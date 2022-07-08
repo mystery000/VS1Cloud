@@ -41,6 +41,9 @@ Template.organisationsettings.onCreated(() => {
 
   templateObject.iscompanyemail = new ReactiveVar();
   templateObject.iscompanyemail.set(false);
+
+  templateObject.isChkUSRegionTax = new ReactiveVar();
+  templateObject.isChkUSRegionTax.set(false);
 });
 
 Template.organisationsettings.onRendered(function () {
@@ -176,6 +179,14 @@ Template.organisationsettings.onRendered(function () {
         mainData.PoCountry +
         "</option>"
     );
+
+    if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
+      templateObject.isChkUSRegionTax.set(true);
+      $("#chkusregiontax").prop("checked", true);
+      $(".chkusregiontax-col").show();
+    } else {
+      $(".chkusregiontax-col").hide();
+    }
 
     if (
       mainData.Address == mainData.PoBox &&
@@ -359,6 +370,9 @@ Template.organisationsettings.helpers({
   },
   iscompanyemail: () => {
     return Template.instance().iscompanyemail.get();
+  },
+  isChkUSRegionTax: () => {
+    return Template.instance().isChkUSRegionTax.get();
   },
   checkCountryABN: () => {
     let countryABNValue = "ABN";
@@ -558,6 +572,7 @@ Template.organisationsettings.events({
     let poPostCode = "";
     let poCountry = "";
     let isDefaultEmail = false;
+    let isChkUSRegionTax = $("#chkusregiontax").is(":checked");
 
     if ($("#chksameaddress").is(":checked")) {
       poAddress = shipAddress;
@@ -605,6 +620,7 @@ Template.organisationsettings.events({
         PoPostcode: poPostCode,
         PoCountry: poCountry,
         TrackEmails: isDefaultEmail,
+        ChkUSRegionTax: isChkUSRegionTax,
       },
     };
     organisationService
@@ -931,6 +947,16 @@ Template.organisationsettings.events({
         });
       }
     });
+  },
+  "change #edtCountry": function (event) {
+    if (event.target.value == "United States") {
+      $("#chkusregiontax").prop("checked", true);
+      $(".chkusregiontax-col").show();
+    }
+    else {
+      $("#chkusregiontax").prop("checked", false);
+      $(".chkusregiontax-col").hide();
+    }
   },
 });
 

@@ -135,20 +135,39 @@ Template.balancesheetreport.onRendered(() => {
           .join("_");
 
         let SubAccountTotal = data.balancesheetreport[i]["Sub Account Total"];
-
         if (SubAccountTotal !== 0) {
-          SubAccountTotal =
-            utilityService.modifynegativeCurrencyFormat(SubAccountTotal);
+          SubAccountTotal = utilityService.modifynegativeCurrencyFormat(SubAccountTotal);
         } else {
           SubAccountTotal = " ";
         }
-        let HeaderAccountTotal =
-          data.balancesheetreport[i]["Header Account Total"];
-        let TotalCurrentAsset_Liability =
-          data.balancesheetreport[i]["Total Current Asset & Liability"];
-        let TotalAsset_Liability =
-          data.balancesheetreport[i]["Total Asset & Liability"];
+
+        let HeaderAccountTotal = data.balancesheetreport[i]["Header Account Total"];
+        if (HeaderAccountTotal !== 0) {
+            HeaderAccountTotal = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal);
+          } else {
+              HeaderAccountTotal = " ";
+          }
+
+        let TotalCurrentAsset_Liability = data.balancesheetreport[i]["Total Current Asset & Liability"];
+        if (TotalCurrentAsset_Liability !== 0) {
+          TotalCurrentAsset_Liability = utilityService.modifynegativeCurrencyFormat(TotalCurrentAsset_Liability);
+        } else {
+          TotalCurrentAsset_Liability = " ";
+        }
+
+        let TotalAsset_Liability = data.balancesheetreport[i]["Total Asset & Liability"];
+        if (TotalAsset_Liability !== 0) {
+          TotalAsset_Liability = utilityService.modifynegativeCurrencyFormat(TotalAsset_Liability);
+        } else {
+          TotalAsset_Liability = " ";
+        }
+        
         let AccountTree = data.balancesheetreport[i]["Account Tree"];
+        // if (AccountTree !== 0) {
+        //   AccountTree = utilityService.modifynegativeCurrencyFormat(AccountTree);
+        // } else {
+        //   AccountTree = " ";
+        // }
         recordObj.selected = false;
 
         /**
@@ -183,16 +202,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
 
@@ -214,16 +226,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
             ,
           ];
@@ -244,16 +249,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
 
@@ -273,16 +271,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalCurrentAsset_Liability
-                ) || "",
+              value: TotalCurrentAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalCurrentAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
             },
           ];
         } else if (AccountTree.replace(/\s/g, "") == "FixedAsset") {
@@ -304,16 +295,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalCurrentAsset_Liability
-                ) || "",
+              value: TotalCurrentAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalCurrentAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
             },
           ];
         } else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
@@ -328,16 +312,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalAsset_Liability
-                ) || "",
+              value: TotalAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalAsset_Liability) || "",
             },
           ];
 
@@ -361,16 +338,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
         } else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
@@ -385,16 +355,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
         } else if (
@@ -411,16 +374,8 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
-              amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+              value: HeaderAccountTotal || "",
+              amount: utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
         } else if (
@@ -437,16 +392,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalCurrentAsset_Liability
-                ) || "",
+              value: TotalCurrentAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalCurrentAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
             },
           ];
         } else if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
@@ -461,16 +409,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalCurrentAsset_Liability
-                ) || "",
+              value: TotalCurrentAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalCurrentAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
             },
           ];
         } else if (
@@ -487,16 +428,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalAsset_Liability
-                ) || "",
+              value:TotalAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalAsset_Liability) || "",
             },
           ];
 
@@ -530,11 +464,7 @@ Template.balancesheetreport.onRendered(() => {
                 type: "amount",
                 value: HeaderAccountTotal || "",
                 amount:
-                  utilityService.convertSubstringParseFloat(
-                    utilityService.modifynegativeCurrencyFormat(
-                      HeaderAccountTotal
-                    )
-                  ) || "",
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
           } else {
@@ -549,22 +479,21 @@ Template.balancesheetreport.onRendered(() => {
               },
               {
                 type: "amount",
-                value:
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                value: HeaderAccountTotal || "",
                 amount:
-                  utilityService.convertSubstringParseFloat(
-                    utilityService.modifynegativeCurrencyFormat(
-                      HeaderAccountTotal
-                    )
-                  ) || "",
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
           }
         }
-
-        records.push(recordObj);
+        console.log( "SubAccountTotal", SubAccountTotal, "HeaderAccountTotal", HeaderAccountTotal )
+        if( recordObj.dataArr2 ){
+          if ( HeaderAccountTotal.replace(/\s/g, "") || SubAccountTotal.replace(/\s/g, "") ) {
+            records.push(recordObj);
+          }
+        }else{
+          records.push(recordObj);
+        }
       }
       // console.log("Records: ", records);
       totalNetAssets = GrandTotalAsset - GrandTotalLiability;
@@ -1477,7 +1406,6 @@ Template.balancesheetreport.onRendered(() => {
   }
   $("#search_list").click(function () {
     let balanceDate = $("#balanceDate").val();
-
     var SegsBalDate = balanceDate.split(" ");
     var months = [
       "January",
@@ -1908,7 +1836,7 @@ Template.balancesheetreport.events({
           records.push(obj);
           obj = ["", "", ""];
         }
-        records.push(obj);
+          records.push(obj);
       }
       let header = [];
       let footer = [];

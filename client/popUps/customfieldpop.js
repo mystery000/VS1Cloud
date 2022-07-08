@@ -806,13 +806,11 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
-              console.log('fieldDataName-', fieldDataName)
               var fieldDataID = $("#edtSaleCustField1").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(1);
 
               $('#customFieldDropdownListTitle1').html(custFields[0].custfieldlabel);
-              console.log("$('#lblCustomField1').html()------", $('#lblCustomField1').innerhtml)
               if (e.pageX > offset.left + $earch.width() - 8) {
                 // X button 16px wide?
                 $("#customFieldDropdownListModal1").modal("toggle");
@@ -901,7 +899,6 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
-              console.log('fieldDataName-', fieldDataName)
 
               var fieldDataID = $("#edtSaleCustField2").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
@@ -995,7 +992,6 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
-              console.log('fieldDataName-', fieldDataName)
               var fieldDataID = $("#edtSaleCustField3").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(3);
@@ -1721,7 +1717,6 @@ Template.customfieldpop.events({
   },
 
   "click .btnCustomFieldToggleDrop": function (e) {
-    console.log('btnCustomFieldToggleDrop')
     const templateObject = Template.instance();
     let data_id = e.target.dataset.id;
     let custfieldarr = templateObject.custfields.get();

@@ -54,6 +54,7 @@ Template.new_quote.onCreated(() => {
     templateObject.taxraterecords = new ReactiveVar([]);
     templateObject.record = new ReactiveVar({});
     templateObject.custfields = new ReactiveVar([]);
+
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
     templateObject.uploadedFile = new ReactiveVar();
@@ -115,6 +116,31 @@ Template.new_quote.onRendered(() => {
          }
    
       };
+
+    templateObject.getTemplateInfo = function() {
+
+        getVS1Data('TemplateSettings').then(function(dataObject) {
+
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+
+
+            if(data.fields)
+            {
+                var quotes = data.fields.quotes;
+
+                $('#Quotes_'+quotes).attr("checked", "checked");
+            }
+    
+
+        });
+
+   };
+
+
+   templateObject.getTemplateInfo();
 
     function showQuotes1(template_title,number)
     {
@@ -5874,6 +5900,54 @@ Template.new_quote.onRendered(function() {
     };
     tempObj.getAllTaxCodes();
 
+    tempObj.getAllCustomFields = function () {
+      let custFields = [];
+      let customData = {};
+      let customFieldCount = 10;
+
+      sideBarService
+        .getAllCustomFields()
+        .then(function (data) {
+          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+            if (data.tcustomfieldlist[x].fields.ListType == 'ltSaleslines') {
+              customData = {
+                active: data.tcustomfieldlist[x].fields.Active || false,
+                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+                datatype: data.tcustomfieldlist[x].fields.DataType || "",
+                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+              };
+              custFields.push(customData);
+            }
+          }
+  
+          if (custFields.length < customFieldCount) {
+            let remainder = customFieldCount - custFields.length;
+            let getRemCustomFields = parseInt(custFields.length);
+            // count = count + remainder;
+            for (let r = 0; r < remainder; r++) {
+              getRemCustomFields++;
+              customData = {
+                active: false,
+                id: "",
+                custfieldlabel: "Custom Field " + getRemCustomFields,
+                datatype: "",
+                isempty: true,
+                iscombo: false,
+              };
+              // count++;
+              custFields.push(customData);
+            }
+          }
+  
+          tempObj.custfields.set(custFields); 
+        })
+    }
+
+    tempObj.getAllCustomFields()
+
 });
 
 Template.new_quote.helpers({
@@ -6988,6 +7062,63 @@ Template.new_quote.events({
    
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
+        
+        getVS1Data('TemplateSettings').then(function(dataObject) {
+
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+
+
+            if(data.fields)
+            {
+
+                var bill =data.fields.bill;         
+                var credits =  data.fields.credits;
+                var customer_payment = data.fields.customer_payment;
+                var invoices = data.fields.invoices;
+                var invoices_back_order =  data.fields.invoices_back_order;
+                var purchase_orderbill = data.fields.purchase_order;
+                var quotes =  $('input[name="Quotes"]:checked').val();
+                var refunds = data.fields.refunds;
+                var sales_orders = data.fields.sales_orders;
+                var supplier_payments = data.fields.supplier_payments;
+                var statements = data.fields.statements;
+                var customer_statement =  data.fields.customer_statement;
+                var delivery_docket =  data.fields.delivery_docket;
+               
+                var print_options  =  {
+                    type:"TemplateSettings",
+                    fields:{                              
+                               client_id:loggedCompany,
+                               bill:bill,
+                               credits:credits,
+                               customer_payment:customer_payment,
+                               customer_statement:customer_statement,
+                               invoices:invoices,
+                               invoices_back_order:invoices_back_order,
+                               purchase_order:purchase_orderbill,
+                               quotes:quotes,
+                               refunds:refunds,
+                               sales_orders:sales_orders,
+                               supplier_payments:supplier_payments,
+                               statements:statements,
+                               delivery_docket:delivery_docket,
+                          }
+              
+              
+                          
+                  }
+
+                  addVS1Data("TemplateSettings", JSON.stringify(print_options));
+
+            }
+    
+
+        });
+
+
         $('#html-2-pdfwrapper-new').css('display', 'block');
         if ($('.edtCustomerEmail').val() != "") {
             $('.pdfCustomerName').html($('#edtCustomerName').val());
@@ -8257,6 +8388,15 @@ Template.new_quote.events({
             $('.colTaxRate').css('display', 'none');
         }
     },
+    'click .chkTaxCode': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colTaxCode').css('display', 'table-cell');
+            $('.colTaxCode').css('padding', '.75rem');
+            $('.colTaxCode').css('vertical-align', 'top');
+        } else {
+            $('.colTaxCode').css('display', 'none');
+        }
+    },
     'click .chkAmount': function(event) {
         if ($(event.target).is(':checked')) {
             $('.colAmount').css('display', 'table-cell');
@@ -8264,6 +8404,15 @@ Template.new_quote.events({
             $('.colAmount').css('vertical-align', 'top');
         } else {
             $('.colAmount').css('display', 'none');
+        }
+    },
+    'click .chkTaxAmount': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colTaxAmount').css('display', 'table-cell');
+            $('.colTaxAmount').css('padding', '.75rem');
+            $('.colTaxAmount').css('vertical-align', 'top');
+        } else {
+            $('.colTaxAmount').css('display', 'none');
         }
     },
     'change .rngRangeProductName': function(event) {
@@ -8330,9 +8479,13 @@ Template.new_quote.events({
     },
     'click .btnSaveGridSettings': function(event) {
         let lineItems = [];
+        let organisationService = new OrganisationService();
 
-        $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
+        $(".fullScreenSpin").css("display", "inline-block");
+
+        $('.displaySettings').each(function(index) {
+            var $tblrow = $(this); 
+            var fieldID = $tblrow.attr("custid") || 0;
             var colTitle = $tblrow.find(".divcolumn").text() || '';
             var colWidth = $tblrow.find(".custom-range").val() || 0;
             var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
@@ -8352,75 +8505,117 @@ Template.new_quote.events({
 
             lineItems.push(lineItemObj);
 
-
-
-        });
-
-
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblQuoteLine'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblQuoteLine',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblQuoteLine',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-
-                        }
-                    });
-
-                }
+            if(fieldID){
+              objDetails1 = {
+                type: "TCustomFieldList",
+                fields: {
+                  Active: colHidden,
+                  ID: parseInt(fieldID),
+                  Description: colTitle
+                },
+              };
+            } else {
+              objDetails1 = {
+                type: "TCustomFieldList",
+                fields: {
+                  Active: colHidden,
+                  DataType: "ftString",
+                  Description: colTitle,
+                  ListType: 'ltSalesLines' 
+                },
+              };
             }
-        }
-        $('#myModal2').modal('toggle');
+
+            organisationService
+            .saveCustomField(objDetails1)
+            .then(function (objDetails) { 
+              $(".fullScreenSpin").css("display", "none");
+
+            })
+            .catch(function (err) {
+              swal({
+                title: "Oooops...",
+                text: err,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {
+                if (result.value) {
+                  $(".fullScreenSpin").css("display", "none");
+                } else if (result.dismiss === "cancel") {
+                }
+              });
+              $(".fullScreenSpin").css("display", "none");
+            });
+          });
+
+
+
+        // var getcurrentCloudDetails = CloudUser.findOne({
+        //     _id: Session.get('mycloudLogonID'),
+        //     clouddatabaseID: Session.get('mycloudLogonDBID')
+        // });
+        // if (getcurrentCloudDetails) {
+        //     if (getcurrentCloudDetails._id.length > 0) {
+        //         var clientID = getcurrentCloudDetails._id;
+        //         var clientUsername = getcurrentCloudDetails.cloudUsername;
+        //         var clientEmail = getcurrentCloudDetails.cloudEmail;
+        //         var checkPrefDetails = CloudPreference.findOne({
+        //             userid: clientID,
+        //             PrefName: 'tblQuoteLine'
+        //         });
+        //         if (checkPrefDetails) {
+        //             CloudPreference.update({
+        //                 _id: checkPrefDetails._id
+        //             }, {
+        //                 $set: {
+        //                     userid: clientID,
+        //                     username: clientUsername,
+        //                     useremail: clientEmail,
+        //                     PrefGroup: 'salesform',
+        //                     PrefName: 'tblQuoteLine',
+        //                     published: true,
+        //                     customFields: lineItems,
+        //                     updatedAt: new Date()
+        //                 }
+        //             }, function(err, idTag) {
+        //                 if (err) {
+        //                     $('#myModal2').modal('toggle');
+
+        //                 } else {
+        //                     $('#myModal2').modal('toggle');
+
+
+        //                 }
+        //             });
+
+        //         } else {
+        //             CloudPreference.insert({
+        //                 userid: clientID,
+        //                 username: clientUsername,
+        //                 useremail: clientEmail,
+        //                 PrefGroup: 'salesform',
+        //                 PrefName: 'tblQuoteLine',
+        //                 published: true,
+        //                 customFields: lineItems,
+        //                 createdAt: new Date()
+        //             }, function(err, idTag) {
+        //                 if (err) {
+        //                     $('#myModal2').modal('toggle');
+
+        //                 } else {
+        //                     $('#myModal2').modal('toggle');
+
+
+        //                 }
+        //             });
+
+        //         }
+        //     }
+        // }
+        // $('#myModal2').modal('toggle');
     },
+
     'click .btnResetGridSettings': function(event) {
         var getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get('mycloudLogonID'),

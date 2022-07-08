@@ -1,19 +1,24 @@
 import { TaxRateService } from "../settings-service";
-import { ReactiveVar } from "meteor/reactive-var";
-import { SideBarService } from "../../js/sidebar-service";
-import "../../lib/global/indexdbstorage.js";
+import { ReactiveVar } from 'meteor/reactive-var';
+import { SideBarService } from '../../js/sidebar-service';
+import { OrganisationService } from "../../js/organisation-service";
+import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
-Template.taxRatesSettings.onCreated(function () {
+let organisationService = new OrganisationService();
+Template.taxRatesSettings.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
 
   templateObject.defaultpurchasetaxcode = new ReactiveVar();
   templateObject.defaultsaletaxcode = new ReactiveVar();
+
+  templateObject.isChkUSRegionTax = new ReactiveVar();
+  templateObject.isChkUSRegionTax.set(false);
 });
 
-Template.taxRatesSettings.onRendered(function () {
-  $(".fullScreenSpin").css("display", "inline-block");
+Template.taxRatesSettings.onRendered(function() {
+  $('.fullScreenSpin').css('display','inline-block');
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
   const dataTableList = [];
@@ -952,40 +957,28 @@ Template.taxRatesSettings.events({
       return;
     }
 
-    if (event.shiftKey == true) {
-      event.preventDefault();
-    }
-
-    if (
-      (event.keyCode >= 48 && event.keyCode <= 57) ||
-      (event.keyCode >= 96 && event.keyCode <= 105) ||
-      event.keyCode == 8 ||
-      event.keyCode == 9 ||
-      event.keyCode == 37 ||
-      event.keyCode == 39 ||
-      event.keyCode == 46 ||
-      event.keyCode == 190
-    ) {
-    } else {
-      event.preventDefault();
-    }
-  },
-  "click .btnSaveTaxRate": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let taxRateService = new TaxRateService();
-    let taxtID = $("#edtTaxID").val();
-    let taxName = $("#edtTaxName").val();
-    let taxDesc = $("#edtTaxDesc").val();
-    let taxRate = parseFloat($("#edtTaxRate").val() / 100);
-    let objDetails = "";
-    if (taxName === "") {
-      Bert.alert(
-        "<strong>WARNING:</strong> Tax Rate cannot be blank!",
-        "warning"
-      );
-      $(".fullScreenSpin").css("display", "none");
-      e.preventDefault();
-    }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+        (event.keyCode >= 96 && event.keyCode <= 105) ||
+        event.keyCode == 8 || event.keyCode == 9 ||
+        event.keyCode == 37 || event.keyCode == 39 ||
+        event.keyCode == 46 || event.keyCode == 190) {
+        } else {
+            event.preventDefault();
+        }
+    },
+    'click .btnSaveTaxRate': function () {
+      $('.fullScreenSpin').css('display','inline-block');
+      let taxRateService = new TaxRateService();
+      let taxtID = $('#edtTaxID').val();
+      let taxName = $('#edtTaxName').val();
+      let taxDesc = $('#edtTaxDesc').val();
+      let taxRate = parseFloat($('#edtTaxRate').val() / 100);
+      let objDetails = '';
+      if (taxName === ''){
+        Bert.alert('<strong>WARNING:</strong> Tax Rate cannot be blank!', 'warning');
+        $('.fullScreenSpin').css('display','none');
+        e.preventDefault();
+      }
 
     if (taxtID == "") {
       taxRateService
@@ -1129,27 +1122,33 @@ Template.taxRatesSettings.events({
           });
           $(".fullScreenSpin").css("display", "none");
         });
-    }
+          $('.fullScreenSpin').css('display','none');
+      }
+     
+    },
+    'click .btnAddTaxRate': function () {
+      $('#add-tax-title').text('Add New Tax Rate');
+      $('#edtTaxID').val('');
+      $('#edtTaxName').val('');
+      $('#edtTaxName').prop('readonly', false);
+      $('#edtTaxRate').val('');
+      $('#edtTaxDesc').val('');
   },
-  "click .btnAddTaxRate": function () {
-    $("#add-tax-title").text("Add New Tax Rate");
-    $("#edtTaxID").val("");
-    $("#edtTaxName").val("");
-    $("#edtTaxName").prop("readonly", false);
-    $("#edtTaxRate").val("");
-    $("#edtTaxDesc").val("");
+  'click .btnSubTaxes': function () {
+    FlowRouter.go('/subtaxsettings');
   },
-  "click .btnDeleteTaxRate": function () {
+  'click .btnDeleteTaxRate': function () {
     let taxRateService = new TaxRateService();
-    let taxCodeId = $("#selectDeleteLineID").val();
+    let taxCodeId = $('#selectDeleteLineID').val();
 
-    let objDetails = {
-      type: "TTaxcode",
-      fields: {
-        Id: parseInt(taxCodeId),
-        Active: false,
-      },
-    };
+
+      let objDetails = {
+          type: "TTaxcode",
+          fields: {
+              Id: parseInt(taxCodeId),
+              Active: false
+          }
+      };
 
     taxRateService
       .saveTaxRate(objDetails)
@@ -1196,7 +1195,11 @@ Template.taxRatesSettings.events({
     $("#selectDeleteLineID").val(targetID);
     $("#deleteLineModal").modal("toggle");
 
-  },
+    },
+    'click .btnBack':function(event){
+      event.preventDefault();
+      history.back(1);
+    }
 });
 
 Template.taxRatesSettings.helpers({
@@ -1217,10 +1220,7 @@ Template.taxRatesSettings.helpers({
     return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({
-      userid: Session.get("mycloudLogonID"),
-      PrefName: "taxRatesList",
-    });
+    return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'taxRatesList'});
   },
   defaultpurchasetaxcode: () => {
     return Template.instance().defaultpurchasetaxcode.get();
@@ -1229,11 +1229,14 @@ Template.taxRatesSettings.helpers({
     return Template.instance().defaultsaletaxcode.get();
   },
   loggedCompany: () => {
-    return localStorage.getItem("mySession") || "";
+    return localStorage.getItem('mySession') || '';
+  },
+  isChkUSRegionTax: () => {
+    return Template.instance().isChkUSRegionTax.get();
   },
 });
 
-Template.registerHelper("equals", function (a, b) {
+Template.registerHelper('equals', function (a, b) {
   return a === b;
 });
 

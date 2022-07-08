@@ -25,10 +25,12 @@ Template.accountrevenuestreams.onRendered(() => {
   let topTenData1 = [];
   let topTenSuppData1 = [];
   let topData = this;
-  function chartClickEvent() {
-      FlowRouter.go("/newprofitandloss?daterange=ignore");
-  }
 
+  function chartClickEvent(event, array) {
+    if (array[0] != undefined) {
+      FlowRouter.go("/newprofitandloss?daterange=ignore");
+    }
+  }
   if (!localStorage.getItem("VS1PNLPeriodReport_dash")) {
     getInvSales(function (data) {
       let currentDate = new Date();

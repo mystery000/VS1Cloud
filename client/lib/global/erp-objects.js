@@ -249,7 +249,9 @@ const erpObject = {
     Tprojecttask_comments: "Tprojecttask_comments",
     Tprojecttask_TaskLabel: "Tprojecttask_TaskLabel",
     TCurrencyRateHistory:"TCurrencyRateHistory",
-    TRepairDetails:"TRepairDetails"
+    TRepairDetails:"TRepairDetails",
+    TPayrollHolidayGroup:"TPayrollHolidayGroup",
+    TVS1Superannuation:"TVS1Superannuation",
 };
 
 export default erpObject;

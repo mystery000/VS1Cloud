@@ -5199,7 +5199,7 @@ Template.payrollrules.onRendered(function() {
     templateObject.getbonusesCommissions = function(){
         getVS1Data('TEarningsBonusesCommissions').then(function(dataObject) {
         if (dataObject.length == 0) {
-             sideBarService.getsuperannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (data) {
+             sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TEarningsBonusesCommissions', JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
@@ -5319,7 +5319,7 @@ Template.payrollrules.onRendered(function() {
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblEarnings_filter input').val();
 
-                                  sideBarService.getsuperannuationBonusesCommissions(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                  sideBarService.getvs1superannuationBonusesCommissions(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
                                     for (let i = 0; i < data.tearningsbonusescommissions.length; i++) {
 
@@ -5388,7 +5388,7 @@ Template.payrollrules.onRendered(function() {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
-                            sideBarService.getsuperannuationBonusesCommissions(dataLenght, 0).then(function (dataNonBo) {
+                            sideBarService.getvs1superannuationBonusesCommissions(dataLenght, 0).then(function (dataNonBo) {
 
                                 addVS1Data('TEarningsBonusesCommissions', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
@@ -5537,7 +5537,7 @@ Template.payrollrules.onRendered(function() {
                               let dataLenght = oSettings._iDisplayLength;
                               let customerSearch = $('#tblEarnings_filter input').val();
 
-                              sideBarService.getsuperannuationBonusesCommissions(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                              sideBarService.getvs1superannuationBonusesCommissions(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
                                 for (let i = 0; i < data.tearningsbonusescommissions.length; i++) {
 
@@ -5605,7 +5605,7 @@ Template.payrollrules.onRendered(function() {
                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                         $('.fullScreenSpin').css('display', 'none');
                     } else {
-                        sideBarService.getsuperannuationBonusesCommissions(dataLenght, 0).then(function (dataNonBo) {
+                        sideBarService.getvs1superannuationBonusesCommissions(dataLenght, 0).then(function (dataNonBo) {
 
                             addVS1Data('TEarningsBonusesCommissions', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                 templateObject.resetData(dataNonBo);
@@ -5633,7 +5633,7 @@ Template.payrollrules.onRendered(function() {
         }).catch(function(err) {
 
 
-           sideBarService.getsuperannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (data) {
+           sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (data) {
              addVS1Data('TEarningsBonusesCommissions', JSON.stringify(data));
                let lineItems = [];
                let lineItemObj = {};
@@ -5756,7 +5756,7 @@ Template.payrollrules.onRendered(function() {
                                     let dataLenght = oSettings._iDisplayLength;
                                     let customerSearch = $('#tblEarnings_filter input').val();
 
-                                    sideBarService.getsuperannuationBonusesCommissions(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                    sideBarService.getvs1superannuationBonusesCommissions(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
                                         for (let i = 0; i < data.tearningsbonusescommissions.length; i++) {
 
@@ -5824,7 +5824,7 @@ Template.payrollrules.onRendered(function() {
                             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                                 $('.fullScreenSpin').css('display', 'none');
                             } else {
-                                sideBarService.getsuperannuationBonusesCommissions(dataLenght, 0).then(function (dataNonBo) {
+                                sideBarService.getvs1superannuationBonusesCommissions(dataLenght, 0).then(function (dataNonBo) {
 
                                     addVS1Data('TEarningsBonusesCommissions', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                         templateObject.resetData(dataNonBo);
@@ -8836,24 +8836,24 @@ Template.payrollrules.onRendered(function() {
     templateObject.getReimbursement();
 
     templateObject.getSuperannuationData = function(){
-        getVS1Data('TSuperannuation').then(function(dataObject) {
+        getVS1Data('TVS1Superannuation').then(function(dataObject) {
             if (dataObject.length == 0) {
                  sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TSuperannuation', JSON.stringify(data));
+                  addVS1Data('TVS1Superannuation', JSON.stringify(data));
                   let lineItems = [];
                   let lineItemObj = {};
-                  for (let i = 0; i < data.tsuperannuation.length; i++) {
+                  for (let i = 0; i < data.tvs1superannuation.length; i++) {
 
                     var dataListAllowance = [
-                        data.tsuperannuation[i].fields.ID || '',
-                        data.tsuperannuation[i].fields.Superfund || '',
-                        data.tsuperannuation[i].fields.Area || '',
-                        data.tsuperannuation[i].fields.Employeeid || '',
-                        data.tsuperannuation[i].fields.ABN || '',
-                        data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
-                        data.tsuperannuation[i].fields.BSB || '',
-                        data.tsuperannuation[i].fields.Accountno || '',
-                        data.tsuperannuation[i].fields.AccountName || '',
+                        data.tvs1superannuation[i].fields.ID || '',
+                        data.tvs1superannuation[i].fields.Superfund || '',
+                        data.tvs1superannuation[i].fields.Area || '',
+                        data.tvs1superannuation[i].fields.EmployeeId || '',
+                        data.tvs1superannuation[i].fields.ABN || '',
+                        data.tvs1superannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                        data.tvs1superannuation[i].fields.BSB || '',
+                        data.tvs1superannuation[i].fields.AccountNo || '',
+                        data.tvs1superannuation[i].fields.AccountName || '',
                         '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                      ];
 
@@ -8950,18 +8950,18 @@ Template.payrollrules.onRendered(function() {
 
                                       sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                                        for (let i = 0; i < data.tsuperannuation.length; i++) {
+                                        for (let i = 0; i < data.tvs1superannuation.length; i++) {
 
                                             var dataListAllowance = [
-                                                data.tsuperannuation[i].fields.ID || '',
-                                                data.tsuperannuation[i].fields.Superfund || '',
-                                                data.tsuperannuation[i].fields.Area || '',
-                                                data.tsuperannuation[i].fields.Employeeid || '',
-                                                data.tsuperannuation[i].fields.ABN || '',
-                                                data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
-                                                data.tsuperannuation[i].fields.BSB || '',
-                                                data.tsuperannuation[i].fields.Accountno || '',
-                                                data.tsuperannuation[i].fields.AccountName || '',
+                                                data.tvs1superannuation[i].fields.ID || '',
+                                                data.tvs1superannuation[i].fields.Superfund || '',
+                                                data.tvs1superannuation[i].fields.Area || '',
+                                                data.tvs1superannuation[i].fields.EmployeeId || '',
+                                                data.tvs1superannuation[i].fields.ABN || '',
+                                                data.tvs1superannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                                                data.tvs1superannuation[i].fields.BSB || '',
+                                                data.tvs1superannuation[i].fields.AccountNo || '',
+                                                data.tvs1superannuation[i].fields.AccountName || '',
                                                 '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                              ];
 
@@ -9015,7 +9015,7 @@ Template.payrollrules.onRendered(function() {
                             } else {
                                 sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
 
-                                    addVS1Data('TSuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                    addVS1Data('TVS1Superannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                         templateObject.resetData(dataNonBo);
                                         $('.fullScreenSpin').css('display', 'none');
                                     }).catch(function (err) {
@@ -9043,22 +9043,23 @@ Template.payrollrules.onRendered(function() {
             }else{
 
               let data = JSON.parse(dataObject[0].data);
+           
 
               let useData = data;
               let lineItems = [];
               let lineItemObj = {};
-              for (let i = 0; i < data.tsuperannuation.length; i++) {
+              for (let i = 0; i < data.tvs1superannuation.length; i++) {
 
                 var dataListAllowance = [
-                    data.tsuperannuation[i].fields.ID || '',
-                    data.tsuperannuation[i].fields.Superfund || '',
-                    data.tsuperannuation[i].fields.Area || '',
-                    data.tsuperannuation[i].fields.Employeeid || '',
-                    data.tsuperannuation[i].fields.ABN || '',
-                    data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
-                    data.tsuperannuation[i].fields.BSB || '',
-                    data.tsuperannuation[i].fields.Accountno || '',
-                    data.tsuperannuation[i].fields.AccountName || '',
+                    data.tvs1superannuation[i].fields.ID || '',
+                    data.tvs1superannuation[i].fields.Superfund || '',
+                    data.tvs1superannuation[i].fields.Area || '',
+                    data.tvs1superannuation[i].fields.EmployeeId || '',
+                    data.tvs1superannuation[i].fields.ABN || '',
+                    data.tvs1superannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                    data.tvs1superannuation[i].fields.BSB || '',
+                    data.tvs1superannuation[i].fields.AccountNo || '',
+                    data.tvs1superannuation[i].fields.AccountName || '',
                     '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                  ];
 
@@ -9154,21 +9155,20 @@ Template.payrollrules.onRendered(function() {
 
                                   sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                                    for (let i = 0; i < data.tsuperannuation.length; i++) {
+                                    for (let i = 0; i < data.tvs1superannuation.length; i++) {
 
                                         var dataListAllowance = [
-                                            data.tsuperannuation[i].fields.ID || '',
-                                            data.tsuperannuation[i].fields.Superfund || '',
-                                            data.tsuperannuation[i].fields.Area || '',
-                                            data.tsuperannuation[i].fields.Employeeid || '',
-                                            data.tsuperannuation[i].fields.ABN || '',
-                                            data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
-                                            data.tsuperannuation[i].fields.BSB || '',
-                                            data.tsuperannuation[i].fields.Accountno || '',
-                                            data.tsuperannuation[i].fields.AccountName || '',
+                                            data.tvs1superannuation[i].fields.ID || '',
+                                            data.tvs1superannuation[i].fields.Superfund || '',
+                                            data.tvs1superannuation[i].fields.Area || '',
+                                            data.tvs1superannuation[i].fields.EmployeeId || '',
+                                            data.tvs1superannuation[i].fields.ABN || '',
+                                            data.tvs1superannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                                            data.tvs1superannuation[i].fields.BSB || '',
+                                            data.tvs1superannuation[i].fields.AccountNo || '',
+                                            data.tvs1superannuation[i].fields.AccountName || '',
                                             '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                          ];
-
                                           splashArraySuperannuationList.push(dataListAllowance);
                                       }
 
@@ -9219,7 +9219,7 @@ Template.payrollrules.onRendered(function() {
                         } else {
                             sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
 
-                                addVS1Data('TSuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                addVS1Data('TVS1Superannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
                                     $('.fullScreenSpin').css('display', 'none');
                                 }).catch(function (err) {
@@ -9245,23 +9245,23 @@ Template.payrollrules.onRendered(function() {
         }).catch(function(err) {
 
               sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
-              addVS1Data('TSuperannuation', JSON.stringify(data));
+              addVS1Data('TVS1Superannuation', JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
 
 
-              for (let i = 0; i < data.tsuperannuation.length; i++) {
+              for (let i = 0; i < data.tvs1superannuation.length; i++) {
 
                 var dataListAllowance = [
-                    data.tsuperannuation[i].fields.ID || '',
-                    data.tsuperannuation[i].fields.Superfund || '',
-                    data.tsuperannuation[i].fields.Area || '',
-                    data.tsuperannuation[i].fields.Employeeid || '',
-                    data.tsuperannuation[i].fields.ABN || '',
-                    data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
-                    data.tsuperannuation[i].fields.BSB || '',
-                    data.tsuperannuation[i].fields.Accountno || '',
-                    data.tsuperannuation[i].fields.AccountName || '',
+                    data.tvs1superannuation[i].fields.ID || '',
+                    data.tvs1superannuation[i].fields.Superfund || '',
+                    data.tvs1superannuation[i].fields.Area || '',
+                    data.tvs1superannuation[i].fields.EmployeeId || '',
+                    data.tvs1superannuation[i].fields.ABN || '',
+                    data.tvs1superannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                    data.tvs1superannuation[i].fields.BSB || '',
+                    data.tvs1superannuation[i].fields.AccountNo || '',
+                    data.tvs1superannuation[i].fields.AccountName || '',
                     '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                  ];
 
@@ -9355,18 +9355,18 @@ Template.payrollrules.onRendered(function() {
 
                                   sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                                    for (let i = 0; i < data.tsuperannuation.length; i++) {
+                                    for (let i = 0; i < data.tvs1superannuation.length; i++) {
 
                                         var dataListAllowance = [
-                                            data.tsuperannuation[i].fields.ID || '',
-                                            data.tsuperannuation[i].fields.Superfund || '',
-                                            data.tsuperannuation[i].fields.Area || '',
-                                            data.tsuperannuation[i].fields.Employeeid || '',
-                                            data.tsuperannuation[i].fields.ABN || '',
-                                            data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
-                                            data.tsuperannuation[i].fields.BSB || '',
-                                            data.tsuperannuation[i].fields.Accountno || '',
-                                            data.tsuperannuation[i].fields.AccountName || '',
+                                            data.tvs1superannuation[i].fields.ID || '',
+                                            data.tvs1superannuation[i].fields.Superfund || '',
+                                            data.tvs1superannuation[i].fields.Area || '',
+                                            data.tvs1superannuation[i].fields.EmployeeId || '',
+                                            data.tvs1superannuation[i].fields.ABN || '',
+                                            data.tvs1superannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                                            data.tvs1superannuation[i].fields.BSB || '',
+                                            data.tvs1superannuation[i].fields.AccountNo || '',
+                                            data.tvs1superannuation[i].fields.AccountName || '',
                                             '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                          ];
 
@@ -9420,7 +9420,7 @@ Template.payrollrules.onRendered(function() {
                         } else {
                             sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
 
-                                addVS1Data('TSuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                addVS1Data('TVS1Superannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
                                     $('.fullScreenSpin').css('display', 'none');
                                 }).catch(function (err) {
@@ -9917,6 +9917,7 @@ Template.payrollrules.onRendered(function() {
       $('#edtRateTypeDirectorsFees').editableSelect();
       $('#edtRateTypeLumpSumW').editableSelect();
       $('#edtFundType').editableSelect();
+      $('#holidaygroup').editableSelect();
 
     });
 
@@ -16432,6 +16433,7 @@ Template.payrollrules.onRendered(function() {
 
     });
 
+
     $('#holidaygroup').editableSelect().on('click.editable-select', function (e, li) {
 
         var $earch = $(this);
@@ -16443,17 +16445,17 @@ Template.payrollrules.onRendered(function() {
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectGroupLineID').val('edtGroupType');
           $('#groupTypeListModel').modal();
-          $('#tblgrouplist_filter .form-control-sm').focus();
-          $('#tblgrouplist_filter .form-control-sm').val();
-          $('#tblgrouplist_filter .form-control-sm').trigger("input");
+          $('#tblgrouptypelist_filter .form-control-sm').focus();
+          $('#tblgrouptypelist_filter .form-control-sm').val();
+          $('#tblgrouptypelist_filter .form-control-sm').trigger("input");
           setTimeout(function () {
-             var datatable = $('#tblgrouplist_filter').DataTable();
+             var datatable = $('#tblgrouptypelist').DataTable();
              datatable.draw();
-             $('#tblgrouplist_filter .form-control-sm').trigger("input");
+             $('#tblgrouptypelist_filter .form-control-sm').trigger("input");
           }, 500);
          }else{
            if(Description.replace(/\s/g, '') != ''){
-             getVS1Data('TVs1TabGroups').then(function (dataObject) {
+             getVS1Data('TPayrollHolidayGroup').then(function (dataObject) {
               if (dataObject.length == 0) {
                      ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
                      let lineItems = [];
@@ -16464,20 +16466,20 @@ Template.payrollrules.onRendered(function() {
                      if (ratetypelist) {
                          for (var h = 0; h < ratetypelist.length; h++) {
 
-                             if (data.tvs1tabgroups[0].fields.Description === ratetypelist[h].description) {
+                             if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
 
-                                fullDescriptionname = ratetypelist[h].description || '';
+                                fullDescriptionname = ratetypelist[h].Groupdesc || '';
 
                              }
                          }
 
                      }
 
-                      var ratetypeid = data.tvs1tabgroups[0].fields.ID || '';
-                      var description = fullDescriptionname || data.tvs1tabgroups[0].fields.Description;
+                      var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                      var description = fullDescriptionname || data.tpayrollholidaygroup[0].fields.Groupdesc;
 
 
-                      $('#edtGroupID').val(ratetypeid);
+                      $('#edtgroupID').val(ratetypeid);
                       $('#edtGroupDescription').val(description);
 
 
@@ -16490,26 +16492,26 @@ Template.payrollrules.onRendered(function() {
                    });
                  } else {
                      let data = JSON.parse(dataObject[0].data);
-                     let useData = data.tvs1tabgroups;
+                     let useData = data.tpayrollholidaygroup;
                      var added=false;
                      let lineItems = [];
                      let lineItemObj = {};
                      let fullDescriptionname = '';
 
-                     $('#add-group-title').text('Edit Group Type Details');
-                     $('#edtGroupID').attr('readonly', true);
-                     $('#edtGroupDescription').attr('readonly', true);
+                     $('#add-grouptype-title').text('Edit Group Type Details');
+                     $('#edtgroupID').attr('readonly', true);
+                   
 
-                     for (let a = 0; a < data.tvs1tabgroups.length; a++) {
+                     for (let a = 0; a < data.tpayrollholidaygroup.length; a++) {
 
-                       if((data.tvs1tabgroups[a].fields.Description) === Description){
+                       if((data.tpayrollholidaygroup[a].fields.Groupdesc) === Description){
                          added = true;
                          if (ratetypelist) {
                              for (var h = 0; h < ratetypelist.length; h++) {
 
-                                 if (data.tvs1tabgroups[a].fields.Description === ratetypelist[h].Description) {
+                                 if (data.tpayrollholidaygroup[a].fields.Groupdesc === ratetypelist[h].Groupdesc) {
 
-                                    fullDescriptionname = ratetypelist[h].Description || '';
+                                    fullDescriptionname = ratetypelist[h].Groupdesc || '';
 
                                  }
                              }
@@ -16518,10 +16520,10 @@ Template.payrollrules.onRendered(function() {
 
 
 
-                  var ratetypeid = data.tvs1tabgroups[a].fields.ID || '';
-                  var ratetypedescription = fullDescriptionname || data.tvs1tabgroups[a].fields.Description;
+                  var ratetypeid = data.tpayrollholidaygroup[a].fields.ID || '';
+                  var ratetypedescription = fullDescriptionname || data.tpayrollholidaygroup[a].fields.Groupdesc;
 
-                  $('#edtGroupID').val(ratetypeid);
+                  $('#edtgroupID').val(ratetypeid);
                   $('#edtGroupDescription').val(ratetypedescription);
 
                   setTimeout(function () {
@@ -16534,25 +16536,25 @@ Template.payrollrules.onRendered(function() {
                          let lineItemObj = {};
                          let fullAccountTypeName = '';
 
-                         $('#add-group-title').text('Edit Group Type Details');
-                         $('#edtGroupID').attr('readonly', true);
-                         $('#edtGroupDescription').attr('readonly', true);
+                         $('#add-grouptype-title').text('Edit Group Type Details');
+                         $('#edtgroupID').attr('readonly', true);
+                       
                          if (ratetypelist) {
                              for (var h = 0; h < ratetypelist.length; h++) {
 
-                                 if (data.tvs1tabgroups[0].fields.Description === ratetypelist[h].Description) {
+                                 if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
 
-                                     fullAccountTypeName = ratetypelist[h].description || '';
+                                     fullAccountTypeName = ratetypelist[h].Groupdesc || '';
 
                                  }
                              }
 
                          }
 
-                          var ratetypeid = data.tvs1tabgroups[0].fields.ID || '';
-                          var ratetypedescription = fullAccountTypeName || data.tvs1tabgroups[0].fields.Description;
+                          var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                          var ratetypedescription = fullAccountTypeName || data.tpayrollholidaygroup[0].fields.Groupdesc;
 
-                          $('#edtGroupID').val(ratetypeid);
+                          $('#edtgroupID').val(ratetypeid);
                           $('#edtGroupDescription').val(ratetypedescription);
 
                           setTimeout(function () {
@@ -16571,29 +16573,32 @@ Template.payrollrules.onRendered(function() {
                  let lineItemObj = {};
                  let fullAccountTypeName = '';
 
-                 $('#add-grouptype-title').text('Edit Rate Type Details');
-                 $('#edtGroupID').attr('readonly', true);
-                 $('#edtGroupDescription').attr('readonly', true);
+                 $('#add-grouptype-title').text('Edit Group Type Details');
+                 $('#edtgroupID').attr('readonly', true);
+               
 
                  if (ratetypelist) {
                     for (var h = 0; h < ratetypelist.length; h++) {
 
-                        if (data.tvs1tabgroups[a].fields.Description === ratetypelist[h].Description) {
-                            fullDescriptionname = ratetypelist[h].Description || '';
+                        if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+
+                            fullAccountTypeName = ratetypelist[h].Groupdesc || '';
+
                         }
                     }
 
                 }
+                var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                var ratetypedescription = fullAccountTypeName || data.tpayrollholidaygroup[0].fields.Groupdesc;
 
-                 var ratetypeid = data.tvs1tabgroups[0].fields.ID || '';
-                 var ratetypedescription = fullAccountTypeName || data.tvs1tabgroups[0].fields.Description;
 
-                          $('#edtGroupID').val(ratetypeid);
-                          $('#edtGroupDescription').val(ratetypedescription);
+                $('#edtgroupID').val(ratetypeid);
+                $('#edtGroupDescription').val(ratetypedescription);
 
-                          setTimeout(function () {
+
+                setTimeout(function () {
                               $('#addGroupModel').modal('show');
-                          }, 500);
+                 }, 500);
 
 
                }).catch(function (err) {
@@ -16603,17 +16608,19 @@ Template.payrollrules.onRendered(function() {
                });
                $('#addGroupModel').modal('toggle');
            }else{
-             $('#selectGroupLineID').val('edtRateType');
+             $('#selectGroupLineID').val('edtGroupType');
              $('#groupTypeListModel').modal();
              setTimeout(function () {
-                  var datatable = $('#tblgrouplist').DataTable();
-                 datatable.draw();
+                  var datatable = $('#tblgrouptypelist').DataTable();
+                  datatable.draw();
 
              }, 500);
            }
          }
 
     });
+
+
 
     $('#edtFundType').editableSelect().on('click.editable-select', function (e, li) {
 
@@ -17799,24 +17806,25 @@ Template.payrollrules.onRendered(function() {
 
 
 
-    $(document).on("click", "#tblgrouplist tbody tr", function(e) {
+    $(document).on("click", "#tblgrouptypelist tbody tr", function(e) {
 
         let selectLineID = $('#selectGroupLineID').val()||'edtGroupType';
 
         var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thGroupID").text()||0;
+        let description = table.find(".thgroupDescription").text();
+        let ratetypeid = table.find(".thgroupID").text()||0;
         $('#groupTypeListModel').modal('toggle');
 
           if(selectLineID == 'edtGroupType'){
            $('#edtGroupDescription').val(description);
+        
            $('#edtGroupID').val(ratetypeid);
            $('#holidaygroup').val(description);
            $('#add-grouptype-title').text('Edit Group Type Details');
 
           }
 
-        $('#tblgrouplist_filter .form-control-sm').val('');
+        $('#ttblgrouptypelist_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshGroupType').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
@@ -18014,6 +18022,8 @@ Template.payrollrules.onRendered(function() {
 
 
     });
+
+    
 
     $(document).on("click", "#tblEarnings tbody tr td:not(.colDeleteEarnings)", function(e) {
 
@@ -18826,7 +18836,8 @@ Template.payrollrules.events({
                     DisplayName: displayName,
                     Superinc: exemptFromSupernation,
                     Workcoverexempt: reportableW1ActivityStatement,
-                    Payrolltaxexempt: exemptFromPAYG
+                    Payrolltaxexempt: exemptFromPAYG,
+                    Displayin:"ok"
                 }
             };
 
@@ -18905,7 +18916,8 @@ Template.payrollrules.events({
                         DisplayName: displayName,
                         Superinc: exemptFromSupernation,
                         Workcoverexempt: reportableW1ActivityStatement,
-                        Payrolltaxexempt: exemptFromPAYG
+                        Payrolltaxexempt: exemptFromPAYG,
+                        Displayin:"ok"
                     }
                 };
 
@@ -19218,6 +19230,193 @@ Template.payrollrules.events({
 
 
         }
+    },
+
+    'click .btnSaveGroup':function(){
+    
+        let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display','inline-block');
+        let taxRateService = new TaxRateService();
+
+        let rateTypeId = $('#edtgroupID').val()|| 0;
+        let ratetypedescription = $('#edtGroupDescription').val()||'';
+
+        if (ratetypedescription === '') {
+            $('.fullScreenSpin').css('display','none');
+            swal('Group description can not be blank !', '', 'warning');
+            e.preventDefault();
+        }
+        else {
+
+
+            $('.fullScreenSpin').css('display','inline-block');
+            if(rateTypeId == ""){
+
+            taxRateService.checkGroupByName(ratetypedescription).then(function (data) {
+             rateTypeId = data.tpayrollholidaygroup[0].Id;
+              objDetails = {
+                 type: "TPayrollHolidayGroup",
+                 fields: {
+                     ID: parseInt(rateTypeId),
+                     Groupdesc: ratetypedescription,
+                     Groupname:ratetypedescription,
+
+                 }
+             };
+
+              taxRateService.saveGroupType(objDetails).then(function (objDetails) {
+                $('.fullScreenSpin').css('display','none');
+                swal({
+                    title: 'Success',
+                    text: 'New Group saved Successfully',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Done'
+
+                }).then((result) => {
+                    if (result.value) {
+                        sideBarService.getNewGroupListVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                            addVS1Data("TPayrollHolidayGroup", JSON.stringify(dataReload)).then(function (datareturn) {
+                                window.open('/payrollrules?active_key=holiday','_self');
+                            }).catch(function (err) {
+                                window.open('/payrollrules?active_key=holiday','_self');
+                            });
+                          }).catch(function (err) {
+                            window.open('/payrollrules?active_key=holiday','_self');
+                          });
+                    }else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+              }).catch(function (err) {
+                $('.fullScreenSpin').css('display','none');
+                swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+                }).then((result) => {
+                if (result.value) {
+                } else if (result.dismiss === 'cancel') {
+
+                }
+                });
+
+              });
+            }).catch(function (err) {
+                objDetails = {
+                    type: "TPayrollHolidayGroup",
+                    fields: {
+                        ID: parseInt(rateTypeId),
+                        Groupdesc: ratetypedescription,
+                        Groupname:ratetypedescription,
+   
+                    }
+                };
+
+             taxRateService.saveGroupType(objDetails).then(function (objDetails) {
+
+                $('.fullScreenSpin').css('display','none');
+                swal({
+                    title: 'Success',
+                    text: 'New Group saved Successfully',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Done'
+
+                }).then((result) => {
+                    if (result.value) {
+                        sideBarService.getNewGroupListVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                            addVS1Data("TPayrollHolidayGroup", JSON.stringify(dataReload)).then(function (datareturn) {
+                                window.open('/payrollrules?active_key=holiday','_self');
+                            }).catch(function (err) {
+                                window.open('/payrollrules?active_key=holiday','_self');
+                            });
+                          }).catch(function (err) {
+                            window.open('/payrollrules?active_key=holiday','_self');
+                          });
+                    }else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+
+             }).catch(function (err) {
+                $('.fullScreenSpin').css('display','none');
+                swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+                }).then((result) => {
+                if (result.value) {
+                } else if (result.dismiss === 'cancel') {
+
+                }
+                });
+
+             });
+            });
+
+            }else{
+            objDetails = {
+                type: "TPayrollHolidayGroup",
+                fields: {
+                    ID: parseInt(rateTypeId),
+                    Groupdesc: ratetypedescription,
+                    Groupname:ratetypedescription,
+
+                }
+            };
+
+          taxRateService.saveGroupType(objDetails).then(function (objDetails) {
+
+                $('.fullScreenSpin').css('display','none');
+                swal({
+                    title: 'Success',
+                    text: 'New Group saved Successfully',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Done'
+
+                }).then((result) => {
+                    if (result.value) {
+                        sideBarService.saveGroupType(initialBaseDataLoad, 0).then(function (dataReload) {
+                            addVS1Data("TPayrollHolidayGroup", JSON.stringify(dataReload)).then(function (datareturn) {
+                                window.open('/payrollrules?active_key=holiday','_self');
+                            }).catch(function (err) {
+                                window.open('/payrollrules?active_key=holiday','_self');
+                            });
+                          }).catch(function (err) {
+                            window.open('/payrollrules?active_key=holiday','_self');
+                          });
+                    }else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+
+          }).catch(function (err) {
+            $('.fullScreenSpin').css('display','none');
+            swal({
+            title: 'Oooops...',
+            text: err,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Try Again'
+            }).then((result) => {
+            if (result.value) {
+            } else if (result.dismiss === 'cancel') {
+
+            }
+            });
+
+          });
+          }
+
+
+        }
+
     },
 
     'click .btnSavefund':function(){
@@ -20129,24 +20328,25 @@ Template.payrollrules.events({
             {
                             $('.fullScreenSpin').css('display','inline-block');
                             objDetails = {
-                                type: "TSuperannuation",
+                                type: "tvs1superannuation",
                                 fields: {
-                                    ID: parseInt(id),
-                                    Superfund:fundName,
-                                    Employeeid:parseInt(employeNumber),
-                                    area:fundType,
-                                    Supertypeid:fundtypeid,
-                                    ABN:abn,
-                                    AccountName:edtaccountname,
-                                    Accountno:edtaccountnumber,
-                                    ElectronicsServiceAddressAlias:edtelectronicsalias,
-                                    BSB:edtbsb,
-                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
-                                    Amount:1,
-                                    DepartmentName:defaultDept,
-                                    Allclasses:true,
+                                          ID: parseInt(id),
+                                          Superfund:fundName,
+                                          EmployeeId:parseInt(employeNumber),
+                                          Area:fundType,
+                                          Supertypeid:fundtypeid,
+                                          ABN:abn,
+                                          AccountName:edtaccountname,
+                                          AccountNo:edtaccountnumber,
+                                          ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                          BSB:edtbsb,
+                                          Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                          Amount:1,
+                                          DepartmentName:defaultDept,
+                                          Allclasses:true,
                                 }
                             };
+      
 
                             taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
                                 $('.fullScreenSpin').css('display','none');
@@ -20160,7 +20360,7 @@ Template.payrollrules.events({
                                 }).then((result) => {
                                     if (result.value) {
                                         sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
-                                            addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                            addVS1Data("TVS1Superannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                                 $('#closeuperannution').trigger('click');
                                                 $('.fullScreenSpin').css('display','inline-block');
                                                 window.open('/payrollrules?active_key=super','_self');
@@ -20245,18 +20445,18 @@ Template.payrollrules.events({
                     {
                         $('.fullScreenSpin').css('display','inline-block');
                         taxRateService.checkSuperannuationName(fundName).then(function (data) {
-                        supperannuationId = data.tsuperannuation[0].Id;
+                        supperannuationId = data.tvs1superannuation[0].ID;
                         objDetails = {
-                          type: "TSuperannuation",
+                          type: "tvs1superannuation",
                           fields: {
                                     ID: parseInt(supperannuationId),
                                     Superfund:fundName,
-                                    Employeeid:parseInt(employeNumber),
-                                    area:fundType,
+                                    EmployeeId:parseInt(employeNumber),
+                                    Area:fundType,
                                     Supertypeid:fundtypeid,
                                     ABN:abn,
                                     AccountName:edtaccountname,
-                                    Accountno:edtaccountnumber,
+                                    AccountNo:edtaccountnumber,
                                     ElectronicsServiceAddressAlias:edtelectronicsalias,
                                     BSB:edtbsb,
                                     Clientid:Session.get('mySessionEmployeeLoggedID'),
@@ -20279,7 +20479,7 @@ Template.payrollrules.events({
                            }).then((result) => {
                                if (result.value) {
                                    sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
-                                       addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                       addVS1Data("TVS1Superannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                            $('#closeuperannution').trigger('click');
                                            $('.fullScreenSpin').css('display','inline-block');
                                            window.open('/payrollrules?active_key=super','_self');
@@ -20317,25 +20517,26 @@ Template.payrollrules.events({
 
                          });
                          }).catch(function (err) {
-                           objDetails = {
-                               type: "TSuperannuation",
-                               fields: {
-
-                                Superfund:fundName,
-                                Employeeid:parseInt(employeNumber),
-                                area:fundType,
-                                Supertypeid:fundtypeid,
-                                ABN:abn,
-                                AccountName:edtaccountname,
-                                Accountno:edtaccountnumber,
-                                ElectronicsServiceAddressAlias:edtelectronicsalias,
-                                BSB:edtbsb,
-                                Clientid:Session.get('mySessionEmployeeLoggedID'),
-                                Amount:1,
-                                DepartmentName:defaultDept,
-                                Allclasses:true,
-                               }
-                           };
+                            objDetails = {
+                                type: "tvs1superannuation",
+                                fields: {
+                                        
+                                          Superfund:fundName,
+                                          EmployeeId:parseInt(employeNumber),
+                                          Area:fundType,
+                                          Supertypeid:fundtypeid,
+                                          ABN:abn,
+                                          AccountName:edtaccountname,
+                                          AccountNo:edtaccountnumber,
+                                          ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                          BSB:edtbsb,
+                                          Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                          Amount:1,
+                                          DepartmentName:defaultDept,
+                                          Allclasses:true,
+                                }
+                            };
+      
 
                        taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
                            $('.fullScreenSpin').css('display','none');
@@ -20349,7 +20550,7 @@ Template.payrollrules.events({
                            }).then((result) => {
                                if (result.value) {
                                    sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
-                                       addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                       addVS1Data("TVS1Superannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                            $('#closeuperannution').trigger('click');
                                            $('.fullScreenSpin').css('display','inline-block');
                                            window.open('/payrollrules?active_key=super','_self');
@@ -20396,26 +20597,27 @@ Template.payrollrules.events({
 
                     $('.fullScreenSpin').css('display','inline-block');
                     taxRateService.checkSuperannuationName(fundName).then(function (data) {
-                    supperannuationId = data.tsuperannuation[0].Id;
+                    supperannuationId = data.tvs1superannuation[0].Id;
                     objDetails = {
-                      type: "TSuperannuation",
-                      fields: {
+                        type: "tvs1superannuation",
+                        fields: {
                                   ID: parseInt(supperannuationId),
-                                   Superfund:fundName,
-                                    Employeeid:parseInt(employeNumber),
-                                    area:fundType,
-                                    Supertypeid:fundtypeid,
-                                    ABN:abn,
-                                    AccountName:edtaccountname,
-                                    Accountno:edtaccountnumber,
-                                    ElectronicsServiceAddressAlias:edtelectronicsalias,
-                                    BSB:edtbsb,
-                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
-                                    Amount:1,
-                                    DepartmentName:defaultDept,
-                                    Allclasses:true,
-                      }
-                  };
+                                  Superfund:fundName,
+                                  EmployeeId:parseInt(employeNumber),
+                                  Area:fundType,
+                                  Supertypeid:fundtypeid,
+                                  ABN:abn,
+                                  AccountName:edtaccountname,
+                                  AccountNo:edtaccountnumber,
+                                  ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                  BSB:edtbsb,
+                                  Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                  Amount:1,
+                                  DepartmentName:defaultDept,
+                                  Allclasses:true,
+                        }
+                    };
+
 
 
                  taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
@@ -20430,7 +20632,7 @@ Template.payrollrules.events({
                        }).then((result) => {
                            if (result.value) {
                                sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
-                                   addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                   addVS1Data("TVS1Superannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                        $('#closeuperannution').trigger('click');
                                        $('.fullScreenSpin').css('display','inline-block');
                                        window.open('/payrollrules?active_key=super','_self');
@@ -20468,25 +20670,26 @@ Template.payrollrules.events({
 
                      });
                      }).catch(function (err) {
-                       objDetails = {
-                           type: "TSuperannuation",
-                           fields: {
-
-                            Superfund:fundName,
-                            Employeeid:parseInt(employeNumber),
-                            area:fundType,
-                            Supertypeid:fundtypeid,
-                            ABN:abn,
-                            AccountName:edtaccountname,
-                            Accountno:edtaccountnumber,
-                            ElectronicsServiceAddressAlias:edtelectronicsalias,
-                            BSB:edtbsb,
-                            Clientid:Session.get('mySessionEmployeeLoggedID'),
-                            Amount:1,
-                            DepartmentName:defaultDept,
-                            Allclasses:true,
-                           }
-                       };
+                        objDetails = {
+                            type: "tvs1superannuation",
+                            fields: {
+                                     
+                                      Superfund:fundName,
+                                      EmployeeId:parseInt(employeNumber),
+                                      Area:fundType,
+                                      Supertypeid:fundtypeid,
+                                      ABN:abn,
+                                      AccountName:edtaccountname,
+                                      AccountNo:edtaccountnumber,
+                                      ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                      BSB:edtbsb,
+                                      Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                      Amount:1,
+                                      DepartmentName:defaultDept,
+                                      Allclasses:true,
+                            }
+                        };
+  
 
                    taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
                        $('.fullScreenSpin').css('display','none');
@@ -20500,7 +20703,7 @@ Template.payrollrules.events({
                        }).then((result) => {
                            if (result.value) {
                                sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
-                                   addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                   addVS1Data("TVS1Superannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                        $('#closeuperannution').trigger('click');
                                        $('.fullScreenSpin').css('display','inline-block');
                                        window.open('/payrollrules?active_key=super','_self');
@@ -21841,7 +22044,7 @@ Template.payrollrules.events({
 
                     }).then((result) => {
                         if (result.value) {
-                            sideBarService.getsuperannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
+                            sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
@@ -21911,7 +22114,7 @@ Template.payrollrules.events({
 
                     }).then((result) => {
                         if (result.value) {
-                            sideBarService.getsuperannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
+                            sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
@@ -21974,7 +22177,7 @@ Template.payrollrules.events({
 
                     }).then((result) => {
                         if (result.value) {
-                            sideBarService.getsuperannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
+                            sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
                                 addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
@@ -23316,6 +23519,7 @@ Template.payrollrules.events({
               Id: parseInt(allowanceId),
               Active: false,
               DisplayName: "Allowances",
+              Displayin:"ok"
 
 
           }
@@ -24003,7 +24207,7 @@ Template.payrollrules.events({
 
                 }).then((result) => {
                     if (result.value) {
-                        sideBarService.getsuperannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
+                        sideBarService.getvs1superannuationBonusesCommissions(initialBaseDataLoad, 0).then(function (dataReload) {
                             addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#bonusescloseid').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
@@ -24221,7 +24425,7 @@ Template.payrollrules.events({
 
         $('.fullScreenSpin').css('display','inline-block');
         let objDetails = {
-            type: "TSuperannuation",
+            type: "TVS1Superannuation",
             fields: {
                 Id: parseInt(superannutionname),
                 Allclasses: false,
@@ -24242,7 +24446,7 @@ Template.payrollrules.events({
                             }).then((result) => {
                             if (result.value) {
                                 sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
-                                    addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                    addVS1Data("TVS1Superannuation", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#delsup').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
 
@@ -24606,7 +24810,7 @@ Template.payrollrules.events({
     },
     'click .btnAddoverTimeEarnings':function(event){
 
-        $('#overtimeEarningsLabel').text('Add New Over Time Earnings');
+       $('#overtimeEarningsLabel').text('Add New Over Time Earnings');
             $('#edtEarningsNameOvertimeid').val(0);
             $('#edtEarningsNameOvertime').val('');
             $('#edtDisplayNameOvertime').val('');
@@ -24936,18 +25140,18 @@ Template.payrollrules.events({
             $(".btnRefreshSuperannuation").removeClass('btnSearchAlert');
             let lineItems = [];
             let lineItemObj = {};
-            if (data.tsuperannuation.length > 0) {
-                for (let i = 0; i < data.tsuperannuation.length; i++) {
+            if (data.tvs1superannuation.length > 0) {
+                for (let i = 0; i < data.tvs1superannuation.length; i++) {
 
                     var dataTableList = {
-                        id:data.tsuperannuation[i].fields.ID || '',
-                        name:data.tsuperannuation[i].fields.Superfund || '',
-                        type:data.tsuperannuation[i].fields.Supertypeid || '',
-                        employenum: data.tsuperannuation[i].fields.Employeeid || '',
+                        id:data.tvs1superannuation[i].fields.ID || '',
+                        name:data.tvs1superannuation[i].fields.Superfund || '',
+                        type:data.tvs1superannuation[i].fields.Supertypeid || '',
+                        employenum: data.tvs1superannuation[i].fields.Employeeid || '',
                         abn:"Key Missing",
                         service:"Key Missing",
                         bsb:"Key Missing",
-                        accountnumber:data.tsuperannuation[i].fields.Accountno || '',
+                        accountnumber:data.tvs1superannuation[i].fields.Accountno || '',
                         accountname:"Key Missing",
                         deletedata:'<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                     };
@@ -24977,7 +25181,7 @@ Template.payrollrules.events({
                             '</tr>');
 
                     }
-                    $('.dataTables_info').html('Showing 1 to ' + data.tsuperannuation.length + ' of ' + data.tsuperannuation.length + ' entries');
+                    $('.dataTables_info').html('Showing 1 to ' + data.tvs1superannuation.length + ' of ' + data.tvs1superannuation.length + ' entries');
 
                 }
 

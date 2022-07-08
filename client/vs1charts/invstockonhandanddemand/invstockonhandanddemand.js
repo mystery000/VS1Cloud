@@ -29,9 +29,11 @@ Template.invstockonhandanddemand.onRendered(()=>{
   let topTenData1 = [];
   let topTenSuppData1 = [];
   let topData = this;
-  function chartClickEvent() {
-    FlowRouter.go("/stockquantitybylocation?daterange=ignore") ;
-  } 
+  function chartClickEvent(event, array) {
+    if (array[0] != undefined) {
+      FlowRouter.go("/stockquantitybylocation?daterange=ignore") ;
+    }
+  }
   getProductStock(function (data) {
 
     let currentDate = new Date();

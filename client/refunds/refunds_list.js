@@ -122,6 +122,79 @@ Template.refundlist.onRendered(function () {
         window.open('/refundlist?page=last', '_self');
     }
 
+    templateObject.getCustomFieldData = function() {
+
+      let custFields = [];
+      let customData = {};
+
+      sideBarService
+      .getAllCustomFields()
+      .then(function (data) {
+        for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+          if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+            customData = {
+              active: data.tcustomfieldlist[x].fields.Active || false,
+              id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+              custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+              datatype: data.tcustomfieldlist[x].fields.DataType || "",
+              isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+              iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+              dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+            };
+            custFields.push(customData);
+          }
+        }
+
+        if (custFields.length < 3) {
+          let remainder = 3 - custFields.length;
+          let getRemCustomFields = parseInt(custFields.length); 
+          for (let r = 0; r < remainder; r++) {
+            getRemCustomFields++;
+            customData = {
+              active: false,
+              id: "",
+              custfieldlabel: "Custom Field " + getRemCustomFields,
+              datatype: "",
+              isempty: true,
+              iscombo: false,
+            };
+            // count++;
+            custFields.push(customData);
+          }
+        }
+        if (custFields) { 
+          $(".colCustFieldHeader1").html(custFields[0].custfieldlabel);
+          $(".colCustFieldHeader2").html(custFields[1].custfieldlabel);
+          $(".colCustFieldHeader3").html(custFields[2].custfieldlabel);
+
+          if (custFields[0].active) {
+            $(".colSaleCustField1").removeClass('hiddenColumn');
+            $(".colSaleCustField1").addClass('showColumn');
+          } else {
+            $(".colSaleCustField1").addClass('hiddenColumn');
+            $(".colSaleCustField1").removeClass('showColumn');
+          }
+    
+          if (custFields[1].active) {
+            $(".colSaleCustField2").removeClass('hiddenColumn');
+            $(".colSaleCustField2").addClass('showColumn');
+          } else {
+            $(".colSaleCustField2").addClass('hiddenColumn');
+            $(".colSaleCustField2").removeClass('showColumn');
+          }
+
+          if (custFields[2].active) {
+            $(".colSaleCustField3").removeClass('hiddenColumn');
+            $(".colSaleCustField3").addClass('showColumn');
+          } else {
+            $(".colSaleCustField3").addClass('hiddenColumn');
+            $(".colSaleCustField3").removeClass('showColumn');
+          }
+        }
+      })
+    }
+
+
     templateObject.getAllRefundData = function () {
 
       var currentBeginDate = new Date();
@@ -182,6 +255,7 @@ Template.refundlist.onRendered(function () {
                             salestatus: salestatus || '',
                             custfield1: data.trefundsalelist[i].SaleCustField1 || '',
                             custfield2: data.trefundsalelist[i].SaleCustField2 || '',
+                            custfield3: data.trefundsalelist[i].SaleCustField3 || '',
                             comments: data.trefundsalelist[i].Comments || '',
                             // shipdate:data.trefundsale[i].fields.ShipDate !=''? moment(data.trefundsale[i].fields.ShipDate).format("DD/MM/YYYY"): data.trefundsale[i].fields.ShipDate,
 
@@ -456,6 +530,7 @@ Template.refundlist.onRendered(function () {
                     $('.fullScreenSpin').css('display', 'none');
                     // Meteor._reload.reload();
                 });
+                templateObject.getCustomFieldData();
             } else {
                 let data = JSON.parse(dataObject[0].data);
 
@@ -498,6 +573,7 @@ Template.refundlist.onRendered(function () {
                         salestatus: salestatus || '',
                         custfield1: data.trefundsalelist[i].SaleCustField1 || '',
                         custfield2: data.trefundsalelist[i].SaleCustField2 || '',
+                        custfield3: data.trefundsalelist[i].SaleCustField3 || '',
                         comments: data.trefundsalelist[i].Comments || '',
                         // shipdate:data.trefundsale[i].fields.ShipDate !=''? moment(data.trefundsale[i].fields.ShipDate).format("DD/MM/YYYY"): data.trefundsale[i].fields.ShipDate,
 
@@ -766,6 +842,7 @@ Template.refundlist.onRendered(function () {
                       }
                     }
                 });
+                templateObject.getCustomFieldData();
 
             }
         }).catch(function (err) {
@@ -809,6 +886,7 @@ Template.refundlist.onRendered(function () {
                       salestatus: salestatus || '',
                       custfield1: data.trefundsalelist[i].SaleCustField1 || '',
                       custfield2: data.trefundsalelist[i].SaleCustField2 || '',
+                      custfield3: data.trefundsalelist[i].SaleCustField3 || '',
                       comments: data.trefundsalelist[i].Comments || '',
                       // shipdate:data.trefundsale[i].fields.ShipDate !=''? moment(data.trefundsale[i].fields.ShipDate).format("DD/MM/YYYY"): data.trefundsale[i].fields.ShipDate,
 
@@ -1083,6 +1161,7 @@ Template.refundlist.onRendered(function () {
               $('.fullScreenSpin').css('display', 'none');
               // Meteor._reload.reload();
           });
+          templateObject.getCustomFieldData();
         });
     }
 
