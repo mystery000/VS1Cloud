@@ -191,11 +191,12 @@ Template.setup.onRendered(function () {
       if (confirmedSteps.includes(i + 1))
         $(`.setup-stepper li:nth-child(${i + 1})`).addClass("completed");
       if (isStepActive(i + 1) == true) {
-        // we need to REMOVE clickDisabled
-      } else {
+        console.log('working 01', i)
         $(`.setup-stepper li:nth-child(${i + 1}) a`).removeClass(
           "clickDisabled"
         );
+      } else {
+        console.log('not working 01', i)
         // we need to ADD clickDisabled
       }
     }
@@ -5068,6 +5069,7 @@ function isStepActive(stepId) {
 
 Template.setup.events({
   "click #start-wizard": function () {
+    $(`[data-step-id=1]`).parents('li').addClass('current');
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
     localStorage.setItem("VS1Cloud_SETUP_STEP", 1);
@@ -5111,6 +5113,7 @@ Template.setup.events({
     let templateObj = Template.instance();
     let stepId = $(event.target).attr("data-step-id");
     stepId = parseInt(stepId);
+    // console.log('stepId = ', stepId)
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li`).removeClass("current");
     // $(`.setup-stepper li`).removeClass("clickDisabled");
