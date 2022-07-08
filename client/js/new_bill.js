@@ -87,6 +87,16 @@ Template.billcard.onRendered(() => {
                var bill = data.fields.bill;           
 
                $('#Bills_'+bill).attr("checked", "checked");
+               $('#choosetemplate').attr("checked", "checked");
+
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    $('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
              }
      
 

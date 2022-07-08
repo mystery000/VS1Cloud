@@ -22,11 +22,11 @@ export class SideBarService extends BaseService {
 
   getNewGroupListVS1(limitcount, limitfrom) {
     let options = "";
-   
+
     if(limitcount == 'All'){
        options = {
          ListType: "Detail",
-       
+
         };
     }else{
       options = {
@@ -66,10 +66,10 @@ export class SideBarService extends BaseService {
   }
 
   saveGroupType(data)
-  { 
-    
+  {
+
     return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
-  
+
   }
   getOneGroupTypeByName(dataSearchName){
     let options = {
@@ -1936,6 +1936,8 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         Listtype: 1,
         FilterIndex: 2,
+        ClientID:msTimeStamp,
+        OrderBy: "DATE desc",
         LimitCount: '"' + initialReportLoad + '"',
       };
     } else {
@@ -1943,6 +1945,7 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         Listtype: 1,
         FilterIndex: 2,
+        OrderBy: "DATE desc",
         LimitCount: '"' + initialReportLoad + '"',
       };
     }
@@ -2129,7 +2132,7 @@ export class SideBarService extends BaseService {
     } else {
       options = {
         ListType: "Detail",
-       
+
       };
     }
     return this.getList(this.ERPObjects.TEarningsBonusesCommissions, options);

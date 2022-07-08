@@ -1,10 +1,6 @@
-import {TaxRateService} from "../settings-service";
 import {ReactiveVar} from 'meteor/reactive-var';
-import {CountryService} from '../../js/country-service';
 import {SideBarService} from '../../js/sidebar-service';
 import { UtilityService } from "../../utility-service";
-import { AccountService } from "../../accounts/account-service";
-import { RateTypeService } from '../../js/ratetype_service';
 import Earning from '../../js/Api/Model/Earning'
 import EarningFields from '../../js/Api/Model/EarningFields'
 import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
@@ -39,7 +35,7 @@ Template.earningRateSettings.onRendered(function() {
     });
 };
 
-templateObject.saveCardsLocalDB = async () => {
+templateObject.saveDataLocalDB = async () => {
 
     const employeePayrolApis = new EmployeePayrollApi();
     // now we have to make the post request to save the data in database
@@ -69,7 +65,7 @@ templateObject.getEarnings = async function(){
         let splashArrayEarningList = new Array();
         let dataObject = await getVS1Data('TEarnings')   
         if ( dataObject.length == 0) {
-            data = await templateObject.saveCardsLocalDB();
+            data = await templateObject.saveDataLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
@@ -264,14 +260,13 @@ templateObject.getEarnings();
             $('#earningRateForm')[0].reset();
             $('#earningRateSettingsModal').modal('show');
         } else {
-            if (searchName.replace(/\s/g, '') == '') {
-                $('#earningRateForm')[0].reset();                
+            if (searchName.replace(/\s/g, '') == '') {             
                 $('#earningRateSettingsModal').modal('show');
                 return false
             }
             let dataObject = await getVS1Data('TEarnings');   
             if ( dataObject.length == 0) {
-                data = await templateObject.saveCardsLocalDB();
+                data = await templateObject.saveDataLocalDB();
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
@@ -284,7 +279,7 @@ templateObject.getEarnings();
                 $('#earningRateForm')[0].reset();
                 $('#addEarningsLineModal').modal('hide');                
                 if( tEarnings.length > 0 ){
-                    earningRate = tEarnings[0];
+                    let earningRate = tEarnings[0];
                     $('#earningID').val(earningRate.fields.ID)
                     $('#edtEarningsName').val(earningRate.fields.EarningsName)
                     $('#edtEarningsType').val(earningRate.fields.EarningType)
@@ -327,7 +322,7 @@ Template.earningRateSettings.events({
         $('#earningRateForm')[0].reset();
         $('#addEarningsLineModal').modal('hide');
     },
-    'click .btnRefreshEarnings':function(event){      
+    'click .btnSearchAlert':function(event){      
         let templateObject = Template.instance();
         var splashArrayEarningList = new Array();
         const lineExtaSellItems = [];
@@ -437,11 +432,15 @@ Template.earningRateSettings.events({
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#earningRateForm')[0].reset();
-            await templateObject.saveCardsLocalDB();
+            await templateObject.saveDataLocalDB();
             await templateObject.getEarnings();
+            $('#ordinaryTimeEarningsModal').modal('hide');
+            $('.fullScreenSpin').css('display', 'none');
+        }else{
+            $('.fullScreenSpin').css('display', 'none');
         }
-        $('#ordinaryTimeEarningsModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
+        
+        
     },
 });
 

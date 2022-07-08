@@ -66,17 +66,30 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
   }
 
-  getBalanceSheetRedirectClientData(accountName, limitcount, limitfrom) {
-    let options = {
+  getBalanceSheetRedirectClientData(accountName, limitcount, limitfrom,urlParametersDateFrom,urlParametersDateTo) {
+      let options = '';
+      if(urlParametersDateFrom != '' && urlParametersDateTo != ''){
+        options = {
+         ReportType: "Detail",
+         IgnoreSummarised: true,
+         AccountName:'"'+accountName+'"',
+         OrderBy:"Date desc",
+         DateFrom: '"' + urlParametersDateFrom + '"',
+         DateTo: '"' + urlParametersDateTo + '"',
+         LimitCount: '"' + limitcount + '"',
+         LimitFrom: '"' + limitfrom + '"',
+       };
+      }else{
+     options = {
       ReportType: "Detail",
       IgnoreSummarised: true,
       IgnoreDates: true,
       AccountName:'"'+accountName+'"',
-      Search: "Type != ''",
       OrderBy:"clientname desc",
       LimitCount: '"' + limitcount + '"',
       LimitFrom: '"' + limitfrom + '"',
     };
+  }
     // return this.getList(this.ERPObjects.TAccount,options);
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
   }

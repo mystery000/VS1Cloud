@@ -136,6 +136,17 @@ Template.new_invoice.onRendered(() => {
                $('#Invoices_'+invoices).attr("checked", "checked");
                $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
                $("[id='Invoice Back Orders_"+invoices_back_order+"']").attr("checked", "checked");
+
+               $('#choosetemplate').attr("checked", "checked");
+
+               if($('#choosetemplate').is(':checked'))
+               {        
+                   $('#templateselection').modal('show');
+               }
+               else
+               {   
+               $('#templateselection').modal('hide');
+               }
            
 
              }

@@ -6,6 +6,19 @@ export default class Employee {
     this.type = type;
     this.fields = fields;
   }
+
+  /**
+   * This will convert from a list
+   * @param {Array} list 
+   * @returns {Employee[]}
+   */
+  static fromList(list = []) {
+    let _list = [];
+    list.forEach((el) => {
+      _list.push(new Employee(el));
+    });
+    return _list;
+  }
 }
 
 /**

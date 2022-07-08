@@ -78,7 +78,7 @@ Template.uomlistpop.onRendered(function() {
                               // $('.dataTables_paginate').css('display', 'none');
                           },
                           "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
+                            // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
                             $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOM_filter");
                           }
 
@@ -152,7 +152,7 @@ Template.uomlistpop.onRendered(function() {
                           // $('.dataTables_paginate').css('display', 'none');
                       },
                       "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
+                        // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
                         $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOM_filter");
                       }
 
@@ -227,7 +227,7 @@ Template.uomlistpop.onRendered(function() {
                           // $('.dataTables_paginate').css('display', 'none');
                       },
                       "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
+                        // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
                         $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOM_filter");
                       }
                   });

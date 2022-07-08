@@ -10,6 +10,7 @@ let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
+let taxRateService = new TaxRateService();
 
 Template.balancesheetreport.onCreated(function () {
   const templateObject = Template.instance();
@@ -160,7 +161,7 @@ Template.balancesheetreport.onRendered(() => {
         } else {
           TotalAsset_Liability = " ";
         }
-        
+
         let AccountTree = data.balancesheetreport[i]["Account Tree"];
         // if (AccountTree !== 0) {
         //   AccountTree = utilityService.modifynegativeCurrencyFormat(AccountTree);
@@ -485,7 +486,6 @@ Template.balancesheetreport.onRendered(() => {
             ];
           }
         }
-        console.log( "SubAccountTotal", SubAccountTotal, "HeaderAccountTotal", HeaderAccountTotal )
         if( recordObj.dataArr2 ){
           if ( HeaderAccountTotal.replace(/\s/g, "") || SubAccountTotal.replace(/\s/g, "") ) {
             records.push(recordObj);
@@ -524,7 +524,6 @@ Template.balancesheetreport.onRendered(() => {
       );
     }
 
-    console.log("Balance sheet record 2: ", records);
 
     templateObject.records.set(records);
     if (templateObject.records.get()) {
@@ -1480,64 +1479,18 @@ Template.balancesheetreport.onRendered(() => {
    * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
    * So we have a showable list of currencies to toggle
    */
-  let _currencyList = [];
-  templateObject.loadCurrency = () =>
-    taxRateService.getCurrencies().then((result) => {
-      // console.log(result);
-      const data = result.tcurrency;
-      //console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "NA",
-          symbol: data[i].CurrencySymbol || "NA",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "NA",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-          active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
-          //active: false,
-          // createdAt: new Date(data[i].MsTimeStamp) || "-",
-          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-        };
 
-        _currencyList.push(dataList);
-        //}
-      }
-      _currencyList = _currencyList.sort((a, b) => {
-        return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase()) 
-      });
-      // console.log(_currencyList);
-
-      templateObject.currencyList.set(_currencyList);
-
-      // $(`.currency-selector-js[currency=${defaultCurrencyCode}]`).parent().css('display', "none");
-    });
-
-  templateObject.loadCurrency();
-
-  templateObject.loadCurrencyHistory = () => {
-    taxRateService
-      .getCurrencyHistory()
-      .then((result) => {
-        //console.log(result);
-        const data = result.tcurrencyratehistory;
-        // console.log(data);
-        // console.log("Currency list: ",data);
-
-        templateObject.tcurrencyratehistory.set(data);
-      })
-      .catch(function (err) {
-        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
-        // Meteor._reload.reload();
-      });
+  templateObject.loadCurrency = async () => {
+    await loadCurrency();
   };
 
-  templateObject.loadCurrencyHistory();
+  //templateObject.loadCurrency();
+
+  templateObject.loadCurrencyHistory = async () => {
+    await loadCurrencyHistory();
+  };
+
+  //templateObject.loadCurrencyHistory();
 
   LoadingOverlay.hide();
 });
@@ -1547,6 +1500,7 @@ function sortByAlfa(a, b) {
 Template.balancesheetreport.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
 
     // console.log("Amount to covert", amount);
     if (!amount || amount.trim() == "") {
@@ -1590,6 +1544,13 @@ Template.balancesheetreport.helpers({
 
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+    // console.log("Currency list 1: ", currencyList);
+
+    // if(currencyList.length == 0) {
+    //   currencyList = Template.instance().currencyList.get();
+    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+    // }
+    // console.log("Currency list 2: ", currencyList);
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -1620,18 +1581,17 @@ Template.balancesheetreport.helpers({
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
 
-    let rate =
-      currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     //amount = amount + 0.36;
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }); // Add commas
     //console.log("final amount", amount);
 
     // amount = amount.toLocaleString();
-   // console.log(amount, Number(amount).toLocaleString("en-US"));
+    // console.log(amount, Number(amount).toLocaleString("en-US"));
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
@@ -1644,6 +1604,9 @@ Template.balancesheetreport.helpers({
     return array.length;
   },
   countActive: (array) => {
+    if (array.length == 0) {
+      return 0;
+    }
     let activeArray = array.filter((c) => c.active == true);
     return activeArray.length;
   },
@@ -1658,6 +1621,9 @@ Template.balancesheetreport.helpers({
   },
   isOnlyDefaultActive() {
     const array = Template.instance().currencyList.get();
+    if (array.length == 0) {
+      return false;
+    }
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
@@ -1755,9 +1721,7 @@ Template.balancesheetreport.events({
         _currencySelectedList.push(_currency);
       });
     } else {
-      let _currency = _currencyList.find(
-        (c) => c.code == defaultCurrencyCode
-      );
+      let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
       _currency.active = true;
       _currencySelectedList.push(_currency);
     }
@@ -1889,26 +1853,14 @@ Template.balancesheetreport.events({
       );
     }
   },
-  "click td.Indent1": function (event) {
+  "click td.Indent1": async function (event) {
     let id = event.target.className.split("item-value-");
     let accountName = id[1].split("_").join(" ");
-    let toDate = moment($("#balanceDate").val())
-      .clone()
-      .endOf("month")
-      .format("YYYY-MM-DD");
+    let toDate = moment($("#balanceDate").val()).clone().endOf("month").format("YYYY-MM-DD");
     let fromDate = "1899-01-01";
     Session.setPersistent("showHeader", true);
-    window.open(
-      "/balancetransactionlist?accountName=" +
-        accountName +
-        "&toDate=" +
-        toDate +
-        "&fromDate=" +
-        fromDate +
-        "&isTabItem=" +
-        false,
-      "_self"
-    );
+    await addVS1Data('TAccountRunningBalanceReport', []);
+    window.open("/balancetransactionlist?accountName=" +accountName +"&toDate=" +toDate +"&fromDate=" +fromDate +"&isTabItem=" +false,"_self");
   },
   "click #moreOptionBal": function () {
     $("#more_search").show();
@@ -2230,6 +2182,10 @@ Template.balancesheetreport.events({
       $(".table tbody tr").show();
     }
   },
+  "click .fx-rate-btn": async (e) => {
+    await loadCurrency();
+    //loadCurrencyHistory();
+  },
 });
 
 Template.registerHelper("equal", function (a, b) {
@@ -2267,3 +2223,64 @@ Template.registerHelper("noDecimal", function (a) {
   let numOut = parseInt(numIn);
   return numOut;
 });
+
+/**
+ *
+ */
+async function loadCurrency() {
+  let templateObject = Template.instance();
+
+  if ((await templateObject.currencyList.get().length) == 0) {
+    LoadingOverlay.show();
+
+    let _currencyList = [];
+    const result = await taxRateService.getCurrencies();
+
+    //taxRateService.getCurrencies().then((result) => {
+    // console.log(result);
+    const data = result.tcurrency;
+    //console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        id: data[i].Id || "",
+        code: data[i].Code || "-",
+        currency: data[i].Currency || "NA",
+        symbol: data[i].CurrencySymbol || "NA",
+        buyrate: data[i].BuyRate || "-",
+        sellrate: data[i].SellRate || "-",
+        country: data[i].Country || "NA",
+        description: data[i].CurrencyDesc || "-",
+        ratelastmodified: data[i].RateLastModified || "-",
+        active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
+        //active: false,
+        // createdAt: new Date(data[i].MsTimeStamp) || "-",
+        // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+      };
+
+      _currencyList.push(dataList);
+      //}
+    }
+    _currencyList = _currencyList.sort((a, b) => {
+      return a.currency
+        .split("")[0]
+        .toLowerCase()
+        .localeCompare(b.currency.split("")[0].toLowerCase());
+    });
+
+    // console.log(_currencyList);
+
+    templateObject.currencyList.set(_currencyList);
+
+    await loadCurrencyHistory(templateObject);
+    LoadingOverlay.hide();
+    //});
+  }
+}
+
+async function loadCurrencyHistory(templateObject) {
+  let result = await taxRateService.getCurrencyHistory();
+  const data = result.tcurrencyratehistory;
+  templateObject.tcurrencyratehistory.set(data);
+  LoadingOverlay.hide();
+}

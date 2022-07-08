@@ -575,6 +575,16 @@ Template.supplierpaymentcard.onRendered(() => {
                 var supplier_payments = data.fields.supplier_payments;
             
                 $("[id='Supplier Payments_"+supplier_payments+"']").attr("checked", "checked");
+                $('#choosetemplate').attr("checked", "checked");
+
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    $('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
                
             }
     

@@ -540,13 +540,13 @@ Template.agedreceivables.events({
     'click #btnSummary': function() {
         FlowRouter.go('/agedreceivablessummary');
     },
-    'click td a': function (event) {
+    'click td a': async function (event) {
         let id = $(event.target).closest('tr').attr('id').split("item-value-");
         var accountName = id[1].split('_').join(' ');
         let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
         let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
         //Session.setPersistent('showHeader',true);
-        addVS1Data('TAccountRunningBalanceReport', []);
+        await addVS1Data('TAccountRunningBalanceReport', []);
         window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
     },
     'change #dateTo': function () {

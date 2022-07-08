@@ -111,6 +111,16 @@ Template.purchaseordercard.onRendered(() => {
             {
                 var purchase_orderbill = data.fields.purchase_order;
                 $("[id='Purchase Orders_"+purchase_orderbill+"']").attr("checked", "checked");
+                $('#choosetemplate').attr("checked", "checked");
+
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    $('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
             }
     
 

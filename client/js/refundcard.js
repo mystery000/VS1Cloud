@@ -180,6 +180,16 @@ Template.refundcard.onRendered(() => {
             {
                 var refunds = data.fields.refunds;
                 $('#Refunds_'+refunds).attr("checked", "checked");
+                $('#choosetemplate').attr("checked", "checked");
+
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    $('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
                
             }
     

@@ -6,6 +6,10 @@ export default class User {
     this.type = type;
     this.fields = fields;
   }
+
+  static getCurrentLoggedUserId() {
+    return Session.get("mySessionEmployeeLoggedID");
+  }
 }
 
 export class UserFields {

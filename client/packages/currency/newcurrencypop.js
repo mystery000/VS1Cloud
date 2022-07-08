@@ -6,6 +6,8 @@ import "../../lib/global/indexdbstorage.js";
 import FxApi from "../../settings/currencies-setting/FxApi";
 let sideBarService = new SideBarService();
 
+let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
+
 Template.newcurrencypop.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecordscurrencypop = new ReactiveVar([]);
@@ -691,7 +693,7 @@ Template.newcurrencypop.events({
             var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
             var currencySellRate = data.tcurrency[i].SellRate || 0;
 
-            let currencyRates = await fxApi.getExchangeRate(currencyName); // we were using currencyCode instead...
+            let currencyRates = await fxApi.getExchangeRate(currencyName, defaultCurrencyCode); // we were using currencyCode instead...
             if (currencyRates) {
               currencyBuyRate = currencyRates.buy;
               currencySellRate = currencyRates.sell;
