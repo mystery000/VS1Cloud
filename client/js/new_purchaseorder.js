@@ -111,6 +111,16 @@ Template.purchaseordercard.onRendered(() => {
             {
                 var purchase_orderbill = data.fields.purchase_order;
                 $("[id='Purchase Orders_"+purchase_orderbill+"']").attr("checked", "checked");
+                $('#choosetemplate').attr("checked", "checked");
+
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    $('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
             }
     
 
@@ -6764,6 +6774,8 @@ Template.purchaseordercard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             var objDetails = '';
+
+            // tempcode. missed to add customfields here.
             if (getso_id[1]) {
                 currentPurchaseOrder = parseInt(currentPurchaseOrder);
                 if ($('input[name="chkCreatePOCredit"]').is(":checked")) {
@@ -10108,7 +10120,22 @@ Template.purchaseordercard.events({
         localStorage.setItem('productname', selectedProductName);
         let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
         localStorage.setItem('productItem', selectedunit);
-    }
+    },
+
+    // add to custom field
+  "click #edtSaleCustField1": function (e) {
+    $("#clickedControl").val("one");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField2": function (e) {
+    $("#clickedControl").val("two");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField3": function (e) {
+    $("#clickedControl").val("three");
+  },
 
 });
 

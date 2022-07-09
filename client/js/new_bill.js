@@ -87,6 +87,16 @@ Template.billcard.onRendered(() => {
                var bill = data.fields.bill;           
 
                $('#Bills_'+bill).attr("checked", "checked");
+               $('#choosetemplate').attr("checked", "checked");
+
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    $('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
              }
      
 
@@ -7742,7 +7752,22 @@ Template.billcard.events({
         } else {
 
         }
-    }
+    },
+
+    // add to custom field
+  "click #edtSaleCustField1": function (e) {
+    $("#clickedControl").val("one");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField2": function (e) {
+    $("#clickedControl").val("two");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField3": function (e) {
+    $("#clickedControl").val("three");
+  },
 
 });
 

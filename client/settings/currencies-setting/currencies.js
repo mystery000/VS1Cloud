@@ -6,7 +6,10 @@ import { SideBarService } from "../../js/sidebar-service";
 // import { HTTP } from "meteor/http";
 import "../../lib/global/indexdbstorage.js";
 import FxApi from "./FxApi";
+import LoadingOverlay from "../../LoadingOverlay";
 let sideBarService = new SideBarService();
+
+let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.currenciessettings.onCreated(function () {
   const templateObject = Template.instance();
@@ -21,7 +24,6 @@ Template.currenciessettings.onRendered(function () {
   let taxRateService = new TaxRateService();
   const dataTableList = [];
   const tableHeaderList = [];
-
   var countryService = new CountryService();
   let countries = [];
 
@@ -1330,6 +1332,13 @@ Template.currenciessettings.events({
         $(".fullScreenSpin").css("display", "none");
       });
   },
+  // "click .btnSaveFrequency": (e) => {
+  //   updateAllCurrencies();
+  // },
+
+  "click .synbutton": (e) => {
+    updateAllCurrencies();
+  },
 });
 
 Template.currenciessettings.helpers({
@@ -1362,3 +1371,74 @@ Template.currenciessettings.helpers({
     return localStorage.getItem("mySession") || "";
   },
 });
+
+
+
+/**
+ * This function will update all currencies
+ */
+export const updateAllCurrencies = () => {
+  let completeCount = 0;
+  let completeCountEnd = 1;
+  LoadingOverlay.show();
+  // we need to get all currencies and update them all
+  const taxRateService = new TaxRateService();
+  taxRateService
+    .getCurrencies()
+    .then((data) => {
+      completeCountEnd = data.tcurrency.length;
+      if (data.tcurrency.length > 0) data = data.tcurrency;
+      //console.log(data);
+
+      data.forEach((currencyData) => {
+        updateCurrency(currencyData, () => {
+          console.log(completeCount);
+
+          if(completeCount == 0) {
+            LoadingOverlay.show();
+          } else if(completeCount == completeCountEnd) {
+            LoadingOverlay.hide();
+          }
+          completeCount++;
+        });
+      });
+    });
+};
+
+export const updateCurrency = async (currencyData, callback) => {
+  let taxRateService = new TaxRateService();
+  let sideBarService = new SideBarService();
+  const fxApi = new FxApi();
+ 
+  /**
+   * Step 1: we need to hit the API
+   */
+  fxApi
+    .getExchangeRate(currencyData.Currency, defaultCurrencyCode, 1)
+    .then((rates) => {
+      currencyData.BuyRate = parseFloat(rates.buy);
+      currencyData.SellRate = parseFloat(rates.sell);
+      // console.log("New currency", currencyData);
+
+      // save the currency
+
+      taxRateService
+        .saveCurrency({
+          type: "TCurrency",
+          fields: currencyData,
+        })
+        .then((currencyData) => {
+          sideBarService.getCurrencies().then((dataReload) => {
+            addVS1Data("TCurrency", JSON.stringify(dataReload))
+              .then(function (datareturn) {
+                callback();
+                // Meteor._reload.reload();
+              })
+              .catch(function (err) {
+                console.log("tCurrency error", err);
+                // Meteor._reload.reload();
+              });
+          });
+        });
+    });
+};

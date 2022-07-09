@@ -763,9 +763,15 @@ Template.leadscard.events({
                 });
             }
         }).catch(function (err) {
+            let errText = "";
+            if (objDetails.fields.ClientName == "") {
+                errText = "Error: Lead Name should not be blank.";
+            } else {
+                errText = err;
+            }
             swal({
                 title: 'Oooops...',
-                text: err,
+                text: errText,
                 type: 'error',
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'

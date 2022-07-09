@@ -141,6 +141,16 @@ Template.new_salesorder.onRendered(() => {
 
                 $("[id='Sales Order_"+sales_orders+"']").attr("checked", "checked");
                 $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
+                $('#choosetemplate').attr("checked", "checked");
+
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    $('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
                
             }
     
@@ -2703,11 +2713,24 @@ Template.new_salesorder.onRendered(() => {
                                 confirmButtonText: 'OK'
                             }).then((result) => {
                                 if (result.value) {
-                                    FlowRouter.go('/salesorderslist?success=true');
+
+                                    if(FlowRouter.current().queryParams.trans){
+                                      FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                    }else{
+                                      FlowRouter.go('/salesorderslist?success=true');
+                                    };
                                 } else if (result.dismiss === 'cancel') {
+                                  if(FlowRouter.current().queryParams.trans){
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                  }else{
                                     FlowRouter.go('/salesorderslist?success=true');
+                                  };
                                 } else {
+                                  if(FlowRouter.current().queryParams.trans){
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                  }else{
                                     FlowRouter.go('/salesorderslist?success=true');
+                                  };
                                 }
                             });
                             $('.fullScreenSpin').css('display', 'none');
@@ -5543,11 +5566,11 @@ Template.new_salesorder.onRendered(() => {
 
 
         });
-      
+
 
        function showSealsOrder(template_title,number) {
         var array_data = [];
-        let lineItems = [];   
+        let lineItems = [];
         object_invoce = [];
         let item_invoices = '';
 
@@ -5594,18 +5617,18 @@ Template.new_salesorder.onRendered(() => {
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
             let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
-        
+
             array_data.push([
-            
+
                 tdproduct,
                 tddescription,
                 tdQty,
                 tdunitprice,
                 taxamount,
                 tdlineamt,
-        
+
             ]);
-        
+
             lineItemObj = {
                 description: tddescription || '',
                 quantity: tdQty || 0,
@@ -5613,7 +5636,7 @@ Template.new_salesorder.onRendered(() => {
                     minimumFractionDigits: 2
                 }) || 0
             }
-        
+
             lineItems.push(lineItemObj);
         });
 
@@ -5630,8 +5653,8 @@ Template.new_salesorder.onRendered(() => {
         stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-     
-    
+
+
         if(number == 1)
         {
               item_invoices = {
@@ -5767,22 +5790,22 @@ Template.new_salesorder.onRendered(() => {
         }
 
 
-       
-    
+
+
             object_invoce.push(item_invoices);
             $("#templatePreviewModal .field_payment").show();
             $("#templatePreviewModal .field_amount").show();
             updateTemplate(object_invoce);
-    
+
             saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
         }
 
         function showDeliveryDocket(template_title,number)
         {
 
-          
+
             var array_data = [];
-            let lineItems = [];   
+            let lineItems = [];
             object_invoce = [];
             let item_invoices = '';
 
@@ -5798,7 +5821,7 @@ Template.new_salesorder.onRendered(() => {
             var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
             var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
             var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-            
+
             let balancedue = $('#totalBalanceDue').html() || 0;
             let tax = $('#subtotal_tax').html() || 0;
             let customer = $('#edtCustomerName').val();
@@ -5830,18 +5853,18 @@ Template.new_salesorder.onRendered(() => {
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                     let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
                     let tdlineamt = $('#' + lineID + " .colAmountEx").text();
-                
+
                     array_data.push([
-                    
+
                         tdproduct,
                         tddescription,
                         tdQty,
                         '',
                         '',
                         '',
-                
+
                     ]);
-                
+
                     lineItemObj = {
                         description: tddescription || '',
                         quantity: tdQty || 0,
@@ -5849,7 +5872,7 @@ Template.new_salesorder.onRendered(() => {
                             minimumFractionDigits: 2
                         }) || 0
                     }
-                
+
                     lineItems.push(lineItemObj);
                 });
 
@@ -5866,8 +5889,8 @@ Template.new_salesorder.onRendered(() => {
                     stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
                     $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-     
-    
+
+
                     if(number == 1)
                     {
                         item_invoices = {
@@ -6004,10 +6027,10 @@ Template.new_salesorder.onRendered(() => {
 
 
                   object_invoce.push(item_invoices);
-            
+
                 $("#templatePreviewModal .field_payment").show();
                 $("#templatePreviewModal .field_amount").show();
-            
+
                 updateTemplate(object_invoce);
                 saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
 
@@ -7976,6 +7999,8 @@ Template.new_salesorder.events({
                 printTemplate.push('Delivery Docket');
            }
              
+             console.log(printTemplate);
+      
             if(printTemplate.length > 0) {
                   
                   for(var i = 0; i < printTemplate.length; i++)
@@ -8821,7 +8846,11 @@ Template.new_salesorder.events({
                             attachments: attachment
                         }, function(error, result) {
                             if (error && error.error === "error") {
+                              if(FlowRouter.current().queryParams.trans){
+                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                              }else{
                                 FlowRouter.go('/salesorderslist?success=true');
+                              };
 
                             } else {
 
@@ -8837,7 +8866,11 @@ Template.new_salesorder.events({
                             attachments: attachment
                         }, function(error, result) {
                             if (error && error.error === "error") {
+                              if(FlowRouter.current().queryParams.trans){
+                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                              }else{
                                 FlowRouter.go('/salesorderslist?success=true');
+                              };
                             } else {
                                 $('#html-2-pdfwrapper').css('display', 'none');
                                 swal({
@@ -8848,7 +8881,11 @@ Template.new_salesorder.events({
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
+                                      if(FlowRouter.current().queryParams.trans){
+                                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                      }else{
                                         FlowRouter.go('/salesorderslist?success=true');
+                                      };
                                     } else if (result.dismiss === 'cancel') {
 
                                     }
@@ -8969,7 +9006,11 @@ Template.new_salesorder.events({
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
+                                      if(FlowRouter.current().queryParams.trans){
+                                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                      }else{
                                         FlowRouter.go('/salesorderslist?success=true');
+                                      };
                                     } else if (result.dismiss === 'cancel') {
 
                                     }
@@ -9009,7 +9050,11 @@ Template.new_salesorder.events({
                         });
 
                     } else {
+                      if(FlowRouter.current().queryParams.trans){
+                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                      }else{
                         FlowRouter.go('/salesorderslist?success=true');
+                      };
                     };
 
 
@@ -10185,9 +10230,17 @@ Template.new_salesorder.events({
                                             }
                                         }, function(err, idTag) {
                                             if (err) {
+                                              if(FlowRouter.current().queryParams.trans){
+                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                              }else{
                                                 FlowRouter.go('/salesorderslist?success=true');
+                                              };
                                             } else {
+                                              if(FlowRouter.current().queryParams.trans){
+                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                              }else{
                                                 FlowRouter.go('/salesorderslist?success=true');
+                                              };
 
                                             }
                                         });
@@ -10211,9 +10264,17 @@ Template.new_salesorder.events({
                                             createdAt: new Date()
                                         }, function(err, idTag) {
                                             if (err) {
+                                              if(FlowRouter.current().queryParams.trans){
+                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                              }else{
                                                 FlowRouter.go('/salesorderslist?success=true');
+                                              };
                                             } else {
+                                              if(FlowRouter.current().queryParams.trans){
+                                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                                              }else{
                                                 FlowRouter.go('/salesorderslist?success=true');
+                                              };
 
                                             }
                                         });

@@ -346,44 +346,10 @@
                                                         <div class="col">
                                                             <button class="btn btn-primary btnRefreshTaxRate float-left" type="button" style="margin: 16px 0px; margin-right: 32px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                 
-                                                            <div><a class="btn btn-primary btnAddTaxRate" role="button" data-toggle="modal" href="#btnAddTaxRate" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Tax Rate<br></a>
-                                                                <div class="modal fade" role="dialog"
-                                                                     tabindex="-1" id="btnAddTaxRate">
-                                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <!-- <h4 id="add-tax-title" name="add-tax-title">Add New Tax Rate</h4> -->
-                                                                                <h4 style="" ><div id="add-tax-title" name="add-tax-title" style="float: left;">Add New Tax Rate</div>  <a role="button" data-toggle="modal" href="#helpModalTaxRate" class="helpModalTaxRate" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a></h4>
-                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                                            <div class="modal-body">
-                                                                                <input type="hidden" class="form-control" id="edtTaxID" name="edtTaxID" style="display:none;">
-                                                                                <div class="row no-gutters">
-                                                                                    <div class="col d-xl-flex align-items-xl-end">
-                                                                                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Name</label>
-                                                                                            <input type="text" class="form-control" id="edtTaxName" name="edtTaxName">
-                                                                                        </div>
-                                                                                        <div class="form-group" style="margin: 8px;">
-                                                                                            <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Rate %</label>
-                                                                                            <input type="text" class="form-control" style="width: 110px;" placeholder="0" id="edtTaxRate" name="edtTaxRate">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row no-gutters">
-                                                                                    <div class="col d-xl-flex align-items-xl-end">
-                                                                                        <div class="form-group flex-grow-1" style="margin: 8px;">
-                                                                                            <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
-                                                                                            <input type="text" class="form-control" id="edtTaxDesc" name="edtTaxDesc">
-                                                                                        </div>
-                                                                                        <!-- <div class="form-group" style="margin: 8px;"><label>Rate</label><input type="text" class="form-control" style="width: 110px;" placeholder="0 %"></div> -->
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button class="btn btn-success btnSaveTaxRate" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                                                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div>
+                                                                <a class="btn btn-primary btnAddTaxRate" role="button" data-toggle="modal" href="#addTaxRateModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Tax Rate<br></a>
+                                                                
+                                                                {{> AddTaxRateModal}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -561,12 +527,12 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {{#if datatablerecords}}
-                                                                {{#each item in datatablerecords}}
+                                                                {{#if taxRates}}
+                                                                {{#each item in taxRates}}
                                                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                    <td contenteditable="false" class="colName">{{item.codename}}</td>
-                                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                                                    <td contenteditable="false" class="colRate text-right">{{item.rate}}</td>
+                                                                    <td contenteditable="false" class="colName clickable">{{item.codename}}</td>
+                                                                    <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
+                                                                    <td contenteditable="false" class="colRate clickable text-right">{{item.rate}}</td>
                                                                     <td contenteditable="false" class="colPurcDef chkBox text-center" style="width:15px;">
                                                                         <div class="custom-control custom-radio">
                                                                             {{#if equals defaultpurchasetaxcode item.codename}}
@@ -610,6 +576,8 @@
                             </div>
                         </div>
                     </div>
+
+                    {{> DeleteLineModal}}
                 </div>
                 <div class="setup-step setup-step-3" style="display: none;">
                     <div class="container-fluid">
@@ -841,7 +809,7 @@
                                                                 <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
                                                                     <!-- <td contenteditable="false" class="colPayMethodID hiddenColumn">{{item.id}}</td> -->
                                                                     <!-- <td contenteditable="false" class="colHeadDept">{{item.headDept}}</td> -->
-                                                                    <td contenteditable="false" class="colName pointer">{{item.paymentmethodname}}</td>
+                                                                    <td contenteditable="false" class="colName pointer clickable">{{item.paymentmethodname}}</td>
                                                                     <!-- <td contenteditable="false" class="colIsCreditCard">{{item.iscreditcard}}</td> -->
                                                                     <td contenteditable="false" class="colIsCreditCard text-center" >
                                                                         {{#if equals item.iscreditcard true}}
@@ -996,96 +964,8 @@
                                                     <div class="row no-gutters">
                                                         <div class="col">
                                                             <button class="btn btn-primary btnRefreshTerm float-left" type="button" style="margin: 16px 0px; margin-right: 32px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                                            <div><a class="btn btn-primary btnAddTerms" role="button" data-toggle="modal" href="#myModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Term<br></a>
-                                                                <div class="modal fade" role="dialog"
-                                                                     tabindex="-1" id="myModal">
-                                                                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 700px;">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h4 >
-                                                                                    <div id="add-terms-title" name="add-terms-title" style="float: left;">Add New Term </div>
-                                                                                    <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;"> Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
-                
-                                                                                    <!-- Start Help View Modal -->
-                                                                                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
-                                                                                        <div class="modal-dialog modal-sm" role="document">
-                                                                                            <div class="modal-content">
-                                                                                                <div class="modal-header" style="padding-bottom: 8px;">
-                                                                                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                                                                <div class="modal-body">
-                                                                                                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                                                                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=19" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                                                                                    <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                                                                                    <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                                                                                                </div>
-                                                                                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <!-- End Help View Modal -->
-                                                                                </h4>
-                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                                            </div>
-                                                                            <div class="modal-body" style="background-color: #ededed;">
-                                                                                <input type="hidden" class="form-control" id="edtTermsID" name="edtTermsID" style="display:none;">
-                                                                                <div class="row no-gutters">
-                                                                                    <div class="col d-xl-flex align-items-xl-end">
-                                                                                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >Days</label>
-                                                                                            <input type="number" class="form-control" style="width: 100px;" id="edtDays" name="edtDays" min="0"></div>
-                                                                                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Term Name</label>
-                                                                                            <input type="text" class="form-control" style="width: 100px;" id="edtName" name="edtName"></div>
-                                                                                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
-                                                                                            <input type="text" class="form-control" id="edtDesc" name="edtDesc"></div>
-                                                                                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >EOM</label>
-                                                                                            {{#if equals includeEOM true}}
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM" name="group1[]" checked><label class="custom-control-label chkBox" for="isEOM"></label></div>
-                                                                                            {{else}}
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM" name="group1[]"><label class="custom-control-label chkBox" for="isEOM"></label></div>
-                                                                                            {{/if}}
-                                                                                        </div>
-                                                                                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >EOM+</label>
-                                                                                            {{#if equals includeEOMPlus true}}
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus" name="group1[]" checked><label class="custom-control-label chkBox" for="isEOMPlus"></label></div>
-                                                                                            {{else}}
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus" name="group1[]"><label class="custom-control-label chkBox" for="isEOMPlus"></label></div>
-                                                                                            {{/if}}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row no-gutters">
-                                                                                    <div class="col-12">
-                                                                                        <div class="form-group" style="margin: 4px 8px;">
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; padding-top: 7px;">
-                                                                                                {{#if equals includeSalesDefault true}}
-                                                                                                <input class="custom-control-input chkBox chkCustomerDef" type="checkbox" id="chkCustomerDef" name="group1[]" checked>
-                                                                                                {{else}}
-                                                                                                <input class="custom-control-input chkBox chkCustomerDef" type="checkbox" id="chkCustomerDef" name="group1[]">
-                                                                                                {{/if}}
-                                                                                                <label class="custom-control-label chkBox" for="chkCustomerDef">Customer Default</label>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-12">
-                                                                                        <div class="form-group" style="margin: 4px 8px;">
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; padding-top: 7px;">
-                                                                                                {{#if equals includePurchaseDefault true}}
-                                                                                                <input class="custom-control-input chkBox chkSupplierDef" type="checkbox" id="chkSupplierDef" name="group1[]" checked>
-                                                                                                {{else}}
-                                                                                                <input class="custom-control-input chkBox chkSupplierDef" type="checkbox" id="chkSupplierDef" name="group1[]">
-                                                                                                {{/if}}
-                                                                                                <label class="custom-control-label chkBox" for="chkSupplierDef">Supplier Default</label>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer" style="background-color: #ededed;">
-                                                                                <button class="btn btn-success btnSaveTerms" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                                                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div><a class="btn btn-primary btnAddTerms" role="button" data-toggle="modal" href="#addTermModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Term<br></a>
+                                                                {{> AddTermModal}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1253,8 +1133,8 @@
                                                                 {{#if termdatatablerecords}}
                                                                 {{#each item in termdatatablerecords}}
                                                                 <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
-                                                                    <td contenteditable="false" class="colName">{{item.termname}}</td>
-                                                                    <td contenteditable="false" class="colIsDays">{{item.termdays}}</td>
+                                                                    <td contenteditable="false" class="colName clickable">{{item.termname}}</td>
+                                                                    <td contenteditable="false" class="colIsDays clickable">{{item.termdays}}</td>
                                                                     <td contenteditable="false" class="colIsEOM text-center" >
                                                                         {{#if equals item.iseom true}}
                                                                         <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iseom-{{item.id}}" checked><label class="custom-control-label chkBox" for="iseom-{{item.id}}"></label></div>
@@ -1269,7 +1149,7 @@
                                                                         <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-{{item.id}}"><label class="custom-control-label chkBox" for="iseomplus-{{item.id}}"></label></div>
                                                                         {{/if}}
                                                                     </td>
-                                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                                                    <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
                                                                     <td contenteditable="false" class="colCustomerDef text-center" >
                                                                         {{#if equals item.isSalesdefault true}}
                                                                         <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-{{item.id}}" checked><label class="custom-control-label chkBox" for="isSalesdefault-{{item.id}}"></label></div>
@@ -1437,11 +1317,14 @@
                             </header>
                 
                             <div class="row d-xl-flex flex-row justify-content-xl-center m-0" style="padding: 0px 20px 20px 20px; background-color: #ededed;">
-                
+                                <div class="modal fade" role="dialog" tabindex="-1" id="addEmployeeModal">
+                                    {{> addemployeepop}}
+                                </div>
+
                                 <div class="col float-left flex-grow-1">
                                     <button class="btn btn-primary btnRefreshEmployee" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                     <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
-                                    <button class="btn btn-success btnAddVS1User" type="button" style="margin: 16px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button>
+                                    <!-- <button class="btn btn-success btnAddVS1User" type="button" style="margin: 16px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button> -->
                                 </div>
                 
                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
@@ -1579,22 +1462,22 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{#if employeedatatablerecords}}
-                                                {{#each item in employeedatatablerecords}}
-                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                                {{#if currentEmployees}}
+                                                {{#each employee in currentEmployees}}
+                                                <tr class="dnd-moved" id="{{employee.fields.ID}}" style="cursor: pointer;">
                                                     <!-- <td contenteditable="false" class="colEmployeeNo" >{{item.id}}</td> -->
-                                                    <td contenteditable="false" class="colEmployeeNo hiddenColumn" >{{item.id}}</td>
-                                                    <td contenteditable="false" class="colEmployeeName" >{{item.employeename}}</td>
-                                                    <td contenteditable="false" class="colFirstName">{{item.firstname}}</td>
-                                                    <td contenteditable="false" class="colLastName">{{item.lastname}}</td>
-                                                    <td contenteditable="false" class="colPhone">{{item.phone}}</td>
-                                                    <td contenteditable="false" class="colMobile">{{item.mobile}}</td>
-                                                    <td contenteditable="false" class="colEmail">{{item.email}}</td>
-                                                    <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-                                                    <td contenteditable="false" class="colCountry hiddenColumn">{{item.country}}</td>
-                                                    <td contenteditable="false" class="colCustFld1 hiddenColumn">{{item.custFld1}}</td>
-                                                    <td contenteditable="false" class="colCustFld2 hiddenColumn">{{item.custFld2}}</td>
-                                                    <td contenteditable="false" class="colAddress">{{item.address}}</td>
+                                                    <td contenteditable="false" class="colEmployeeNo hiddenColumn" >{{employee.fields.ID}}</td>
+                                                    <td contenteditable="false" class="colEmployeeName" >{{employee.fields.EmployeeName}}</td>
+                                                    <td contenteditable="false" class="colFirstName">{{employee.fields.FirstName}}</td>
+                                                    <td contenteditable="false" class="colLastName">{{employee.fields.LastName}}</td>
+                                                    <td contenteditable="false" class="colPhone">{{employee.fields.Phone}}</td>
+                                                    <td contenteditable="false" class="colMobile">{{employee.fields.Mobile}}</td>
+                                                    <td contenteditable="false" class="colEmail">{{employee.fields.Email}}</td>
+                                                    <td contenteditable="false" class="colDepartment">{{employee.fields.DefaultClassName}}</td>
+                                                    <td contenteditable="false" class="colCountry hiddenColumn">{{employee.fields.Country}}</td>
+                                                    <td contenteditable="false" class="colCustFld1 hiddenColumn">{{employee.fields.CustFld1}}</td>
+                                                    <td contenteditable="false" class="colCustFld2 hiddenColumn">{{employee.fields.CustFld2}}</td>
+                                                    <td contenteditable="false" class="colAddress">{{employee.fields.Street}}</td>
                                                 </tr>
                                                 {{/each}}
                                                 {{/if}}
@@ -1623,256 +1506,51 @@
                                     <a class="btn btn-primary float-left btnAddNewAccounts" role="button" data-toggle="modal"
                                         href="#addNewAccount" style="margin: 8px;"><i class="fa fa-plus"
                                             style="margin-right: 8px;"></i>New Account</a>
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="addNewAccount">
-                                        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"
-                                            role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 style="">
-                                                        <div id="add-account-title" name="add-account-title" style="float: left;">New
-                                                            Account</div>
-                
-                                                        <a role="button" data-toggle="modal" href="#helpViewModalAdd"
-                                                            style="float: right; font-size: 20px; margin-top: 4px; margin-left: 8px;">Help
-                                                            <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
-                
-                
-                
-                                                    </h4><button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <div>
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="addNewAccount">
+                                                    {{> addAccountModal}}
                                                 </div>
-                                                <div class="modal-body" style="background-color: #ededed;">
-                                                    <input type="hidden" class="form-control" id="edtAccountID" name="edtAccountID"
-                                                        style="display:none;">
-                                                    <div>
-                                                        <div class="d-xl-flex align-items-xl-start">
-                                                            <div class="flex-grow-1">
-                                                                <div class="form-group" style="margin: 4px;"><label>Account Type</label>
-                                                                    <select class="form-control pointer" id="sltAccountType"
-                                                                        name="sltAccountType">
-                                                                        {{#each item in accounttyperecords}}
-                                                                        <option value="{{item.accounttypename}}">{{item.description}}
-                                                                        </option>
-                                                                        {{/each}}
-                                                                    </select>
-                                                                </div>
+
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
+                                                    {{> taxratelistpop}}
+                                                </div>
+
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
+                                                    {{> newtaxratepop}}
+                                                </div>
+
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+                                                    <div class="modal-dialog modal-sm" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="padding-bottom: 8px;">
+                                                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close"><span aria-hidden="true">×</span></button>
                                                             </div>
-                
-                                                            <div class="flex-grow-1">
-                                                                <div class="form-group" style="margin: 4px;"><label>Account Name</label>
-                                                                    <input type="text" class="form-control" id="edtAccountName"
-                                                                        name="edtAccountName">
-                                                                </div>
+                                                            <div class="modal-body">
+                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal"
+                                                                        href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a>
+                                                                </p>
+                                                                <p class="text-center text-muted"><a
+                                                                        href="https://vs1forum.com/viewtopic.php?f=6&t=30" target="_blank"
+                                                                        class="btn btn-primary">Download Help File</a></p>
+                                                                <p class="text-center text-muted"><button class="btn btn-primary"
+                                                                        type="button">Employ Advisor</button></p>
+                                                                <p class="text-center text-muted" style="margin: 0;"><a
+                                                                        href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}"
+                                                                        target="_blank" class="btn btn-primary">Go To Forum</a> </p>
                                                             </div>
-                                                            <div class="flex-grow-1">
-                                                                <div class="form-group" style="margin: 4px;"><label>Account No</label>
-                                                                    <input type="text" class="form-control" id="edtAccountNo"
-                                                                        name="edtAccountNo">
-                                                                </div>
-                                                            </div>
-                                                            <div class="flex-grow-1">
-                                                                <div class="form-group" style="margin: 4px;"><label>Tax Code</label>
-                                                                    <select type="search" class="form-control" id="sltTaxCode"
-                                                                        name="sltTaxCode"
-                                                                        style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                    </select>
-                                                                    <!-- select class="form-control pointer" id="sltTaxCode" name="sltTaxCode">
-                                                                        {{#each item in taxraterecords}}
-                                                                        <option value="{{item.codename}}">{{item.codename}}</option>
-                                                                        {{/each}}
-                                                                    </select> -->
-                                                                </div>
-                                                            </div>
+                                                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                                                                    data-dismiss="modal" type="button">Close</button></div>
                                                         </div>
-                                                        <div>
-                                                            <hr class="reporthr" style="width: 100%;margin: 4px;">
-                                                        </div>
-                                                        <div class="d-xl-flex align-items-xl-center">
-                                                            <div class="flex-grow-1">
-                                                                <div class="d-xl-flex align-items-xl-start"></div>
-                                                                <div class="d-xl-flex align-items-xl-start">
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="form-group d-xl-flex flex-column justify-content-xl-start"
-                                                                            style="margin: 4px;"><label>Account Description</label>
-                                                                            <textarea class="border rounded" rows="3"
-                                                                                id="txaAccountDescription" name="txaAccountDescription"
-                                                                                style="width: 100%; color: rgb(110, 112, 126);"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <hr class="reporthr" style="width: 100%;margin: 4px;">
-                                                        </div>
-                                                        <!-- {{#if isBankAccount}} -->
-                                                        <div class="d-xl-flex align-items-xl-center isBankAccount isNotBankAccount">
-                                                            <div class="flex-grow-1">
-                                                                <label><b>Bank Account Details</b></label>
-                                                                <div class="d-xl-flex align-items-xl-start">
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="form-group" style="margin: 4px;"><label>Bank
-                                                                                Name</label>
-                                                                            <input type="text" class="form-control" id="edtBankName"
-                                                                                name="edtBankName">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="form-group" style="margin: 4px;"><label>Bank Account
-                                                                                Name</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="edtBankAccountName" name="edtBankAccountName">
-                                                                        </div>
-                                                                    </div>
-                
-                
-                
-                                                                    <div class="flex-grow-0">
-                                                                        <div class="form-group" style="margin: 4px; width: 150px;">
-                                                                            <label>{{bsbRegionName}}</label>
-                                                                            <input type="text" class="form-control" id="edtBSB"
-                                                                                name="edtBSB">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                
-                                                                <div class="d-xl-flex align-items-xl-start">
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="form-group" style="margin: 4px;"><label>Bank Account
-                                                                                No</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="edtBankAccountNo" name="edtBankAccountNo">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="form-group" style="margin: 4px;"><label>Swift
-                                                                                Code</label>
-                                                                            <input type="text" class="form-control" id="swiftCode"
-                                                                                name="swiftCode">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="flex-grow-0">
-                                                                        <div class="form-group" style="margin: 4px; width: 150px;">
-                                                                            <label>Routing Number</label>
-                                                                            <input type="text" class="form-control" id="routingNo"
-                                                                                name="routingNo">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <!--                                             <div class="d-xl-flex align-items-xl-center">
-                                                            <div class="flex-grow-1">
-                                                                <div class="d-xl-flex align-items-xl-start"></div>
-                                                                <div class="d-xl-flex align-items-xl-start">
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label>Comments</label>
-                                                                            <textarea class="border rounded" rows="3" id="txaAccountComments" name="txaAccountComments" style="width: 100%; color: rgb(110, 112, 126);"></textarea></div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> -->
-                                                                <div class="d-xl-flex align-items-xl-center">
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input showOnTransactions"
-                                                                                id="showOnTransactions" />
-                                                                            <label class="custom-control-label"
-                                                                                for="showOnTransactions">Show On Transactions</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                
-                                                        <div class="d-xl-flex align-items-xl-center isCreditAccount isNotCreditAccount">
-                                                            <div class="flex-grow-1">
-                                                                <label><b>Credit Card Details</b></label>
-                                                                <div class="d-xl-flex align-items-xl-start">
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="form-group" style="margin: 4px;"><label>Card
-                                                                                Number</label>
-                                                                            <input type="tel" inputmode="numeric"
-                                                                                pattern="[0-9\s]{13,19}" class="form-control"
-                                                                                id="edtCardNumber" name="edtCardNumber"
-                                                                                autocomplete="cc-number" maxlength="19"
-                                                                                placeholder="xxxx xxxx xxxx xxxx">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="flex-grow-0">
-                                                                        <div class="form-group" style="margin: 4px;"><label>Expiry
-                                                                                Date</label>
-                                                                            <!-- <input type="text" class="form-control" id="edtExpiryDate" name="edtExpiryDate"></div> -->
-                
-                                                                            <div class="input-group date"
-                                                                                style="width: 150px; cursor: pointer;">
-                                                                                <input type="text" class="form-control"
-                                                                                    id="edtExpiryDate" name="edtExpiryDate">
-                                                                                <div class="input-group-addon">
-                                                                                    <span class="glyphicon glyphicon-th"></span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                
-                                                                    </div>
-                
-                                                                    <div class="flex-grow-0">
-                                                                        <div class="form-group" style="margin: 4px; width: 150px;">
-                                                                            <label>CVC</label>
-                                                                            <input type="tel" inputmode="numeric" class="form-control"
-                                                                                id="edtCvc" name="edtCvc">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                
-                
-                                                            </div>
-                                                        </div>
-                                                        <!-- {{/if}} -->
                                                     </div>
                                                 </div>
-                                                <form></form>
-                                                <div class="modal-footer" style="background-color: #ededed;">
-                                                    <button class="btn btn-success btnSaveAccount" type="button" style="margin: 8px;"
-                                                        id="btnSaveAccount" name="btnSaveAccount"><i class="fa fa-save"
-                                                            style="margin-right: 5px;"></i>Save</button>
-                                                    <button class="btn btn-danger btnDeleteAccount" type="button"
-                                                        style="margin: 16px;"><i class="fa fa-trash"
-                                                            style="padding-right: 8px;"></i>Delete</button>
-                                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"
-                                                        style="margin: 8px;"><i class="fa fa-close"
-                                                            style="margin-right: 5px;"></i>Close</button>
-                                                </div>
+            
                                             </div>
-                                        </div>
-                                    </div>
                 
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
-                                        <div class="modal-dialog modal-sm" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="padding-bottom: 8px;">
-                                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p class="text-center text-muted"><a role="button" data-toggle="modal"
-                                                            href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a>
-                                                    </p>
-                                                    <p class="text-center text-muted"><a
-                                                            href="https://vs1forum.com/viewtopic.php?f=6&t=30" target="_blank"
-                                                            class="btn btn-primary">Download Help File</a></p>
-                                                    <p class="text-center text-muted"><button class="btn btn-primary"
-                                                            type="button">Employ Advisor</button></p>
-                                                    <p class="text-center text-muted" style="margin: 0;"><a
-                                                            href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}"
-                                                            target="_blank" class="btn btn-primary">Go To Forum</a> </p>
-                                                </div>
-                                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
-                                                        data-dismiss="modal" type="button">Close</button></div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                   
+                                   
                                 </div>
-                                <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button>
+                                <!-- <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button> -->
                             </div>
                             <div class="col-5 d-xl-flex justify-content-xl-end align-items-end">
                                 <style>
@@ -1883,115 +1561,117 @@
                                     }
                                 </style>
                                 <div class="btn-group float-right exportbtngroup" style="margin: 8px;">
-                                    <button class="btn btn-primary d-flex align-items-center exportbtnExcel" type="button"><i class="fas fa-file-export"
+                                    <button data-target="#tblAccountOverview_wrapper" class="btn btn-primary d-flex align-items-center exportbtnExcel" type="button"><i class="fas fa-file-export"
                                             style="margin-right: 5px;"></i>Export</button>
                                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
                                         aria-expanded="false" type="button"></button>
                                     <div role="menu" class="dropdown-menu">
-                                        <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export
+                                        <a data-target="#tblAccountOverview_wrapper" role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export
                                             Excel</a>
-                                        <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
+                                        <a data-target="#tblAccountOverview_wrapper" role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
                 
                                     </div>
                                 </div>
                                 <div>
                                     <button style="margin: 8px;" class="btn d-flex align-items-center btn-primary float-right" role="button" data-toggle="modal"
-                                        href="#importModal"><i class="fas fa-file-import"
+                                        href="#importModal_step5"><i class="fas fa-file-import"
                                             style="padding-right: 5px;"></i>Import</button>
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div
-                                                        class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
-                                                        <p style="margin-bottom: 0;font-weight: bold;">1. Download the
-                                                            &lt;&lt;form&gt;&gt; template</p>
-                                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by
-                                                            downloading our template file. This file has the correct column headings to
-                                                            allow VS1 Cloud to import your form's details.</p>
-                                                        <div class="col flex-grow-1">
-                                                            <button class="btn btn-primary templateDownload" type="button"
-                                                                style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv"
-                                                                    style="margin-right: 5px;"></i>Download CSV Template</button>
-                                                            <button class="btn btn-primary templateDownloadXLSX" type="button"
-                                                                style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv"
-                                                                    style="margin-right: 5px;"></i>Download Excel Template</button>
+                                   <div>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step5">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4>Import Items</h4><button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div
+                                                            class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                                            <p style="margin-bottom: 0;font-weight: bold;">1. Download the
+                                                                &lt;&lt;form&gt;&gt; template</p>
+                                                            <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Start by
+                                                                downloading our template file. This file has the correct column headings to
+                                                                allow VS1 Cloud to import your form's details.</p>
+                                                            <div class="col flex-grow-1">
+                                                                <button class="btn btn-primary templateDownload" type="button"
+                                                                    style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv"
+                                                                        style="margin-right: 5px;"></i>Download CSV Template</button>
+                                                                <button class="btn btn-primary templateDownloadXLSX" type="button"
+                                                                    style="margin: 16px;margin-bottom: 0;"><i class="fas fa-file-csv"
+                                                                        style="margin-right: 5px;"></i>Download Excel Template</button>
+                                                            </div>
+                                                            <div class="col d-xl-flex align-items-xl-center"
+                                                                style="width: 50px;max-width: 50px;">
+                                                                <a href="downloads/csvHelpFile.pdf" target="_blank" download><i
+                                                                        class="fa fa-question-circle-o" data-toggle="tooltip"
+                                                                        data-bs-tooltip=""
+                                                                        title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+                                                                        style="margin: 16px;"></i></a>
+                                                            </div>
                                                         </div>
-                                                        <div class="col d-xl-flex align-items-xl-center"
-                                                            style="width: 50px;max-width: 50px;">
-                                                            <a href="downloads/csvHelpFile.pdf" target="_blank" download><i
-                                                                    class="fa fa-question-circle-o" data-toggle="tooltip"
-                                                                    data-bs-tooltip=""
-                                                                    title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
-                                                                    style="margin: 16px;"></i></a>
+                                                        <hr>
+                                                        <div
+                                                            class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                            <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the
+                                                                template</p>
+                                                            <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel,
+                                                                or another spreadsheet editor, you can fill in the VS1 Cloud template file
+                                                                with your desired details.</p>
+                                                            <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important:
+                                                                Avoid changing the column headings in the template file.</p>
+                                                        </div>
+                                                        <hr>
+                                                        <div
+                                                            class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                            <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template
+                                                                file</p>
+                                                            <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your
+                                                                updated template and you're ready to go.</p>
+                    
+                                                            <div class="divTable" id="file-display">
+                                                            </div>
+                                                            <input type="file" id="attachment-upload-account" style="display:none"
+                                                                accept=".csv,.txt,.xlsx">
+                                                            <style>
+                                                                #row1 {
+                                                                    display: flex;
+                                                                    flex-direction: row;
+                                                                    justify-content: space-around;
+                                                                }
+                    
+                                                                #column1 {
+                                                                    display: flex;
+                                                                }
+                    
+                    
+                                                                #column2 {
+                                                                    display: flex;
+                                                                    flex-direction: column;
+                                                                    margin: 16px;
+                                                                    padding: .375rem .75rem;
+                                                                }
+                                                            </style>
+                                                            <div id="row1">
+                                                                <div id="column1"></div><button
+                                                                    class="btn btn-primary btnUploadFile new_attachment_btn_account" type="button"
+                                                                    style="margin: 16px;"><i class="fa fa-cloud-upload"
+                                                                        style="margin-right: 5px;"></i>Browse</button>
+                                                                <div class="file-name" id="column2"></div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <hr>
-                                                    <div
-                                                        class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                        <p style="margin-bottom: 0;font-weight: bold;">2. Copy your items into the
-                                                            template</p>
-                                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Using MS Excel,
-                                                            or another spreadsheet editor, you can fill in the VS1 Cloud template file
-                                                            with your desired details.</p>
-                                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 16px;">Important:
-                                                            Avoid changing the column headings in the template file.</p>
+                                                    <div class="modal-footer"><button class="btn btn-primary btnImport" type="button"
+                                                            disabled><i class="fas fa-file-import"
+                                                                style="margin-right: 5px;"></i>Import</button>
+                                                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                                                class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                     </div>
-                                                    <hr>
-                                                    <div
-                                                        class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                                                        <p style="margin-bottom: 0;font-weight: bold;">3. Import the updated template
-                                                            file</p>
-                                                        <p style="margin-left: 16px;margin-bottom: 0;margin-top: 4px;">Save your
-                                                            updated template and you're ready to go.</p>
-                
-                                                        <div class="divTable" id="file-display">
-                                                        </div>
-                                                        <input type="file" id="attachment-upload-account" style="display:none"
-                                                            accept=".csv,.txt,.xlsx">
-                                                        <style>
-                                                            #row1 {
-                                                                display: flex;
-                                                                flex-direction: row;
-                                                                justify-content: space-around;
-                                                            }
-                
-                                                            #column1 {
-                                                                display: flex;
-                                                            }
-                
-                
-                                                            #column2 {
-                                                                display: flex;
-                                                                flex-direction: column;
-                                                                margin: 16px;
-                                                                padding: .375rem .75rem;
-                                                            }
-                                                        </style>
-                                                        <div id="row1">
-                                                            <div id="column1"></div><button
-                                                                class="btn btn-primary btnUploadFile new_attachment_btn_account" type="button"
-                                                                style="margin: 16px;"><i class="fa fa-cloud-upload"
-                                                                    style="margin-right: 5px;"></i>Browse</button>
-                                                            <div class="file-name" id="column2"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer"><button class="btn btn-primary btnImport" type="button"
-                                                        disabled><i class="fas fa-file-import"
-                                                            style="margin-right: 5px;"></i>Import</button>
-                                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
-                                                            class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                   </div>
                                 </div>
-                                <button class="btn btn-primary d-flex align-items-center printConfirmAccount float-right" type="button" style="margin: 8px;"><i
+                                <button data-target="#tblAccountOverview_wrapper" class="btn btn-primary d-flex align-items-center printConfirmAccount printConfirm float-right" type="button" style="margin: 8px;"><i
                                         class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
                                 <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2"
                                     style="margin: 8px;">
@@ -2183,28 +1863,28 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{#if datatablerecords}}
-                                        {{#each item in datatablerecords}}
-                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                            <td contenteditable="false" class="colAccountId hiddenColumn">{{item.id}}</td>
-                                            <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
-                                            <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                            <td contenteditable="false" class="colAccountNo">{{item.accountnumber}}</td>
-                                            <td contenteditable="false" class="colType" accounttype="{{item.accounttypeshort}}">
-                                                {{item.accounttypename}}</td>
+                                        {{#if accountList}}
+                                        {{#each account in accountList}}
+                                        <tr class="dnd-moved" id="{{account.id}}" style="cursor: pointer;">
+                                            <td contenteditable="false" class="colAccountId hiddenColumn">{{account.id}}</td>
+                                            <td contenteditable="false" class="colAccountName">{{account.accountname}}</td>
+                                            <td contenteditable="false" class="colDescription">{{account.description}}</td>
+                                            <td contenteditable="false" class="colAccountNo">{{account.accountnumber}}</td>
+                                            <td contenteditable="false" class="colType" accounttype="{{account.accounttypeshort}}">
+                                                {{account.accounttypename}}</td>
                                             <td contenteditable="false" class="colBalance" style="text-align: right!important;">
-                                                {{item.balance}}</td>
-                                            <td contenteditable="false" class="colTaxCode">{{item.taxcode}}</td>
-                                            <td contenteditable="false" class="colBankName hiddenColumn">{{item.bankname}}</td>
-                                            <td contenteditable="false" class="colBankAccountName">{{item.bankaccountname}}</td>
-                                            <td contenteditable="false" class="colBSB">{{item.bsb}}</td>
-                                            <td contenteditable="false" class="colBankAccountNo">{{item.bankaccountnumber}}</td>
-                                            <td contenteditable="false" class="colCardNumber hiddenColumn">{{item.cardnumber}}</td>
-                                            <td contenteditable="false" class="colExpiryDate hiddenColumn">{{item.expirydate}}</td>
-                                            <td contenteditable="false" class="colCVC hiddenColumn">{{item.cvc}}</td>
-                                            <td contenteditable="false" class="colExtra hiddenColumn">{{item.swiftcode}}</td>
+                                                {{account.balance}}</td>
+                                            <td contenteditable="false" class="colTaxCode">{{account.taxcode}}</td>
+                                            <td contenteditable="false" class="colBankName hiddenColumn">{{account.bankname}}</td>
+                                            <td contenteditable="false" class="colBankAccountName">{{account.bankaccountname}}</td>
+                                            <td contenteditable="false" class="colBSB">{{account.bsb}}</td>
+                                            <td contenteditable="false" class="colBankAccountNo">{{account.bankaccountnumber}}</td>
+                                            <td contenteditable="false" class="colCardNumber hiddenColumn">{{account.cardnumber}}</td>
+                                            <td contenteditable="false" class="colExpiryDate hiddenColumn">{{account.expirydate}}</td>
+                                            <td contenteditable="false" class="colCVC hiddenColumn">{{account.cvc}}</td>
+                                            <td contenteditable="false" class="colExtra hiddenColumn">{{account.swiftcode}}</td>
                                             <td contenteditable="false" class="colAPCANumber hiddenColumn"
-                                                checkheader="{{item.isheader}}">{{item.apcanumber}}</td>
+                                                checkheader="{{account.isheader}}">{{account.apcanumber}}</td>
                 
                                         </tr>
                                         {{/each}}
@@ -2218,6 +1898,7 @@
                                     <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 16px;" data-step-id="6">Confirm</button>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -2363,22 +2044,29 @@
                 
                                 <div class="col float-left flex-grow-1">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                    <button id="btnNewCustomer" name="btnNewCustomer" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
+                                    <button id="btnNewCustomer" data-toggle="#addCustomerModal" name="btnNewCustomer" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
+                                </div>
+
+                                <div >
+
+                                    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+                                        {{> addcustomerpop}}
+                                    </div>
                                 </div>
                 
                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
                                     <div class="btn-group groupExport" style="margin: 16px;">
-                                        <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                                        <button data-target="#tblCustomerlist_wrapper" class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
                                         <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                                         <div role="menu" class="dropdown-menu">
-                                            <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
-                                            <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
+                                            <a data-target="#tblCustomerlist_wrapper" role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
+                                            <a data-target="#tblCustomerlist_wrapper" role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
                                         </div>
                                     </div>
                                     <!-- <button class="btn btn-primary export" type="button" style="margin: 16px; background-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button> -->
                                     <div>
-                                        <button style="margin: 16px;" class="btn btn-primary" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                                        <button style="margin: 16px;" class="btn btn-primary" role="button" data-toggle="modal" href="#importModal_step7"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step7">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -2442,9 +2130,101 @@
                                     </div>
                 
                                     <!-- <button class="btn btn-primary float-right" type="button" style="margin: 16px;" id="" name=""><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button> -->
-                                    <button class="btn btn-primary printConfirm" type="button" style="margin: 16px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                                    <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a>
+                                    <button data-target="#tblCustomerlist_wrapper" class="btn btn-primary printConfirm" type="button" style="margin: 16px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                                    <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#opensettings_step7" style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a>
                                 </div>
+                                    <div>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="opensettings_step7">
+                                            <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                    <div class="modal-body">
+                                                        <div>
+                                                            {{#if customerListHeaders}}
+                                                            <form class="d-xl-flex align-items-xl-center">
+                                                                <div class="flex-grow-1">
+                                                                    <style>
+                                                                        .groove {
+                                                                            border-style: solid;
+                                                                            border-width: 1px;
+                                                                            width: 200px;
+                                                                            padding: 2px;
+                                                                            border-radius: .35rem;
+                                                                            font-size: 1rem;
+                                                                        }
+                                                                        .custom-control-label{
+                                                                            position: absolute;
+                                                                        }
+                                                                        .rngRange {
+                                                                            position: relative;
+                                                                            display: flex;
+                                                                            flex-direction: column;
+                                                                            width: 100%;
+                                                                            pointer-events: auto;
+                                                                            background-color: rgb(255, 255, 255);
+                                                                            background-clip: padding-box;
+                                                                            border: 1px solid rgb(133, 135, 150);
+                                                                            border-radius: .3rem;
+                                                                            border-style: solid;
+                                                                            border-width: 1px;
+                                                                            padding: 2px;
+                                                                            border-radius: .35rem;
+                                                                            color: rgb(128, 128, 128);
+                                                                            height:inherit!important;
+                                                                        }
+                                                                        @media only screen and (max-width: 480px) {
+                                                                            .modal.show .modal-dialog{
+                                                                                float: inherit!important;
+                                                                                left: inherit!important;
+                                                                                top: auto!important;
+                    
+                                                                            }
+                                                                        }
+                                                                    </style>
+                                                                    {{#each item in customerListHeaders}}
+                                                                    {{#if equals item.sTitle "id"}}
+                                                                    {{else}}
+                    
+                                                                    <div id="{{item.sIndex}}" class="columnSettings">
+                                                                        <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                            <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
+                                                                            <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
+                                                                            <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                                                                        </div>
+                                                                        <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;font-size: 1rem;">
+                                                                            <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
+                                                                            <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
+                                                                            <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
+                                                                        </div>
+                                                                    </div>
+                    
+                                                                    {{#if equals item.sVisible true}}
+                                                                    <script>
+                                                                        $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
+                                                                    </script>
+                                                                    {{else}}
+                                                                    <script>
+                                                                        $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
+                                                                    </script>
+                                                                    {{/if}}
+                    
+                                                                    {{/if}}
+                                                                    {{/each}}
+                                                                </div>
+                                                            </form>
+                                                            {{/if}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                        <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                 
                             </div>
                 
@@ -2502,8 +2282,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{#if datatablerecords}}
-                                                {{#each item in datatablerecords}}
+                                                {{#if customerList}}
+                                                {{#each item in customerList}}
                                                 <tr class="dnd-moved" id="{{item.id}}" isjob="{{item.job}}" style="cursor: pointer;">
                                                     <td contenteditable="false" class="colCustomerID hiddenColumn" >{{item.id}}</td>
                                                     <td contenteditable="false" class="colCompany" >{{item.company}}</td>
@@ -2535,6 +2315,7 @@
                                             <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 16px;" data-step-id="7">Confirm</button>
                                         </div>
                                     </div>
+                                  
                                 </div>
                             </div>
                         </div>
@@ -2573,14 +2354,17 @@
                                         }
                                     </style>
                 
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                                   
+                                </h1>
+                                <div>
+                                    <div class="modal fade" role="dialog" tabindex="-1" id="opensettings_step8">
                                         <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                 <div class="modal-body">
                                                     <div>
-                                                        {{#if tableheaderrecords}}
+                                                        {{#if customerListHeaders}}
                                                         <form class="d-xl-flex align-items-xl-center">
                                                             <div class="flex-grow-1">
                                                                 <style>
@@ -2621,7 +2405,7 @@
                                                                         }
                                                                     }
                                                                 </style>
-                                                                {{#each item in tableheaderrecords}}
+                                                                {{#each item in customerListHeaders}}
                                                                 {{#if equals item.sTitle "id"}}
                                                                 {{else}}
                 
@@ -2663,14 +2447,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                </h1>
+
+                                    <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
+                                        {{> addsupplierpop}}
+                                    </div>
+                                </div>
                             </header>
                 
                             <div class="row d-xl-flex flex-row justify-content-xl-center m-0" style="padding: 0px 20px 20px 20px; background-color: #ededed;">
                 
                                 <div class="col float-left flex-grow-1">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                    <button id="btnNewSupplier" name="btnNewSupplier" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Supplier</button>
+                                    <button data-toggle="#addSupplierModal" id="btnNewSupplier" name="btnNewSupplier" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Supplier</button>
                                 </div>
                 
                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
@@ -2809,8 +2597,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{#if datatablerecords}}
-                                                {{#each item in datatablerecords}}
+                                                {{#if supplierList}}
+                                                {{#each item in supplierList}}
                                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                                     <td contenteditable="false" class="colSupplierID hiddenColumn" >{{item.id}}</td>
                                                     <td contenteditable="false" class="colCompany" >{{item.company}}</td>

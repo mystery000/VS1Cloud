@@ -156,7 +156,17 @@ Template.paymentcard.onRendered(() => {
                 if(data.fields)
                 {
                     var customer_payment = data.fields.customer_payment;
-                    $("[id='Customer Payments_"+customer_payment+"']").attr("checked", "checked");                   
+                    $("[id='Customer Payments_"+customer_payment+"']").attr("checked", "checked");   
+                    $('#choosetemplate').attr("checked", "checked");
+
+                    if($('#choosetemplate').is(':checked'))
+                    {        
+                        $('#templateselection').modal('show');
+                    }
+                    else
+                    {   
+                    $('#templateselection').modal('hide');
+                    }                
                 }
         
     

@@ -1922,10 +1922,10 @@ Template.bankingoverview.events({
     'click .openaccountpayable': function() {
         FlowRouter.go('/chequelist');
     },
-    'click .opentrans': function(event) {
+    'click .opentrans': async function(event) {
         let bankAccountName = $(event.target).closest('.openaccountreceivable').attr('id');
         // FlowRouter.go('/accounttransactions?id=' + id);
-        addVS1Data('TAccountRunningBalanceReport', []);
+        await addVS1Data('TAccountRunningBalanceReport', []);
         FlowRouter.go("/balancetransactionlist?accountName=" +bankAccountName +"&isTabItem=" +false);
     },
     'click .btnPrinStatment': function() {
