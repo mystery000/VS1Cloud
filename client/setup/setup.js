@@ -174,7 +174,9 @@ Template.setup.onRendered(function () {
         index: i,
         active: currentStep == i ? true : false,
         clickable: i < currentStep ? !true : !false,
+        isConfirmed:  i > currentStep ? !true : !false,
       });
+
     }
     templateObject.steps.set(_steps);
   };
