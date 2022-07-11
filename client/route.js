@@ -1811,3 +1811,12 @@ authenticatedRoutes.route('/payrollleavetaken', {
         });
     }
 });
+
+authenticatedRoutes.route('/uomSettings', {
+    name: 'uomSettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'uomSettings'
+        });
+    }
+});

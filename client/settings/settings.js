@@ -77,6 +77,9 @@ Template.settings.events({
     },
     'click .btnTemplates': function(event) {
         FlowRouter.go('/templatesettings');
+    },
+    'click .btnUomSettings': function(event) {
+        FlowRouter.go('/uomSettings');
     }
 });
 
