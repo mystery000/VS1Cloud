@@ -12,6 +12,7 @@ import { Random } from 'meteor/random';
 import { AppointmentService } from '../appointments/appointment-service';
 import EmployeePaySettings from "../js/Api/Model/EmployeePaySettings";
 import EmployeePaySettingFields from "../js/Api/Model/EmployeePaySettingFields";
+import {Employee, EmployeeFields} from '../js/Api/Model/Employee';
 import AssignLeaveType from "../js/Api/Model/AssignLeaveType";
 import AssignLeaveTypeFields from "../js/Api/Model/AssignLeaveTypeFields";
 import PayTemplateEarningLine from "../js/Api/Model/PayTemplateEarningLine";
@@ -3003,7 +3004,7 @@ Template.employeescard.onRendered(function () {
                     }
                 });
 
-                console.log('useData', useData.length)
+                console.log('useData', useData)
                 let employeePaySettings = {}
                 let objEmployeePaySettings = {}
                 if( useData.length == 0 ){
@@ -3035,7 +3036,6 @@ Template.employeescard.onRendered(function () {
                     }  
                     templateObject.employeePaySettings.set(objEmployeePaySettings);                 
                 }else{
-                    console.log('step-2')
                     employeePaySettings = useData[0]
                     console.log( employeePaySettings )
                     objEmployeePaySettings = {
@@ -5138,28 +5138,26 @@ Template.employeescard.events({
             /**
              * Load EmployeePayrollApi API
              */
-            // const employeePayrollApi = new EmployeePayrollApi();
+            const employeePayrollApi = new EmployeePayrollApi();
 
-            // const apiEndpoint = employeePayrollApi.collection.findByName(
-            //     employeePayrollApi.collectionNames.TEmployeepaysettings
-            // );
-
-            // let employeePayrollService = new EmployeePayrollService();
+            const apiEndpoint = employeePayrollApi.collection.findByName(
+                employeePayrollApi.collectionNames.TEmployeepaysettings
+            );
 
             let useData = [];
             const listEmployeePaySettings = {}
-            let employeePaySettings = templateObject.employeePayInfos.get();
-            let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
-            if( TEmployeepaysettings.length ){
-                listEmployeePaySettings = JSON.parse(TEmployeepaysettings[0].data);
-                useData = EmployeePaySettings.fromList(
-                    listEmployeePaySettings.temployeepaysettings
-                ).filter((item) => {
-                    if ( item.fields.Employeeid !== parseInt(employeeID) ) {
-                        return item;
-                    }
-                });
-            }
+            // let employeePaySettings = templateObject.employeePayInfos.get();
+            // let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
+            // if( TEmployeepaysettings.length ){
+            //     listEmployeePaySettings = JSON.parse(TEmployeepaysettings[0].data);
+            //     useData = EmployeePaySettings.fromList(
+            //         listEmployeePaySettings.temployeepaysettings
+            //     ).filter((item) => {
+            //         if ( item.fields.Employeeid !== parseInt(employeeID) ) {
+            //             return item;
+            //         }
+            //     });
+            // }
 
             let TaxFileNumber = $("#edtTaxFileNumber").val();
             let TFNExemption = $("#edtTfnExemption").val();
@@ -5172,20 +5170,43 @@ Template.employeescard.events({
             let UpwardvariationRequested = $("#taxesUpwardVariationRequested").is(':checked') ? true : false;
             let SeniorandPensionersTaxOffsetClaimed = $("#taxesSeniorPensionersTaxOffsetClaimed").is(':checked') ? true : false;
             let HasApprovedWithholdingVariation = $("#taxesHasApprovedWithholdingVariation").is(':checked') ? true : false;
+            
+            let employeePaySettings = {
+                type: 'TEmployeepaysettings',
+                fields: {
+                    Employeeid: parseInt(employeeID),
+                    Employee: {
+                        type: 'TEmployeeDetails',
+                        fields: {
+                            ID: parseInt(employeeID),
+                            TFN: TaxFileNumber,
+                            TaxFreeThreshold: TaxFreeThreshold,
+                            TFNExemption: TFNExemption,
+                            EmploymentBasis: EmploymentBasis,
+                            ResidencyStatus: ResidencyStatus,
+                            StudyTrainingSupportLoan: StudyTrainingSupportLoan,
+                            EligibleToReceiveLeaveLoading: EligibleToReceiveLeaveLoading,
+                            OtherTaxOffsetClaimed: OtherTaxOffsetClaimed,
+                            UpwardvariationRequested: UpwardvariationRequested,
+                            SeniorandPensionersTaxOffsetClaimed: SeniorandPensionersTaxOffsetClaimed,
+                            HasApprovedWithholdingVariation: HasApprovedWithholdingVariation
+                        }
+                    }
+                }
+            };
 
-            employeePaySettings.fields.Employee.fields.TFN = TaxFileNumber;
-            employeePaySettings.fields.Employee.fields.TaxFreeThreshold = TaxFreeThreshold;
-            employeePaySettings.fields.Employee.fields.TFNExemption = TFNExemption;
-            employeePaySettings.fields.Employee.fields.EmploymentBasis = EmploymentBasis;
-            employeePaySettings.fields.Employee.fields.ResidencyStatus = ResidencyStatus;
-            employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan = StudyTrainingSupportLoan;
-            employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading = EligibleToReceiveLeaveLoading;
-            employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed = OtherTaxOffsetClaimed;
-            employeePaySettings.fields.Employee.fields.UpwardvariationRequested = UpwardvariationRequested;
-            employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed = SeniorandPensionersTaxOffsetClaimed;
-            employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation = HasApprovedWithholdingVariation;
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(employeePaySettings),
+            });
 
-            useData.push(employeePaySettings);
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                console.log('jsonResponse', jsonResponse)
+            }
+
+            return false
 
             /**
              * Saving employeePaySettings Object in localDB

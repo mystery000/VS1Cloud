@@ -15,7 +15,8 @@ export default class EmployeePayrollApi {
         TEarnings: "TEarnings",
         TDeduction: "TDeduction",
         TSuperannuation: "TSuperannuation",
-        TReimbursement: "TReimbursement"
+        TReimbursement: "TReimbursement",
+        TLeave: "TLeave"
     };
 
     this.collection = new ApiCollection([
@@ -42,6 +43,11 @@ export default class EmployeePayrollApi {
         new ApiEndpoint({
           name: this.collectionNames.TReimbursement,
           url: ApiService.getBaseUrl({ endpoint: "TReimbursement" }),
+          headers: ApiService.getHeaders()
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TLeave,
+          url: ApiService.getBaseUrl({ endpoint: "TLeave" }),
           headers: ApiService.getHeaders()
         })
     ]);

@@ -246,6 +246,7 @@ openDb = function (dbName) {
       db.createObjectStore('TemplateSettings', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TVS1Superannuation',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayrollHolidayGroup',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TLeave',{ keyPath: "EmployeeEmail"});
 
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
