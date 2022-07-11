@@ -281,12 +281,9 @@ Template.taxRatesSettings.onRendered(function () {
             description: useData[i].Description || '-',
             region: useData[i].RegionName || '-',
             rate: taxRate || '-',
-
-
           };
 
           dataTableList.push(dataList);
-          //}
         }
 
         templateObject.datatablerecords.set(dataTableList);

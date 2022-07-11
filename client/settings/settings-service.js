@@ -93,6 +93,26 @@ export class TaxRateService extends BaseService {
         return this.getList(this.ERPObjects.TTaxCode, options);
     }
 
+    getSubTaxDropDown() {
+        let options = {
+            PropertyList: "CodeName",
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TSubTaxCode, options);
+    }
+
+    saveSubTax(data) {
+        return this.POST(this.ERPObjects.TSubTaxCode, data);
+    }
+
+    getSubTaxVS1() {
+        let options = {
+            PropertyList: "ID,CodeName,Description,Category,Active",
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TSubTaxVS1, options);
+    }
+
     checkTermByName(termName) {
         let options = {
             select: "[TermsName]='" + termName + "'"
