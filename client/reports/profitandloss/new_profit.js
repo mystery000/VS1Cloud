@@ -948,7 +948,7 @@ Template.newprofitandloss.events({
       _currencySelectedList.push(_currency);
     }
 
-    //console.log("Selected currency list", _currencySelectedList);
+    // console.log("Selected currency list", _currencySelectedList);
 
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
@@ -2268,7 +2268,7 @@ Template.newprofitandloss.helpers({
 
     // get default currency symbol
     // let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
-    //console.log("default: ",_defaultCurrency);
+    // console.log("default: ",_defaultCurrency);
     // amount = amount.replace(_defaultCurrency.symbol, '');
     // console.log("Is nan", amount, isNaN(amount));
     // amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
@@ -2322,12 +2322,12 @@ Template.newprofitandloss.helpers({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
-    //console.log("final amount", amount);
+    // console.log("final amount", amount);
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-    //console.log(convertedAmount);
+    // console.log(convertedAmount);
 
     return convertedAmount;
   },
@@ -2358,7 +2358,7 @@ Template.newprofitandloss.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
-      //console.log(activeArray[0].currency);
+      // console.log(activeArray[0].currency);
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -2499,7 +2499,7 @@ async function loadCurrency() {
     //taxRateService.getCurrencies().then((result) => {
     // console.log(result);
     const data = result.tcurrency;
-    //console.log(data);
+    // console.log(data);
     for (let i = 0; i < data.length; i++) {
       // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
       var dataList = {

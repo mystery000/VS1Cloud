@@ -48,7 +48,7 @@ Template.generalledger.onRendered(() => {
 
   let prevMonth = moment().subtract(1, 'months').format('MM')
 
-  console.log( prevMonth )
+  // console.log( prevMonth )
 
   if (currentDate.getDate() < 10) {
     fromDateDay = "0" + currentDate.getDate();
@@ -395,7 +395,7 @@ Template.generalledger.onRendered(() => {
       let totalRecord = [];
       let grandtotalRecord = [];
 
-      //console.log("Untouched data: ", data.tgeneralledgerreport);
+      // console.log("Untouched data: ", data.tgeneralledgerreport);
 
       if (data.tgeneralledgerreport.length) {
         let records = [];
@@ -736,7 +736,7 @@ Template.generalledger.events({
       _currencySelectedList.push(_currency);
     }
 
-    //console.log("Selected currency list", _currencySelectedList);
+    // console.log("Selected currency list", _currencySelectedList);
 
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
@@ -1208,7 +1208,7 @@ Template.generalledger.helpers({
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
     // )[0];
-    //console.log("default: ",_defaultCurrency);
+    // console.log("default: ",_defaultCurrency);
     // amount = amount.replace(_defaultCurrency.symbol, "");
 
     // console.log("Is nan", amount, isNaN(amount));
@@ -1270,12 +1270,12 @@ Template.generalledger.helpers({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
-    //console.log("final amount", amount);
+    // console.log("final amount", amount);
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-    //console.log(convertedAmount);
+    // console.log(convertedAmount);
 
     return convertedAmount;
   },
@@ -1294,7 +1294,7 @@ Template.generalledger.helpers({
   },
   isNegativeAmount(amount) {
     if (Math.sign(amount) === -1) {
-      //console.log("The amount is: ", amount);
+      // console.log("The amount is: ", amount);
       return true;
     }
     return false;
@@ -1307,7 +1307,7 @@ Template.generalledger.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
-      //console.log(activeArray[0].currency);
+      // console.log(activeArray[0].currency);
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -1379,7 +1379,7 @@ Template.registerHelper("containsequals", function (a, b) {
     //taxRateService.getCurrencies().then((result) => {
     // console.log(result);
     const data = result.tcurrency;
-    //console.log(data);
+    // console.log(data);
     for (let i = 0; i < data.length; i++) {
       // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
       var dataList = {

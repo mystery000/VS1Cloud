@@ -33,20 +33,20 @@ if (Meteor.isServer) {
 }
 Meteor.methods({
   readMethod: function (useremail) {
-    //console.log(useremail+' '+userLoginPassword);
+    // console.log(useremail+' '+userLoginPassword);
     var documentUser = CloudUser.findOne({ cloudEmail: useremail });
     // console.log(documentUser);
     if (!documentUser) {
       //throw new Meteor.Error( 'document-not-found', 'No documents found matching this query.' );
     } else {
-      //console.log(documentUser);
+      // console.log(documentUser);
     }
     return documentUser;
   },
   readMethodLog: function (useremail, userLoginPassword, userHashPassword) {
-    //console.log(useremail+' '+userLoginPassword);
+    // console.log(useremail+' '+userLoginPassword);
     var documentUser = CloudUser.find({ cloudEmail: useremail, cloudHashPassword: userLoginPassword }).fetch();
-    //console.log(document);
+    // console.log(document);
     if (!documentUser) {
       //throw new Meteor.Error( 'document-not-found', 'No documents found matching this query.' );
     } else {
@@ -59,7 +59,7 @@ Meteor.methods({
     if (!documentPref) {
       //throw new Meteor.Error( 'document-not-found', 'No documents found matching this query.' );
     } else {
-      //console.log(document);
+      // console.log(document);
     }
     return documentPref;
   }
