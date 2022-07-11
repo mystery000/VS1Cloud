@@ -208,15 +208,18 @@ authenticatedRoutes.route('/dashboard', {
     }
 });
 
+// custom route
 
-authenticatedRoutes.route('/dashboard-sales-manager', {
-    name: 'dashboard',
+
+authenticatedRoutes.route('/salesdashboard',{
+    name: 'salesdashboard' ,
     action() {
         BlazeLayout.render('layout', {
-            yield: 'dashboard'
+            yield: 'salesdashboard'
         });
     }
 });
+// custom route end
 
 authenticatedRoutes.route('/appointments', {
     name: 'appointments',

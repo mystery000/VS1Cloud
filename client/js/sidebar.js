@@ -28,6 +28,8 @@ Template.sidenav.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.includeDashboard = new ReactiveVar();
     templateObject.includeDashboard.set(false);
+    templateObject.includeSalesdashboard = new ReactiveVar();
+    templateObject.includeSalesdashboard.set(false);
     templateObject.includeMain = new ReactiveVar();
     templateObject.includeMain.set(false);
     templateObject.includeInventory = new ReactiveVar();
@@ -131,6 +133,7 @@ Template.sidenav.onRendered(function() {
     let employeeLoggedUserAccess = Session.get('ERPSolidCurrentUSerAccess');
 
     let isDashboard = Session.get('CloudDashboardModule');
+    let isSalesDash = Session.get('CloudSalesDashModule');
     let isMain = Session.get('CloudMainModule');
     let isInventory = Session.get('CloudInventoryModule');
     let isManufacturing = Session.get('CloudManufacturingModule');
@@ -490,6 +493,9 @@ Template.sidenav.onRendered(function() {
     if (LoggedDB !== null) {
         if (isDashboard) {
             templateObject.includeDashboard.set(true);
+        }
+        if (isSalesDash) {
+            templateObject.includeSalesdashboard.set(true);
         }
         if (isMain) {
             templateObject.includeMain.set(true);
@@ -3532,6 +3538,9 @@ Template.sidenav.events({
 Template.sidenav.helpers({
     includeDashboard: () => {
         return Template.instance().includeDashboard.get();
+    },
+    includeSalesdashboard: () => {
+        return Template.instance().includeincludeSalesdashboard.get();
     },
     includeMain: () => {
         return Template.instance().includeMain.get();

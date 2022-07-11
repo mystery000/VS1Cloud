@@ -7,6 +7,8 @@ Template.home.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.includeDashboard = new ReactiveVar();
     templateObject.includeDashboard.set(false);
+    templateObject.includeSalesdashboard = new ReactiveVar();
+    templateObject.includeSalesdashboard.set(true);
     templateObject.includeMain = new ReactiveVar();
     templateObject.includeMain.set(false);
     templateObject.includeInventory = new ReactiveVar();
