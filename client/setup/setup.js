@@ -452,7 +452,7 @@ Template.setup.onRendered(function () {
       }
 
       setTimeout(() => {
-        $("#taxRatesList")
+        $("#taxRatesTable")
           .DataTable({
             columnDefs: [
               {
@@ -481,7 +481,7 @@ Template.setup.onRendered(function () {
             responsive: true,
             order: [[0, "asc"]],
             action: function () {
-              $("#taxRatesList").DataTable().ajax.reload();
+              $("#taxRatesTable").DataTable().ajax.reload();
             },
             fnDrawCallback: function (oSettings) {
               setTimeout(function () {
@@ -4279,6 +4279,7 @@ Template.setup.events({
     localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
   },
   "click .btnBack": function (event) {
+    let templateObject = Template.instance();
     let stepId = $(event.target).attr("data-step-id");
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
@@ -4554,7 +4555,7 @@ Template.setup.events({
   // TODO: Step 2
   // Active Tax Rates
   "click .chkDatatableTaxRate": function (event) {
-    var columns = $("#taxRatesList th");
+    var columns = $("#taxRatesTable th");
     let columnDataValue = $(event.target)
       .closest("div")
       .find(".divcolumnTaxRate")
@@ -4698,7 +4699,7 @@ Template.setup.events({
     let columnDatanIndex = $(event.target)
       .closest("div.columnSettings")
       .attr("id");
-    var datable = $("#taxRatesList").DataTable();
+    var datable = $("#taxRatesTable").DataTable();
     var title = datable.column(columnDatanIndex).header();
     $(title).html(columData);
   },
@@ -4718,7 +4719,7 @@ Template.setup.events({
       .prev()
       .find(".divcolumnTaxRate")
       .text();
-    var datable = $("#taxRatesList th");
+    var datable = $("#taxRatesTable th");
     $.each(datable, function (i, v) {
       if (v.innerText == columnDataValue) {
         let className = v.className;
@@ -4729,7 +4730,7 @@ Template.setup.events({
   },
   "click .btnOpenSettingsTaxRate": function (event) {
     let templateObject = Template.instance();
-    var columns = $("#taxRatesList th");
+    var columns = $("#taxRatesTable th");
 
     const tableHeaderList = [];
     let sTible = "";
@@ -5159,7 +5160,7 @@ Template.setup.events({
         $(".fullScreenSpin").css("display", "none");
       });
   },
-  "click #taxRatesList td.clickable": (e) => TaxRatesEditListener(e),
+  "click #taxRatesTable td.clickable": (e) => TaxRatesEditListener(e),
   "click .table-remove-tax-rate": (e) => {
     e.stopPropagation();
     const targetID = $(e.target).closest("tr").attr("id"); // table row ID
