@@ -155,8 +155,8 @@ Meteor.startup(() => {
         let postHeaders = {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "CLIENT-ID": "vrf9JUep9GWNHCpIKRREbTA9jbrF4LxdoEtiyLO",
-          "AUTHORIZATION": "apikey dev.vs1cloud:d56dcb27df3930fccceb8dd4c7e2628d",
+          "CLIENT-ID": "vrfL66wgAgzekdXcv1A58cz4Nn6AA97plgPEiTM",
+          "AUTHORIZATION": "apikey rasheedariyibi1:d323b9196724528cd72b9f8617db276e",
           // "Access-Control-Allow-Origin": "*"
         };
         let postData = {
