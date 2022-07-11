@@ -67,12 +67,16 @@ Template.agedreceivablessummary.onRendered(()=>{
   });
   $("#dateFrom").val(fromDate);
    $("#dateTo").val(begunDate);
-
+    let contactName = FlowRouter.current().queryParams.contact ||'';
+    let contactID = FlowRouter.current().queryParams.contactid ||'';
+    if(FlowRouter.current().queryParams.contact){
+      localStorage.setItem('VS1AgedReceivableSummary_Report','');
+    }
     templateObject.getAgedReceivableReports = function (dateFrom, dateTo, ignoreDate) {
       templateObject.records.set('');
       templateObject.grandrecords.set('');
       if(!localStorage.getItem('VS1AgedReceivableSummary_Report')){
-        reportService.getAgedReceivableDetailsSummaryData(dateFrom, dateTo, ignoreDate).then(function (data) {
+        reportService.getAgedReceivableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID).then(function (data) {
           let totalRecord = [];
           let grandtotalRecord = [];
 

@@ -1920,6 +1920,32 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
+  getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID) {
+    let options = "";
+    if(contactID != ''){
+      options = {
+        IgnoreDates: true,
+        ClientID:contactID
+      };
+    }else{
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        select: "[deleted]=false",
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        select: "[deleted]=false",
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        LimitCount: '"' + initialReportLoad + '"',
+      };
+    }
+  }
+    return this.getList(this.ERPObjects.TAPReport, options);
+  }
+
   getTAPReportByName(contactName) {
     let options = "";
     options = {

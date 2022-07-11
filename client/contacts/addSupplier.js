@@ -1035,14 +1035,21 @@ Template.supplierscard.events({
         }
     },
     'click .openBalance': function (event) {
+        let currentId = FlowRouter.current().queryParams.id||'';
         let supplierName = $('#edtSupplierCompany').val() || '';
         if (supplierName !== "") {
-            // if(supplierName.indexOf('^') > 0) {
-            //   supplierName = supplierName.split('^')[0]
-            // }
-            window.open('/agedpayables?contact='+supplierName, '_self');
+            window.open('/agedpayables?contact='+supplierName+'&contactid='+currentId, '_self');
         } else {
             window.open('/agedpayables','_self');
+        }
+    },
+    'click .openBalancesummary': function (event) {
+        let currentId = FlowRouter.current().queryParams.id||'';
+        let supplierName = $('#edtSupplierCompany').val() || '';
+        if (supplierName !== "") {
+            window.open('/agedpayablessummary?contact='+supplierName+'&contactid='+currentId, '_self');
+        } else {
+            window.open('/agedpayablessummary','_self');
         }
     },
     'click .btnBack':function(event){
