@@ -70,7 +70,7 @@ async function saveCharts() {
   ChartHandler.buildPositions();
 
   const charts = $(".chart-visibility.editCharts");
-  // console.log(charts);
+
   /**
    * @property {Tvs1ChartDashboardPreference[]}
    */
@@ -82,7 +82,6 @@ async function saveCharts() {
   );
 
   Array.prototype.forEach.call(charts, (chart) => {
-    //console.log(chart);
     chartList.push(
       new Tvs1ChartDashboardPreference({
         type: "Tvs1dashboardpreferences",
@@ -106,8 +105,6 @@ async function saveCharts() {
   });
 
   for (const _chart of chartList) {
-    // chartList.forEach(async (chart) => {
-    //console.log("Saving chart");
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
@@ -116,14 +113,8 @@ async function saveCharts() {
 
     if (ApiResponse.ok == true) {
       const jsonResponse = await ApiResponse.json();
-      // console.log(
-      //   "Chart: " +
-      //     _chart.ChartName +
-      //     " will be hidden ? " +
-      //     !_chart.fields.Active
-      // );
+      
     }
-    //});
   }
 }
 
@@ -177,7 +168,6 @@ Template.allChartLists.onRendered(function () {
 
       if (allChartResponse.ok == true) {
         const allChartsJsonResponse = await allChartResponse.json();
-        //console.log(allChartsJsonResponse);
         chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
       }
     }
@@ -185,8 +175,6 @@ Template.allChartLists.onRendered(function () {
     if( chartList.length > 0 ){
       // Hide all charts
       $('.sortable-chart-widget-js').addClass("hideelement");
-      // console.log(allChartResponse);
-      // console.log('chartlist', chartList);
       // the goal here is to get the right names so it can be used for preferences
       chartList.forEach((chart) => {
         setTimeout(() => {
@@ -202,8 +190,23 @@ Template.allChartLists.onRendered(function () {
             chart.fields.ID
           );
 
+          // Default charts          
+          let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
+          $(`[key='${chart.fields._chartSlug}']`).addClass(defaultClass);
+          $(`[key='${chart.fields._chartSlug}']`).attr('width', '100%');
+          $(`[key='${chart.fields._chartSlug}']`).css('height', "auto");
+          $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
+            "width",
+            "100%"
+          );
+          $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
+            "height",
+            "auto"
+          );
+          
+
           if (chart.fields.ChartGroup == _chartGroup) {
-            // Default charts
+
             defaultChartList.push(chart.fields._chartSlug);
 
             $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
@@ -267,42 +270,20 @@ Template.allChartLists.onRendered(function () {
 
     // Now get user preferences
     let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
-    // console.log('tvs1ChartDashboardPreference', tvs1ChartDashboardPreference)
     
     if (tvs1ChartDashboardPreference.length > 0) {
       // if charts to be displayed are specified
       tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
         setTimeout(() => {
-        // this is good to see how the charts are apearing or not
-        //if (tvs1chart.fields.ChartGroup == "Dashboard") {
+
         const itemName =
           tvs1chart.fields.ChartGroup.toLowerCase() +
           "__" +
           tvs1chart.fields.Chartname.toLowerCase().split(" ").join("_"); // this is the new item name
-
-        //localStorage.setItem(itemName, tvs1chart);
-        //console.log(itemName + " " + tvs1chart.fields.Active);
-
-        //if (itemList.includes(itemName) == true) {
         
 
         $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
         $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
-
-        // This the default size if ever it zero
-        // if ($(`[key='${itemName}'] .ui-resizable`).width() < 150) {
-        //   $(`[key='${itemName}'] .ui-resizable`).css("width", "500px");
-        // }
-
-        // This the default size if ever it zero
-        // if ($(`[key='${itemName}'] .ui-resizable`).height() < 150) {
-        //   $(`[key='${itemName}'] .ui-resizable`).css("height", "350px");
-          
-        //   const height = $(`[key='${itemName}'] .card-body`).height();
-        //   console.log(height);
-        //   $(`[key='${itemName}'] canvas`).attr("height", height);
-        //   $(`[key='${itemName}'] canvas`).css("height", `${height}px`);
-        // }
 
         $(`[key='${itemName}']`).attr("pref-id", tvs1chart.fields.ID);
         $(`[key='${itemName}']`).attr("position", tvs1chart.fields.Position);
@@ -345,7 +326,6 @@ Template.allChartLists.onRendered(function () {
           }
 
           $(`[key='${itemName}']`).removeClass("hideelement");
-          //$(`[key='${itemName}']`).attr("is-hidden", false);
         } else {
           let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
           $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
@@ -357,8 +337,6 @@ Template.allChartLists.onRendered(function () {
             "true"
           );
         }
-        //}
-        //}
         }, 500);
       });     
 
@@ -405,16 +383,10 @@ Template.allChartLists.events({
   "click .on-editor-change-mode": (e) => {
     // this will toggle the visibility of the widget
     if ($(e.currentTarget).attr("is-hidden") == "true") {
-      // console.log('was true');
-      // $(e.currentTarget).parent(".chart-visibility").attr("is-hidden", 'false');
-      // $(e.currentTarget).parent(".chart-visibility").addClass('hideelement');
       $(e.currentTarget).attr("is-hidden", "false");
 
       $(e.currentTarget).html("<i class='far fa-eye'></i>");
     } else {
-      // console.log('was false');
-      // $(e.currentTarget).parent(".chart-visibility").attr("is-hidden", 'true');
-      // $(e.currentTarget).parent(".chart-visibility").removeClass('hideelement');
       $(e.currentTarget).attr("is-hidden", "true");
       $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
     }
@@ -466,7 +438,6 @@ Template.allChartLists.events({
   "click #btnCancel": async () => {
     $(".fullScreenSpin").css("display", "block");
     chartsEditor.disable();
-    console.log('sdfsd');
     const templateObject = Template.instance();
     await templateObject.hideChartElements();
     await templateObject.checkChartToDisplay();
