@@ -12,21 +12,21 @@ let currentFormatedDate =
   currentDate.getFullYear();
 
 
-Template.updateCurrencies.onCreated(function () {
-  const templateObject = Template.instance();
-});
+// Template.updateCurrencies.onCreated(function () {
+//   const templateObject = Template.instance();
+// });
 
-Template.updateCurrencies.onRendered(function () {
-  let templateObject = Template.instance();
-  console.log("Currency user");
+// Template.updateCurrencies.onRendered(function () {
+//   let templateObject = Template.instance();
+//   console.log("Currency user");
 
-  const targetUserId = FlowRouter.getParam("_userId");
+//   const targetUserId = FlowRouter.getParam("_userId");
 
-  console.log(targetUserId);
+//   console.log(targetUserId);
 
-  return {targetUserId};
+//   return {targetUserId};
 
-  updateAllCurrencies(targetUserId);
+//   updateAllCurrencies(targetUserId);
 
 
-});
+// });

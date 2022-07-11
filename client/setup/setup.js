@@ -175,6 +175,7 @@ Template.setup.onRendered(function () {
         active: currentStep == i ? true : false,
         clickable: i < currentStep ? !true : !false,
         isConfirmed:  i > currentStep ? !true : !false,
+        skippedSteps: []
       });
 
     }
@@ -5109,6 +5110,8 @@ Template.setup.events({
     } else {
       $(".setup-complete").css("display", "flex");
     }
+    let _steps = templateObject.steps.get();
+    _steps.skippedSteps.push(stepId);
     localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
   },
   "click .gotToStepID": function (event) {
