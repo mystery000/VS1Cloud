@@ -325,10 +325,27 @@ export class PaymentsService extends BaseService {
       return this.getList(this.ERPObjects.TAPReport, options);
   }
 
+  getOverviewAPDetailsSupp(supplierID) {
+      let options = {
+        IgnoreDates: true,
+        ClientID: supplierID,
+          // select: "[Pay]=false"
+      };
+      return this.getList(this.ERPObjects.TAPReport, options);
+  }
+
   getOverviewARDetails() {
       let options = {
           IgnoreDates: true,
           // select: "[Pay]=false"
+      };
+      return this.getList(this.ERPObjects.TARReport, options);
+  }
+
+  getOverviewARDetailsCust(CustID) {
+      let options = {
+          IgnoreDates: true,
+          ClientID: CustID,
       };
       return this.getList(this.ERPObjects.TARReport, options);
   }

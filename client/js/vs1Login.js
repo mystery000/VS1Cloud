@@ -226,7 +226,11 @@ Template.vs1login.onRendered(function () {
 
     });
    };
-    templateObject.checkOpenDbCheckVersion();
+   templateObject.checkOpenDbCheckVersion();
+   setTimeout(async function() {
+       await templateObject.checkOpenDbCheckVersion();
+   }, 500);
+
     function getSideBarData(employeeID, accessUserName, accessDatabase, erpdbname) {
 
         let lineItemslevel = [];

@@ -2,8 +2,6 @@ export default class ApiService {
   constructor() {
     this.erpGet = erpDb();
     this.ERPObjects = ERPObjects();
-
-    console.log("ApiService module loaded");
   }
 
   /**

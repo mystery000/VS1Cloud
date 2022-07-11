@@ -5374,12 +5374,13 @@ Template.chequecard.events({
         },
       };
 
-      purchaseService
-        .saveChequeEx(objDetails)
-        .then(function (objDetails) {
-          FlowRouter.go("/chequelist?success=true");
-        })
-        .catch(function (err) {
+      purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
+          if(FlowRouter.current().queryParams.trans){
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+          }else{
+            FlowRouter.go("/chequelist?success=true");
+          };
+        }).catch(function (err) {
           swal({
             title: "Oooops...",
             text: err,
@@ -5397,7 +5398,11 @@ Template.chequecard.events({
           $(".fullScreenSpin").css("display", "none");
         });
     } else {
-      FlowRouter.go("/chequelist?success=true");
+      if(FlowRouter.current().queryParams.trans){
+        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+      }else{
+        FlowRouter.go("/chequelist?success=true");
+      };
     }
     $("#deleteLineModal").modal("toggle");
   },
@@ -5860,7 +5865,12 @@ Template.chequecard.events({
                   },
                   function (error, result) {
                     if (error && error.error === "error") {
-                      FlowRouter.go("/chequelist?success=true");
+
+                      if(FlowRouter.current().queryParams.trans){
+                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                      }else{
+                        FlowRouter.go("/chequelist?success=true");
+                      };
                     } else {
                       $("#html-2-pdfwrapper").css("display", "none");
                       swal({
@@ -5876,7 +5886,11 @@ Template.chequecard.events({
                         confirmButtonText: "OK",
                       }).then((result) => {
                         if (result.value) {
-                          FlowRouter.go("/chequelist?success=true");
+                          if(FlowRouter.current().queryParams.trans){
+                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                          }else{
+                            FlowRouter.go("/chequelist?success=true");
+                          };
                         } else if (result.dismiss === "cancel") {
                         }
                       });
@@ -5898,7 +5912,11 @@ Template.chequecard.events({
                   },
                   function (error, result) {
                     if (error && error.error === "error") {
-                      FlowRouter.go("/chequelist?success=true");
+                      if(FlowRouter.current().queryParams.trans){
+                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                      }else{
+                        FlowRouter.go("/chequelist?success=true");
+                      };
                     } else {
                       $("#html-2-pdfwrapper").css("display", "none");
                       swal({
@@ -5909,7 +5927,11 @@ Template.chequecard.events({
                         confirmButtonText: "OK",
                       }).then((result) => {
                         if (result.value) {
-                          FlowRouter.go("/chequelist?success=true");
+                          if(FlowRouter.current().queryParams.trans){
+                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                          }else{
+                            FlowRouter.go("/chequelist?success=true");
+                          };
                         } else if (result.dismiss === "cancel") {
                         }
                       });
@@ -5931,7 +5953,11 @@ Template.chequecard.events({
                   },
                   function (error, result) {
                     if (error && error.error === "error") {
-                      FlowRouter.go("/chequelist?success=true");
+                      if(FlowRouter.current().queryParams.trans){
+                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                      }else{
+                        FlowRouter.go("/chequelist?success=true");
+                      };
                     } else {
                       $("#html-2-pdfwrapper").css("display", "none");
                       swal({
@@ -5942,7 +5968,11 @@ Template.chequecard.events({
                         confirmButtonText: "OK",
                       }).then((result) => {
                         if (result.value) {
-                          FlowRouter.go("/chequelist?success=true");
+                          if(FlowRouter.current().queryParams.trans){
+                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                          }else{
+                            FlowRouter.go("/chequelist?success=true");
+                          };
                         } else if (result.dismiss === "cancel") {
                         }
                       });
@@ -5952,7 +5982,11 @@ Template.chequecard.events({
                   }
                 );
               } else {
-                FlowRouter.go("/chequelist?success=true");
+                if(FlowRouter.current().queryParams.trans){
+                  FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                }else{
+                  FlowRouter.go("/chequelist?success=true");
+                };
               }
             };
           }
@@ -6511,7 +6545,12 @@ Template.chequecard.events({
   },
   "click .btnBack": function (event) {
     event.preventDefault();
-    history.back(1);
+    if(FlowRouter.current().queryParams.trans){
+      FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+    }else{
+      history.back(1);
+    };
+
   },
   "click #btnViewPayment": function () {
     var url = FlowRouter.current().path;

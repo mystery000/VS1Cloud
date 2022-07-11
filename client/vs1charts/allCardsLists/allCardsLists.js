@@ -29,7 +29,7 @@ Template.allCardsLists.onRendered(function () {
         cardPreferencesEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
+        );
         cardPreferencesEndpoint.url.searchParams.append(
             "select",
             `[EmployeeID]=${employeeID}`
@@ -40,7 +40,7 @@ Template.allCardsLists.onRendered(function () {
             cardPreferencesEndpointJsonResponse = await cardPreferencesEndpointResponse.json();
             await addVS1Data('Tvs1CardPreference', JSON.stringify(cardPreferencesEndpointJsonResponse))
             return true
-        }        
+        }
     }
 
 
@@ -64,12 +64,11 @@ Template.allCardsLists.onRendered(function () {
                         return card;
                     }
                 });
-                // console.log('cardList', cardList)
             }
             if( cardList.length > 0 ){
                 cardList.forEach((card) => {
                     $(`[card-key='${card.fields.CardKey}']`).attr("position", card.fields.Position);
-                    $(`[card-key='${card.fields.CardKey}']`).attr("card-id", card.fields.ID);                    
+                    $(`[card-key='${card.fields.CardKey}']`).attr("card-id", card.fields.ID);
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
                     if( card.fields.Active == false ){
                         $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
@@ -106,7 +105,6 @@ Template.allCardsLists.onRendered(function () {
     templateObject.setCardPositions();
 
     templateObject.activateDraggable = () => {
-        // console.log('i am doing texting')
         setTimeout(function(){
             $(".connectedCardSortable").sortable({
                 disabled: false,
@@ -114,8 +112,6 @@ Template.allCardsLists.onRendered(function () {
                 placeholder: "portlet-placeholder ui-corner-all",
                 tolerance: 'pointer',
                 stop: async (event, ui) => {
-                    // console.log($(ui.item[0]));
-                    console.log("Dropped the sortable chart");
                     if( $(ui.item[0]).hasClass("dimmedChart") == false ){
                         // Here we rebuild positions tree in html
                         await ChartHandler.buildCardPositions();
@@ -124,8 +120,8 @@ Template.allCardsLists.onRendered(function () {
                         $(".fullScreenSpin").css("display", "none");
                     }
                 },
-            }).disableSelection();    
-        }, 500)    
+            }).disableSelection();
+        }, 500)
     };
 
     templateObject.activateDraggable();
@@ -144,7 +140,6 @@ Template.allCardsLists.onRendered(function () {
 
         const cards = $(".card-visibility");
         const cardList = [];
-        // console.log(cards);
         for (let i = 0; i < cards.length; i++) {
             cardList.push(
                 new Tvs1CardPreference({
@@ -167,10 +162,9 @@ Template.allCardsLists.onRendered(function () {
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(_card),
                 });
-            
+
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
-                    console.log('jsonResponse', jsonResponse)
                 }
             }
             await templateObject.saveCardsLocalDB();
@@ -187,13 +181,13 @@ Template.allCardsLists.events({
         if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
             $('.cardShowBtn').removeClass('hideelement');
             $('.editCardBtn').find('i').removeClass('fa-cog')
-            $('.editCardBtn').find('i').addClass('fa-save')      
+            $('.editCardBtn').find('i').addClass('fa-save')
         }else{
             $(".fullScreenSpin").css("display", "block");
             $('.cardShowBtn').addClass('hideelement');
             $('.editCardBtn').find('i').removeClass('fa-save')
             $('.editCardBtn').find('i').addClass('fa-cog');
-            // Save cards 
+            // Save cards
             await templateObject.saveCards();
             await templateObject.setCardPositions();
             $(".fullScreenSpin").css("display", "none");
@@ -208,16 +202,16 @@ Template.allCardsLists.events({
     },
     "click .cardShowBtn": function(e){
         e.preventDefault();
-        let templateObject = Template.instance();        
+        let templateObject = Template.instance();
         if( $(e.target).find('.far').hasClass('fa-eye') ){
             $(e.target).find('.far').removeClass('fa-eye')
             $(e.target).find('.far').addClass('fa-eye-slash')
-            $(e.target).parents('.card-visibility').attr('card-active', 'false') 
+            $(e.target).parents('.card-visibility').attr('card-active', 'false')
         }else{
             $(e.target).find('.far').removeClass('fa-eye-slash')
             $(e.target).find('.far').addClass('fa-eye')
             $(e.target).parents('.card-visibility').attr('card-active', 'true')
-        }         
+        }
         return false
     },
 });

@@ -5,15 +5,14 @@ export default class FxApi {
     "d2ViaW55Zmk2MzU1NjQ4MDg6czluZnFia3BjaTBpMzNrMnZybDJwOTZ2dm4=";
 
   constructor() {
-    console.log("Fx Api Loaded");
   }
 
   /**
-   * 
-   * @param {String} to 
-   * @param {String} from 
-   * @param {float} amount 
-   * @returns {{buy: float, sell: float}} 
+   *
+   * @param {String} to
+   * @param {String} from
+   * @param {float} amount
+   * @returns {{buy: float, sell: float}}
    */
   async getExchangeRate(to = "EUR", from = "AUD", amount = 1) {
     try {
@@ -45,7 +44,6 @@ export default class FxApi {
         };
       }
     } catch (e) {
-      console.log(e);
     }
   }
 

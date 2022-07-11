@@ -89,7 +89,7 @@ Template.accountsoverview.onRendered(function () {
     }
   );
 
- 
+
 
   templateObject.getAllTaxCodes = function () {
     getVS1Data("TTaxcodeVS1")
@@ -1922,15 +1922,12 @@ Template.accountsoverview.onRendered(function () {
   );
 
   //Open balance
-  $("#tblAccountOverview tbody").on("click", "tr .colBalance", function () {
+  $("#tblAccountOverview tbody").on("click", "tr .colBalance", async function () {
     var listData = $(this).closest("tr").attr("id");
-    var accountName = $(event.target)
-      .closest("tr")
-      .find(".colAccountName")
-      .text();
+    var accountName = $(event.target).closest("tr").find(".colAccountName").text();
     let columnBalClass = $(event.target).attr("class");
     let accountService = new AccountService();
-    addVS1Data('TAccountRunningBalanceReport', []);
+    await addVS1Data('TAccountRunningBalanceReport', []);
     FlowRouter.go("/balancetransactionlist?accountName=" +accountName +"&isTabItem=" +false);
     //window.open('/balancetransactionlist?accountName=' + accountName+ '&isTabItem='+false,'_self');
   });

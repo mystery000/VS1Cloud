@@ -94,14 +94,14 @@ Template.header.onRendered(function() {
     const templateObject = Template.instance();
     let sidePanelToggle = Session.get('sidePanelToggle');
 
-    var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide')||'false';
+    var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide') || 'false';
     setTimeout(function() {
-    if(dontOpenSearchGuide == 'true' || dontOpenSearchGuide == true){
-      $(".chkOpenByDefault").prop("checked", true);
-    }else{
-      $(".chkOpenByDefault").prop("checked", false);
-    }
-  }, 200);
+        if (dontOpenSearchGuide == 'true' || dontOpenSearchGuide == true) {
+            $(".chkOpenByDefault").prop("checked", true);
+        } else {
+            $(".chkOpenByDefault").prop("checked", false);
+        }
+    }, 200);
     var isMobile = false;
     if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
         /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) {
@@ -114,18 +114,35 @@ Template.header.onRendered(function() {
         document.getElementById("mobileBarcodeScan2").style.display = "block";
     }
 
+    $(document).keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            if ($('#searchGuideModal').css('display') == 'block') {
+                $( "#btnCloseSearchGuide" ).trigger( "click" );
+            }
+         }
+    });
+
+    $(document).on( 'keydown', function(e) {
+        if ((e.keyCode == "27") ) {
+            if ($('#searchGuideModal').css('display') == 'block') {
+                $('#searchGuideModal').modal(show);
+            }
+        }
+    });
+
 
     $(document).ready(function() {
-        $('.btnClose').on('click', function (event) {
+        $('.btnClose').on('click', function(event) {
             $('#searchGuideModal').modal('hide');
-            if(isMobile == true) {
+            if (isMobile == true) {
                 $('.txtGlobalSearchMobile').focus();
             } else {
                 $('.txtGlobalSearch').focus();
             }
         });
 
-});
+    });
 
     $("#scanBarcodeHeadTop").click(function() {
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -569,28 +586,28 @@ Template.header.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'none');
                     let dataTableList = [];
                     let dataTableListDupp = [];
-                    if(data.tglobalsearchreport.length > 0){
-                    for (let i = 0; i < data.tglobalsearchreport.length; i++) {
-                        if (data.tglobalsearchreport[i].Type === "Stock Transfer") {
-                            dataSelectID = segs[1] || data.tglobalsearchreport[i].TransId || '';
-                            if(dataSelectID != ''){
-                              window.open('/stocktransfercard?id=' + dataSelectID, '_self');
-                            }else{
-                              swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                    if (data.tglobalsearchreport.length > 0) {
+                        for (let i = 0; i < data.tglobalsearchreport.length; i++) {
+                            if (data.tglobalsearchreport[i].Type === "Stock Transfer") {
+                                dataSelectID = segs[1] || data.tglobalsearchreport[i].TransId || '';
+                                if (dataSelectID != '') {
+                                    window.open('/stocktransfercard?id=' + dataSelectID, '_self');
+                                } else {
+                                    swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                                }
+                            } else {
+                                swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                                $('.fullScreenSpin').css('display', 'none');
                             }
-                        } else {
-                          swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                          $('.fullScreenSpin').css('display', 'none');
                         }
-                    }
-                  }else{
-                    swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_StockAdjust) {
+            } else if (segs[0] == Barcode_Prefix_StockAdjust) {
 
                 productService.getGlobalSearchStockAdjust(segs[1]).then(function(data) {
                     let dataSelectID = '';
@@ -601,17 +618,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tstockadjustentry.length > 0){
+                    if (data.tstockadjustentry.length > 0) {
                         window.open('/stockadjustmentcard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Employee) {
+            } else if (segs[0] == Barcode_Prefix_Employee) {
 
                 productService.getGlobalSearchEmployee(segs[1]).then(function(data) {
                     let dataSelectID = '';
@@ -622,17 +639,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.temployee.length > 0){
+                    if (data.temployee.length > 0) {
                         window.open('/employeescard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Invoice || segs[0] == Barcode_Prefix_Invoice2) {
+            } else if (segs[0] == Barcode_Prefix_Invoice || segs[0] == Barcode_Prefix_Invoice2) {
                 productService.getGlobalSearchReportByType(segs[1], "Invoice").then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -641,25 +658,25 @@ Template.header.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'none');
                     let dataTableList = [];
                     let dataTableListDupp = [];
-                    if(data.tglobalsearchreport.length > 0){
-                    for (let i = 0; i < data.tglobalsearchreport.length; i++) {
-                        if (data.tglobalsearchreport[i].Type === "Invoice") {
-                            dataSelectID = data.tglobalsearchreport[i].TransId || '';
-                            if(dataSelectID != '' && dataSelectID == segs[1]){
-                              window.open('/invoicecard?id=' + dataSelectID, '_self');
+                    if (data.tglobalsearchreport.length > 0) {
+                        for (let i = 0; i < data.tglobalsearchreport.length; i++) {
+                            if (data.tglobalsearchreport[i].Type === "Invoice") {
+                                dataSelectID = data.tglobalsearchreport[i].TransId || '';
+                                if (dataSelectID != '' && dataSelectID == segs[1]) {
+                                    window.open('/invoicecard?id=' + dataSelectID, '_self');
+                                }
+                            } else {
+                                swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                                $('.fullScreenSpin').css('display', 'none');
                             }
-                        } else {
-                          swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                          $('.fullScreenSpin').css('display', 'none');
                         }
-                    }
-                  }else{
-                    swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_SalesOrder) {
+            } else if (segs[0] == Barcode_Prefix_SalesOrder) {
                 productService.getGlobalSearchReportByType(segs[1], "Sales Order").then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -668,25 +685,25 @@ Template.header.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'none');
                     let dataTableList = [];
                     let dataTableListDupp = [];
-                    if(data.tglobalsearchreport.length > 0){
-                    for (let i = 0; i < data.tglobalsearchreport.length; i++) {
-                        if (data.tglobalsearchreport[i].Type === "Sales Order") {
-                            dataSelectID = data.tglobalsearchreport[i].TransId || '';
-                            if(dataSelectID != '' && dataSelectID == segs[1]){
-                              window.open('/salesordercard?id=' + dataSelectID, '_self');
+                    if (data.tglobalsearchreport.length > 0) {
+                        for (let i = 0; i < data.tglobalsearchreport.length; i++) {
+                            if (data.tglobalsearchreport[i].Type === "Sales Order") {
+                                dataSelectID = data.tglobalsearchreport[i].TransId || '';
+                                if (dataSelectID != '' && dataSelectID == segs[1]) {
+                                    window.open('/salesordercard?id=' + dataSelectID, '_self');
+                                }
+                            } else {
+                                swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                                $('.fullScreenSpin').css('display', 'none');
                             }
-                        } else {
-                          swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                          $('.fullScreenSpin').css('display', 'none');
                         }
-                    }
-                  }else{
-                    swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Quote) {
+            } else if (segs[0] == Barcode_Prefix_Quote) {
                 productService.getGlobalSearchReportByType(segs[1], "Quote").then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -695,29 +712,29 @@ Template.header.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'none');
                     let dataTableList = [];
                     let dataTableListDupp = [];
-                    if(data.tglobalsearchreport.length > 0){
-                    for (let i = 0; i < data.tglobalsearchreport.length; i++) {
-                        if (data.tglobalsearchreport[i].Type === "Quote") {
-                            dataSelectID = data.tglobalsearchreport[i].TransId || '';
-                            if(dataSelectID != '' && dataSelectID == segs[1]){
-                              window.open('/quotecard?id=' + dataSelectID, '_self');
-                            }else{
-                              swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                              $('.fullScreenSpin').css('display', 'none');
+                    if (data.tglobalsearchreport.length > 0) {
+                        for (let i = 0; i < data.tglobalsearchreport.length; i++) {
+                            if (data.tglobalsearchreport[i].Type === "Quote") {
+                                dataSelectID = data.tglobalsearchreport[i].TransId || '';
+                                if (dataSelectID != '' && dataSelectID == segs[1]) {
+                                    window.open('/quotecard?id=' + dataSelectID, '_self');
+                                } else {
+                                    swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }
+                            } else {
+                                swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                                $('.fullScreenSpin').css('display', 'none');
                             }
-                        } else {
-                          swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                          $('.fullScreenSpin').css('display', 'none');
                         }
-                    }
-                  }else{
-                    swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
                     }
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
 
-            }else if (segs[0] == Barcode_Prefix_Refund) {
+            } else if (segs[0] == Barcode_Prefix_Refund) {
 
                 productService.getGlobalSearchRefund(segs[1]).then(function(data) {
                     let dataSelectID = '';
@@ -728,17 +745,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.trefundsale.length > 0){
+                    if (data.trefundsale.length > 0) {
                         window.open('/refundcard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Payment) {
+            } else if (segs[0] == Barcode_Prefix_Payment) {
                 /*productService.getGlobalSearchReportByType(segs[1], "General Ledger").then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -776,27 +793,27 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tpaymentlist.length > 0){
-                          for(let i=0; i<data.tpaymentlist.length; i++){
-                            if(data.tpaymentlist[i].TYPE =="Customer Payment" && data.tpaymentlist[i].PaymentID ==dataSelectID){
+                    if (data.tpaymentlist.length > 0) {
+                        for (let i = 0; i < data.tpaymentlist.length; i++) {
+                            if (data.tpaymentlist[i].TYPE == "Customer Payment" && data.tpaymentlist[i].PaymentID == dataSelectID) {
                                 window.open('/paymentcard?id=' + dataSelectID, '_self');
-                            }else if(data.tpaymentlist[i].TYPE =="Supplier Payment" && data.tpaymentlist[i].PaymentID ==dataSelectID){
+                            } else if (data.tpaymentlist[i].TYPE == "Supplier Payment" && data.tpaymentlist[i].PaymentID == dataSelectID) {
                                 window.open('/supplierpaymentcard?id=' + dataSelectID, '_self');
-                            }else{
-                               //window.open('/paymentoverview', '_self');
-                               swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                            } else {
+                                //window.open('/paymentoverview', '_self');
+                                swal('No record with that exact number "' + barcode + '"', '', 'warning');
                             }
-                          }
+                        }
 
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Bill) {
+            } else if (segs[0] == Barcode_Prefix_Bill) {
 
                 productService.getGlobalSearchBill(segs[1]).then(function(data) {
                     let dataSelectID = '';
@@ -807,17 +824,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tbillex.length > 0){
+                    if (data.tbillex.length > 0) {
                         window.open('/billcard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_PurchaseOrder) {
+            } else if (segs[0] == Barcode_Prefix_PurchaseOrder) {
 
                 productService.getGlobalSearchPO(segs[1]).then(function(data) {
                     let dataSelectID = '';
@@ -828,17 +845,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tpurchaseorderex.length > 0){
+                    if (data.tpurchaseorderex.length > 0) {
                         window.open('/purchaseordercard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Journal) {
+            } else if (segs[0] == Barcode_Prefix_Journal) {
 
                 productService.getGlobalSearchJournalEntry(segs[1]).then(function(data) {
                     let dataSelectID = '';
@@ -849,17 +866,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tjournalentry.length > 0){
+                    if (data.tjournalentry.length > 0) {
                         window.open('/journalentrycard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_TimeSheet) {
+            } else if (segs[0] == Barcode_Prefix_TimeSheet) {
                 productService.getGlobalSearchTimeSheet(segs[1]).then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -869,17 +886,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.ttimesheet.length > 0){
+                    if (data.ttimesheet.length > 0) {
                         window.open('/timesheet?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Customer) {
+            } else if (segs[0] == Barcode_Prefix_Customer) {
 
                 productService.getGlobalSearchCustomer(segs[1]).then(function(data) {
                     let dataSelectID = '';
@@ -890,17 +907,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tcustomervs1.length > 0){
+                    if (data.tcustomervs1.length > 0) {
                         window.open('/customerscard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Supplier) {
+            } else if (segs[0] == Barcode_Prefix_Supplier) {
                 productService.getGlobalSearchSupplier(segs[1]).then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -910,17 +927,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tsuppliervs1.length > 0){
+                    if (data.tsuppliervs1.length > 0) {
                         window.open('/supplierscard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Product) {
+            } else if (segs[0] == Barcode_Prefix_Product) {
                 productService.getGlobalSearchProduct(segs[1]).then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -930,17 +947,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tproductvs1.length > 0){
+                    if (data.tproductvs1.length > 0) {
                         window.open('/productview?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Account) {
+            } else if (segs[0] == Barcode_Prefix_Account) {
                 productService.getGlobalSearchAccount(segs[1]).then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -950,17 +967,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.taccountvs1.length > 0){
-                      window.open('/accountsoverview?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    if (data.taccountvs1.length > 0) {
+                        window.open('/accountsoverview?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Check) {
+            } else if (segs[0] == Barcode_Prefix_Check) {
                 productService.getGlobalSearchCheck(segs[1]).then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -970,17 +987,17 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tchequeex.length > 0){
-                      window.open('/chequecard?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    if (data.tchequeex.length > 0) {
+                        window.open('/chequecard?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            }else if (segs[0] == Barcode_Prefix_Shipping) {
+            } else if (segs[0] == Barcode_Prefix_Shipping) {
                 productService.getGlobalSearchShipping(segs[1]).then(function(data) {
                     let dataSelectID = '';
                     let isProcessed = '';
@@ -990,11 +1007,11 @@ Template.header.onRendered(function() {
                     let dataTableList = [];
                     let dataTableListDupp = [];
                     dataSelectID = segs[1] || '';
-                    if(data.tinvoice.length > 0){
-                      window.open('/shippingdocket?id=' + dataSelectID, '_self');
-                    }else{
-                      swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                      $('.fullScreenSpin').css('display', 'none');
+                    if (data.tinvoice.length > 0) {
+                        window.open('/shippingdocket?id=' + dataSelectID, '_self');
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
                     }
 
                 }).catch(function(err) {
@@ -1012,270 +1029,270 @@ Template.header.onRendered(function() {
                     }, 200);
                     let dataTableList = [];
                     let dataTableListDupp = [];
-                    if(data.tglobalsearchreport.length > 0){
-                    for (let i = 0; i < data.tglobalsearchreport.length; i++) {
-                        if (data.tglobalsearchreport[i].Type === "Purchase Order") {
-                            dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
-                        } else if (data.tglobalsearchreport[i].Type === "Bill") {
-                            dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
-                        } else if (data.tglobalsearchreport[i].Type === "Credit") {
-                            dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
-                        } else if (data.tglobalsearchreport[i].Type === "Customer Payment") {
-                            dataSelectID = data.tglobalsearchreport[i].PaymentID;
-                        } else if (data.tglobalsearchreport[i].Type === "Supplier Payment") {
-                            dataSelectID = data.tglobalsearchreport[i].PaymentID;
-                        } else if (data.tglobalsearchreport[i].Type === "Invoice") {
-                            dataSelectID = data.tglobalsearchreport[i].SaleID;
-                        } else if (data.tglobalsearchreport[i].Type === "PO") {
-                            dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
-                        } else if (data.tglobalsearchreport[i].Type === "Cheque") {
-                            dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
-                        } else if (data.tglobalsearchreport[i].Type === "Customer") {
-                            dataSelectID = data.tglobalsearchreport[i].ClientId;
-                        } else if (data.tglobalsearchreport[i].Type === "Sales Order") {
-                            dataSelectID = data.tglobalsearchreport[i].SaleID;
-                        } else if (data.tglobalsearchreport[i].Type === "Quote") {
-                            dataSelectID = data.tglobalsearchreport[i].SaleID;
-                        } else if (data.tglobalsearchreport[i].Type === "Employee") {
-                            dataSelectID = data.tglobalsearchreport[i].ID;
-                        } else if (data.tglobalsearchreport[i].Type === "Product") {
-                            dataSelectID = data.tglobalsearchreport[i].PartsID;
-                        } else if (data.tglobalsearchreport[i].Type === "Refund") {
-                            dataSelectID = data.tglobalsearchreport[i].SaleID;
-                        } else if (data.tglobalsearchreport[i].Type === "INV-BO") {
-                            dataSelectID = data.tglobalsearchreport[i].SaleID;
-                        } else if (data.tglobalsearchreport[i].Type === "Account") {
-                            dataSelectID = data.tglobalsearchreport[i].AccountsID;
-                        } else if (data.tglobalsearchreport[i].Type === "Stock Adjustment") {
-                            dataSelectID = data.tglobalsearchreport[i].StockAdjustID;
-                            if (data.tglobalsearchreport[i].IsProcessed) {
-                                isProcessed = "Processed";
-                            } else {
-                                isProcessed = "On Hold";
-                            }
-                        } else if (data.tglobalsearchreport[i].Type === "Stock Transfer") {
-                            dataSelectID = data.tglobalsearchreport[i].TransId;
-                            if (data.tglobalsearchreport[i].IsProcessed) {
-                                isProcessed = "Processed";
-                            } else {
-                                isProcessed = "On Hold";
-                            }
-                        } else {
-                            dataSelectID = data.tglobalsearchreport[i].ID;
-                        }
-                        var dataList = {
-                            catg: data.tglobalsearchreport[i].Catg || '',
-                            catgdesc: data.tglobalsearchreport[i].Catgdesc || '',
-                            ClientId: data.tglobalsearchreport[i].ClientId || '',
-                            id: dataSelectID || '',
-                            type: data.tglobalsearchreport[i].Type || '',
-                            company: data.tglobalsearchreport[i].Company || '',
-                            globalref: data.tglobalsearchreport[i].Globalref || '',
-                            transDate: data.tglobalsearchreport[i].TransDate != '' ? moment(data.tglobalsearchreport[i].TransDate).format("YYYY/MM/DD") : data.tglobalsearchreport[i].TransDate,
-                            transId: data.tglobalsearchreport[i].TransId || '',
-                            saleID: data.tglobalsearchreport[i].SaleID || '',
-                            purchaseOrderID: data.tglobalsearchreport[i].PurchaseOrderID || '',
-                            paymentID: data.tglobalsearchreport[i].PaymentID || '',
-                            prepaymentID: data.tglobalsearchreport[i].PrepaymentID || '',
-                            fixedAssetID: data.tglobalsearchreport[i].FixedAssetID || '',
-                            partsID: data.tglobalsearchreport[i].PartsID || ''
-
-                        };
-
-                        var dataListNew = [
-                            dataSelectID || '',
-                            data.tglobalsearchreport[i].Company || '',
-                            data.tglobalsearchreport[i].Type || '',
-                            data.tglobalsearchreport[i].Globalref || '',
-                            isProcessed
-
-                        ];
-                        //if(dataSelectID != ""){
-                        dataTableList.push(dataList);
-                        splashArrayList.push(dataListNew);
-                        //}
-                    }
-
-
-
-
-                    setTimeout(function() {
-                        $('#searchPOP').modal('toggle');
-
-                        $('#tblSearchOverview').DataTable({
-                            data: splashArrayList,
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            paging: true,
-                            "aaSorting": [],
-                            "orderMulti": true,
-                            columnDefs: [{
-                                    className: "colId",
-                                    "targets": [0]
-                                },
-                                {
-                                    className: "colName",
-                                    "targets": [1]
-                                },
-                                {
-                                    className: "colType",
-                                    "targets": [2]
-                                },
-                                {
-                                    className: "colTransGlobal",
-                                    "targets": [3]
-                                },
-                                {
-                                    className: "colTransStatus",
-                                    "targets": [4]
+                    if (data.tglobalsearchreport.length > 0) {
+                        for (let i = 0; i < data.tglobalsearchreport.length; i++) {
+                            if (data.tglobalsearchreport[i].Type === "Purchase Order") {
+                                dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
+                            } else if (data.tglobalsearchreport[i].Type === "Bill") {
+                                dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
+                            } else if (data.tglobalsearchreport[i].Type === "Credit") {
+                                dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
+                            } else if (data.tglobalsearchreport[i].Type === "Customer Payment") {
+                                dataSelectID = data.tglobalsearchreport[i].PaymentID;
+                            } else if (data.tglobalsearchreport[i].Type === "Supplier Payment") {
+                                dataSelectID = data.tglobalsearchreport[i].PaymentID;
+                            } else if (data.tglobalsearchreport[i].Type === "Invoice") {
+                                dataSelectID = data.tglobalsearchreport[i].SaleID;
+                            } else if (data.tglobalsearchreport[i].Type === "PO") {
+                                dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
+                            } else if (data.tglobalsearchreport[i].Type === "Cheque") {
+                                dataSelectID = data.tglobalsearchreport[i].PurchaseOrderID;
+                            } else if (data.tglobalsearchreport[i].Type === "Customer") {
+                                dataSelectID = data.tglobalsearchreport[i].ClientId;
+                            } else if (data.tglobalsearchreport[i].Type === "Sales Order") {
+                                dataSelectID = data.tglobalsearchreport[i].SaleID;
+                            } else if (data.tglobalsearchreport[i].Type === "Quote") {
+                                dataSelectID = data.tglobalsearchreport[i].SaleID;
+                            } else if (data.tglobalsearchreport[i].Type === "Employee") {
+                                dataSelectID = data.tglobalsearchreport[i].ID;
+                            } else if (data.tglobalsearchreport[i].Type === "Product") {
+                                dataSelectID = data.tglobalsearchreport[i].PartsID;
+                            } else if (data.tglobalsearchreport[i].Type === "Refund") {
+                                dataSelectID = data.tglobalsearchreport[i].SaleID;
+                            } else if (data.tglobalsearchreport[i].Type === "INV-BO") {
+                                dataSelectID = data.tglobalsearchreport[i].SaleID;
+                            } else if (data.tglobalsearchreport[i].Type === "Account") {
+                                dataSelectID = data.tglobalsearchreport[i].AccountsID;
+                            } else if (data.tglobalsearchreport[i].Type === "Stock Adjustment") {
+                                dataSelectID = data.tglobalsearchreport[i].StockAdjustID;
+                                if (data.tglobalsearchreport[i].IsProcessed) {
+                                    isProcessed = "Processed";
+                                } else {
+                                    isProcessed = "On Hold";
                                 }
+                            } else if (data.tglobalsearchreport[i].Type === "Stock Transfer") {
+                                dataSelectID = data.tglobalsearchreport[i].TransId;
+                                if (data.tglobalsearchreport[i].IsProcessed) {
+                                    isProcessed = "Processed";
+                                } else {
+                                    isProcessed = "On Hold";
+                                }
+                            } else {
+                                dataSelectID = data.tglobalsearchreport[i].ID;
+                            }
+                            var dataList = {
+                                catg: data.tglobalsearchreport[i].Catg || '',
+                                catgdesc: data.tglobalsearchreport[i].Catgdesc || '',
+                                ClientId: data.tglobalsearchreport[i].ClientId || '',
+                                id: dataSelectID || '',
+                                type: data.tglobalsearchreport[i].Type || '',
+                                company: data.tglobalsearchreport[i].Company || '',
+                                globalref: data.tglobalsearchreport[i].Globalref || '',
+                                transDate: data.tglobalsearchreport[i].TransDate != '' ? moment(data.tglobalsearchreport[i].TransDate).format("YYYY/MM/DD") : data.tglobalsearchreport[i].TransDate,
+                                transId: data.tglobalsearchreport[i].TransId || '',
+                                saleID: data.tglobalsearchreport[i].SaleID || '',
+                                purchaseOrderID: data.tglobalsearchreport[i].PurchaseOrderID || '',
+                                paymentID: data.tglobalsearchreport[i].PaymentID || '',
+                                prepaymentID: data.tglobalsearchreport[i].PrepaymentID || '',
+                                fixedAssetID: data.tglobalsearchreport[i].FixedAssetID || '',
+                                partsID: data.tglobalsearchreport[i].PartsID || ''
 
-                            ],
-                            rowId: 0,
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            colReorder: {
-                                fixedColumnsLeft: 1
-                            },
+                            };
 
-                            pageLength: initialReportDatatableLoad,
-                            lengthMenu: [
-                                [initialReportDatatableLoad, -1],
-                                [initialReportDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true,
-                            "fnDrawCallback": function(oSettings) {
-                                var searchDataValue = $('.txtGlobalSearch').val().toLowerCase();
-                                $('#tblSearchOverview_wrapper .paginate_button.page-item').removeClass('disabled');
-                                $('#tblSearchOverview_ellipsis').addClass('disabled');
-                                if (oSettings._iDisplayLength == -1) {
-                                    if (oSettings.fnRecordsDisplay() > 150) {
-                                        $('#tblSearchOverview_wrapper .paginate_button.page-item.previous').addClass('disabled');
+                            var dataListNew = [
+                                dataSelectID || '',
+                                data.tglobalsearchreport[i].Company || '',
+                                data.tglobalsearchreport[i].Type || '',
+                                data.tglobalsearchreport[i].Globalref || '',
+                                isProcessed
+
+                            ];
+                            //if(dataSelectID != ""){
+                            dataTableList.push(dataList);
+                            splashArrayList.push(dataListNew);
+                            //}
+                        }
+
+
+
+
+                        setTimeout(function() {
+                            $('#searchPOP').modal('toggle');
+
+                            $('#tblSearchOverview').DataTable({
+                                data: splashArrayList,
+                                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                paging: true,
+                                "aaSorting": [],
+                                "orderMulti": true,
+                                columnDefs: [{
+                                        className: "colId",
+                                        "targets": [0]
+                                    },
+                                    {
+                                        className: "colName",
+                                        "targets": [1]
+                                    },
+                                    {
+                                        className: "colType",
+                                        "targets": [2]
+                                    },
+                                    {
+                                        className: "colTransGlobal",
+                                        "targets": [3]
+                                    },
+                                    {
+                                        className: "colTransStatus",
+                                        "targets": [4]
+                                    }
+
+                                ],
+                                rowId: 0,
+                                select: true,
+                                destroy: true,
+                                colReorder: true,
+                                colReorder: {
+                                    fixedColumnsLeft: 1
+                                },
+
+                                pageLength: initialReportDatatableLoad,
+                                lengthMenu: [
+                                    [initialReportDatatableLoad, -1],
+                                    [initialReportDatatableLoad, "All"]
+                                ],
+                                info: true,
+                                responsive: true,
+                                "fnDrawCallback": function(oSettings) {
+                                    var searchDataValue = $('.txtGlobalSearch').val().toLowerCase();
+                                    $('#tblSearchOverview_wrapper .paginate_button.page-item').removeClass('disabled');
+                                    $('#tblSearchOverview_ellipsis').addClass('disabled');
+                                    if (oSettings._iDisplayLength == -1) {
+                                        if (oSettings.fnRecordsDisplay() > 150) {
+                                            $('#tblSearchOverview_wrapper .paginate_button.page-item.previous').addClass('disabled');
+                                            $('#tblSearchOverview_wrapper .paginate_button.page-item.next').addClass('disabled');
+                                        }
+                                    } else {
+
+                                    }
+                                    if (oSettings.fnRecordsDisplay() < initialReportLoad) {
                                         $('#tblSearchOverview_wrapper .paginate_button.page-item.next').addClass('disabled');
                                     }
-                                } else {
-
-                                }
-                                if (oSettings.fnRecordsDisplay() < initialReportLoad) {
-                                    $('#tblSearchOverview_wrapper .paginate_button.page-item.next').addClass('disabled');
-                                }
-                                $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                    .on('click', function() {
-                                        $('.fullScreenSpin').css('display', 'inline-block');
-                                        let dataLenght = oSettings._iDisplayLength;
+                                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                        .on('click', function() {
+                                            $('.fullScreenSpin').css('display', 'inline-block');
+                                            let dataLenght = oSettings._iDisplayLength;
 
 
-                                        sideBarService.getGlobalSearchReport(searchDataValue, initialReportLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                            sideBarService.getGlobalSearchReport(searchDataValue, initialReportLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
 
-                                            let dataOld = splashArrayList;
-                                            for (let i = 0; i < dataObjectnew.tglobalsearchreport.length; i++) {
-                                                if (dataObjectnew.tglobalsearchreport[i].Type === "Purchase Order") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Bill") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Credit") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Customer Payment") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].PaymentID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Supplier Payment") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].PaymentID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Invoice") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "PO") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Cheque") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Customer") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].ClientId;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Sales Order") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Quote") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Employee") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].ID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Product") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].PartsID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Refund") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "INV-BO") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
-                                                } else if (dataObjectnew.tglobalsearchreport[i].Type === "Account") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].AccountsID;
-                                                } else if (data.tglobalsearchreport[i].Type === "Stock Adjustment") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].StockAdjustID;
-                                                    if (data.tglobalsearchreport[i].IsProcessed) {
-                                                        isProcessed = "Processed";
+                                                let dataOld = splashArrayList;
+                                                for (let i = 0; i < dataObjectnew.tglobalsearchreport.length; i++) {
+                                                    if (dataObjectnew.tglobalsearchreport[i].Type === "Purchase Order") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Bill") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Credit") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Customer Payment") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].PaymentID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Supplier Payment") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].PaymentID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Invoice") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "PO") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Cheque") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].PurchaseOrderID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Customer") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].ClientId;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Sales Order") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Quote") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Employee") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].ID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Product") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].PartsID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Refund") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "INV-BO") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].SaleID;
+                                                    } else if (dataObjectnew.tglobalsearchreport[i].Type === "Account") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].AccountsID;
+                                                    } else if (data.tglobalsearchreport[i].Type === "Stock Adjustment") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].StockAdjustID;
+                                                        if (data.tglobalsearchreport[i].IsProcessed) {
+                                                            isProcessed = "Processed";
+                                                        } else {
+                                                            isProcessed = "On Hold";
+                                                        }
+                                                    } else if (data.tglobalsearchreport[i].Type === "Stock Transfer") {
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].TransId;
+                                                        if (data.tglobalsearchreport[i].IsProcessed) {
+                                                            isProcessed = "Processed";
+                                                        } else {
+                                                            isProcessed = "On Hold";
+                                                        }
                                                     } else {
-                                                        isProcessed = "On Hold";
+                                                        dataSelectID = dataObjectnew.tglobalsearchreport[i].ID;
                                                     }
-                                                } else if (data.tglobalsearchreport[i].Type === "Stock Transfer") {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].TransId;
-                                                    if (data.tglobalsearchreport[i].IsProcessed) {
-                                                        isProcessed = "Processed";
-                                                    } else {
-                                                        isProcessed = "On Hold";
-                                                    }
-                                                } else {
-                                                    dataSelectID = dataObjectnew.tglobalsearchreport[i].ID;
+                                                    var dataListDupp = {
+                                                        catg: dataObjectnew.tglobalsearchreport[i].Catg || '',
+                                                        catgdesc: dataObjectnew.tglobalsearchreport[i].Catgdesc || '',
+                                                        ClientId: dataObjectnew.tglobalsearchreport[i].ClientId || '',
+                                                        id: dataSelectID || '',
+                                                        type: dataObjectnew.tglobalsearchreport[i].Type || '',
+                                                        company: dataObjectnew.tglobalsearchreport[i].Company || '',
+                                                        globalref: dataObjectnew.tglobalsearchreport[i].Globalref || '',
+                                                        transDate: dataObjectnew.tglobalsearchreport[i].TransDate != '' ? moment(dataObjectnew.tglobalsearchreport[i].TransDate).format("YYYY/MM/DD") : dataObjectnew.tglobalsearchreport[i].TransDate,
+                                                        transId: dataObjectnew.tglobalsearchreport[i].TransId || '',
+                                                        saleID: dataObjectnew.tglobalsearchreport[i].SaleID || '',
+                                                        purchaseOrderID: dataObjectnew.tglobalsearchreport[i].PurchaseOrderID || '',
+                                                        paymentID: dataObjectnew.tglobalsearchreport[i].PaymentID || '',
+                                                        prepaymentID: dataObjectnew.tglobalsearchreport[i].PrepaymentID || '',
+                                                        fixedAssetID: dataObjectnew.tglobalsearchreport[i].FixedAssetID || '',
+                                                        partsID: dataObjectnew.tglobalsearchreport[i].PartsID || ''
+
+                                                    };
+
+                                                    var dataListNewDupp = [
+                                                        dataSelectID || '',
+                                                        dataObjectnew.tglobalsearchreport[i].Company || '',
+                                                        dataObjectnew.tglobalsearchreport[i].Type || '',
+                                                        dataObjectnew.tglobalsearchreport[i].Globalref || '',
+                                                        isProcessed
+
+                                                    ];
+                                                    dataTableListDupp.push(dataListDupp);
+                                                    splashArrayListDupp.push(dataListNewDupp);
                                                 }
-                                                var dataListDupp = {
-                                                    catg: dataObjectnew.tglobalsearchreport[i].Catg || '',
-                                                    catgdesc: dataObjectnew.tglobalsearchreport[i].Catgdesc || '',
-                                                    ClientId: dataObjectnew.tglobalsearchreport[i].ClientId || '',
-                                                    id: dataSelectID || '',
-                                                    type: dataObjectnew.tglobalsearchreport[i].Type || '',
-                                                    company: dataObjectnew.tglobalsearchreport[i].Company || '',
-                                                    globalref: dataObjectnew.tglobalsearchreport[i].Globalref || '',
-                                                    transDate: dataObjectnew.tglobalsearchreport[i].TransDate != '' ? moment(dataObjectnew.tglobalsearchreport[i].TransDate).format("YYYY/MM/DD") : dataObjectnew.tglobalsearchreport[i].TransDate,
-                                                    transId: dataObjectnew.tglobalsearchreport[i].TransId || '',
-                                                    saleID: dataObjectnew.tglobalsearchreport[i].SaleID || '',
-                                                    purchaseOrderID: dataObjectnew.tglobalsearchreport[i].PurchaseOrderID || '',
-                                                    paymentID: dataObjectnew.tglobalsearchreport[i].PaymentID || '',
-                                                    prepaymentID: dataObjectnew.tglobalsearchreport[i].PrepaymentID || '',
-                                                    fixedAssetID: dataObjectnew.tglobalsearchreport[i].FixedAssetID || '',
-                                                    partsID: dataObjectnew.tglobalsearchreport[i].PartsID || ''
+                                                var thirdaryData = $.merge($.merge([], splashArrayListDupp), splashArrayList);
+                                                let uniqueChars = [...new Set(thirdaryData)];
+                                                var datatable = $('#tblSearchOverview').DataTable();
+                                                datatable.clear();
+                                                datatable.rows.add(uniqueChars);
+                                                datatable.draw(false);
 
-                                                };
+                                                $('.fullScreenSpin').css('display', 'none');
 
-                                                var dataListNewDupp = [
-                                                    dataSelectID || '',
-                                                    dataObjectnew.tglobalsearchreport[i].Company || '',
-                                                    dataObjectnew.tglobalsearchreport[i].Type || '',
-                                                    dataObjectnew.tglobalsearchreport[i].Globalref || '',
-                                                    isProcessed
+                                            }).catch(function(err) {
+                                                $('.fullScreenSpin').css('display', 'none');
+                                            });
 
-                                                ];
-                                                dataTableListDupp.push(dataListDupp);
-                                                splashArrayListDupp.push(dataListNewDupp);
-                                            }
-                                            var thirdaryData = $.merge($.merge([], splashArrayListDupp), splashArrayList);
-                                            let uniqueChars = [...new Set(thirdaryData)];
-                                            var datatable = $('#tblSearchOverview').DataTable();
-                                            datatable.clear();
-                                            datatable.rows.add(uniqueChars);
-                                            datatable.draw(false);
-
-                                            $('.fullScreenSpin').css('display', 'none');
-
-                                        }).catch(function(err) {
-                                            $('.fullScreenSpin').css('display', 'none');
                                         });
+                                    setTimeout(function() {
+                                        checkStockColor();
+                                    }, 100);
+                                }
 
-                                    });
-                                setTimeout(function() {
-                                    checkStockColor();
-                                }, 100);
-                            }
+                            }).on('page', function() {
 
-                        }).on('page', function() {
-
-                        });
-                        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    }, 0);
-                  }else{
-                    swal('No record with that exact number "' + barcode + '"', '', 'warning');
-                  }
+                            });
+                            $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                        }, 0);
+                    } else {
+                        swal('No record with that exact number "' + barcode + '"', '', 'warning');
+                    }
                     $('#tblSearchOverview tbody').on('click', 'tr', function() {
                         var listData = $(this).closest('tr').attr('id');
                         var transactiontype = $(event.target).closest("tr").find(".colType").text();
@@ -1470,7 +1487,7 @@ Template.header.onRendered(function() {
             let companyCity = data.tcompanyinfo[0].PoCity || '';
             let companyState = data.tcompanyinfo[0].PoState || '';
             let routingNo = data.tcompanyinfo[0].SiteCode || '';
-            let companyReg = data.tcompanyinfo[0].CompanyNumber||'';
+            let companyReg = data.tcompanyinfo[0].CompanyNumber || '';
             let bankDetails = "Bank Name: " + bankName + "\n" + "Account Name: " + accountName + "\n Bank Account: " + accNo + "\nBSB: " + bsb + "\n Swift Code: " + swiftCode + "\n" + "Routing No: " + routingNo;
             Session.setPersistent('vs1companyName', companyName);
             Session.setPersistent('vs1companyaddress1', companyaddress1);
@@ -1500,28 +1517,27 @@ Template.header.onRendered(function() {
             }
 
         }).catch(function(err) {
-          $('.process').addClass('killProgressBar');
-          swal({
-              title: 'Oooops...',
-              text: err,
-              type: 'error',
-              showCancelButton: false,
-              confirmButtonText: 'Try Again'
-          }).then((result) => {
-              if (result.value) {
-              } else if (result.dismiss === 'cancel') {
+            $('.process').addClass('killProgressBar');
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {} else if (result.dismiss === 'cancel') {
 
-              }
-          });
+                }
+            });
         });
 
         organizationService.getCheckTcompLogoData().then(function(dataLogo) {
-          let logoImagePicture = dataLogo.tcomplogo[0].MIMEEncodedPicture||'';
-          let logoPictureType = dataLogo.tcomplogo[0].Pictype||'';
-          let logoImageData = 'data:image/' +logoPictureType+';base64,'+logoImagePicture;
-          if (dataLogo.tcomplogo.length) {
-          localStorage.setItem("Image",logoImageData);
-          };
+            let logoImagePicture = dataLogo.tcomplogo[0].MIMEEncodedPicture || '';
+            let logoPictureType = dataLogo.tcomplogo[0].Pictype || '';
+            let logoImageData = 'data:image/' + logoPictureType + ';base64,' + logoImagePicture;
+            if (dataLogo.tcomplogo.length) {
+                localStorage.setItem("Image", logoImageData);
+            };
         });
     };
     if (!localStorage.getItem('vs1LoggedEmployeeImages_dash')) {
@@ -1674,18 +1690,18 @@ Template.header.events({
         $('.headerprogressbar').removeClass('headerprogressbarShow');
         $('.headerprogressbar').addClass('headerprogressbarHidden');
     },
-    'click .chkOpenByDefault': function () {
-      if ($(event.target).is(':checked')) {
-        localStorage.setItem('dontopensearchguide', true);
-        setTimeout(function() {
-        Meteor._reload.reload();
-        }, 100);
-      }else{
-        localStorage.setItem('dontopensearchguide', false);
-        setTimeout(function() {
-        Meteor._reload.reload();
-        }, 100);
-      }
+    'click .chkOpenByDefault': function() {
+        if ($(event.target).is(':checked')) {
+            localStorage.setItem('dontopensearchguide', true);
+            setTimeout(function() {
+                Meteor._reload.reload();
+            }, 100);
+        } else {
+            localStorage.setItem('dontopensearchguide', false);
+            setTimeout(function() {
+                Meteor._reload.reload();
+            }, 100);
+        }
     },
     'click .shorthandCode': function() {
         // let getData = $(event.target).text()||'';
@@ -1765,8 +1781,8 @@ Template.header.events({
         }, 200);
         if (searchData != '') {
             templateObject.getAllGlobalSearch(searchData);
-        }else{
-          $('#searchGuideModal').modal('toggle');
+        } else {
+            $('#searchGuideModal').modal('toggle');
         }
     },
     'keypress .txtGlobalSearch': function(event) {
@@ -1785,29 +1801,29 @@ Template.header.events({
         }
     },
     'click .txtGlobalSearch': function(event) {
-      var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide')||'false';
-      if(dontOpenSearchGuide == 'true' ||dontOpenSearchGuide == true){
+        var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide') || 'false';
+        if (dontOpenSearchGuide == 'true' || dontOpenSearchGuide == true) {
 
-      }else{
-        if($(event.target).val()== ''){
-          $('#searchGuideModal').modal('toggle');
+        } else {
+            if ($(event.target).val() == '') {
+                $('#searchGuideModal').modal('toggle');
+            }
         }
-      }
 
 
     },
     'click #btnSearchGuide': function(event) {
-         $('#searchGuideModal').modal('toggle');
+        $('#searchGuideModal').modal('toggle');
     },
     'click .txtGlobalSearchMobile': function(event) {
-      var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide')||false;
-      if(dontOpenSearchGuide){
+        var dontOpenSearchGuide = localStorage.getItem('dontopensearchguide') || false;
+        if (dontOpenSearchGuide) {
 
-      }else{
-        if($(event.target).val()== ''){
-          $('#searchGuideModal').modal('toggle');
+        } else {
+            if ($(event.target).val() == '') {
+                $('#searchGuideModal').modal('toggle');
+            }
         }
-      }
     },
     'click .btnCloseModal': function(event) {
         let templateObject = Template.instance();
@@ -2109,12 +2125,12 @@ Template.header.helpers({
         });
     },
     isCloudAdminUser: function() {
-      var adminUserDetails = localStorage.getItem('VS1AdminUserName')||'';
-      var loggedUserDetails = localStorage.getItem('mySession')||'';
-      let isAdminUser = false;
-      if(adminUserDetails.toLowerCase() == loggedUserDetails.toLowerCase()){
-        isAdminUser = true;
-      }
+        var adminUserDetails = localStorage.getItem('VS1AdminUserName') || '';
+        var loggedUserDetails = localStorage.getItem('mySession') || '';
+        let isAdminUser = false;
+        if (adminUserDetails.toLowerCase() == loggedUserDetails.toLowerCase()) {
+            isAdminUser = true;
+        }
         return isAdminUser;
     }
 });

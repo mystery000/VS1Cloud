@@ -30,9 +30,9 @@ Template.grouplist.onRendered(function() {
     let utilityService = new UtilityService();
     let rateTypeService = new RateTypeService();
     let description = '';
-    var splashArrayGroupTypeList = new Array(); 
+    var splashArrayGroupTypeList = new Array();
     var currentLoc = FlowRouter.current().route.path;
-   
+
     tempObj.getAllGroupType = function() {
         getVS1Data('TVs1TabGroups').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -40,26 +40,15 @@ Template.grouplist.onRendered(function() {
                     let records = [];
                     let inventoryData = [];
                     addVS1Data('TVs1TabGroups',JSON.stringify(data));
-                    console.log(data);
-                    // for (let i = 0; i < data.tvs1tabgroups.length; i++) {
-                    //    if (!isNaN(data.tvs1tabgroups[i].fields.Description)) {
-                    //     description = data.tvs1tabgroups[i].fields.Description || '';
-                    //   } else {
-                    //     description = "";
-                    //   }
-                    //   var dataList = [                   
-                    //   	data.tvs1tabgroups[i].fields.Description || '',                    
-                    //   ];                 
-                    //   splashArrayGroupTypeList.push(dataList);
-                    // }
-            
+
+
                     if(splashArrayGroupTypeList) {
                        $('#tblgrouplist').dataTable({
                             data: splashArrayGroupTypeList,
                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             columnDefs: [
-                                { className: "thgroupDescription", "targets": [0] },                                     
-                                { className: "thgroupID hiddenColumn", "targets": [1] }                              
+                                { className: "thgroupDescription", "targets": [0] },
+                                { className: "thgroupID hiddenColumn", "targets": [1] }
                             ],
                             select: true,
                             destroy: true,
@@ -78,12 +67,11 @@ Template.grouplist.onRendered(function() {
 
                     }
                 });
-              } 
+              }
               else {
                 let data = JSON.parse(dataObject[0].data);
 
-                console.log(data);
-                let useData = data.tvs1tabgroups;           
+                let useData = data.tvs1tabgroups;
                 let records = [];
                 let inventoryData = [];
                 for (let i = 0; i < useData.length; i++) {
@@ -95,9 +83,9 @@ Template.grouplist.onRendered(function() {
                     var dataList = [
                         useData[i].fields.Description || '-',
                         useData[i].fields.ID || ''
-                    ];                  
+                    ];
                     splashArrayGroupTypeList.push(dataList);
-                   
+
 
                 }
                 if (splashArrayGroupTypeList) {
@@ -109,8 +97,8 @@ Template.grouplist.onRendered(function() {
                         "aaSorting": [],
                         "orderMulti": true,
                         columnDefs: [
-                            { className: "thgroupDescription", "targets": [0] },                                     
-                            { className: "thgroupID hiddenColumn", "targets": [1] }                              
+                            { className: "thgroupDescription", "targets": [0] },
+                            { className: "thgroupID hiddenColumn", "targets": [1] }
                         ],
                         colReorder: true,
                         "order": [
@@ -121,7 +109,7 @@ Template.grouplist.onRendered(function() {
                         info: true,
                         responsive: true,
                         "fnInitComplete": function () {
-                           
+
                             $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#addGroupModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouplist_filter");
                             $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouplist_filter");
                         }
@@ -138,24 +126,6 @@ Template.grouplist.onRendered(function() {
                 let records = [];
                 let inventoryData = [];
 
-                console.log(data);
-                // for (let i = 0; i < data.tvs1tabgroups.length; i++) {
-                //    if (!isNaN(data.tvs1tabgroups[i].fields.Description)) {
-                //     Description = data.tvs1tabgroups[i].fields.Description || '';
-                //   } else {
-                //     Description = '';
-                //   }
-                //   var dataList = [
-      
-                //     data.tvs1tabgroups[i].fields.Description || '',          
-                //     data.tvs1tabgroups[i].fields.ID || ''
-                //   ];            
-                //   splashArrayGroupTypeList.push(dataList);
-                
-
-                // }
-                //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
-
                 if (splashArrayGroupTypeList) {
 
                     $('#tblratetypelist').dataTable({
@@ -166,8 +136,8 @@ Template.grouplist.onRendered(function() {
                         "aaSorting": [],
                         "orderMulti": true,
                         columnDefs: [
-                            { className: "thDescription", "targets": [0] },                                     
-                            { className: "thRateID hiddenColumn", "targets": [1]}   
+                            { className: "thDescription", "targets": [0] },
+                            { className: "thRateID hiddenColumn", "targets": [1]}
                         ],
                         colReorder: true,
 
@@ -180,7 +150,7 @@ Template.grouplist.onRendered(function() {
                         info: true,
                         responsive: true,
                         "fnInitComplete": function () {
-                           
+
                             $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#addRateModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouplist_filter");
                             $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouplist_filter");
                         }
@@ -197,7 +167,7 @@ Template.grouplist.onRendered(function() {
 
 });
 Template.grouplist.helpers({
-   
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
@@ -208,8 +178,8 @@ Template.grouplist.helpers({
             return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
         });
     },
-  
-   
+
+
     isMobileDevices: () => {
         var isMobile = false;
 
@@ -220,15 +190,15 @@ Template.grouplist.helpers({
 
         return isMobile;
     },
-   
+
 });
 
 Template.grouplist.events({
-   
+
     'click .btnAddGroupType': function(event) {
       $('#add-group-title').text('Add New Group Type');
       $('#edtgroupID').val('');
-   
+
     },
 
 
@@ -239,7 +209,7 @@ Template.grouplist.events({
         const clientList = [];
         let salesOrderTable;
         var splashArray = new Array();
-        var splashArrayGroupTypeList = new Array(); 
+        var splashArrayGroupTypeList = new Array();
         let utilityService = new UtilityService();
         const dataTableList = [];
         const tableHeaderList = [];
@@ -253,13 +223,13 @@ Template.grouplist.events({
                 let lineItemObj = {};
                 if (data.tvs1tabgroups.length > 0) {
                   for (let i = 0; i < data.tvs1tabgroups.length; i++) {
-                    var dataList = [                  
+                    var dataList = [
                     	data.tvs1tabgroups[i].fields.Description || '',
                         data.tvs1tabgroups[i].fields.ID || ''
                     ];
-                
+
                     splashArrayGroupTypeList.push(dataList);
-                    
+
 
                     }
                     var datatable = $('#tblgrouplist').DataTable();
@@ -300,14 +270,14 @@ Template.grouplist.events({
                   let inventoryData = [];
                   for (let i = 0; i < data.tvs1tabgroups.length; i++) {
                       var dataList = [
-                  
+
                           data.tvs1tabgroups[i].fields.Description || '',
                           data.tvs1tabgroups[i].fields.ID || ''
                       ];
 
                       splashArrayGroupTypeList.push(dataList);
                   }
-                  
+
                   var datatable = $('#tblgrouplist').DataTable();
                     datatable.clear();
                     datatable.rows.add(splashArrayGroupTypeList);
@@ -329,7 +299,7 @@ Template.grouplist.events({
             $('#statusModal').modal();
         }
     },
- 
+
     'click .lineDescription': function(event) {
         $('#tblCreditLine tbody tr .lineDescription').attr("data-toggle", "modal");
         $('#tblCreditLine tbody tr .lineDescription').attr("data-target", "#groupTypeListModel");
@@ -347,10 +317,10 @@ Template.grouplist.events({
         templateObject.getAllGroupType();
 
     },
- 
 
-    
-   
+
+
+
 });
 
 Template.registerHelper('equals', function(a, b) {

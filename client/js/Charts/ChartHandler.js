@@ -9,7 +9,6 @@ export default class ChartHandler {
 
   static buildPositions() {
     const charts = $(".chart-visibility");
-    console.log("Rebuilding list");
 
     for (let i = 0; i <= charts.length; i++) {
       $(charts[i]).attr("position", i);
@@ -26,7 +25,6 @@ export default class ChartHandler {
       if( parseInt( widthPercentage ) > 100 ){
         widthPercentage = 100
       }
-      console.log('widthPercentage', widthPercentage)
       return widthPercentage;
   }
 
@@ -42,7 +40,7 @@ export default class ChartHandler {
       }
       return heightPercentage;
   }
-  
+
   static buildCardPositions(charts = $(".card-visibility")) {
     for (let i = 0; i <= charts.length; i++) {
       $(charts[i]).attr("position", i);
@@ -55,20 +53,19 @@ export default class ChartHandler {
      */
     const dashboardApis = new DashboardApi(); // Load all dashboard APIS
     ChartHandler.buildPositions();
-  
-  
+
+
     /**
      * @property {Tvs1ChartDashboardPreference[]}
      */
     let chartList = [];
-  
+
     // now we have to make the post request to save the data in database
     const apiEndpoint = dashboardApis.collection.findByName(
       dashboardApis.collectionNames.Tvs1dashboardpreferences
     );
-  
+
     Array.prototype.forEach.call(charts, (chart) => {
-      //console.log(chart);
       chartList.push(
         new Tvs1ChartDashboardPreference({
           type: "Tvs1dashboardpreferences",
@@ -93,23 +90,15 @@ export default class ChartHandler {
     });
 
     for (const _chart of chartList) {
-      // chartList.forEach(async (chart) => {
-      //console.log("Saving chart");
-  
+
       const ApiResponse = await apiEndpoint.fetch(null, {
         method: "POST",
         headers: ApiService.getPostHeaders(),
         body: JSON.stringify(_chart),
       });
-  
+
       if (ApiResponse.ok == true) {
         const jsonResponse = await ApiResponse.json();
-        // console.log(
-        //   "Chart: " +
-        //     _chart.ChartName +
-        //     " will be hidden ? " +
-        //     !_chart.fields.Active
-        // );
       }
       //});
     }
@@ -165,7 +154,7 @@ export default class ChartHandler {
       "ListType",
       "'Detail'"
     );
-    
+
     dashboardPreferencesEndpoint.url.searchParams.append(
       "select",
       `[employeeID]=${employeeId}`

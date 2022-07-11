@@ -32,19 +32,15 @@ let FxEditorSetting = new FxSettingsEditor({
                 startDate: "",
             }),
         });
-
-
-        console.log(fxUpdateObject);
     },
     onEditDisabled: () => {
         fxUpdateObject = null;
 
     },
     onCanceled: () => {
-        console.log('canceled edit mode')
     },
     onSaved: () => {
-        console.log('on Saved');
+
     }
 });
 
@@ -761,8 +757,6 @@ Template.fixUpdates.events({
         var startdateTimeDaily = new Date($("#edtDailyStartDate").datepicker("getDate"));
         var startdateTimeOneTime = new Date($("#edtOneTimeOnlyDate").datepicker("getDate"));
 
-        console.log("tes");
-
         if ($('#frequencyMonthly').is(":checked")) {
             startTime = $('#edtMonthlyStartTime').val();
             startDate = startdateTimeMonthly.getFullYear() + "-" + (startdateTimeMonthly.getMonth() + 1) + "-" + startdateTimeMonthly.getDate()||'';
@@ -842,26 +836,6 @@ Template.fixUpdates.events({
 
         }
 
-        console.log(objDetails);
-
-
-        // taxRateService.saveScheduleSettings(objDetails).then(function(data) {
-        //     Meteor._reload.reload();
-        // }).catch(function(err) {
-        //     swal({
-        //         title: 'Oooops...',
-        //         text: err,
-        //         type: 'error',
-        //         showCancelButton: false,
-        //         confirmButtonText: 'Try Again'
-        //     }).then((result) => {
-        //         if (result.value) {
-        //             Meteor._reload.reload();
-        //         } else if (result.dismiss === 'cancel') {}
-        //     });
-        //     $('.fullScreenSpin').css('display', 'none');
-        // });
-
         $('.fullScreenSpin').css('display', 'none');
 
     },
@@ -885,8 +859,6 @@ Template.fixUpdates.events({
 
         $("#formid").val(formId);
 
-        console.log(fxUpdateObject.frequency.rythm.charAt(0).toUpperCase() + fxUpdateObject.frequency.rythm.slice(1));
-
         templateObject.assignFrequency(fxUpdateObject.frequency.rythm.charAt(0).toUpperCase() + fxUpdateObject.frequency.rythm.slice(1));
         let currentDate = new Date();
         let currentDateTime = currentDate.getDay() + "/" + currentDate.getMonth() + "/" + currentDate.getFullYear();
@@ -894,50 +866,6 @@ Template.fixUpdates.events({
         $('#edtDailyStartTime').val(fxUpdateObject.frequency.startTime);
         $('#edtDailyStartDate').val(currentDateTime);
 
-        // This is the default previous data
-        // var result = scheduleData.filter(data => {
-        //     return data.formID == formId
-        // });
-        // if (result.length > 0) {
-        //   let startDateVal = result[0].startDate != '' ? moment(result[0].startDate).format("DD/MM/YYYY") : result[0].startDate;
-        //     templateObject.assignFrequency(result[0].frequency);
-        //     templateObject.getMonths(result[0].startDate, result[0].endDate);
-        //     $('#frequencyid').val(result[0].id);
-
-        //     const _frequencies = [
-        //         "Monthly",
-        //         "Weekly",
-        //         "Daily"
-        //     ];
-
-        //     if(_frequencies.includes(result[0].frequency) == true) {
-
-        //        console.log(result[0].startTime);
-
-        //         if (result[0].frequency == "Monthly") {
-
-        //             $('#sltDayOccurence').val(result[0].every);
-        //             $('#sltDayOfWeek').val(result[0].monthDays);
-        //             $('#edtMonthlyStartTime').val(result[0].startTime);
-        //             $('#edtMonthlyStartDate').val(startDateVal);
-        //         }else if (result[0].frequency == "Weekly") {
-        //             $('#weeklyEveryXWeeks').val(result[0].every);
-        //             $('#edtWeeklyStartTime').val(result[0].startTime);
-        //             $('#edtWeeklyStartDate').val(startDateVal);
-        //             templateObject.getDayName(result[0].weekDay);
-
-        //         } else if (result[0].frequency == "Daily") {
-        //             $('#dailyEveryXDays').val(result[0].every);
-        //             $('#edtDailyStartTime').val(result[0].startTime);
-        //             $('#edtDailyStartDate').val(startDateVal);
-
-        //         }
-        //         $(event.currentTarget).text(result[0].frequency);
-
-        //     }
-
-
-        // }
 
         $("#frequencyModal").modal('toggle');
     },
@@ -962,12 +890,6 @@ Template.fixUpdates.events({
             document.getElementById("dailySettings").style.display = "none";
             document.getElementById("oneTimeOnlySettings").style.display = "none";
             document.getElementById("onEventSettings").style.display = "none";
-
-            // fxUpdateObject.frequency = new FxFrequencyMonthly({
-            //     everyDay: "month",
-            //     ofMonths: []
-            // });
-            // console.log(fxUpdateObject);
 
         } else if (event.target.id == "frequencyWeekly") {
             document.getElementById("weeklySettings").style.display = "block";
@@ -1082,9 +1004,7 @@ Template.fixUpdates.events({
 
         // We get the ID of the row
         const cellId = $(e.target).parents('.modal#basedOnModal').attr('cell-id');
-        console.log(cellId);
         let cell = $(`#update-fx-settings .dnd-moved#${cellId} .edtBasedOn`);
-        console.log(cell);
 
         if (radioFrequency == "basedOnPrint") {
 

@@ -1821,3 +1821,11 @@ publicRoutes.route('/cron/currency-update/:_userId', {
         });
     }
 });
+authenticatedRoutes.route('/uomSettings', {
+    name: 'uomSettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'uomSettings'
+        });
+    }
+});

@@ -8,9 +8,9 @@ export default class FinanceApi {
 
     /**
      * This function will return the exchange rate
-     * 
-     * @param {String} from 
-     * @param {String} to 
+     *
+     * @param {String} from
+     * @param {String} to
      * @param {Integer} amount
      * @returns {String}
      */
@@ -19,12 +19,11 @@ export default class FinanceApi {
         var from = "GBP",
         to = "EUR",
         value = "19999.95";
-     
+
         let url = "https://api.apilayer.com/exchangerates_data/convert?to=:TO&from=:FROM&amount=:AMOUNT";
         url.replace(':TO', to);
         url.replace(':FROM', from);
         url.replace(':AMOUNT', amount);
-        console.log(url);
 
 
 
@@ -38,14 +37,12 @@ export default class FinanceApi {
 
         if(response.ok) {
             const data = await response.json();
-            console.log(data);
-            
+
         }
       } catch(err) {
-          console.log(err);
-          
+
       }
 
 
-    } 
+    }
 }

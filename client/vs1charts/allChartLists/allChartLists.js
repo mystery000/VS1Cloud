@@ -70,7 +70,6 @@ async function saveCharts() {
   ChartHandler.buildPositions();
 
   const charts = $(".chart-visibility.editCharts");
-  // console.log(charts);
   /**
    * @property {Tvs1ChartDashboardPreference[]}
    */
@@ -82,7 +81,6 @@ async function saveCharts() {
   );
 
   Array.prototype.forEach.call(charts, (chart) => {
-    //console.log(chart);
     chartList.push(
       new Tvs1ChartDashboardPreference({
         type: "Tvs1dashboardpreferences",
@@ -107,7 +105,6 @@ async function saveCharts() {
 
   for (const _chart of chartList) {
     // chartList.forEach(async (chart) => {
-    //console.log("Saving chart");
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
@@ -116,12 +113,6 @@ async function saveCharts() {
 
     if (ApiResponse.ok == true) {
       const jsonResponse = await ApiResponse.json();
-      // console.log(
-      //   "Chart: " +
-      //     _chart.ChartName +
-      //     " will be hidden ? " +
-      //     !_chart.fields.Active
-      // );
     }
     //});
   }
@@ -157,15 +148,15 @@ Template.allChartLists.onRendered(function () {
     });
 
     $(".card").addClass("dimmedChart");
-    $(".py-2").removeClass("dimmedChart");    
+    $(".py-2").removeClass("dimmedChart");
   };
   templateObject.checkChartToDisplay = async () => {
     let defaultChartList = [];
     let chartList = [];
 
-    const dashboardApis = new DashboardApi(); // Load all dashboard APIS 
+    const dashboardApis = new DashboardApi(); // Load all dashboard APIS
 
-    let displayedCharts = 0;    
+    let displayedCharts = 0;
     chartList = await ChartHandler.getTvs1charts()
     if( chartList.length == 0 ){
       // Fetching data from API
@@ -177,7 +168,6 @@ Template.allChartLists.onRendered(function () {
 
       if (allChartResponse.ok == true) {
         const allChartsJsonResponse = await allChartResponse.json();
-        //console.log(allChartsJsonResponse);
         chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
       }
     }
@@ -185,9 +175,6 @@ Template.allChartLists.onRendered(function () {
     if( chartList.length > 0 ){
       // Hide all charts
       $('.sortable-chart-widget-js').addClass("hideelement");
-      // console.log(allChartResponse);
-      // console.log('chartlist', chartList);
-      // the goal here is to get the right names so it can be used for preferences
       chartList.forEach((chart) => {
         setTimeout(() => {
           //chart.fields.active = false; // Will set evething to false
@@ -267,8 +254,6 @@ Template.allChartLists.onRendered(function () {
 
     // Now get user preferences
     let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
-    // console.log('tvs1ChartDashboardPreference', tvs1ChartDashboardPreference)
-    
     if (tvs1ChartDashboardPreference.length > 0) {
       // if charts to be displayed are specified
       tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
@@ -280,29 +265,9 @@ Template.allChartLists.onRendered(function () {
           "__" +
           tvs1chart.fields.Chartname.toLowerCase().split(" ").join("_"); // this is the new item name
 
-        //localStorage.setItem(itemName, tvs1chart);
-        //console.log(itemName + " " + tvs1chart.fields.Active);
-
-        //if (itemList.includes(itemName) == true) {
-        
-
         $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
         $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
 
-        // This the default size if ever it zero
-        // if ($(`[key='${itemName}'] .ui-resizable`).width() < 150) {
-        //   $(`[key='${itemName}'] .ui-resizable`).css("width", "500px");
-        // }
-
-        // This the default size if ever it zero
-        // if ($(`[key='${itemName}'] .ui-resizable`).height() < 150) {
-        //   $(`[key='${itemName}'] .ui-resizable`).css("height", "350px");
-          
-        //   const height = $(`[key='${itemName}'] .card-body`).height();
-        //   console.log(height);
-        //   $(`[key='${itemName}'] canvas`).attr("height", height);
-        //   $(`[key='${itemName}'] canvas`).css("height", `${height}px`);
-        // }
 
         $(`[key='${itemName}']`).attr("pref-id", tvs1chart.fields.ID);
         $(`[key='${itemName}']`).attr("position", tvs1chart.fields.Position);
@@ -360,7 +325,7 @@ Template.allChartLists.onRendered(function () {
         //}
         //}
         }, 500);
-      });     
+      });
 
       displayedCharts = document.querySelectorAll(
         ".sortable-chart-widget-js:not(.hideelement)"
@@ -373,7 +338,7 @@ Template.allChartLists.onRendered(function () {
           $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
           $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
           $(`[key='${item}']`).removeClass("hideelement");
-          $(`[key='${item}']`).addClass("chart-visibility");          
+          $(`[key='${item}']`).addClass("chart-visibility");
         }
       }
       await ChartHandler.buildPositions();
@@ -387,7 +352,7 @@ Template.allChartLists.onRendered(function () {
           })
           .appendTo($chartWrappper);
       }, 500)
-    } 
+    }
   };
   templateObject.deactivateDraggable = () => {
     draggableCharts.disable();
@@ -405,16 +370,12 @@ Template.allChartLists.events({
   "click .on-editor-change-mode": (e) => {
     // this will toggle the visibility of the widget
     if ($(e.currentTarget).attr("is-hidden") == "true") {
-      // console.log('was true');
-      // $(e.currentTarget).parent(".chart-visibility").attr("is-hidden", 'false');
-      // $(e.currentTarget).parent(".chart-visibility").addClass('hideelement');
+
       $(e.currentTarget).attr("is-hidden", "false");
 
       $(e.currentTarget).html("<i class='far fa-eye'></i>");
     } else {
-      // console.log('was false');
-      // $(e.currentTarget).parent(".chart-visibility").attr("is-hidden", 'true');
-      // $(e.currentTarget).parent(".chart-visibility").removeClass('hideelement');
+
       $(e.currentTarget).attr("is-hidden", "true");
       $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
     }

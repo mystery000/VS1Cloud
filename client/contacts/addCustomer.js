@@ -103,10 +103,10 @@ Template.customerscard.onRendered(function () {
     }, 500);
 
 
-    templateObject.getOverviewARData = function (CustomerName) {
-        getVS1Data('TARReport').then(function (dataObject) {
+    templateObject.getOverviewARData = function (CustomerName, CustomerID) {
+        getVS1Data('TARReport1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                paymentService.getOverviewARDetails().then(function (data) {
+                paymentService.getOverviewARDetailsCust(CustomerID).then(function (data) {
                     setOverviewARDetails(data, CustomerName);
                 });
             } else {
@@ -114,7 +114,7 @@ Template.customerscard.onRendered(function () {
                 setOverviewARDetails(data, CustomerName);
             }
         }).catch(function (err) {
-            paymentService.getOverviewARDetails().then(function (data) {
+            paymentService.getOverviewARDetailsCust(CustomerID).then(function (data) {
                 setOverviewARDetails(data, CustomerName);
             });
         });
@@ -202,10 +202,10 @@ Template.customerscard.onRendered(function () {
         });
     };
 
-    templateObject.getAllProductRecentTransactions = function (customerName) {
-        getVS1Data('TTransactionListReport').then(function (dataObject) {
+    templateObject.getAllProductRecentTransactions = function (customerName, customerID) {
+        getVS1Data('TTransactionListReport1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getTTransactionListReport().then(function (data) {
+                sideBarService.getTTransactionListReport(customerID).then(function (data) {
                     setAllProductRecentTransactions(data, customerName);
                 }).catch(function (err) {
                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -217,7 +217,7 @@ Template.customerscard.onRendered(function () {
                 setAllProductRecentTransactions(data, customerName);
             }
         }).catch(function (err) {
-            sideBarService.getTTransactionListReport('').then(function (data) {
+            sideBarService.getTTransactionListReport(customerID).then(function (data) {
                 setAllProductRecentTransactions(data, customerName);
             }).catch(function (err) {
                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -230,11 +230,11 @@ Template.customerscard.onRendered(function () {
         let lineItems = [];
         let lineItemObj = {};
         let transID = "";
-        addVS1Data('TTransactionListReport', JSON.stringify(data)).then(function (datareturn) {
-
-        }).catch(function (err) {
-
-        });
+        // addVS1Data('TTransactionListReport', JSON.stringify(data)).then(function (datareturn) {
+        //
+        // }).catch(function (err) {
+        //
+        // });
         for (let i = 0; i < data.ttransactionlistreport.length; i++) {
             let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].DEBITSEX) || 0.00;
             // let totalTax = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].TotalTax) || 0.00;
@@ -381,6 +381,11 @@ Template.customerscard.onRendered(function () {
                         MakeNegative();
                     }, 100);
                 },
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                  let countTableData = data.Params.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                }
 
             }).on('page', function () {
                 setTimeout(function () {
@@ -428,29 +433,29 @@ Template.customerscard.onRendered(function () {
             const transactiontype = $(event.target).closest("tr").find(".colType").text();
             if ((listData) && (transactiontype)) {
                 if (transactiontype == 'Bill') {
-                    FlowRouter.go('/billcard?id=' + listData);
+                    FlowRouter.go('/billcard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Credit') {
-                    FlowRouter.go('/creditcard?id=' + listData);
+                    FlowRouter.go('/creditcard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'PO') {
-                    FlowRouter.go('/purchaseordercard?id=' + listData);
+                    FlowRouter.go('/purchaseordercard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Supplier Payment') {
-                    FlowRouter.go('/supplierpaymentcard?id=' + listData);
+                    FlowRouter.go('/supplierpaymentcard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Customer Payment') {
-                    FlowRouter.go('/paymentcard?id=' + listData);
+                    FlowRouter.go('/paymentcard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Cheque') {
-                    FlowRouter.go('/chequecard?id=' + listData);
+                    FlowRouter.go('/chequecard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Journal Entry') {
-                    FlowRouter.go('/journalentrycard?id=' + listData);
+                    FlowRouter.go('/journalentrycard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Refund') {
-                    FlowRouter.go('/invoicecard?id=' + listData);
+                    FlowRouter.go('/invoicecard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Invoice') {
-                    FlowRouter.go('/invoicecard?id=' + listData);
+                    FlowRouter.go('/invoicecard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Sales Order' || transactiontype == 'SO') {
-                    FlowRouter.go('/salesordercard?id=' + listData);
+                    FlowRouter.go('/salesordercard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'Quote') {
-                    FlowRouter.go('/quotecard?id=' + listData);
+                    FlowRouter.go('/quotecard?id=' + listData+'&trans='+data.Params.ClientID);
                 } else if (transactiontype == 'UnInvoiced SO') {
-                    FlowRouter.go('/salesordercard?id=' + listData);
+                    FlowRouter.go('/salesordercard?id=' + listData+'&trans='+data.Params.ClientID);
                 }
             }
         });
@@ -1202,7 +1207,7 @@ Template.customerscard.onRendered(function () {
             templateObject.isJobSameAddress.set(true);
         }
         //let attachmentData =  contactService.getCustomerAttachmentList(data.fields.ID);
-        templateObject.getOverviewARData(data.fields.ClientName);
+        templateObject.getOverviewARData(data.fields.ClientName, data.fields.ID);
         templateObject.records.set(lineItemObj);
 
         /* START attachment */
@@ -1216,7 +1221,7 @@ Template.customerscard.onRendered(function () {
         /* END  attachment */
 
         templateObject.isJob.set(data.fields.IsJob);
-        templateObject.getAllProductRecentTransactions(data.fields.ClientName);
+        templateObject.getAllProductRecentTransactions(data.fields.ClientName, data.fields.ID);
         templateObject.getAllCustomerJobs(data.fields.ClientName);
         templateObject.getAllCrm(data.fields.ClientName);
         //templateObject.uploadedFiles.set(attachmentData);
@@ -1760,14 +1765,27 @@ Template.customerscard.events({
         }
     },
     'click .openBalance': function (event) {
+        let currentId = FlowRouter.current().queryParams.id||FlowRouter.current().queryParams.jobid||'';
         let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
         if(customerName !== "") {
             if(customerName.indexOf('^') > 0) {
               customerName = customerName.split('^')[0]
             }
-            window.open('/agedreceivables?contact='+customerName, '_self');
+            window.open('/agedreceivables?contact='+customerName+'&contactid='+currentId, '_self');
         } else {
             window.open('/agedreceivables','_self');
+        }
+    },
+    'click .openBalancesummary': function (event) {
+        let currentId = FlowRouter.current().queryParams.id||FlowRouter.current().queryParams.jobid||'';
+        let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
+        if(customerName !== "") {
+            if(customerName.indexOf('^') > 0) {
+              customerName = customerName.split('^')[0]
+            }
+            window.open('/agedreceivablessummary?contact='+customerName+'&contactid='+currentId, '_self');
+        } else {
+            window.open('/agedreceivablessummary','_self');
         }
     },
     'click #customerShipping-1': function (event) {

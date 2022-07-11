@@ -7,7 +7,6 @@ Template.FxRateModal.onCreated(function () {
 });
 
 Template.FxRateModal.onRendered(function () {
-  console.log("Fx Rate Modal");
   let templateObject = Template.instance();
 });
 
@@ -15,9 +14,6 @@ Template.FxRateModal.events({});
 
 Template.FxRateModal.helpers({
   isDefaultCurrency: (currencyData) => {
-    //console.log(currencyData);
-    return currencyData.code == defaultCurrencyCode
-      ? "hidden"
-      : "";
+    return currencyData.code == defaultCurrencyCode? "hidden": "";
   },
 });

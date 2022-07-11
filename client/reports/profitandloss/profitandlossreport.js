@@ -265,18 +265,12 @@ Template.profitlossreport.onRendered(() => {
 });
 
 Template.profitlossreport.events({
-  "click td a": function (event) {
+  "click td a": async function (event) {
     let id = $(event.target).closest("tr").attr("id").split("item-value-");
     var accountName = id[1].split("_").join(" ");
-    let toDate = moment($("#dateTo").val())
-      .clone()
-      .endOf("month")
-      .format("YYYY-MM-DD");
-    let fromDate = moment($("#dateFrom").val())
-      .clone()
-      .startOf("year")
-      .format("YYYY-MM-DD");
-      addVS1Data('TAccountRunningBalanceReport', []);
+    let toDate = moment($("#dateTo").val()).clone().endOf("month").format("YYYY-MM-DD");
+    let fromDate = moment($("#dateFrom").val()).clone().startOf("year").format("YYYY-MM-DD");
+      await addVS1Data('TAccountRunningBalanceReport', []);
     //Session.setPersistent('showHeader',true);
     window.open(
       "/balancetransactionlist?accountName=" +

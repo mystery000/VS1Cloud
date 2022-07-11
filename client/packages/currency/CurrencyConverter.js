@@ -1,6 +1,5 @@
 class CurrencyConverter {
   constructor() {
-    console.log("Currency converter module loaded");
   }
 
   /**

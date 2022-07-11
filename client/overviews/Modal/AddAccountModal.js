@@ -30,7 +30,6 @@ Template.addAccountModal.onCreated(function () {
 Template.addAccountModal.onRendered(function () {
   const generatedId = $(".generated-id").attr("id", generate());
   const currentElement = this;
-  // console.log(this);
   $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
 
@@ -615,13 +614,8 @@ Template.addAccountModal.onRendered(function () {
 
   $(document).ready(function () {
     setTimeout(function () {
-      //console.log(this.$(".sltTaxCode"));
       this.$(".sltTaxCode").editableSelect();
-      this.$(".sltTaxCode")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          // console.log(e, li, "hello");
-          // return false;
+      this.$(".sltTaxCode").editableSelect().on("click.editable-select", function (e, li) {
           var $earch = $(this);
           var taxSelected = "sales";
           var offset = $earch.offset();
@@ -735,7 +729,6 @@ Template.addAccountModal.onRendered(function () {
     }, 1000);
 
     $(document).on("click", "#tblTaxRate tbody tr", (e) => {
-        // console.log("current event", e, e.currentTarget);
       var table = $(e.currentTarget);
       let lineTaxCode = table.find(".taxName").text();
       currentElement.$(".sltTaxCode").val(lineTaxCode);

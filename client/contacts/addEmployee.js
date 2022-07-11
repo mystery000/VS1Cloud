@@ -32,6 +32,7 @@ import PayNotesFields from "../js/Api/Model/PayNotesFields";
 import 'jquery-editable-select';
 import '../lib/global/indexdbstorage.js';
 import { functionsIn } from "lodash";
+import moment from "moment";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let edtProductSelect = "";
@@ -1322,14 +1323,6 @@ Template.employeescard.onRendered(function () {
                     if (dataObject.length == 0) {
                         contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
                             $('.fullScreenSpin').css('display', 'none');
-                            console.log('data--->',data)
-                            // add to custom field
-                            // tempcode
-                            // setTimeout(function () {
-                            //   $('#edtSaleCustField1').val(data.fields.CustFld1);
-                            //   $('#edtSaleCustField2').val(data.fields.CustFld2);
-                            //   $('#edtSaleCustField3').val(data.fields.CustFld3);
-                            // }, 5500);
 
                             let lineItems = [];
                             let empEmail = '';
@@ -1540,7 +1533,7 @@ Template.employeescard.onRendered(function () {
 
 
                             // tempcode
-                              //   setTimeout(function () {// add to custom field 
+                              //   setTimeout(function () {// add to custom field
 
                               //     $('#edtSaleCustField1').val(useData[i].fields.CustFld1);
                               //     $('#edtSaleCustField2').val(useData[i].fields.CustFld2);
@@ -2981,7 +2974,6 @@ Template.employeescard.onRendered(function () {
                     return item;
                 }
             });
-            // console.log(openingBalances)
             templateObject.openingBalanceInfo.set(openingBalances);
         }
     };
@@ -2993,7 +2985,6 @@ Template.employeescard.onRendered(function () {
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
                 let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data);
-                //console.log('TEmployeepaysettingData', TEmployeepaysettingData)
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -3001,44 +2992,71 @@ Template.employeescard.onRendered(function () {
                         return item;
                     }
                 });
+                let employeePaySettings = {}
+                let objEmployeePaySettings = {}
+                if( useData.length == 0 ){
+                    let ePaySettings = await contactService.getOneEmployeeDataEx(employeeID);
+                    if( ePaySettings ){
+                        objEmployeePaySettings = {
+                            EmployeeName: ePaySettings.fields.EmployeeName,
+                            BankAccountName: "",
+                            BankAccountBSB: "",
+                            BankAccountNo: "",
+                            StatementText: "",
+                            AnnualSalary: 0,
+                            EarningYTD: 0,
+                            NextPayDate: moment().format('YYYY-MM-DD'),
+                            AnnSalary: 0,
+                            TFN: ePaySettings.fields.TFN,
+                            Country: ePaySettings.fields.Country,
+                            TaxFreeThreshold: false,
+                            TFNExemption: "",
+                            EmploymentBasis: "",
+                            ResidencyStatus: "",
+                            StudyTrainingSupportLoan: false,
+                            EligibleToReceiveLeaveLoading: false,
+                            OtherTaxOffsetClaimed: false,
+                            UpwardvariationRequested: false,
+                            SeniorandPensionersTaxOffsetClaimed: false,
+                            HasApprovedWithholdingVariation: false,
+                        }
+                    }
+                    templateObject.employeePaySettings.set(objEmployeePaySettings);
+                }else{
+                    employeePaySettings = useData[0]
+                    objEmployeePaySettings = {
+                        EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
+                        BankAccountName: employeePaySettings.fields.BankAccountName,
+                        BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
+                        BankAccountNo: employeePaySettings.fields.BankAccountNo,
+                        StatementText: employeePaySettings.fields.Statement,
+                        AnnualSalary: employeePaySettings.fields.AnnualSalary,
+                        EarningYTD: employeePaySettings.fields.EarningYTD,
+                        NextPayDate: employeePaySettings.fields.NextPayDate,
+                        AnnSalary: employeePaySettings.fields.Employee.fields.Wages * 12,
+                        TFN: employeePaySettings.fields.Employee.fields.TFN,
+                        Country: employeePaySettings.fields.Employee.fields.Country,
+                        TaxFreeThreshold: employeePaySettings.fields.Employee.fields.TaxFreeThreshold ? employeePaySettings.fields.Employee.fields.TaxFreeThreshold : false,
 
-                // console.log('TEmployeepaysettingData', useData)
+                        TFNExemption: employeePaySettings.fields.Employee.fields.TFNExemption ? employeePaySettings.fields.Employee.fields.TFNExemption : "",
+                        EmploymentBasis: employeePaySettings.fields.Employee.fields.EmploymentBasis ? employeePaySettings.fields.Employee.fields.EmploymentBasis : "",
+                        ResidencyStatus: employeePaySettings.fields.Employee.fields.ResidencyStatus ? employeePaySettings.fields.Employee.fields.ResidencyStatus : "",
+                        StudyTrainingSupportLoan: employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan ? employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan : false,
+                        EligibleToReceiveLeaveLoading: employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading ? employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading : false,
+                        OtherTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed : false,
+                        UpwardvariationRequested: employeePaySettings.fields.Employee.fields.UpwardvariationRequested ? employeePaySettings.fields.Employee.fields.UpwardvariationRequested : false,
+                        SeniorandPensionersTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed : false,
+                        HasApprovedWithholdingVariation: employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation ? employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation : false,
+                    }
 
-                let employeePaySettings = useData[0]
+                    templateObject.employeePaySettings.set(objEmployeePaySettings);
 
+                    templateObject.employeePayInfos.set(employeePaySettings);
 
-                let objEmployeePaySettings = {
-                    EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
-                    BankAccountName: employeePaySettings.fields.BankAccountName,
-                    BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
-                    BankAccountNo: employeePaySettings.fields.BankAccountNo,
-                    StatementText: employeePaySettings.fields.Statement,
-                    AnnualSalary: employeePaySettings.fields.AnnualSalary,
-                    EarningYTD: employeePaySettings.fields.EarningYTD,
-                    NextPayDate: employeePaySettings.fields.NextPayDate,
-                    AnnSalary: employeePaySettings.fields.Employee.fields.Wages * 12,
-                    TFN: employeePaySettings.fields.Employee.fields.TFN,
-                    Country: employeePaySettings.fields.Employee.fields.Country,
-                    TaxFreeThreshold: employeePaySettings.fields.Employee.fields.TaxFreeThreshold ? employeePaySettings.fields.Employee.fields.TaxFreeThreshold : false,
-
-                    TFNExemption: employeePaySettings.fields.Employee.fields.TFNExemption ? employeePaySettings.fields.Employee.fields.TFNExemption : "",
-                    EmploymentBasis: employeePaySettings.fields.Employee.fields.EmploymentBasis ? employeePaySettings.fields.Employee.fields.EmploymentBasis : "",
-                    ResidencyStatus: employeePaySettings.fields.Employee.fields.ResidencyStatus ? employeePaySettings.fields.Employee.fields.ResidencyStatus : "",
-                    StudyTrainingSupportLoan: employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan ? employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan : false,
-                    EligibleToReceiveLeaveLoading: employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading ? employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading : false,
-                    OtherTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed : false,
-                    UpwardvariationRequested: employeePaySettings.fields.Employee.fields.UpwardvariationRequested ? employeePaySettings.fields.Employee.fields.UpwardvariationRequested : false,
-                    SeniorandPensionersTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed : false,
-                    HasApprovedWithholdingVariation: employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation ? employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation : false,
+                    $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
+                    $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
+                    $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
                 }
-
-                templateObject.employeePaySettings.set(objEmployeePaySettings);
-
-                templateObject.employeePayInfos.set(employeePaySettings);
-
-                $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
-                $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
-                $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
             }
         } catch(err) {
             let employeePayrollService = new EmployeePayrollService();
@@ -3190,7 +3208,6 @@ Template.employeescard.onRendered(function () {
                         $('#deductionSettingsModal').modal('show');
                     } else {
                         if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
                         }
                         $('#deductionSettingsModal').modal('show');
                     }
@@ -3213,7 +3230,6 @@ Template.employeescard.onRendered(function () {
                         $('#superannuationSettingsModal').modal('show');
                     } else {
                         if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
                         }
                         $('#superannuationSettingsModal').modal('show');
                     }
@@ -3236,7 +3252,6 @@ Template.employeescard.onRendered(function () {
                         $('#reimbursementSettingsModal').modal('show');
                     } else {
                         if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
                         }
                         $('#reimbursementSettingsModal').modal('show');
                     }
@@ -3255,12 +3270,10 @@ Template.employeescard.onRendered(function () {
                     let dropDownID = $search.attr('id')
                     templateObject.currentDrpDownID.set(dropDownID);
                     let currencyDataName = e.target.value || '';
-                    // console.log( currencyDataName )
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                         $('#leaveTypeSettingsModal').modal('show');
                     } else {
                         if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
                         }
                     }
                 });
@@ -3277,7 +3290,6 @@ Template.employeescard.onRendered(function () {
                             $('#accountListModal').modal('show');
                         } else {
                             if (currencyDataName.replace(/\s/g, '') != '') {
-                                // console.log('step 2')
                             }
                         }
                     });
@@ -3618,7 +3630,7 @@ Template.employeescard.events({
         let state = $('#edtState').val();
         let postalcode = $('#edtPostalCode').val();
         let country = $('#edtCountry').val();
- 
+
         let custField4 = $('#edtCustomeField4').val();
         // add to custom field
         let custField1 = $('#edtSaleCustField1').val()||'';
@@ -4239,10 +4251,7 @@ Template.employeescard.events({
                 }),
             })
         );
-        // let updatedOpeningBalance = {
-        //     topeningbalances: openingBalances,
-        // }
-        // console.log('useData', payEarningLinesTemp)
+
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obEarningsRate').val('');
         $('#addEarningsLineModal2').modal('hide');
@@ -4287,10 +4296,7 @@ Template.employeescard.events({
                 }),
             })
         );
-        // let updatedOpeningBalance = {
-        //     topeningbalances: openingBalances,
-        // }
-        // console.log('useData', payEarningLinesTemp)
+
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obDeductionType').val('');
         $('#addDeductionLineModal2').modal('hide');
@@ -4337,10 +4343,7 @@ Template.employeescard.events({
                 }),
             })
         );
-        // let updatedOpeningBalance = {
-        //     topeningbalances: openingBalances,
-        // }
-        // console.log('useData', payEarningLinesTemp)
+
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obSuperannuationFund').val('');
         $('#obContributionType').val('');
@@ -4386,10 +4389,7 @@ Template.employeescard.events({
                 }),
             })
         );
-        // let updatedOpeningBalance = {
-        //     topeningbalances: openingBalances,
-        // }
-        // console.log('useData', payEarningLinesTemp)
+
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obReimbursementType').val('');
         $('#addReimbursementLineModal2').modal('hide');
@@ -4548,7 +4548,6 @@ Template.employeescard.events({
                 }),
             })
         );
-        // console.log('paynotes', paynotes)
         let updatedNotes = {
             tpaynotes: paynotes,
         }

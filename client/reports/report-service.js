@@ -66,17 +66,30 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
   }
 
-  getBalanceSheetRedirectClientData(accountName, limitcount, limitfrom) {
-    let options = {
+  getBalanceSheetRedirectClientData(accountName, limitcount, limitfrom,urlParametersDateFrom,urlParametersDateTo) {
+      let options = '';
+      if(urlParametersDateFrom != '' && urlParametersDateTo != ''){
+        options = {
+         ReportType: "Detail",
+         IgnoreSummarised: true,
+         AccountName:'"'+accountName+'"',
+         OrderBy:"Date desc",
+         DateFrom: '"' + urlParametersDateFrom + '"',
+         DateTo: '"' + urlParametersDateTo + '"',
+         LimitCount: '"' + limitcount + '"',
+         LimitFrom: '"' + limitfrom + '"',
+       };
+      }else{
+     options = {
       ReportType: "Detail",
       IgnoreSummarised: true,
       IgnoreDates: true,
       AccountName:'"'+accountName+'"',
-      Search: "Type != ''",
       OrderBy:"clientname desc",
       LimitCount: '"' + limitcount + '"',
       LimitFrom: '"' + limitfrom + '"',
     };
+  }
     // return this.getList(this.ERPObjects.TAccount,options);
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
   }
@@ -193,15 +206,16 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
-  getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate) {
-    // let options = {
-    //     IgnoreDates:ignoreDate,
-    //     ReportType: 'Summary',
-    //     DateFrom: '"'+dateFrom+'"',
-    //     DateTo: '"'+dateTo+'"'
-    // };
-
+  getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID) {
     let options = "";
+    if(contactID != ''){
+      options = {
+        IgnoreDates: true,
+        ReportType: "Summary",
+        ClientID:contactID
+      };
+    }else{
+
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
@@ -215,15 +229,16 @@ export class ReportService extends BaseService {
         DateTo: '"' + dateTo + '"',
       };
     }
+  }
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
-  getAgedReceivableDetailsData(dateFrom, dateTo, ignoreDate, contactName) {
+  getAgedReceivableDetailsData(dateFrom, dateTo, ignoreDate, contactID) {
     let options = "";
-    if(contactName != ''){
+    if(contactID != ''){
       options = {
         IgnoreDates: true,
-        Search:'Name = "'+contactName+'"'
+        ClientID:contactID
       };
     }else{
     if (ignoreDate == true) {
@@ -241,8 +256,39 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TARReport, options);
   }
 
-  getAgedReceivableDetailsSummaryData(dateFrom, dateTo, ignoreDate) {
+
+  getTAPReport(dateFrom, dateTo, ignoreDate, contactID) {
     let options = "";
+    if(contactID != ''){
+      options = {
+        IgnoreDates: true,
+        ClientID:contactID
+      };
+    }else{
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+  }
+    return this.getList(this.ERPObjects.TAPReport, options);
+  }
+
+  getAgedReceivableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID) {
+    let options = "";
+    if(contactID != ''){
+      options = {
+        IgnoreDates: true,
+        ReportType: "Summary",
+        ClientID:contactID
+      };
+    }else{
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
@@ -255,6 +301,7 @@ export class ReportService extends BaseService {
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
       };
+    }
     }
     return this.getList(this.ERPObjects.TARReport, options);
   }

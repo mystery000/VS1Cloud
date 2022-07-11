@@ -161,7 +161,7 @@ Template.balancesheetreport.onRendered(() => {
         } else {
           TotalAsset_Liability = " ";
         }
-        
+
         let AccountTree = data.balancesheetreport[i]["Account Tree"];
         // if (AccountTree !== 0) {
         //   AccountTree = utilityService.modifynegativeCurrencyFormat(AccountTree);
@@ -486,7 +486,6 @@ Template.balancesheetreport.onRendered(() => {
             ];
           }
         }
-        console.log( "SubAccountTotal", SubAccountTotal, "HeaderAccountTotal", HeaderAccountTotal )
         if( recordObj.dataArr2 ){
           if ( HeaderAccountTotal.replace(/\s/g, "") || SubAccountTotal.replace(/\s/g, "") ) {
             records.push(recordObj);
@@ -525,7 +524,6 @@ Template.balancesheetreport.onRendered(() => {
       );
     }
 
-    console.log("Balance sheet record 2: ", records);
 
     templateObject.records.set(records);
     if (templateObject.records.get()) {
@@ -1503,7 +1501,6 @@ Template.balancesheetreport.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    console.log(amount);
 
     // console.log("Amount to covert", amount);
     if (!amount || amount.trim() == "") {
@@ -1856,26 +1853,14 @@ Template.balancesheetreport.events({
       );
     }
   },
-  "click td.Indent1": function (event) {
+  "click td.Indent1": async function (event) {
     let id = event.target.className.split("item-value-");
     let accountName = id[1].split("_").join(" ");
-    let toDate = moment($("#balanceDate").val())
-      .clone()
-      .endOf("month")
-      .format("YYYY-MM-DD");
+    let toDate = moment($("#balanceDate").val()).clone().endOf("month").format("YYYY-MM-DD");
     let fromDate = "1899-01-01";
     Session.setPersistent("showHeader", true);
-    window.open(
-      "/balancetransactionlist?accountName=" +
-        accountName +
-        "&toDate=" +
-        toDate +
-        "&fromDate=" +
-        fromDate +
-        "&isTabItem=" +
-        false,
-      "_self"
-    );
+    await addVS1Data('TAccountRunningBalanceReport', []);
+    window.open("/balancetransactionlist?accountName=" +accountName +"&toDate=" +toDate +"&fromDate=" +fromDate +"&isTabItem=" +false,"_self");
   },
   "click #moreOptionBal": function () {
     $("#more_search").show();
