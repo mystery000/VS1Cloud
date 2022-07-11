@@ -1191,7 +1191,6 @@ Template.receiptsoverview.onRendered(function() {
             } else { //else load data from indexdb
                 let data = JSON.parse(dataObject[0].data);
                 let lineItems = [];
-                console.log(data);
                 data.texpenseclaimex.forEach(expense => {
                     if (Object.prototype.toString.call(expense.fields.Lines) === "[object Array]") {
                         expense.fields.Lines.forEach(claim => {
@@ -1469,7 +1468,6 @@ Template.receiptsoverview.onRendered(function() {
             $(parentElement + ' .transactionTypes').val(transactionTypeName);
 
         }).catch(function(err) {
-            console.log('ocrresult err', err);
             $('.fullScreenSpin').css('display', 'none');
         });
     }
@@ -2141,7 +2139,7 @@ Template.receiptsoverview.events({
                     // GroupReport: groupReport,
                     // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                     // TransactionTypeName: transactionTypeName,
-               
+
                 }
             };
 
@@ -2164,10 +2162,6 @@ Template.receiptsoverview.events({
                     ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate)
                 }
             }
-
-            console.log("TODO: API update required for fx rate: ", "TExpenseClaimEx", expenseClaim);
-
-
 
             $('.fullScreenSpin').css('display', 'inline-block');
             accountService.saveReceipt(expenseClaim).then(function(data) {
@@ -2738,7 +2732,6 @@ Template.receiptsoverview.events({
         }
     },
     "change .currencies": (e) => {
-        //console.log(e);
         const value = $(e.currentTarget).attr('buy-rate');
 
         let from = $('#employeeListModal').attr('data-from');
@@ -2756,8 +2749,6 @@ Template.receiptsoverview.events({
             $('#nav-time .exchange-rate-js').val(value);
             $('#nav-time .exchange-rate-js').trigger("change");
         }
-        
-        console.log('Something has changed: ',  value);
 
     },
 

@@ -511,3 +511,23 @@ td.td-input {
     background-color: #e74a3b !important;
     color: #fff !important;
 }
+
+.text-Green {
+    background-color: #1cc88a !important;
+    color: #fff !important;
+}
+
+.text-Yellow {
+    background-color: #f6c23e !important;
+    color: #fff !important;
+}
+
+.text-Orange {
+    background-color: #fd7e14 !important;
+    color: #fff !important;
+}
+
+.text-deleted {
+    background-color: #e74a3b !important;
+    color: #fff;
+}

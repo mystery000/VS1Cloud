@@ -65,7 +65,6 @@ export default class ChartsEditor {
     this._onEnabled();
     this.onEnable();
     if (this.debug == true) {
-      console.log("Editor: " + this.mode);
     }
   }
 
@@ -75,7 +74,6 @@ export default class ChartsEditor {
     this._onDisabled();
     this.onDisable();
     if (this.debug == true) {
-      console.log("Editor: " + this.mode);
     }
   }
 }

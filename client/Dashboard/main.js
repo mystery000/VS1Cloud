@@ -47,7 +47,6 @@ Template.home.onRendered(function () {
   const templateObject = Template.instance();
 
   let isDashboard = Session.get('CloudDashboardModule');
-  console.log(isDashboard);
   let isMain = Session.get('CloudMainModule');
   let isInventory = Session.get('CloudInventoryModule');
   let isManufacturing = Session.get('CloudManufacturingModule');

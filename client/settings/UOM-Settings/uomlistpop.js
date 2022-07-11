@@ -160,7 +160,6 @@ Template.uomlistpop.onRendered(function() {
               }
           }
       }).catch(function (err) {
-        console.log(err);
           sideBarService.getUOMVS1().then(function (data) {
 
               let records = [];

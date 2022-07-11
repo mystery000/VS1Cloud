@@ -1992,7 +1992,6 @@ Template.customfieldpop.events({
             IsCombo: "false",
           },
         };
-        console.log('list type=>', listType)
 
         organisationService
           .saveCustomField(objDetails1)
@@ -2130,11 +2129,7 @@ Template.customfieldpop.events({
           };
         }
 
-    console.log('list type=>', objDetails1)
-
-        organisationService
-          .saveCustomField(objDetails1)
-          .then(function (objDetails) {
+        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
             if (i == 0) {
               $(".lblCustomField1").text(fieldData[i].name);
               $("#customFieldText1").val(fieldData[i].name);

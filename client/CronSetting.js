@@ -60,7 +60,6 @@ export default class CronSetting {
           date.toDateString().split(" ")[3];
       }
     } else if (this.type == "Weekly") {
-      console.log("It is weekly !!");
 
       text += "every " + this.every + " week";
       text += " on " + this.days;
@@ -77,7 +76,6 @@ export default class CronSetting {
         " in " +
         date.toDateString().split(" ")[3];
     } else if (this.type == "Daily") {
-      console.log("It is daily");
 
       const date = this.convertToDate(this.startAt);
       const minutes = this.convertToDate(this.startAt).getMinutes();
@@ -139,13 +137,10 @@ export default class CronSetting {
    * @returns {Date}
    */
   convertToDate(date) {
-    // console.log("Converting Date");
     if (date instanceof Date) {
-      // console.log("There is nothing to convert");
       return date;
     }
     date = new Date(date);
-    // console.log("Converting date: ",date);
     return date;
   }
 
@@ -164,5 +159,17 @@ export default class CronSetting {
     }
 
     return number + suffixe;
+  }
+
+
+  getStartAt() {
+    return this.convertToDate(this.startAt);
+  }
+
+  isFuture() {
+    if(this.getStartAt() > new Date()) {
+      return true;
+    }
+    return false;
   }
 }

@@ -67,12 +67,12 @@ Template.agedpayablessummary.onRendered(()=>{
 
    $("#dateFrom").val(fromDate);
    $("#dateTo").val(begunDate);
-
+   let contactID = FlowRouter.current().queryParams.contactid ||'';
     templateObject.getAgedPayableReports = function (dateFrom, dateTo, ignoreDate) {
       templateObject.records.set('');
       templateObject.grandrecords.set('');
       if(!localStorage.getItem('VS1AgedPayablesSummary_Report')){
-        reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate).then(function (data) {
+        reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID).then(function (data) {
        let totalRecord = [];
        let grandtotalRecord = [];
 
@@ -425,7 +425,7 @@ let grandOlder = 0;
               }
           }
       });
-      
+
         document.title = 'Aged Payables Summary Report';
       $(".printReport").print({
           title   :  document.title +" | Aged Payable | "+loggedCompany,

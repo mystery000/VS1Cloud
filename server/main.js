@@ -84,9 +84,7 @@ Meteor.startup(() => {
         clientId: 'KESAGIh3yF3Z220TwoYeMDJKgsRXSSk4',
         secret: 'TqDOhdMCOYHJq1se'
     }).then(function(accessToken) {
-        // console.log(accessToken);
     }).catch(function(error) {
-        // console.log(accessToken);
     });
 
     callYodleeApi = function (loginName, clientID, secretKey, cb) {
@@ -155,8 +153,8 @@ Meteor.startup(() => {
         let postHeaders = {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "CLIENT-ID": "vrf9JUep9GWNHCpIKRREbTA9jbrF4LxdoEtiyLO",
-          "AUTHORIZATION": "apikey dev.vs1cloud:d56dcb27df3930fccceb8dd4c7e2628d",
+          "CLIENT-ID": "vrfL66wgAgzekdXcv1A58cz4Nn6AA97plgPEiTM",
+          "AUTHORIZATION": "apikey rasheedariyibi1:d323b9196724528cd72b9f8617db276e",
           // "Access-Control-Allow-Origin": "*"
         };
         let postData = {
@@ -399,13 +397,10 @@ Meteor.startup(() => {
         'getSMSLogs': async (authSid, authToken) => {
             const smsClient = require('twilio')(authSid, authToken);
             try {
-                return smsClient.messages.list()
-                    .then(messages => {
-                        console.log(messages[0].sid);
+                return smsClient.messages.list().then(messages => {
                         return { success: true, messages };
                     });
             } catch(error) {
-                console.log('Got an error: ', error);
                 return {success: false, message: error.message};
             }
         }

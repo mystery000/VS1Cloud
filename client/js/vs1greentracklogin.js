@@ -873,7 +873,6 @@ $("#login-button").click(function(e){
                         }
                     }
                 }
-                console.log(smsSettings);
                 $.ajax(
                     {
                         method: 'GET',
@@ -888,7 +887,6 @@ $("#login-button").click(function(e){
                         success: function(data) {
                             if (!data.sms_messages) {
                                 addVS1Data('TVS1SMSLogs', data).then((res) => {
-                                    console.log(res);
                                 }).then(error => console.log(error));
                             }
                         },

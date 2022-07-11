@@ -1,5 +1,4 @@
 /**
- * @author : Dusko.
  * this is ocr service class.
  */
 export class OCRService {
@@ -18,7 +17,7 @@ export class OCRService {
             resolve(JSON.parse(results.content));
           } else {
             reject(results);
-          }          
+          }
         }
       });
       // resolve(JSON.parse(dummyData));

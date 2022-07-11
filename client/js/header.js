@@ -114,8 +114,17 @@ Template.header.onRendered(function() {
         document.getElementById("mobileBarcodeScan2").style.display = "block";
     }
 
+    $(document).keypress(function(event){
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            if ($('#searchGuideModal').css('display') == 'block') {
+                $( "#btnCloseSearchGuide" ).trigger( "click" );
+            }
+         }
+    });
+
     $(document).on( 'keydown', function(e) {
-        if (e.keyCode === 27 ) {
+        if ((e.keyCode == "27") ) {
             if ($('#searchGuideModal').css('display') == 'block') {
                 $('#searchGuideModal').modal(show);
             }

@@ -24,7 +24,7 @@ Template.top10Customers.onRendered(function () {
   let topData = this;
   function chartClickEvent() {
     FlowRouter.go("/customerdetailsreport?daterange=ignore");
-  } 
+  }
   getInvSales(function (data) {
     setTimeout(function () {
       let customerList = [];
@@ -165,12 +165,10 @@ Template.top10Customers.onRendered(function () {
               let filterData = _.filter(data.tinvoiceex, function (data) {
                 return !data.deleted;
               });
-              // console.log(filterData);
               // This will filter and return cutomer name
               let filterDueDateData = _.filter(filterData, function (data) {
                 return data.CustomerName;
               });
-              //  console.log(filterDueDateData);
 
               let groupData = _.omit(
                 _.groupBy(filterDueDateData, "CustomerName"),

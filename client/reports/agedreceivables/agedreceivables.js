@@ -67,6 +67,7 @@ Template.agedreceivables.onRendered(() => {
     $("#dateTo").val(begunDate);
     let currenctURL = FlowRouter.current().queryParams;
     let contactName = FlowRouter.current().queryParams.contact ||'';
+    let contactID = FlowRouter.current().queryParams.contactid ||'';
     templateObject.getAgedReceivableReports = function (dateFrom, dateTo, ignoreDate) {
         templateObject.records.set('');
         templateObject.grandrecords.set('');
@@ -74,7 +75,7 @@ Template.agedreceivables.onRendered(() => {
 
         //}else{
         if (!localStorage.getItem('VS1AgedReceivables_Report')) {
-            reportService.getAgedReceivableDetailsData(dateFrom, dateTo, ignoreDate, contactName).then(function (data) {
+            reportService.getAgedReceivableDetailsData(dateFrom, dateTo, ignoreDate, contactID).then(function (data) {
                 let totalRecord = [];
                 let grandtotalRecord = [];
 

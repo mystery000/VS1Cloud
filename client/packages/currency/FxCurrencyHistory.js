@@ -93,12 +93,8 @@ Template.FxCurrencyHistory.onRendered(function () {
   }
 
   templateInstance.getTaxRates = function () {
-    taxRateService
-      .getCurrencyHistory()
-      .then((result) => {
-        // console.log(result);
+    taxRateService.getCurrencyHistory().then((result) => {
         const data = result.tcurrencyratehistory;
-        // console.log(data);
         let lineItems = [];
         let lineItemObj = {};
         for (let i = 0; i < data.length; i++) {
@@ -122,23 +118,17 @@ Template.FxCurrencyHistory.onRendered(function () {
           dataTableList.push(dataList);
           //}
         }
-        // console.log(dataTableList);
 
         if (urlParams.get("currency")) {
           // Filter by currency
           dataTableList = dataTableList.filter((value, index) => {
-            //console.log(value);
             return value.code == urlParams.get("currency");
           });
         }
 
         if (urlParams.get("dateFrom") && urlParams.get("dateTo")) {
-          // console.log(begunDate);
           const _dateFrom = formatDateFromUrl(begunDate);
           const _dateTo = formatDateFromUrl(fromDate);
-          // console.log(_dateFrom);
-          // console.log(_dateTo);
-
           dataTableList = dataTableList.filter((value, index) => {
             if (_dateFrom > value.createdAt && _dateTo < value.createdAt) {
               return true;
@@ -403,10 +393,6 @@ Template.FxCurrencyHistory.events({
 
     const formatDateFrom = formatDateToString(firstDay);
     const formatDateTo = formatDateToString(lastDay);
-    // console.log(formatDateTo);
-    // console.log(formatDateFrom);
-
-    // debugger;
 
     $("#dateTo").val(formatDateTo);
     $("#dateFrom").val(formatDateFrom);
@@ -462,9 +448,6 @@ Template.FxCurrencyHistory.events({
     myUrl.searchParams.append("dateTo", formatDateTo);
 
     window.location.href = myUrl;
-
-    // console.log(formatDateFrom);
-    // console.log(formatDateTo);
   },
   "change #dateFrom": function () {
     let templateObject = Template.instance();
@@ -488,9 +471,6 @@ Template.FxCurrencyHistory.events({
     myUrl.searchParams.append("dateTo", formatDateTo);
 
     window.location.href = myUrl;
-
-    // console.log(formatDateFrom);
-    // console.log(formatDateTo);
   },
   "click .chkDatatable": function (event) {
     var columns = $("#tblFxCurrencyHistory th");
@@ -740,7 +720,7 @@ Template.FxCurrencyHistory.events({
   "click #exportbtn": function () {
     LoadingOverlay.show();
      jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletocsv").click();
-    
+
     LoadingOverlay.hide();
   },
   "click .printConfirm": function (event) {
@@ -766,10 +746,7 @@ Template.FxCurrencyHistory.events({
 
 Template.FxCurrencyHistory.helpers({
   datatablerecords: () => {
-    return Template.instance()
-      .datatablerecords.get()
-      .sort(function (a, b) {
-        // console.log(a, b);
+    return Template.instance().datatablerecords.get().sort(function (a, b) {
         if (a.code == "NA") {
           return 1;
         } else if (b.code == "NA") {
@@ -777,14 +754,12 @@ Template.FxCurrencyHistory.helpers({
         }
         return a.code.toUpperCase() > b.code.toUpperCase() ? 1 : -1;
         // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-      })
-      .sort(sortById);
+      }).sort(sortById);
     // .sort(sortByDate);
     // .sort((a, b) => a.createdAt - b.createdAt);
   },
   tableheaderrecords: () => {
     let data = Template.instance().tableheaderrecords.get();
-    console.log(data);
     return data;
   },
   salesCloudPreferenceRec: () => {
@@ -822,8 +797,6 @@ function sortByDate(a, b) {
  */
 function formatDateFromUrl(urlDate) {
   const _date = urlDate.split("/");
-
-  // console.log(_date);
 
   const finalDate = new Date(_date[2], _date[1], _date[0]);
 

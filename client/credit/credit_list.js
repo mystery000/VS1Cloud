@@ -440,7 +440,6 @@ Template.creditlist.onRendered(function() {
               });
             }else{
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data);
                 let useData = data.tcreditlist;
                 let lineItems = [];
                 $('.fullScreenSpin').css('display','none');

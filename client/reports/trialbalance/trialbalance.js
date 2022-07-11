@@ -567,7 +567,7 @@ Template.trialbalance.events({
       _currencySelectedList.push(_currency);
     }
 
-    //console.log("Selected currency list", _currencySelectedList);
+     
 
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
@@ -990,7 +990,7 @@ Template.trialbalance.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    // console.log("Amount to covert", amount);
+     
     if (!amount || amount.trim() == "") {
       return "";
     }
@@ -1011,16 +1011,16 @@ Template.trialbalance.helpers({
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
     // )[0];
-    //console.log("default: ",_defaultCurrency);
+     
     // amount = amount.replace(_defaultCurrency.symbol, "");
 
-    // console.log("Is nan", amount, isNaN(amount));
+     
     // amount =
     //   isNaN(amount) == true
     //     ? parseFloat(amount.substring(1))
     //     : parseFloat(amount);
-    // console.log("Amount to convert", amount);
-    // console.log("currency to convert to", currencyData);
+     
+     
 
     // Get the selected date
     let dateTo = $("#dateTo").val();
@@ -1029,7 +1029,7 @@ Template.trialbalance.helpers({
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-    // console.log('date to', dateTo);
+     
 
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
@@ -1060,8 +1060,8 @@ Template.trialbalance.helpers({
     });
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-    // console.log("Closests currency", firstElem);
-    // console.log("Currency list: ", currencyList);
+     
+     
 
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     amount = parseFloat(amount * rate); // Multiply by the rate
@@ -1069,12 +1069,12 @@ Template.trialbalance.helpers({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }); // Add commas
-    //console.log("final amount", amount);
+     
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-    //console.log(convertedAmount);
+     
 
     return convertedAmount;
   },
@@ -1105,7 +1105,7 @@ Template.trialbalance.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
-      //console.log(activeArray[0].currency);
+       
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -1176,9 +1176,9 @@ Template.registerHelper("containsequals", function (a, b) {
     const result = await taxRateService.getCurrencies();
 
     //taxRateService.getCurrencies().then((result) => {
-    // console.log(result);
+     
     const data = result.tcurrency;
-    //console.log(data);
+     
     for (let i = 0; i < data.length; i++) {
       // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
       var dataList = {
@@ -1207,7 +1207,7 @@ Template.registerHelper("containsequals", function (a, b) {
         .localeCompare(b.currency.split("")[0].toLowerCase());
     });
 
-    // console.log(_currencyList);
+     
 
     templateObject.currencyList.set(_currencyList);
 

@@ -23,24 +23,6 @@ Template.monthlyprofitandloss.onCreated(() => {
 Template.monthlyprofitandloss.onRendered(() => {
   const templateObject = Template.instance();
 
-  // $(`#monthylprofiteandlosscol`).removeClass("showelement");
-  // $(`#monthylprofiteandlosscol`).addClass("hideelement");
-
-  // // This will handle the display
-  // const widgetKey = "tvs1charts__monthyl_profit_and_loss";
-  // const displayed = localStorage.getItem(widgetKey) || true; // by default it will show this chart
-  // if (displayed == true || displayed == "true") {
-  //   console.log(displayed);
-  //   console.log(`showing widget ${widgetKey}`);
-
-  //   $(`.${widgetKey}`).parent().addClass("showelement");
-  //   $(`.${widgetKey}`).parent().removeClass("hideelement");
-  // } else {
-  //   console.log(`hidding widget ${widgetKey}`);
-  //   $(`.${widgetKey}`).parent().removeClass("showelement");
-  //   $(`.${widgetKey}`).parent().addClass("hideelement");
-  // }
-
   let topTenData1 = [];
   let topTenSuppData1 = [];
   let topData = this;
@@ -52,22 +34,6 @@ Template.monthlyprofitandloss.onRendered(() => {
       FlowRouter.go("/newprofitandloss?daterange=monthly");
     }
   }
-
-  // function chartClickEvent() {
-  //     FlowRouter.go("/newprofitandloss?daterange=monthly");
-  // }
-
-  // setTimeout(function () {
-  //   let checkStatus = false;
-  //   if (checkStatus == false || checkStatus == "false") {
-  //     $("#monthlyprofitlossstatus").addClass("hideelement");
-  //     $("#profitlosshide").text("Show");
-  //   } else {
-  //     $("#monthlyprofitlossstatus").removeClass("hideelement");
-  //     $("#monthlyprofitlossstatus").addClass("showelement");
-  //     $("#profitlosshide").text("Hide");
-  //   }
-  // }, 500);
 
   if (!localStorage.getItem("VS1PNLPeriodReport_dash")) {
     getInvSales(function (data) {

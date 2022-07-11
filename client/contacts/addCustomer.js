@@ -1765,14 +1765,27 @@ Template.customerscard.events({
         }
     },
     'click .openBalance': function (event) {
+        let currentId = FlowRouter.current().queryParams.id||FlowRouter.current().queryParams.jobid||'';
         let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
         if(customerName !== "") {
             if(customerName.indexOf('^') > 0) {
               customerName = customerName.split('^')[0]
             }
-            window.open('/agedreceivables?contact='+customerName, '_self');
+            window.open('/agedreceivables?contact='+customerName+'&contactid='+currentId, '_self');
         } else {
             window.open('/agedreceivables','_self');
+        }
+    },
+    'click .openBalancesummary': function (event) {
+        let currentId = FlowRouter.current().queryParams.id||FlowRouter.current().queryParams.jobid||'';
+        let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
+        if(customerName !== "") {
+            if(customerName.indexOf('^') > 0) {
+              customerName = customerName.split('^')[0]
+            }
+            window.open('/agedreceivablessummary?contact='+customerName+'&contactid='+currentId, '_self');
+        } else {
+            window.open('/agedreceivablessummary','_self');
         }
     },
     'click #customerShipping-1': function (event) {

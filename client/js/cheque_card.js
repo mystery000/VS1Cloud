@@ -5376,7 +5376,7 @@ Template.chequecard.events({
 
       purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
           if(FlowRouter.current().queryParams.trans){
-            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
           }else{
             FlowRouter.go("/chequelist?success=true");
           };
@@ -5399,7 +5399,7 @@ Template.chequecard.events({
         });
     } else {
       if(FlowRouter.current().queryParams.trans){
-        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
       }else{
         FlowRouter.go("/chequelist?success=true");
       };
@@ -5867,7 +5867,7 @@ Template.chequecard.events({
                     if (error && error.error === "error") {
 
                       if(FlowRouter.current().queryParams.trans){
-                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{
                         FlowRouter.go("/chequelist?success=true");
                       };
@@ -5887,7 +5887,7 @@ Template.chequecard.events({
                       }).then((result) => {
                         if (result.value) {
                           if(FlowRouter.current().queryParams.trans){
-                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                           }else{
                             FlowRouter.go("/chequelist?success=true");
                           };
@@ -5913,7 +5913,7 @@ Template.chequecard.events({
                   function (error, result) {
                     if (error && error.error === "error") {
                       if(FlowRouter.current().queryParams.trans){
-                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{
                         FlowRouter.go("/chequelist?success=true");
                       };
@@ -5928,7 +5928,7 @@ Template.chequecard.events({
                       }).then((result) => {
                         if (result.value) {
                           if(FlowRouter.current().queryParams.trans){
-                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                           }else{
                             FlowRouter.go("/chequelist?success=true");
                           };
@@ -5954,7 +5954,7 @@ Template.chequecard.events({
                   function (error, result) {
                     if (error && error.error === "error") {
                       if(FlowRouter.current().queryParams.trans){
-                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{
                         FlowRouter.go("/chequelist?success=true");
                       };
@@ -5969,7 +5969,7 @@ Template.chequecard.events({
                       }).then((result) => {
                         if (result.value) {
                           if(FlowRouter.current().queryParams.trans){
-                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                           }else{
                             FlowRouter.go("/chequelist?success=true");
                           };
@@ -5983,7 +5983,7 @@ Template.chequecard.events({
                 );
               } else {
                 if(FlowRouter.current().queryParams.trans){
-                  FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
+                  FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                 }else{
                   FlowRouter.go("/chequelist?success=true");
                 };
@@ -6545,7 +6545,12 @@ Template.chequecard.events({
   },
   "click .btnBack": function (event) {
     event.preventDefault();
-    history.back(1);
+    if(FlowRouter.current().queryParams.trans){
+      FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+    }else{
+      history.back(1);
+    };
+
   },
   "click #btnViewPayment": function () {
     var url = FlowRouter.current().path;
