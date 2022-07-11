@@ -466,6 +466,7 @@ Template.allChartLists.events({
   "click #btnCancel": async () => {
     $(".fullScreenSpin").css("display", "block");
     chartsEditor.disable();
+    console.log('sdfsd');
     const templateObject = Template.instance();
     await templateObject.hideChartElements();
     await templateObject.checkChartToDisplay();
