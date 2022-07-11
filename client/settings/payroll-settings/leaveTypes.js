@@ -148,7 +148,7 @@ Template.leaveTypeSettings.onRendered(function() {
                                 let dataLenght = oSettings._iDisplayLength;
                                 let customerSearch = $('#tblLeaves_filter input').val();
     
-                                sideBarService.getDeduction(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                sideBarService.getLeave(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
                                     for (let i = 0; i < data.tleave.length; i++) {
                                         var dataListAllowance = [
@@ -186,8 +186,8 @@ Template.leaveTypeSettings.onRendered(function() {
                         }, 100);
                     },
                     "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddordinaryTimeDeductions' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeDeductionsModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaves_filter");
-                        $("<button class='btn btn-primary btnRefreshDeductions' type='button' id='btnRefreshDeductions' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaves_filter");
+                        $("<button class='btn btn-primary btnAddordinaryTimeLeave' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeLeaveModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaves_filter");
+                        $("<button class='btn btn-primary btnRefreshLeave' type='button' id='btnRefreshLeave' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaves_filter");
                     }
     
                 }).on('page', function () {
@@ -208,9 +208,9 @@ Template.leaveTypeSettings.onRendered(function() {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
-                            sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
+                            sideBarService.getLeave(dataLenght, 0).then(function (dataNonBo) {
     
-                                addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                addVS1Data('TLeave', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     // templateObject.resetData(dataNonBo);
                                     $('.fullScreenSpin').css('display', 'none');
                                 }).catch(function (err) {
