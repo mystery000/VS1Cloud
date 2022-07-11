@@ -253,6 +253,7 @@
                                         <div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll"
                                                 for="formCheck-All"></label></div>
                                     </th>
+                                    <th class="th colOverdueDays" style="width:80px;">Overdue</th>
                                     <th class="th colSortDate hiddenColumn">id</th>
                                     <th class="th colPaymentDate" style="width:80px;">Date</th>
                                     <th class="th colCustomerName" style="width:200px;">Customer Name</th>
@@ -276,6 +277,7 @@
                                                 <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-{{item.id}}"
                                                         value="{{item.outsandingamount}}"><label class="custom-control-label chkBox pointer" for="formCheck-{{item.id}}"></label></div>
                                             </td>
+                                            <td contenteditable="false" class="colOverdueDays {{item.overduetype}}" id="colOverdueDays{{item.id}}">{{item.overduedays}}</td>
                                             <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
                                             <td contenteditable="false" class="colPaymentDate"><span style="display:none;">{{item.sortdate}}</span>{{item.paymentdate}}</td>
                                             <td contenteditable="false" class="colCustomerName" id="colCustomerName{{item.id}}">{{item.customername}}</td>

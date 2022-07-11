@@ -66,29 +66,6 @@ Template.customerawaitingpayments.onRendered(function () {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
-        if (error) {}
-        else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
-
-
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -149,6 +126,29 @@ Template.customerawaitingpayments.onRendered(function () {
                       let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
                       let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
                       let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+
+                      var dueDateCal = new Date(data.tsaleslist[i].dueDate);
+                      var currentDateCal = new Date();
+                      let overDueDays = 0;
+                      let overDueDaysText = '';
+                      let overDueType = 'text-Green';
+
+                      if (dueDateCal < currentDateCal) {
+                          overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                          if(overDueDays == 1){
+                            overDueDaysText = overDueDays + ' Day';
+                          }else{
+                            overDueDaysText = overDueDays + ' Days';
+                          }
+                          if(overDueDays <= 30){
+                            overDueType = 'text-Yellow';
+                          }else if(overDueDays <= 60){
+                            overDueType = 'text-Orange';
+                          }else{
+                            overDueType = 'text-deleted';
+                          }
+                      }
+
                       var dataList = {
                           id: data.tsaleslist[i].SaleId || '',
                           sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
@@ -163,7 +163,9 @@ Template.customerawaitingpayments.onRendered(function () {
                           department: data.tsaleslist[i].ClassName || '',
                           refno: data.tsaleslist[i].BORef || '',
                           paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
-                          notes: data.tsaleslist[i].Comments || ''
+                          notes: data.tsaleslist[i].Comments || '',
+                          overduedays:overDueDaysText,
+                          overduetype:overDueType,
                       };
                       //if (data.tsaleslist[i].Balance != 0) {
                           dataTableList.push(dataList);
@@ -269,7 +271,7 @@ Template.customerawaitingpayments.onRendered(function () {
                           // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                           info: true,
                           responsive: true,
-                          "order": [[ 1, "desc" ],[ 3, "desc" ]],
+                          "order": [[ 2, "desc" ],[ 4, "desc" ]],
                           // "aaSorting": [[1,'desc']],
                           action: function () {
                               $('#tblcustomerAwaitingPayment').DataTable().ajax.reload();
@@ -448,6 +450,30 @@ Template.customerawaitingpayments.onRendered(function () {
                     let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
                     let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
                     let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+
+                    var dueDateCal = new Date(data.tsaleslist[i].dueDate);
+                    var currentDateCal = new Date();
+                    let overDueDays = 0;
+                    let overDueDaysText = '';
+                    let overDueType = 'text-Green';
+
+                    if (dueDateCal < currentDateCal) {
+                        overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays == 1){
+                          overDueDaysText = overDueDays + ' Day';
+                        }else{
+                          overDueDaysText = overDueDays + ' Days';
+                        }
+                        if(overDueDays <= 30){
+                          overDueType = 'text-Yellow';
+                        }else if(overDueDays <= 60){
+                          overDueType = 'text-Orange';
+                        }else{
+                          overDueType = 'text-deleted';
+                        }
+                    }
+
+
                     var dataList = {
                         id: data.tsaleslist[i].SaleId || '',
                         sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
@@ -462,7 +488,9 @@ Template.customerawaitingpayments.onRendered(function () {
                         department: data.tsaleslist[i].ClassName || '',
                         refno: data.tsaleslist[i].BORef || '',
                         paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
-                        notes: data.tsaleslist[i].Comments || ''
+                        notes: data.tsaleslist[i].Comments || '',
+                        overduedays:overDueDaysText,
+                        overduetype:overDueType,
                     };
                     //if (data.tsaleslist[i].Balance != 0) {
                         dataTableList.push(dataList);
@@ -568,7 +596,7 @@ Template.customerawaitingpayments.onRendered(function () {
                         // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                         info: true,
                         responsive: true,
-                        "order": [[ 1, "desc" ],[ 3, "desc" ]],
+                        "order": [[ 2, "desc" ],[ 4, "desc" ]],
                         // "aaSorting": [[1,'desc']],
                         action: function () {
                             $('#tblcustomerAwaitingPayment').DataTable().ajax.reload();
@@ -743,6 +771,29 @@ Template.customerawaitingpayments.onRendered(function () {
                     let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
                     let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
                     let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+
+                    var dueDateCal = new Date(data.tsaleslist[i].dueDate);
+                    var currentDateCal = new Date();
+                    let overDueDays = 0;
+                    let overDueDaysText = '';
+                    let overDueType = 'text-Green';
+
+                    if (dueDateCal < currentDateCal) {
+                        overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays == 1){
+                          overDueDaysText = overDueDays + ' Day';
+                        }else{
+                          overDueDaysText = overDueDays + ' Days';
+                        }
+                        if(overDueDays <= 30){
+                          overDueType = 'text-Yellow';
+                        }else if(overDueDays <= 60){
+                          overDueType = 'text-Orange';
+                        }else{
+                          overDueType = 'text-deleted';
+                        }
+                    }
+
                     var dataList = {
                         id: data.tsaleslist[i].SaleId || '',
                         sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
@@ -757,7 +808,9 @@ Template.customerawaitingpayments.onRendered(function () {
                         department: data.tsaleslist[i].ClassName || '',
                         refno: data.tsaleslist[i].BORef || '',
                         paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
-                        notes: data.tsaleslist[i].Comments || ''
+                        notes: data.tsaleslist[i].Comments || '',
+                        overduedays:overDueDaysText,
+                        overduetype:overDueType,
                     };
                     //if (data.tsaleslist[i].Balance != 0) {
                         dataTableList.push(dataList);
@@ -863,7 +916,7 @@ Template.customerawaitingpayments.onRendered(function () {
                         // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                         info: true,
                         responsive: true,
-                        "order": [[ 1, "desc" ],[ 3, "desc" ]],
+                        "order": [[ 2, "desc" ],[ 4, "desc" ]],
                         // "aaSorting": [[1,'desc']],
                         action: function () {
                             $('#tblcustomerAwaitingPayment').DataTable().ajax.reload();
@@ -1106,6 +1159,28 @@ Template.customerawaitingpayments.events({
                           let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
                           let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
 
+                          var dueDateCal = new Date(data.tsaleslist[i].dueDate);
+                          var currentDateCal = new Date();
+                          let overDueDays = 0;
+                          let overDueDaysText = '';
+                          let overDueType = 'text-Green';
+
+                          if (dueDateCal < currentDateCal) {
+                              overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                              if(overDueDays == 1){
+                                overDueDaysText = overDueDays + ' Day';
+                              }else{
+                                overDueDaysText = overDueDays + ' Days';
+                              }
+                              if(overDueDays <= 30){
+                                overDueType = 'text-Yellow';
+                              }else if(overDueDays <= 60){
+                                overDueType = 'text-Orange';
+                              }else{
+                                overDueType = 'text-deleted';
+                              }
+                          }
+
                           var dataList = {
                            id: data.tsaleslist[i].SaleId || '',
                            sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
@@ -1119,7 +1194,9 @@ Template.customerawaitingpayments.events({
                            department: data.tsaleslist[i].ClassName || '',
                            refno: data.tsaleslist[i].BORef || '',
                            paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
-                           notes: data.tsaleslist[i].Comments || ''
+                           notes: data.tsaleslist[i].Comments || '',
+                           overduedays:overDueDaysText,
+                           overduetype:overDueType,
                        };
 
                       //if(data.tinvoiceex[i].fields.Deleted == false){

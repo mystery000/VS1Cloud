@@ -18,11 +18,8 @@ Template.updateCurrencies.onCreated(function () {
 
 Template.updateCurrencies.onRendered(function () {
   let templateObject = Template.instance();
-  console.log("Currency user");
 
   const targetUserId = FlowRouter.getParam("_userId");
-
-  console.log("updating user currencies: ", targetUserId);
 
   updateAllCurrencies(targetUserId);
 

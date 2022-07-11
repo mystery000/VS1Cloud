@@ -53,7 +53,7 @@ function formatFields(fields, searchkey) {
 
 function buildPositions() {
   const sortfields = $(".pSortItems");
-   
+
   // Level 0 Sorting
   let counter = 1;
   for (let i = 0; i <= sortfields.length; i++) {
@@ -324,7 +324,7 @@ Template.newprofitandloss.onRendered(function () {
         options.threcords = [];
         if (data.tprofitandlossperiodcomparereport) {
           let accountData = data.tprofitandlossperiodcomparereport;
-           
+
           let accountType = "";
           var dataList = "";
           for (let i = 0; i < accountData.length; i++) {
@@ -539,7 +539,7 @@ Template.newprofitandloss.onRendered(function () {
           }
 
           // Set Table Data
-           
+
           templateObject.reportOptions.set(options);
           templateObject.records.set(records);
           if (templateObject.records.get()) {
@@ -712,7 +712,7 @@ Template.newprofitandloss.onRendered(function () {
           profitLossLayouts.push(item.fields);
         }
       });
-       
+
       let newprofitLossLayouts = [];
       // Fetch Subchilds According to the Above grouping
       profitLossLayouts.forEach(function (item) {
@@ -794,9 +794,7 @@ Template.newprofitandloss.onRendered(function () {
             // for array
             var data = group.sortable("serialize").get();
             var jsonString = JSON.stringify(data, null, " ");
-            console.log(jsonString);
-            // container.el.removeClass("active");
-            // _super($item, container);
+
           },
         });
 
@@ -948,7 +946,7 @@ Template.newprofitandloss.events({
       _currencySelectedList.push(_currency);
     }
 
-     
+
 
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
@@ -2203,24 +2201,11 @@ Template.newprofitandloss.events({
         item.fields.Level2Order,
         item.fields.Level3Order
       );
-       
+
       return item;
-      // fieldsList.push(item);
-      /**
-       * Update layout fields one by one API call
-       */
-      // const ApiResponse = await apiEndpoint.fetch(null, {
-      //   method: "POST",
-      //   headers: ApiService.getPostHeaders(),
-      //   body: JSON.stringify(item),
-      // });
-      // if (ApiResponse.ok == true) {
-      //   const jsonResponse = await ApiResponse.json();
-      //   console.log(jsonResponse)
-      // }
     });
 
-     
+
 
     /**
      *
@@ -2249,7 +2234,7 @@ Template.newprofitandloss.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-     
+
     if (!amount || amount.trim() == "") {
       return "";
     }
@@ -2268,12 +2253,12 @@ Template.newprofitandloss.helpers({
 
     // get default currency symbol
     // let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
-     
+
     // amount = amount.replace(_defaultCurrency.symbol, '');
-     
+
     // amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
-     
-     
+
+
 
     // Get the selected date
     let dateTo = $("#dateTo").val();
@@ -2282,7 +2267,7 @@ Template.newprofitandloss.helpers({
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-     
+
 
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
@@ -2313,8 +2298,8 @@ Template.newprofitandloss.helpers({
     });
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-     
-     
+
+
 
     let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
     amount = parseFloat(amount * rate); // Multiply by the rate
@@ -2322,12 +2307,12 @@ Template.newprofitandloss.helpers({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
-     
+
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-     
+
 
     return convertedAmount;
   },
@@ -2358,7 +2343,7 @@ Template.newprofitandloss.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
-       
+
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -2465,28 +2450,6 @@ Template.registerHelper("noDecimal", function (a) {
   return numOut;
 });
 
-// /**
-//  * This function will check each minus and add text-danger to that th
-//  */
-// function minusAmountsStyle() {
-
-//   setTimeout(() => {
-//     const elements = document.querySelectorAll(".fgr");
-
-//     elements.forEach((element) => {
-//       console.log(element.innerHTML);
-//       if(element.innerHTML.includes('-')) {
-//         element.classList.add('text-danger');
-//       }
-//     });
-
-//   }, 3000);
-
-// }
-
-/**
- *
- */
 async function loadCurrency() {
   let templateObject = Template.instance();
 
@@ -2497,9 +2460,9 @@ async function loadCurrency() {
     const result = await taxRateService.getCurrencies();
 
     //taxRateService.getCurrencies().then((result) => {
-     
+
     const data = result.tcurrency;
-     
+
     for (let i = 0; i < data.length; i++) {
       // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
       var dataList = {
@@ -2528,7 +2491,7 @@ async function loadCurrency() {
         .localeCompare(b.currency.split("")[0].toLowerCase());
     });
 
-     
+
 
     templateObject.currencyList.set(_currencyList);
 
