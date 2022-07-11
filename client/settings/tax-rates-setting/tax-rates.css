@@ -5,7 +5,7 @@
 
 .taxRatesSettings .active_page_content h1 {
     border-bottom: 0;
-   margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .taxRatesSettings .taxBg {
@@ -28,9 +28,10 @@
 }
 
 
-.taxRatesSettings .get-started-title .rightIcons{
+.taxRatesSettings .get-started-title .rightIcons {
     float: right;
 }
+
 .taxRatesSettings .get-started-title h2 {
     font-size: 16px;
     font-weight: 700;
@@ -183,7 +184,8 @@
     width: 100%;
     margin-top: 30px;
 }
-.taxRatesSettings .tasks .secondaryButtons{
+
+.taxRatesSettings .tasks .secondaryButtons {
     height: 48px;
     margin-bottom: 0;
 
@@ -299,6 +301,7 @@
     padding: 4px 0px 4px 0;
     height: 40px;
 }
+
 .taxRatesSettings .bubbleToolbar button {
     color: #c00 !important;
 }
@@ -341,7 +344,7 @@
     box-shadow: rgba(255, 255, 255, 0.3) 0 0 0 1px inset;
     box-sizing: border-box;
     cursor: pointer;
-    margin:0;
+    margin: 0;
     padding: 6px 12px;
     position: relative;
     text-align: center;
@@ -544,6 +547,7 @@
 #myModal h4.modal-title {
     font-weight: bold;
 }
+
 .taxRatesSettings .bubbleToolbar button {
     color: #c00 !important;
 }
@@ -552,6 +556,7 @@
     background-color: #fbfbfb;
     font-size: 12px;
 }
+
 .taxRatesSettings .modal-body input {
     width: 150px;
     height: 20px;
@@ -559,7 +564,8 @@
     padding-right: 2px;
     margin-bottom: 5px;
 }
-.taxRatesSettings .modal-body select.form-control{
+
+.taxRatesSettings .modal-body select.form-control {
     width: 150px;
     height: 25px;
     padding-left: 2px;
@@ -617,7 +623,7 @@
 }
 
 #myModal3 .taxComponents input {
-  border: 1px solid;
+    border: 1px solid;
     border-color: #b5b8bb #e2e4e7 #e8eaec #bdbfc3;
     font-size: 11px;
     width: 10%;
@@ -626,10 +632,10 @@
 }
 
 #myModal3 .taxComponents input:first-child {
-  margin-right: 49%;
-  width: 32%;
-  text-align: left;
-  height: 20px;
+    margin-right: 49%;
+    width: 32%;
+    text-align: left;
+    height: 20px;
 }
 
 #myModal3 .taxComponents input:last-child {
@@ -677,18 +683,18 @@
     margin: 30px auto;
 }
 
-#myModal .modal-body p{
+#myModal .modal-body p {
     color: #333;
     clear: left;
     margin: 3px 0 5px;
 }
 
-#myModal .modal-body input{
+#myModal .modal-body input {
     border-radius: inherit;
 }
 
 #myModal #tax-type ul.dropdown-menu li,
-#myModal3 #tax-type ul.dropdown-menu li{
+#myModal3 #tax-type ul.dropdown-menu li {
     cursor: pointer;
     font-size: 11px;
     margin: 0;
@@ -702,39 +708,45 @@
     border: 1px solid #fff;
     font-weight: normal;
 }
+
 #myModal #tax-type ul.dropdown-menu li:hover,
-#myModal3 #tax-type ul.dropdown-menu li:hover{
+#myModal3 #tax-type ul.dropdown-menu li:hover {
     background: #dfe8f6;
     cursor: pointer;
-    border: 1px dotted #a3bae9!important;
+    border: 1px dotted #a3bae9 !important;
 }
+
 #myModal #tax-type ul.dropdown-menu,
-#myModal3 #tax-type ul.dropdown-menu{
+#myModal3 #tax-type ul.dropdown-menu {
     width: 200px;
     height: 150px;
     overflow-y: scroll;
 }
+
 #myModal #tax-type img#region-dropdown-img,
-#myModal3 #tax-type img#region-dropdown-img{
+#myModal3 #tax-type img#region-dropdown-img {
     height: 20px !important;
 }
+
 #tax-type {
     width: 32%;
     margin-bottom: 10px;
 }
 
 #myModal #tax-type input.form-control.select-tax-type-input,
-#myModal3 #tax-type input.form-control.select-tax-type-input{
+#myModal3 #tax-type input.form-control.select-tax-type-input {
     height: 15px;
     background: #fbfbfb;
-    border-color: #b5b8bb #e2e4e7 #e8eaec #bdbfc3!important;
+    border-color: #b5b8bb #e2e4e7 #e8eaec #bdbfc3 !important;
 }
-#myModal .taxComponents span{
+
+#myModal .taxComponents span {
     margin-right: 0;
     padding-top: 4px;
 }
+
 #myModal span.delete-component,
-#myModal3 span.delete-component{
+#myModal3 span.delete-component {
     background: #d6d3d3;
     width: 13px;
     height: 13px;
@@ -745,34 +757,38 @@
     border-radius: 2px;
     font-size: 13px;
     cursor: pointer;
-    margin-left:10px;
+    margin-left: 10px;
     margin-right: 0;
     margin-top: 3px;
 
 }
 
-#myModal span.delete-component:hover{
+#myModal span.delete-component:hover {
     background: #c51a1a;
 }
 
-#myModal .modal-footer button.btn.btn-success{
+#myModal .modal-footer button.btn.btn-success {
     line-height: initial;
 }
+
 #myModal .taxComponents .close-button {
     opacity: 0;
 }
-#myModal .dropdown-add-rec{
+
+#myModal .dropdown-add-rec {
     border: 1px solid #ccc !important;
 }
-#myModal .modal-body div#tax-type  input {
+
+#myModal .modal-body div#tax-type input {
     border-radius: inherit;
     width: 89%;
 }
+
 .taxRatesSettings table.standard thead tr td.selected {
     background-color: #f2f6ff !important;
 }
 
-#upd_taxName{
+#upd_taxName {
     border-radius: inherit;
 }
 
@@ -780,12 +796,15 @@
     .btnRefresh {
         margin-bottom: 0px;
     }
+
     .btnAddTaxRate {
         margin-bottom: 16px;
     }
+
     .btnOpenSettings {
         float: right;
     }
+
     .card-body {
         padding: 0.75rem !important;
     }

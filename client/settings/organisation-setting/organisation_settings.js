@@ -162,10 +162,10 @@ Template.organisationsettings.onRendered(function () {
     $("#edtCountry").val(mainData.Country);
     $("#edtCountry").append(
       '<option selected="selected" value="' +
-        mainData.Country +
-        '">' +
-        mainData.Country +
-        "</option>"
+      mainData.Country +
+      '">' +
+      mainData.Country +
+      "</option>"
     );
     $("#edtpostaladdress").val(mainData.PoBox);
     $("#edtPostalCity").val(mainData.PoCity);
@@ -174,10 +174,10 @@ Template.organisationsettings.onRendered(function () {
     $("#edtPostalCountry").val(mainData.PoCountry);
     $("#edtPostalCountry").append(
       '<option selected="selected" value="' +
-        mainData.PoCountry +
-        '">' +
-        mainData.PoCountry +
-        "</option>"
+      mainData.PoCountry +
+      '">' +
+      mainData.PoCountry +
+      "</option>"
     );
 
     if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
@@ -803,7 +803,7 @@ Template.organisationsettings.events({
 
       organisationService
         .saveCompanyLogo(companyLogoObj)
-        .then(function (companyLogoObj) {});
+        .then(function (companyLogoObj) { });
     }
   },
 
@@ -901,10 +901,10 @@ Template.organisationsettings.events({
               if (result.value) {
                 window.open(
                   "https://depot.vs1cloud.com/vs1subscription/cancelsubscription.php?email=" +
-                    loggeduserEmail +
-                    "&urlfrom=" +
-                    currentURL.url +
-                    "",
+                  loggeduserEmail +
+                  "&urlfrom=" +
+                  currentURL.url +
+                  "",
                   "_self"
                 );
               } else if (result.dismiss === "cancel") {
@@ -920,7 +920,7 @@ Template.organisationsettings.events({
                 text: inputValue.value,
                 html: "",
               },
-              function (error, result) {}
+              function (error, result) { }
             );
 
             swal({
@@ -933,10 +933,10 @@ Template.organisationsettings.events({
               if (result.value) {
                 window.open(
                   "https://depot.vs1cloud.com/vs1subscription/cancelsubscription.php?email=" +
-                    loggeduserEmail +
-                    "&urlfrom=" +
-                    currentURL.url +
-                    "",
+                  loggeduserEmail +
+                  "&urlfrom=" +
+                  currentURL.url +
+                  "",
                   "_self"
                 );
               } else if (result.dismiss === "cancel") {
