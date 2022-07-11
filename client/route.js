@@ -1811,3 +1811,13 @@ authenticatedRoutes.route('/payrollleavetaken', {
         });
     }
 });
+
+
+publicRoutes.route('/cron/currency-update/:_userId', {
+    name: 'updateCurrencies',
+    action() {
+        BlazeLayout.render('updateCurrencies', {
+            yield: 'updateCurrencies'
+        });
+    }
+});

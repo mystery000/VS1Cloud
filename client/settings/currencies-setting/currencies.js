@@ -1377,7 +1377,7 @@ Template.currenciessettings.helpers({
 /**
  * This function will update all currencies
  */
-export const updateAllCurrencies = () => {
+export const updateAllCurrencies = (employeeId) => {
   let completeCount = 0;
   let completeCountEnd = 1;
   LoadingOverlay.show();
