@@ -422,15 +422,12 @@
                             <tr class="dnd-moved">
                                 <th class="th colSortDate hiddenColumn">id</th>
                                 <th class="th colPaymentDate" style="width:80px;">Date</th>
+                                <th class="th colCustomerName" style="width:200px;">Contact Name</th>
                                 <th class="th colPaymentNo" style="width:80px;">Payment#</th>
-                                <th class="th colType" style="width:130px;">Type</th>
                                 <th class="th colRefNo" style="width:80px;">Ref No.</th>
-
                                 <th class="th colPaymentAmount" style="width:80px;">Amount</th>
-                                <!-- <th class="th colOpeningBalance" style="width:80px;">Opening Balance</th> -->
-                                <!-- <th class="th colBalance" style="width:80px;">Balance</th> -->
-                                <th class="th colCustomerName" style="width:200px;">Customer Name</th>
                                 <th class="th colBankAccount" style="width:120px;">Bank</th>
+                                <th class="th colType" style="width:130px;">Type</th>
                                 <th class="th colDepartment" style="width:80px;">Department</th>
                                 <th class="th colStatus" style="width: 5% !important;">Status</th>
                                 <th class="th colReceiptNo hiddenColumn">Receipt No.</th>
@@ -445,15 +442,12 @@
                                     <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                         <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
                                         <td contenteditable="false" class="colPaymentDate"><span style="display:none;">{{item.sortdate}}</span>{{item.paymentdate}}</td>
-                                        <td contenteditable="false" class="colPaymentNo">{{item.id}}</td>
-                                        <td contenteditable="false" class="colType">{{item.type}}</td>
-                                        <td contenteditable="false" class="colRefNo">{{item.refno}}</td>
-
-                                        <td contenteditable="false" class="colPaymentAmount" style="text-align: right!important;">{{item.paymentamount}}</td>
-                                        <!-- <td contenteditable="false" class="colOpeningBalance" style="text-align: right!important;">{{item.openingbalance}}</td> -->
-                                        <!-- <td contenteditable="false" class="colBalance" style="text-align: right!important;">{{item.balance}}</td> -->
                                         <td contenteditable="false" class="colCustomerName">{{item.customername}}</td>
+                                        <td contenteditable="false" class="colPaymentNo">{{item.id}}</td>
+                                        <td contenteditable="false" class="colRefNo">{{item.refno}}</td>
+                                        <td contenteditable="false" class="colPaymentAmount" style="text-align: right!important;">{{item.paymentamount}}</td>
                                         <td contenteditable="false" class="colBankAccount">{{item.bankaccount}}</td>
+                                        <td contenteditable="false" class="colType">{{item.type}}</td>
                                         <td contenteditable="false" class="colDepartment">{{item.department}}</td>
                                         <td contenteditable="false" class="colStatus">{{item.paystatus}}</td>
                                         <td contenteditable="false" class="colReceiptNo hiddenColumn">{{item.receiptno}}</td>
