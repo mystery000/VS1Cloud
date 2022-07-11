@@ -494,7 +494,7 @@ Template.balancesheetreport.onRendered(() => {
           records.push(recordObj);
         }
       }
-      // console.log("Records: ", records);
+       
       totalNetAssets = GrandTotalAsset - GrandTotalLiability;
       let netAssets = {
         id: "",
@@ -1312,7 +1312,7 @@ Template.balancesheetreport.onRendered(() => {
 
     //       records.push(recordObj);
     //     }
-    //     // console.log("Records: ", records);
+    //      
     //     totalNetAssets = GrandTotalAsset - GrandTotalLiability;
     //     let netAssets = {
     //       id: "",
@@ -1502,7 +1502,7 @@ Template.balancesheetreport.helpers({
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
 
-    // console.log("Amount to covert", amount);
+     
     if (!amount || amount.trim() == "") {
       return "";
     }
@@ -1511,9 +1511,9 @@ Template.balancesheetreport.helpers({
       return amount;
     }
 
-    // console.log('Input amount', amount);
+     
     amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
-    // console.log('Converted amount', amount);
+     
 
     // Lets remove the minus character
     const isMinus = amount < 0;
@@ -1523,15 +1523,15 @@ Template.balancesheetreport.helpers({
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
     // )[0];
-    // console.log("default: ",_defaultCurrency);
+     
     //amount = amount.replace(_defaultCurrency.symbol, "");
-    // console.log("Is nan", amount, isNaN(amount));
+     
     // amount =
     //   isNaN(amount) == true
     //     ? parseFloat(amount.substring(1))
     //     : parseFloat(amount);
-    // console.log("Amount to convert", amount);
-    // console.log("currency to convert to", currencyData);
+     
+     
 
     // Get the selected date
     let dateTo = $("#balancedate").val();
@@ -1540,17 +1540,17 @@ Template.balancesheetreport.helpers({
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-    // console.log('date to', dateTo);
+     
 
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-    // console.log("Currency list 1: ", currencyList);
+     
 
     // if(currencyList.length == 0) {
     //   currencyList = Template.instance().currencyList.get();
     //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
     // }
-    // console.log("Currency list 2: ", currencyList);
+     
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -1578,8 +1578,8 @@ Template.balancesheetreport.helpers({
     });
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-    // console.log("Closests currency", firstElem);
-    // console.log("Currency list: ", currencyList);
+     
+     
 
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     //amount = amount + 0.36;
@@ -1588,15 +1588,15 @@ Template.balancesheetreport.helpers({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
-    // console.log("final amount", amount);
+     
 
     // amount = amount.toLocaleString();
-    // console.log(amount, Number(amount).toLocaleString("en-US"));
+     
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-    // console.log(convertedAmount);
+     
 
     return convertedAmount;
   },
@@ -1627,7 +1627,7 @@ Template.balancesheetreport.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
-      // console.log(activeArray[0].currency);
+       
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -1726,7 +1726,7 @@ Template.balancesheetreport.events({
       _currencySelectedList.push(_currency);
     }
 
-    // console.log("Selected currency list", _currencySelectedList);
+     
 
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
@@ -2237,9 +2237,9 @@ async function loadCurrency() {
     const result = await taxRateService.getCurrencies();
 
     //taxRateService.getCurrencies().then((result) => {
-    // console.log(result);
+     
     const data = result.tcurrency;
-    // console.log(data);
+     
     for (let i = 0; i < data.length; i++) {
       // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
       var dataList = {
@@ -2268,7 +2268,7 @@ async function loadCurrency() {
         .localeCompare(b.currency.split("")[0].toLowerCase());
     });
 
-    // console.log(_currencyList);
+     
 
     templateObject.currencyList.set(_currencyList);
 
