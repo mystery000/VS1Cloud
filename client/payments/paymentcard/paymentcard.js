@@ -147,34 +147,34 @@ Template.paymentcard.onRendered(() => {
         templateObject.getTemplateInfo = function() {
 
             getVS1Data('TemplateSettings').then(function(dataObject) {
-    
+
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data;
                 let lineItems = [];
                 let lineItemObj = {};
-      
+
                 if(data.fields)
                 {
                     var customer_payment = data.fields.customer_payment;
-                    $("[id='Customer Payments_"+customer_payment+"']").attr("checked", "checked");   
+                    $("[id='Customer Payments_"+customer_payment+"']").attr("checked", "checked");
                     $('#choosetemplate').attr("checked", "checked");
 
                     if($('#choosetemplate').is(':checked'))
-                    {        
+                    {
                         $('#templateselection').modal('show');
                     }
                     else
-                    {   
+                    {
                     $('#templateselection').modal('hide');
-                    }                
+                    }
                 }
-        
-    
+
+
             });
-    
+
        };
-    
-    
+
+
        templateObject.getTemplateInfo();
 
 
@@ -5623,7 +5623,6 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/invoicelist?success=true');
 
                                         } else {}
                                     });
@@ -5637,7 +5636,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/invoicelist?success=true');
+
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
                                             swal({
@@ -5648,7 +5647,12 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    FlowRouter.go('/invoicelist?success=true');
+
+                                                    if(FlowRouter.current().queryParams.trans){
+                                                      FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                    }else{
+                                                      FlowRouter.go('/invoicelist?success=true');
+                                                    };
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -5678,7 +5682,11 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     FlowRouter.go('/invoicelist?success=true');
+                                                  };
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -5707,7 +5715,11 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     FlowRouter.go('/invoicelist?success=true');
+                                                  };
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -5716,7 +5728,11 @@ Template.paymentcard.events({
                                     });
 
                                 } else {
+                                  if(FlowRouter.current().queryParams.trans){
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                  }else{
                                     FlowRouter.go('/invoicelist?success=true');
+                                  };
                                 };
                             };
 
@@ -5902,7 +5918,11 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
+                                          if(FlowRouter.current().queryParams.trans){
+                                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                          }else{
                                             FlowRouter.go('/invoicelist?success=true');
+                                          };
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
                                             swal({
@@ -5913,7 +5933,11 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     FlowRouter.go('/invoicelist?success=true');
+                                                  };
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -5943,7 +5967,11 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     FlowRouter.go('/invoicelist?success=true');
+                                                  };
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -5972,7 +6000,11 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     FlowRouter.go('/invoicelist?success=true');
+                                                  };
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -5981,7 +6013,11 @@ Template.paymentcard.events({
                                     });
 
                                 } else {
+                                  if(FlowRouter.current().queryParams.trans){
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                  }else{
                                     FlowRouter.go('/invoicelist?success=true');
+                                  };
                                 };
                             };
 
@@ -6463,8 +6499,12 @@ Template.paymentcard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
-                                    FlowRouter.go('/paymentoverview?success=true');
 
+                                    if(FlowRouter.current().queryParams.trans){
+                                      FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                    }else{
+                                      FlowRouter.go('/paymentoverview?success=true');
+                                    };
                                 } else {}
                             });
 
@@ -6477,7 +6517,11 @@ Template.paymentcard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
+                                  if(FlowRouter.current().queryParams.trans){
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                  }else{
                                     FlowRouter.go('/paymentoverview?success=true');
+                                  };
                                 } else {
                                     $('#html-2-pdfwrapper').css('display', 'none');
                                     swal({
@@ -6488,7 +6532,11 @@ Template.paymentcard.events({
                                         confirmButtonText: 'OK'
                                     }).then((result) => {
                                         if (result.value) {
+                                          if(FlowRouter.current().queryParams.trans){
+                                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                          }else{
                                             FlowRouter.go('/paymentoverview?success=true');
+                                          };
                                         } else if (result.dismiss === 'cancel') {}
                                     });
 
@@ -6518,7 +6566,11 @@ Template.paymentcard.events({
                                         confirmButtonText: 'OK'
                                     }).then((result) => {
                                         if (result.value) {
+                                          if(FlowRouter.current().queryParams.trans){
+                                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                          }else{
                                             FlowRouter.go('/paymentoverview?success=true');
+                                          };
                                         } else if (result.dismiss === 'cancel') {}
                                     });
 
@@ -6547,7 +6599,11 @@ Template.paymentcard.events({
                                         confirmButtonText: 'OK'
                                     }).then((result) => {
                                         if (result.value) {
+                                          if(FlowRouter.current().queryParams.trans){
+                                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                          }else{
                                             FlowRouter.go('/paymentoverview?success=true');
+                                          };
                                         } else if (result.dismiss === 'cancel') {}
                                     });
 
@@ -6556,7 +6612,11 @@ Template.paymentcard.events({
                             });
 
                         } else {
+                          if(FlowRouter.current().queryParams.trans){
+                            FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                          }else{
                             FlowRouter.go('/paymentoverview?success=true');
+                          };
                         };
                     };
 
@@ -6708,7 +6768,7 @@ Template.paymentcard.events({
                             attachments: attachment
                         }, function(error, result) {
                             if (error && error.error === "error") {
-                                FlowRouter.go('/paymentoverview?success=true');
+
 
                             } else {}
                         });
@@ -6733,7 +6793,11 @@ Template.paymentcard.events({
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
+                                      if(FlowRouter.current().queryParams.trans){
+                                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                      }else{
                                         FlowRouter.go('/paymentoverview?success=true');
+                                      };
                                     } else if (result.dismiss === 'cancel') {}
                                 });
 
@@ -6763,7 +6827,11 @@ Template.paymentcard.events({
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
+                                      if(FlowRouter.current().queryParams.trans){
+                                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                      }else{
                                         FlowRouter.go('/paymentoverview?success=true');
+                                      };
                                     } else if (result.dismiss === 'cancel') {}
                                 });
 
@@ -6792,7 +6860,11 @@ Template.paymentcard.events({
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
+                                      if(FlowRouter.current().queryParams.trans){
+                                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                      }else{
                                         FlowRouter.go('/paymentoverview?success=true');
+                                      };
                                     } else if (result.dismiss === 'cancel') {}
                                 });
 
@@ -6801,7 +6873,11 @@ Template.paymentcard.events({
                         });
 
                     } else {
+                      if(FlowRouter.current().queryParams.trans){
+                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                      }else{
                         FlowRouter.go('/paymentoverview?success=true');
+                      };
                     };
                 };
 
@@ -7217,7 +7293,11 @@ Template.paymentcard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {
+                              if(FlowRouter.current().queryParams.trans){
+                                FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                              }else{
                                 window.open(newURL, '_self');
+                              };
                             } else if (result.dismiss === 'cancel') {
                                 window.open(newURL, '_self');
                             }
@@ -7350,10 +7430,10 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            window.open(newURL, '_self');
+
 
                                         } else {
-                                            window.open(newURL, '_self');
+
                                         }
                                     });
 
@@ -7377,9 +7457,17 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     window.open(newURL, '_self');
+                                                  };
                                                 } else if (result.dismiss === 'cancel') {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     window.open(newURL, '_self');
+                                                  };
                                                 }
                                             });
 
@@ -7409,9 +7497,17 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     window.open(newURL, '_self');
+                                                  };
                                                 } else if (result.dismiss === 'cancel') {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     window.open(newURL, '_self');
+                                                  };
                                                 }
                                             });
 
@@ -7440,9 +7536,17 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     window.open(newURL, '_self');
+                                                  };
                                                 } else if (result.dismiss === 'cancel') {
+                                                  if(FlowRouter.current().queryParams.trans){
+                                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                                  }else{
                                                     window.open(newURL, '_self');
+                                                  };
                                                 }
                                             });
 
@@ -7451,7 +7555,11 @@ Template.paymentcard.events({
                                     });
 
                                 } else {
+                                  if(FlowRouter.current().queryParams.trans){
+                                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                  }else{
                                     window.open(newURL, '_self');
+                                  };
                                 };
                             };
 
@@ -7506,7 +7614,11 @@ Template.paymentcard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {
-                                window.open(newURL, '_self');
+                                if(FlowRouter.current().queryParams.trans){
+                                  FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                                }else{
+                                  window.open(newURL, '_self');
+                                };
                             } else if (result.dismiss === 'cancel') {
                                 window.open(newURL, '_self');
                             }
@@ -8111,13 +8223,17 @@ Template.paymentcard.events({
     },
     'click .btnBack': function(event) {
         event.preventDefault();
-        history.back(1);
+        if(FlowRouter.current().queryParams.trans){
+          FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+        }else{
+          history.back(1);
+        };
     },
     'click .printConfirm':async function (event) {
 
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         getVS1Data('TemplateSettings').then(function(dataObject) {
 
             let data = JSON.parse(dataObject[0].data);
@@ -8129,7 +8245,7 @@ Template.paymentcard.events({
             if(data.fields)
             {
 
-                var bill =data.fields.bill;         
+                var bill =data.fields.bill;
                 var credits =  data.fields.credits;
                 var customer_payment =$('input[name="Customer Payments"]:checked').val();
                 var invoices = data.fields.invoices;
@@ -8142,10 +8258,10 @@ Template.paymentcard.events({
                 var statements = data.fields.statements;
                 var customer_statement =  data.fields.customer_statement;
                 var delivery_docket =  data.fields.delivery_docket;
-               
+
                 var print_options  =  {
                     type:"TemplateSettings",
-                    fields:{                              
+                    fields:{
                                client_id:loggedCompany,
                                bill:bill,
                                credits:credits,
@@ -8161,15 +8277,15 @@ Template.paymentcard.events({
                                statements:statements,
                                delivery_docket:delivery_docket,
                           }
-              
-              
-                          
+
+
+
                   }
 
                   addVS1Data("TemplateSettings", JSON.stringify(print_options));
 
             }
-    
+
 
         });
 

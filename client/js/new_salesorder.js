@@ -10728,9 +10728,11 @@ Template.new_salesorder.events({
     },
     'click .btnBack': function(event) {
         event.preventDefault();
-        history.back(1);
-        //FlowRouter.go('/salesorderslist');
-        //window.open('/invoicelist','_self');
+        if(FlowRouter.current().queryParams.trans){
+          FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+        }else{
+          history.back(1);
+        };
     },
     'click #btnCopyToInvoice': function() {
         //FlowRouter.go('/salesorderslist');
