@@ -1323,14 +1323,6 @@ Template.employeescard.onRendered(function () {
                     if (dataObject.length == 0) {
                         contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
                             $('.fullScreenSpin').css('display', 'none');
-                            console.log('data--->',data)
-                            // add to custom field
-                            // tempcode
-                            // setTimeout(function () {
-                            //   $('#edtSaleCustField1').val(data.fields.CustFld1);
-                            //   $('#edtSaleCustField2').val(data.fields.CustFld2);
-                            //   $('#edtSaleCustField3').val(data.fields.CustFld3);
-                            // }, 5500);
 
                             let lineItems = [];
                             let empEmail = '';
@@ -1541,7 +1533,7 @@ Template.employeescard.onRendered(function () {
 
 
                             // tempcode
-                              //   setTimeout(function () {// add to custom field 
+                              //   setTimeout(function () {// add to custom field
 
                               //     $('#edtSaleCustField1').val(useData[i].fields.CustFld1);
                               //     $('#edtSaleCustField2').val(useData[i].fields.CustFld2);
@@ -2982,7 +2974,6 @@ Template.employeescard.onRendered(function () {
                     return item;
                 }
             });
-            // console.log(openingBalances)
             templateObject.openingBalanceInfo.set(openingBalances);
         }
     };
@@ -2994,7 +2985,6 @@ Template.employeescard.onRendered(function () {
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
                 let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data);
-                //console.log('TEmployeepaysettingData', TEmployeepaysettingData)
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -3002,8 +2992,6 @@ Template.employeescard.onRendered(function () {
                         return item;
                     }
                 });
-
-                console.log('useData', useData.length)
                 let employeePaySettings = {}
                 let objEmployeePaySettings = {}
                 if( useData.length == 0 ){
@@ -3032,12 +3020,10 @@ Template.employeescard.onRendered(function () {
                             SeniorandPensionersTaxOffsetClaimed: false,
                             HasApprovedWithholdingVariation: false,
                         }
-                    }  
-                    templateObject.employeePaySettings.set(objEmployeePaySettings);                 
+                    }
+                    templateObject.employeePaySettings.set(objEmployeePaySettings);
                 }else{
-                    console.log('step-2')
                     employeePaySettings = useData[0]
-                    console.log( employeePaySettings )
                     objEmployeePaySettings = {
                         EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
                         BankAccountName: employeePaySettings.fields.BankAccountName,
@@ -3222,7 +3208,6 @@ Template.employeescard.onRendered(function () {
                         $('#deductionSettingsModal').modal('show');
                     } else {
                         if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
                         }
                         $('#deductionSettingsModal').modal('show');
                     }
@@ -3245,7 +3230,6 @@ Template.employeescard.onRendered(function () {
                         $('#superannuationSettingsModal').modal('show');
                     } else {
                         if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
                         }
                         $('#superannuationSettingsModal').modal('show');
                     }
@@ -3268,7 +3252,6 @@ Template.employeescard.onRendered(function () {
                         $('#reimbursementSettingsModal').modal('show');
                     } else {
                         if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
                         }
                         $('#reimbursementSettingsModal').modal('show');
                     }
@@ -3287,12 +3270,10 @@ Template.employeescard.onRendered(function () {
                     let dropDownID = $search.attr('id')
                     templateObject.currentDrpDownID.set(dropDownID);
                     let currencyDataName = e.target.value || '';
-                    // console.log( currencyDataName )
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                         $('#leaveTypeSettingsModal').modal('show');
                     } else {
                         if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
                         }
                     }
                 });
@@ -3309,7 +3290,6 @@ Template.employeescard.onRendered(function () {
                             $('#accountListModal').modal('show');
                         } else {
                             if (currencyDataName.replace(/\s/g, '') != '') {
-                                // console.log('step 2')
                             }
                         }
                     });
@@ -3650,7 +3630,7 @@ Template.employeescard.events({
         let state = $('#edtState').val();
         let postalcode = $('#edtPostalCode').val();
         let country = $('#edtCountry').val();
- 
+
         let custField4 = $('#edtCustomeField4').val();
         // add to custom field
         let custField1 = $('#edtSaleCustField1').val()||'';
@@ -4271,10 +4251,7 @@ Template.employeescard.events({
                 }),
             })
         );
-        // let updatedOpeningBalance = {
-        //     topeningbalances: openingBalances,
-        // }
-        // console.log('useData', payEarningLinesTemp)
+
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obEarningsRate').val('');
         $('#addEarningsLineModal2').modal('hide');
@@ -4319,10 +4296,7 @@ Template.employeescard.events({
                 }),
             })
         );
-        // let updatedOpeningBalance = {
-        //     topeningbalances: openingBalances,
-        // }
-        // console.log('useData', payEarningLinesTemp)
+
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obDeductionType').val('');
         $('#addDeductionLineModal2').modal('hide');
@@ -4369,10 +4343,7 @@ Template.employeescard.events({
                 }),
             })
         );
-        // let updatedOpeningBalance = {
-        //     topeningbalances: openingBalances,
-        // }
-        // console.log('useData', payEarningLinesTemp)
+
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obSuperannuationFund').val('');
         $('#obContributionType').val('');
@@ -4418,10 +4389,7 @@ Template.employeescard.events({
                 }),
             })
         );
-        // let updatedOpeningBalance = {
-        //     topeningbalances: openingBalances,
-        // }
-        // console.log('useData', payEarningLinesTemp)
+
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obReimbursementType').val('');
         $('#addReimbursementLineModal2').modal('hide');
@@ -4580,7 +4548,6 @@ Template.employeescard.events({
                 }),
             })
         );
-        // console.log('paynotes', paynotes)
         let updatedNotes = {
             tpaynotes: paynotes,
         }

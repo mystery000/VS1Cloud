@@ -169,7 +169,7 @@ Template.leadscard.onRendered(function () {
                         //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
                         //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
                         // }, 5500);
-                        
+
                         added = true;
                         setOneLeadDataEx(useData[i]);
                         $('.fullScreenSpin').css('display', 'none');
@@ -230,7 +230,6 @@ Template.leadscard.onRendered(function () {
         });
     };
     function setOneLeadDataEx(data) {
-        // console.log(data);
         let lineItemObj = {
             id: data.fields.ID || '',
             lid: 'Edit Lead',
@@ -401,7 +400,6 @@ Template.leadscard.onRendered(function () {
         let lineItemObj = {};
         let dataTableList = [];
         let tableHeaderList = [];
-        // console.log(data);
         for (let i = 0; i < data.tprojecttasks.length; i++) {
             if (data.tprojecttasks[i].fields.TaskName === leadName) {
                 let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
@@ -688,7 +686,7 @@ Template.leadscard.events({
         // let sltRewardPointsOpeningDate =  $('#dtAsOf').val();
         const sltRewardPointsOpeningDate = new Date($("#dtAsOf").datepicker("getDate"));
         let openingDate = sltRewardPointsOpeningDate.getFullYear() + "-" + (sltRewardPointsOpeningDate.getMonth() + 1) + "-" + sltRewardPointsOpeningDate.getDate();
-        let notes = $('#txaNotes').val(); 
+        let notes = $('#txaNotes').val();
         let custField4 = $('#edtCustomField4').val();
         // add to custom field
         let custField1 = $('#edtSaleCustField1').val()||'';
@@ -1243,7 +1241,7 @@ Template.leadscard.events({
         } else {
             $(".attchment-tooltip").show();
         }
-    },  
+    },
     'click .btnNewLead': function (event) {
         window.open('/leadscard', '_self');
     },

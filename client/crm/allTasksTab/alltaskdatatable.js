@@ -260,7 +260,6 @@ Template.alltaskdatatable.onRendered(function () {
       });
 
     } catch (error) {
-      console.log(error)
     }
   }
 
@@ -1068,7 +1067,7 @@ Template.alltaskdatatable.onRendered(function () {
 
             <div class="dropdown-divider"></div>
 
-            <div class="dropdown-item-wrap no-modal"> 
+            <div class="dropdown-item-wrap no-modal">
               <div class="no-modal">
                 <div class="no-modal">
                   <span class="no-modal">Priority</span>
@@ -1086,11 +1085,11 @@ Template.alltaskdatatable.onRendered(function () {
                   <i class="far fa-flag no-modal taskDropSecondFlag task_modal_priority_0" data-toggle="tooltip"
                     data-placement="bottom" title="Priority 4" data-priority="0"
                     data-id="${item.fields.ID}"></i>
-                </div> 
+                </div>
               </div>
             </div>
 
-            <div class="dropdown-divider"></div> 
+            <div class="dropdown-divider"></div>
 
             <a class="dropdown-item no-modal movetoproject" data-id="${item.fields.ID}"
               data-projectid="${item.fields.ProjectID}">
@@ -1350,7 +1349,7 @@ Template.alltaskdatatable.onRendered(function () {
       td0 = moment(item.fields.MsTimeStamp).format("DD/MM/YYYY");
       td1 = `<span class="taskTag"><a class="taganchor"><i class="fas fa-tag" style="margin-right: 5px; color:${item.fields.Color};"></i>${item.fields.TaskLabelName}</a></span>`;
 
-      td2 = ` 
+      td2 = `
           <div class="dropdown btnLabelActions" title="Delete Label">
             <button type="button" class="btn btn-danger btnDeleteLabel" data-id="${item.fields.ID}"><i
                 class="far fa-trash-alt" style="width: 16px;" data-id="${item.fields.ID}"></i>
@@ -3805,7 +3804,7 @@ function openEditTaskModal(id, type) {
                     <div class="row">
                       <span class="activityName">${activity.EnteredBy
               } </span> <span class="activityAction">${activity.ActivityName
-              } </span>  
+              } </span>
                     </div>
                     <div class="row">
                       <span class="activityComment">${activity.ActivityDescription
@@ -3862,7 +3861,7 @@ function openEditTaskModal(id, type) {
                       <div class="row">
                         <span class="activityName">${activity.EnteredBy
                 } </span> <span class="activityAction">${activity.ActivityName
-                } </span>  
+                } </span>
                       </div>
                       <div class="row">
                         <span class="activityComment">${activity.ActivityDescription

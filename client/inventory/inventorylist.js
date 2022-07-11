@@ -477,7 +477,6 @@ Template.inventorylist.onRendered(function() {
                         });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
-                    console.log(data);
                     let useData = data.tproductvs1;
                     let lineItems = [];
                     let lineItemObj = {};
@@ -771,7 +770,6 @@ Template.inventorylist.onRendered(function() {
                     }, 0);
                 }
             }).catch(function(err) {
-              console.log(err);
                 sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) {
                         addVS1Data("TProductVS1", JSON.stringify(data));
                         // addVS1Data('TProductVS1',JSON.stringify(data));
@@ -2025,7 +2023,6 @@ Template.inventorylist.events({
 
                         // dataTableList.push(dataList);
                     }
-                    console.log(splashArrayProductListDept);
                     if (splashArrayProductListDept) {
                         var datatable = $("#tblInventory").DataTable();
                         datatable.clear();

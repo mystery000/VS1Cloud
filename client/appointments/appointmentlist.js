@@ -536,7 +536,7 @@ Template.appointmentlist.onRendered(async function () {
                                                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                         });
                                                     }).catch(e => {
-                                                        console.log(e);
+
                                                     });
                                                     dataList.custFld11 = "Yes";
                                                     break;
@@ -552,7 +552,7 @@ Template.appointmentlist.onRendered(async function () {
                                                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                         });
                                                     }).catch(e => {
-                                                        console.log(e);
+
                                                     });
                                                     dataList.custFld11 = "No";
                                                     break;
@@ -1036,7 +1036,7 @@ Template.appointmentlist.onRendered(async function () {
                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
-                                                    console.log(e);
+
                                                 });
                                                 dataList.custFld11 = "Yes";
                                                 break;
@@ -1052,7 +1052,7 @@ Template.appointmentlist.onRendered(async function () {
                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
-                                                    console.log(e);
+
                                                 });
                                                 dataList.custFld11 = "No";
                                                 break;
@@ -2582,7 +2582,7 @@ Template.appointmentlist.events({
                                                       addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                   });
                                               }).catch(e => {
-                                                  console.log(e);
+
                                               });
                                               dataList.custFld11 = "Yes";
                                               break;
@@ -2598,7 +2598,7 @@ Template.appointmentlist.events({
                                                       addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                   });
                                               }).catch(e => {
-                                                  console.log(e);
+
                                               });
                                               dataList.custFld11 = "No";
                                               break;
@@ -2769,7 +2769,7 @@ Template.appointmentlist.events({
                                                     addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                 });
                                             }).catch(e => {
-                                                console.log(e);
+
                                             });
                                             dataList.custFld11 = "Yes";
                                             break;
@@ -2785,7 +2785,7 @@ Template.appointmentlist.events({
                                                     addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                 });
                                             }).catch(e => {
-                                                console.log(e);
+
                                             });
                                             dataList.custFld11 = "No";
                                             break;

@@ -1301,7 +1301,6 @@ Template.supplierscard.events({
                 //window.open('/supplierscard?id=' + supplierSaveID,'_self');
                 //window.open('/supplierlist','_self');
                 sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad,0).then(function(dataReload) {
-                  //console.log('getAllSuppliersDataVS1', dataReload)
                     addVS1Data('TSupplierVS1',JSON.stringify(dataReload)).then(function (datareturn) {
                         window.open('/supplierlist','_self');
                     }).catch(function (err) {

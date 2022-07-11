@@ -42,12 +42,11 @@ Template.leadlist.onRendered(function() {
             }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
             });
-        }); 
+        });
     };
     function setAllLeads(data) {
         let lineItems = [];
         let lineItemObj = {};
-        // console.log(data);
         for (let i = 0; i < data.tprospect.length; i++) {
             // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
             // const city = contactContacts?contactContacts.fields.ContactCity:'';
