@@ -137,8 +137,6 @@ Template.new_salesorder.onRendered(() => {
                 var sales_orders = data.fields.sales_orders;
                 var delivery_docket = data.fields.delivery_docket;
 
-                console.log(sales_orders);
-
                 $("[id='Sales Order_"+sales_orders+"']").attr("checked", "checked");
                 $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
                 $('#choosetemplate').attr("checked", "checked");
@@ -856,8 +854,6 @@ Template.new_salesorder.onRendered(() => {
           var tbl_header = $("#templatePreviewModal .tbl_header")
           tbl_header.empty()
           for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                console.log("key and value", key)
-                console.log("key and value", value)
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
           }
         }
@@ -6797,7 +6793,6 @@ Template.new_salesorder.onRendered(function() {
               custFields.push(customData);
             }
           }
-          console.log('custFields=>',custFields)
           tempObj.custfields.set(custFields);
         })
     }
@@ -8048,8 +8043,6 @@ Template.new_salesorder.events({
            if($('#print_delivery_docket').is(':checked') || $('#print_delivery_docket_second').is(':checked')) {
                 printTemplate.push('Delivery Docket');
            }
-
-             console.log(printTemplate);
 
             if(printTemplate.length > 0) {
 
@@ -9555,7 +9548,6 @@ Template.new_salesorder.events({
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
-        console.log(reset_data[index].label, reset_data[index].active);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 

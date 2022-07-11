@@ -16,7 +16,7 @@ export default class resizableCharts {
         stop: async (event, ui) => {
 
           // add custom class to manage spacing
-          
+
 
           /**
            * Build the positions of the widgets
@@ -41,25 +41,16 @@ export default class resizableCharts {
             .addClass("resizeAfterChart");
             // Restrict width more than 100
             if ( ChartHandler.calculateWidth(ui.element[0]) >= 100) {
-                $(this).resizable("option", "maxWidth", ui.size.width); 
+                $(this).resizable("option", "maxWidth", ui.size.width);
             }
             // Resctrict height screen size.
             if ( ChartHandler.calculateHeight(ui.element[0]) >= 100) {
-                $(this).resizable("option", "maxHeight", ui.size.height); 
+                $(this).resizable("option", "maxHeight", ui.size.height);
             }
             // will not apply on Expenses breakdown
             $(ui.element[0]).parents(".sortable-chart-widget-js").css("width", chartWidth);
             $(ui.element[0]).parents(".sortable-chart-widget-js").css("height", chartHeight);
-            
-            // $(ui.element[0]).find("canvas").css("height", chartHeight);
-          // } 
-          // else {
-          //   $(ui.element[0]).css('height', '');
-          //   $(ui.element[0]).find("canvas").css('width', '100%');
-          // }
 
-          //  console.log(event.currentTarget);
-          //   console.log(ui.element[0]);
         },
       });
     }, timeOut);

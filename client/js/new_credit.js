@@ -894,7 +894,7 @@ Template.creditcard.onRendered(() => {
 
                                         lineItemsTable.push(dataListTable);
                                         lineItems.push(lineItemObj);
-                                        console.log("TEST:");
+
                                     }
                                 } else {
                                     let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
@@ -925,7 +925,7 @@ Template.creditcard.onRendered(() => {
                                         TaxRate: TaxRateGbp || 0
                                     };
                                     lineItems.push(lineItemObj);
-                                    console.log("TEST:");
+
                                 }
                             } else {
                                 var dataListTable = [
@@ -939,7 +939,7 @@ Template.creditcard.onRendered(() => {
                                 ];
                                 lineItemsTable.push(dataListTable);
                                 lineItems.push(lineItemObj);
-                                console.log("TEST:");
+
                             }
 
                             let creditrecord = {
@@ -1135,7 +1135,7 @@ Template.creditcard.onRendered(() => {
 
                                         lineItemsTable.push(dataListTable);
                                         lineItems.push(lineItemObj);
-                                        console.log("TEST:");
+
                                     }
                                 } else {
                                     let AmountGbp = useData[d].fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
@@ -1166,7 +1166,7 @@ Template.creditcard.onRendered(() => {
                                         TaxRate: TaxRateGbp || 0
                                     };
                                     lineItems.push(lineItemObj);
-                                    console.log("TEST:");
+
                                 }
 
                                 let creditrecord = {
@@ -1350,7 +1350,7 @@ Template.creditcard.onRendered(() => {
 
                                             lineItemsTable.push(dataListTable);
                                             lineItems.push(lineItemObj);
-                                            console.log("TEST:");
+
                                         }
                                     } else {
                                         let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
@@ -1381,7 +1381,7 @@ Template.creditcard.onRendered(() => {
                                             TaxRate: TaxRateGbp || 0
                                         };
                                         lineItems.push(lineItemObj);
-                                        console.log("TEST:");
+
                                     }
                                 } else {
                                     var dataListTable = [
@@ -1395,7 +1395,7 @@ Template.creditcard.onRendered(() => {
                                     ];
                                     lineItemsTable.push(dataListTable);
                                     lineItems.push(lineItemObj);
-                                    console.log("TEST:");
+
                                 }
 
                                 let creditrecord = {
@@ -1594,7 +1594,7 @@ Template.creditcard.onRendered(() => {
 
                                     lineItemsTable.push(dataListTable);
                                     lineItems.push(lineItemObj);
-                                    console.log("TEST:");
+
                                 }
                             } else {
                                 let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
@@ -1625,7 +1625,7 @@ Template.creditcard.onRendered(() => {
                                     TaxRate: TaxRateGbp || 0
                                 };
                                 lineItems.push(lineItemObj);
-                                console.log("TEST:");
+
                             }
                         } else {
                             var dataListTable = [
@@ -1639,7 +1639,7 @@ Template.creditcard.onRendered(() => {
                             ];
                             lineItemsTable.push(dataListTable);
                             lineItems.push(lineItemObj);
-                            console.log("TEST:");
+
                         }
 
                         let creditrecord = {
@@ -1987,7 +1987,6 @@ Template.creditcard.onRendered(() => {
           }else{
             $("#templatePreviewModal .invoiceNumber").show();
           }
-          console.log("invoice number==",object_invoce[0]["invoicenumber"])
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
           if(object_invoce[0]["refnumber"] == ""){
@@ -2091,8 +2090,6 @@ Template.creditcard.onRendered(() => {
           var tbl_header = $("#templatePreviewModal .tbl_header")
           tbl_header.empty()
           for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                console.log("key and value", key)
-                console.log("key and value", value)
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
           }
         }
@@ -4599,61 +4596,7 @@ Template.creditcard.helpers({
 });
 
 Template.creditcard.events({
-
-    // 'click .printConfirm':async function (event) {
-
-    //     var printTemplate = [];
-    //     $('.fullScreenSpin').css('display', 'inline-block');
-    //     $('#html-2-pdfwrapper').css('display', 'block');
-    //     if ($('.edtCustomerEmail').val() != "") {
-    //         $('.pdfCustomerName').html($('#edtCustomerName').val());
-    //         $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-    //         $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-    //         var ponumber = $('#ponumber').val() || '.';
-    //         $('.po').text(ponumber);
-    //         var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-    //         if($('#print_credit').is(':checked') || $('#print_credit_second').is(':checked')) {
-    //             printTemplate.push('Credits');
-    //         }
-
-    //         if(printTemplate.length > 0) {
-
-    //               for(var i = 0; i < printTemplate.length; i++)
-    //               {
-    //                 if(printTemplate[i] == 'Credits')
-    //                 {
-    //                     var template_number = $('input[name="Credits"]:checked').val();
-    //                 }
-    //                 //console.log("Template Number is "+template);
-    //                 let result = await exportSalesToPdf(printTemplate[i],template_number);
-    //                 if(result == true)
-    //                 {
-    //                      console.log("Template Number Is "+  template_number);
-    //                 }
-
-    //               }
-
-    //         }
-
-
-
-    //     } else {
-    //                 swal({
-    //                     title: 'Customer Email Required',
-    //                     text: 'Please enter customer email',
-    //                     type: 'error',
-    //                     showCancelButton: false,
-    //                     confirmButtonText: 'OK'
-    //                 }).then((result) => {
-    //                     if (result.value) {}
-    //                     else if (result.dismiss === 'cancel') {}
-    //                 });
-    //     }
-    // },
-
-    'click  #open_print_confirm':function(event)
-    {
+    'click  #open_print_confirm':function(event){
         if($('#choosetemplate').is(':checked'))
         {
             $('#confirmprint').modal('show');
@@ -5572,7 +5515,6 @@ Template.creditcard.events({
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
-                         console.log("Template Number Is "+  template_number);
                     }
 
                   }
@@ -6626,7 +6568,7 @@ Template.creditcard.events({
             }
 
             lineItems.push(lineItemObj);
-            console.log("TEST:");
+
 
 
         });

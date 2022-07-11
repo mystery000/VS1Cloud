@@ -31,7 +31,6 @@ export default class ApiEndPoint {
       const response = await fetch(url, options);
       return response;
     } catch (exception) {
-      console.log(exception);
     }
   }
 }

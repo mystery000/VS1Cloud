@@ -7,9 +7,7 @@ export default class ApiCollectionHelper {
     this.debug = false;
 
     this.collection = collection;
-    
 
-    //console.log("ApiCollectionHelper module loaded");
   }
 
   debugMe(message = null, params = []) {
@@ -24,10 +22,6 @@ export default class ApiCollectionHelper {
         return string;
       };
 
-      console.log(startString);
-      console.log(message, ...params);
-      console.log(endString(startString));
-      console.log(`You see this because debug mode is active`);
     }
   }
 

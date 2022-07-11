@@ -743,7 +743,6 @@ Template.purchaseordercard.onRendered(() => {
           }else{
             $("#templatePreviewModal .invoiceNumber").show();
           }
-          console.log("invoice number==",object_invoce[0]["invoicenumber"])
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
           if(object_invoce[0]["refnumber"] == ""){
@@ -847,8 +846,6 @@ Template.purchaseordercard.onRendered(() => {
           var tbl_header = $("#templatePreviewModal .tbl_header")
           tbl_header.empty()
           for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                console.log("key and value", key)
-                console.log("key and value", value)
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
           }
         }
@@ -6273,7 +6270,7 @@ Template.purchaseordercard.events({
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
-                         console.log("Template Number Is "+  template_number);
+
                     }
 
                   }
@@ -10081,13 +10078,10 @@ Template.purchaseordercard.events({
                     } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                         $('#lotNumberModal').modal('show');
                         if (element.pqaseriallotdata == "null") {
-                            console.log("Data: NAN");
                         } else {
                             if (element.pqaseriallotdata.fields.PQABatch == "null") {
-                                console.log("Data: NAN");
                             } else {
                                 if (element.pqaseriallotdata.fields.PQABatch.length == 0) {
-                                    console.log("Data: NAN");
                                 } else {
                                     let shtml = '';
                                     let i = 0;
@@ -10097,7 +10091,6 @@ Template.purchaseordercard.events({
                                     `;
                                     for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
                                         if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
-                                            console.log("Data: NAN");
                                         } else {
                                             i++;
                                             shtml += `
@@ -10112,13 +10105,10 @@ Template.purchaseordercard.events({
                     } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
                         $('#serialNumberModal').modal('show');
                         if (element.pqaseriallotdata == "null") {
-                            console.log("Data: NAN");
                         } else {
                             if (element.pqaseriallotdata.fields.PQASN == "null") {
-                                console.log("Data: NAN");
                             } else {
                                 if (element.pqaseriallotdata.fields.PQASN.length == 0) {
-                                    console.log("Data: NAN");
                                 } else {
                                     let shtml = '';
                                     let i = 0;
@@ -10128,7 +10118,7 @@ Template.purchaseordercard.events({
                                     `;
                                     for (let k = 0; k < element.pqaseriallotdata.fields.PQASN.length; k++) {
                                         if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") {
-                                            console.log("Data: NAN");
+
                                         } else {
                                             i++;
                                             shtml += `
