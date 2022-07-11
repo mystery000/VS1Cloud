@@ -165,4 +165,16 @@ export default class CronSetting {
 
     return number + suffixe;
   }
+
+
+  getStartAt() {
+    return this.convertToDate(this.startAt);
+  }
+
+  isFuture() {
+    if(this.getStartAt() > new Date()) {
+      return true;
+    }
+    return false;
+  }
 }
