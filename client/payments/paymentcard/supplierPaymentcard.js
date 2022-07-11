@@ -702,7 +702,6 @@ Template.supplierpaymentcard.onRendered(() => {
           }else{
             $("#templatePreviewModal .invoiceNumber").show();
           }
-          console.log("invoice number==",object_invoce[0]["invoicenumber"])
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
           if(object_invoce[0]["refnumber"] == ""){
@@ -806,8 +805,6 @@ Template.supplierpaymentcard.onRendered(() => {
           var tbl_header = $("#templatePreviewModal .tbl_header")
           tbl_header.empty()
           for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                console.log("key and value", key)
-                console.log("key and value", value)
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
           }
         }
@@ -1422,8 +1419,6 @@ Template.supplierpaymentcard.onRendered(() => {
           let lineItems = [];
           let lineItemObj = {};
           let totalPaidCal = 0;
-          console.log(data);
-
           for (let i = 0; i < data.tbillreport.length; i++) {
               if (data.tbillreport[i].Type == "Credit") {
                   totalPaidCal = data.tbillreport[i]['Total Amount (Inc)'] + data.tbillreport[i].Balance;
@@ -4122,7 +4117,6 @@ Template.supplierpaymentcard.onRendered(() => {
             getVS1Data('TBillEx').then(function(dataObject) {
                 if (dataObject.length == 0) {
                     paymentService.getOneBillPayment(currentPOID).then(function(data) {
-                        console.log(data);
                         let lineItems = [];
                         let lineItemObj = {};
 
@@ -6740,8 +6734,6 @@ Template.supplierpaymentcard.events({
 
 
                   }
-
-                  console.log(print_options);
                   addVS1Data("TemplateSettings", JSON.stringify(print_options));
 
             }
@@ -6774,11 +6766,10 @@ Template.supplierpaymentcard.events({
 
                         var template_number = $('input[name="Supplier Payments"]:checked').val();
                     }
-                    console.log("Template Number is "+template_number);
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
-                         console.log("Template Number Is "+  template_number);
+
                     }
 
                   }

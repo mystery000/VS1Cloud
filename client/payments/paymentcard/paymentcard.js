@@ -760,7 +760,6 @@ Template.paymentcard.onRendered(() => {
               }else{
                 $("#templatePreviewModal .invoiceNumber").show();
               }
-              console.log("invoice number==",object_invoce[0]["invoicenumber"])
               $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
               if(object_invoce[0]["refnumber"] == ""){
@@ -864,8 +863,6 @@ Template.paymentcard.onRendered(() => {
               var tbl_header = $("#templatePreviewModal .tbl_header")
               tbl_header.empty()
               for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                    console.log("key and value", key)
-                    console.log("key and value", value)
                     tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
               }
             }
@@ -3018,9 +3015,6 @@ Template.paymentcard.onRendered(() => {
 
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tcustomerpayment;
-
-                    console.log(data);
-
                     var added = false;
                     for (let d = 0; d < useData.length; d++) {
 
@@ -4172,7 +4166,6 @@ Template.paymentcard.onRendered(() => {
                     }
                 }
             }).catch(function(err) {
-              console.log(err);
                 paymentService.getOneInvoicePayment(currentSalesID).then(async function(data) {
                     let lineItems = [];
                     let lineItemObj = {};
@@ -8316,7 +8309,6 @@ Template.paymentcard.events({
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
-                         console.log("Template Number Is "+  template_number);
                     }
 
                   }

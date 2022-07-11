@@ -34,12 +34,10 @@ Template.serialnumberpop.events({
     'click .btnSNSave': function(event) {
         let startSerialnum = Number($('.lineSerialnumbers').text());
         let selectedunit = localStorage.getItem('productItem');
-        console.log(startSerialnum, selectedunit);
     },
     'click .btnAutoFill': function(event) {
         let startSerialnum = Number($('.lineSerialnumbers').text());
         let selectedunit = localStorage.getItem('productItem');
-        console.log(startSerialnum, selectedunit);
         if (startSerialnum == 0 || startSerialnum == "NaN" || startSerialnum == "") {
             swal('', 'You have to enter serial number correctly!', 'info');
             event.preventDefault();

@@ -1688,7 +1688,6 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 });
             }
         }).catch(function (err) {
-          console.log(err);
           if (FlowRouter.current().queryParams.overdue) {
 
           }else if (FlowRouter.current().queryParams.type) {

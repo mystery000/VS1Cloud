@@ -660,7 +660,6 @@ Template.newcurrencypop.onRendered(function () {
 
 Template.newcurrencypop.events({
   "change #sedtCountry": async (e) => {
-    console.log("value changed");
     $(".fullScreenSpin").css("display", "inline-block");
 
     let taxRateService = new TaxRateService();
@@ -715,52 +714,8 @@ Template.newcurrencypop.events({
     $(".fullScreenSpin").css("display", "none");
   },
   "click #sedtCountry": (e) => {
-    console.log(e);
-
     $("#countryModal").modal("show");
   },
-  //   "change #sedtCountry": function () {
-  //     let taxRateService = new TaxRateService();
-  //     let selectCountry = $("#sedtCountry").val();
-  //     //$('#edtCurrencyID').val('');
-
-  //     $("#currencyCode").val("");
-  //     $("#currencySymbol").val("");
-  //     $("#edtCurrencyName").val("");
-  //     $("#edtCurrencyDesc").val("");
-  //     $("#edtBuyRate").val(1);
-  //     $("#edtSellRate").val(1);
-  //     if (selectCountry != "") {
-  //       taxRateService
-  //         .getOneCurrencyByCountry(selectCountry)
-  //         .then(function (data) {
-  //           for (let i = 0; i < data.tcurrency.length; i++) {
-  //             if (data.tcurrency[i].Country === selectCountry) {
-  //               var currencyid = data.tcurrency[i].Id || "";
-  //               var country = data.tcurrency[i].Country || "";
-  //               var currencyCode = data.tcurrency[i].Code || "";
-  //               var currencySymbol = data.tcurrency[i].CurrencySymbol || "";
-  //               var currencyName = data.tcurrency[i].Currency || "";
-  //               var currencyDesc = data.tcurrency[i].CurrencyDesc;
-  //               var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
-  //               var currencySellRate = data.tcurrency[i].SellRate || 0;
-
-  //               $("#edtCurrencyID").val(currencyid);
-  //               // $('#sedtCountry').val(country);
-
-  //               $("#currencyCode").val(currencyCode);
-  //               $("#currencySymbol").val(currencySymbol);
-  //               $("#edtCurrencyName").val(currencyName);
-  //               $("#edtCurrencyDesc").val(currencyDesc);
-  //               $("#edtBuyRate").val(currencyBuyRate);
-  //               $("#edtSellRate").val(currencySellRate);
-  //             }
-  //           }
-
-  //           //data.fields.Rate || '';
-  //         });
-  //     }
-  //   },
   "click #btnNewInvoice": function (event) {
     // FlowRouter.go('/invoicecard');
   },

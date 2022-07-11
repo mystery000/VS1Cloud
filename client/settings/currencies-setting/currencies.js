@@ -243,7 +243,6 @@ Template.currenciessettings.onRendered(function () {
             });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          console.log(data);
           let useData = data.tcurrency;
           let lineItems = [];
           let lineItemObj = {};
@@ -419,7 +418,6 @@ Template.currenciessettings.onRendered(function () {
         }
       })
       .catch(function (err) {
-        console.log(err);
         taxRateService
           .getCurrencies()
           .then(function (data) {
@@ -689,11 +687,6 @@ Template.currenciessettings.onRendered(function () {
 });
 
 Template.currenciessettings.events({
-  // "change #currencyCode": (e) => {
-  //   const fxApi = new FxApi();
-
-  //   console.log($(e.currentTarget).val());
-  // },
   "click .btn-fx-history": (e) => {
     window.location.href = `/fx-currency-history`;
     // FlowRouter.go(`/fx-currency-history`);
@@ -1388,11 +1381,9 @@ export const updateAllCurrencies = () => {
     .then((data) => {
       completeCountEnd = data.tcurrency.length;
       if (data.tcurrency.length > 0) data = data.tcurrency;
-      //console.log(data);
 
       data.forEach((currencyData) => {
         updateCurrency(currencyData, () => {
-          console.log(completeCount);
 
           if(completeCount == 0) {
             LoadingOverlay.show();
@@ -1409,7 +1400,7 @@ export const updateCurrency = async (currencyData, callback) => {
   let taxRateService = new TaxRateService();
   let sideBarService = new SideBarService();
   const fxApi = new FxApi();
- 
+
   /**
    * Step 1: we need to hit the API
    */
@@ -1418,9 +1409,6 @@ export const updateCurrency = async (currencyData, callback) => {
     .then((rates) => {
       currencyData.BuyRate = parseFloat(rates.buy);
       currencyData.SellRate = parseFloat(rates.sell);
-      // console.log("New currency", currencyData);
-
-      // save the currency
 
       taxRateService
         .saveCurrency({
@@ -1435,8 +1423,7 @@ export const updateCurrency = async (currencyData, callback) => {
                 // Meteor._reload.reload();
               })
               .catch(function (err) {
-                console.log("tCurrency error", err);
-                // Meteor._reload.reload();
+
               });
           });
         });

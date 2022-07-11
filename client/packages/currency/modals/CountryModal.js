@@ -11,17 +11,13 @@ Template.CountryModal.onCreated(function () {
 });
 
 Template.CountryModal.onRendered(function () {
-  console.log("Country widget");
   let templateObject = Template.instance();
 
   var countryService = new CountryService();
   let countries = [];
 
   templateObject.getCountryData = function () {
-    getVS1Data("TCountries")
-      .then(function (dataObject) {
-        console.log("country list", dataObject);
-
+    getVS1Data("TCountries").then(function (dataObject) {
         if (dataObject.length == 0) {
           countryService.getCountry().then((data) => {
             for (let i = 0; i < data.tcountries.length; i++) {
@@ -39,8 +35,7 @@ Template.CountryModal.onRendered(function () {
           countries = _.sortBy(countries);
           templateObject.countryData.set(countries);
         }
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         countryService.getCountry().then((data) => {
           for (let i = 0; i < data.tcountries.length; i++) {
             countries.push(data.tcountries[i].Country);
@@ -50,7 +45,6 @@ Template.CountryModal.onRendered(function () {
         });
       });
 
-    // console.log(countries);
   };
   templateObject.getCountryData();
 });
@@ -61,7 +55,6 @@ Template.CountryModal.events({
     const searchedValue = $(e.currentTarget).val().trim().toLowerCase();
 
     if (!searchedValue) {
-      //   console.log("search is empty");
       $(`#${ariaControls} tbody tr td`).css("display", "");
     } else {
       /**
@@ -82,10 +75,6 @@ Template.CountryModal.events({
     $(`#${listContainerNode} tbody tr`).css("display", "");
 
     const countryName = $(e.currentTarget).attr("value");
-
-    //    console.log($(e.target).parent('.modal'));
-    //    console.log($(e.currentTarget).parents('.modal'));
-    //    console.log(countryName);
 
     $("#sedtCountry").val(countryName);
     $("#sedtCountry").attr("value", countryName);

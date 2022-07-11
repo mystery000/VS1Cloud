@@ -6,14 +6,11 @@ export default class layoutEditor {
 
     this.employeeId = Session.get("mySessionEmployeeLoggedID");
 
-    console.log(element);
-
     this.save = element.querySelector(".saveTable"); // save button
 
     this.accountList = [];
 
     this.bindEvents();
-    console.log("Layout editor loaded");
   }
 
   /**
@@ -39,7 +36,6 @@ export default class layoutEditor {
    */
   async buildTree() {
     const sortableAccounts = document.querySelectorAll(".sortableAccount");
-    console.log(sortableAccounts);
     let accounts = [];
 
     const jsonExpected = [
@@ -109,8 +105,6 @@ export default class layoutEditor {
     });
 
     this.accountList = accounts;
-
-    console.log(this.accountList);
   }
 
   /**
@@ -130,7 +124,6 @@ export default class layoutEditor {
       // then refresh page
       window.location.reload();
     } else {
-      console.log(response);
     }
   }
 
@@ -138,16 +131,9 @@ export default class layoutEditor {
     // this is our edit listener
     $(this.save).on("click", (e) => {
       e.preventDefault();
-      console.log(e);
       const sortableAccounts = document.querySelectorAll(".sortableAccount");
-      console.log(sortableAccounts.length);
-      this.setupTree()
-        .then(() => this.buildTree())
-        .then(() => this.saveData());
-      // setTimeout(() => this.buildTree(), 150);
-      // setTimeout(() => this.saveData(), 300);
+      this.setupTree().then(() => this.buildTree()).then(() => this.saveData());
 
-      // this will add a position attribute to each sortableAccount
       for (let i = 0; i < sortableAccounts.length; i++) {
         let sortableAccount = sortableAccounts[i];
         sortableAccount.setAttribute("position", i);

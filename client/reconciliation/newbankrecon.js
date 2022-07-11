@@ -292,7 +292,6 @@ Template.newbankrecon.onRendered(function() {
             let access_token = data.token.accessToken;
             const yodleeAccountID = getYodleeAccountID(accountId);
             yodleeService.getTransactionData(access_token, yodleeFromDate).then(function(data) {
-                console.log(data);
                 let lastTransactionDate = '1899-12-31';
                 let debitTypeList = [];
                 let creditTypeList = [];
@@ -360,8 +359,6 @@ Template.newbankrecon.onRendered(function() {
                 }
                 debitTypeList = [...new Set(debitTypeList)];
                 creditTypeList = [...new Set(creditTypeList)];
-                // console.log(debitTypeList);
-                // console.log(creditTypeList);
                 templateObject.lastTransactionDate.set(moment(lastTransactionDate).format("DD/MM/YYYY"));
                 const currentBeginDate = new Date();
                 let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -412,7 +409,6 @@ Template.newbankrecon.onRendered(function() {
         });
     };
     function setAllTReconcilation(data, yodleeData) {
-        // console.log(data);
         let reconList = [];
         for(let i=0; i<data.treconciliation.length; i++){
             if (bankaccountname == data.treconciliation[i].fields.AccountName ) {
@@ -565,7 +561,6 @@ Template.newbankrecon.onRendered(function() {
         page_arr = page_arr.slice((page_number-1)*page_limit, page_number*page_limit);
         let thirdaryData = $.merge($.merge([], templateObject.bankTransactionData.get()), page_arr);
         templateObject.bankTransactionData.set(thirdaryData);
-        // console.log(templateObject.bankTransactionData.get());
         if (templateObject.bankTransactionData.get().length > 0) {
             setTimeout(function() {
                 if (parseInt(page_number) == 1) {
@@ -606,7 +601,6 @@ Template.newbankrecon.onRendered(function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         let matchData = [];
         reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
-            // console.log(data);
             if (data.ttobereconcileddeposit.length > 0) {
                 for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
                     let reconciledepositObj = {
@@ -634,7 +628,6 @@ Template.newbankrecon.onRendered(function() {
                 }
             }
             reconService.getToBeReconciledWithdrawal(accountId, statementDate, ignoreDate).then(function(data) {
-                // console.log(data);
                 if (data.ttobereconciledwithdrawal.length > 0) {
                     for (let j = 0; j < data.ttobereconciledwithdrawal.length; j++ ) {
                         let reconcilewithdrawalObj = {
@@ -673,7 +666,6 @@ Template.newbankrecon.onRendered(function() {
         let thirdaryData = sortTransactionData(matchData, 'SortDate');
         VS1TransactionList = thirdaryData;
         templateObject.matchTransactionData.set(thirdaryData);
-        // console.log(templateObject.matchTransactionData.get());
     }
 
     templateObject.getAllReconListData = function () {
@@ -711,7 +703,6 @@ Template.newbankrecon.onRendered(function() {
         });
     };
     function setAllTReconcilationList(data) {
-        // console.log(data);
         let reconList = [];
         for(let i=0; i<data.treconciliationlist.length; i++){
             let openBalance = utilityService.modifynegativeCurrencyFormat(data.treconciliationlist[i].OpenBalance)|| 0.00;
@@ -1011,7 +1002,6 @@ Template.newbankrecon.onRendered(function() {
                         paymentFields = item.VS1List.DepositLines[0].fields;
                     }
                 }
-                // console.log(paymentFields);
                 if (paymentFields) {
                     $('#paymentID_' + item.YodleeLineID).val(paymentFields.PaymentID);
                     $('#who_' + item.YodleeLineID).val(paymentFields.Notes);
@@ -1627,9 +1617,7 @@ Template.newbankrecon.events({
                         SalesStatus: ''
                     }
                 };
-                // console.log(objINVDetails);
                 salesService.saveInvoiceEx(objINVDetails).then(function (resultINV) {
-                    // console.log(resultINV);
                     if (resultINV.fields.ID) {
                         let paymentData = [];
                         const lineID = resultINV.fields.ID;
@@ -1663,9 +1651,7 @@ Template.newbankrecon.events({
                                 AccountName: bankAccountName || '',
                             }
                         };
-                        // console.log(objPaymentDetails);
                         paymentService.saveDepositData(objPaymentDetails).then(function(resultPayment) {
-                            // console.log(resultPayment);
                             if (resultPayment.fields.ID) {
                                 let lineReconObj = {
                                     type: "TReconciliationWithdrawalLines",
@@ -1822,9 +1808,7 @@ Template.newbankrecon.events({
                                 AccountName: bankAccountName || '',
                             }
                         };
-                        console.log(JSON.stringify(objPaymentDetails));
                         paymentService.saveSuppDepositData(objPaymentDetails).then(function(resultPayment) {
-                            // console.log(resultPayment);
                             if (resultPayment.fields.ID) {
                                 let lineReconObj = {
                                     type: "TReconciliationDepositLines",
@@ -1867,7 +1851,6 @@ Template.newbankrecon.events({
                                         WithdrawalLines: null
                                     }
                                 };
-                                // console.log(objReconDetails);
                                 reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
                                     if (resultRecon.fields.ID) {
                                         openFindMatchAfterSave(resultRecon.fields.ID);
@@ -2760,7 +2743,6 @@ function saveDiscuss(text, yodleeID) {
                 StatementNo: yodleeID.toString() || '0',
             }
         };
-        // console.log(objReconDetails);
         reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
             if (resultRecon.fields.ID) {
                 $("#reconID_"+yodleeID).val(resultRecon.fields.ID);
@@ -2789,61 +2771,3 @@ function setCurrencyFormatForInput(target) {
         $(target).val(utilityService.modifynegativeCurrencyFormat(input));
     }
 }
-
-// function connectYodlee() {
-//     let fastLinkURL = "https://fl4.sandbox.yodlee.com/authenticate/restserver/fastlink"; // Fastlink URL
-//
-//
-//     // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
-//     yodleeService.getAccessToken(user_name, client_id, secret).then(function(data) {
-//         let access_token = data.token.accessToken;
-//     }).catch(function (err) {
-//         return null;
-//     });
-//     // (function (window) {
-//     //     //Open FastLink
-//     //    // window.fastlink.open({
-//     //         //     fastLinkURL: fastLinkURL,
-//     //         //     accessToken: 'Bearer ' + data.token.accessToken,
-//     //         //     params: {
-//     //         //         configName: 'Verification'
-//     //         //     },
-//     //         //     onSuccess: function (data) {
-//     //         //         // will be called on success. For list of possible message, refer to onSuccess(data) Method.
-//     //         //         console.log(data);
-//     //         //         //window.alert(JSON.data.sites[0]);
-//     //         //         //window.alert(JSON.data.sites[1]);
-//     //         //
-//     //         //     },
-//     //         //     onError: function (data) {
-//     //         //         // will be called on error. For list of possible message, refer to onError(data) Method.
-//     //         //         console.log(data);
-//     //         //     },
-//     //         //     onClose: function (data) {
-//     //         //         // will be called called to close FastLink. For list of possible message, refer to onClose(data) Method.
-//     //         //         //window.alert(JSON.stringify(data));
-//     //         //         console.log(data);
-//     //         //         //window.fastlink.close();
-//     //         //
-//     //         //     },
-//     //         //     onEvent: function (data) {
-//     //         //         // will be called on intermittent status update.
-//     //         //         console.log(data);
-//     //         //     }
-//     //         // },
-//     //         // 'container-fastlink');
-//     //     // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
-//     // }(window));
-// }
-// function getYodleeTransactionData(token) {
-//     yodleeService.getAccessToken(user_name, client_id, secret).then(function(data) {
-//         let access_token = data.token.accessToken;
-//         yodleeService.getTransactionData(access_token, '2021-08-01').then(function(data) {
-//             return data;
-//         }).catch(function(err) {
-//             return null;
-//         });
-//     }).catch(function (err) {
-//         return null;
-//     });
-// }
