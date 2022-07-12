@@ -115,6 +115,7 @@ Template.setup.onCreated(() => {
   templateObject.selectedFile = new ReactiveVar();
   templateObject.currentEmployees = new ReactiveVar([]);
   templateObject.editableEmployee = new ReactiveVar();
+  templateObject.empuserrecord = new ReactiveVar();
 
   // Step 6 variables
   templateObject.accountList = new ReactiveVar([]);
@@ -177,10 +178,9 @@ Template.setup.onRendered(function () {
         index: i,
         active: currentStep == i ? true : false,
         clickable: i < currentStep ? !true : !false,
-        isConfirmed:  i > currentStep ? !true : !false,
-        skippedSteps: []
+        isConfirmed: i > currentStep ? !true : !false,
+        skippedSteps: [],
       });
-
     }
     templateObject.steps.set(_steps);
   };
@@ -1979,11 +1979,7 @@ Template.setup.onRendered(function () {
 
     //await templateObject.employeedatatablerecords.set(employeeList); // all employees
 
-    await templateObject.currentEmployees.set(
-      employeeList.filter((employee) => {
-        return employee.fields.ID == User.getCurrentLoggedUserId();
-      })
-    );
+    await templateObject.currentEmployees.set(employeeList);
 
     LoadingOverlay.hide();
   };
@@ -2030,7 +2026,6 @@ Template.setup.onRendered(function () {
               templateObject.employeedatatablerecords.set(
                 dataTableListEmployee
               );
-
 
               if (templateObject.employeedatatablerecords.get()) {
                 Meteor.call(
@@ -2544,15 +2539,17 @@ Template.setup.onRendered(function () {
   templateObject.getEmployeeProfileImageData = function (employeeName) {
     const contactService = new ContactService();
     contactService.getEmployeeProfileImageByName(employeeName).then((data) => {
-        let employeeProfile = '';
-        for (let i = 0; i < data.temployeepicture.length; i++) {
-
-            if (data.temployeepicture[i].EmployeeName === employeeName) {
-                employeeProfile = data.temployeepicture[i].EncodedPic;
-                $('.imageUpload').attr('src', 'data:image/jpeg;base64,' + employeeProfile);
-                $('.cloudEmpImgID').val(data.temployeepicture[i].Id);
-            }
+      let employeeProfile = "";
+      for (let i = 0; i < data.temployeepicture.length; i++) {
+        if (data.temployeepicture[i].EmployeeName === employeeName) {
+          employeeProfile = data.temployeepicture[i].EncodedPic;
+          $(".imageUpload").attr(
+            "src",
+            "data:image/jpeg;base64," + employeeProfile
+          );
+          $(".cloudEmpImgID").val(data.temployeepicture[i].Id);
         }
+      }
     });
   };
 
@@ -2635,7 +2632,6 @@ Template.setup.onRendered(function () {
       let accBalance = "";
 
       data.taccountvs1.forEach((account) => {
-
         if (!isNaN(account.fields.Balance)) {
           accBalance =
             utilityService.modifynegativeCurrencyFormat(
@@ -2670,7 +2666,6 @@ Template.setup.onRendered(function () {
       });
 
       templateObject.accountList.set(_accountList);
-
     }
 
     setTimeout(function () {
@@ -4020,237 +4015,294 @@ Template.setup.onRendered(function () {
       departmentData = "All";
 
       data.tproductvs1.forEach((product) => {
-        _inventoryList.push({...product.fields});
-      })
+        _inventoryList.push({ ...product.fields });
+      });
 
-       templateObject.inventoryList.set(_inventoryList);
+      templateObject.inventoryList.set(_inventoryList);
 
-      if(templateObject.inventoryList.get()) {
-        setTimeout(function() {
-          $("#tblInventory").dataTable({
-                  // data: _inventoryList,
-                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      if (templateObject.inventoryList.get()) {
+        setTimeout(function () {
+          $("#tblInventory")
+            .dataTable({
+              // data: _inventoryList,
+              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
-                  columnDefs: [{
-                          className: "colProductID hiddenColumn",
-                          targets: [0],
-                      },
-                      {
-                          className: "colProductName",
-                          targets: [1],
-                      },
-                      {
-                          className: "colSalesDescription",
-                          targets: [2],
-                      },
-                      {
-                          className: "colAvailable text-right",
-                          targets: [3],
-                      },
-                      {
-                          className: "colOnSO text-right",
-                          targets: [4],
-                      },
-                      {
-                          className: "colOnBO text-right",
-                          targets: [5],
-                      },
-                      {
-                          className: "colInStock text-right",
-                          targets: [6],
-                      },
-                      {
-                          className: "colOnOrder text-right",
-                          targets: [7],
-                      },
-                      {
-                          className: "colCostPrice hiddenColumn text-right",
-                          targets: [8],
-                      },
-                      {
-                          className: "colCostPriceInc  text-right",
-                          targets: [9],
-                      },
-                      {
-                          className: "colSalePrice hiddenColumn text-right",
-                          targets: [10],
-                      },
-                      {
-                          className: "colSalePriceInc  text-right",
-                          targets: [11],
-                      },
-                      {
-                          className: "colSerialNo  text-center hiddenColumn",
-                          targets: [12],
-                      },
-                      {
-                          className: "colBarcode hiddenColumn",
-                          targets: [13],
-                      },
-                      {
-                          className: "colDepartment hiddenColumn",
-                          targets: [14],
-                      },
-                      {
-                          className: "colPurchaseDescription hiddenColumn",
-                          targets: [15],
-                      },
-                      {
-                          className: "colProdCustField1 hiddenColumn",
-                          targets: [16],
-                      },
-                      {
-                          className: "colProdCustField2 hiddenColumn",
-                          targets: [17],
-                      },
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  buttons: [{
-                          extend: "excelHtml5",
-                          text: "",
-                          download: "open",
-                          className: "btntabletocsv hiddenColumn",
-                          filename: "inventory_" + moment().format(),
-                          orientation: "portrait",
-                          exportOptions: {
-                              columns: ":visible",
-                          },
-                      },
-                      {
-                          extend: "print",
-                          download: "open",
-                          className: "btntabletopdf hiddenColumn",
-                          text: "",
-                          title: "Inventory List",
-                          filename: "inventory_" + moment().format(),
-                          exportOptions: {
-                              columns: ":visible",
-                          },
-                      },
-                  ],
-                  // bStateSave: true,
-                  // rowId: 0,
-                  // paging: false,
-                  // "scrollY": "800px",
-                  // "scrollCollapse": true,
-                  pageLength: initialBaseDataLoad,
-                  lengthMenu: [
-                      [initialBaseDataLoad, -1],
-                      [initialBaseDataLoad, "All"],
-                  ],
-                  info: true,
-                  responsive: true,
-                  order: [
-                      [0, "asc"]
-                  ],
-                  action: function() {
-                      $("#tblInventory").DataTable().ajax.reload();
+              columnDefs: [
+                {
+                  className: "colProductID hiddenColumn",
+                  targets: [0],
+                },
+                {
+                  className: "colProductName",
+                  targets: [1],
+                },
+                {
+                  className: "colSalesDescription",
+                  targets: [2],
+                },
+                {
+                  className: "colAvailable text-right",
+                  targets: [3],
+                },
+                {
+                  className: "colOnSO text-right",
+                  targets: [4],
+                },
+                {
+                  className: "colOnBO text-right",
+                  targets: [5],
+                },
+                {
+                  className: "colInStock text-right",
+                  targets: [6],
+                },
+                {
+                  className: "colOnOrder text-right",
+                  targets: [7],
+                },
+                {
+                  className: "colCostPrice hiddenColumn text-right",
+                  targets: [8],
+                },
+                {
+                  className: "colCostPriceInc  text-right",
+                  targets: [9],
+                },
+                {
+                  className: "colSalePrice hiddenColumn text-right",
+                  targets: [10],
+                },
+                {
+                  className: "colSalePriceInc  text-right",
+                  targets: [11],
+                },
+                {
+                  className: "colSerialNo  text-center hiddenColumn",
+                  targets: [12],
+                },
+                {
+                  className: "colBarcode hiddenColumn",
+                  targets: [13],
+                },
+                {
+                  className: "colDepartment hiddenColumn",
+                  targets: [14],
+                },
+                {
+                  className: "colPurchaseDescription hiddenColumn",
+                  targets: [15],
+                },
+                {
+                  className: "colProdCustField1 hiddenColumn",
+                  targets: [16],
+                },
+                {
+                  className: "colProdCustField2 hiddenColumn",
+                  targets: [17],
+                },
+              ],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              buttons: [
+                {
+                  extend: "excelHtml5",
+                  text: "",
+                  download: "open",
+                  className: "btntabletocsv hiddenColumn",
+                  filename: "inventory_" + moment().format(),
+                  orientation: "portrait",
+                  exportOptions: {
+                    columns: ":visible",
                   },
-                  fnDrawCallback: function(oSettings) {
-                      $(".paginate_button.page-item").removeClass("disabled");
-                      $("#tblInventory_ellipsis").addClass("disabled");
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {}
-                          $(".fullScreenSpin").css("display", "inline-block");
-                          setTimeout(function() {
-                              $(".fullScreenSpin").css("display", "none");
-                          }, 100);
-                      } else {}
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $(".paginate_button.page-item.next").addClass("disabled");
-                      }
-
-                      $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
-                          $(".fullScreenSpin").css("display", "inline-block");
-                          let dataLenght = oSettings._iDisplayLength;
-                          let customerSearch = $("#tblInventory_filter input").val();
-                          sideBarService.getNewProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                  for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
-                                    let availableQty = 0;
-                                    let onBOOrder = 0;
-                                    if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
-                                    for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
-                                         availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                                     };
-                                   };
-                                     if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
-                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                                      }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
-                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                                      }else{
-                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                                      }
-                                      var dataListDupp = [
-                                          dataObjectnew.tproductvs1[i].fields.ID || "",
-                                          dataObjectnew.tproductvs1[i].fields.ProductName || "-",
-                                          dataObjectnew.tproductvs1[i].fields.SalesDescription || "",
-                                          availableQty,
-                                          0,
-                                          onBOOrder,
-                                          dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-                                          dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                                          checkIfSerialorLot||'',
-                                          dataObjectnew.tproductvs1[i].fields.BARCODE || "",
-                                          departmentData,
-                                          dataObjectnew.tproductvs1[i].fields.PurchaseDescription || "",
-                                          dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
-                                          dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
-                                      ];
-                                      splashArrayProductList.push(dataListDupp);
-                                  }
-                                  let uniqueChars = [...new Set(splashArrayProductList)];
-                                  var datatable = $("#tblInventory").DataTable();
-                                  datatable.clear();
-                                  datatable.rows.add(uniqueChars);
-                                  datatable.draw(false);
-                                  setTimeout(function() {
-                                      $("#tblInventory").dataTable().fnPageChange("last");
-                                  }, 400);
-
-                                  $(".fullScreenSpin").css("display", "none");
-                              })
-                              .catch(function(err) {
-                                  $(".fullScreenSpin").css("display", "none");
-                              });
-                      });
-                      setTimeout(function() {
-                          MakeNegative();
-                      }, 100);
+                },
+                {
+                  extend: "print",
+                  download: "open",
+                  className: "btntabletopdf hiddenColumn",
+                  text: "",
+                  title: "Inventory List",
+                  filename: "inventory_" + moment().format(),
+                  exportOptions: {
+                    columns: ":visible",
                   },
-                  fnInitComplete: function() {
-                      $(
-                          "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                      ).insertAfter("#tblInventory_filter");
-                  },
-              }).on("length.dt", function(e, settings, len) {
-                  $(".fullScreenSpin").css("display", "inline-block");
-                  let dataLenght = settings._iDisplayLength;
-                  // splashArrayProductList = [];
-                  if (dataLenght == -1) {
-                      $(".fullScreenSpin").css("display", "none");
-                  } else {
-                      if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                          $(".fullScreenSpin").css("display", "none");
-                      } else {
-                          $(".fullScreenSpin").css("display", "none");
-                      }
+                },
+              ],
+              // bStateSave: true,
+              // rowId: 0,
+              // paging: false,
+              // "scrollY": "800px",
+              // "scrollCollapse": true,
+              pageLength: initialBaseDataLoad,
+              lengthMenu: [
+                [initialBaseDataLoad, -1],
+                [initialBaseDataLoad, "All"],
+              ],
+              info: true,
+              responsive: true,
+              order: [[0, "asc"]],
+              action: function () {
+                $("#tblInventory").DataTable().ajax.reload();
+              },
+              fnDrawCallback: function (oSettings) {
+                $(".paginate_button.page-item").removeClass("disabled");
+                $("#tblInventory_ellipsis").addClass("disabled");
+                if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
                   }
-              });
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  setTimeout(function () {
+                    $(".fullScreenSpin").css("display", "none");
+                  }, 100);
+                } else {
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
 
-            $(".fullScreenSpin").css("display", "none");
-            $("div.dataTables_filter input").addClass(
-                "form-control form-control-sm"
-            );
+                $(
+                  ".paginate_button.next:not(.disabled)",
+                  this.api().table().container()
+                ).on("click", function () {
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  let dataLenght = oSettings._iDisplayLength;
+                  let customerSearch = $("#tblInventory_filter input").val();
+                  sideBarService
+                    .getNewProductListVS1(
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay()
+                    )
+                    .then(function (dataObjectnew) {
+                      for (
+                        let i = 0;
+                        i < dataObjectnew.tproductvs1.length;
+                        i++
+                      ) {
+                        let availableQty = 0;
+                        let onBOOrder = 0;
+                        if (
+                          dataObjectnew.tproductvs1[i].fields.ProductClass !=
+                          null
+                        ) {
+                          for (
+                            let a = 0;
+                            a <
+                            dataObjectnew.tproductvs1[i].fields.ProductClass
+                              .length;
+                            a++
+                          ) {
+                            availableQty +=
+                              dataObjectnew.tproductvs1[i].fields.ProductClass[
+                                a
+                              ].fields.AvailableQuantity || 0;
+                          }
+                        }
+                        if (
+                          dataObjectnew.tproductvs1[i].fields.SNTracking == true
+                        ) {
+                          checkIfSerialorLot =
+                            '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+                        } else if (
+                          dataObjectnew.tproductvs1[i].fields.Batch == true
+                        ) {
+                          checkIfSerialorLot =
+                            '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+                        } else {
+                          checkIfSerialorLot =
+                            '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+                        }
+                        var dataListDupp = [
+                          dataObjectnew.tproductvs1[i].fields.ID || "",
+                          dataObjectnew.tproductvs1[i].fields.ProductName ||
+                            "-",
+                          dataObjectnew.tproductvs1[i].fields
+                            .SalesDescription || "",
+                          availableQty,
+                          0,
+                          onBOOrder,
+                          dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
+                          dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
+                          utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(
+                              dataObjectnew.tproductvs1[i].fields.BuyQty1Cost *
+                                100
+                            ) / 100
+                          ),
+                          utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(
+                              dataObjectnew.tproductvs1[i].fields
+                                .BuyQty1CostInc * 100
+                            ) / 100
+                          ),
+                          utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(
+                              dataObjectnew.tproductvs1[i].fields
+                                .SellQty1Price * 100
+                            ) / 100
+                          ),
+                          utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(
+                              dataObjectnew.tproductvs1[i].fields
+                                .SellQty1PriceInc * 100
+                            ) / 100
+                          ),
+                          checkIfSerialorLot || "",
+                          dataObjectnew.tproductvs1[i].fields.BARCODE || "",
+                          departmentData,
+                          dataObjectnew.tproductvs1[i].fields
+                            .PurchaseDescription || "",
+                          dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
+                          dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
+                        ];
+                        splashArrayProductList.push(dataListDupp);
+                      }
+                      let uniqueChars = [...new Set(splashArrayProductList)];
+                      var datatable = $("#tblInventory").DataTable();
+                      datatable.clear();
+                      datatable.rows.add(uniqueChars);
+                      datatable.draw(false);
+                      setTimeout(function () {
+                        $("#tblInventory").dataTable().fnPageChange("last");
+                      }, 400);
+
+                      $(".fullScreenSpin").css("display", "none");
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                });
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              },
+              fnInitComplete: function () {
+                $(
+                  "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                ).insertAfter("#tblInventory_filter");
+              },
+            })
+            .on("length.dt", function (e, settings, len) {
+              $(".fullScreenSpin").css("display", "inline-block");
+              let dataLenght = settings._iDisplayLength;
+              // splashArrayProductList = [];
+              if (dataLenght == -1) {
+                $(".fullScreenSpin").css("display", "none");
+              } else {
+                if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                  $(".fullScreenSpin").css("display", "none");
+                } else {
+                  $(".fullScreenSpin").css("display", "none");
+                }
+              }
+            });
+
+          $(".fullScreenSpin").css("display", "none");
+          $("div.dataTables_filter input").addClass(
+            "form-control form-control-sm"
+          );
         }, 0);
       }
     }
-
   };
 
   templateObject.loadInventory();
@@ -4270,7 +4322,7 @@ function isStepActive(stepId) {
 
 Template.setup.events({
   "click #start-wizard": function () {
-    $(`[data-step-id=1]`).parents('li').addClass('current');
+    $(`[data-step-id=1]`).parents("li").addClass("current");
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
     localStorage.setItem("VS1Cloud_SETUP_STEP", 1);
@@ -6338,801 +6390,82 @@ Template.setup.events({
   },
 
   // TODO: Step 5
+  "click .btnSaveEmpPop": (e) => {
+    //console.log("Save employee clicked", e);
+    $("#addEmployeeModal").modal("toggle");
+  },
   "click .employees-js": (e) => {
     let templateObject = Template.instance();
-    $('#addEmployeeModal').modal('toggle');
-    console.log(e);
-    const employeeID = $(e).attr("id");
-      if (!isNaN(employeeId)) {
-        templateObject.getEmployeeData = function () {
-            getVS1Data('TEmployee').then(function (dataObject) {
+    $("#addEmployeeModal").modal("toggle");
+    LoadingOverlay.show();
+    const employeeID = $(e.currentTarget).attr("id");
+    if (!isNaN(employeeID)) {
+      console.log(employeeID);
 
-                if (dataObject.length == 0) {
-                    contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                        $('.fullScreenSpin').css('display', 'none');
+      let employeeList = templateObject.currentEmployees.get();
+      console.log(employeeList);
 
-                        let lineItems = [];
-                        let empEmail = '';
-                        let overideset = data.fields.User.fields.CustFld14;
-                        if (overideset != "") {
-                            if (overideset = "true") {
-                                overideset = true;
-                            } else {
-                                overideset = false;
-                            }
-                            $("#overridesettings").prop('checked', overideset);
-                        } else {
-                            $("#overridesettings").prop('checked', false);
-                        }
+      let data = employeeList.filter(
+        (employee) => employee.fields.ID == employeeID
+      );
+      data = data[0];
+      console.log("FOUND: ", data);
 
-                        if (data.fields.Email.replace(/\s/g, '') == '') {
-                            if (data.fields.User != null) {
-                                let emplineItems = [];
-                                let emplineItemObj = {};
-                                empEmail = data.fields.User.fields.LogonName;
-                                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                emplineItemObj = {
-                                    empID: data.fields.User.fields.EmployeeId || '',
-                                    EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                    LogonName: data.fields.User.fields.LogonName || '',
-                                    PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                };
-                                emplineItems.push(emplineItemObj);
-                                templateObject.empuserrecord.set(emplineItems);
-                            } else {
-                                let emplineItems = [];
-                                let emplineItemObj = {};
-                                emplineItemObj = {
-                                    empID: '',
-                                    EmployeeName: data.fields.EmployeeName,
-                                    LogonName: ''
-                                };
-                                emplineItems.push(emplineItemObj);
-                                templateObject.empuserrecord.set(emplineItems);
-                            }
+      let editableEmployee = {
+        id: data.fields.ID,
+        lid: "Edit Employee",
+        title: data.fields.Title || "",
+        firstname: data.fields.FirstName || "",
+        middlename: data.fields.MiddleName || "",
+        lastname: data.fields.LastName || "",
+        company: data.fields.EmployeeName || "",
+        tfn: data.fields.TFN || "",
+        priority: data.fields.CustFld5 || 0,
+        color: data.fields.CustFld6 || "#00a3d3",
+        email: data.fields.Email || "",
+        phone: data.fields.Phone || "",
+        mobile: data.fields.Mobile || "",
+        fax: data.fields.FaxNumber || "",
+        skype: data.fields.SkypeName || "",
+        gender: data.fields.Sex || "",
+        dob: data.fields.DOB
+          ? moment(data.fields.DOB).format("DD/MM/YYYY")
+          : "",
+        startdate: data.fields.DateStarted
+          ? moment(data.fields.DateStarted).format("DD/MM/YYYY")
+          : "",
+        datefinished: data.fields.DateFinished
+          ? moment(data.fields.DateFinished).format("DD/MM/YYYY")
+          : "",
+        position: data.fields.Position || "",
+        streetaddress: data.fields.Street || "",
+        city: data.fields.Street2 || "",
+        state: data.fields.State || "",
+        postalcode: data.fields.PostCode || "",
+        country: data.fields.Country || LoggedCountry,
+        custfield1: data.fields.CustFld1 || "",
+        custfield2: data.fields.CustFld2 || "",
+        custfield3: data.fields.CustFld3 || "",
+        custfield4: data.fields.CustFld4 || "",
+        custfield14: data.fields.CustFld14 || "",
+        website: "",
+        notes: data.fields.Notes || "",
+      };
 
-                        } else {
-                            empEmail = data.fields.Email;
-                            if (data.fields.User != null) {
-                                let emplineItems = [];
-                                let emplineItemObj = {};
-                                Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                emplineItemObj = {
-                                    empID: data.fields.User.fields.EmployeeId || '',
-                                    EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                    LogonName: data.fields.User.fields.LogonName || '',
-                                    PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                };
-                                emplineItems.push(emplineItemObj);
-                                templateObject.empuserrecord.set(emplineItems);
-                            } else {
-                                let emplineItems = [];
-                                let emplineItemObj = {};
-                                emplineItemObj = {
-                                    empID: '',
-                                    EmployeeName: data.fields.EmployeeName,
-                                    LogonName: ''
-                                };
-                                emplineItems.push(emplineItemObj);
-                                templateObject.empuserrecord.set(emplineItems);
-                            }
-                        }
+      console.log(editableEmployee);
 
-                        let lineItemObj = {
-                            id: data.fields.ID,
-                            lid: 'Edit Employee',
-                            title: data.fields.Title || '',
-                            firstname: data.fields.FirstName || '',
-                            middlename: data.fields.MiddleName || '',
-                            lastname: data.fields.LastName || '',
-                            company: data.fields.EmployeeName || '',
-                            tfn: data.fields.TFN || '',
-                            priority: data.fields.CustFld5 || 0,
-                            color: data.fields.CustFld6 || "#00a3d3",
-                            email: empEmail || '',
-                            phone: data.fields.Phone || '',
-                            mobile: data.fields.Mobile || '',
-                            fax: data.fields.FaxNumber || '',
-                            skype: data.fields.SkypeName || '',
-                            gender: data.fields.Sex || '',
-                            dob: data.fields.DOB ? moment(data.fields.DOB).format('DD/MM/YYYY') : "",
-                            startdate: data.fields.DateStarted ? moment(data.fields.DateStarted).format('DD/MM/YYYY') : "",
-                            datefinished: data.fields.DateFinished ? moment(data.fields.DateFinished).format('DD/MM/YYYY') : "",
-                            position: data.fields.Position || '',
-                            streetaddress: data.fields.Street || '',
-                            city: data.fields.Street2 || '',
-                            state: data.fields.State || '',
-                            postalcode: data.fields.PostCode || '',
-                            country: data.fields.Country || LoggedCountry,
-                            custfield1: data.fields.CustFld1 || '',
-                            custfield2: data.fields.CustFld2 || '',
-                            custfield3: data.fields.CustFld3 || '',
-                            custfield4: data.fields.CustFld4 || '',
-                            custfield14: data.fields.CustFld14 || '',
-                            website: '',
-                            notes: data.fields.Notes || '',
+      templateObject.editableEmployee.set(editableEmployee);
 
-                        };
-                        templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
-
-                        templateObject.editableEmployee.set(lineItemObj);
-                        setTimeout(function () {
-                          if(data.fields.CustFld7 == "true"){
-                            $("#productCostPayRate").prop("checked", true);
-                          }else{
-                            $("#productCostPayRate").prop("checked", false);
-                          }
-
-                          if(data.fields.CustFld8 == "true" || data.fields.CustFld8 == ""){
-                            $("#addAllProducts").prop("checked", true);
-                            $('.activeProductEmployee').css('display', 'none');
-                          }else{
-                            $("#addAllProducts").prop("checked", false);
-                            $('.activeProductEmployee').css('display', 'block');
-                          }
-                        }, 500);
-                        if (currentId.addvs1user == "true") {
-                            setTimeout(function () {
-                                $('.employeeTab').trigger('click');
-                                $('.addvs1usertab').trigger('click');
-                                $('#cloudEmpEmailAddress').focus();
-                            }, 100);
-                        }
-
-                        if ((currentId.addvs1user == "true") && (currentId.id)) {
-                            // swal("Please ensure the employee has a email and password.", "", "info");
-                            if (useData[i].fields.User != null) {
-                                swal({
-                                    title: 'User currently has an Existing Login.',
-                                    text: '',
-                                    type: 'info',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        $('#cloudEmpEmailAddress').focus();
-                                        $('.modal-backdrop').css('display', 'none');
-                                    } else if (result.dismiss === 'cancel') {
-                                        $('.modal-backdrop').css('display', 'none');
-                                    }
-                                });
-                            } else {
-                                swal({
-                                    title: 'Please ensure the employee has a email and password.',
-                                    text: '',
-                                    type: 'info',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        $('#cloudEmpEmailAddress').focus();
-                                        $('.modal-backdrop').css('display', 'none');
-                                    } else if (result.dismiss === 'cancel') {
-                                        $('.modal-backdrop').css('display', 'none');
-                                    }
-                                });
-                            }
-
-                        }
-                        /* START attachment */
-                        templateObject.attachmentCount.set(0);
-                        if (data.fields.Attachments) {
-                            if (data.fields.Attachments.length) {
-                                templateObject.attachmentCount.set(data.fields.Attachments.length);
-                                templateObject.uploadedFiles.set(data.fields.Attachments);
-
-                            }
-                        }
-                        /* END  attachment */
-
-                        //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
-                        // $('.fullScreenSpin').css('display','none');
-                        setTimeout(function () {
-                            var rowCount = $('.results tbody tr').length;
-                            $('.counter').text(rowCount + ' items');
-                            $('#cloudEmpName').val(data.fields.EmployeeName);
-                            $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
-                                showOn: 'button',
-                                buttonText: 'Show Date',
-                                buttonImageOnly: true,
-                                buttonImage: '/img/imgCal2.png',
-                                dateFormat: 'dd/mm/yy',
-                                showOtherMonths: true,
-                                selectOtherMonths: true,
-                                changeMonth: true,
-                                changeYear: true,
-                                yearRange: "-90:+10",
-                            });
-                            // $('.fullScreenSpin').css('display','none');
-                        }, 500);
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.temployee;
-                    var added = false;
-                    for (let i = 0; i < useData.length; i++) {
-                        if (parseInt(useData[i].fields.ID) === parseInt(employeeID)) {
-                            added = true;
-                            $('.fullScreenSpin').css('display', 'none');
-                            let lineItems = [];
-                            let empEmail = '';
-                            let overideset = useData[i].fields.CustFld14;
-
-
-                        // tempcode
-                          //   setTimeout(function () {// add to custom field
-
-                          //     $('#edtSaleCustField1').val(useData[i].fields.CustFld1);
-                          //     $('#edtSaleCustField2').val(useData[i].fields.CustFld2);
-                          //     $('#edtSaleCustField3').val(useData[i].fields.CustFld3);
-                          // }, 5500);
-
-                            if (useData[i].fields.Email.replace(/\s/g, '') == '') {
-                                if (useData[i].fields.User != null) {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    empEmail = useData[i].fields.User.fields.LogonName;
-                                    Session.setPersistent('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
-                                    emplineItemObj = {
-                                        empID: useData[i].fields.User.fields.EmployeeId || '',
-                                        EmployeeName: useData[i].fields.User.fields.EmployeeName || '',
-                                        LogonName: useData[i].fields.User.fields.LogonName || '',
-                                        PasswordHash: useData[i].fields.User.fields.LogonPassword || ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                } else {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    emplineItemObj = {
-                                        empID: '',
-                                        EmployeeName: useData[i].fields.EmployeeName,
-                                        LogonName: ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                }
-
-                            } else {
-                                empEmail = useData[i].fields.Email;
-                                if (useData[i].fields.User != null) {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    Session.setPersistent('cloudCurrentLogonName', useData[i].fields.User.fields.LogonName);
-                                    emplineItemObj = {
-                                        empID: useData[i].fields.User.fields.EmployeeId || '',
-                                        EmployeeName: useData[i].fields.User.fields.EmployeeName || '',
-                                        LogonName: useData[i].fields.User.fields.LogonName || '',
-                                        PasswordHash: useData[i].fields.User.fields.LogonPassword || ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                } else {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    emplineItemObj = {
-                                        empID: '',
-                                        EmployeeName: useData[i].fields.EmployeeName,
-                                        LogonName: ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                }
-                            }
-
-                            let lineItemObj = {
-                                id: useData[i].fields.ID,
-                                lid: 'Edit Employee',
-                                title: useData[i].fields.Title || '',
-                                firstname: useData[i].fields.FirstName || '',
-                                middlename: useData[i].fields.MiddleName || '',
-                                lastname: useData[i].fields.LastName || '',
-                                company: useData[i].fields.EmployeeName || '',
-                                // company: "BBB",
-                                tfn: useData[i].fields.TFN || '',
-                                priority: useData[i].fields.CustFld5 || 0,
-                                color: useData[i].fields.CustFld6 || "#00a3d3",
-                                email: empEmail || '',
-                                phone: useData[i].fields.Phone || '',
-                                mobile: useData[i].fields.Mobile || '',
-                                fax: useData[i].fields.FaxNumber || '',
-                                skype: useData[i].fields.SkypeName || '',
-                                gender: useData[i].fields.Sex || '',
-                                dob: useData[i].fields.DOB ? moment(useData[i].fields.DOB).format('DD/MM/YYYY') : "",
-                                startdate: useData[i].fields.DateStarted ? moment(useData[i].fields.DateStarted).format('DD/MM/YYYY') : "",
-                                datefinished: useData[i].fields.DateFinished ? moment(useData[i].fields.DateFinished).format('DD/MM/YYYY') : "",
-                                position: useData[i].fields.Position || '',
-                                streetaddress: useData[i].fields.Street || '',
-                                city: useData[i].fields.Street2 || '',
-                                state: useData[i].fields.State || '',
-                                postalcode: useData[i].fields.PostCode || '',
-                                country: useData[i].fields.Country || LoggedCountry,
-                                custfield1: useData[i].fields.CustFld1 || '',
-                                custfield2: useData[i].fields.CustFld2 || '',
-                                custfield3: useData[i].fields.CustFld3 || '',
-                                custfield4: useData[i].fields.CustFld4 || '',
-                                custfield14: useData[i].fields.CustFld14 || '',
-                                website: '',
-                                notes: useData[i].fields.Notes || '',
-
-                            };
-                            templateObject.getEmployeeProfileImageData(useData[i].fields.EmployeeName);
-
-                            templateObject.editableEmployee.set(lineItemObj);
-                            if (currentId.addvs1user == "true") {
-                                setTimeout(function () {
-                                    $('.employeeTab').trigger('click');
-                                    $('.addvs1usertab').trigger('click');
-                                    $('#cloudEmpEmailAddress').focus();
-                                }, 100);
-                            }
-                            setTimeout(function () {
-                                if (overideset != "") {
-                                    if (overideset == "true") {
-                                        $("#overridesettings").prop('checked', true);
-                                    } else {
-                                        $("#overridesettings").prop('checked', false);
-                                    }
-                                } else {
-                                    $("#overridesettings").prop('checked', false);
-                                }
-
-                            }, 1000);
-
-                          setTimeout(function () {
-                            if(useData[i].fields.CustFld7 == "true"){
-                              $("#productCostPayRate").prop("checked", true);
-                            }else{
-                              $("#productCostPayRate").prop("checked", false);
-                            }
-
-                            if(useData[i].fields.CustFld8 == "true" || useData[i].fields.CustFld8 == ""){
-                              $("#addAllProducts").prop("checked", true);
-                              $('.activeProductEmployee').css('display', 'none');
-                            }else{
-                              $("#addAllProducts").prop("checked", false);
-                              $('.activeProductEmployee').css('display', 'block');
-                            }
-                          }, 500);
-                            if ((currentId.addvs1user == "true") && (currentId.id)) {
-                                // swal("Please ensure the employee has a email and password.", "", "info");
-
-                                if (useData[i].fields.User != null) {
-                                    swal({
-                                        title: 'User currently has an Existing Login.',
-                                        text: '',
-                                        type: 'info',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            $('#cloudEmpEmailAddress').focus();
-                                            $('.modal-backdrop').css('display', 'none');
-                                        } else if (result.dismiss === 'cancel') {
-                                            $('.modal-backdrop').css('display', 'none');
-                                        }
-                                    });
-                                } else {
-                                    swal({
-                                        title: 'Please ensure the employee has a email and password.',
-                                        text: '',
-                                        type: 'info',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            $('#cloudEmpEmailAddress').focus();
-                                            $('.modal-backdrop').css('display', 'none');
-                                        } else if (result.dismiss === 'cancel') {
-                                            $('.modal-backdrop').css('display', 'none');
-                                        }
-                                    });
-                                }
-
-                            }
-                            /* START attachment */
-                            templateObject.attachmentCount.set(0);
-                            if (useData[i].fields.Attachments) {
-                                if (useData[i].fields.Attachments.length) {
-                                    templateObject.attachmentCount.set(useData[i].fields.Attachments.length);
-                                    templateObject.uploadedFiles.set(useData[i].fields.Attachments);
-
-                                }
-                            }
-                            /* END  attachment */
-
-                            //templateObject.getAllProductRecentTransactions(useData[i].fields.EmployeeName);
-                            // $('.fullScreenSpin').css('display','none');
-                            setTimeout(function () {
-                                var rowCount = $('.results tbody tr').length;
-                                $('.counter').text(rowCount + ' items');
-                                $('#cloudEmpName').val(useData[i].fields.EmployeeName);
-                                $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
-                                    showOn: 'button',
-                                    buttonText: 'Show Date',
-                                    buttonImageOnly: true,
-                                    buttonImage: '/img/imgCal2.png',
-                                    dateFormat: 'dd/mm/yy',
-                                    showOtherMonths: true,
-                                    selectOtherMonths: true,
-                                    changeMonth: true,
-                                    changeYear: true,
-                                    yearRange: "-90:+10",
-                                });
-                                // $('.fullScreenSpin').css('display','none');
-                            }, 500);
-
-                        }
-                    }
-
-                    if (!added) {
-                        contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                            $('.fullScreenSpin').css('display', 'none');
-                            let lineItems = [];
-                            let empEmail = '';
-
-                            if (data.fields.Email.replace(/\s/g, '') == '') {
-                                if (data.fields.User != null) {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    empEmail = data.fields.User.fields.LogonName;
-                                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                    emplineItemObj = {
-                                        empID: data.fields.User.fields.EmployeeId || '',
-                                        EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                        LogonName: data.fields.User.fields.LogonName || '',
-                                        PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                } else {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    emplineItemObj = {
-                                        empID: '',
-                                        EmployeeName: data.fields.EmployeeName,
-                                        LogonName: ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                }
-
-                            } else {
-                                empEmail = data.fields.Email;
-                                if (data.fields.User != null) {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                                    emplineItemObj = {
-                                        empID: data.fields.User.fields.EmployeeId || '',
-                                        EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                        LogonName: data.fields.User.fields.LogonName || '',
-                                        PasswordHash: data.fields.User.fields.LogonPassword || ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                } else {
-                                    let emplineItems = [];
-                                    let emplineItemObj = {};
-                                    emplineItemObj = {
-                                        empID: '',
-                                        EmployeeName: data.fields.EmployeeName,
-                                        LogonName: ''
-                                    };
-                                    emplineItems.push(emplineItemObj);
-                                    templateObject.empuserrecord.set(emplineItems);
-                                }
-                            }
-
-                            let lineItemObj = {
-                                id: data.fields.ID,
-                                lid: 'Edit Employee',
-                                title: data.fields.Title || '',
-                                firstname: data.fields.FirstName || '',
-                                middlename: data.fields.MiddleName || '',
-                                lastname: data.fields.LastName || '',
-                                company: data.fields.EmployeeName || '',
-                                tfn: data.fields.TFN || '',
-                                priority: data.fields.CustFld5 || 0,
-                                color: data.fields.CustFld6 || "#00a3d3",
-                                email: empEmail || '',
-                                phone: data.fields.Phone || '',
-                                mobile: data.fields.Mobile || '',
-                                fax: data.fields.FaxNumber || '',
-                                skype: data.fields.SkypeName || '',
-                                gender: data.fields.Sex || '',
-                                dob: data.fields.DOB ? moment(data.fields.DOB).format('DD/MM/YYYY') : "",
-                                startdate: data.fields.DateStarted ? moment(data.fields.DateStarted).format('DD/MM/YYYY') : "",
-                                datefinished: data.fields.DateFinished ? moment(data.fields.DateFinished).format('DD/MM/YYYY') : "",
-                                position: data.fields.Position || '',
-                                streetaddress: data.fields.Street || '',
-                                city: data.fields.Street2 || '',
-                                state: data.fields.State || '',
-                                postalcode: data.fields.PostCode || '',
-                                country: data.fields.Country || LoggedCountry,
-                                custfield1: data.fields.CustFld1 || '',
-                                custfield2: data.fields.CustFld2 || '',
-                                custfield3: data.fields.CustFld3 || '',
-                                custfield4: data.fields.CustFld4 || '',
-                                custfield14: data.fields.CustFld14 || '',
-                                website: '',
-                                notes: data.fields.Notes || '',
-
-                            };
-                            templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
-
-                            templateObject.editableEmployee.set(lineItemObj);
-                            if (currentId.addvs1user == "true") {
-                                setTimeout(function () {
-                                    $('.employeeTab').trigger('click');
-                                    $('.addvs1usertab').trigger('click');
-                                    $('#cloudEmpEmailAddress').focus();
-                                }, 100);
-                            }
-
-                            if ((currentId.addvs1user == "true") && (currentId.id)) {
-                                // swal("Please ensure the employee has a email and password.", "", "info");
-                                if (useData[i].fields.User != null) {
-                                    swal({
-                                        title: 'User currently has an Existing Login.',
-                                        text: '',
-                                        type: 'info',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            $('#cloudEmpEmailAddress').focus();
-                                            $('.modal-backdrop').css('display', 'none');
-                                        } else if (result.dismiss === 'cancel') {
-                                            $('.modal-backdrop').css('display', 'none');
-                                        }
-                                    });
-                                } else {
-                                    swal({
-                                        title: 'Please ensure the employee has a email and password.',
-                                        text: '',
-                                        type: 'info',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            $('#cloudEmpEmailAddress').focus();
-                                            $('.modal-backdrop').css('display', 'none');
-                                        } else if (result.dismiss === 'cancel') {
-                                            $('.modal-backdrop').css('display', 'none');
-                                        }
-                                    });
-                                }
-                            }
-                            /* START attachment */
-                            templateObject.attachmentCount.set(0);
-                            if (data.fields.Attachments) {
-                                if (data.fields.Attachments.length) {
-                                    templateObject.attachmentCount.set(data.fields.Attachments.length);
-                                    templateObject.uploadedFiles.set(data.fields.Attachments);
-
-                                }
-                            }
-                            /* END  attachment */
-
-                            //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
-                            // $('.fullScreenSpin').css('display','none');
-                            setTimeout(function () {
-                                var rowCount = $('.results tbody tr').length;
-                                $('.counter').text(rowCount + ' items');
-                                $('#cloudEmpName').val(data.fields.EmployeeName);
-                                $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
-                                    showOn: 'button',
-                                    buttonText: 'Show Date',
-                                    buttonImageOnly: true,
-                                    buttonImage: '/img/imgCal2.png',
-                                    dateFormat: 'dd/mm/yy',
-                                    showOtherMonths: true,
-                                    selectOtherMonths: true,
-                                    changeMonth: true,
-                                    changeYear: true,
-                                    yearRange: "-90:+10",
-                                });
-                                $('.fullScreenSpin').css('display','none');
-                            }, 500);
-                        });
-                    }
-                }
-            }).catch(function (err) {
-                contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    let lineItems = [];
-                    let empEmail = '';
-
-                    if (data.fields.Email.replace(/\s/g, '') == '') {
-                        if (data.fields.User != null) {
-                            let emplineItems = [];
-                            let emplineItemObj = {};
-                            empEmail = data.fields.User.fields.LogonName;
-                            Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                            emplineItemObj = {
-                                empID: data.fields.User.fields.EmployeeId || '',
-                                EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                LogonName: data.fields.User.fields.LogonName || '',
-                                PasswordHash: data.fields.User.fields.LogonPassword || ''
-                            };
-                            emplineItems.push(emplineItemObj);
-                            templateObject.empuserrecord.set(emplineItems);
-                        } else {
-                            let emplineItems = [];
-                            let emplineItemObj = {};
-                            emplineItemObj = {
-                                empID: '',
-                                EmployeeName: data.fields.EmployeeName,
-                                LogonName: ''
-                            };
-                            emplineItems.push(emplineItemObj);
-                            templateObject.empuserrecord.set(emplineItems);
-                        }
-
-                    } else {
-                        empEmail = data.fields.Email;
-                        if (data.fields.User != null) {
-                            let emplineItems = [];
-                            let emplineItemObj = {};
-                            Session.setPersistent('cloudCurrentLogonName', data.fields.User.fields.LogonName);
-                            emplineItemObj = {
-                                empID: data.fields.User.fields.EmployeeId || '',
-                                EmployeeName: data.fields.User.fields.EmployeeName || '',
-                                LogonName: data.fields.User.fields.LogonName || '',
-                                PasswordHash: data.fields.User.fields.LogonPassword || ''
-                            };
-                            emplineItems.push(emplineItemObj);
-                            templateObject.empuserrecord.set(emplineItems);
-                        } else {
-                            let emplineItems = [];
-                            let emplineItemObj = {};
-                            emplineItemObj = {
-                                empID: '',
-                                EmployeeName: data.fields.EmployeeName,
-                                LogonName: ''
-                            };
-                            emplineItems.push(emplineItemObj);
-                            templateObject.empuserrecord.set(emplineItems);
-                        }
-                    }
-
-                    let lineItemObj = {
-                        id: data.fields.ID,
-                        lid: 'Edit Employee',
-                        title: data.fields.Title || '',
-                        firstname: data.fields.FirstName || '',
-                        middlename: data.fields.MiddleName || '',
-                        lastname: data.fields.LastName || '',
-                        company: data.fields.EmployeeName || '',
-                        tfn: data.fields.TFN || '',
-                        priority: data.fields.CustFld5 || 0,
-                        color: data.fields.CustFld6 || "#00a3d3",
-                        email: empEmail || '',
-                        phone: data.fields.Phone || '',
-                        mobile: data.fields.Mobile || '',
-                        fax: data.fields.FaxNumber || '',
-                        skype: data.fields.SkypeName || '',
-                        gender: data.fields.Sex || '',
-                        dob: data.fields.DOB ? moment(data.fields.DOB).format('DD/MM/YYYY') : "",
-                        startdate: data.fields.DateStarted ? moment(data.fields.DateStarted).format('DD/MM/YYYY') : "",
-                        datefinished: data.fields.DateFinished ? moment(data.fields.DateFinished).format('DD/MM/YYYY') : "",
-                        position: data.fields.Position || '',
-                        streetaddress: data.fields.Street || '',
-                        city: data.fields.Street2 || '',
-                        state: data.fields.State || '',
-                        postalcode: data.fields.PostCode || '',
-                        country: data.fields.Country || LoggedCountry,
-                        custfield1: data.fields.CustFld1 || '',
-                        custfield2: data.fields.CustFld2 || '',
-                        custfield3: data.fields.CustFld3 || '',
-                        custfield4: data.fields.CustFld4 || '',
-                        website: '',
-                        notes: data.fields.Notes || '',
-
-                    };
-                    templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
-                    setTimeout(function () {
-                      if(data.fields.CustFld7 == "true"){
-                        $("#productCostPayRate").prop("checked", true);
-                      }else{
-                        $("#productCostPayRate").prop("checked", false);
-                      }
-
-                      if(data.fields.CustFld8 == "true" || data.fields.CustFld8 == ""){
-                        $("#addAllProducts").prop("checked", true);
-                        $('.activeProductEmployee').css('display', 'none');
-                      }else{
-                        $("#addAllProducts").prop("checked", false);
-                        $('.activeProductEmployee').css('display', 'block');
-                      }
-                    }, 500);
-                    templateObject.editableEmployee.set(lineItemObj);
-                    if (currentId.addvs1user == "true") {
-                        setTimeout(function () {
-                            $('.employeeTab').trigger('click');
-                            $('.addvs1usertab').trigger('click');
-                            $('#cloudEmpEmailAddress').focus();
-                        }, 100);
-                    }
-
-                    if ((currentId.addvs1user == "true") && (currentId.id)) {
-                        // swal("Please ensure the employee has a email and password.", "", "info");
-                        if (useData[i].fields.User != null) {
-                            swal({
-                                title: 'User currently has an Existing Login.',
-                                text: '',
-                                type: 'info',
-                                showCancelButton: false,
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.value) {
-                                    $('#cloudEmpEmailAddress').focus();
-                                    $('.modal-backdrop').css('display', 'none');
-                                } else if (result.dismiss === 'cancel') {
-                                    $('.modal-backdrop').css('display', 'none');
-                                }
-                            });
-                        } else {
-                            swal({
-                                title: 'Please ensure the employee has a email and password.',
-                                text: '',
-                                type: 'info',
-                                showCancelButton: false,
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.value) {
-                                    $('#cloudEmpEmailAddress').focus();
-                                    $('.modal-backdrop').css('display', 'none');
-                                } else if (result.dismiss === 'cancel') {
-                                    $('.modal-backdrop').css('display', 'none');
-                                }
-                            });
-                        }
-                    }
-                    /* START attachment */
-                    templateObject.attachmentCount.set(0);
-                    if (data.fields.Attachments) {
-                        if (data.fields.Attachments.length) {
-                            templateObject.attachmentCount.set(data.fields.Attachments.length);
-                            templateObject.uploadedFiles.set(data.fields.Attachments);
-
-                        }
-                    }
-                    /* END  attachment */
-
-                    //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
-                    // $('.fullScreenSpin').css('display','none');
-                    setTimeout(function () {
-                        var rowCount = $('.results tbody tr').length;
-                        $('.counter').text(rowCount + ' items');
-                        $('#cloudEmpName').val(data.fields.EmployeeName);
-                        $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
-                            showOn: 'button',
-                            buttonText: 'Show Date',
-                            buttonImageOnly: true,
-                            buttonImage: '/img/imgCal2.png',
-                            dateFormat: 'dd/mm/yy',
-                            showOtherMonths: true,
-                            selectOtherMonths: true,
-                            changeMonth: true,
-                            changeYear: true,
-                            yearRange: "-90:+10",
-                        });
-                        $('.fullScreenSpin').css('display','none');
-                    }, 500);
-                });
-            });
-
-        }
-
-        templateObject.getEmployeeData();
-
-      }
-    
+      console.log(templateObject.editableEmployee.get());
+    }
+    LoadingOverlay.hide();
   },
   "click #btnNewEmployee": (event) => {
     // FlowRouter.go("/employeescard");
+    LoadingOverlay.show();
+    Template.instance().editableEmployee.set(null);
+    LoadingOverlay.hide();
+
     $("#addEmployeeModal").modal("toggle");
   },
   "click .btnAddVS1User": function (event) {
@@ -9820,7 +9153,7 @@ Template.setup.helpers({
   // Step 9 helpers
   inventoryList: () => {
     return Template.instance().inventoryList.get();
-  }
+  },
 });
 
 Template.registerHelper("equals", function (a, b) {
