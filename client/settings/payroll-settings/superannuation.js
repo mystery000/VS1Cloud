@@ -46,7 +46,9 @@ Template.superannuationSettings.onRendered(function() {
 
     if (employeePayrolEndpointResponse.ok == true) {
         employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-        await addVS1Data('TSuperannuation', JSON.stringify(employeePayrolEndpointJsonResponse))
+        if( employeePayrolEndpointJsonResponse.tsuperannuation.length ){
+            await addVS1Data('TSuperannuation', JSON.stringify(employeePayrolEndpointJsonResponse))
+        }
         return employeePayrolEndpointJsonResponse
     }  
     return '';

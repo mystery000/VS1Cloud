@@ -1777,9 +1777,7 @@
                                                                             Leave Type</button>
                                                                     </div>
                                                                 </div>
-                                                                <div class="modal fade" role="dialog" tabindex="-1" id="leaveTypeSettingsModal" style="z-index:99999;">
-                                                                    {{> leaveTypeSettings}}
-                                                                </div>
+                                                                {{> leaveTypeSettings}}
                                                                 <div class="modal fade" id="assignLeaveTypeModal" role="dialog" aria-labelledby="assignLeaveTypeModal" aria-hidden="true" style="z-index:9999;">
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                                         <div class="modal-content">
@@ -2427,23 +2425,16 @@
                                                                             <table id="tblPayslipHistory" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayslipHistory">
                                                                                 <thead>
                                                                                     <tr class="dnd-moved">
-                                                                                        <th class="th colPayslipPeriod" style="">Period</th>
-                                                                                        <th class="th colPayslipPaymentDate" style="">Payment Date</th>
-                                                                                        <th class="th colPayslipTotalPay" style="">Total Pay</th>
+                                                                                        <th class="th colPayslipID hiddenColumn">ID</th>
+                                                                                        <th class="th colPayslipPeriod">Period</th>
+                                                                                        <th class="th colPayslipPaymentDate">Payment Date</th>
+                                                                                        <th class="th colPayslipTotalPay">Total Pay</th>
                                                                                         <th class="th colPayslipDownload" style="width: 3% !important;"></th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                                        <td contenteditable="false" class="colDescription"></td>
-                                                                                        <td contenteditable="false" class="colLeavePeriod"></td>
-                                                                                        <td contenteditable="false" class="colLeaveType"></td>
-                                                                                        <td contenteditable="false" class="colPayslipDownload" style="width: 3% !important;">
-                                                                                            <button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
 
+                                                                                </tbody>
                                                                             </table>
                                                                         </div>
                                                                     </div>
@@ -3291,16 +3282,6 @@
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    {{#if notesrecords}}
-                                                                                        {{#each item in notesrecords}}
-                                                                                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                                                <td contenteditable="false" class="colEmpPayrollID hiddenColumn">{{item.id}}</td>
-                                                                                                <td contenteditable="false" class="colEmpPayrollNotesDate">{{item.createdat}}</td>
-                                                                                                <td contenteditable="false" class="colEmpPayrollNotesUser">{{item.username}}</td>
-                                                                                                <td contenteditable="false" class="colEmpPayrollNotes">{{item.notes}}</td>
-                                                                                            </tr>
-                                                                                        {{/each}}
-                                                                                    {{/if}}
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>

@@ -46,7 +46,9 @@ Template.reimbursementSettings.onRendered(function() {
 
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-            await addVS1Data('TReimbursement', JSON.stringify(employeePayrolEndpointJsonResponse))
+            if( employeePayrolEndpointJsonResponse.treimbursement.length ){
+                await addVS1Data('TReimbursement', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
             return employeePayrolEndpointJsonResponse
         }  
         return '';

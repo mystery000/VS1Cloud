@@ -207,145 +207,145 @@ Template.employeescard.onRendered(function () {
         $('.fullScreenSpin').css('display', 'none');
     }, 100);
 
-    setTimeout(function() {
-        $('#tblPayslipHistory').DataTable({
-            columnDefs: [{
-                "orderable": false,
-                "targets": -1
-            }],
-            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [{
-                extend: 'excelHtml5',
-                text: '',
-                download: 'open',
-                className: "btntabletocsv hiddenColumn",
-                filename: "taxratelist_" + moment().format(),
-                orientation: 'portrait',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }, {
-                extend: 'print',
-                download: 'open',
-                className: "btntabletopdf hiddenColumn",
-                text: '',
-                title: 'Tax Rate List',
-                filename: "taxratelist_" + moment().format(),
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }],
-            select: true,
-            destroy: true,
-            colReorder: {
-                fixedColumnsRight: 1
-            },
-            lengthMenu: [
-                [25, -1],
-                [25, "All"]
-            ],
-            // bStateSave: true,
-            // rowId: 0,
-            paging: true,
-            info: true,
-            responsive: true,
-            "order": [
-                [0, "asc"]
-            ],
-            action: function() {
-                $('#tblPayslipHistory').DataTable().ajax.reload();
-            },
-            "fnDrawCallback": function(oSettings) {
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-            },
+    // setTimeout(function() {
+    //     $('#tblPayslipHistory').DataTable({
+    //         columnDefs: [{
+    //             "orderable": false,
+    //             "targets": -1
+    //         }],
+    //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //         buttons: [{
+    //             extend: 'excelHtml5',
+    //             text: '',
+    //             download: 'open',
+    //             className: "btntabletocsv hiddenColumn",
+    //             filename: "taxratelist_" + moment().format(),
+    //             orientation: 'portrait',
+    //             exportOptions: {
+    //                 columns: ':visible'
+    //             }
+    //         }, {
+    //             extend: 'print',
+    //             download: 'open',
+    //             className: "btntabletopdf hiddenColumn",
+    //             text: '',
+    //             title: 'Tax Rate List',
+    //             filename: "taxratelist_" + moment().format(),
+    //             exportOptions: {
+    //                 columns: ':visible'
+    //             }
+    //         }],
+    //         select: true,
+    //         destroy: true,
+    //         colReorder: {
+    //             fixedColumnsRight: 1
+    //         },
+    //         lengthMenu: [
+    //             [25, -1],
+    //             [25, "All"]
+    //         ],
+    //         // bStateSave: true,
+    //         // rowId: 0,
+    //         paging: true,
+    //         info: true,
+    //         responsive: true,
+    //         "order": [
+    //             [0, "asc"]
+    //         ],
+    //         action: function() {
+    //             $('#tblPayslipHistory').DataTable().ajax.reload();
+    //         },
+    //         "fnDrawCallback": function(oSettings) {
+    //             setTimeout(function() {
+    //                 MakeNegative();
+    //             }, 100);
+    //         },
 
-        }).on('page', function() {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-            let draftRecord = templateObject.datatablerecords.get();
-            templateObject.datatablerecords.set(draftRecord);
-        }).on('column-reorder', function() {
+    //     }).on('page', function() {
+    //         setTimeout(function() {
+    //             MakeNegative();
+    //         }, 100);
+    //         let draftRecord = templateObject.datatablerecords.get();
+    //         templateObject.datatablerecords.set(draftRecord);
+    //     }).on('column-reorder', function() {
 
-        }).on('length.dt', function(e, settings, len) {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        });
+    //     }).on('length.dt', function(e, settings, len) {
+    //         setTimeout(function() {
+    //             MakeNegative();
+    //         }, 100);
+    //     });
 
-        // $('#currencyLists').DataTable().column( 0 ).visible( true );
-        $('.fullScreenSpin').css('display', 'none');
-    }, 100);
+    //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
+    //     $('.fullScreenSpin').css('display', 'none');
+    // }, 100);
 
-    setTimeout(function() {
-        $('#tblPayrollNotes').DataTable({
-            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [{
-                extend: 'excelHtml5',
-                text: '',
-                download: 'open',
-                className: "btntabletocsv hiddenColumn",
-                filename: "taxratelist_" + moment().format(),
-                orientation: 'portrait',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }, {
-                extend: 'print',
-                download: 'open',
-                className: "btntabletopdf hiddenColumn",
-                text: '',
-                title: 'Tax Rate List',
-                filename: "taxratelist_" + moment().format(),
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }],
-            select: true,
-            destroy: true,
-            colReorder: {
-                fixedColumnsRight: 1
-            },
-            lengthMenu: [
-                [25, -1],
-                [25, "All"]
-            ],
-            // bStateSave: true,
-            // rowId: 0,
-            paging: true,
-            info: true,
-            responsive: true,
-            "order": [
-                [0, "asc"]
-            ],
-            action: function() {
-                $('#tblPayrollNotes').DataTable().ajax.reload();
-            },
-            "fnDrawCallback": function(oSettings) {
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-            },
+    // setTimeout(function() {
+    //     $('#tblPayrollNotes').DataTable({
+    //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //         buttons: [{
+    //             extend: 'excelHtml5',
+    //             text: '',
+    //             download: 'open',
+    //             className: "btntabletocsv hiddenColumn",
+    //             filename: "taxratelist_" + moment().format(),
+    //             orientation: 'portrait',
+    //             exportOptions: {
+    //                 columns: ':visible'
+    //             }
+    //         }, {
+    //             extend: 'print',
+    //             download: 'open',
+    //             className: "btntabletopdf hiddenColumn",
+    //             text: '',
+    //             title: 'Tax Rate List',
+    //             filename: "taxratelist_" + moment().format(),
+    //             exportOptions: {
+    //                 columns: ':visible'
+    //             }
+    //         }],
+    //         select: true,
+    //         destroy: true,
+    //         colReorder: {
+    //             fixedColumnsRight: 1
+    //         },
+    //         lengthMenu: [
+    //             [25, -1],
+    //             [25, "All"]
+    //         ],
+    //         // bStateSave: true,
+    //         // rowId: 0,
+    //         paging: true,
+    //         info: true,
+    //         responsive: true,
+    //         "order": [
+    //             [0, "asc"]
+    //         ],
+    //         action: function() {
+    //             $('#tblPayrollNotes').DataTable().ajax.reload();
+    //         },
+    //         "fnDrawCallback": function(oSettings) {
+    //             setTimeout(function() {
+    //                 MakeNegative();
+    //             }, 100);
+    //         },
 
-        }).on('page', function() {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-            let draftRecord = templateObject.datatablerecords.get();
-            templateObject.datatablerecords.set(draftRecord);
-        }).on('column-reorder', function() {
+    //     }).on('page', function() {
+    //         setTimeout(function() {
+    //             MakeNegative();
+    //         }, 100);
+    //         let draftRecord = templateObject.datatablerecords.get();
+    //         templateObject.datatablerecords.set(draftRecord);
+    //     }).on('column-reorder', function() {
 
-        }).on('length.dt', function(e, settings, len) {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        });
+    //     }).on('length.dt', function(e, settings, len) {
+    //         setTimeout(function() {
+    //             MakeNegative();
+    //         }, 100);
+    //     });
 
-        // $('#currencyLists').DataTable().column( 0 ).visible( true );
-        $('.fullScreenSpin').css('display', 'none');
-    }, 200);
+    //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
+    //     $('.fullScreenSpin').css('display', 'none');
+    // }, 200);
 
     setTimeout(function () {
         Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'defaulttax', function (error, result) {
@@ -2828,111 +2828,185 @@ Template.employeescard.onRendered(function () {
     };
     templateObject.getLeaveRequests();
 
+    templateObject.saveNotesLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayNotes
+        );
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );                
+        
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tpaynotes.length ){
+                await addVS1Data('TPayNotes', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }  
+        return '';
+    };
+
     templateObject.getPayNotesTypes = async () => {
-        let TPayNotes = await getVS1Data('TPayNotes');
-        if( TPayNotes.length ){
-            let TPayNotesData = JSON.parse(TPayNotes[0].data);
-            let useData = PayNotes.fromList(
-                TPayNotesData.tpaynotes
-            ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                    return item;
-                }
-            });
-            let dataTableList = []
-            Array.prototype.forEach.call(useData, (item, index) => {
-                let ID = index + 1
-                dataTableList.push({
-                    id: ID || '',
-                    createdat: moment(item.fields.CreatedAt).format("DD/MM/YYYY") || '',
-                    username: item.fields.UserName || '',
-                    notes: item.fields.Notes || ''
-                })
-            })
-            if ( $.fn.DataTable.isDataTable('#tblEmpPayrollNotes') ) {
-                $('#tblEmpPayrollNotes').DataTable().destroy();
-            }
-            templateObject.notesrecords.set(dataTableList);
-            if( templateObject.notesrecords.get() ){
-                setTimeout(function () {
-                    $('#tblEmpPayrollNotes').DataTable({
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        columnDefs: [
 
-                        {
-                            className: "colEmpPayrollNotesID hiddenColumn",
-                            "targets": [0]
-                        },
-                        {
-                            className: "colEmpPayrollNotesDate",
-                            "targets": [1]
-                        },
-                        {
-                            className: "colEmpPayrollNotesUser",
-                            "targets": [2]
-                        },
-                        {
-                            className: "colEmpPayrollNotesDesc",
-                            "targets": [3]
-                        }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        order: [[0, "asc"]],
-                        action: function () {
-                            $('#tblEmpPayrollNotes').DataTable().ajax.reload();
-                        },
-                        fnDrawCallback: function (oSettings) {
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblEmpPayrollNotes_ellipsis').addClass('disabled');
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-
-                                }
-                            } else {
-
-                            }
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    var splashArrayEarningListDupp = new Array();
-                                    let dataLenght = oSettings._iDisplayLength;
-                                    let customerSearch = $('#tblEmpPayrollNotes_filter input').val();
-                                    // Pagination code here
-
-                                });
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        fnInitComplete: function () {
-                            $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
-                            $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
-                        }
-
-                    }).on('page', function () {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.notesrecords.get();
-                        templateObject.notesrecords.set(draftRecord);
-                    }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    });
-                }, 100);
-            }
+        let dataObject = await getVS1Data('TPayNotes')  
+        if ( dataObject.length == 0) {
+            TPayNotesData = await templateObject.saveNotesLocalDB();
+        }else{
+            TPayNotesData = JSON.parse(dataObject[0].data);
         }
+
+        let useData = PayNotes.fromList(
+            TPayNotesData.tpaynotes
+        ).filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                return item;
+            }
+        });
+        let splashArrayPayNotesList = [];
+        for (let i = 0; i < useData.length; i++) {
+            let dataListAllowance = [
+                useData.tpaynotes[i].fields.ID || '',
+                moment(useData.tpaynotes[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
+                useData.tpaynotes[i].fields.UserName || '',
+                useData.tpaynotes[i].fields.Notes || '',
+            ];
+            splashArrayPayNotesList.push(dataListAllowance);
+        }
+        setTimeout(function () {
+            $('#tblEmpPayrollNotes').DataTable({  
+                data: splashArrayPayNotesList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+
+                    {
+                        className: "colEmpPayrollNotesID hiddenColumn",
+                        "targets": [0]
+                    },
+                    {
+                        className: "colEmpPayrollNotesDate",
+                        "targets": [1]
+                    },
+                    {
+                        className: "colEmpPayrollNotesUser",
+                        "targets": [2]
+                    },
+                    {
+                        className: "colEmpPayrollNotesDesc",
+                        "targets": [3]
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[0, "asc"]],
+                action: function () {
+                    $('#tblEmpPayrollNotes').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblEmpPayrollNotes_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            var splashArrayPayNotesListDupp = new Array();
+                            let dataLenght = oSettings._iDisplayLength;
+                            let customerSearch = $('#tblEmpPayrollNotes_filter input').val();
+
+                            sideBarService.getPayNotes(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+                                for (let i = 0; i < useData.length; i++) {
+                                    let dataListAllowance = [
+                                        useData.tpaynotes[i].fields.ID || '',
+                                        moment(useData.tpaynotes[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
+                                        useData.tpaynotes[i].fields.UserName || '',
+                                        useData.tpaynotes[i].fields.Notes || '',
+                                    ];
+                                    splashArrayPayNotesList.push(dataListAllowance);
+                                }
+
+                                let uniqueChars = [...new Set(splashArrayPayNotesList)];
+                                var datatable = $('#tblEmpPayrollNotes').DataTable();
+                                datatable.clear();
+                                datatable.rows.add(uniqueChars);
+                                datatable.draw(false);
+                                setTimeout(function () {
+                                    $("#tblEmpPayrollNotes").dataTable().fnPageChange('last');
+                                }, 400);
+
+                                $('.fullScreenSpin').css('display', 'none');
+
+
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+
+                        });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddordinaryTimePayNotes' data-dismiss='modal' data-toggle='modal' data-target='#newNoteModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpPayrollNotes_filter");
+                    $("<button class='btn btn-primary btnRefreshPayNotes' type='button' id='btnRefreshPayNotes' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpPayrollNotes_filter");
+                }
+
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+
+            }).on('column-reorder', function () {
+
+            }).on('length.dt', function (e, settings, len) {
+                //$('.fullScreenSpin').css('display', 'inline-block');
+                let dataLenght = settings._iDisplayLength;
+                splashArrayPayNotesList = [];
+                if (dataLenght == -1) {
+                $('.fullScreenSpin').css('display', 'none');
+
+                } else {
+                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        sideBarService.getPayNotes(dataLenght, 0).then(function (dataNonBo) {
+
+                            addVS1Data('TPayNotes', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                // templateObject.resetData(dataNonBo);
+                                $('.fullScreenSpin').css('display', 'none');
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    }
+                }
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+        }, 0);
     };
     templateObject.getPayNotesTypes();
 
@@ -3147,6 +3221,195 @@ Template.employeescard.onRendered(function () {
         });
     }
     templateObject.getTBankAccounts();
+
+    // Pay Slip table
+    templateObject.getPaySlips = async function(){
+        try {
+            let data = {};
+            let splashArrayPaySlipList = new Array();
+            let dataObject = await getVS1Data('TPaySlips')  
+            if ( dataObject.length == 0) {
+                const employeePayrolApis = new EmployeePayrollApi();
+                // now we have to make the post request to save the data in database
+                const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TPaySlips
+                );
+
+                employeePayrolEndpoint.url.searchParams.append(
+                    "ListType",
+                    "'Detail'"
+                );                
+                
+                const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+                if (employeePayrolEndpointResponse.ok == true) {
+                    data = await employeePayrolEndpointResponse.json();
+                    if( data.tpayslips.length ){
+                        await addVS1Data('TPaySlips', JSON.stringify(data))
+                    }
+                }
+            }else{
+                data = JSON.parse(dataObject[0].data);
+            }
+            for (let i = 0; i < data.tpayslips.length; i++) {
+
+                let dataListAllowance = [
+                    data.tpayslips[i].fields.ID || '',
+                    data.tpayslips[i].fields.Period || '',
+                    data.tpayslips[i].fields.PaymentDate || '',
+                    data.tpayslips[i].fields.TotalPay || '',
+                    '<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>',
+                ];
+
+                splashArrayPaySlipList.push(dataListAllowance);
+            }
+
+            templateObject.datatablerecords.set(splashArrayPaySlipList);
+            $('.fullScreenSpin').css('display', 'none');
+            setTimeout(function () {
+                $('#tblPayslipHistory').DataTable({  
+                    data: splashArrayPaySlipList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                            className: "colPayslipID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colPayslipPeriod",
+                            "targets": [1]
+                        },
+                        {
+                            className: "colPayslipPaymentDate",
+                            "targets": [2]
+                        },
+                        {
+                            className: "colPayslipTotalPay",
+                            "targets": [3]
+                        },
+                        {
+                            className: "colPayslipDownload",
+                            "targets": [4]
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblPayslipHistory').DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblPayslipHistory_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+    
+                            }
+                        } else {
+    
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+    
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayPaySlipListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblPayslipHistory_filter input').val();
+    
+                                sideBarService.getPaySlip(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+    
+                                    for (let i = 0; i < data.tpayslips.length; i++) {
+
+                                        let dataListAllowance = [
+                                            data.tpayslips[i].fields.ID || '',
+                                            data.tpayslips[i].fields.Period || '',
+                                            data.tpayslips[i].fields.PaymentDate || '',
+                                            data.tpayslips[i].fields.TotalPay || '',
+                                            '<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>',
+                                        ];
+                        
+                                        splashArrayPaySlipList.push(dataListAllowance);
+                                    }
+
+                                    let uniqueChars = [...new Set(splashArrayPaySlipList)];
+                                    var datatable = $('#tblPayslipHistory').DataTable();
+                                    datatable.clear();
+                                    datatable.rows.add(uniqueChars);
+                                    datatable.draw(false);
+                                    setTimeout(function () {
+                                        $("#tblPayslipHistory").dataTable().fnPageChange('last');
+                                    }, 400);
+    
+                                    $('.fullScreenSpin').css('display', 'none');
+    
+    
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+    
+                            });
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
+                    }
+    
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+    
+                }).on('column-reorder', function () {
+    
+                }).on('length.dt', function (e, settings, len) {
+                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = settings._iDisplayLength;
+                    splashArrayPaySlipList = [];
+                    if (dataLenght == -1) {
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                    } else {
+                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        } else {
+                            sideBarService.getPaySlip(dataLenght, 0).then(function (dataNonBo) {
+    
+                                addVS1Data('TPaySlips', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                    // templateObject.resetData(dataNonBo);
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }
+                    }
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
+            }, 0);
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+        }
+    };
+    
+    
+    templateObject.getPaySlips();
+
+
+
     // Display pay template tab inputs
     templateObject.displayPayTempEarningLines = function() {
         let payLines = templateObject.payTemplateEarningLineInfo.get();
@@ -3279,50 +3542,24 @@ Template.employeescard.onRendered(function () {
 
     $(document).ready(function () {
         setTimeout(function () {
-            $('#leaveTypeSelect').editableSelect();
-            $('#leaveTypeSelect').editableSelect()
-                .on('click.editable-select', function (e, li) {
-                    let $search = $(this);
-                    let offset = $search.offset();
-                    let dropDownID = $search.attr('id')
-                    templateObject.currentDrpDownID.set(dropDownID);
-                    let currencyDataName = e.target.value || '';
-                    // console.log( currencyDataName )
-                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                        $('#leaveTypeSettingsModal').modal('show');
-                    } else {
-                        if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
-                        }
+        $('#edtExpenseAccount').editableSelect();
+        $('#edtExpenseAccount').editableSelect()
+            .on('click.editable-select', function (e, li) {
+                let $search = $(this);
+                let dropDownID = $search.attr('id')
+                templateObject.currentDrpDownID.set(dropDownID);
+                let offset = $search.offset();
+                let currencyDataName = e.target.value || '';
+                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                    $('#accountListModal').modal('show');
+                } else {
+                    if (currencyDataName.replace(/\s/g, '') != '') {
+                        // console.log('step 2')
                     }
-                });
-
-                $('#edtExpenseAccount').editableSelect();
-                $('#edtExpenseAccount').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        let $search = $(this);
-                        let dropDownID = $search.attr('id')
-                        templateObject.currentDrpDownID.set(dropDownID);
-                        let offset = $search.offset();
-                        let currencyDataName = e.target.value || '';
-                        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                            $('#accountListModal').modal('show');
-                        } else {
-                            if (currencyDataName.replace(/\s/g, '') != '') {
-                                // console.log('step 2')
-                            }
-                        }
-                    });
+                }
+            });
         }, 1000);
-        $(document).on("click", "#tblLeaves tbody tr", function (e) {
-            var table = $(this);
-            let name = table.find(".colLeaveName").text()||'';
-            let ID = table.find(".colLeaveID").text()||'';
-            let searchFilterID = templateObject.currentDrpDownID.get()
-            $('#' + searchFilterID).val(name);
-            $('#' + searchFilterID + 'ID').val(ID);
-            $('#leaveTypeSettingsModal').modal('toggle');
-        });
+        
         //On Click Earnings List
         $(document).on("click", "#tblEarnings tbody tr", function (e) {
             var table = $(this);
@@ -4557,38 +4794,47 @@ Template.employeescard.events({
     'click #savePayRollNotes': async function(){
         $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayNotes
+        );
+
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let Notes = $('#payRollNotes').val();
-        const paynotes = [];
-        let TPayNotes = await getVS1Data('TPayNotes');
-        if( TPayNotes.length ){
-            let TPayNotesData = JSON.parse(TPayNotes[0].data);
-            paynotes = PayNotes.fromList(
-                TPayNotesData.tpaynotes
-            );
+        let noteSetting = new PayNotes({
+            type: "TPayNotes",
+            fields: new PayNotesFields({
+                EmployeeID: parseInt(employeeID),
+                Notes: Notes,
+                CreatedAt: moment(),
+                UserID: Session.get("mySessionEmployeeLoggedID"),
+                UserName: Session.get('mySessionEmployee') || '',
+            }),
+        })
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(noteSetting),
+            });
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                await templateObject.saveNotesLocalDB();
+                await templateObject.getPayNotesTypes();
+                $('#payRollNotes').val('');
+                $('#newNoteModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+            }             
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
         }
-        paynotes.push(
-            new PayNotes({
-                type: "TPayNotes",
-                fields: new PayNotesFields({
-                    EmployeeID: employeeID,
-                    Notes: Notes,
-                    CreatedAt: moment(),
-                    UserID: Session.get("mySessionEmployeeLoggedID"),
-                    UserName: Session.get('mySessionEmployee') || '',
-                }),
-            })
-        );
-        // console.log('paynotes', paynotes)
-        let updatedNotes = {
-            tpaynotes: paynotes,
-        }
-        await addVS1Data('TPayNotes', JSON.stringify(updatedNotes));
-        templateObject.getPayNotesTypes();
-        $('#payRollNotes').val('');
-        $('#newNoteModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
+               
     },
 
     // Pay Template Tab

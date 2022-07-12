@@ -40,7 +40,9 @@ Template.deductionSettings.onRendered(function() {
 
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-            await addVS1Data('TDeduction', JSON.stringify(employeePayrolEndpointJsonResponse))
+            if( employeePayrolEndpointJsonResponse.tdeduction.length ){
+                await addVS1Data('TDeduction', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
             return employeePayrolEndpointJsonResponse
         }  
         return '';
@@ -345,7 +347,7 @@ Template.deductionSettings.events({
     },
     'click .btnAddordinaryTimeDeductions':function(event){
         $('#deductionRateForm')[0].reset();
-        $('#noneModal').modal('hide');
+        $('#noneModal').modal('show');
     },
     'click .btnSearchAlert':function(event){      
         let templateObject = Template.instance();

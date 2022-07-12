@@ -52,7 +52,9 @@ templateObject.saveDataLocalDB = async () => {
 
     if (employeePayrolEndpointResponse.ok == true) {
         employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-        await addVS1Data('TEarnings', JSON.stringify(employeePayrolEndpointJsonResponse))
+        if( employeePayrolEndpointJsonResponse.tearnings.length ){
+            await addVS1Data('TEarnings', JSON.stringify(employeePayrolEndpointJsonResponse))
+        }
         return employeePayrolEndpointJsonResponse
     }  
     return '';      
