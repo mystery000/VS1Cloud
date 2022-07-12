@@ -10,7 +10,7 @@ Template.subTaxesSettings.onCreated(function () {
 });
 
 Template.subTaxesSettings.onRendered(function () {
-  // $('.fullScreenSpin').css('display', 'inline-block');
+  $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
   const dataTableList = [];
@@ -19,7 +19,8 @@ Template.subTaxesSettings.onRendered(function () {
   templateObject.getSubTaxes = function () {
     getVS1Data('TSubTaxVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
-        taxRateService.getSubTaxVS1().then(function (data) {
+        // taxRateService.getSubTaxVS1().then(function (data) {
+          let data = taxRateService.getSubTaxVS1();
           for (let i = 0; i < data.tsubtaxvs1.length; i++) {
             var dataList = {
               id: data.tsubtaxvs1[i].Id || '',
@@ -67,9 +68,6 @@ Template.subTaxesSettings.onRendered(function () {
               }
             );
 
-            setTimeout(function () {
-              MakeNegative();
-            }, 100);
           }
 
           $(".fullScreenSpin").css("display", "none");
@@ -88,7 +86,7 @@ Template.subTaxesSettings.onRendered(function () {
                     text: '',
                     download: 'open',
                     className: "btntabletocsv hiddenColumn",
-                    filename: "taxratelist_" + moment().format(),
+                    filename: "subtaxlist_" + moment().format(),
                     orientation: 'portrait',
                     exportOptions: {
                       columns: ":visible",
@@ -99,8 +97,8 @@ Template.subTaxesSettings.onRendered(function () {
                     download: "open",
                     className: "btntabletopdf hiddenColumn",
                     text: "",
-                    title: "Tax Rate List",
-                    filename: "taxratelist_" + moment().format(),
+                    title: "Sub Tax List",
+                    filename: "subtaxlist_" + moment().format(),
                     exportOptions: {
                       columns: ":visible",
                     },
@@ -123,7 +121,7 @@ Template.subTaxesSettings.onRendered(function () {
                     className: "btntabletopdf hiddenColumn",
                     text: "",
                     title: "Tax Rate List",
-                    filename: "taxratelist_" + moment().format(),
+                    filename: "subtaxlist_" + moment().format(),
                     exportOptions: {
                       columns: ":visible",
                     },
@@ -148,23 +146,16 @@ Template.subTaxesSettings.onRendered(function () {
                   $("#subTaxList").DataTable().ajax.reload();
                 },
                 fnDrawCallback: function (oSettings) {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
+                  
                 },
               })
               .on("page", function () {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
                 let draftRecord = templateObject.datatablerecords.get();
                 templateObject.datatablerecords.set(draftRecord);
               })
               .on("column-reorder", function () { })
               .on("length.dt", function (e, settings, len) {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
+                
               });
 
             $(".fullScreenSpin").css("display", "none");
@@ -198,9 +189,9 @@ Template.subTaxesSettings.onRendered(function () {
           templateObject.tableheaderrecords.set(tableHeaderList);
           $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-        }).catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
-        });
+        // }).catch(function (err) {
+        //   $(".fullScreenSpin").css("display", "none");
+        // });
       } else {
         let data = JSON.parse(dataObject[0].data);
         let useData = data.ttaxcodevs1;
@@ -248,10 +239,6 @@ Template.subTaxesSettings.onRendered(function () {
             }
           });
 
-
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
         }
 
         $('.fullScreenSpin').css('display', 'none');
@@ -268,7 +255,7 @@ Template.subTaxesSettings.onRendered(function () {
                 text: '',
                 download: 'open',
                 className: "btntabletocsv hiddenColumn",
-                filename: "taxratelist_" + moment().format(),
+                filename: "subtaxlist_" + moment().format(),
                 orientation: 'portrait',
                 exportOptions: {
                   columns: ':visible'
@@ -279,7 +266,7 @@ Template.subTaxesSettings.onRendered(function () {
                 className: "btntabletopdf hiddenColumn",
                 text: '',
                 title: 'Tax Rate List',
-                filename: "taxratelist_" + moment().format(),
+                filename: "subtaxlist_" + moment().format(),
                 exportOptions: {
                   columns: ':visible'
                 }
@@ -303,23 +290,16 @@ Template.subTaxesSettings.onRendered(function () {
               $('#subTaxList').DataTable().ajax.reload();
             },
             "fnDrawCallback": function (oSettings) {
-              setTimeout(function () {
-                MakeNegative();
-              }, 100);
+              
             },
 
           }).on('page', function () {
-            setTimeout(function () {
-              MakeNegative();
-            }, 100);
             let draftRecord = templateObject.datatablerecords.get();
             templateObject.datatablerecords.set(draftRecord);
           }).on('column-reorder', function () {
 
           }).on('length.dt', function (e, settings, len) {
-            setTimeout(function () {
-              MakeNegative();
-            }, 100);
+            
           });
 
           // $('#subTaxList').DataTable().column( 0 ).visible( true );
@@ -356,13 +336,14 @@ Template.subTaxesSettings.onRendered(function () {
 
       }
     }).catch(function (err) {
-      taxRateService.getSubTaxVS1().then(function (data) {
+      // taxRateService.getSubTaxVS1().then(function (data) {
+        let data = taxRateService.getSubTaxVS1();
         for (let i = 0; i < data.tsubtaxvs1.length; i++) {
           var dataList = {
             id: data.tsubtaxvs1[i].Id || '',
             codename: data.tsubtaxvs1[i].CodeName || '-',
             description: data.tsubtaxvs1[i].Description || '-',
-            region: data.tsubtaxvs1[i].Category || '-'
+            category: data.tsubtaxvs1[i].Category || '-'
           };
 
           dataTableList.push(dataList);
@@ -400,11 +381,6 @@ Template.subTaxesSettings.onRendered(function () {
 
             }
           });
-
-
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
         }
 
         $('.fullScreenSpin').css('display', 'none');
@@ -421,7 +397,7 @@ Template.subTaxesSettings.onRendered(function () {
                 text: '',
                 download: 'open',
                 className: "btntabletocsv hiddenColumn",
-                filename: "taxratelist_" + moment().format(),
+                filename: "subtaxlist_" + moment().format(),
                 orientation: 'portrait',
                 exportOptions: {
                   columns: ':visible'
@@ -432,7 +408,7 @@ Template.subTaxesSettings.onRendered(function () {
                 className: "btntabletopdf hiddenColumn",
                 text: '',
                 title: 'Tax Rate List',
-                filename: "taxratelist_" + moment().format(),
+                filename: "subtaxlist_" + moment().format(),
                 exportOptions: {
                   columns: ':visible'
                 }
@@ -456,23 +432,16 @@ Template.subTaxesSettings.onRendered(function () {
               $('#subTaxList').DataTable().ajax.reload();
             },
             "fnDrawCallback": function (oSettings) {
-              setTimeout(function () {
-                MakeNegative();
-              }, 100);
+              
             },
 
           }).on('page', function () {
-            setTimeout(function () {
-              MakeNegative();
-            }, 100);
             let draftRecord = templateObject.datatablerecords.get();
             templateObject.datatablerecords.set(draftRecord);
           }).on('column-reorder', function () {
 
           }).on('length.dt', function (e, settings, len) {
-            setTimeout(function () {
-              MakeNegative();
-            }, 100);
+            
           });
 
           // $('#subTaxList').DataTable().column( 0 ).visible( true );
@@ -507,12 +476,13 @@ Template.subTaxesSettings.onRendered(function () {
         templateObject.tableheaderrecords.set(tableHeaderList);
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-      }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
-      });
+      // }).catch(function (err) {
+      //   $('.fullScreenSpin').css('display', 'none');
+      // });
     });
-
   }
+
+  templateObject.getSubTaxes();
 });
 
 

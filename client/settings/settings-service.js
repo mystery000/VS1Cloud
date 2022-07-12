@@ -110,7 +110,47 @@ export class TaxRateService extends BaseService {
             PropertyList: "ID,CodeName,Description,Category,Active",
             select: "[Active]=true",
         };
-        return this.getList(this.ERPObjects.TSubTaxVS1, options);
+        // return this.getList(this.ERPObjects.TSubTaxVS1, options);
+        let demoData = {
+            tsubtaxvs1: [
+                {
+                    ID: 1,
+                    CodeName: "STRT",
+                    Description: "State Rate",
+                    Category: "State",
+                    Active: true
+                },
+                {
+                    ID: 2,
+                    CodeName: "CTRT",
+                    Description: "City Rate",
+                    Category: "City",
+                    Active: true
+                },
+                {
+                    ID: 3,
+                    CodeName: "SPRT",
+                    Description: "Special Rate",
+                    Category: "Other",
+                    Active: true
+                },
+                {
+                    ID: 4,
+                    CodeName: "CONRT",
+                    Description: "Country Rate",
+                    Category: "Country",
+                    Active: true
+                },
+                {
+                    ID: 5,
+                    CodeName: "EXT",
+                    Description: "Exercise Tax",
+                    Category: "Other",
+                    Active: true
+                },
+            ]
+        };
+        return demoData;
     }
 
     checkTermByName(termName) {
