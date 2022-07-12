@@ -5,7 +5,8 @@ import { OrganisationService } from "../../js/organisation-service";
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
-Template.taxRatesSettings.onCreated(function(){
+
+Template.taxRatesSettings.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -646,11 +647,12 @@ Template.taxRatesSettings.onRendered(function () {
         $('#edtTaxRate').val(taxRate);
         $('#edtTaxDesc').val(taxDesc);
 
-
         //});
 
-        $(this).closest('tr').attr('data-target', '#myModal');
-        $(this).closest('tr').attr('data-toggle', 'modal');
+        // $(this).closest('tr').attr('data-target', '#addNewTaxRate');
+        // $(this).closest('tr').attr('data-toggle', 'modal');
+
+        $("#addNewTaxRate").modal("toggle");
 
       }
 
@@ -886,12 +888,6 @@ Template.taxRatesSettings.events({
       .catch(function (err) {
         location.reload(true);
       });
-  },
-  'click .btnAddNewTaxRate': function () {
-    $('#newTaxRate').css('display', 'block');
-  },
-  'click .btnCloseAddNewTax': function () {
-    $('#newTaxRate').css('display', 'none');
   },
   "click .btnSaveDefaultTax": function () {
     let purchasetaxcode = $("input[name=optradioP]:checked").val() || "";
@@ -1170,7 +1166,6 @@ Template.taxRatesSettings.events({
         });
       $('.fullScreenSpin').css('display', 'none');
 
-
     }
   },
   'click .btnAddTaxRate': function () {
@@ -1240,7 +1235,6 @@ Template.taxRatesSettings.events({
     const targetID = $(e.target).closest("tr").attr("id"); // table row ID
     $("#selectDeleteLineID").val(targetID);
     $("#deleteLineModal").modal("toggle");
-
   },
   'click .btnBack': function (event) {
     event.preventDefault();
@@ -1316,10 +1310,10 @@ export const TaxRatesEditListener = (e) => {
 
       //});
 
-      // tr.attr("data-target", "#addTaxRateModal");
+      // tr.attr("data-target", "#addNewTaxRate");
       // tr.attr("data-toggle", "modal");
 
-      $("#addTaxRateModal").modal("toggle");
+      $("#addNewTaxRate").modal("toggle");
     }
   }
 };

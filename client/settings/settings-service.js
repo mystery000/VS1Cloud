@@ -114,35 +114,35 @@ export class TaxRateService extends BaseService {
         let demoData = {
             tsubtaxvs1: [
                 {
-                    ID: 1,
+                    Id: 1,
                     CodeName: "STRT",
                     Description: "State Rate",
                     Category: "State",
                     Active: true
                 },
                 {
-                    ID: 2,
+                    Id: 2,
                     CodeName: "CTRT",
                     Description: "City Rate",
                     Category: "City",
                     Active: true
                 },
                 {
-                    ID: 3,
+                    Id: 3,
                     CodeName: "SPRT",
                     Description: "Special Rate",
                     Category: "Other",
                     Active: true
                 },
                 {
-                    ID: 4,
+                    Id: 4,
                     CodeName: "CONRT",
                     Description: "Country Rate",
                     Category: "Country",
                     Active: true
                 },
                 {
-                    ID: 5,
+                    Id: 5,
                     CodeName: "EXT",
                     Description: "Exercise Tax",
                     Category: "Other",
@@ -151,6 +151,13 @@ export class TaxRateService extends BaseService {
             ]
         };
         return demoData;
+    }
+
+    checkSubTaxByName(codeName) {
+        let options = {
+            select: "[CodeName]='" + codeName + "'"
+        };
+        return this.getList(this.ERPObjects.TSubTaxCode, options);
     }
 
     checkTermByName(termName) {
