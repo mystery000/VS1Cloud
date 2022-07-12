@@ -59,6 +59,8 @@ Template.new_salesorder.onCreated(() => {
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
     templateObject.custfields = new ReactiveVar([]);
+    templateObject.displayfields = new ReactiveVar([]);
+    
     templateObject.address = new ReactiveVar();
     templateObject.abn = new ReactiveVar();
     templateObject.referenceNumber = new ReactiveVar();
@@ -6750,7 +6752,7 @@ Template.new_salesorder.onRendered(function() {
     };
     tempObj.getAllTaxCodes();
 
-    // customf field displaysettings
+    // custom field displaysettings
     tempObj.getAllCustomFieldDisplaySettings = function () {
       let custFields = [];
       let customData = {};
@@ -6794,6 +6796,8 @@ Template.new_salesorder.onRendered(function() {
             }
           }
           tempObj.custfields.set(custFields);
+          tempObj.displayfields.set(custFields);
+          
         })
     }
 
@@ -6835,9 +6839,17 @@ Template.new_salesorder.helpers({
     vs1companyBankRoutingNo: () => {
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
     },
+    // this is not using?
     custfields: () => {
+      console.log(Template.instance().custfields.get())
             return Template.instance().custfields.get();
     },
+
+    // custom field displaysettings
+    displayfields: () => {
+            return Template.instance().displayfields.get();
+    }, 
+
     custfield1: () => {
         return localStorage.getItem('custfield1salesorder') || 'Custom Field 1';
     },
@@ -9545,11 +9557,15 @@ Template.new_salesorder.events({
         { label: 'Amount', class: 'colAmount', active: true },
         { label: 'Tax Amount', class: 'colTaxAmount', active: true }
       ];
+      var datable = $('#tblSalesOrderLine').DataTable();
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
+
+        var title = datable.column( index + 1 ).header();
+        $(title).html(reset_data[index].label);
 
         if (reset_data[index].active) {
           $('.' + reset_data[index].class).css('display', 'table-cell');
