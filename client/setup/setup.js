@@ -7096,7 +7096,7 @@ Template.setup.events({
   },
 
   // TODO: Step 6
-  "click .btnAddNewAccount": function (event) {
+  "click .btnAddNewAccounts": function (event) {
     $("#add-account-title").text("Add New Account");
     $("#edtAccountID").val("");
     $("#sltAccountType").val("");
