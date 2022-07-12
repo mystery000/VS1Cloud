@@ -2110,11 +2110,13 @@ Template.salesorderslist.onRendered(function() {
     templateObject.getAllSalesOrderData();
     }
 
+    // custom field displaysettings
     templateObject.getCustomFieldData = function() {
 
       let custFields = [];
       let dispFields = [];
       let customData = {};
+      let customFieldCount = 11;
       let listType = "ltExpenseLines";        // tempcode. every settings need its own type
 
       let reset_data = [
@@ -2128,10 +2130,7 @@ Template.salesorderslist.onRendered(function() {
         { label: 'Status', class: 'colStatus', active: true },
         { label: 'Employee', class: 'colEmployee', active: false },
         { label: 'Converted?', class: 'colConverted', active: true },
-        { label: 'Comments', class: 'colComments', active: true },
-        // { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },
-        // { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
-        // { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
+        { label: 'Comments', class: 'colComments', active: true }, 
       ]; 
 
       sideBarService
@@ -2181,8 +2180,8 @@ Template.salesorderslist.onRendered(function() {
           }
         }
 
-        if (dispFields.length < 11) {
-          let remainder = 11 - dispFields.length;
+        if (dispFields.length < customFieldCount) {
+          let remainder = customFieldCount - dispFields.length;
           let getRemCustomFields = parseInt(dispFields.length); 
           for (let r = 0; r < remainder; r++) {
             customData = {

@@ -58,7 +58,6 @@ Template.new_salesorder.onCreated(() => {
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
-    templateObject.custfields = new ReactiveVar([]);
     templateObject.displayfields = new ReactiveVar([]);
     
     templateObject.address = new ReactiveVar();
@@ -6795,13 +6794,12 @@ Template.new_salesorder.onRendered(function() {
               custFields.push(customData);
             }
           }
-          tempObj.custfields.set(custFields);
           tempObj.displayfields.set(custFields);
           
         })
     }
 
-    tempObj.getAllCustomFieldDisplaySettings()
+    tempObj.getAllCustomFieldDisplaySettings();
     //$('#tblInventory').DataTable().column( 6 ).visible( false );
 });
 Template.new_salesorder.helpers({
@@ -6838,12 +6836,7 @@ Template.new_salesorder.helpers({
     },
     vs1companyBankRoutingNo: () => {
         return localStorage.getItem('vs1companyBankRoutingNo') || '';
-    },
-    // this is not using?
-    custfields: () => {
-      console.log(Template.instance().custfields.get())
-            return Template.instance().custfields.get();
-    },
+    }, 
 
     // custom field displaysettings
     displayfields: () => {
@@ -7053,46 +7046,7 @@ Template.new_salesorder.events({
     'click #edtSaleCustField3': function(event) {
         clickedInput = "three";
         $('#clickedControl').val(clickedInput);
-    },
-    // 'click .btnAddNewCustField': function(event) {
-    //   let templateObject = Template.instance();
-    //     let isDropDown = true;
-    //     let statusvalID = $("#selectCustFieldID").val()||'';
-    //     $("#statusId1").val(statusvalID);
-    //     $('#isdropDown').val(isDropDown);
-    //     $('#newCustomFieldPop').modal('toggle');
-    //     $('#customFieldList').modal('toggle');
-    //     let custfieldarr = templateObject.custfields.get();
-    //     if(custfieldarr[0].id == statusvalID){
-    //       if(Array.isArray(custfieldarr[0].dropdown)) {
-    //           // $('.btnAddNewTextBox').nextAll().remove();
-    //           //$('.customText').val(custfieldarr[0].dropdown[0].fields.Text);
-    //           for(let x = 0; x < custfieldarr[0].dropdown.length; x++) {
-    //               $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
-    //                                   '<div class="col-10">'+
-    //                                       '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown[x].fields.ID+'" value="'+ custfieldarr[0].dropdown[x].fields.Text+'" autocomplete="off">'+
-    //                                   '</div>'+
-    //                                   '<div class="col-2">'+
-    //                                       '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
-    //                                   '</div>'+
-    //                               '</div>');
-    //           }
-
-    //       } else if(Object.keys(custfieldarr[0].dropdown).length > 0) {
-    //           // $('.btnAddNewTextBox').nextAll().remove();
-    //            $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
-    //                                   '<div class="col-10">'+
-    //                                       '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown.fields.ID+'" value="'+ custfieldarr[0].dropdown.fields.Text+'" autocomplete="off">'+
-    //                                   '</div>'+
-    //                                   '<div class="col-2">'+
-    //                                       '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
-    //                                   '</div>'+
-    //                               '</div>');
-
-    //       }
-    //     }
-
-    // },
+    }, 
     'click #edtCustomerName': function(event) {
         $('#edtCustomerName').select();
         $('#edtCustomerName').editableSelect();
@@ -9564,7 +9518,7 @@ Template.new_salesorder.events({
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
-        var title = datable.column( index + 1 ).header();
+        var title = datable.column( index ).header();
         $(title).html(reset_data[index].label);
 
         if (reset_data[index].active) {
