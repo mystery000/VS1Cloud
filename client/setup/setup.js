@@ -40,10 +40,66 @@ function setCurrentStep(stepId) {
   return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
 }
 
+function getConfirmedSteps() {
+  return localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || JSON.stringify([]);;
+
+}
+
+
+function setConfirmedSteps(steps = []) {
+  return localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", JSON.stringify(steps));
+}
+
+function addConfirmedStep(step) {
+  let steps = getConfirmedSteps();
+  console.log(steps);
+  steps = JSON.parse(steps);
+  console.log(steps);
+  steps.push(step);
+  setConfirmedSteps(steps);
+}
+
+/**
+ * 
+ * @param {integer} stepId 
+ * @returns {boolean}
+ */
+function isConfirmedStep(stepId) {
+  let steps = getConfirmedSteps();
+  return steps.includes(stepId);
+}
+
+function getSkippedSteps() {
+  return  localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify([]);
+}
+
+function addSkippedStep(step) {
+  let steps = getSkippedSteps();
+  steps = JSON.parse(steps);
+  console.log(steps);
+  steps.push(step);
+  setSkippedSteps(steps);
+}
+
+function setSkippedSteps(steps = []) {
+  return localStorage.setItem("VS1Cloud_SETUP_SKIPPED_STEP", JSON.stringify(steps));
+}
+
+/**
+ * 
+ * @param {integer} stepId 
+ * @returns {boolean}
+ */
+function isStepSkipped(stepId) {
+  let steps = getSkippedSteps();
+  return steps.includes(stepId);
+}
+
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.stepNumber = new ReactiveVar(1);
   templateObject.steps = new ReactiveVar([]);
+  templateObject.skippedSteps = new ReactiveVar([]);
 
   // Step 1 Variables
   templateObject.iscompanyemail = new ReactiveVar();
@@ -178,8 +234,8 @@ Template.setup.onRendered(function () {
         index: i,
         active: currentStep == i ? true : false,
         clickable: i < currentStep ? !true : !false,
-        isConfirmed: i > currentStep ? !true : !false,
-        skippedSteps: [],
+        isConfirmed: isConfirmedStep(i),
+        skippedSteps: isStepSkipped(i),
       });
     }
     templateObject.steps.set(_steps);
@@ -1262,18 +1318,20 @@ Template.setup.onRendered(function () {
             showCancelButton: false,
             confirmButtonText: "OK",
           }).then((result) => {
-            $(".setup-step").css("display", "none");
-            $(`.setup-stepper li:nth-child(4)`).addClass("current");
-            $(`.setup-stepper li:nth-child(3)`).removeClass("current");
-            $(`.setup-stepper li:nth-child(3)`).addClass("completed");
-            $(".setup-step-4").css("display", "block");
-            let confirmedSteps =
-              localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-            localStorage.setItem(
-              "VS1Cloud_SETUP_CONFIRMED_STEPS",
-              confirmedSteps + "3,"
-            );
-            localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
+            // $(".setup-step").css("display", "none");
+            // $(`.setup-stepper li:nth-child(4)`).addClass("current");
+            // $(`.setup-stepper li:nth-child(3)`).removeClass("current");
+            // $(`.setup-stepper li:nth-child(3)`).addClass("completed");
+            // $(".setup-step-4").css("display", "block");
+            // let confirmedSteps =
+            //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+            // localStorage.setItem(
+            //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+            //   confirmedSteps + "3,"
+            // );
+            // localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
+
+        
           });
         })
         .catch(function (err) {
@@ -1285,18 +1343,18 @@ Template.setup.onRendered(function () {
             showCancelButton: false,
             confirmButtonText: "OK",
           }).then((result) => {
-            $(".setup-step").css("display", "none");
-            $(`.setup-stepper li:nth-child(4)`).addClass("current");
-            $(`.setup-stepper li:nth-child(3)`).removeClass("current");
-            $(`.setup-stepper li:nth-child(3)`).addClass("completed");
-            $(".setup-step-4").css("display", "block");
-            let confirmedSteps =
-              localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-            localStorage.setItem(
-              "VS1Cloud_SETUP_CONFIRMED_STEPS",
-              confirmedSteps + "3,"
-            );
-            localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
+            // $(".setup-step").css("display", "none");
+            // $(`.setup-stepper li:nth-child(4)`).addClass("current");
+            // $(`.setup-stepper li:nth-child(3)`).removeClass("current");
+            // $(`.setup-stepper li:nth-child(3)`).addClass("completed");
+            // $(".setup-step-4").css("display", "block");
+            // let confirmedSteps =
+            //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+            // localStorage.setItem(
+            //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+            //   confirmedSteps + "3,"
+            // );
+            // localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
           });
         });
     });
@@ -3988,6 +4046,7 @@ Template.setup.onRendered(function () {
 
   // Step 9 Render functionalities
 
+  let  splashArrayProductList = new Array();
   templateObject.loadInventory = async () => {
     let _inventoryList = [];
     let dataObject = await getVS1Data("TProductVS1");
@@ -3998,7 +4057,7 @@ Template.setup.onRendered(function () {
         : JSON.parse(dataObject[0].data);
 
     if (data.tproductvs1) {
-      addVS1Data("TProductVS1", JSON.stringify(data));
+      await addVS1Data("TProductVS1", JSON.stringify(data));
 
       //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
       let lineItems = [];
@@ -4018,13 +4077,14 @@ Template.setup.onRendered(function () {
         _inventoryList.push({ ...product.fields });
       });
 
+   
       templateObject.inventoryList.set(_inventoryList);
 
       if (templateObject.inventoryList.get()) {
         setTimeout(function () {
           $("#tblInventory")
             .dataTable({
-              // data: _inventoryList,
+              // data: splashArrayProductList,
               sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
               columnDefs: [
@@ -4321,14 +4381,18 @@ function isStepActive(stepId) {
 }
 
 Template.setup.events({
-  "click #start-wizard": function () {
+  "click #start-wizard":  (e) =>  {
+    let templateObject = Template.instance();
     $(`[data-step-id=1]`).parents("li").addClass("current");
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
-    localStorage.setItem("VS1Cloud_SETUP_STEP", 1);
+    setCurrentStep(1);
+    templateObject.loadSteps();
   },
   "click .confirmBtn": function (event) {
+    let templateObject = Template.instance();
     let stepId = $(event.target).attr("data-step-id");
+    addConfirmedStep(stepId);
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
@@ -4340,18 +4404,15 @@ Template.setup.events({
     } else {
       $(".setup-complete").css("display", "block");
     }
-    let confirmedSteps =
-      localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-    localStorage.setItem(
-      "VS1Cloud_SETUP_CONFIRMED_STEPS",
-      confirmedSteps + (stepId - 1) + ","
-    );
-    localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+
+    setCurrentStep(stepId);
+    templateObject.loadSteps();
   },
   "click .btnBack": function (event) {
     let templateObject = Template.instance();
-    let stepId = $(event.target).attr("data-step-id");
-    stepId = parseInt(stepId) + 1;
+    let stepId = parseInt($(event.target).attr("data-step-id"));
+    addSkippedStep(stepId);
+    stepId = stepId +1;
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
@@ -4361,14 +4422,20 @@ Template.setup.events({
     } else {
       $(".setup-complete").css("display", "flex");
     }
-    let _steps = templateObject.steps.get();
-    _steps.skippedSteps.push(stepId);
-    localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+    // let _steps = templateObject.steps.get();
+    // _steps.skippedSteps.push(stepId);
+
+    let skippedSteps = templateObject.skippedSteps.get();
+    skippedSteps.push(stepId);
+    templateObject.skippedSteps.set(skippedSteps);
+    
+    setCurrentStep(stepId);
+    templateObject.loadSteps();
   },
   "click .gotToStepID": function (event) {
     let templateObj = Template.instance();
-    let stepId = $(event.target).attr("data-step-id");
-    stepId = parseInt(stepId);
+    const stepId = parseInt($(event.target).attr("data-step-id"));
+
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li`).removeClass("current");
     // $(`.setup-stepper li`).removeClass("clickDisabled");
@@ -4508,18 +4575,18 @@ Template.setup.events({
           showCancelButton: false,
           confirmButtonText: "OK",
         }).then((result) => {
-          $(".setup-step").css("display", "none");
-          $(`.setup-stepper li:nth-child(2)`).addClass("current");
-          $(`.setup-stepper li:nth-child(1)`).removeClass("current");
-          $(`.setup-stepper li:nth-child(1)`).addClass("completed");
-          $(".setup-step-2").css("display", "block");
-          let confirmedSteps =
-            localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-          localStorage.setItem(
-            "VS1Cloud_SETUP_CONFIRMED_STEPS",
-            confirmedSteps + "1,"
-          );
-          localStorage.setItem("VS1Cloud_SETUP_STEP", 2);
+          // $(".setup-step").css("display", "none");
+          // $(`.setup-stepper li:nth-child(2)`).addClass("current");
+          // $(`.setup-stepper li:nth-child(1)`).removeClass("current");
+          // $(`.setup-stepper li:nth-child(1)`).addClass("completed");
+          // $(".setup-step-2").css("display", "block");
+          // let confirmedSteps =
+          //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+          // localStorage.setItem(
+          //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+          //   confirmedSteps + "1,"
+          // );
+          // localStorage.setItem("VS1Cloud_SETUP_STEP", 2);
         });
       })
       .catch(function (err) {
@@ -4896,19 +4963,19 @@ Template.setup.events({
                   showCancelButton: false,
                   confirmButtonText: "OK",
                 }).then((result) => {
-                  $(".setup-step").css("display", "none");
-                  $(`.setup-stepper li:nth-child(3)`).addClass("current");
-                  $(`.setup-stepper li:nth-child(2)`).removeClass("current");
-                  $(`.setup-stepper li:nth-child(2)`).addClass("completed");
-                  $(".setup-step-3").css("display", "block");
-                  let confirmedSteps =
-                    localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") ||
-                    "";
-                  localStorage.setItem(
-                    "VS1Cloud_SETUP_CONFIRMED_STEPS",
-                    confirmedSteps + "2,"
-                  );
-                  localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
+                  // $(".setup-step").css("display", "none");
+                  // $(`.setup-stepper li:nth-child(3)`).addClass("current");
+                  // $(`.setup-stepper li:nth-child(2)`).removeClass("current");
+                  // $(`.setup-stepper li:nth-child(2)`).addClass("completed");
+                  // $(".setup-step-3").css("display", "block");
+                  // let confirmedSteps =
+                  //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") ||
+                  //   "";
+                  // localStorage.setItem(
+                  //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+                  //   confirmedSteps + "2,"
+                  // );
+                  // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                 });
               })
               .catch(function (err) {
@@ -4920,19 +4987,19 @@ Template.setup.events({
                   showCancelButton: false,
                   confirmButtonText: "OK",
                 }).then((result) => {
-                  $(".setup-step").css("display", "none");
-                  $(`.setup-stepper li:nth-child(3)`).addClass("current");
-                  $(`.setup-stepper li:nth-child(2)`).removeClass("current");
-                  $(`.setup-stepper li:nth-child(2)`).addClass("completed");
-                  $(".setup-step-3").css("display", "block");
-                  let confirmedSteps =
-                    localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") ||
-                    "";
-                  localStorage.setItem(
-                    "VS1Cloud_SETUP_CONFIRMED_STEPS",
-                    confirmedSteps + "2,"
-                  );
-                  localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
+                  // $(".setup-step").css("display", "none");
+                  // $(`.setup-stepper li:nth-child(3)`).addClass("current");
+                  // $(`.setup-stepper li:nth-child(2)`).removeClass("current");
+                  // $(`.setup-stepper li:nth-child(2)`).addClass("completed");
+                  // $(".setup-step-3").css("display", "block");
+                  // let confirmedSteps =
+                  //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") ||
+                  //   "";
+                  // localStorage.setItem(
+                  //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+                  //   confirmedSteps + "2,"
+                  // );
+                  // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                 });
               });
           } else {
@@ -4944,18 +5011,18 @@ Template.setup.events({
               showCancelButton: false,
               confirmButtonText: "OK",
             }).then((result) => {
-              $(".setup-step").css("display", "none");
-              $(`.setup-stepper li:nth-child(3)`).addClass("current");
-              $(`.setup-stepper li:nth-child(2)`).removeClass("current");
-              $(`.setup-stepper li:nth-child(2)`).addClass("completed");
-              $(".setup-step-3").css("display", "block");
-              let confirmedSteps =
-                localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-              localStorage.setItem(
-                "VS1Cloud_SETUP_CONFIRMED_STEPS",
-                confirmedSteps + "2,"
-              );
-              localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
+              // $(".setup-step").css("display", "none");
+              // $(`.setup-stepper li:nth-child(3)`).addClass("current");
+              // $(`.setup-stepper li:nth-child(2)`).removeClass("current");
+              // $(`.setup-stepper li:nth-child(2)`).addClass("completed");
+              // $(".setup-step-3").css("display", "block");
+              // let confirmedSteps =
+              //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+              // localStorage.setItem(
+              //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+              //   confirmedSteps + "2,"
+              // );
+              // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
             });
           }
         }
@@ -4969,18 +5036,18 @@ Template.setup.events({
           showCancelButton: false,
           confirmButtonText: "OK",
         }).then((result) => {
-          $(".setup-step").css("display", "none");
-          $(`.setup-stepper li:nth-child(3)`).addClass("current");
-          $(`.setup-stepper li:nth-child(2)`).removeClass("current");
-          $(`.setup-stepper li:nth-child(2)`).addClass("completed");
-          $(".setup-step-3").css("display", "block");
-          let confirmedSteps =
-            localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-          localStorage.setItem(
-            "VS1Cloud_SETUP_CONFIRMED_STEPS",
-            confirmedSteps + "2,"
-          );
-          localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
+          // $(".setup-step").css("display", "none");
+          // $(`.setup-stepper li:nth-child(3)`).addClass("current");
+          // $(`.setup-stepper li:nth-child(2)`).removeClass("current");
+          // $(`.setup-stepper li:nth-child(2)`).addClass("completed");
+          // $(".setup-step-3").css("display", "block");
+          // let confirmedSteps =
+          //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+          // localStorage.setItem(
+          //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+          //   confirmedSteps + "2,"
+          // );
+          // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
         });
       });
   },
@@ -8850,7 +8917,7 @@ Template.setup.events({
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
   },
   "click #tblSupplierlist tbody tr": (e) => {
-    
+
   },
   // TODO: Step 9
 
