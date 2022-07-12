@@ -3638,26 +3638,26 @@ Template.setup.onRendered(function () {
     // });
     // templateObject.customerListHeaders.set(_customerListHeaders);
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
-    $("#tblCustomerlist tbody").on("click", "tr", function () {
-      var listData = $(this).closest("tr").attr("id");
-      var transactiontype = $(this).closest("tr").attr("isjob");
-      var url = FlowRouter.current().path;
-      if (listData) {
-        if (url.indexOf("?type") > 0) {
-          if (transactiontype != "") {
-            FlowRouter.go("/customerscard?jobid=" + listData + "&transTab=job");
-          } else {
-            FlowRouter.go("/customerscard?id=" + listData + "&transTab=job");
-          }
-        } else {
-          if (transactiontype != "") {
-            FlowRouter.go("/customerscard?jobid=" + listData);
-          } else {
-            FlowRouter.go("/customerscard?id=" + listData);
-          }
-        }
-      }
-    });
+    // $("#tblCustomerlist tbody").on("click", "tr", function () {
+    //   var listData = $(this).closest("tr").attr("id");
+    //   var transactiontype = $(this).closest("tr").attr("isjob");
+    //   var url = FlowRouter.current().path;
+    //   if (listData) {
+    //     if (url.indexOf("?type") > 0) {
+    //       if (transactiontype != "") {
+    //         FlowRouter.go("/customerscard?jobid=" + listData + "&transTab=job");
+    //       } else {
+    //         FlowRouter.go("/customerscard?id=" + listData + "&transTab=job");
+    //       }
+    //     } else {
+    //       if (transactiontype != "") {
+    //         FlowRouter.go("/customerscard?jobid=" + listData);
+    //       } else {
+    //         FlowRouter.go("/customerscard?id=" + listData);
+    //       }
+    //     }
+    //   }
+    // });
   };
 
   templateObject.loadDefaultCustomer();
@@ -3976,12 +3976,12 @@ Template.setup.onRendered(function () {
     // });
     // templateObject.supplierListHeaders.set(_supplierListHeaers);
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
-    $("#tblSupplierlist tbody").on("click", "tr", function () {
-      var listData = $(this).closest("tr").attr("id");
-      if (listData) {
-        FlowRouter.go("/supplierscard?id=" + listData);
-      }
-    });
+    // $("#tblSupplierlist tbody").on("click", "tr", function () {
+    //   var listData = $(this).closest("tr").attr("id");
+    //   if (listData) {
+    //     FlowRouter.go("/supplierscard?id=" + listData);
+    //   }
+    // });
   };
 
   templateObject.loadSuppliers();
@@ -8822,9 +8822,35 @@ Template.setup.events({
     const target = $(e.currentTarget).attr("data-toggle");
     $(target).modal("toggle");
   },
+  "click #tblCustomerlist tbody tr": (e) => {
+    const tr = $(e.currentTarget);
+    var listData = tr.attr("id");
+    var transactiontype = tr.attr("isjob");
+    var url = FlowRouter.current().path;
+    console.log(listData, tr);
+    // if (listData) {
+    //   if (url.indexOf("?type") > 0) {
+    //     if (transactiontype != "") {
+    //       FlowRouter.go("/customerscard?jobid=" + listData + "&transTab=job");
+    //     } else {
+    //       FlowRouter.go("/customerscard?id=" + listData + "&transTab=job");
+    //     }
+    //   } else {
+    //     if (transactiontype != "") {
+    //       FlowRouter.go("/customerscard?jobid=" + listData);
+    //     } else {
+    //       FlowRouter.go("/customerscard?id=" + listData);
+    //     }
+    //   }
+    // }
+  },
+
   // TODO: Step 8
   "click #btnNewSupplier": (e) => {
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
+  },
+  "click #tblSupplierlist tbody tr": (e) => {
+    
   },
   // TODO: Step 9
 
