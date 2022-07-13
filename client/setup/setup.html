@@ -72,7 +72,12 @@
                     <ul id="progress-steps">
                         {{# if steps}}
                             {{#each step in steps}}
-                                <li class="{{#if step.active}} current {{/if}} {{#if step.isConfirmed}} completed {{/if}}{{#if step.isSkipStep}} skipped {{/if}}"><div class="content"><a class="gotToStepID {{#if step.clickable}} clickDisabled {{/if}}" data-step-id="{{step.id}}" href="">Step {{step.index}}</a></div></li>
+                                <li class="
+                                {{#if step.active}} current {{/if}} 
+                                {{#if step.isConfirmed}} completed {{/if}}
+                                {{#if step.isSkipStep}} skipped {{/if}}">
+                                
+                                <div class="content"><a class="gotToStepID {{#if step.clickable}} clickDisabled {{/if}}" data-step-id="{{step.id}}" href="">Step {{step.index}}</a></div></li>
                             {{/each}}
                         {{/if}}
                        
@@ -102,7 +107,7 @@
                                                             </div>
                                                             <!-- End Replace Image -->
                                                             <br>
-                                                            <button class="btn btn-primary" type="button" id="changeLogo" data-toggle="modal" data-target="#changeLogoModal"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload Logo</button>
+                                                            <button class="btn btn-primary alerts-border" type="button" id="changeLogo" data-toggle="modal" data-target="#changeLogoModal"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload Logo</button>
                                                             <button class="btn btn-primary" id="removeLogo">Remove logo</button>
                                                         </div>
                                                     </div>
@@ -328,7 +333,7 @@
                 
                                                 <div>
                                                     <button class="btn btn-primary float-left btnBack" type="button" style="margin-right: 8px;" data-step-id="1">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                    <button class="btn btn-success float-right" id="saveStep1" type="button" data-step-id="1">Confirm</button>
+                                                    <button class="btn btn-success float-right confirmBtn" id="saveStep1" type="button" data-step-id="1">Confirm</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -504,7 +509,7 @@
                                                 <div class="row no-gutters">
                                                     <div class="col">
                                                         <button class="btn btn-primary float-left btnBack" type="button" style="margin: 16px;" data-step-id="2">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                        <button class="btn btn-success float-right" id="saveStep2" type="button" style="margin: 16px;" data-step-id="2">Confirm</button>
+                                                        <button class="btn btn-success float-right confirmBtn" id="saveStep2" type="button" style="margin: 16px;" data-step-id="2">Confirm</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -671,12 +676,7 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div class="row no-gutters">
-                                                    <div class="col">
-                                                        <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 16px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                        <!-- <button class="btn btn-primary float-right" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button> -->
-                                                    </div>
-                                                </div>
+                                              
                                             </div>
                                         </div>
                                     </div>
@@ -762,7 +762,7 @@
                                                 <div class="row no-gutters">
                                                     <div class="col">
                                                         <button class="btn btn-primary float-left btnBack" type="button" style="margin: 16px;" data-step-id="3">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                                                        <button class="btn btn-success float-right" id="saveStep3" type="button" style="margin: 16px;" data-step-id="3">Confirm</button>
+                                                        <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button" style="margin: 16px;" data-step-id="3">Confirm</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1077,7 +1077,7 @@
                                                         opacity: 1;
                                                     }
                                                 </style>
-                                                <table id="tblEmployeelist" name="tblEmployeelist" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblEmployeelist">
+                                                <table id="employeeListTable" name="employeeListTable" style="width:100%" class="dataTable table table-hover table-striped table-bordered employeeListTable">
                                                     <thead>
                                                         <tr class="dnd-moved">
                         
@@ -2407,6 +2407,7 @@
         .setup-stepper li.current {
             color:white;
             background: #c13050;
+            text-decoration: underline;
         }
         .setup-stepper li.current::before {
             background: #c13050;

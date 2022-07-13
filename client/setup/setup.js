@@ -37,17 +37,22 @@ function getCurrentStep() {
 }
 
 function setCurrentStep(stepId) {
+  const templateObject = Template.instance();
+  templateObject.currentStep.set(stepId);
   return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
 }
 
 function getConfirmedSteps() {
-  return localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || JSON.stringify([]);;
-
+  return (
+    localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || JSON.stringify([])
+  );
 }
 
-
 function setConfirmedSteps(steps = []) {
-  return localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", JSON.stringify(steps));
+  return localStorage.setItem(
+    "VS1Cloud_SETUP_CONFIRMED_STEPS",
+    JSON.stringify(steps)
+  );
 }
 
 function addConfirmedStep(step) {
@@ -60,8 +65,8 @@ function addConfirmedStep(step) {
 }
 
 /**
- * 
- * @param {integer} stepId 
+ *
+ * @param {integer} stepId
  * @returns {boolean}
  */
 function isConfirmedStep(stepId) {
@@ -70,7 +75,9 @@ function isConfirmedStep(stepId) {
 }
 
 function getSkippedSteps() {
-  return  localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify([]);
+  return (
+    localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify([])
+  );
 }
 
 function addSkippedStep(step) {
@@ -82,12 +89,15 @@ function addSkippedStep(step) {
 }
 
 function setSkippedSteps(steps = []) {
-  return localStorage.setItem("VS1Cloud_SETUP_SKIPPED_STEP", JSON.stringify(steps));
+  return localStorage.setItem(
+    "VS1Cloud_SETUP_SKIPPED_STEP",
+    JSON.stringify(steps)
+  );
 }
 
 /**
- * 
- * @param {integer} stepId 
+ *
+ * @param {integer} stepId
  * @returns {boolean}
  */
 function isStepSkipped(stepId) {
@@ -97,6 +107,7 @@ function isStepSkipped(stepId) {
 
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
+  templateObject.currentStep = new ReactiveVar(1);
   templateObject.stepNumber = new ReactiveVar(1);
   templateObject.steps = new ReactiveVar([]);
   templateObject.skippedSteps = new ReactiveVar([]);
@@ -221,7 +232,7 @@ Template.setup.onCreated(() => {
 });
 
 Template.setup.onRendered(function () {
-  $(".fullScreenSpin").css("display", "none");
+  LoadingOverlay.show();
   const templateObject = Template.instance();
   // Get step local storage variable and set step
   const currentStep = getCurrentStep();
@@ -232,8 +243,8 @@ Template.setup.onRendered(function () {
       _steps.push({
         id: i,
         index: i,
-        active: currentStep == i ? true : false,
-        clickable: i < currentStep ? !true : !false,
+        active: getCurrentStep() == i ? true : false,
+        clickable: i <= getCurrentStep() ? !true : !false,
         isConfirmed: isConfirmedStep(i),
         skippedSteps: isStepSkipped(i),
       });
@@ -665,55 +676,55 @@ Template.setup.onRendered(function () {
               setTimeout(function () {
                 $("#paymentmethodList")
                   .DataTable({
-                    columnDefs: [
-                      {
-                        orderable: false,
-                        targets: -1,
-                      },
-                    ],
+                    // columnDefs: [
+                    //   {
+                    //     orderable: false,
+                    //     targets: -1,
+                    //   },
+                    // ],
                     select: true,
                     destroy: true,
                     colReorder: true,
                     sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [
-                      {
-                        extend: "csvHtml5",
-                        text: "",
-                        download: "open",
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "paymentmethodList_" + moment().format(),
-                        orientation: "portrait",
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                      },
-                      {
-                        extend: "print",
-                        download: "open",
-                        className: "btntabletopdf hiddenColumn",
-                        text: "",
-                        title: "Payment Method List",
-                        filename: "paymentmethodList_" + moment().format(),
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                      },
-                      {
-                        extend: "excelHtml5",
-                        title: "",
-                        download: "open",
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "paymentmethodList_" + moment().format(),
-                        orientation: "portrait",
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                        // ,
-                        // customize: function ( win ) {
-                        //   $(win.document.body).children("h1:first").remove();
-                        // }
-                      },
-                    ],
+                    // buttons: [
+                    //   {
+                    //     extend: "csvHtml5",
+                    //     text: "",
+                    //     download: "open",
+                    //     className: "btntabletocsv hiddenColumn",
+                    //     filename: "paymentmethodList_" + moment().format(),
+                    //     orientation: "portrait",
+                    //     exportOptions: {
+                    //       columns: ":visible",
+                    //     },
+                    //   },
+                    //   {
+                    //     extend: "print",
+                    //     download: "open",
+                    //     className: "btntabletopdf hiddenColumn",
+                    //     text: "",
+                    //     title: "Payment Method List",
+                    //     filename: "paymentmethodList_" + moment().format(),
+                    //     exportOptions: {
+                    //       columns: ":visible",
+                    //     },
+                    //   },
+                    //   {
+                    //     extend: "excelHtml5",
+                    //     title: "",
+                    //     download: "open",
+                    //     className: "btntabletoexcel hiddenColumn",
+                    //     filename: "paymentmethodList_" + moment().format(),
+                    //     orientation: "portrait",
+                    //     exportOptions: {
+                    //       columns: ":visible",
+                    //     },
+                    //     // ,
+                    //     // customize: function ( win ) {
+                    //     //   $(win.document.body).children("h1:first").remove();
+                    //     // }
+                    //   },
+                    // ],
                     // bStateSave: true,
                     // rowId: 0,
                     paging: false,
@@ -1330,8 +1341,6 @@ Template.setup.onRendered(function () {
             //   confirmedSteps + "3,"
             // );
             // localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
-
-        
           });
         })
         .catch(function (err) {
@@ -2024,7 +2033,7 @@ Template.setup.onRendered(function () {
      *
      */
     if (dataObject.length == 0) {
-      dataObject = await sideBarService.getAllEmployees(initialBaseDataLoad, 0);
+      dataObject = await sideBarService.getAllEmployees("All");
       await addVS1Data("TEmployee", JSON.stringify(dataObject));
 
       if (dataObject.temployee) {
@@ -2039,560 +2048,427 @@ Template.setup.onRendered(function () {
 
     await templateObject.currentEmployees.set(employeeList);
 
+    if (await templateObject.currentEmployees.get()) {
+      setTimeout(() => {
+        $("#employeeListTable")
+        .DataTable({
+          columnDefs: [],
+          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          select: true,
+          destroy: true,
+          colReorder: true,
+          paging: false,
+          info: true,
+          responsive: true,
+          order: [[0, "asc"]],
+          action: function () {
+            $("#employeeListTable").DataTable().ajax.reload();
+          },
+          fnInitComplete: function () {
+            $(
+              "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+            ).insertAfter("#employeeListTable_filter");
+          },
+        })
+        .on("page", function () {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+          let draftRecord = templateObject.currentEmployees.get();
+          templateObject.currentEmployees.set(draftRecord);
+        })
+        .on("column-reorder", function () {})
+        .on("length.dt", function (e, settings, len) {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        });
+      }, 1000);
+    }
+
     LoadingOverlay.hide();
   };
 
   templateObject.loadEmployees();
 
-  templateObject.getEmployees = function () {
-    getVS1Data("TEmployee")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService
-            .getAllEmployees(initialBaseDataLoad, 0)
-            .then(function (data) {
-              addVS1Data("TEmployee", JSON.stringify(data));
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.temployee.length; i++) {
-                var dataList = {
-                  id: data.temployee[i].fields.ID || "",
-                  employeeno: data.temployee[i].fields.EmployeeNo || "",
-                  employeename: data.temployee[i].fields.EmployeeName || "",
-                  firstname: data.temployee[i].fields.FirstName || "",
-                  lastname: data.temployee[i].fields.LastName || "",
-                  phone: data.temployee[i].fields.Phone || "",
-                  mobile: data.temployee[i].fields.Mobile || "",
-                  email: data.temployee[i].fields.Email || "",
-                  address: data.temployee[i].fields.Street || "",
-                  country: data.temployee[i].fields.Country || "",
-                  department: data.temployee[i].fields.DefaultClassName || "",
-                  custFld1: data.temployee[i].fields.CustFld1 || "",
-                  custFld2: data.temployee[i].fields.CustFld2 || "",
-                  custFld3: data.temployee[i].fields.CustFld3 || "",
-                  custFld4: data.temployee[i].fields.CustFld4 || "",
-                };
+  // templateObject.getEmployees = function () {
+  //   getVS1Data("TEmployee")
+  //     .then(function (dataObject) {
+  //       if (dataObject.length == 0) {
+  //         sideBarService
+  //           .getAllEmployees(initialBaseDataLoad, 0)
+  //           .then(function (data) {
+  //             addVS1Data("TEmployee", JSON.stringify(data));
+  //             let lineItems = [];
+  //             let lineItemObj = {};
+  //             for (let i = 0; i < data.temployee.length; i++) {
+  //               var dataList = {
+  //                 id: data.temployee[i].fields.ID || "",
+  //                 employeeno: data.temployee[i].fields.EmployeeNo || "",
+  //                 employeename: data.temployee[i].fields.EmployeeName || "",
+  //                 firstname: data.temployee[i].fields.FirstName || "",
+  //                 lastname: data.temployee[i].fields.LastName || "",
+  //                 phone: data.temployee[i].fields.Phone || "",
+  //                 mobile: data.temployee[i].fields.Mobile || "",
+  //                 email: data.temployee[i].fields.Email || "",
+  //                 address: data.temployee[i].fields.Street || "",
+  //                 country: data.temployee[i].fields.Country || "",
+  //                 department: data.temployee[i].fields.DefaultClassName || "",
+  //                 custFld1: data.temployee[i].fields.CustFld1 || "",
+  //                 custFld2: data.temployee[i].fields.CustFld2 || "",
+  //                 custFld3: data.temployee[i].fields.CustFld3 || "",
+  //                 custFld4: data.temployee[i].fields.CustFld4 || "",
+  //               };
 
-                if (
-                  data.temployee[i].fields.EmployeeName.replace(/\s/g, "") != ""
-                ) {
-                  dataTableListEmployee.push(dataList);
-                }
-                //}
-              }
+  //               if (
+  //                 data.temployee[i].fields.EmployeeName.replace(/\s/g, "") != ""
+  //               ) {
+  //                 dataTableListEmployee.push(dataList);
+  //               }
+  //               //}
+  //             }
 
-              templateObject.employeedatatablerecords.set(
-                dataTableListEmployee
-              );
+  //             templateObject.employeedatatablerecords.set(
+  //               dataTableListEmployee
+  //             );
 
-              if (templateObject.employeedatatablerecords.get()) {
-                Meteor.call(
-                  "readPrefMethod",
-                  Session.get("mycloudLogonID"),
-                  "tblEmployeelist",
-                  function (error, result) {
-                    if (error) {
-                    } else {
-                      if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                          let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
-                          let columHeaderUpdate = customcolumn[
-                            i
-                          ].thclass.replace(/ /g, ".");
-                          let hiddenColumn = customcolumn[i].hidden;
-                          let columnClass = columHeaderUpdate.split(".")[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
+  //             if (templateObject.employeedatatablerecords.get()) {
+  //               Meteor.call(
+  //                 "readPrefMethod",
+  //                 Session.get("mycloudLogonID"),
+  //                 "tblEmployeelist",
+  //                 function (error, result) {
+  //                   if (error) {
+  //                   } else {
+  //                     if (result) {
+  //                       for (let i = 0; i < result.customFields.length; i++) {
+  //                         let customcolumn = result.customFields;
+  //                         let columData = customcolumn[i].label;
+  //                         let columHeaderUpdate = customcolumn[
+  //                           i
+  //                         ].thclass.replace(/ /g, ".");
+  //                         let hiddenColumn = customcolumn[i].hidden;
+  //                         let columnClass = columHeaderUpdate.split(".")[1];
+  //                         let columnWidth = customcolumn[i].width;
+  //                         let columnindex = customcolumn[i].index + 1;
 
-                          if (hiddenColumn == true) {
-                            $("." + columnClass + "").addClass("hiddenColumn");
-                            $("." + columnClass + "").removeClass("showColumn");
-                          } else if (hiddenColumn == false) {
-                            $("." + columnClass + "").removeClass(
-                              "hiddenColumn"
-                            );
-                            $("." + columnClass + "").addClass("showColumn");
-                          }
-                        }
-                      }
-                    }
-                  }
-                );
-              }
+  //                         if (hiddenColumn == true) {
+  //                           $("." + columnClass + "").addClass("hiddenColumn");
+  //                           $("." + columnClass + "").removeClass("showColumn");
+  //                         } else if (hiddenColumn == false) {
+  //                           $("." + columnClass + "").removeClass(
+  //                             "hiddenColumn"
+  //                           );
+  //                           $("." + columnClass + "").addClass("showColumn");
+  //                         }
+  //                       }
+  //                     }
+  //                   }
+  //                 }
+  //               );
+  //             }
 
-              setTimeout(function () {
-                $("#tblEmployeelist")
-                  .DataTable({
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [
-                      {
-                        extend: "csvHtml5",
-                        text: "",
-                        download: "open",
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Employee List - " + moment().format(),
-                        orientation: "portrait",
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                      },
-                      {
-                        extend: "print",
-                        download: "open",
-                        className: "btntabletopdf hiddenColumn",
-                        text: "",
-                        title: "Employee List",
-                        filename: "Employee List - " + moment().format(),
-                        exportOptions: {
-                          columns: ":visible",
-                          stripHtml: false,
-                        },
-                      },
-                      {
-                        extend: "excelHtml5",
-                        title: "",
-                        download: "open",
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "Employee List - " + moment().format(),
-                        orientation: "portrait",
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                      },
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    // bStateSave: true,
-                    // rowId: 0,
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [
-                      [initialDatatableLoad, -1],
-                      [initialDatatableLoad, "All"],
-                    ],
-                    info: true,
-                    responsive: true,
-                    order: [[1, "asc"]],
-                    action: function () {
-                      $("#tblEmployeelist").DataTable().ajax.reload();
-                    },
-                    fnInitComplete: function () {
-                      $(
-                        "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                      ).insertAfter("#tblEmployeelist_filter");
-                    },
-                  })
-                  .on("page", function () {
-                    let draftRecord =
-                      templateObject.employeedatatablerecords.get();
-                    templateObject.employeedatatablerecords.set(draftRecord);
-                  })
-                  .on("column-reorder", function () {});
+  //             setTimeout(function () {
+  //               $("#tblEmployeelist")
+  //                 .DataTable({
+  //                   // columnDefs: [],
+  //                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+  //                   // buttons: [
+  //                   //   {
+  //                   //     extend: "csvHtml5",
+  //                   //     text: "",
+  //                   //     download: "open",
+  //                   //     className: "btntabletocsv hiddenColumn",
+  //                   //     filename: "Employee List - " + moment().format(),
+  //                   //     orientation: "portrait",
+  //                   //     exportOptions: {
+  //                   //       columns: ":visible",
+  //                   //     },
+  //                   //   },
+  //                   //   {
+  //                   //     extend: "print",
+  //                   //     download: "open",
+  //                   //     className: "btntabletopdf hiddenColumn",
+  //                   //     text: "",
+  //                   //     title: "Employee List",
+  //                   //     filename: "Employee List - " + moment().format(),
+  //                   //     exportOptions: {
+  //                   //       columns: ":visible",
+  //                   //       stripHtml: false,
+  //                   //     },
+  //                   //   },
+  //                   //   {
+  //                   //     extend: "excelHtml5",
+  //                   //     title: "",
+  //                   //     download: "open",
+  //                   //     className: "btntabletoexcel hiddenColumn",
+  //                   //     filename: "Employee List - " + moment().format(),
+  //                   //     orientation: "portrait",
+  //                   //     exportOptions: {
+  //                   //       columns: ":visible",
+  //                   //     },
+  //                   //   },
+  //                   // ],
+  //                   select: true,
+  //                   destroy: true,
+  //                   colReorder: true,
+  //                   // bStateSave: true,
+  //                   // rowId: 0,
+  //                   // pageLength: initialDatatableLoad,
+  //                   // lengthMenu: [
+  //                   //   [initialDatatableLoad, -1],
+  //                   //   [initialDatatableLoad, "All"],
+  //                   // ],
+  //                   paging: false,
+  //                   info: true,
+  //                   responsive: true,
+  //                   order: [[1, "asc"]],
+  //                   action: function () {
+  //                     $("#tblEmployeelist").DataTable().ajax.reload();
+  //                   },
+  //                   fnInitComplete: function () {
+  //                     $(
+  //                       "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+  //                     ).insertAfter("#tblEmployeelist_filter");
+  //                   },
+  //                 })
+  //                 .on("page", function () {
+  //                   let draftRecord =
+  //                     templateObject.employeedatatablerecords.get();
+  //                   templateObject.employeedatatablerecords.set(draftRecord);
+  //                 })
+  //                 .on("column-reorder", function () {});
 
-                // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-                $(".fullScreenSpin").css("display", "none");
-              }, 0);
+  //               // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
+  //               $(".fullScreenSpin").css("display", "none");
+  //             }, 0);
 
-              var columns = $("#tblEmployeelist th");
-              let sTible = "";
-              let sWidth = "";
-              let sIndex = "";
-              let sVisible = "";
-              let columVisible = false;
-              let sClass = "";
-              $.each(columns, function (i, v) {
-                if (v.hidden == false) {
-                  columVisible = true;
-                }
-                if (v.className.includes("hiddenColumn")) {
-                  columVisible = false;
-                }
-                sWidth = v.style.width.replace("px", "");
-                let datatablerecordObj = {
-                  sTitle: v.innerText || "",
-                  sWidth: sWidth || "",
-                  sIndex: v.cellIndex || "",
-                  sVisible: columVisible || false,
-                  sClass: v.className || "",
-                };
-                tableHeaderListTerm.push(datatablerecordObj);
-              });
-              templateObject.employeetableheaderrecords.set(
-                tableHeaderListTerm
-              );
-              $("div.dataTables_filter input").addClass(
-                "form-control form-control-sm"
-              );
-              // $("#tblEmployeelist tbody").on("click", "tr", function () {
-              //   var listData = $(this).closest("tr").attr("id");
-              //   if (listData) {
-              //     FlowRouter.go("/employeescard?id=" + listData);
-              //   }
-              // });
-            })
-            .catch(function (err) {
-              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $(".fullScreenSpin").css("display", "none");
-              // Meteor._reload.reload();
-            });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.temployee;
+  //             // var columns = $("#tblEmployeelist th");
+  //             // let sTible = "";
+  //             // let sWidth = "";
+  //             // let sIndex = "";
+  //             // let sVisible = "";
+  //             // let columVisible = false;
+  //             // let sClass = "";
+  //             // $.each(columns, function (i, v) {
+  //             //   if (v.hidden == false) {
+  //             //     columVisible = true;
+  //             //   }
+  //             //   if (v.className.includes("hiddenColumn")) {
+  //             //     columVisible = false;
+  //             //   }
+  //             //   sWidth = v.style.width.replace("px", "");
+  //             //   let datatablerecordObj = {
+  //             //     sTitle: v.innerText || "",
+  //             //     sWidth: sWidth || "",
+  //             //     sIndex: v.cellIndex || "",
+  //             //     sVisible: columVisible || false,
+  //             //     sClass: v.className || "",
+  //             //   };
+  //             //   tableHeaderListTerm.push(datatablerecordObj);
+  //             // });
+  //             // templateObject.employeetableheaderrecords.set(
+  //             //   tableHeaderListTerm
+  //             // );
+  //             $("div.dataTables_filter input").addClass(
+  //               "form-control form-control-sm"
+  //             );
+  //             // $("#tblEmployeelist tbody").on("click", "tr", function () {
+  //             //   var listData = $(this).closest("tr").attr("id");
+  //             //   if (listData) {
+  //             //     FlowRouter.go("/employeescard?id=" + listData);
+  //             //   }
+  //             // });
+  //           })
+  //           .catch(function (err) {
+  //             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+  //             $(".fullScreenSpin").css("display", "none");
+  //             // Meteor._reload.reload();
+  //           });
+  //       } else {
+  //         let data = JSON.parse(dataObject[0].data);
+  //         let useData = data.temployee;
 
-          let lineItems = [];
-          let lineItemObj = {};
-          for (let i = 0; i < useData.length; i++) {
-            var dataList = {
-              id: useData[i].fields.ID || "",
-              employeeno: useData[i].fields.EmployeeNo || "",
-              employeename: useData[i].fields.EmployeeName || "",
-              firstname: useData[i].fields.FirstName || "",
-              lastname: useData[i].fields.LastName || "",
-              phone: useData[i].fields.Phone || "",
-              mobile: useData[i].fields.Mobile || "",
-              email: useData[i].fields.Email || "",
-              address: useData[i].fields.Street || "",
-              country: useData[i].fields.Country || "",
-              department: useData[i].fields.DefaultClassName || "",
-              custFld1: useData[i].fields.CustFld1 || "",
-              custFld2: useData[i].fields.CustFld2 || "",
-              custFld3: useData[i].fields.CustFld3 || "",
-              custFld4: useData[i].fields.CustFld4 || "",
-            };
+  //         let lineItems = [];
+  //         let lineItemObj = {};
+  //         for (let i = 0; i < useData.length; i++) {
+  //           var dataList = {
+  //             id: useData[i].fields.ID || "",
+  //             employeeno: useData[i].fields.EmployeeNo || "",
+  //             employeename: useData[i].fields.EmployeeName || "",
+  //             firstname: useData[i].fields.FirstName || "",
+  //             lastname: useData[i].fields.LastName || "",
+  //             phone: useData[i].fields.Phone || "",
+  //             mobile: useData[i].fields.Mobile || "",
+  //             email: useData[i].fields.Email || "",
+  //             address: useData[i].fields.Street || "",
+  //             country: useData[i].fields.Country || "",
+  //             department: useData[i].fields.DefaultClassName || "",
+  //             custFld1: useData[i].fields.CustFld1 || "",
+  //             custFld2: useData[i].fields.CustFld2 || "",
+  //             custFld3: useData[i].fields.CustFld3 || "",
+  //             custFld4: useData[i].fields.CustFld4 || "",
+  //           };
 
-            if (useData[i].fields.EmployeeName.replace(/\s/g, "") != "") {
-              dataTableList.push(dataList);
-            }
-            //}
-          }
+  //           if (useData[i].fields.EmployeeName.replace(/\s/g, "") != "") {
+  //             dataTableList.push(dataList);
+  //           }
+  //           //}
+  //         }
 
-          templateObject.employeedatatablerecords.set(dataTableList);
+  //         templateObject.employeedatatablerecords.set(dataTableList);
 
-          if (templateObject.employeedatatablerecords.get()) {
-            Meteor.call(
-              "readPrefMethod",
-              Session.get("mycloudLogonID"),
-              "tblEmployeelist",
-              function (error, result) {
-                if (error) {
-                } else {
-                  if (result) {
-                    for (let i = 0; i < result.customFields.length; i++) {
-                      let customcolumn = result.customFields;
-                      let columData = customcolumn[i].label;
-                      let columHeaderUpdate = customcolumn[i].thclass.replace(
-                        / /g,
-                        "."
-                      );
-                      let hiddenColumn = customcolumn[i].hidden;
-                      let columnClass = columHeaderUpdate.split(".")[1];
-                      let columnWidth = customcolumn[i].width;
-                      let columnindex = customcolumn[i].index + 1;
+  //         if (templateObject.employeedatatablerecords.get()) {
+  //           Meteor.call(
+  //             "readPrefMethod",
+  //             Session.get("mycloudLogonID"),
+  //             "tblEmployeelist",
+  //             function (error, result) {
+  //               if (error) {
+  //               } else {
+  //                 if (result) {
+  //                   for (let i = 0; i < result.customFields.length; i++) {
+  //                     let customcolumn = result.customFields;
+  //                     let columData = customcolumn[i].label;
+  //                     let columHeaderUpdate = customcolumn[i].thclass.replace(
+  //                       / /g,
+  //                       "."
+  //                     );
+  //                     let hiddenColumn = customcolumn[i].hidden;
+  //                     let columnClass = columHeaderUpdate.split(".")[1];
+  //                     let columnWidth = customcolumn[i].width;
+  //                     let columnindex = customcolumn[i].index + 1;
 
-                      if (hiddenColumn == true) {
-                        $("." + columnClass + "").addClass("hiddenColumn");
-                        $("." + columnClass + "").removeClass("showColumn");
-                      } else if (hiddenColumn == false) {
-                        $("." + columnClass + "").removeClass("hiddenColumn");
-                        $("." + columnClass + "").addClass("showColumn");
-                      }
-                    }
-                  }
-                }
-              }
-            );
-          }
+  //                     if (hiddenColumn == true) {
+  //                       $("." + columnClass + "").addClass("hiddenColumn");
+  //                       $("." + columnClass + "").removeClass("showColumn");
+  //                     } else if (hiddenColumn == false) {
+  //                       $("." + columnClass + "").removeClass("hiddenColumn");
+  //                       $("." + columnClass + "").addClass("showColumn");
+  //                     }
+  //                   }
+  //                 }
+  //               }
+  //             }
+  //           );
+  //         }
 
-          setTimeout(function () {
-            $("#tblEmployeelist")
-              .DataTable({
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                buttons: [
-                  {
-                    extend: "csvHtml5",
-                    text: "",
-                    download: "open",
-                    className: "btntabletocsv hiddenColumn",
-                    filename: "Employee List - " + moment().format(),
-                    orientation: "portrait",
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                  },
-                  {
-                    extend: "print",
-                    download: "open",
-                    className: "btntabletopdf hiddenColumn",
-                    text: "",
-                    title: "Employee List",
-                    filename: "Employee List - " + moment().format(),
-                    exportOptions: {
-                      columns: ":visible",
-                      stripHtml: false,
-                    },
-                  },
-                  {
-                    extend: "excelHtml5",
-                    title: "",
-                    download: "open",
-                    className: "btntabletoexcel hiddenColumn",
-                    filename: "Employee List - " + moment().format(),
-                    orientation: "portrait",
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                  },
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                // bStateSave: true,
-                // rowId: 0,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                  [initialDatatableLoad, -1],
-                  [initialDatatableLoad, "All"],
-                ],
-                info: true,
-                responsive: true,
-                order: [[1, "asc"]],
-                action: function () {
-                  $("#tblEmployeelist").DataTable().ajax.reload();
-                },
-                fnInitComplete: function () {
-                  $(
-                    "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                  ).insertAfter("#tblEmployeelist_filter");
-                },
-              })
-              .on("page", function () {
-                let draftRecord = templateObject.employeedatatablerecords.get();
-                templateObject.employeedatatablerecords.set(draftRecord);
-              })
-              .on("column-reorder", function () {});
+  //         setTimeout(function () {
+  //           $("#tblEmployeelist")
+  //             .DataTable({
+  //               sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+  //               select: true,
+  //               destroy: true,
+  //               colReorder: true,
+  //               paging: false,
+  //               info: true,
+  //               responsive: true,
+  //               order: [[1, "asc"]],
+  //               action: function () {
+  //                 $("#tblEmployeelist").DataTable().ajax.reload();
+  //               },
+  //               fnInitComplete: function () {
+  //                 $(
+  //                   "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+  //                 ).insertAfter("#tblEmployeelist_filter");
+  //               },
+  //             })
+  //             .on("page", function () {
+  //               let draftRecord = templateObject.employeedatatablerecords.get();
+  //               templateObject.employeedatatablerecords.set(draftRecord);
+  //             })
+  //             .on("column-reorder", function () {});
 
-            // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-            $(".fullScreenSpin").css("display", "none");
-          }, 0);
+  //           // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
+  //           $(".fullScreenSpin").css("display", "none");
+  //         }, 0);
 
-          var columns = $("#tblEmployeelist th");
-          let sTible = "";
-          let sWidth = "";
-          let sIndex = "";
-          let sVisible = "";
-          let columVisible = false;
-          let sClass = "";
-          $.each(columns, function (i, v) {
-            if (v.hidden == false) {
-              columVisible = true;
-            }
-            if (v.className.includes("hiddenColumn")) {
-              columVisible = false;
-            }
-            sWidth = v.style.width.replace("px", "");
-            let datatablerecordObj = {
-              sTitle: v.innerText || "",
-              sWidth: sWidth || "",
-              sIndex: v.cellIndex || "",
-              sVisible: columVisible || false,
-              sClass: v.className || "",
-            };
-            tableHeaderListTerm.push(datatablerecordObj);
-          });
-          templateObject.employeetableheaderrecords.set(tableHeaderListTerm);
-          $("div.dataTables_filter input").addClass(
-            "form-control form-control-sm"
-          );
-          // $("#tblEmployeelist tbody").on("click", "tr", function () {
-          //   var listData = $(this).closest("tr").attr("id");
-          //   if (listData) {
-          //     FlowRouter.go("/employeescard?id=" + listData);
-          //   }
-          // });
-        }
-      })
-      .catch(function (err) {
-        sideBarService
-          .getAllEmployees(initialBaseDataLoad, 0)
-          .then(function (data) {
-            addVS1Data("TEmployee", JSON.stringify(data));
-            let lineItems = [];
-            let lineItemObj = {};
-            for (let i = 0; i < data.temployee.length; i++) {
-              var dataList = {
-                id: data.temployee[i].fields.ID || "",
-                employeeno: data.temployee[i].fields.EmployeeNo || "",
-                employeename: data.temployee[i].fields.EmployeeName || "",
-                firstname: data.temployee[i].fields.FirstName || "",
-                lastname: data.temployee[i].fields.LastName || "",
-                phone: data.temployee[i].fields.Phone || "",
-                mobile: data.temployee[i].fields.Mobile || "",
-                email: data.temployee[i].fields.Email || "",
-                address: data.temployee[i].fields.Street || "",
-                country: data.temployee[i].fields.Country || "",
-                department: data.temployee[i].fields.DefaultClassName || "",
-                custFld1: data.temployee[i].fields.CustFld1 || "",
-                custFld2: data.temployee[i].fields.CustFld2 || "",
-                custFld3: data.temployee[i].fields.CustFld3 || "",
-                custFld4: data.temployee[i].fields.CustFld4 || "",
-              };
+  //         $("div.dataTables_filter input").addClass(
+  //           "form-control form-control-sm"
+  //         );
 
-              if (
-                data.temployee[i].fields.EmployeeName.replace(/\s/g, "") != ""
-              ) {
-                dataTableListTerm.push(dataList);
-              }
-              //}
-            }
+  //       }
+  //     })
+  //     .catch(function (err) {
+  //       sideBarService
+  //         .getAllEmployees(initialBaseDataLoad, 0)
+  //         .then(function (data) {
+  //           addVS1Data("TEmployee", JSON.stringify(data));
+  //           let lineItems = [];
+  //           let lineItemObj = {};
+  //           for (let i = 0; i < data.temployee.length; i++) {
+  //             var dataList = {
+  //               id: data.temployee[i].fields.ID || "",
+  //               employeeno: data.temployee[i].fields.EmployeeNo || "",
+  //               employeename: data.temployee[i].fields.EmployeeName || "",
+  //               firstname: data.temployee[i].fields.FirstName || "",
+  //               lastname: data.temployee[i].fields.LastName || "",
+  //               phone: data.temployee[i].fields.Phone || "",
+  //               mobile: data.temployee[i].fields.Mobile || "",
+  //               email: data.temployee[i].fields.Email || "",
+  //               address: data.temployee[i].fields.Street || "",
+  //               country: data.temployee[i].fields.Country || "",
+  //               department: data.temployee[i].fields.DefaultClassName || "",
+  //               custFld1: data.temployee[i].fields.CustFld1 || "",
+  //               custFld2: data.temployee[i].fields.CustFld2 || "",
+  //               custFld3: data.temployee[i].fields.CustFld3 || "",
+  //               custFld4: data.temployee[i].fields.CustFld4 || "",
+  //             };
 
-            templateObject.employeedatatablerecords.set(dataTableListTerm);
+  //             if (
+  //               data.temployee[i].fields.EmployeeName.replace(/\s/g, "") != ""
+  //             ) {
+  //               dataTableListTerm.push(dataList);
+  //             }
+  //             //}
+  //           }
 
-            if (templateObject.employeedatatablerecords.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "tblEmployeelist",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass.replace(
-                          / /g,
-                          "."
-                        );
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.split(".")[1];
-                        let columnWidth = customcolumn[i].width;
-                        let columnindex = customcolumn[i].index + 1;
+  //           templateObject.employeedatatablerecords.set(dataTableListTerm);
 
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
-                    }
-                  }
-                }
-              );
-            }
+  //           if (templateObject.employeedatatablerecords.get()) {
 
-            setTimeout(function () {
-              $("#tblEmployeelist")
-                .DataTable({
-                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  buttons: [
-                    {
-                      extend: "csvHtml5",
-                      text: "",
-                      download: "open",
-                      className: "btntabletocsv hiddenColumn",
-                      filename: "Employee List - " + moment().format(),
-                      orientation: "portrait",
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                    },
-                    {
-                      extend: "print",
-                      download: "open",
-                      className: "btntabletopdf hiddenColumn",
-                      text: "",
-                      title: "Employee List",
-                      filename: "Employee List - " + moment().format(),
-                      exportOptions: {
-                        columns: ":visible",
-                        stripHtml: false,
-                      },
-                    },
-                    {
-                      extend: "excelHtml5",
-                      title: "",
-                      download: "open",
-                      className: "btntabletoexcel hiddenColumn",
-                      filename: "Employee List - " + moment().format(),
-                      orientation: "portrait",
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                    },
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  // bStateSave: true,
-                  // rowId: 0,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"],
-                  ],
-                  info: true,
-                  responsive: true,
-                  order: [[1, "asc"]],
-                  action: function () {
-                    $("#tblEmployeelist").DataTable().ajax.reload();
-                  },
-                })
-                .on("page", function () {
-                  let draftRecord =
-                    templateObject.employeedatatablerecords.get();
-                  templateObject.employeedatatablerecords.set(draftRecord);
-                })
-                .on("column-reorder", function () {});
+  //           }
 
-              // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-              $(".fullScreenSpin").css("display", "none");
-            }, 0);
+  //           setTimeout(function () {
+  //             $("#tblEmployeelist")
+  //               .DataTable({
+  //                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
-            var columns = $("#tblEmployeelist th");
-            let sTible = "";
-            let sWidth = "";
-            let sIndex = "";
-            let sVisible = "";
-            let columVisible = false;
-            let sClass = "";
-            $.each(columns, function (i, v) {
-              if (v.hidden == false) {
-                columVisible = true;
-              }
-              if (v.className.includes("hiddenColumn")) {
-                columVisible = false;
-              }
-              sWidth = v.style.width.replace("px", "");
-              let datatablerecordObj = {
-                sTitle: v.innerText || "",
-                sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
-                sVisible: columVisible || false,
-                sClass: v.className || "",
-              };
-              tableHeaderList.push(datatablerecordObj);
-            });
-            templateObject.employeetableheaderrecords.set(tableHeaderList);
-            $("div.dataTables_filter input").addClass(
-              "form-control form-control-sm"
-            );
-            // $("#tblEmployeelist tbody").on("click", "tr", function () {
-            //   var listData = $(this).closest("tr").attr("id");
-            //   if (listData) {
-            //     FlowRouter.go("/employeescard?id=" + listData);
-            //   }
-            // });
-          })
-          .catch(function (err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
-          });
-      });
-  };
+  //                 select: true,
+  //                 destroy: true,
+  //                 colReorder: true,
+
+  //                 paging: false,
+  //                 info: true,
+  //                 responsive: true,
+  //                 order: [[1, "asc"]],
+  //                 action: function () {
+  //                   $("#tblEmployeelist").DataTable().ajax.reload();
+  //                 },
+  //               })
+  //               .on("page", function () {
+  //                 let draftRecord =
+  //                   templateObject.employeedatatablerecords.get();
+  //                 templateObject.employeedatatablerecords.set(draftRecord);
+  //               })
+  //               .on("column-reorder", function () {});
+
+  //             // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
+  //             $(".fullScreenSpin").css("display", "none");
+  //           }, 0);
+
+  //           $("div.dataTables_filter input").addClass(
+  //             "form-control form-control-sm"
+  //           );
+
+  //         })
+  //         .catch(function (err) {
+  //           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+  //           $(".fullScreenSpin").css("display", "none");
+  //           // Meteor._reload.reload();
+  //         });
+  //     });
+  // };
 
   templateObject.getEmployeeProfileImageData = function (employeeName) {
     const contactService = new ContactService();
@@ -2737,52 +2613,53 @@ Template.setup.onRendered(function () {
           destroy: true,
           colReorder: true,
           sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          buttons: [
-            {
-              extend: "csvHtml5",
-              text: "",
-              download: "open",
-              className: "btntabletocsv hiddenColumn",
-              filename: "accountoverview_" + moment().format(),
-              orientation: "portrait",
-              exportOptions: {
-                columns: ":visible",
-              },
-            },
-            {
-              extend: "print",
-              download: "open",
-              className: "btntabletopdf hiddenColumn",
-              text: "",
-              title: "Accounts Overview",
-              filename: "Accounts Overview_" + moment().format(),
-              exportOptions: {
-                columns: ":visible",
-              },
-            },
-            {
-              extend: "excelHtml5",
-              title: "",
-              download: "open",
-              className: "btntabletoexcel hiddenColumn",
-              filename: "accountoverview_" + moment().format(),
-              orientation: "portrait",
-              exportOptions: {
-                columns: ":visible",
-              },
-              // ,
-              // customize: function ( win ) {
-              //   $(win.document.body).children("h1:first").remove();
-              // }
-            },
-          ],
+          // buttons: [
+          //   {
+          //     extend: "csvHtml5",
+          //     text: "",
+          //     download: "open",
+          //     className: "btntabletocsv hiddenColumn",
+          //     filename: "accountoverview_" + moment().format(),
+          //     orientation: "portrait",
+          //     exportOptions: {
+          //       columns: ":visible",
+          //     },
+          //   },
+          //   {
+          //     extend: "print",
+          //     download: "open",
+          //     className: "btntabletopdf hiddenColumn",
+          //     text: "",
+          //     title: "Accounts Overview",
+          //     filename: "Accounts Overview_" + moment().format(),
+          //     exportOptions: {
+          //       columns: ":visible",
+          //     },
+          //   },
+          //   {
+          //     extend: "excelHtml5",
+          //     title: "",
+          //     download: "open",
+          //     className: "btntabletoexcel hiddenColumn",
+          //     filename: "accountoverview_" + moment().format(),
+          //     orientation: "portrait",
+          //     exportOptions: {
+          //       columns: ":visible",
+          //     },
+          //     // ,
+          //     // customize: function ( win ) {
+          //     //   $(win.document.body).children("h1:first").remove();
+          //     // }
+          //   },
+          // ],
           // bStateSave: true,
           // rowId: 0,
-          pageLength: initialDatatableLoad,
-          lengthMenu: [
-            [initialDatatableLoad, -1],
-            [initialDatatableLoad, "All"],
-          ],
+          // pageLength: initialDatatableLoad,
+          // lengthMenu: [
+          //   [initialDatatableLoad, -1],
+          //   [initialDatatableLoad, "All"],
+          // ],
+          paging: false,
           info: true,
           responsive: true,
           order: [[0, "asc"]],
@@ -2945,11 +2822,12 @@ Template.setup.onRendered(function () {
                 select: true,
                 destroy: true,
                 colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                  [initialDatatableLoad, -1],
-                  [initialDatatableLoad, "All"],
-                ],
+                // pageLength: initialDatatableLoad,
+                // lengthMenu: [
+                //   [initialDatatableLoad, -1],
+                //   [initialDatatableLoad, "All"],
+                // ],
+                paging: false,
                 info: true,
                 responsive: true,
                 fnInitComplete: function () {
@@ -3093,11 +2971,12 @@ Template.setup.onRendered(function () {
 
               order: [[0, "asc"]],
 
-              pageLength: initialDatatableLoad,
-              lengthMenu: [
-                [initialDatatableLoad, -1],
-                [initialDatatableLoad, "All"],
-              ],
+              // pageLength: initialDatatableLoad,
+              // lengthMenu: [
+              //   [initialDatatableLoad, -1],
+              //   [initialDatatableLoad, "All"],
+              // ],
+              paging: false,
               info: true,
               responsive: true,
               fnInitComplete: function () {
@@ -3241,11 +3120,12 @@ Template.setup.onRendered(function () {
 
               order: [[0, "asc"]],
 
-              pageLength: initialDatatableLoad,
-              lengthMenu: [
-                [initialDatatableLoad, -1],
-                [initialDatatableLoad, "All"],
-              ],
+              // pageLength: initialDatatableLoad,
+              // lengthMenu: [
+              //   [initialDatatableLoad, -1],
+              //   [initialDatatableLoad, "All"],
+              // ],
+              paging: false,
               info: true,
               responsive: true,
               fnInitComplete: function () {
@@ -3319,11 +3199,12 @@ Template.setup.onRendered(function () {
         ],
         colReorder: true,
 
-        pageLength: initialDatatableLoad,
-        lengthMenu: [
-          [initialDatatableLoad, -1],
-          [initialDatatableLoad, "All"],
-        ],
+        // pageLength: initialDatatableLoad,
+        // lengthMenu: [
+        //   [initialDatatableLoad, -1],
+        //   [initialDatatableLoad, "All"],
+        // ],
+        paging: false,
         info: true,
         responsive: true,
         fnDrawCallback: function (oSettings) {
@@ -3474,7 +3355,7 @@ Template.setup.onRendered(function () {
     let dataObject = await getVS1Data("TCustomerVS1");
     let data =
       dataObject.length == 0
-        ? await sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0)
+        ? await sideBarService.getAllCustomersDataVS1("All")
         : JSON.parse(dataObject[0].data);
 
     let _customerList = [];
@@ -3582,93 +3463,53 @@ Template.setup.onRendered(function () {
       setTimeout(function () {
         MakeNegative();
       }, 100);
-    }
 
-    LoadingOverlay.hide();
-    setTimeout(function () {
-      $("#tblCustomerlist")
-        .DataTable({
-          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          buttons: [
-            {
-              extend: "csvHtml5",
-              text: "",
-              download: "open",
-              className: "btntabletocsv hiddenColumn",
-              filename: "customeroverview_" + moment().format(),
-              orientation: "portrait",
-              exportOptions: {
-                columns: ":visible",
-              },
+      setTimeout(function () {
+        $("#tblCustomerlist")
+          .DataTable({
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            select: true,
+            destroy: true,
+            colReorder: true,
+            paging: false,
+            info: true,
+            responsive: true,
+            order: [[1, "asc"]],
+            action: function () {
+              $("#tblCustomerlist").DataTable().ajax.reload();
             },
-            {
-              extend: "print",
-              download: "open",
-              className: "btntabletopdf hiddenColumn",
-              text: "",
-              title: "Customer List",
-              filename: "Customer List - " + moment().format(),
-              exportOptions: {
-                columns: ":visible",
-                stripHtml: false,
-              },
+            fnDrawCallback: function (oSettings) {
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
             },
-            {
-              extend: "excelHtml5",
-              title: "",
-              download: "open",
-              className: "btntabletoexcel hiddenColumn",
-              filename: "Customer List - " + moment().format(),
-              orientation: "portrait",
-              exportOptions: {
-                columns: ":visible",
-              },
+            fnInitComplete: function () {
+              $(
+                "<button class='btn btn-primary btnRefreshCustomers' type='button' id='btnRefreshCustomers' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+              ).insertAfter("#tblCustomerlist_filter");
             },
-          ],
-          select: true,
-          destroy: true,
-          colReorder: true,
-          // bStateSave: true,
-          // rowId: 0,
-          pageLength: initialDatatableLoad,
-          lengthMenu: [
-            [initialDatatableLoad, -1],
-            [initialDatatableLoad, "All"],
-          ],
-          info: true,
-          responsive: true,
-          order: [[1, "asc"]],
-          action: function () {
-            $("#tblCustomerlist").DataTable().ajax.reload();
-          },
-          fnDrawCallback: function (oSettings) {
+          })
+          .on("page", function () {
             setTimeout(function () {
               MakeNegative();
             }, 100);
-          },
-          fnInitComplete: function () {
-            $(
-              "<button class='btn btn-primary btnRefreshCustomers' type='button' id='btnRefreshCustomers' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-            ).insertAfter("#tblCustomerlist_filter");
-          },
-        })
-        .on("page", function () {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-          let draftRecord = templateObject.customerList.get();
-          templateObject.customerList.set(draftRecord);
-        })
-        .on("column-reorder", function () {})
-        .on("length.dt", function (e, settings, len) {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        });
+            let draftRecord = templateObject.customerList.get();
+            templateObject.customerList.set(draftRecord);
+          })
+          .on("column-reorder", function () {})
+          .on("length.dt", function (e, settings, len) {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          });
+  
+        // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
+        $(".fullScreenSpin").css("display", "none");
+      }, 1000);
+    }
 
-      // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
-      $(".fullScreenSpin").css("display", "none");
-    }, 0);
+    LoadingOverlay.hide();
+    
 
     // var columns = $("#tblCustomerlist th");
     // let sTible = "";
@@ -3727,7 +3568,7 @@ Template.setup.onRendered(function () {
     let dataObject = await getVS1Data("TSupplierVS1");
     let data =
       dataObject.length == 0
-        ? await sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0)
+        ? await sideBarService.getAllSuppliersDataVS1("All")
         : JSON.parse(dataObject[0].data);
 
     let _supplierList = [];
@@ -3822,52 +3663,53 @@ Template.setup.onRendered(function () {
         $("#tblSupplierlist")
           .DataTable({
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [
-              {
-                extend: "csvHtml5",
-                text: "",
-                download: "open",
-                className: "btntabletocsv hiddenColumn",
-                filename: "Supplier List - " + moment().format(),
-                orientation: "portrait",
-                exportOptions: {
-                  columns: ":visible",
-                },
-              },
-              {
-                extend: "print",
-                download: "open",
-                className: "btntabletopdf hiddenColumn",
-                text: "",
-                title: "Supplier List",
-                filename: "Supplier List - " + moment().format(),
-                exportOptions: {
-                  columns: ":visible",
-                  stripHtml: false,
-                },
-              },
-              {
-                extend: "excelHtml5",
-                title: "",
-                download: "open",
-                className: "btntabletoexcel hiddenColumn",
-                filename: "Supplier List - " + moment().format(),
-                orientation: "portrait",
-                exportOptions: {
-                  columns: ":visible",
-                },
-              },
-            ],
+            // buttons: [
+            //   {
+            //     extend: "csvHtml5",
+            //     text: "",
+            //     download: "open",
+            //     className: "btntabletocsv hiddenColumn",
+            //     filename: "Supplier List - " + moment().format(),
+            //     orientation: "portrait",
+            //     exportOptions: {
+            //       columns: ":visible",
+            //     },
+            //   },
+            //   {
+            //     extend: "print",
+            //     download: "open",
+            //     className: "btntabletopdf hiddenColumn",
+            //     text: "",
+            //     title: "Supplier List",
+            //     filename: "Supplier List - " + moment().format(),
+            //     exportOptions: {
+            //       columns: ":visible",
+            //       stripHtml: false,
+            //     },
+            //   },
+            //   {
+            //     extend: "excelHtml5",
+            //     title: "",
+            //     download: "open",
+            //     className: "btntabletoexcel hiddenColumn",
+            //     filename: "Supplier List - " + moment().format(),
+            //     orientation: "portrait",
+            //     exportOptions: {
+            //       columns: ":visible",
+            //     },
+            //   },
+            // ],
             select: true,
             destroy: true,
             colReorder: true,
             // bStateSave: true,
             // rowId: 0,
-            pageLength: initialDatatableLoad,
-            lengthMenu: [
-              [initialDatatableLoad, -1],
-              [initialDatatableLoad, "All"],
-            ],
+            // pageLength: initialDatatableLoad,
+            // lengthMenu: [
+            //   [initialDatatableLoad, -1],
+            //   [initialDatatableLoad, "All"],
+            // ],
+            paging: false,
             info: true,
             responsive: true,
             order: [[1, "asc"]],
@@ -4046,14 +3888,14 @@ Template.setup.onRendered(function () {
 
   // Step 9 Render functionalities
 
-  let  splashArrayProductList = new Array();
+  let splashArrayProductList = new Array();
   templateObject.loadInventory = async () => {
     let _inventoryList = [];
     let dataObject = await getVS1Data("TProductVS1");
 
     let data =
       dataObject.length == 0
-        ? await sideBarService.getNewProductListVS1(initialBaseDataLoad, 0)
+        ? await sideBarService.getNewProductListVS1("All")
         : JSON.parse(dataObject[0].data);
 
     if (data.tproductvs1) {
@@ -4079,35 +3921,36 @@ Template.setup.onRendered(function () {
         let onSOORDer = 0;
 
         if (product.fields.ProductClass != null) {
-          for (let a = 0;a < product.fields.ProductClass.length; a++) {
-            availableQty += product.fields.ProductClass[a].fields.AvailableQuantity || 0;
+          for (let a = 0; a < product.fields.ProductClass.length; a++) {
+            availableQty +=
+              product.fields.ProductClass[a].fields.AvailableQuantity || 0;
           }
         }
         product.fields.AvailableQuantity = availableQty;
-        product.fields.onBOOrder = product.fields.TotalQtyInStock - availableQty;
+        product.fields.onBOOrder =
+          product.fields.TotalQtyInStock - availableQty;
         product.fields.onSOOrder = onSOORDer;
-        
-        product.fields.CostPrice = utilityService.modifynegativeCurrencyFormat(
+
+        (product.fields.CostPrice = utilityService.modifynegativeCurrencyFormat(
           Math.floor(product.fields.BuyQty1Cost * 100) / 100
-        ),
-        product.fields.CostPriceInc = utilityService.modifynegativeCurrencyFormat(
-          Math.floor(product.fields.BuyQty1CostInc * 100) /
-            100
-        ),
-        product.fields.SellPrice = utilityService.modifynegativeCurrencyFormat(
-          Math.floor(product.fields.SellQty1Price * 100) / 100
-        ),
-        product.fields.SellPriceInc = utilityService.modifynegativeCurrencyFormat(
-          Math.floor(product.fields.SellQty1PriceInc * 100) /
-            100
-        ),
-
-
-        _inventoryList.push({ ...product.fields });
+        )),
+          (product.fields.CostPriceInc =
+            utilityService.modifynegativeCurrencyFormat(
+              Math.floor(product.fields.BuyQty1CostInc * 100) / 100
+            )),
+          (product.fields.SellPrice =
+            utilityService.modifynegativeCurrencyFormat(
+              Math.floor(product.fields.SellQty1Price * 100) / 100
+            )),
+          (product.fields.SellPriceInc =
+            utilityService.modifynegativeCurrencyFormat(
+              Math.floor(product.fields.SellQty1PriceInc * 100) / 100
+            )),
+          _inventoryList.push({ ...product.fields });
       });
 
       console.log("Inventory list", _inventoryList);
-   
+
       templateObject.inventoryList.set(_inventoryList);
 
       if (templateObject.inventoryList.get()) {
@@ -4221,151 +4064,148 @@ Template.setup.onRendered(function () {
               // ],
               // bStateSave: true,
               // rowId: 0,
-              // paging: false,
+              paging: false,
               // "scrollY": "800px",
               // "scrollCollapse": true,
-              pageLength: initialBaseDataLoad,
-              lengthMenu: [
-                [initialBaseDataLoad, -1],
-                [initialBaseDataLoad, "All"],
-              ],
+              // pageLength: initialBaseDataLoad,
+              // lengthMenu: [],
               info: true,
               responsive: true,
               order: [[0, "asc"]],
               action: function () {
                 $("#InventoryTable").DataTable().ajax.reload();
               },
-              fnDrawCallback: function (oSettings) {
-                $(".paginate_button.page-item").removeClass("disabled");
-                $("#tblInventory_ellipsis").addClass("disabled");
-                if (oSettings._iDisplayLength == -1) {
-                  if (oSettings.fnRecordsDisplay() > 150) {
-                  }
-                  $(".fullScreenSpin").css("display", "inline-block");
-                  setTimeout(function () {
-                    $(".fullScreenSpin").css("display", "none");
-                  }, 100);
-                } else {
-                }
-                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                  $(".paginate_button.page-item.next").addClass("disabled");
-                }
+              // fnDrawCallback: function (oSettings) {
+              //   $(".paginate_button.page-item").removeClass("disabled");
+              //   $("#tblInventory_ellipsis").addClass("disabled");
+              //   if (oSettings._iDisplayLength == -1) {
+              //     if (oSettings.fnRecordsDisplay() > 150) {
+              //     }
+              //     $(".fullScreenSpin").css("display", "inline-block");
+              //     setTimeout(function () {
+              //       $(".fullScreenSpin").css("display", "none");
+              //     }, 100);
+              //   } else {
+              //   }
+              //   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+              //     $(".paginate_button.page-item.next").addClass("disabled");
+              //   }
 
-                $(
-                  ".paginate_button.next:not(.disabled)",
-                  this.api().table().container()
-                ).on("click", function () {
-                  $(".fullScreenSpin").css("display", "inline-block");
-                  let dataLenght = oSettings._iDisplayLength;
-                  let customerSearch = $("#tblInventory_filter input").val();
-                  sideBarService
-                    .getNewProductListVS1(
-                      initialDatatableLoad,
-                      oSettings.fnRecordsDisplay()
-                    )
-                    .then(function (dataObjectnew) {
-                      for (
-                        let i = 0;
-                        i < dataObjectnew.tproductvs1.length;
-                        i++
-                      ) {
-                        let availableQty = 0;
-                        let onBOOrder = 0;
-                        if (
-                          dataObjectnew.tproductvs1[i].fields.ProductClass !=
-                          null
-                        ) {
-                          for (
-                            let a = 0;
-                            a <
-                            dataObjectnew.tproductvs1[i].fields.ProductClass
-                              .length;
-                            a++
-                          ) {
-                            availableQty +=
-                              dataObjectnew.tproductvs1[i].fields.ProductClass[
-                                a
-                              ].fields.AvailableQuantity || 0;
-                          }
-                        }
-                        if (
-                          dataObjectnew.tproductvs1[i].fields.SNTracking == true
-                        ) {
-                          checkIfSerialorLot =
-                            '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                        } else if (
-                          dataObjectnew.tproductvs1[i].fields.Batch == true
-                        ) {
-                          checkIfSerialorLot =
-                            '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                        } else {
-                          checkIfSerialorLot =
-                            '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                        }
-                        var dataListDupp = [
-                          dataObjectnew.tproductvs1[i].fields.ID || "",
-                          dataObjectnew.tproductvs1[i].fields.ProductName ||
-                            "-",
-                          dataObjectnew.tproductvs1[i].fields
-                            .SalesDescription || "",
-                          availableQty,
-                          0,
-                          onBOOrder,
-                          dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-                          dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
-                          utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(
-                              dataObjectnew.tproductvs1[i].fields.BuyQty1Cost *
-                                100
-                            ) / 100
-                          ),
-                          utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(
-                              dataObjectnew.tproductvs1[i].fields
-                                .BuyQty1CostInc * 100
-                            ) / 100
-                          ),
-                          utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(
-                              dataObjectnew.tproductvs1[i].fields
-                                .SellQty1Price * 100
-                            ) / 100
-                          ),
-                          utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(
-                              dataObjectnew.tproductvs1[i].fields
-                                .SellQty1PriceInc * 100
-                            ) / 100
-                          ),
-                          checkIfSerialorLot || "",
-                          dataObjectnew.tproductvs1[i].fields.BARCODE || "",
-                          departmentData,
-                          dataObjectnew.tproductvs1[i].fields
-                            .PurchaseDescription || "",
-                          dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
-                          dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
-                        ];
-                        splashArrayProductList.push(dataListDupp);
-                      }
-                      let uniqueChars = [...new Set(splashArrayProductList)];
-                      var datatable = $("#InventoryTable").DataTable();
-                      datatable.clear();
-                      datatable.rows.add(uniqueChars);
-                      datatable.draw(false);
-                      setTimeout(function () {
-                        $("#InventoryTable").dataTable().fnPageChange("last");
-                      }, 400);
+              //   $(
+              //     ".paginate_button.next:not(.disabled)",
+              //     this.api().table().container()
+              //   ).on("click", function () {
+              //     $(".fullScreenSpin").css("display", "inline-block");
+              //     let dataLenght = oSettings._iDisplayLength;
+              //     let customerSearch = $("#tblInventory_filter input").val();
+              //     sideBarService
+              //       .getNewProductListVS1(
+              //         initialDatatableLoad,
+              //         oSettings.fnRecordsDisplay()
+              //       )
+              //       .then(function (dataObjectnew) {
+              //         for (
+              //           let i = 0;
+              //           i < dataObjectnew.tproductvs1.length;
+              //           i++
+              //         ) {
+              //           let availableQty = 0;
+              //           let onBOOrder = 0;
+              //           if (
+              //             dataObjectnew.tproductvs1[i].fields.ProductClass !=
+              //             null
+              //           ) {
+              //             for (
+              //               let a = 0;
+              //               a <
+              //               dataObjectnew.tproductvs1[i].fields.ProductClass
+              //                 .length;
+              //               a++
+              //             ) {
+              //               availableQty +=
+              //                 dataObjectnew.tproductvs1[i].fields.ProductClass[
+              //                   a
+              //                 ].fields.AvailableQuantity || 0;
+              //             }
+              //           }
+              //           if (
+              //             dataObjectnew.tproductvs1[i].fields.SNTracking == true
+              //           ) {
+              //             checkIfSerialorLot =
+              //               '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+              //           } else if (
+              //             dataObjectnew.tproductvs1[i].fields.Batch == true
+              //           ) {
+              //             checkIfSerialorLot =
+              //               '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+              //           } else {
+              //             checkIfSerialorLot =
+              //               '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+              //           }
+              //           var dataListDupp = [
+              //             dataObjectnew.tproductvs1[i].fields.ID || "",
+              //             dataObjectnew.tproductvs1[i].fields.ProductName ||
+              //               "-",
+              //             dataObjectnew.tproductvs1[i].fields
+              //               .SalesDescription || "",
+              //             availableQty,
+              //             0,
+              //             onBOOrder,
+              //             dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
+              //             dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
+              //             utilityService.modifynegativeCurrencyFormat(
+              //               Math.floor(
+              //                 dataObjectnew.tproductvs1[i].fields.BuyQty1Cost *
+              //                   100
+              //               ) / 100
+              //             ),
+              //             utilityService.modifynegativeCurrencyFormat(
+              //               Math.floor(
+              //                 dataObjectnew.tproductvs1[i].fields
+              //                   .BuyQty1CostInc * 100
+              //               ) / 100
+              //             ),
+              //             utilityService.modifynegativeCurrencyFormat(
+              //               Math.floor(
+              //                 dataObjectnew.tproductvs1[i].fields
+              //                   .SellQty1Price * 100
+              //               ) / 100
+              //             ),
+              //             utilityService.modifynegativeCurrencyFormat(
+              //               Math.floor(
+              //                 dataObjectnew.tproductvs1[i].fields
+              //                   .SellQty1PriceInc * 100
+              //               ) / 100
+              //             ),
+              //             checkIfSerialorLot || "",
+              //             dataObjectnew.tproductvs1[i].fields.BARCODE || "",
+              //             departmentData,
+              //             dataObjectnew.tproductvs1[i].fields
+              //               .PurchaseDescription || "",
+              //             dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
+              //             dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
+              //           ];
+              //           splashArrayProductList.push(dataListDupp);
+              //         }
+              //         let uniqueChars = [...new Set(splashArrayProductList)];
+              //         var datatable = $("#InventoryTable").DataTable();
+              //         datatable.clear();
+              //         datatable.rows.add(uniqueChars);
+              //         datatable.draw(false);
+              //         setTimeout(function () {
+              //           $("#InventoryTable").dataTable().fnPageChange("last");
+              //         }, 400);
 
-                      $(".fullScreenSpin").css("display", "none");
-                    })
-                    .catch(function (err) {
-                      $(".fullScreenSpin").css("display", "none");
-                    });
-                });
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              },
+              //         $(".fullScreenSpin").css("display", "none");
+              //       })
+              //       .catch(function (err) {
+              //         $(".fullScreenSpin").css("display", "none");
+              //       });
+              //   });
+              //   setTimeout(function () {
+              //     MakeNegative();
+              //   }, 100);
+              // },
               fnInitComplete: function () {
                 $(
                   "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -4412,7 +4252,7 @@ function isStepActive(stepId) {
 }
 
 Template.setup.events({
-  "click #start-wizard":  (e) =>  {
+  "click #start-wizard": (e) => {
     let templateObject = Template.instance();
     $(`[data-step-id=1]`).parents("li").addClass("current");
     $(".first-page").css("display", "none");
@@ -4426,15 +4266,16 @@ Template.setup.events({
     addConfirmedStep(stepId);
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
-    $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
-    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
-    $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
-    $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
-    if (stepId !== numberOfSteps) {
-      $(".setup-step-" + stepId).css("display", "block");
-    } else {
-      $(".setup-complete").css("display", "block");
-    }
+    // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
+    // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
+    // $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
+    // $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
+    $(".setup-step-" + stepId).css("display", "block");
+    // if (stepId !== numberOfSteps) {
+    //   $(".setup-step-" + stepId).css("display", "block");
+    // } else {
+    //   $(".setup-complete").css("display", "block");
+    // }
 
     setCurrentStep(stepId);
     templateObject.loadSteps();
@@ -4443,10 +4284,9 @@ Template.setup.events({
     let templateObject = Template.instance();
     let skippedSteps = templateObject.skippedSteps.get();
     let stepId = parseInt($(event.target).attr("data-step-id"));
-    skippedSteps.push(stepId);
-    templateObject.skippedSteps.set(skippedSteps);
+
     addSkippedStep(stepId);
-    stepId = stepId +1;
+    stepId = stepId + 1;
     $(".setup-step").css("display", "none");
     // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
@@ -4460,10 +4300,9 @@ Template.setup.events({
     // let _steps = templateObject.steps.get();
     // _steps.skippedSteps.push(stepId);
 
-    
-   
-   
-    
+    skippedSteps.push(stepId);
+    templateObject.skippedSteps.set(skippedSteps);
+
     setCurrentStep(stepId);
     templateObject.loadSteps();
   },
@@ -5332,7 +5171,10 @@ Template.setup.events({
         $(".fullScreenSpin").css("display", "none");
       });
   },
-  "click #taxRatesTable td.clickable": (e) => TaxRatesEditListener(e),
+  "click #taxRatesTable tbody td.clickable": (e) => {
+    console.log(e);
+    TaxRatesEditListener(e);
+  },
   "click .table-remove-tax-rate": (e) => {
     e.stopPropagation();
     const targetID = $(e.target).closest("tr").attr("id"); // table row ID
@@ -8951,9 +8793,7 @@ Template.setup.events({
   "click #btnNewSupplier": (e) => {
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
   },
-  "click #tblSupplierlist tbody tr": (e) => {
-
-  },
+  "click #tblSupplierlist tbody tr": (e) => {},
   // TODO: Step 9
   "click .lblCostEx": function (event) {
     var $earch = $(event.currentTarget);
@@ -9014,15 +8854,15 @@ Template.setup.events({
     }
   },
   "click #btnNewProduct": (e) => {
-    $($(e.currentTarget).attr('data-toggle')).modal("toggle");
+    $($(e.currentTarget).attr("data-toggle")).modal("toggle");
   },
   "click .btnRefresh": () => {
     Meteor._reload.reload();
   },
   "change #isProductAdded": (E) => {
-    console.log('Product added');
+    console.log("Product added");
     //$(".btnRefresh").click();
-    $('#addProductModal').modal("toggle");
+    $("#addProductModal").modal("toggle");
     LoadingOverlay.show();
     let templateObject = Template.instance();
 
@@ -9030,12 +8870,20 @@ Template.setup.events({
       templateObject.loadInventory();
       LoadingOverlay.hide();
     }, 1500);
-   
-  }
-  
+  },
 });
 
 Template.setup.helpers({
+  isStepActive: (step) => {
+    const currentStep = getCurrentStep();
+    if (currentStep == step) {
+      return 'style="display: none"';
+    }
+    return 'style="display: block"';
+  },
+  currentStep: () => {
+    return getCurrentStep() || 1;
+  },
   steps: () => {
     return Template.instance().steps.get();
   },
