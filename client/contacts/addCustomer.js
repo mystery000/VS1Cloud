@@ -1999,6 +1999,9 @@ Template.customerscard.events({
         // let suffix = $('#edtSuffix').val();
         let phone = $('#edtCustomerPhone').val()||'';
         let mobile = $('#edtCustomerMobile').val()||'';
+        if(mobile && mobile !== '') {
+            mobile = contactService.changeMobileFormat(mobile);
+        }
         let fax = $('#edtCustomerFax').val()||'';
         let accountno = $('#edtClientNo').val()||'';
         let skype = $('#edtCustomerSkypeID').val()||'';
@@ -3309,7 +3312,10 @@ Template.customerscard.events({
 
 Template.customerscard.helpers({
     record: () => {
-        return Template.instance().records.get();
+        let temp =  Template.instance().records.get();
+        if(temp && temp.mobile) {
+            temp.mobile = temp.mobile.replace('+61', '0')
+        }
     },
     countryList: () => {
         return Template.instance().countryData.get();

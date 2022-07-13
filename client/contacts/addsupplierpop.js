@@ -539,6 +539,9 @@ Template.addsupplierpop.events({
         let suffix = $('#suffix').val()||'';
         let phone = $('#edtSupplierPhone').val()||'';
         let mobile = $('#edtSupplierMobile').val()||'';
+        if(mobile && mobile !== '') {
+            mobile = contactService.changeMobileFormat(mobile);
+        }
         let fax = $('#edtSupplierFax').val()||'';
         let accountno = $('#edtSupplierAccountNo').val()||'';
         let skype = $('#edtSupplierSkypeID').val()||'';
@@ -1343,7 +1346,11 @@ Template.addsupplierpop.events({
 
 Template.addsupplierpop.helpers({
     record : () => {
-        return Template.instance().records.get();
+        let temp =  Template.instance().records.get();
+        if(temp && temp.mobile) {
+            temp.mobile = temp.mobile.replace('+61', '0')
+        }
+        return temp;
     },
     countryList: () => {
         return Template.instance().countryData.get();

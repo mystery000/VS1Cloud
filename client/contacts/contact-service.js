@@ -564,4 +564,21 @@ export class ContactService extends BaseService {
      saveEmployeeProducts(data){
          return this.POST(this.ERPObjects.TRepServices, data);
      }
+
+     changeMobileFormat(mobile) {
+        var mobileResult = '';
+        if(mobile && mobile !== '') {
+          if(mobile.charAt(0) == '0') {
+            console.log("first Char is  0", mobile);
+            mobileResult = mobile.replace('0', '+61')
+          } else if(mobile.substring(0,3) == '+61') {
+            console.log("first char is +61", mobile);
+            mobileResult = mobile.replace('+61', '0');
+          } else  {
+            console.log("first char is not matched and will not be changed", mobile );
+            mobileResult = '+61'.concat(mobile);
+          }
+        } 
+        return mobileResult;
+      }
   }
