@@ -2474,7 +2474,7 @@ Template.addemployeepop.events({
                             addVS1Data('TEmployee', JSON.stringify(dataReload)).then(function (datareturn) {
                                 sideBarService.getAllAppointmentPredList().then(function (data) {
                                     addVS1Data('TAppointmentPreferences', JSON.stringify(data)).then(function (datareturn) {
-                                        
+
                                         $('.setup-wizard') ? $('.btnRefreshEmployee').click() : FlowRouter.go('/employeelist?success=true');
                                     }).catch(function (err) {
                                         $('.setup-wizard') ? $('.btnRefreshEmployee').click() : FlowRouter.go('/employeelist?success=true');
@@ -3459,125 +3459,11 @@ Template.addemployeepop.events({
             getchkcustomField4 = false;
         }
 
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'employeescard'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'contactform',
-                            PrefName: 'employeescard',
-                            published: true,
-                            customFields: [{
-                                    index: '1',
-                                    label: getcustomField1,
-                                    hidden: getchkcustomField1
-                                }, {
-                                    index: '2',
-                                    label: getcustomField2,
-                                    hidden: getchkcustomField2
-                                }, {
-                                    index: '3',
-                                    label: getcustomField3,
-                                    hidden: getchkcustomField3
-                                }, {
-                                    index: '4',
-                                    label: getcustomField4,
-                                    hidden: getchkcustomField4
-                                }
-                            ],
-                            updatedAt: new Date()
-                        }
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#customfieldModal').modal('toggle');
-                        } else {
-                            $('#customfieldModal').modal('toggle');
-
-                        }
-                    });
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'contactform',
-                        PrefName: 'employeescard',
-                        published: true,
-                        customFields: [{
-                                index: '1',
-                                label: getcustomField1,
-                                hidden: getchkcustomField1
-                            }, {
-                                index: '2',
-                                label: getcustomField2,
-                                hidden: getchkcustomField2
-                            }, {
-                                index: '3',
-                                label: getcustomField3,
-                                hidden: getchkcustomField3
-                            }, {
-                                index: '4',
-                                label: getcustomField4,
-                                hidden: getchkcustomField4
-                            }
-                        ],
-                        createdAt: new Date()
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#customfieldModal').modal('toggle');
-                        } else {
-                            $('#customfieldModal').modal('toggle');
-
-                        }
-                    });
-                }
-            }
-        }
+        $('#customfieldModal').modal('toggle');
 
     },
     'click .btnResetSettings': function (event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'employeescard'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function (err, idTag) {
-                        if (err) {}
-                        else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
+        $('#customfieldModal').modal('toggle');
     },
     'click .new_attachment_btn': function (event) {
         $('#attachment-upload').trigger('click');

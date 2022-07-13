@@ -1087,73 +1087,7 @@ Template.leadscard.events({
         if ($('#formCheck-four').is(':checked')) {
             getchkcustomField4 = false;
         }
-        let checkPrefDetails = getCheckPrefDetails();
-        if (checkPrefDetails) {
-            CloudPreference.update({ _id: checkPrefDetails._id }, {
-                $set: {
-                    username: clientUsername, useremail: clientEmail,
-                    PrefGroup: 'contactform', PrefName: 'leadscard', published: true,
-                    customFields: [{
-                        index: '1',
-                        label: getcustomField1,
-                        hidden: getchkcustomField1
-                    }, {
-                        index: '2',
-                        label: getcustomField2,
-                        hidden: getchkcustomField2
-                    }, {
-                        index: '3',
-                        label: getcustomField3,
-                        hidden: getchkcustomField3
-                    }, {
-                        index: '4',
-                        label: getcustomField4,
-                        hidden: getchkcustomField4
-                    }
-                                  ],
-                    updatedAt: new Date()
-                }
-            }, function (err, idTag) {
-                if (err) {
-                    $('#customfieldModal').modal('toggle');
-                } else {
-                    $('#customfieldModal').modal('toggle');
-                    $('.btnSave').trigger('click');
-                }
-            });
-        } else {
-            CloudPreference.insert({
-                userid: clientID, username: clientUsername, useremail: clientEmail,
-                PrefGroup: 'contactform', PrefName: 'leadscard', published: true,
-                customFields: [{
-                        index: '1',
-                        label: getcustomField1,
-                        hidden: getchkcustomField1
-                    }, {
-                        index: '2',
-                        label: getcustomField2,
-                        hidden: getchkcustomField2
-                    }, {
-                        index: '3',
-                        label: getcustomField3,
-                        hidden: getchkcustomField3
-                    }, {
-                        index: '4',
-                        label: getcustomField4,
-                        hidden: getchkcustomField4
-                    }
-                ],
-                createdAt: new Date()
-            }, function (err, idTag) {
-                if (err) {
-                    $('#customfieldModal').modal('toggle');
-                } else {
-                    $('#customfieldModal').modal('toggle');
-                    $('.btnSave').trigger('click');
-
-                }
-            });
-        }
+        $('#customfieldModal').modal('toggle');
     },
     'click .btnResetSettings': function (event) {
         let checkPrefDetails = getCheckPrefDetails();
