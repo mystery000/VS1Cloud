@@ -42,13 +42,37 @@ Meteor.methods({
     console.log("Running cron job for user: " + cronSetting.employeeId);
     // await fetch("/cron/currency-update/" + cronSetting.employeeId);
     // We are testing with get request only but we need post request here
-    let app_url="https://sandboxdb.vs1cloud.com:4434/erpapi/TCurrency?ListType=Detail";
-    return await Meteor.http.call("GET", app_url, {
-      headers: {
-        "content-type":"application/json",
-        "Accept":"application/json"
-      },
+    // let app_url="https://sandboxdb.vs1cloud.com:4434/erpapi/TCurrency?ListType=Detail";
+    // return await Meteor.http.call("GET", app_url, {
+    //   headers: {
+    //     "content-type":"application/json",
+    //     "Accept":"application/json"
+    //   },
+    // });
+
+    let apiUrl = "https://sandboxdb.vs1cloud.com:4434/erpapi/TCurrency?ListType=Detail";
+
+    console.log("Running cron job for user: " + cronSetting.employeeId);
+    /* My only fear is how do you pass the header details to this form? */
+    /* Not diffuclt if you pass it from client to this place */
+    let postHeaders = {
+      "database": "VS1_Cloud_DB_cacb_ba_cf_Tgck5c",
+      "username": "dene@vs1cloud.com",
+      "password": "Dene@123"
+      // "Access-Control-Allow-Origin": "*"
+    };
+
+    Meteor.http.call("GET", apiUrl, {
+        // data: postData,
+        headers: postHeaders,
+    }, (error, result) => {
+        if (error) {
+
+        } else {
+            console.log(result);
+        }
     });
+
   },
   /**
    * This function will just add the cron job
