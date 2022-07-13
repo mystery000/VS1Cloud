@@ -119,30 +119,6 @@ Template.purchasesoverview.onRendered(function () {
       });
   };
 
-  Meteor.call(
-    "readPrefMethod",
-    Session.get("mycloudLogonID"),
-    "tblPurchaseOverview",
-    function (error, result) {
-      if (error) {
-      } else {
-        if (result) {
-          for (let i = 0; i < result.customFields.length; i++) {
-            let customcolumn = result.customFields;
-            let columData = customcolumn[i].label;
-            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-            let hiddenColumn = customcolumn[i].hidden;
-            let columnClass = columHeaderUpdate.split(".")[1];
-            let columnWidth = customcolumn[i].width;
-
-            $("th." + columnClass + "").html(columData);
-            $("th." + columnClass + "").css("width", "" + columnWidth + "px");
-          }
-        }
-      }
-    }
-  );
-
   templateObject.resetData = function (dataVal) {
     window.open("/purchasesoverview?page=last", "_self");
   };
@@ -1346,18 +1322,8 @@ Template.purchasesoverview.onRendered(function () {
   };
 
   templateObject.getAllPurchaseOrderAll();
-  templateObject.getAllFilterPurchasesData = function (
-    fromDate,
-    toDate,
-    ignoreDate
-  ) {
-    sideBarService.getAllPurchasesList(
-        fromDate,
-        toDate,
-        ignoreDate,
-        initialReportLoad,
-        0
-      ).then(function (data) {
+  templateObject.getAllFilterPurchasesData = function (fromDate,toDate,ignoreDate) {
+    sideBarService.getAllPurchasesList(fromDate,toDate,ignoreDate,initialReportLoad,0).then(function (data) {
         addVS1Data("TPurchasesList", JSON.stringify(data)).then(function (datareturn) {
             window.open("/purchasesoverview?toDate=" +toDate +"&fromDate=" +fromDate +"&ignoredate=" +ignoreDate,"_self");
           }).catch(function (err) {
