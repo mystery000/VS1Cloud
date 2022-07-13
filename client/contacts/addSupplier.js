@@ -171,10 +171,11 @@ Template.supplierscard.onRendered(function () {
                 //itemsAwaitingPaymentcount.push(dataListAwaitingCust);
                 totAmount += Number(data.tapreport[i].AmountDue);
                 let date = new Date(data.tapreport[i].DueDate);
-                if (date < new Date()) {
+                let totOverdueLine = Number(data.tapreport[i].AmountDue) - Number(data.tapreport[i].Current)||0;
+                //if (date < new Date()) {
                     //itemsOverduePaymentcount.push(dataListAwaitingCust);
-                    totAmountOverDue += Number(data.tapreport[i].AmountDue);
-                }
+                    totAmountOverDue += totOverdueLine;
+                //}
             }
         }
         $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
@@ -1041,6 +1042,14 @@ Template.supplierscard.events({
             window.open('/agedpayables?contact='+supplierName+'&contactid='+currentId, '_self');
         } else {
             window.open('/agedpayables','_self');
+        }
+    },
+    'click .btnMakeSupplierPayment': async function (event) {
+      let currentId = FlowRouter.current().queryParams.id||'';
+      let supplierName = $('#edtSupplierCompany').val() || '';
+      if (supplierName !== "") {
+            await addVS1Data('TAwaitingSupplierPayment', []);
+            FlowRouter.go('/supplierawaitingpurchaseorder?contact='+supplierName+'&contactid='+currentId);
         }
     },
     'click .openBalancesummary': function (event) {

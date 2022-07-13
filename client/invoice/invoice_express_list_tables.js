@@ -1183,7 +1183,7 @@ Template.invoicelist.onRendered(function () {
 
         if (custFields.length < 3) {
           let remainder = 3 - custFields.length;
-          let getRemCustomFields = parseInt(custFields.length); 
+          let getRemCustomFields = parseInt(custFields.length);
           for (let r = 0; r < remainder; r++) {
             getRemCustomFields++;
             customData = {
@@ -1198,7 +1198,7 @@ Template.invoicelist.onRendered(function () {
             custFields.push(customData);
           }
         }
-        if (custFields) { 
+        if (custFields) {
           $(".colCustFieldHeader1").html(custFields[0].custfieldlabel);
           $(".colCustFieldHeader2").html(custFields[1].custfieldlabel);
           $(".colCustFieldHeader3").html(custFields[2].custfieldlabel);
@@ -1210,7 +1210,7 @@ Template.invoicelist.onRendered(function () {
             $(".colSaleCustField1").addClass('hiddenColumn');
             $(".colSaleCustField1").removeClass('showColumn');
           }
-    
+
           if (custFields[1].active) {
             $(".colSaleCustField2").removeClass('hiddenColumn');
             $(".colSaleCustField2").addClass('showColumn');
@@ -1626,7 +1626,15 @@ Template.invoicelist.events({
             addVS1Data('TInvoiceList', JSON.stringify(dataInvoice)).then(function (datareturn) {
               sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
                   addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
+                    sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+                        addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
+                          window.open('/invoicelist', '_self');
+                          }).catch(function (err) {
+                            window.open('/invoicelist', '_self');
+                           });
+                    }).catch(function (err) {
                       window.open('/invoicelist', '_self');
+                    });
                   }).catch(function (err) {
                       window.open('/invoicelist', '_self');
                   });

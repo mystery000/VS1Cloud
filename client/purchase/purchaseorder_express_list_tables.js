@@ -1860,18 +1860,7 @@ Template.purchaseorderlist.events({
     if (currentDate.getDate() < 10) {
       days = "0" + currentDate.getDate();
     }
-    let currenctTodayDate =
-      currentDate.getFullYear() +
-      "-" +
-      month +
-      "-" +
-      days +
-      " " +
-      hours +
-      ":" +
-      minutes +
-      ":" +
-      seconds;
+    let currenctTodayDate =currentDate.getFullYear() +"-" +month +"-" +days +" " +hours +":" +minutes +":" +seconds;
     let templateObject = Template.instance();
 
     var currentBeginDate = new Date();
@@ -1889,81 +1878,42 @@ Template.purchaseorderlist.events({
     }
     var toDate =
       currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-    let prevMonth11Date = moment()
-      .subtract(reportsloadMonths, "months")
-      .format("YYYY-MM-DD");
+    let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
 
-    sideBarService
-      .getAllPurchaseOrderListAll(
-        prevMonth11Date,
-        toDate,
-        false,
-        initialReportLoad,
-        0
-      )
-      .then(function (data) {
-        addVS1Data("TbillReport", JSON.stringify(data))
-          .then(function (datareturn) {})
-          .catch(function (err) {});
-      })
-      .catch(function (err) {});
+    sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+        addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {}).catch(function (err) {});
+      }).catch(function (err) {});
 
-    sideBarService
-      .getAllTPurchaseOrderListData(
-        prevMonth11Date,
-        toDate,
-        false,
-        initialReportLoad,
-        0
-      )
-      .then(function (dataPO) {
-        addVS1Data("TPurchaseOrderList", JSON.stringify(dataPO))
-          .then(function (datareturn) {
-            sideBarService
-              .getAllPurchaseOrderList(initialDataLoad, 0)
-              .then(function (data) {
-                addVS1Data("TPurchaseOrderEx", JSON.stringify(data))
-                  .then(function (datareturn) {
+    sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPO) {
+        addVS1Data("TPurchaseOrderList", JSON.stringify(dataPO)).then(function (datareturn) {
+            sideBarService.getAllPurchaseOrderList(initialDataLoad, 0).then(function (data) {
+                addVS1Data("TPurchaseOrderEx", JSON.stringify(data)).then(function (datareturn) {
                     window.open("/purchaseorderlist", "_self");
-                  })
-                  .catch(function (err) {
+                  }).catch(function (err) {
                     window.open("/purchaseorderlist", "_self");
                   });
-              })
-              .catch(function (err) {
+              }).catch(function (err) {
                 window.open("/purchaseorderlist", "_self");
               });
-          })
-          .catch(function (err) {
-            sideBarService
-              .getAllPurchaseOrderList(initialDataLoad, 0)
-              .then(function (data) {
-                addVS1Data("TPurchaseOrderEx", JSON.stringify(data))
-                  .then(function (datareturn) {
+          }).catch(function (err) {
+            sideBarService.getAllPurchaseOrderList(initialDataLoad, 0).then(function (data) {
+                addVS1Data("TPurchaseOrderEx", JSON.stringify(data)).then(function (datareturn) {
                     window.open("/purchaseorderlist", "_self");
-                  })
-                  .catch(function (err) {
+                  }).catch(function (err) {
                     window.open("/purchaseorderlist", "_self");
                   });
-              })
-              .catch(function (err) {
+              }).catch(function (err) {
                 window.open("/purchaseorderlist", "_self");
               });
           });
-      })
-      .catch(function (err) {
-        sideBarService
-          .getAllPurchaseOrderList(initialDataLoad, 0)
-          .then(function (data) {
-            addVS1Data("TPurchaseOrderEx", JSON.stringify(data))
-              .then(function (datareturn) {
+      }).catch(function (err) {
+        sideBarService.getAllPurchaseOrderList(initialDataLoad, 0).then(function (data) {
+            addVS1Data("TPurchaseOrderEx", JSON.stringify(data)).then(function (datareturn) {
                 window.open("/purchaseorderlist", "_self");
-              })
-              .catch(function (err) {
+              }).catch(function (err) {
                 window.open("/purchaseorderlist", "_self");
               });
-          })
-          .catch(function (err) {
+          }).catch(function (err) {
             window.open("/purchaseorderlist", "_self");
           });
       });

@@ -1829,7 +1829,7 @@ Template.paymentoverview.events({
 
           });
 
-          sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0,'').then(function (data) {
               addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data)).then(function (datareturn) {
 
               }).catch(function (err) {

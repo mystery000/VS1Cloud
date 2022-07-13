@@ -133,10 +133,11 @@ Template.customerscard.onRendered(function () {
                 // itemsAwaitingPaymentcount.push(dataListAwaitingCust);
                 totAmount += Number(data.tarreport[i].AmountDue);
                 let date = new Date(data.tarreport[i].DueDate);
-                if (date < new Date()) {
+                  let totOverdueLine = Number(data.tarreport[i].AmountDue) - Number(data.tarreport[i].Current)||0;
+                //if (date < new Date()) {
                     // itemsOverduePaymentcount.push(dataListAwaitingCust);
-                    totAmountOverDue += Number(data.tarreport[i].AmountDue);
-                }
+                    totAmountOverDue += totOverdueLine;
+                //}
             }
         }
         $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
@@ -1774,6 +1775,17 @@ Template.customerscard.events({
             window.open('/agedreceivables?contact='+customerName+'&contactid='+currentId, '_self');
         } else {
             window.open('/agedreceivables','_self');
+        }
+    },
+    'click .btnReceiveCustomerPayment': async function (event) {
+        let currentId = FlowRouter.current().queryParams.id||FlowRouter.current().queryParams.jobid||'';
+        let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
+        if(customerName !== "") {
+            if(customerName.indexOf('^') > 0) {
+              customerName = customerName.split('^')[0]
+            }
+            await addVS1Data('TAwaitingCustomerPayment', []);
+            FlowRouter.go('/customerawaitingpayments?contact='+customerName+'&contactid='+currentId);
         }
     },
     'click .openBalancesummary': function (event) {

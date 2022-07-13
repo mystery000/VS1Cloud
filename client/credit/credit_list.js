@@ -1422,7 +1422,39 @@ Template.creditlist.events({
           addVS1Data('TCreditList',JSON.stringify(dataCredit)).then(function (datareturn) {
             sideBarService.getAllCreditList(initialDataLoad,0).then(function(data) {
                 addVS1Data('TCredit',JSON.stringify(data)).then(function (datareturn) {
-                    window.open('/creditlist','_self');
+                  sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+                    addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
+                      sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+                          addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                              window.open('/creditlist','_self');
+                            }).catch(function (err) {
+                              window.open('/creditlist','_self');
+                            });
+                        }).catch(function (err) {
+                          window.open('/creditlist','_self');
+                        });
+                      }).catch(function (err) {
+                        sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+                            addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                                window.open('/creditlist','_self');
+                              }).catch(function (err) {
+                                window.open('/creditlist','_self');
+                              });
+                          }).catch(function (err) {
+                            window.open('/creditlist','_self');
+                          });
+                      });
+                  }).catch(function (err) {
+                    sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+                        addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                            window.open('/creditlist','_self');
+                          }).catch(function (err) {
+                            window.open('/creditlist','_self');
+                          });
+                      }).catch(function (err) {
+                        window.open('/creditlist','_self');
+                      });
+                  });
                 }).catch(function (err) {
                     window.open('/creditlist','_self');
                 });

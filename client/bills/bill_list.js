@@ -1395,11 +1395,43 @@ Template.billlist.events({
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
 
-      sideBarService.getAllBillListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataBill) {
-          addVS1Data('TBillList',JSON.stringify(dataBill)).then(function (datareturn) {
+      sideBarService.getAllBillListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataBillList) {
+          addVS1Data('TBillList',JSON.stringify(dataBillList)).then(function (datareturn) {
             sideBarService.getAllBillExList(initialDataLoad,0).then(function(dataBill) {
                 addVS1Data('TBillEx',JSON.stringify(dataBill)).then(function (datareturn) {
-                    window.open('/billlist','_self');
+                  sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+                    addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
+                      sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+                          addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                              window.open('/billlist','_self');
+                            }).catch(function (err) {
+                              window.open('/billlist','_self');
+                            });
+                        }).catch(function (err) {
+                          window.open('/billlist','_self');
+                        });
+                      }).catch(function (err) {
+                        sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+                            addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                                window.open('/billlist','_self');
+                              }).catch(function (err) {
+                                window.open('/billlist','_self');
+                              });
+                          }).catch(function (err) {
+                            window.open('/billlist','_self');
+                          });
+                      });
+                  }).catch(function (err) {
+                    sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+                        addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                            window.open('/billlist','_self');
+                          }).catch(function (err) {
+                            window.open('/billlist','_self');
+                          });
+                      }).catch(function (err) {
+                        window.open('/billlist','_self');
+                      });
+                  });
                 }).catch(function (err) {
                     window.open('/billlist','_self');
                 });

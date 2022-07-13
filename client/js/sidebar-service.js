@@ -1185,8 +1185,22 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBillList, options);
   }
 
-  getAllAwaitingSupplierPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllAwaitingSupplierPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,contactID) {
     let options = "";
+    if(contactID != '' && contactID != undefined){
+      options = {
+        IgnoreDates: true,
+        IncludePOs: true,
+        IncludeBills: true,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        OrderBy: "PurchaseOrderID desc",
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+        ClientID:contactID,
+      };
+    }else{
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
@@ -1214,6 +1228,7 @@ export class SideBarService extends BaseService {
         LimitFrom: '"' + limitfrom + '"',
       };
     }
+   }
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
@@ -1361,8 +1376,25 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
-  getAllAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, contactID) {
     let options = "";
+    if(contactID != '' && contactID != undefined){
+      options = {
+        IgnoreDates: true,
+        IgnoreDates: true,
+        IncludeIsInvoice: true,
+        IncludeIsQuote: false,
+        IncludeIsRefund: true,
+        IncludeISSalesOrder: false,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+        Search: "ClientId = "+contactID,
+        OrderBy: "SaleID desc"
+      };
+    }else{
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
@@ -1395,6 +1427,7 @@ export class SideBarService extends BaseService {
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
+    }
     }
     return this.getList(this.ERPObjects.TSalesList, options);
   }
@@ -2519,6 +2552,7 @@ export class SideBarService extends BaseService {
         OrderBy: "ReconciliationID desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
+        Search: "Deleted != " + true + "",
       };
     } else {
       options = {
@@ -2528,6 +2562,7 @@ export class SideBarService extends BaseService {
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
+        Search: "Deleted != " + true + "",
       };
     }
     return this.getList(this.ERPObjects.TReconciliationList, options);
@@ -2549,6 +2584,7 @@ export class SideBarService extends BaseService {
       IgnoreDates: false,
       DateFrom: '"' + dateFrom + '"',
       DateTo: '"' + dateTo + '"',
+      Search: "Deleted != " + true + "",
     };
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }

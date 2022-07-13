@@ -140,6 +140,7 @@ Template.overduesupplierawaiting.onRendered(function () {
 
                         if (dueDateCal < currentDateCal) {
                             overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                            if(overDueDays > 0){
                             if(overDueDays == 1){
                               overDueDaysText = overDueDays + ' Day';
                             }else{
@@ -152,6 +153,7 @@ Template.overduesupplierawaiting.onRendered(function () {
                             }else{
                               overDueType = 'text-deleted';
                             }
+                          }
                         }
                         //if (data.tbillreport[i].Balance != 0) {
                             if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
@@ -490,6 +492,7 @@ Template.overduesupplierawaiting.onRendered(function () {
 
                     if (dueDateCal < currentDateCal) {
                         overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays > 0){
                         if(overDueDays == 1){
                           overDueDaysText = overDueDays + ' Day';
                         }else{
@@ -502,6 +505,7 @@ Template.overduesupplierawaiting.onRendered(function () {
                         }else{
                           overDueType = 'text-deleted';
                         }
+                      }
                     }
                     if (useData[i].Balance != 0) {
                         if ((useData[i].Type == "Purchase Order") || (useData[i].Type == "Bill") || (useData[i].Type == "Credit")) {
@@ -802,6 +806,7 @@ Template.overduesupplierawaiting.onRendered(function () {
 
                     if (dueDateCal < currentDateCal) {
                         overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays > 0){
                         if(overDueDays == 1){
                           overDueDaysText = overDueDays + ' Day';
                         }else{
@@ -814,6 +819,7 @@ Template.overduesupplierawaiting.onRendered(function () {
                         }else{
                           overDueType = 'text-deleted';
                         }
+                      }
                     }
                     //if (data.tbillreport[i].Balance != 0) {
                         if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
@@ -1474,6 +1480,7 @@ Template.overduesupplierawaiting.events({
 
                               if (dueDateCal < currentDateCal) {
                                   overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                                  if(overDueDays > 0){
                                   if(overDueDays == 1){
                                     overDueDaysText = overDueDays + ' Day';
                                   }else{
@@ -1486,6 +1493,7 @@ Template.overduesupplierawaiting.events({
                                   }else{
                                     overDueType = 'text-deleted';
                                   }
+                                }
                               }
 
                               var dataList = {
@@ -1755,16 +1763,54 @@ Template.overduesupplierawaiting.events({
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
         sideBarService.getAllOverDueAwaitingSupplierPaymentOver(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
             addVS1Data('TOverdueAwaitingSupplierPayment', JSON.stringify(data)).then(function (datareturn) {
-              Meteor._reload.reload();
             }).catch(function (err) {
 
-                Meteor._reload.reload();
             });
         }).catch(function (err) {
-           Meteor._reload.reload();
+
         });
 
 
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
+            addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
+                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataSuppPay) {
+                    addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
+                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
+                            addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+                              setTimeout(function () {
+                                Meteor._reload.reload();
+                              }, 2000);
+                            }).catch(function(err) {
+                              setTimeout(function () {
+                                Meteor._reload.reload();
+                              }, 2000);
+                            });
+                        }).catch(function(err) {
+                          setTimeout(function () {
+                            Meteor._reload.reload();
+                          }, 2000);
+                        });
+                    }).catch(function(err) {
+                        setTimeout(function () {
+                            Meteor._reload.reload();
+                         }, 2000);
+                    });
+                }).catch(function(err) {
+                  setTimeout(function () {
+                    Meteor._reload.reload();
+                  }, 2000);
+                });
+            }).catch(function(err) {
+              setTimeout(function () {
+                Meteor._reload.reload();
+              }, 2000);
+            });
+        }).catch(function(err) {
+          setTimeout(function () {
+            Meteor._reload.reload();
+          }, 2000);
+
+        });
     },
     'click .printConfirm': function (event) {
 

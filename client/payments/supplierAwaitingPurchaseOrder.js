@@ -80,14 +80,32 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
       location.reload();
     }
 
+    let contactID = FlowRouter.current().queryParams.contactid ||'';
     // $('#tblSupplierAwaitingPO').DataTable();
     templateObject.getAllSupplierPaymentData = function () {
+      var currentBeginDate = new Date();
+      var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+      let fromDateMonth = (currentBeginDate.getMonth() + 1);
+      let fromDateDay = currentBeginDate.getDate();
+      if((currentBeginDate.getMonth()+1) < 10){
+          fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+      }else{
+        fromDateMonth = (currentBeginDate.getMonth()+1);
+      }
+
+      if(currentBeginDate.getDate() < 10){
+          fromDateDay = "0" + currentBeginDate.getDate();
+      }
+      var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+      let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
         getVS1Data('TAwaitingSupplierPayment').then(function (dataObject) {
             if (dataObject.length == 0) {
-                paymentService.getAllAwaitingSupplierDetails().then(function (data) {
+                sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0,contactID).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     let totalPaidCal = 0;
+                    addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data));
                     if (data.Params.IgnoreDates == true) {
                         $('#dateFrom').attr('readonly', true);
                         $('#dateTo').attr('readonly', true);
@@ -123,6 +141,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
 
                         if (dueDateCal < currentDateCal) {
                             overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                            if(overDueDays > 0){
                             if(overDueDays == 1){
                               overDueDaysText = overDueDays + ' Day';
                             }else{
@@ -135,6 +154,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                             }else{
                               overDueType = 'text-deleted';
                             }
+                          }
                         }
                             if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
                                 var dataList = {
@@ -289,7 +309,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                     if(data.Params.IgnoreDates == true){
-                                      sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                      sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),contactID).then(function (dataObjectnew) {
                                           getVS1Data('TAwaitingSupplierPayment').then(function (dataObjectold) {
                                               if (dataObjectold.length == 0) {}
                                               else {
@@ -314,7 +334,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                           $('.fullScreenSpin').css('display', 'none');
                                       });
                                     }else{
-                                    sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                    sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),contactID).then(function (dataObjectnew) {
                                         getVS1Data('TAwaitingSupplierPayment').then(function (dataObjectold) {
                                             if (dataObjectold.length == 0) {}
                                             else {
@@ -473,6 +493,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
 
                     if (dueDateCal < currentDateCal) {
                         overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays > 0){
                         if(overDueDays == 1){
                           overDueDaysText = overDueDays + ' Day';
                         }else{
@@ -485,6 +506,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                         }else{
                           overDueType = 'text-deleted';
                         }
+                      }
                     }
 
                     if (useData[i].Balance != 0) {
@@ -641,7 +663,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                 if(data.Params.IgnoreDates == true){
-                                  sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                  sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),contactID).then(function (dataObjectnew) {
                                       getVS1Data('TAwaitingSupplierPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
                                           else {
@@ -666,7 +688,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                       $('.fullScreenSpin').css('display', 'none');
                                   });
                                 }else{
-                                sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),contactID).then(function (dataObjectnew) {
                                     getVS1Data('TAwaitingSupplierPayment').then(function (dataObjectold) {
                                         if (dataObjectold.length == 0) {}
                                         else {
@@ -780,10 +802,11 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 });
             }
         }).catch(function (err) {
-            paymentService.getAllAwaitingSupplierDetails().then(function (data) {
+            sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0,contactID).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 let totalPaidCal = 0;
+                addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data));
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
@@ -816,6 +839,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
 
                     if (dueDateCal < currentDateCal) {
                         overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays > 0){
                         if(overDueDays == 1){
                           overDueDaysText = overDueDays + ' Day';
                         }else{
@@ -828,6 +852,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                         }else{
                           overDueType = 'text-deleted';
                         }
+                      }
                     }
 
                     //if (data.tbillreport[i].Balance != 0) {
@@ -984,7 +1009,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                 if(data.Params.IgnoreDates == true){
-                                  sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                  sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),contactID).then(function (dataObjectnew) {
                                       getVS1Data('TAwaitingSupplierPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
                                           else {
@@ -1009,7 +1034,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                       $('.fullScreenSpin').css('display', 'none');
                                   });
                                 }else{
-                                sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                sideBarService.getAllAwaitingSupplierPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),contactID).then(function (dataObjectnew) {
                                     getVS1Data('TAwaitingSupplierPayment').then(function (dataObjectold) {
                                         if (dataObjectold.length == 0) {}
                                         else {
@@ -1202,6 +1227,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
 
                         if (dueDateCal < currentDateCal) {
                             overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                            if(overDueDays > 0){
                             if(overDueDays == 1){
                               overDueDaysText = overDueDays + ' Day';
                             }else{
@@ -1214,6 +1240,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                             }else{
                               overDueType = 'text-deleted';
                             }
+                          }
                         }
 
                         //if (data.tbillreport[i].Balance != 0) {
@@ -1528,6 +1555,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
 
                     if (dueDateCal < currentDateCal) {
                         overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays > 0){
                         if(overDueDays == 1){
                           overDueDaysText = overDueDays + ' Day';
                         }else{
@@ -1540,6 +1568,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                         }else{
                           overDueType = 'text-deleted';
                         }
+                      }
                     }
                     //if (data.tbillreport[i].Balance != 0) {
                         if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
@@ -1862,6 +1891,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
 
                   if (dueDateCal < currentDateCal) {
                       overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                      if(overDueDays > 0){
                       if(overDueDays == 1){
                         overDueDaysText = overDueDays + ' Day';
                       }else{
@@ -1874,6 +1904,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                       }else{
                         overDueType = 'text-deleted';
                       }
+                    }
                   }
                   //if (data.tbillreport[i].Balance != 0) {
                       if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
@@ -2170,7 +2201,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
             $('.fullScreenSpin').css('display', 'none');
         });
       }else{
-        sideBarService.getAllAwaitingSupplierPayment(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllAwaitingSupplierPayment(fromDate, toDate, ignoreDate,initialReportLoad,0,contactID).then(function(data) {
             addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data)).then(function(datareturn) {
                 location.reload();
             }).catch(function(err) {
@@ -2482,6 +2513,7 @@ Template.supplierawaitingpurchaseorder.events({
 
                               if (dueDateCal < currentDateCal) {
                                   overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                                  if(overDueDays > 0){
                                   if(overDueDays == 1){
                                     overDueDaysText = overDueDays + ' Day';
                                   }else{
@@ -2494,6 +2526,7 @@ Template.supplierawaitingpurchaseorder.events({
                                   }else{
                                     overDueType = 'text-deleted';
                                   }
+                                }
                               }
 
                               var dataList = {
@@ -2761,50 +2794,76 @@ Template.supplierawaitingpurchaseorder.events({
         }
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-        sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+        sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0,'').then(function (data) {
             addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data)).then(function (datareturn) {
-              if (FlowRouter.current().queryParams.overdue) {
 
-              }else if (FlowRouter.current().queryParams.type) {
-                if(FlowRouter.current().queryParams.type == 'po'){
-                  toDate = "PO";
-                }else if(FlowRouter.current().queryParams.type == 'bill'){
-                  toDate = "Bill";
-                }
-              }
-              sideBarService.getAllOverDueAwaitingSupplierPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
-                  addVS1Data('TAwaitingSupplierPaymentType', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                     Meteor._reload.reload();
-                  }).catch(function (err) {
-                      Meteor._reload.reload();
-                  });
-              }).catch(function (err) {
-                 Meteor._reload.reload();
-              });
             }).catch(function (err) {
-              if (FlowRouter.current().queryParams.overdue) {
 
-              }else if (FlowRouter.current().queryParams.type) {
-                if(FlowRouter.current().queryParams.type == 'po'){
-                  toDate = "PO";
-                }else if(FlowRouter.current().queryParams.type == 'bill'){
-                  toDate = "Bill";
-                }
-              }
-              sideBarService.getAllOverDueAwaitingSupplierPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
-                  addVS1Data('TAwaitingSupplierPaymentType', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                     Meteor._reload.reload();
-                  }).catch(function (err) {
-                      Meteor._reload.reload();
-                  });
-              }).catch(function (err) {
-                 Meteor._reload.reload();
-              });
             });
         }).catch(function (err) {
-           Meteor._reload.reload();
+
         });
 
+
+        if (FlowRouter.current().queryParams.overdue) {
+
+        }else if (FlowRouter.current().queryParams.type) {
+          if(FlowRouter.current().queryParams.type == 'po'){
+            toDate = "PO";
+          }else if(FlowRouter.current().queryParams.type == 'bill'){
+            toDate = "Bill";
+          }
+        }
+        sideBarService.getAllOverDueAwaitingSupplierPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
+            addVS1Data('TAwaitingSupplierPaymentType', JSON.stringify(dataOverDue)).then(function (datareturn) {
+
+            }).catch(function (err) {
+
+            });
+        }).catch(function (err) {
+
+        });
+
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
+            addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
+                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataSuppPay) {
+                    addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
+                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
+                            addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+                              setTimeout(function () {
+                                window.open('/supplierawaitingpurchaseorder', '_self');
+                              }, 2000);
+                            }).catch(function(err) {
+                              setTimeout(function () {
+                                window.open('/supplierawaitingpurchaseorder', '_self');
+                              }, 2000);
+                            });
+                        }).catch(function(err) {
+                          setTimeout(function () {
+                            window.open('/supplierawaitingpurchaseorder', '_self');
+                          }, 2000);
+                        });
+                    }).catch(function(err) {
+                        setTimeout(function () {
+                            window.open('/supplierawaitingpurchaseorder', '_self');
+                         }, 2000);
+                    });
+                }).catch(function(err) {
+                  setTimeout(function () {
+                    window.open('/supplierawaitingpurchaseorder', '_self');
+                  }, 2000);
+                });
+            }).catch(function(err) {
+              setTimeout(function () {
+                window.open('/supplierawaitingpurchaseorder', '_self');
+              }, 2000);
+            });
+        }).catch(function(err) {
+          setTimeout(function () {
+            window.open('/supplierawaitingpurchaseorder', '_self');
+          }, 2000);
+
+        });
 
     },
     'click .printConfirm': function (event) {
