@@ -75,6 +75,9 @@ Template.home.onRendered(function () {
     if(isDashboard){
       templateObject.includeDashboard.set(true);
     }
+    // if(issalesDashboard){
+    //   templateObject.includeDashboard.set(true);
+    // }
     if(isMain){
       templateObject.includeMain.set(true);
     }
@@ -156,6 +159,9 @@ Template.home.helpers({
     includeDashboard: () => {
         return Template.instance().includeDashboard.get();
     },
+    includeSalesdashboard:()=>{
+      return Template.instance().includeSalesdashboard.get();
+    },
     includeMain: () => {
         return Template.instance().includeMain.get();
     },
@@ -219,6 +225,9 @@ Template.home.events({
   },
   'click .includeDashboard': function (event) {
     FlowRouter.go('/dashboard');
+  },
+  'click .includeSalesdashboard': function (event) {
+    FlowRouter.go('/salesdashboard');
   },
   'click .includeExpenseClaims': function (event) {
     FlowRouter.go('/expenseclaims/current-claims');
