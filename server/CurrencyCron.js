@@ -43,9 +43,17 @@ Meteor.methods({
    * This functions is going to run when the cron is running
    * @param {*} cronSetting 
    */
-  runCron: async (cronSetting) => {
+   runCron: async (cronSetting) => {
     console.log("Running cron job for user: " + cronSetting.employeeId);
-    await fetch("/cron/currency-update/" + cronSetting.employeeId);
+    // await fetch("/cron/currency-update/" + cronSetting.employeeId);
+    // We are testing with get request only but we need post request here
+    let app_url="https://sandboxdb.vs1cloud.com:4434/erpapi/TCurrency?ListType=Detail";
+    return await Meteor.http.call("GET", app_url, {
+      headers: {
+        "content-type":"application/json",
+        "Accept":"application/json"
+      },
+    });
   },
   /**
    * This function will just add the cron job
@@ -67,7 +75,9 @@ Meteor.methods({
       },
       job: () => {
         console.log(cronSetting.employeeId);
-        Meteor.call('runCron', cronSetting);
+        Meteor.call("runCron", cronSetting,  function(error, results) {
+          console.log(results, error); //results.data should be a JSON object
+        });
       },
     });
   },
