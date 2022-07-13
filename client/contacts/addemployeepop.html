@@ -816,10 +816,12 @@
                                         <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
                                             {{> productlistpop}}
                                         </div>
-
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-                                            {{> newproductpop}}
-                                        </div>
+                                        {{#if isSetup}}
+                                        {{else}}
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+                                                {{> newproductpop}}
+                                            </div>
+                                        {{/if}}
                                     </div>
                                 </div>
                             </div>

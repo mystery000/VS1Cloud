@@ -7,6 +7,7 @@ import 'jquery-editable-select';
 import { Random } from 'meteor/random';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import LoadingOverlay from "../LoadingOverlay";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -1506,7 +1507,7 @@ Template.newproductpop.events({
         let templateObject = Template.instance();
         templateObject.getAllProductRecentTransactions();
     },
-    'click #btnSaveProdPOP': async function () {
+    'click #btnSaveProdPOP': async function (e) {
         let productService = new ProductService();
         let productCode = $("#edtproductcode").val();
         let productName = $("#edtproductname").val();
@@ -2424,7 +2425,11 @@ Template.newproductpop.events({
 
         }
 
-
+        $('#isProductAdded').val('true');
+        $('#isProductAdded').trigger('change');
+        // $('#newProductModal').modal('hide');
+        // $("#addProductModal").modal('hide');
+        // LoadingOverlay.hide();
     },
     'click .btnBack':function(event){
         event.preventDefault();
