@@ -4918,6 +4918,7 @@ Template.employeescard.events({
 
     // Pay Template Tab
     'click #addEarningsLine': async function(){
+        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4931,39 +4932,45 @@ Template.employeescard.events({
         let EarningRate = $('#earningRateSelect').val();
         let CalculationType = $('input[name=calculationType]:checked').val();
         let ExpenseAccount = $('#expenseAccount').val();
-        // let payEarningLinesTemp = [];
-        // let payEarningLinesTempExist = templateObject.payTemplateEarningLineInfo.get();
-        // if( Array.isArray( payEarningLinesTempExist ) ){
-        //     payEarningLinesTemp = payEarningLinesTempExist
-        // }
-        // payEarningLinesTemp.push(
+
         let payEarningLines = new PayTemplateEarningLine({
                 type: 'TPayTemplateEarningLine',
                 fields: new PayTemplateEarningLineFields({
+                    ID: 0,
                     EmployeeID: employeeID,
                     EarningRate: EarningRate,
                     CalculationType: CalculationType,
                     ExpenseAccount: ExpenseAccount,
                     Amount: 0
                 })
-            })
-        // )
-        // templateObject.payTemplateEarningLineInfo.set(payEarningLinesTemp);
+            });
 
         try {
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(payEarningLines),
-            });
+            // const ApiResponse = await apiEndpoint.fetch(null, {
+            //     method: "POST",
+            //     headers: ApiService.getPostHeaders(),
+            //     body: JSON.stringify(payEarningLines),
+            // });
         
-            if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                console.log('jsonResponse', jsonResponse)
-                await templateObject.saveEarningLocalDB();
+            // if (ApiResponse.ok == true) {
+                // const jsonResponse = await ApiResponse.json();
+                // payEarningLines.fields.ID = jsonResponse.fields.ID;
+
+                let dataObject = await getVS1Data('TPayTemplateEarningLine')  
+                if ( dataObject.length == 0 ) {   
+                    await templateObject.saveEarningLocalDB(); 
+                }else{
+                    let earningData = [];
+                    earningData = JSON.parse(dataObject[0].data);
+                    earningData.tpaytemplateearningline.push(payEarningLines);
+                    console.log('earningData', earningData)
+                    await addVS1Data('TPayTemplateEarningLine', JSON.stringify(earningData))
+                }
                 await templateObject.getPayEarningLines();
+                $('.earningLineDropDown').editableSelect();
                 $('input[name=calculationType]:checked').attr('checked', false);
                 $('#expenseAccount').val('');
+                $('#addEarningsLineModal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -4973,9 +4980,6 @@ Template.employeescard.events({
         }
 
         return false
-
-        
-        await templateObject.setEarningLineDropDown();
         setTimeout(function () {
             let index = payEarningLinesTemp.length - 1;
             $('#ptEarningRate' + index).val(payEarningLinesTemp[index].fields.EarningRate);
