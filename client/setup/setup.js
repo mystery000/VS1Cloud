@@ -37,6 +37,8 @@ function getCurrentStep() {
 }
 
 function setCurrentStep(stepId) {
+  const templateObject = Template.instance();
+  templateObject.currentStep.set(stepId);
   return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
 }
 
@@ -97,6 +99,7 @@ function isStepSkipped(stepId) {
 
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
+  templateObject.currentStep = new ReactiveVar(1);
   templateObject.stepNumber = new ReactiveVar(1);
   templateObject.steps = new ReactiveVar([]);
   templateObject.skippedSteps = new ReactiveVar([]);
@@ -221,7 +224,7 @@ Template.setup.onCreated(() => {
 });
 
 Template.setup.onRendered(function () {
-  $(".fullScreenSpin").css("display", "none");
+  LoadingOverlay.show();
   const templateObject = Template.instance();
   // Get step local storage variable and set step
   const currentStep = getCurrentStep();
@@ -232,8 +235,8 @@ Template.setup.onRendered(function () {
       _steps.push({
         id: i,
         index: i,
-        active: currentStep == i ? true : false,
-        clickable: i < currentStep ? !true : !false,
+        active: getCurrentStep() == i ? true : false,
+        clickable: i <= currentStep ? !true : !false,
         isConfirmed: isConfirmedStep(i),
         skippedSteps: isStepSkipped(i),
       });
@@ -4426,15 +4429,16 @@ Template.setup.events({
     addConfirmedStep(stepId);
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
-    $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
-    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
-    $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
-    $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
-    if (stepId !== numberOfSteps) {
-      $(".setup-step-" + stepId).css("display", "block");
-    } else {
-      $(".setup-complete").css("display", "block");
-    }
+    // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
+    // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
+    // $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
+    // $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
+    $(".setup-step-" + stepId).css("display", "block");
+    // if (stepId !== numberOfSteps) {
+    //   $(".setup-step-" + stepId).css("display", "block");
+    // } else {
+    //   $(".setup-complete").css("display", "block");
+    // }
 
     setCurrentStep(stepId);
     templateObject.loadSteps();
@@ -4443,8 +4447,7 @@ Template.setup.events({
     let templateObject = Template.instance();
     let skippedSteps = templateObject.skippedSteps.get();
     let stepId = parseInt($(event.target).attr("data-step-id"));
-    skippedSteps.push(stepId);
-    templateObject.skippedSteps.set(skippedSteps);
+   
     addSkippedStep(stepId);
     stepId = stepId +1;
     $(".setup-step").css("display", "none");
@@ -4460,7 +4463,8 @@ Template.setup.events({
     // let _steps = templateObject.steps.get();
     // _steps.skippedSteps.push(stepId);
 
-    
+    skippedSteps.push(stepId);
+    templateObject.skippedSteps.set(skippedSteps);
    
    
     
@@ -9036,6 +9040,9 @@ Template.setup.events({
 });
 
 Template.setup.helpers({
+  currentStep: () => {
+    return getCurrentStep() || 1;
+  },
   steps: () => {
     return Template.instance().steps.get();
   },
