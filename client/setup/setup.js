@@ -236,7 +236,7 @@ Template.setup.onRendered(function () {
         id: i,
         index: i,
         active: getCurrentStep() == i ? true : false,
-        clickable: i <= currentStep ? !true : !false,
+        clickable: i <= getCurrentStep() ? !true : !false,
         isConfirmed: isConfirmedStep(i),
         skippedSteps: isStepSkipped(i),
       });
