@@ -3054,12 +3054,14 @@ Template.employeescard.onRendered(function () {
         await templateObject.payTemplateEarningLineInfo.set(useData);
         await templateObject.setEarningLineDropDown();
         if( useData.length ){
-            Array.prototype.forEach.call(useData, (item) => {
-                // amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                // amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-                $(`#ptEarningRate${item.fields.ID}`).val( item.fields.EarningRate );
-                $(`#ptEarningAmount${item.fields.ID}`).val( item.fields.Amount );
-            })
+            setTimeout(function () {
+                Array.prototype.forEach.call(useData, (item) => {
+                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                    $(`#ptEarningRate${item.fields.ID}`).val( item.fields.EarningRate );
+                    $(`#ptEarningAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
+                })
+            }, 500);
         }
 
     };
