@@ -1510,9 +1510,7 @@ Template.salesoverview.onRendered(function () {
         { label: 'Comments', class: 'colComments', active: true }, 
       ]; 
 
-      sideBarService
-      .getAllCustomFields()
-      .then(function (data) {
+      sideBarService.getAllCustomFields().then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
             customData = {
@@ -2132,9 +2130,7 @@ Template.salesoverview.events({
           };
         }
 
-        organisationService
-        .saveCustomField(objDetails1)
-        .then(function (objDetails) { 
+        organisationService.saveCustomField(objDetails1).then(function (objDetails) { 
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         })
@@ -2156,96 +2152,7 @@ Template.salesoverview.events({
           $('#myModal2').modal('hide');
         });
       });
-
-
-    // let lineItems = [];
-    // //let datatable =$('#tblSalesOverview').DataTable();
-    // $(".columnSettings").each(function (index) {
-    //   var $tblrow = $(this);
-    //   var colTitle = $tblrow.find(".divcolumn").text() || "";
-    //   var colWidth = $tblrow.find(".custom-range").val() || 0;
-    //   var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-    //   var colHidden = false;
-    //   if ($tblrow.find(".custom-control-input").is(":checked")) {
-    //     colHidden = false;
-    //   } else {
-    //     colHidden = true;
-    //   }
-    //   let lineItemObj = {
-    //     index: index,
-    //     label: colTitle,
-    //     hidden: colHidden,
-    //     width: colWidth,
-    //     thclass: colthClass,
-    //   };
-
-    //   lineItems.push(lineItemObj);
-    // });
-
-    //datatable.state.save();
-
-    // var getcurrentCloudDetails = CloudUser.findOne({
-    //   _id: Session.get("mycloudLogonID"),
-    //   clouddatabaseID: Session.get("mycloudLogonDBID"),
-    // });
-    // if (getcurrentCloudDetails) {
-    //   if (getcurrentCloudDetails._id.length > 0) {
-    //     var clientID = getcurrentCloudDetails._id;
-    //     var clientUsername = getcurrentCloudDetails.cloudUsername;
-    //     var clientEmail = getcurrentCloudDetails.cloudEmail;
-    //     var checkPrefDetails = CloudPreference.findOne({
-    //       userid: clientID,
-    //       PrefName: "tblSalesOverview",
-    //     });
-    //     if (checkPrefDetails) {
-    //       CloudPreference.update(
-    //         {
-    //           _id: checkPrefDetails._id,
-    //         },
-    //         {
-    //           $set: {
-    //             userid: clientID,
-    //             username: clientUsername,
-    //             useremail: clientEmail,
-    //             PrefGroup: "salesform",
-    //             PrefName: "tblSalesOverview",
-    //             published: true,
-    //             customFields: lineItems,
-    //             updatedAt: new Date(),
-    //           },
-    //         },
-    //         function (err, idTag) {
-    //           if (err) {
-    //             $("#myModal2").modal("toggle");
-    //           } else {
-    //             $("#myModal2").modal("toggle");
-    //           }
-    //         }
-    //       );
-    //     } else {
-    //       CloudPreference.insert(
-    //         {
-    //           userid: clientID,
-    //           username: clientUsername,
-    //           useremail: clientEmail,
-    //           PrefGroup: "salesform",
-    //           PrefName: "tblSalesOverview",
-    //           published: true,
-    //           customFields: lineItems,
-    //           createdAt: new Date(),
-    //         },
-    //         function (err, idTag) {
-    //           if (err) {
-    //             $("#myModal2").modal("toggle");
-    //           } else {
-    //             $("#myModal2").modal("toggle");
-    //           }
-    //         }
-    //       );
-    //     }
-    //   }
-    // }
-    // $("#myModal2").modal("toggle");
+ 
   },
 
   "blur .divcolumn": function (event) {
