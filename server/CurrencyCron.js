@@ -33,6 +33,18 @@ Meteor.startup(() => {
 });
 
 Meteor.methods({
+  updateCurrency: async (currency) => {
+    /**
+     * We need to make an API call to get the object
+     */
+    
+
+    currency.BuyRate = "";
+    currency.sellRate = "";
+
+    return currency;
+
+  }
   /**
    * This functions is going to run when the cron is running
    * @param {*} cronSetting
@@ -60,6 +72,9 @@ Meteor.methods({
       // "Access-Control-Allow-Origin": "*"
     };
 
+    /**
+     * Here we GET all tCurrency of the currency user
+     */
     Meteor.http.call("GET", apiUrl, {
         // data: postData,
         headers: postHeaders,
@@ -70,6 +85,28 @@ Meteor.methods({
             console.log(result);
         }
     });
+
+    /**
+     * now we need to loop and update each objects
+     */
+
+
+
+
+    /**
+     * Here we will save ht big object list
+     */
+    Meteor.http.call("POST", apiUrl, {
+      // data: postData,
+      headers: postHeaders,
+      body: {},
+  }, (error, result) => {
+      if (error) {
+
+      } else {
+          console.log(result);
+      }
+  });
 
   },
   /**
