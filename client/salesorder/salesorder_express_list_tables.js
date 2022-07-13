@@ -2133,9 +2133,7 @@ Template.salesorderslist.onRendered(function() {
         { label: 'Comments', class: 'colComments', active: true },
       ];
 
-      sideBarService
-      .getAllCustomFields()
-      .then(function (data) {
+      sideBarService.getAllCustomFields().then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
             customData = {
@@ -2206,36 +2204,7 @@ Template.salesorderslist.onRendered(function() {
 
         templateObject.custfields.set(custFields);
         templateObject.displayfields.set(dispFields);
-
-        // if (custFields) {
-        //   $(".colCustFieldHeader1").html(custFields[0].custfieldlabel);
-        //   $(".colCustFieldHeader2").html(custFields[1].custfieldlabel);
-        //   $(".colCustFieldHeader3").html(custFields[2].custfieldlabel);
-
-        //   if (custFields[0].active) {
-        //     $(".colSaleCustField1").removeClass('hiddenColumn');
-        //     $(".colSaleCustField1").addClass('showColumn');
-        //   } else {
-        //     $(".colSaleCustField1").addClass('hiddenColumn');
-        //     $(".colSaleCustField1").removeClass('showColumn');
-        //   }
-
-        //   if (custFields[1].active) {
-        //     $(".colSaleCustField2").removeClass('hiddenColumn');
-        //     $(".colSaleCustField2").addClass('showColumn');
-        //   } else {
-        //     $(".colSaleCustField2").addClass('hiddenColumn');
-        //     $(".colSaleCustField2").removeClass('showColumn');
-        //   }
-
-        //   if (custFields[2].active) {
-        //     $(".colSaleCustField3").removeClass('hiddenColumn');
-        //     $(".colSaleCustField3").addClass('showColumn');
-        //   } else {
-        //     $(".colSaleCustField3").addClass('hiddenColumn');
-        //     $(".colSaleCustField3").removeClass('showColumn');
-        //   }
-        // }
+ 
       })
     }
 
@@ -2492,25 +2461,7 @@ Template.salesorderslist.events({
         }
 
       });
-        // var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        // if(getcurrentCloudDetails){
-        //     if (getcurrentCloudDetails._id.length > 0) {
-        //         var clientID = getcurrentCloudDetails._id;
-        //         var clientUsername = getcurrentCloudDetails.cloudUsername;
-        //         var clientEmail = getcurrentCloudDetails.cloudEmail;
-        //         var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblSalesOrderlist'});
-        //         if (checkPrefDetails) {
-        //             CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
-        //                 if (err) {
-
-        //                 }else{
-        //                     Meteor._reload.reload();
-        //                 }
-        //             });
-
-        //         }
-        //     }
-        // }
+         
     },
 
     // custom field displaysettings
@@ -2564,9 +2515,7 @@ Template.salesorderslist.events({
           };
         }
 
-        organisationService
-        .saveCustomField(objDetails1)
-        .then(function (objDetails) {
+        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         })
@@ -2588,43 +2537,8 @@ Template.salesorderslist.events({
           $('#myModal2').modal('hide');
         });
       });
-
-        // var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        // if(getcurrentCloudDetails){
-        //     if (getcurrentCloudDetails._id.length > 0) {
-        //         var clientID = getcurrentCloudDetails._id;
-        //         var clientUsername = getcurrentCloudDetails.cloudUsername;
-        //         var clientEmail = getcurrentCloudDetails.cloudEmail;
-        //         var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblSalesOrderlist'});
-        //         if (checkPrefDetails) {
-        //             CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-        //                                                                        PrefGroup:'salesform',PrefName:'tblSalesOrderlist',published:true,
-        //                                                                        customFields:lineItems,
-        //                                                                        updatedAt: new Date() }}, function(err, idTag) {
-        //                 if (err) {
-        //                     $('#myModal2').modal('toggle');
-        //                 } else {
-        //                     $('#myModal2').modal('toggle');
-        //                 }
-        //             });
-
-        //         }else{
-        //             CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-        //                                     PrefGroup:'salesform',PrefName:'tblSalesOrderlist',published:true,
-        //                                     customFields:lineItems,
-        //                                     createdAt: new Date() }, function(err, idTag) {
-        //                 if (err) {
-        //                     $('#myModal2').modal('toggle');
-        //                 } else {
-        //                     $('#myModal2').modal('toggle');
-
-        //                 }
-        //             });
-        //         }
-        //     }
-        // }
-
     },
+    
     'blur .divcolumn' : function(event){
         let columData = $(event.target).text();
 

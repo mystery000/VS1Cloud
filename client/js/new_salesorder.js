@@ -6758,9 +6758,7 @@ Template.new_salesorder.onRendered(function() {
       let customFieldCount = 10;
       let ListType = 'ltSaleslines';   // tempcode. every settings need its own type
 
-      sideBarService
-        .getAllCustomFields()
-        .then(function (data) {
+      sideBarService.getAllCustomFields().then(function (data) {
           for (let x = 0; x < data.tcustomfieldlist.length; x++) {
             if (data.tcustomfieldlist[x].fields.ListType == ListType) {
               customData = {
@@ -6840,7 +6838,7 @@ Template.new_salesorder.helpers({
 
     // custom field displaysettings
     displayfields: () => {
-            return Template.instance().displayfields.get();
+      return Template.instance().displayfields.get();
     }, 
 
     custfield1: () => {
@@ -9406,9 +9404,7 @@ Template.new_salesorder.events({
             };
           }
 
-          organisationService
-          .saveCustomField(objDetails1)
-          .then(function (objDetails) {
+          organisationService.saveCustomField(objDetails1).then(function (objDetails) {
             $(".fullScreenSpin").css("display", "none");
             $('#myModal2').modal('hide');
           })
@@ -9430,70 +9426,7 @@ Template.new_salesorder.events({
             $('#myModal2').modal('hide');
           });
         });
-
-
-
-
-        // var getcurrentCloudDetails = CloudUser.findOne({
-        //     _id: Session.get('mycloudLogonID'),
-        //     clouddatabaseID: Session.get('mycloudLogonDBID')
-        // });
-        // if (getcurrentCloudDetails) {
-        //     if (getcurrentCloudDetails._id.length > 0) {
-        //         var clientID = getcurrentCloudDetails._id;
-        //         var clientUsername = getcurrentCloudDetails.cloudUsername;
-        //         var clientEmail = getcurrentCloudDetails.cloudEmail;
-        //         var checkPrefDetails = CloudPreference.findOne({
-        //             userid: clientID,
-        //             PrefName: 'tblSalesOrderLine'
-        //         });
-        //         if (checkPrefDetails) {
-        //             CloudPreference.update({
-        //                 _id: checkPrefDetails._id
-        //             }, {
-        //                 $set: {
-        //                     userid: clientID,
-        //                     username: clientUsername,
-        //                     useremail: clientEmail,
-        //                     PrefGroup: 'salesform',
-        //                     PrefName: 'tblSalesOrderLine',
-        //                     published: true,
-        //                     customFields: lineItems,
-        //                     updatedAt: new Date()
-        //                 }
-        //             }, function(err, idTag) {
-        //                 if (err) {
-        //                     $('#myModal2').modal('toggle');
-        //                     //FlowRouter.go('/salesorderslist?success=true');
-        //                 } else {
-        //                     $('#myModal2').modal('toggle');
-        //                     //FlowRouter.go('/salesorderslist?success=true');
-
-        //                 }
-        //             });
-
-        //         } else {
-        //             CloudPreference.insert({
-        //                 userid: clientID,
-        //                 username: clientUsername,
-        //                 useremail: clientEmail,
-        //                 PrefGroup: 'salesform',
-        //                 PrefName: 'tblSalesOrderLine',
-        //                 published: true,
-        //                 customFields: lineItems,
-        //                 createdAt: new Date()
-        //             }, function(err, idTag) {
-        //                 if (err) {
-        //                     $('#myModal2').modal('toggle');
-        //                 } else {
-        //                     $('#myModal2').modal('toggle');
-
-        //                 }
-        //             });
-        //         }
-        //     }
-        // }
-        // $('#myModal2').modal('toggle');
+ 
     },
 
     // custom field displaysettings
@@ -9530,35 +9463,7 @@ Template.new_salesorder.events({
         }
 
       });
-
-      // it will be simple if remove the rows in the CustomFiledList
-        // var getcurrentCloudDetails = CloudUser.findOne({
-        //     _id: Session.get('mycloudLogonID'),
-        //     clouddatabaseID: Session.get('mycloudLogonDBID')
-        // });
-        // if (getcurrentCloudDetails) {
-        //     if (getcurrentCloudDetails._id.length > 0) {
-        //         var clientID = getcurrentCloudDetails._id;
-        //         var clientUsername = getcurrentCloudDetails.cloudUsername;
-        //         var clientEmail = getcurrentCloudDetails.cloudEmail;
-        //         var checkPrefDetails = CloudPreference.findOne({
-        //             userid: clientID,
-        //             PrefName: 'tblSalesOrderLine'
-        //         });
-        //         if (checkPrefDetails) {
-        //             CloudPreference.remove({
-        //                 _id: checkPrefDetails._id
-        //             }, function(err, idTag) {
-        //                 if (err) {
-
-        //                 } else {
-        //                     Meteor._reload.reload();
-        //                 }
-        //             });
-
-        //         }
-        //     }
-        // }
+ 
     },
 
     'click .btnResetSettings': function(event) {
