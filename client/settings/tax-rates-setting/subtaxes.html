@@ -40,9 +40,9 @@
                                         <div class="col">
                                             <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px 0px; margin-right: 32px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
 
-                                            <a class="btn btn-primary btnAddSubTax" role="button" data-toggle="modal" href="#myModal" style="margin-top: 16px; margin-right: 32px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Sub Tax<br></a>
+                                            <a class="btn btn-primary btnAddSubTax" role="button" data-toggle="modal" href="#addSubTaxModal" style="margin-top: 16px; margin-right: 32px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Sub Tax<br></a>
 
-                                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="addSubTaxModal">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -236,9 +236,9 @@
                                                 {{#if datatablerecords}}
                                                 {{#each item in datatablerecords}}
                                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                    <td contenteditable="false" class="colName">{{item.codename}}</td>
-                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colCategory">{{item.category}}</td>
+                                                    <td contenteditable="false" class="colName clickable">{{item.codename}}</td>
+                                                    <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
+                                                    <td contenteditable="false" class="colCategory clickable">{{item.category}}</td>
                                                     <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
                                                 </tr>
                                                 {{/each}}
