@@ -2349,7 +2349,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getAllAwaitingSupplierPaymentData = function() {
 
-        sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0,'').then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2387,7 +2387,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getAllAwaitingCustomerPaymentData = function() {
 
-        sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, false,initialReportLoad,0,'').then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);

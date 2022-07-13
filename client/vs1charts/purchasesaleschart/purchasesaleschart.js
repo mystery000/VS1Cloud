@@ -60,11 +60,11 @@ Template.purchasesaleschart.onRendered(()=>{
                     itemsAwaitingPaymentcount.push(dataListAwaitingCust);
                     totAmount += Number(data.tarreport[i].AmountDue);
                     let date = new Date(data.tarreport[i].DueDate);
-
-                    if (date < new Date()) {
+                    let totOverdueLine = Number(data.tarreport[i].AmountDue) - Number(data.tarreport[i].Current)||0;
+                    //if (date < new Date()) {
                         itemsOverduePaymentcount.push(dataListAwaitingCust);
-                        totAmountOverDue += Number(data.tarreport[i].AmountDue);
-                    }
+                        totAmountOverDue +=totOverdueLine;
+                    //}
                 }
 
             }
@@ -106,10 +106,11 @@ Template.purchasesaleschart.onRendered(()=>{
                     supptotAmount += Number(data.tapreport[i].AmountDue);
                     itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
                     let date = new Date(data.tapreport[i].DueDate);
-                    if (date < new Date()) {
-                        supptotAmountOverDue += Number(data.tapreport[i].AmountDue);
+                    let supptotAmountOverDueLine = Number(data.tapreport[i].AmountDue) - Number(data.tapreport[i].Current)||0;
+                    //if (date < new Date()) {
+                        supptotAmountOverDue += supptotAmountOverDueLine;
                         itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                    }
+                    //}
                 }
 
             }

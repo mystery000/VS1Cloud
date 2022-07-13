@@ -1862,15 +1862,11 @@ Template.journalentrycard.events({
 
         if (!isNaN($(event.target).val())) {
             let inputCreditEx = parseFloat($(event.target).val());
-            $(event.target).val(Currency + '' + inputCreditEx.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }));
+            $(event.target).val(Currency + '' + inputCreditEx.toLocaleString(undefined, {minimumFractionDigits: 2}));
         } else {
             let inputCreditEx = Number($(event.target).val().replace(/[^0-9.-]+/g, ""));
 
-            $(event.target).val(Currency + '' + inputCreditEx.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputCreditEx.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         }
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -1878,15 +1874,11 @@ Template.journalentrycard.events({
 
         let inputCredit = parseFloat($(event.target).val()) || 0;
         if (!isNaN($(event.target).val())) {
-            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         } else {
             let inputCredit = Number($(event.target).val().replace(/[^0-9.-]+/g, ""));
 
-            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         }
 
         let $tblrows = $("#tblJournalEntryLine tbody tr");
@@ -1896,8 +1888,6 @@ Template.journalentrycard.events({
         if ($(event.target).val().replace(/[^0-9.-]+/g, "") != 0) {
             $('#' + targetID + " .lineDebitEx").val(Currency + '0.00');
             $('#' + targetID + " .lineDebitInc").val(Currency + '0.00');
-
-
         }
         let nextRowID = $(event.target).closest('tr').next('tr').attr("id");
         let inputCreditData = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) ||0;
@@ -1924,13 +1914,12 @@ Template.journalentrycard.events({
 
             var credit = $tblrow.find(".lineCreditEx").val() || Currency + '0';
             var debit = $tblrow.find(".lineDebitEx").val() || Currency + '0';
-            var subTotalCredit = Number(credit.replace(/[^0-9.-]+/g, "")) || Currency + '0';
-            var subTotalDebit = Number(debit.replace(/[^0-9.-]+/g, "")) || Currency + '0';
+            var subTotalCredit = Number(credit.replace(/[^0-9.-]+/g, "")) || 0;
+            var subTotalDebit = Number(debit.replace(/[^0-9.-]+/g, "")) || 0;
 
             var taxTotalCredit = parseFloat(credit.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) || 0;
             var taxTotalDebit = parseFloat(debit.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) || 0;
             $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalCredit));
-
             if (!isNaN(subTotalCredit)) {
                 let totalCreditInc = (parseFloat(subTotalCredit)) + (parseFloat(taxTotalCredit)) || 0;
                 $tblrow.find('.lineCreditIncChange').val(utilityService.modifynegativeCurrencyFormat(totalCreditInc.toFixed(2)));
@@ -1956,15 +1945,11 @@ Template.journalentrycard.events({
 
         if (!isNaN($(event.target).val())) {
             let inputDebitEx = parseFloat($(event.target).val());
-            $(event.target).val(Currency + '' + inputDebitEx.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }));
+            $(event.target).val(Currency + '' + inputDebitEx.toLocaleString(undefined, {minimumFractionDigits: 2}));
         } else {
             let inputDebitEx = Number($(event.target).val().replace(/[^0-9.-]+/g, ""));
 
-            $(event.target).val(Currency + '' + inputDebitEx.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputDebitEx.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         }
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -1972,15 +1957,11 @@ Template.journalentrycard.events({
 
         let inputCredit = parseFloat($('.lineDebitEx').val()) || 0;
         if (!isNaN($('.lineDebitEx').val())) {
-            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         } else {
             let inputCredit = Number($(event.target).val().replace(/[^0-9.-]+/g, ""));
 
-            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         }
 
         let $tblrows = $("#tblJournalEntryLine tbody tr");
@@ -2013,8 +1994,8 @@ Template.journalentrycard.events({
             }
             var credit = $tblrow.find(".lineCreditEx").val() || Currency + '0';
             var debit = $tblrow.find(".lineDebitEx").val() || Currency + '0';
-            var subTotalCredit = Number(credit.replace(/[^0-9.-]+/g, "")) || Currency + '0';
-            var subTotalDebit = Number(debit.replace(/[^0-9.-]+/g, "")) || Currency + '0';
+            var subTotalCredit = Number(credit.replace(/[^0-9.-]+/g, "")) || 0;
+            var subTotalDebit = Number(debit.replace(/[^0-9.-]+/g, "")) || 0;
 
             var taxTotalCredit = parseFloat(credit.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) || 0;
             var taxTotalDebit = parseFloat(debit.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) || 0;
@@ -2138,15 +2119,11 @@ Template.journalentrycard.events({
 
         if (!isNaN($(event.target).val())) {
             let inputDebitEx = parseFloat($(event.target).val());
-            $(event.target).val(Currency + '' + inputDebitEx.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }));
+            $(event.target).val(Currency + '' + inputDebitEx.toLocaleString(undefined, {minimumFractionDigits: 2}));
         } else {
             let inputDebitEx = Number($(event.target).val().replace(/[^0-9.-]+/g, ""));
 
-            $(event.target).val(Currency + '' + inputDebitEx.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputDebitEx.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         }
         let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -2154,15 +2131,11 @@ Template.journalentrycard.events({
 
         let inputCredit = parseFloat($(event.target).val()) || 0;
         if (!isNaN($(event.target).val())) {
-            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         } else {
             let inputCredit = Number($(event.target).val().replace(/[^0-9.-]+/g, ""));
 
-            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || Currency + '0');
+            $(event.target).val(Currency + '' + inputCredit.toLocaleString(undefined, {minimumFractionDigits: 2}) || Currency + '0');
         }
 
         let $tblrows = $("#tblJournalEntryLine tbody tr");
@@ -2982,8 +2955,8 @@ Template.journalentrycard.events({
                 var $tblrow = $(this);
                 var credit = $tblrow.find(".lineCreditEx").val() || Currency + '0';
                 var debit = $tblrow.find(".lineDebitEx").val() || Currency + '0';
-                var subTotalCredit = Number(credit.replace(/[^0-9.-]+/g, "")) || Currency + '0';
-                var subTotalDebit = Number(debit.replace(/[^0-9.-]+/g, "")) || Currency + '0';
+                var subTotalCredit = Number(credit.replace(/[^0-9.-]+/g, "")) || 0;
+                var subTotalDebit = Number(debit.replace(/[^0-9.-]+/g, "")) || 0;
                 if (!isNaN(subTotalCredit)) {
                     subGrandCreditTotal += isNaN(subTotalCredit) ? 0 : subTotalCredit;
                 };

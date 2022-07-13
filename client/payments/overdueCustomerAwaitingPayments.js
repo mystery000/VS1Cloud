@@ -135,6 +135,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
 
                       if (dueDateCal < currentDateCal) {
                           overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                          if(overDueDays > 0){
                           if(overDueDays == 1){
                             overDueDaysText = overDueDays + ' Day';
                           }else{
@@ -147,6 +148,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                           }else{
                             overDueType = 'text-deleted';
                           }
+                        }
                       }
 
                       var dataList = {
@@ -459,6 +461,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
 
                     if (dueDateCal < currentDateCal) {
                         overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays > 0){
                         if(overDueDays == 1){
                           overDueDaysText = overDueDays + ' Day';
                         }else{
@@ -471,6 +474,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                         }else{
                           overDueType = 'text-deleted';
                         }
+                      }
                     }
 
                     var dataList = {
@@ -751,6 +755,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
 
                     if (dueDateCal < currentDateCal) {
                         overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                        if(overDueDays > 0){
                         if(overDueDays == 1){
                           overDueDaysText = overDueDays + ' Day';
                         }else{
@@ -763,6 +768,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                         }else{
                           overDueType = 'text-deleted';
                         }
+                      }
                     }
 
                     var dataList = {
@@ -1153,6 +1159,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
 
                           if (dueDateCal < currentDateCal) {
                               overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
+                              if(overDueDays > 0){
                               if(overDueDays == 1){
                                 overDueDaysText = overDueDays + ' Day';
                               }else{
@@ -1165,6 +1172,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
                               }else{
                                 overDueType = 'text-deleted';
                               }
+                            }
                           }
 
                           var dataList = {
@@ -1458,30 +1466,55 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
 
         sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
             addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data)).then(function (datareturn) {
-              sideBarService.getAllOverDueAwaitingCustomerPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
-                  addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                      window.open("/overduecustomerawaitingpayments", "_self");
-                  }).catch(function (err) {
-                      window.open("/overduecustomerawaitingpayments", "_self");
-                  });
-              }).catch(function (err) {
-                sideBarService.getAllOverDueAwaitingCustomerPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
-                    addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                        window.open("/overduecustomerawaitingpayments", "_self");
-                    }).catch(function (err) {
-                        window.open("/overduecustomerawaitingpayments", "_self");
-                    });
-                }).catch(function (err) {
-                    window.open("/overduecustomerawaitingpayments", "_self");
-                });
-              });
+
             }).catch(function (err) {
-                window.open("/overduecustomerawaitingpayments", "_self");
+
             });
         }).catch(function (err) {
-            window.open("/overduecustomerawaitingpayments", "_self");
+
         });
 
+
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
+            addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
+                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataSuppPay) {
+                    addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
+                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
+                            addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+                              setTimeout(function () {
+                                window.open("/overduecustomerawaitingpayments", "_self");
+                              }, 2000);
+                            }).catch(function(err) {
+                              setTimeout(function () {
+                                window.open("/overduecustomerawaitingpayments", "_self");
+                              }, 2000);
+                            });
+                        }).catch(function(err) {
+                          setTimeout(function () {
+                            window.open("/overduecustomerawaitingpayments", "_self");
+                          }, 2000);
+                        });
+                    }).catch(function(err) {
+                        setTimeout(function () {
+                            window.open("/overduecustomerawaitingpayments", "_self");
+                         }, 2000);
+                    });
+                }).catch(function(err) {
+                  setTimeout(function () {
+                    window.open("/overduecustomerawaitingpayments", "_self");
+                  }, 2000);
+                });
+            }).catch(function(err) {
+              setTimeout(function () {
+                window.open("/overduecustomerawaitingpayments", "_self");
+              }, 2000);
+            });
+        }).catch(function(err) {
+          setTimeout(function () {
+            window.open("/overduecustomerawaitingpayments", "_self");
+          }, 2000);
+
+        });
 
     },
     'change #dateTo': function() {

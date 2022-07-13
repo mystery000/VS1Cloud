@@ -818,7 +818,7 @@ Template.emailsettings.onRendered(function () {
                                     // Save email settings
                                     await taxRateService.saveScheduleSettings(objDetail);
                                 } catch(e) {
-                                    console.log(e);
+
                                 }
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
 
@@ -870,7 +870,6 @@ Template.emailsettings.onRendered(function () {
                 await Promise.all(promise1);
                 resolve({success: true, message: ''});
             } catch(error) {
-                console.log(error);
                 if (typeof error !== 'string') error = error.message;
                 resolve({success: false, message: 'Something went wrong. Please try again later.'});
             }
@@ -997,7 +996,6 @@ Template.emailsettings.onRendered(function () {
                 return {success: true};
             }
         } catch(e) {
-            console.log(e);
             return {success: false, message: 'Something went wrong. Please try again later.'};
         }
     }
@@ -1134,10 +1132,7 @@ Template.emailsettings.events({
         } else if (radioFrequency == "frequencyOnetimeonly") {
             const startTime = $('#edtOneTimeOnlyTime').val();
             const startDate = $('#edtOneTimeOnlyDate').val();
-            // if (!startTime) {
-            //     startTime = new Date();
-            // }
-            console.log(startTime, startDate);
+
             $('#edtOneTimeOnlyTimeError').css('display', 'none');
             $('#edtOneTimeOnlyDateError').css('display', 'none');
             setTimeout(function () {

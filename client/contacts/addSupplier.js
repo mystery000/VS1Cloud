@@ -171,10 +171,11 @@ Template.supplierscard.onRendered(function () {
                 //itemsAwaitingPaymentcount.push(dataListAwaitingCust);
                 totAmount += Number(data.tapreport[i].AmountDue);
                 let date = new Date(data.tapreport[i].DueDate);
-                if (date < new Date()) {
+                let totOverdueLine = Number(data.tapreport[i].AmountDue) - Number(data.tapreport[i].Current)||0;
+                //if (date < new Date()) {
                     //itemsOverduePaymentcount.push(dataListAwaitingCust);
-                    totAmountOverDue += Number(data.tapreport[i].AmountDue);
-                }
+                    totAmountOverDue += totOverdueLine;
+                //}
             }
         }
         $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
@@ -1043,6 +1044,14 @@ Template.supplierscard.events({
             window.open('/agedpayables','_self');
         }
     },
+    'click .btnMakeSupplierPayment': async function (event) {
+      let currentId = FlowRouter.current().queryParams.id||'';
+      let supplierName = $('#edtSupplierCompany').val() || '';
+      if (supplierName !== "") {
+            await addVS1Data('TAwaitingSupplierPayment', []);
+            FlowRouter.go('/supplierawaitingpurchaseorder?contact='+supplierName+'&contactid='+currentId);
+        }
+    },
     'click .openBalancesummary': function (event) {
         let currentId = FlowRouter.current().queryParams.id||'';
         let supplierName = $('#edtSupplierCompany').val() || '';
@@ -1599,64 +1608,7 @@ Template.supplierscard.events({
         if($('#formCheck-four').is(':checked')){
             getchkcustomField4 = false;
         }
-        let checkPrefDetails = getCheckPrefDetails('supplierscard');
-        if (checkPrefDetails) {
-            CloudPreference.update({ _id: checkPrefDetails._id},{ $set: {username:clientUsername,useremail:clientEmail,
-                                                                         PrefGroup:'contactform',PrefName:'supplierscard',published:true,
-                                                                         customFields:[{
-                                                                             index: '1',
-                                                                             label: getcustomField1,
-                                                                             hidden: getchkcustomField1
-                                                                         },{
-                                                                             index: '2',
-                                                                             label: getcustomField2,
-                                                                             hidden: getchkcustomField2
-                                                                         },{
-                                                                             index: '3',
-                                                                             label: getcustomField3,
-                                                                             hidden: getchkcustomField3
-                                                                         },{
-                                                                             index: '4',
-                                                                             label: getcustomField4,
-                                                                             hidden: getchkcustomField4
-                                                                         }
-                                                                                      ],
-                                                                         updatedAt: new Date() }}, function(err, idTag) {
-                if (err) {
-                    $('#customfieldModal').modal('toggle');
-                } else {
-                    $('#customfieldModal').modal('toggle');
-                }
-            });
-        } else {
-            CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-                                    PrefGroup:'contactform',PrefName:'supplierscard',published:true,
-                                    customFields:[{
-                                        index: '1',
-                                        label: getcustomField1,
-                                        hidden: getchkcustomField1
-                                    },{
-                                        index: '2',
-                                        label: getcustomField2,
-                                        hidden: getchkcustomField2
-                                    },{
-                                        index: '3',
-                                        label: getcustomField3,
-                                        hidden: getchkcustomField3
-                                    },{
-                                        index: '4',
-                                        label: getcustomField4,
-                                        hidden: getchkcustomField4
-                                    }
-                                                 ],
-                                    createdAt: new Date() }, function(err, idTag) {
-                if (err) {
-                    $('#customfieldModal').modal('toggle');
-                } else {
-                    $('#customfieldModal').modal('toggle');
-                }
-            });
-        }
+        $('#customfieldModal').modal('toggle');
     },
     'click .btnResetSettings': function(event){
         let checkPrefDetails = getCheckPrefDetails('supplierscard');

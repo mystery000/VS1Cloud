@@ -147,7 +147,7 @@ Template.refundlist.onRendered(function () {
 
         if (custFields.length < 3) {
           let remainder = 3 - custFields.length;
-          let getRemCustomFields = parseInt(custFields.length); 
+          let getRemCustomFields = parseInt(custFields.length);
           for (let r = 0; r < remainder; r++) {
             getRemCustomFields++;
             customData = {
@@ -162,7 +162,7 @@ Template.refundlist.onRendered(function () {
             custFields.push(customData);
           }
         }
-        if (custFields) { 
+        if (custFields) {
           $(".colCustFieldHeader1").html(custFields[0].custfieldlabel);
           $(".colCustFieldHeader2").html(custFields[1].custfieldlabel);
           $(".colCustFieldHeader3").html(custFields[2].custfieldlabel);
@@ -174,7 +174,7 @@ Template.refundlist.onRendered(function () {
             $(".colSaleCustField1").addClass('hiddenColumn');
             $(".colSaleCustField1").removeClass('showColumn');
           }
-    
+
           if (custFields[1].active) {
             $(".colSaleCustField2").removeClass('hiddenColumn');
             $(".colSaleCustField2").addClass('showColumn');
@@ -1547,7 +1547,16 @@ Template.refundlist.events({
             addVS1Data('TRefundSaleList', JSON.stringify(dataRefund)).then(function (datareturn) {
               sideBarService.getAllRefundList(initialDataLoad, 0).then(function (data) {
                   addVS1Data('TRefundSale', JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/refundlist', '_self');
+
+                      sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+                          addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
+                              window.open('/refundlist', '_self');
+                            }).catch(function (err) {
+                                window.open('/refundlist', '_self');
+                             });
+                      }).catch(function (err) {
+                          window.open('/refundlist', '_self');
+                      });
                   }).catch(function (err) {
                       window.open('/refundlist', '_self');
                   });

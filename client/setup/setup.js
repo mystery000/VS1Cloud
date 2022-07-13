@@ -11,10 +11,12 @@ import Employee, { EmployeeFields } from "../js/Api/Model/Employee";
 import User from "../js/Api/Model/User";
 import { AccountService } from "../accounts/account-service";
 import "jquery-editable-select";
+import { ContactService } from "../contacts/contact-service";
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
+const contactService = new ContactService();
 // let purchaseService = new PurchaseBoardService();
 
 function MakeNegative() {
@@ -38,10 +40,66 @@ function setCurrentStep(stepId) {
   return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
 }
 
+function getConfirmedSteps() {
+  return localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || JSON.stringify([]);;
+
+}
+
+
+function setConfirmedSteps(steps = []) {
+  return localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", JSON.stringify(steps));
+}
+
+function addConfirmedStep(step) {
+  let steps = getConfirmedSteps();
+  console.log(steps);
+  steps = JSON.parse(steps);
+  console.log(steps);
+  steps.push(step);
+  setConfirmedSteps(steps);
+}
+
+/**
+ * 
+ * @param {integer} stepId 
+ * @returns {boolean}
+ */
+function isConfirmedStep(stepId) {
+  let steps = getConfirmedSteps();
+  return steps.includes(stepId);
+}
+
+function getSkippedSteps() {
+  return  localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify([]);
+}
+
+function addSkippedStep(step) {
+  let steps = getSkippedSteps();
+  steps = JSON.parse(steps);
+  console.log(steps);
+  steps.push(step);
+  setSkippedSteps(steps);
+}
+
+function setSkippedSteps(steps = []) {
+  return localStorage.setItem("VS1Cloud_SETUP_SKIPPED_STEP", JSON.stringify(steps));
+}
+
+/**
+ * 
+ * @param {integer} stepId 
+ * @returns {boolean}
+ */
+function isStepSkipped(stepId) {
+  let steps = getSkippedSteps();
+  return steps.includes(stepId);
+}
+
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.stepNumber = new ReactiveVar(1);
   templateObject.steps = new ReactiveVar([]);
+  templateObject.skippedSteps = new ReactiveVar([]);
 
   // Step 1 Variables
   templateObject.iscompanyemail = new ReactiveVar();
@@ -112,6 +170,8 @@ Template.setup.onCreated(() => {
   templateObject.employeetableheaderrecords = new ReactiveVar([]);
   templateObject.selectedFile = new ReactiveVar();
   templateObject.currentEmployees = new ReactiveVar([]);
+  templateObject.editableEmployee = new ReactiveVar();
+  templateObject.empuserrecord = new ReactiveVar();
 
   // Step 6 variables
   templateObject.accountList = new ReactiveVar([]);
@@ -174,10 +234,9 @@ Template.setup.onRendered(function () {
         index: i,
         active: currentStep == i ? true : false,
         clickable: i < currentStep ? !true : !false,
-        isConfirmed:  i > currentStep ? !true : !false,
-        skippedSteps: []
+        isConfirmed: isConfirmedStep(i),
+        skippedSteps: isStepSkipped(i),
       });
-
     }
     templateObject.steps.set(_steps);
   };
@@ -452,7 +511,7 @@ Template.setup.onRendered(function () {
       }
 
       setTimeout(() => {
-        $("#taxRatesList")
+        $("#taxRatesTable")
           .DataTable({
             columnDefs: [
               {
@@ -481,7 +540,7 @@ Template.setup.onRendered(function () {
             responsive: true,
             order: [[0, "asc"]],
             action: function () {
-              $("#taxRatesList").DataTable().ajax.reload();
+              $("#taxRatesTable").DataTable().ajax.reload();
             },
             fnDrawCallback: function (oSettings) {
               setTimeout(function () {
@@ -1259,18 +1318,20 @@ Template.setup.onRendered(function () {
             showCancelButton: false,
             confirmButtonText: "OK",
           }).then((result) => {
-            $(".setup-step").css("display", "none");
-            $(`.setup-stepper li:nth-child(4)`).addClass("current");
-            $(`.setup-stepper li:nth-child(3)`).removeClass("current");
-            $(`.setup-stepper li:nth-child(3)`).addClass("completed");
-            $(".setup-step-4").css("display", "block");
-            let confirmedSteps =
-              localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-            localStorage.setItem(
-              "VS1Cloud_SETUP_CONFIRMED_STEPS",
-              confirmedSteps + "3,"
-            );
-            localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
+            // $(".setup-step").css("display", "none");
+            // $(`.setup-stepper li:nth-child(4)`).addClass("current");
+            // $(`.setup-stepper li:nth-child(3)`).removeClass("current");
+            // $(`.setup-stepper li:nth-child(3)`).addClass("completed");
+            // $(".setup-step-4").css("display", "block");
+            // let confirmedSteps =
+            //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+            // localStorage.setItem(
+            //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+            //   confirmedSteps + "3,"
+            // );
+            // localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
+
+        
           });
         })
         .catch(function (err) {
@@ -1282,18 +1343,18 @@ Template.setup.onRendered(function () {
             showCancelButton: false,
             confirmButtonText: "OK",
           }).then((result) => {
-            $(".setup-step").css("display", "none");
-            $(`.setup-stepper li:nth-child(4)`).addClass("current");
-            $(`.setup-stepper li:nth-child(3)`).removeClass("current");
-            $(`.setup-stepper li:nth-child(3)`).addClass("completed");
-            $(".setup-step-4").css("display", "block");
-            let confirmedSteps =
-              localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-            localStorage.setItem(
-              "VS1Cloud_SETUP_CONFIRMED_STEPS",
-              confirmedSteps + "3,"
-            );
-            localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
+            // $(".setup-step").css("display", "none");
+            // $(`.setup-stepper li:nth-child(4)`).addClass("current");
+            // $(`.setup-stepper li:nth-child(3)`).removeClass("current");
+            // $(`.setup-stepper li:nth-child(3)`).addClass("completed");
+            // $(".setup-step-4").css("display", "block");
+            // let confirmedSteps =
+            //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+            // localStorage.setItem(
+            //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+            //   confirmedSteps + "3,"
+            // );
+            // localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
           });
         });
     });
@@ -1976,11 +2037,7 @@ Template.setup.onRendered(function () {
 
     //await templateObject.employeedatatablerecords.set(employeeList); // all employees
 
-    await templateObject.currentEmployees.set(
-      employeeList.filter((employee) => {
-        return employee.fields.ID == User.getCurrentLoggedUserId();
-      })
-    );
+    await templateObject.currentEmployees.set(employeeList);
 
     LoadingOverlay.hide();
   };
@@ -2027,7 +2084,6 @@ Template.setup.onRendered(function () {
               templateObject.employeedatatablerecords.set(
                 dataTableListEmployee
               );
-
 
               if (templateObject.employeedatatablerecords.get()) {
                 Meteor.call(
@@ -2538,6 +2594,23 @@ Template.setup.onRendered(function () {
       });
   };
 
+  templateObject.getEmployeeProfileImageData = function (employeeName) {
+    const contactService = new ContactService();
+    contactService.getEmployeeProfileImageByName(employeeName).then((data) => {
+      let employeeProfile = "";
+      for (let i = 0; i < data.temployeepicture.length; i++) {
+        if (data.temployeepicture[i].EmployeeName === employeeName) {
+          employeeProfile = data.temployeepicture[i].EncodedPic;
+          $(".imageUpload").attr(
+            "src",
+            "data:image/jpeg;base64," + employeeProfile
+          );
+          $(".cloudEmpImgID").val(data.temployeepicture[i].Id);
+        }
+      }
+    });
+  };
+
   // templateObject.getEmployees();
 
   // $("#tblEmployeelist tbody").on("click", "tr", function () {
@@ -2617,7 +2690,6 @@ Template.setup.onRendered(function () {
       let accBalance = "";
 
       data.taccountvs1.forEach((account) => {
-
         if (!isNaN(account.fields.Balance)) {
           accBalance =
             utilityService.modifynegativeCurrencyFormat(
@@ -2652,7 +2724,6 @@ Template.setup.onRendered(function () {
       });
 
       templateObject.accountList.set(_accountList);
-
     }
 
     setTimeout(function () {
@@ -3625,26 +3696,26 @@ Template.setup.onRendered(function () {
     // });
     // templateObject.customerListHeaders.set(_customerListHeaders);
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
-    $("#tblCustomerlist tbody").on("click", "tr", function () {
-      var listData = $(this).closest("tr").attr("id");
-      var transactiontype = $(this).closest("tr").attr("isjob");
-      var url = FlowRouter.current().path;
-      if (listData) {
-        if (url.indexOf("?type") > 0) {
-          if (transactiontype != "") {
-            FlowRouter.go("/customerscard?jobid=" + listData + "&transTab=job");
-          } else {
-            FlowRouter.go("/customerscard?id=" + listData + "&transTab=job");
-          }
-        } else {
-          if (transactiontype != "") {
-            FlowRouter.go("/customerscard?jobid=" + listData);
-          } else {
-            FlowRouter.go("/customerscard?id=" + listData);
-          }
-        }
-      }
-    });
+    // $("#tblCustomerlist tbody").on("click", "tr", function () {
+    //   var listData = $(this).closest("tr").attr("id");
+    //   var transactiontype = $(this).closest("tr").attr("isjob");
+    //   var url = FlowRouter.current().path;
+    //   if (listData) {
+    //     if (url.indexOf("?type") > 0) {
+    //       if (transactiontype != "") {
+    //         FlowRouter.go("/customerscard?jobid=" + listData + "&transTab=job");
+    //       } else {
+    //         FlowRouter.go("/customerscard?id=" + listData + "&transTab=job");
+    //       }
+    //     } else {
+    //       if (transactiontype != "") {
+    //         FlowRouter.go("/customerscard?jobid=" + listData);
+    //       } else {
+    //         FlowRouter.go("/customerscard?id=" + listData);
+    //       }
+    //     }
+    //   }
+    // });
   };
 
   templateObject.loadDefaultCustomer();
@@ -3963,18 +4034,19 @@ Template.setup.onRendered(function () {
     // });
     // templateObject.supplierListHeaders.set(_supplierListHeaers);
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
-    $("#tblSupplierlist tbody").on("click", "tr", function () {
-      var listData = $(this).closest("tr").attr("id");
-      if (listData) {
-        FlowRouter.go("/supplierscard?id=" + listData);
-      }
-    });
+    // $("#tblSupplierlist tbody").on("click", "tr", function () {
+    //   var listData = $(this).closest("tr").attr("id");
+    //   if (listData) {
+    //     FlowRouter.go("/supplierscard?id=" + listData);
+    //   }
+    // });
   };
 
   templateObject.loadSuppliers();
 
   // Step 9 Render functionalities
 
+  let  splashArrayProductList = new Array();
   templateObject.loadInventory = async () => {
     let _inventoryList = [];
     let dataObject = await getVS1Data("TProductVS1");
@@ -3985,7 +4057,7 @@ Template.setup.onRendered(function () {
         : JSON.parse(dataObject[0].data);
 
     if (data.tproductvs1) {
-      addVS1Data("TProductVS1", JSON.stringify(data));
+      await addVS1Data("TProductVS1", JSON.stringify(data));
 
       //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
       let lineItems = [];
@@ -4002,237 +4074,295 @@ Template.setup.onRendered(function () {
       departmentData = "All";
 
       data.tproductvs1.forEach((product) => {
-        _inventoryList.push({...product.fields});
-      })
+        _inventoryList.push({ ...product.fields });
+      });
 
-       templateObject.inventoryList.set(_inventoryList);
+   
+      templateObject.inventoryList.set(_inventoryList);
 
-      if(templateObject.inventoryList.get()) {
-        setTimeout(function() {
-          $("#tblInventory").dataTable({
-                  // data: _inventoryList,
-                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      if (templateObject.inventoryList.get()) {
+        setTimeout(function () {
+          $("#tblInventory")
+            .dataTable({
+              // data: splashArrayProductList,
+              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
-                  columnDefs: [{
-                          className: "colProductID hiddenColumn",
-                          targets: [0],
-                      },
-                      {
-                          className: "colProductName",
-                          targets: [1],
-                      },
-                      {
-                          className: "colSalesDescription",
-                          targets: [2],
-                      },
-                      {
-                          className: "colAvailable text-right",
-                          targets: [3],
-                      },
-                      {
-                          className: "colOnSO text-right",
-                          targets: [4],
-                      },
-                      {
-                          className: "colOnBO text-right",
-                          targets: [5],
-                      },
-                      {
-                          className: "colInStock text-right",
-                          targets: [6],
-                      },
-                      {
-                          className: "colOnOrder text-right",
-                          targets: [7],
-                      },
-                      {
-                          className: "colCostPrice hiddenColumn text-right",
-                          targets: [8],
-                      },
-                      {
-                          className: "colCostPriceInc  text-right",
-                          targets: [9],
-                      },
-                      {
-                          className: "colSalePrice hiddenColumn text-right",
-                          targets: [10],
-                      },
-                      {
-                          className: "colSalePriceInc  text-right",
-                          targets: [11],
-                      },
-                      {
-                          className: "colSerialNo  text-center hiddenColumn",
-                          targets: [12],
-                      },
-                      {
-                          className: "colBarcode hiddenColumn",
-                          targets: [13],
-                      },
-                      {
-                          className: "colDepartment hiddenColumn",
-                          targets: [14],
-                      },
-                      {
-                          className: "colPurchaseDescription hiddenColumn",
-                          targets: [15],
-                      },
-                      {
-                          className: "colProdCustField1 hiddenColumn",
-                          targets: [16],
-                      },
-                      {
-                          className: "colProdCustField2 hiddenColumn",
-                          targets: [17],
-                      },
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  buttons: [{
-                          extend: "excelHtml5",
-                          text: "",
-                          download: "open",
-                          className: "btntabletocsv hiddenColumn",
-                          filename: "inventory_" + moment().format(),
-                          orientation: "portrait",
-                          exportOptions: {
-                              columns: ":visible",
-                          },
-                      },
-                      {
-                          extend: "print",
-                          download: "open",
-                          className: "btntabletopdf hiddenColumn",
-                          text: "",
-                          title: "Inventory List",
-                          filename: "inventory_" + moment().format(),
-                          exportOptions: {
-                              columns: ":visible",
-                          },
-                      },
-                  ],
-                  // bStateSave: true,
-                  // rowId: 0,
-                  // paging: false,
-                  // "scrollY": "800px",
-                  // "scrollCollapse": true,
-                  pageLength: initialBaseDataLoad,
-                  lengthMenu: [
-                      [initialBaseDataLoad, -1],
-                      [initialBaseDataLoad, "All"],
-                  ],
-                  info: true,
-                  responsive: true,
-                  order: [
-                      [0, "asc"]
-                  ],
-                  action: function() {
-                      $("#tblInventory").DataTable().ajax.reload();
+              columnDefs: [
+                {
+                  className: "colProductID hiddenColumn",
+                  targets: [0],
+                },
+                {
+                  className: "colProductName",
+                  targets: [1],
+                },
+                {
+                  className: "colSalesDescription",
+                  targets: [2],
+                },
+                {
+                  className: "colAvailable text-right",
+                  targets: [3],
+                },
+                {
+                  className: "colOnSO text-right",
+                  targets: [4],
+                },
+                {
+                  className: "colOnBO text-right",
+                  targets: [5],
+                },
+                {
+                  className: "colInStock text-right",
+                  targets: [6],
+                },
+                {
+                  className: "colOnOrder text-right",
+                  targets: [7],
+                },
+                {
+                  className: "colCostPrice hiddenColumn text-right",
+                  targets: [8],
+                },
+                {
+                  className: "colCostPriceInc  text-right",
+                  targets: [9],
+                },
+                {
+                  className: "colSalePrice hiddenColumn text-right",
+                  targets: [10],
+                },
+                {
+                  className: "colSalePriceInc  text-right",
+                  targets: [11],
+                },
+                {
+                  className: "colSerialNo  text-center hiddenColumn",
+                  targets: [12],
+                },
+                {
+                  className: "colBarcode hiddenColumn",
+                  targets: [13],
+                },
+                {
+                  className: "colDepartment hiddenColumn",
+                  targets: [14],
+                },
+                {
+                  className: "colPurchaseDescription hiddenColumn",
+                  targets: [15],
+                },
+                {
+                  className: "colProdCustField1 hiddenColumn",
+                  targets: [16],
+                },
+                {
+                  className: "colProdCustField2 hiddenColumn",
+                  targets: [17],
+                },
+              ],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              buttons: [
+                {
+                  extend: "excelHtml5",
+                  text: "",
+                  download: "open",
+                  className: "btntabletocsv hiddenColumn",
+                  filename: "inventory_" + moment().format(),
+                  orientation: "portrait",
+                  exportOptions: {
+                    columns: ":visible",
                   },
-                  fnDrawCallback: function(oSettings) {
-                      $(".paginate_button.page-item").removeClass("disabled");
-                      $("#tblInventory_ellipsis").addClass("disabled");
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {}
-                          $(".fullScreenSpin").css("display", "inline-block");
-                          setTimeout(function() {
-                              $(".fullScreenSpin").css("display", "none");
-                          }, 100);
-                      } else {}
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $(".paginate_button.page-item.next").addClass("disabled");
-                      }
-
-                      $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
-                          $(".fullScreenSpin").css("display", "inline-block");
-                          let dataLenght = oSettings._iDisplayLength;
-                          let customerSearch = $("#tblInventory_filter input").val();
-                          sideBarService.getNewProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                  for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
-                                    let availableQty = 0;
-                                    let onBOOrder = 0;
-                                    if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
-                                    for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
-                                         availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
-                                     };
-                                   };
-                                     if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
-                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-                                      }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
-                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-                                      }else{
-                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-                                      }
-                                      var dataListDupp = [
-                                          dataObjectnew.tproductvs1[i].fields.ID || "",
-                                          dataObjectnew.tproductvs1[i].fields.ProductName || "-",
-                                          dataObjectnew.tproductvs1[i].fields.SalesDescription || "",
-                                          availableQty,
-                                          0,
-                                          onBOOrder,
-                                          dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-                                          dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
-                                          checkIfSerialorLot||'',
-                                          dataObjectnew.tproductvs1[i].fields.BARCODE || "",
-                                          departmentData,
-                                          dataObjectnew.tproductvs1[i].fields.PurchaseDescription || "",
-                                          dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
-                                          dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
-                                      ];
-                                      splashArrayProductList.push(dataListDupp);
-                                  }
-                                  let uniqueChars = [...new Set(splashArrayProductList)];
-                                  var datatable = $("#tblInventory").DataTable();
-                                  datatable.clear();
-                                  datatable.rows.add(uniqueChars);
-                                  datatable.draw(false);
-                                  setTimeout(function() {
-                                      $("#tblInventory").dataTable().fnPageChange("last");
-                                  }, 400);
-
-                                  $(".fullScreenSpin").css("display", "none");
-                              })
-                              .catch(function(err) {
-                                  $(".fullScreenSpin").css("display", "none");
-                              });
-                      });
-                      setTimeout(function() {
-                          MakeNegative();
-                      }, 100);
+                },
+                {
+                  extend: "print",
+                  download: "open",
+                  className: "btntabletopdf hiddenColumn",
+                  text: "",
+                  title: "Inventory List",
+                  filename: "inventory_" + moment().format(),
+                  exportOptions: {
+                    columns: ":visible",
                   },
-                  fnInitComplete: function() {
-                      $(
-                          "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                      ).insertAfter("#tblInventory_filter");
-                  },
-              }).on("length.dt", function(e, settings, len) {
-                  $(".fullScreenSpin").css("display", "inline-block");
-                  let dataLenght = settings._iDisplayLength;
-                  // splashArrayProductList = [];
-                  if (dataLenght == -1) {
-                      $(".fullScreenSpin").css("display", "none");
-                  } else {
-                      if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                          $(".fullScreenSpin").css("display", "none");
-                      } else {
-                          $(".fullScreenSpin").css("display", "none");
-                      }
+                },
+              ],
+              // bStateSave: true,
+              // rowId: 0,
+              // paging: false,
+              // "scrollY": "800px",
+              // "scrollCollapse": true,
+              pageLength: initialBaseDataLoad,
+              lengthMenu: [
+                [initialBaseDataLoad, -1],
+                [initialBaseDataLoad, "All"],
+              ],
+              info: true,
+              responsive: true,
+              order: [[0, "asc"]],
+              action: function () {
+                $("#tblInventory").DataTable().ajax.reload();
+              },
+              fnDrawCallback: function (oSettings) {
+                $(".paginate_button.page-item").removeClass("disabled");
+                $("#tblInventory_ellipsis").addClass("disabled");
+                if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
                   }
-              });
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  setTimeout(function () {
+                    $(".fullScreenSpin").css("display", "none");
+                  }, 100);
+                } else {
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
 
-            $(".fullScreenSpin").css("display", "none");
-            $("div.dataTables_filter input").addClass(
-                "form-control form-control-sm"
-            );
+                $(
+                  ".paginate_button.next:not(.disabled)",
+                  this.api().table().container()
+                ).on("click", function () {
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  let dataLenght = oSettings._iDisplayLength;
+                  let customerSearch = $("#tblInventory_filter input").val();
+                  sideBarService
+                    .getNewProductListVS1(
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay()
+                    )
+                    .then(function (dataObjectnew) {
+                      for (
+                        let i = 0;
+                        i < dataObjectnew.tproductvs1.length;
+                        i++
+                      ) {
+                        let availableQty = 0;
+                        let onBOOrder = 0;
+                        if (
+                          dataObjectnew.tproductvs1[i].fields.ProductClass !=
+                          null
+                        ) {
+                          for (
+                            let a = 0;
+                            a <
+                            dataObjectnew.tproductvs1[i].fields.ProductClass
+                              .length;
+                            a++
+                          ) {
+                            availableQty +=
+                              dataObjectnew.tproductvs1[i].fields.ProductClass[
+                                a
+                              ].fields.AvailableQuantity || 0;
+                          }
+                        }
+                        if (
+                          dataObjectnew.tproductvs1[i].fields.SNTracking == true
+                        ) {
+                          checkIfSerialorLot =
+                            '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+                        } else if (
+                          dataObjectnew.tproductvs1[i].fields.Batch == true
+                        ) {
+                          checkIfSerialorLot =
+                            '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+                        } else {
+                          checkIfSerialorLot =
+                            '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+                        }
+                        var dataListDupp = [
+                          dataObjectnew.tproductvs1[i].fields.ID || "",
+                          dataObjectnew.tproductvs1[i].fields.ProductName ||
+                            "-",
+                          dataObjectnew.tproductvs1[i].fields
+                            .SalesDescription || "",
+                          availableQty,
+                          0,
+                          onBOOrder,
+                          dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
+                          dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
+                          utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(
+                              dataObjectnew.tproductvs1[i].fields.BuyQty1Cost *
+                                100
+                            ) / 100
+                          ),
+                          utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(
+                              dataObjectnew.tproductvs1[i].fields
+                                .BuyQty1CostInc * 100
+                            ) / 100
+                          ),
+                          utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(
+                              dataObjectnew.tproductvs1[i].fields
+                                .SellQty1Price * 100
+                            ) / 100
+                          ),
+                          utilityService.modifynegativeCurrencyFormat(
+                            Math.floor(
+                              dataObjectnew.tproductvs1[i].fields
+                                .SellQty1PriceInc * 100
+                            ) / 100
+                          ),
+                          checkIfSerialorLot || "",
+                          dataObjectnew.tproductvs1[i].fields.BARCODE || "",
+                          departmentData,
+                          dataObjectnew.tproductvs1[i].fields
+                            .PurchaseDescription || "",
+                          dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
+                          dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
+                        ];
+                        splashArrayProductList.push(dataListDupp);
+                      }
+                      let uniqueChars = [...new Set(splashArrayProductList)];
+                      var datatable = $("#tblInventory").DataTable();
+                      datatable.clear();
+                      datatable.rows.add(uniqueChars);
+                      datatable.draw(false);
+                      setTimeout(function () {
+                        $("#tblInventory").dataTable().fnPageChange("last");
+                      }, 400);
+
+                      $(".fullScreenSpin").css("display", "none");
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                });
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              },
+              fnInitComplete: function () {
+                $(
+                  "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                ).insertAfter("#tblInventory_filter");
+              },
+            })
+            .on("length.dt", function (e, settings, len) {
+              $(".fullScreenSpin").css("display", "inline-block");
+              let dataLenght = settings._iDisplayLength;
+              // splashArrayProductList = [];
+              if (dataLenght == -1) {
+                $(".fullScreenSpin").css("display", "none");
+              } else {
+                if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                  $(".fullScreenSpin").css("display", "none");
+                } else {
+                  $(".fullScreenSpin").css("display", "none");
+                }
+              }
+            });
+
+          $(".fullScreenSpin").css("display", "none");
+          $("div.dataTables_filter input").addClass(
+            "form-control form-control-sm"
+          );
         }, 0);
       }
     }
-
   };
 
   templateObject.loadInventory();
@@ -4251,14 +4381,18 @@ function isStepActive(stepId) {
 }
 
 Template.setup.events({
-  "click #start-wizard": function () {
-    $(`[data-step-id=1]`).parents('li').addClass('current');
+  "click #start-wizard":  (e) =>  {
+    let templateObject = Template.instance();
+    $(`[data-step-id=1]`).parents("li").addClass("current");
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
-    localStorage.setItem("VS1Cloud_SETUP_STEP", 1);
+    setCurrentStep(1);
+    templateObject.loadSteps();
   },
   "click .confirmBtn": function (event) {
+    let templateObject = Template.instance();
     let stepId = $(event.target).attr("data-step-id");
+    addConfirmedStep(stepId);
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
@@ -4270,17 +4404,15 @@ Template.setup.events({
     } else {
       $(".setup-complete").css("display", "block");
     }
-    let confirmedSteps =
-      localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-    localStorage.setItem(
-      "VS1Cloud_SETUP_CONFIRMED_STEPS",
-      confirmedSteps + (stepId - 1) + ","
-    );
-    localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+
+    setCurrentStep(stepId);
+    templateObject.loadSteps();
   },
   "click .btnBack": function (event) {
-    let stepId = $(event.target).attr("data-step-id");
-    stepId = parseInt(stepId) + 1;
+    let templateObject = Template.instance();
+    let stepId = parseInt($(event.target).attr("data-step-id"));
+    addSkippedStep(stepId);
+    stepId = stepId +1;
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
@@ -4290,14 +4422,20 @@ Template.setup.events({
     } else {
       $(".setup-complete").css("display", "flex");
     }
-    let _steps = templateObject.steps.get();
-    _steps.skippedSteps.push(stepId);
-    localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+    // let _steps = templateObject.steps.get();
+    // _steps.skippedSteps.push(stepId);
+
+    let skippedSteps = templateObject.skippedSteps.get();
+    skippedSteps.push(stepId);
+    templateObject.skippedSteps.set(skippedSteps);
+    
+    setCurrentStep(stepId);
+    templateObject.loadSteps();
   },
   "click .gotToStepID": function (event) {
     let templateObj = Template.instance();
-    let stepId = $(event.target).attr("data-step-id");
-    stepId = parseInt(stepId);
+    const stepId = parseInt($(event.target).attr("data-step-id"));
+
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li`).removeClass("current");
     // $(`.setup-stepper li`).removeClass("clickDisabled");
@@ -4437,18 +4575,18 @@ Template.setup.events({
           showCancelButton: false,
           confirmButtonText: "OK",
         }).then((result) => {
-          $(".setup-step").css("display", "none");
-          $(`.setup-stepper li:nth-child(2)`).addClass("current");
-          $(`.setup-stepper li:nth-child(1)`).removeClass("current");
-          $(`.setup-stepper li:nth-child(1)`).addClass("completed");
-          $(".setup-step-2").css("display", "block");
-          let confirmedSteps =
-            localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-          localStorage.setItem(
-            "VS1Cloud_SETUP_CONFIRMED_STEPS",
-            confirmedSteps + "1,"
-          );
-          localStorage.setItem("VS1Cloud_SETUP_STEP", 2);
+          // $(".setup-step").css("display", "none");
+          // $(`.setup-stepper li:nth-child(2)`).addClass("current");
+          // $(`.setup-stepper li:nth-child(1)`).removeClass("current");
+          // $(`.setup-stepper li:nth-child(1)`).addClass("completed");
+          // $(".setup-step-2").css("display", "block");
+          // let confirmedSteps =
+          //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+          // localStorage.setItem(
+          //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+          //   confirmedSteps + "1,"
+          // );
+          // localStorage.setItem("VS1Cloud_SETUP_STEP", 2);
         });
       })
       .catch(function (err) {
@@ -4554,7 +4692,7 @@ Template.setup.events({
   // TODO: Step 2
   // Active Tax Rates
   "click .chkDatatableTaxRate": function (event) {
-    var columns = $("#taxRatesList th");
+    var columns = $("#taxRatesTable th");
     let columnDataValue = $(event.target)
       .closest("div")
       .find(".divcolumnTaxRate")
@@ -4698,7 +4836,7 @@ Template.setup.events({
     let columnDatanIndex = $(event.target)
       .closest("div.columnSettings")
       .attr("id");
-    var datable = $("#taxRatesList").DataTable();
+    var datable = $("#taxRatesTable").DataTable();
     var title = datable.column(columnDatanIndex).header();
     $(title).html(columData);
   },
@@ -4718,7 +4856,7 @@ Template.setup.events({
       .prev()
       .find(".divcolumnTaxRate")
       .text();
-    var datable = $("#taxRatesList th");
+    var datable = $("#taxRatesTable th");
     $.each(datable, function (i, v) {
       if (v.innerText == columnDataValue) {
         let className = v.className;
@@ -4729,7 +4867,7 @@ Template.setup.events({
   },
   "click .btnOpenSettingsTaxRate": function (event) {
     let templateObject = Template.instance();
-    var columns = $("#taxRatesList th");
+    var columns = $("#taxRatesTable th");
 
     const tableHeaderList = [];
     let sTible = "";
@@ -4825,19 +4963,19 @@ Template.setup.events({
                   showCancelButton: false,
                   confirmButtonText: "OK",
                 }).then((result) => {
-                  $(".setup-step").css("display", "none");
-                  $(`.setup-stepper li:nth-child(3)`).addClass("current");
-                  $(`.setup-stepper li:nth-child(2)`).removeClass("current");
-                  $(`.setup-stepper li:nth-child(2)`).addClass("completed");
-                  $(".setup-step-3").css("display", "block");
-                  let confirmedSteps =
-                    localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") ||
-                    "";
-                  localStorage.setItem(
-                    "VS1Cloud_SETUP_CONFIRMED_STEPS",
-                    confirmedSteps + "2,"
-                  );
-                  localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
+                  // $(".setup-step").css("display", "none");
+                  // $(`.setup-stepper li:nth-child(3)`).addClass("current");
+                  // $(`.setup-stepper li:nth-child(2)`).removeClass("current");
+                  // $(`.setup-stepper li:nth-child(2)`).addClass("completed");
+                  // $(".setup-step-3").css("display", "block");
+                  // let confirmedSteps =
+                  //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") ||
+                  //   "";
+                  // localStorage.setItem(
+                  //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+                  //   confirmedSteps + "2,"
+                  // );
+                  // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                 });
               })
               .catch(function (err) {
@@ -4849,19 +4987,19 @@ Template.setup.events({
                   showCancelButton: false,
                   confirmButtonText: "OK",
                 }).then((result) => {
-                  $(".setup-step").css("display", "none");
-                  $(`.setup-stepper li:nth-child(3)`).addClass("current");
-                  $(`.setup-stepper li:nth-child(2)`).removeClass("current");
-                  $(`.setup-stepper li:nth-child(2)`).addClass("completed");
-                  $(".setup-step-3").css("display", "block");
-                  let confirmedSteps =
-                    localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") ||
-                    "";
-                  localStorage.setItem(
-                    "VS1Cloud_SETUP_CONFIRMED_STEPS",
-                    confirmedSteps + "2,"
-                  );
-                  localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
+                  // $(".setup-step").css("display", "none");
+                  // $(`.setup-stepper li:nth-child(3)`).addClass("current");
+                  // $(`.setup-stepper li:nth-child(2)`).removeClass("current");
+                  // $(`.setup-stepper li:nth-child(2)`).addClass("completed");
+                  // $(".setup-step-3").css("display", "block");
+                  // let confirmedSteps =
+                  //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") ||
+                  //   "";
+                  // localStorage.setItem(
+                  //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+                  //   confirmedSteps + "2,"
+                  // );
+                  // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                 });
               });
           } else {
@@ -4873,18 +5011,18 @@ Template.setup.events({
               showCancelButton: false,
               confirmButtonText: "OK",
             }).then((result) => {
-              $(".setup-step").css("display", "none");
-              $(`.setup-stepper li:nth-child(3)`).addClass("current");
-              $(`.setup-stepper li:nth-child(2)`).removeClass("current");
-              $(`.setup-stepper li:nth-child(2)`).addClass("completed");
-              $(".setup-step-3").css("display", "block");
-              let confirmedSteps =
-                localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-              localStorage.setItem(
-                "VS1Cloud_SETUP_CONFIRMED_STEPS",
-                confirmedSteps + "2,"
-              );
-              localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
+              // $(".setup-step").css("display", "none");
+              // $(`.setup-stepper li:nth-child(3)`).addClass("current");
+              // $(`.setup-stepper li:nth-child(2)`).removeClass("current");
+              // $(`.setup-stepper li:nth-child(2)`).addClass("completed");
+              // $(".setup-step-3").css("display", "block");
+              // let confirmedSteps =
+              //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+              // localStorage.setItem(
+              //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+              //   confirmedSteps + "2,"
+              // );
+              // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
             });
           }
         }
@@ -4898,18 +5036,18 @@ Template.setup.events({
           showCancelButton: false,
           confirmButtonText: "OK",
         }).then((result) => {
-          $(".setup-step").css("display", "none");
-          $(`.setup-stepper li:nth-child(3)`).addClass("current");
-          $(`.setup-stepper li:nth-child(2)`).removeClass("current");
-          $(`.setup-stepper li:nth-child(2)`).addClass("completed");
-          $(".setup-step-3").css("display", "block");
-          let confirmedSteps =
-            localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-          localStorage.setItem(
-            "VS1Cloud_SETUP_CONFIRMED_STEPS",
-            confirmedSteps + "2,"
-          );
-          localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
+          // $(".setup-step").css("display", "none");
+          // $(`.setup-stepper li:nth-child(3)`).addClass("current");
+          // $(`.setup-stepper li:nth-child(2)`).removeClass("current");
+          // $(`.setup-stepper li:nth-child(2)`).addClass("completed");
+          // $(".setup-step-3").css("display", "block");
+          // let confirmedSteps =
+          //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
+          // localStorage.setItem(
+          //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
+          //   confirmedSteps + "2,"
+          // );
+          // localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
         });
       });
   },
@@ -5159,7 +5297,7 @@ Template.setup.events({
         $(".fullScreenSpin").css("display", "none");
       });
   },
-  "click #taxRatesList td.clickable": (e) => TaxRatesEditListener(e),
+  "click #taxRatesTable td.clickable": (e) => TaxRatesEditListener(e),
   "click .table-remove-tax-rate": (e) => {
     e.stopPropagation();
     const targetID = $(e.target).closest("tr").attr("id"); // table row ID
@@ -6319,8 +6457,82 @@ Template.setup.events({
   },
 
   // TODO: Step 5
+  "click .btnSaveEmpPop": (e) => {
+    //console.log("Save employee clicked", e);
+    $("#addEmployeeModal").modal("toggle");
+  },
+  "click .employees-js": (e) => {
+    let templateObject = Template.instance();
+    $("#addEmployeeModal").modal("toggle");
+    LoadingOverlay.show();
+    const employeeID = $(e.currentTarget).attr("id");
+    if (!isNaN(employeeID)) {
+      console.log(employeeID);
+
+      let employeeList = templateObject.currentEmployees.get();
+      console.log(employeeList);
+
+      let data = employeeList.filter(
+        (employee) => employee.fields.ID == employeeID
+      );
+      data = data[0];
+      console.log("FOUND: ", data);
+
+      let editableEmployee = {
+        id: data.fields.ID,
+        lid: "Edit Employee",
+        title: data.fields.Title || "",
+        firstname: data.fields.FirstName || "",
+        middlename: data.fields.MiddleName || "",
+        lastname: data.fields.LastName || "",
+        company: data.fields.EmployeeName || "",
+        tfn: data.fields.TFN || "",
+        priority: data.fields.CustFld5 || 0,
+        color: data.fields.CustFld6 || "#00a3d3",
+        email: data.fields.Email || "",
+        phone: data.fields.Phone || "",
+        mobile: data.fields.Mobile || "",
+        fax: data.fields.FaxNumber || "",
+        skype: data.fields.SkypeName || "",
+        gender: data.fields.Sex || "",
+        dob: data.fields.DOB
+          ? moment(data.fields.DOB).format("DD/MM/YYYY")
+          : "",
+        startdate: data.fields.DateStarted
+          ? moment(data.fields.DateStarted).format("DD/MM/YYYY")
+          : "",
+        datefinished: data.fields.DateFinished
+          ? moment(data.fields.DateFinished).format("DD/MM/YYYY")
+          : "",
+        position: data.fields.Position || "",
+        streetaddress: data.fields.Street || "",
+        city: data.fields.Street2 || "",
+        state: data.fields.State || "",
+        postalcode: data.fields.PostCode || "",
+        country: data.fields.Country || LoggedCountry,
+        custfield1: data.fields.CustFld1 || "",
+        custfield2: data.fields.CustFld2 || "",
+        custfield3: data.fields.CustFld3 || "",
+        custfield4: data.fields.CustFld4 || "",
+        custfield14: data.fields.CustFld14 || "",
+        website: "",
+        notes: data.fields.Notes || "",
+      };
+
+      console.log(editableEmployee);
+
+      templateObject.editableEmployee.set(editableEmployee);
+
+      console.log(templateObject.editableEmployee.get());
+    }
+    LoadingOverlay.hide();
+  },
   "click #btnNewEmployee": (event) => {
     // FlowRouter.go("/employeescard");
+    LoadingOverlay.show();
+    Template.instance().editableEmployee.set(null);
+    LoadingOverlay.hide();
+
     $("#addEmployeeModal").modal("toggle");
   },
   "click .btnAddVS1User": function (event) {
@@ -6951,7 +7163,7 @@ Template.setup.events({
   },
 
   // TODO: Step 6
-  "click .btnAddNewAccount": function (event) {
+  "click .btnAddNewAccounts": function (event) {
     $("#add-account-title").text("Add New Account");
     $("#edtAccountID").val("");
     $("#sltAccountType").val("");
@@ -8677,9 +8889,35 @@ Template.setup.events({
     const target = $(e.currentTarget).attr("data-toggle");
     $(target).modal("toggle");
   },
+  "click #tblCustomerlist tbody tr": (e) => {
+    const tr = $(e.currentTarget);
+    var listData = tr.attr("id");
+    var transactiontype = tr.attr("isjob");
+    var url = FlowRouter.current().path;
+    console.log(listData, tr);
+    // if (listData) {
+    //   if (url.indexOf("?type") > 0) {
+    //     if (transactiontype != "") {
+    //       FlowRouter.go("/customerscard?jobid=" + listData + "&transTab=job");
+    //     } else {
+    //       FlowRouter.go("/customerscard?id=" + listData + "&transTab=job");
+    //     }
+    //   } else {
+    //     if (transactiontype != "") {
+    //       FlowRouter.go("/customerscard?jobid=" + listData);
+    //     } else {
+    //       FlowRouter.go("/customerscard?id=" + listData);
+    //     }
+    //   }
+    // }
+  },
+
   // TODO: Step 8
   "click #btnNewSupplier": (e) => {
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
+  },
+  "click #tblSupplierlist tbody tr": (e) => {
+
   },
   // TODO: Step 9
 
@@ -8858,6 +9096,9 @@ Template.setup.helpers({
       PrefName: "tblEmployeelist",
     });
   },
+  editableEmployee: () => {
+    return Template.instance().editableEmployee.get();
+  },
 
   // Step 6 helpers
   bsbRegionName: () => {
@@ -9005,7 +9246,7 @@ Template.setup.helpers({
   // Step 9 helpers
   inventoryList: () => {
     return Template.instance().inventoryList.get();
-  }
+  },
 });
 
 Template.registerHelper("equals", function (a, b) {
