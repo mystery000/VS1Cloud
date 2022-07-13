@@ -3010,6 +3010,53 @@ Template.employeescard.onRendered(function () {
     };
     templateObject.getPayNotesTypes();
 
+    templateObject.saveEarningLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        );
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );                
+        
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tpaytemplateearningline.length ){
+                await addVS1Data('TPayTemplateEarningLine', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }  
+        return '';
+    };
+
+    templateObject.getPayEarningLines = async function(){
+        let data = [];
+        let dataObject = await getVS1Data('TPayTemplateEarningLine')  
+        if ( dataObject.length == 0) {   
+            data = await templateObject.saveEarningLocalDB(); 
+        }else{
+            data = JSON.parse(dataObject[0].data);
+        }
+        
+        let useData = PayTemplateEarningLine.fromList(
+            data.tpaytemplateearningline
+        ).filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                return item;
+            }
+        });
+
+        templateObject.payTemplateEarningLineInfo.set(useData);
+
+    };
+
+    templateObject.getPayEarningLines();
+
     templateObject.getAssignLeaveTypes = async () => {
         let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
         if( TAssignLeaveTypes.length ){
@@ -4729,6 +4776,13 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TAssignLeaveType
+        );
+
         let LeaveType = $('#leaveTypeSelect').val();
         let LeaveCalcMethod = $('#leaveCalcMethodSelect').val();
         let HoursLeave = '';
@@ -4755,16 +4809,18 @@ Template.employeescard.events({
         let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
         let EFTLeaveType = $("#eftLeaveType").is(':checked') ? true : false;
         let SuperannuationGuarantee = ( EFTLeaveType )? $("#superannuationGuarantee").is(':checked') ? true : false : false;
-        const assignLeaveTypes = [];
-        let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
-        if( TAssignLeaveTypes.length ){
-            let TAssignLeaveTypesData = JSON.parse(TAssignLeaveTypes[0].data);
-            assignLeaveTypes = AssignLeaveType.fromList(
-                TAssignLeaveTypesData.tassignteavetype
-            );
-        }
-        assignLeaveTypes.push(
-            new AssignLeaveType({
+        
+        // const assignLeaveTypes = [];
+        // let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
+        // if( TAssignLeaveTypes.length ){
+        //     let TAssignLeaveTypesData = JSON.parse(TAssignLeaveTypes[0].data);
+        //     assignLeaveTypes = AssignLeaveType.fromList(
+        //         TAssignLeaveTypesData.tassignteavetype
+        //     );
+        // }
+
+        // assignLeaveTypes.push(
+        let assignLeaveTypes = new AssignLeaveType({
                 type: "TAssignLeaveType",
                 fields: new AssignLeaveTypeFields({
                     LeaveType: LeaveType,
@@ -4777,17 +4833,40 @@ Template.employeescard.events({
                     OpeningBalance: OpeningBalance,
                     OnTerminationUnusedBalance: OnTerminationUnusedBalance,
                     EFTLeaveType: EFTLeaveType,
-                    SuperannuationGuarantee: SuperannuationGuarantee
+                    SuperannuationGuarantee: SuperannuationGuarantee,
+                    Active: true
                 }),
             })
-        );
-        let updatedAssignLeaveTypes = {
-            tassignteavetype: assignLeaveTypes,
+        // );
+        // let updatedAssignLeaveTypes = {
+        //     tassignteavetype: assignLeaveTypes,
+        // }
+        // await addVS1Data('TAssignLeaveType', JSON.stringify(updatedAssignLeaveTypes));
+
+        // console.log('assignLeaveTypes', assignLeaveTypes)
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(assignLeaveTypes),
+            });
+            
+            
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                // $('#deductionRateForm')[0].reset();
+                // await templateObject.saveAssignLeaveLocalDB();
+                // await templateObject.getAssignLeaveTypes();
+                $('#assignLeaveTypeModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+            }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
         }
-        await addVS1Data('TAssignLeaveType', JSON.stringify(updatedAssignLeaveTypes));
-        templateObject.getAssignLeaveTypes();
-        $('#assignLeaveTypeModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
+        
     },
 
     // TO DO
@@ -4842,28 +4921,60 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        );
+
         let EarningRate = $('#earningRateSelect').val();
         let CalculationType = $('input[name=calculationType]:checked').val();
         let ExpenseAccount = $('#expenseAccount').val();
-        let payEarningLinesTemp = [];
-        let payEarningLinesTempExist = templateObject.payTemplateEarningLineInfo.get();
-        if( Array.isArray( payEarningLinesTempExist ) ){
-            payEarningLinesTemp = payEarningLinesTempExist
-        }
-        payEarningLinesTemp.push(
-            new PayTemplateEarningLine({
+        // let payEarningLinesTemp = [];
+        // let payEarningLinesTempExist = templateObject.payTemplateEarningLineInfo.get();
+        // if( Array.isArray( payEarningLinesTempExist ) ){
+        //     payEarningLinesTemp = payEarningLinesTempExist
+        // }
+        // payEarningLinesTemp.push(
+        let payEarningLines = new PayTemplateEarningLine({
                 type: 'TPayTemplateEarningLine',
                 fields: new PayTemplateEarningLineFields({
                     EmployeeID: employeeID,
                     EarningRate: EarningRate,
                     CalculationType: CalculationType,
-                    ExpenseAccount: ExpenseAccount
+                    ExpenseAccount: ExpenseAccount,
+                    Amount: 0
                 })
             })
-        )
-        templateObject.payTemplateEarningLineInfo.set(payEarningLinesTemp);
-        $('input[name=calculationType]:checked').attr('checked', false);
-        $('#expenseAccount').val('');
+        // )
+        // templateObject.payTemplateEarningLineInfo.set(payEarningLinesTemp);
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payEarningLines),
+            });
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                console.log('jsonResponse', jsonResponse)
+                await templateObject.saveEarningLocalDB();
+                await templateObject.getPayEarningLines();
+                $('input[name=calculationType]:checked').attr('checked', false);
+                $('#expenseAccount').val('');
+                $('.fullScreenSpin').css('display', 'none');
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+            }             
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+        }
+
+        return false
+
+        
         await templateObject.setEarningLineDropDown();
         setTimeout(function () {
             let index = payEarningLinesTemp.length - 1;
@@ -4892,7 +5003,9 @@ Template.employeescard.events({
                     EmployeeID: employeeID,
                     DeductionType: DeductionType,
                     CalculationType: CalculationType,
-                    ControlAccount: ControlAccount,
+                    ExpenseAccount: ControlAccount,
+                    Amount: 0,
+                    Percentage: 0
                 })
             })
         )
@@ -4941,6 +5054,8 @@ Template.employeescard.events({
                     LiabilityAccount: LiabilityAccount,
                     PaymentFrequency: PaymentFrequency,
                     PeriodPaymentDate: PeriodPaymentDate,
+                    Percentage: 0,
+                    Amount: 0
                 })
             })
         )
@@ -4999,7 +5114,8 @@ Template.employeescard.events({
                     EmployeeID: employeeID,
                     ReiumbursementType: ReiumbursementType,
                     Description: Description,
-                    ControlExpenseAccount: ControlExpenseAccount,
+                    ExpenseAccount: ControlExpenseAccount,
+                    Amount: 0
                 })
             })
         )
