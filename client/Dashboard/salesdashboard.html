@@ -8,6 +8,12 @@
                 <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
             </header>
         </div>
+
+
+
+
+
+
         <div class="col-12 col-md-6 justify-content-end">
             <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
         </div>
@@ -30,11 +36,17 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12 col-md-6"></div>
+        <div class="col-12 col-md-6"></div>
+
+    
+    </div>
                 <!-- All Cards List -->
                 {{> allCardsListsec tabGroupID="1" chartGroup="Dashboard"}}
 
                 <!-- All charts list -->
-                {{> allCardsListsec  tabGroupID="1" chartGroup="Dashboard" }}
+                {{> allChartListssec  tabGroupID="1" chartGroup="Dashboard" }}
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 670px!important;">
             <div class="modal-content">

@@ -149,7 +149,7 @@ Template.newsidenav.onRendered(function() {
     let employeeLoggedUserAccess = Session.get('ERPSolidCurrentUSerAccess');
 
     let isDashboard = Session.get('CloudDashboardModule');
-    let isSalesDash = true;
+    let isSalesDashboard = Session.get('CloudSalesDashboardModule');;
     let isMain = Session.get('CloudMainModule');
     let isInventory = Session.get('CloudInventoryModule');
     let isManufacturing = Session.get('CloudManufacturingModule');
@@ -594,9 +594,9 @@ Template.newsidenav.onRendered(function() {
         if (isDashboard) {
             templateObject.includeDashboard.set(true);
         }
-        // if (isSalesDash) {
-        //     templateObject.includeSalesdashboard.set(true);
-        // }
+        if (isSalesDashboard) {
+            templateObject.includeSalesdashboard.set(true);
+        }
         if (isMain) {
             templateObject.includeMain.set(true);
         }

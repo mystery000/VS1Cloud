@@ -8,7 +8,7 @@ Template.home.onCreated(function () {
     templateObject.includeDashboard = new ReactiveVar();
     templateObject.includeDashboard.set(false);
     templateObject.includeSalesdashboard = new ReactiveVar();
-    templateObject.includeSalesdashboard.set(true);
+    templateObject.includeSalesdashboard.set(false);
     templateObject.includeMain = new ReactiveVar();
     templateObject.includeMain.set(false);
     templateObject.includeInventory = new ReactiveVar();
@@ -49,6 +49,7 @@ Template.home.onRendered(function () {
   const templateObject = Template.instance();
 
   let isDashboard = Session.get('CloudDashboardModule');
+  let isSalesDashboard = Session.get('CloudSalesDashboardModule');
   console.log(isDashboard);
   let isMain = Session.get('CloudMainModule');
   let isInventory = Session.get('CloudInventoryModule');
@@ -74,6 +75,9 @@ Template.home.onRendered(function () {
   if(LoggedDB !== null){
     if(isDashboard){
       templateObject.includeDashboard.set(true);
+    }
+    if(isSalesDashboard){
+      templateObject.includeSalesdashboard.set(true);
     }
     // if(issalesDashboard){
     //   templateObject.includeDashboard.set(true);

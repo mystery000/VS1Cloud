@@ -362,6 +362,8 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
        let isStockTransferLicence = Session.get('CloudStockTransferLicence');
        let isMainLicence = Session.get('CloudMainLicence');
        let isDashboardLicence = Session.get('CloudDashboardLicence');
+       let isSalesDashboardLicence = Session.get('CloudSalesDashboardLicence');
+       let isSalesdashboard = Session.get('CloudSalesDashboard');
 
           
        let isAccountsLicence = Session.get('CloudAccountsLicence');
@@ -452,6 +454,15 @@ let isSettingsLicence = Session.get('CloudSettingsLicence');
                   }else if((radioValue != 1) && (accessDesc == "Dashboard") && (isDashboardLicence)){
                     isDashboard = false;
                     Session.setPersistent('CloudDashboardModule', isDashboard);
+                  }
+
+                  if((radioValue == 1) && (accessDesc == "Salesdashboard") && (isSalesDashboardLicence)){
+                    isSalesdashboard = true;
+                    Session.setPersistent('CloudSalesDashboardModule', isSalesdashboard);
+                    console.log('is salesdash boarde' , isSalesdashboard)
+                  }else if((radioValue != 1) && (accessDesc == "Salesdashboard") && (isSalesDashboardLicence)){
+                    isSalesdashboard = false;
+                    Session.setPersistent('CloudSalesDashboardModule', isSalesdashboard);
                   }
 
                   
