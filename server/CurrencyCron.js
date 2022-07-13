@@ -44,7 +44,7 @@ Meteor.methods({
 
     return currency;
 
-  }
+  },
   /**
    * This functions is going to run when the cron is running
    * @param {*} cronSetting
