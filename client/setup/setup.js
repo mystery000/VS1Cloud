@@ -4074,120 +4074,151 @@ Template.setup.onRendered(function () {
       departmentData = "All";
 
       data.tproductvs1.forEach((product) => {
+        let availableQty = 0;
+        let onBOOrder = 0;
+        let onSOORDer = 0;
+
+        if (product.fields.ProductClass != null) {
+          for (let a = 0;a < product.fields.ProductClass.length; a++) {
+            availableQty += product.fields.ProductClass[a].fields.AvailableQuantity || 0;
+          }
+        }
+        product.fields.AvailableQuantity = availableQty;
+        product.fields.onBOOrder = product.fields.TotalQtyInStock - availableQty;
+        product.fields.onSOOrder = onSOORDer;
+        
+        product.fields.CostPrice = utilityService.modifynegativeCurrencyFormat(
+          Math.floor(product.fields.BuyQty1Cost * 100) / 100
+        ),
+        product.fields.CostPriceInc = utilityService.modifynegativeCurrencyFormat(
+          Math.floor(product.fields.BuyQty1CostInc * 100) /
+            100
+        ),
+        product.fields.SellPrice = utilityService.modifynegativeCurrencyFormat(
+          Math.floor(product.fields.SellQty1Price * 100) / 100
+        ),
+        product.fields.SellPriceInc = utilityService.modifynegativeCurrencyFormat(
+          Math.floor(product.fields.SellQty1PriceInc * 100) /
+            100
+        ),
+
+
         _inventoryList.push({ ...product.fields });
       });
 
+      console.log("Inventory list", _inventoryList);
    
       templateObject.inventoryList.set(_inventoryList);
 
       if (templateObject.inventoryList.get()) {
         setTimeout(function () {
-          $("#tblInventory")
+          //console.log($("#InventoryTable"));
+          $("#InventoryTable")
             .dataTable({
               // data: splashArrayProductList,
               sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
-              columnDefs: [
-                {
-                  className: "colProductID hiddenColumn",
-                  targets: [0],
-                },
-                {
-                  className: "colProductName",
-                  targets: [1],
-                },
-                {
-                  className: "colSalesDescription",
-                  targets: [2],
-                },
-                {
-                  className: "colAvailable text-right",
-                  targets: [3],
-                },
-                {
-                  className: "colOnSO text-right",
-                  targets: [4],
-                },
-                {
-                  className: "colOnBO text-right",
-                  targets: [5],
-                },
-                {
-                  className: "colInStock text-right",
-                  targets: [6],
-                },
-                {
-                  className: "colOnOrder text-right",
-                  targets: [7],
-                },
-                {
-                  className: "colCostPrice hiddenColumn text-right",
-                  targets: [8],
-                },
-                {
-                  className: "colCostPriceInc  text-right",
-                  targets: [9],
-                },
-                {
-                  className: "colSalePrice hiddenColumn text-right",
-                  targets: [10],
-                },
-                {
-                  className: "colSalePriceInc  text-right",
-                  targets: [11],
-                },
-                {
-                  className: "colSerialNo  text-center hiddenColumn",
-                  targets: [12],
-                },
-                {
-                  className: "colBarcode hiddenColumn",
-                  targets: [13],
-                },
-                {
-                  className: "colDepartment hiddenColumn",
-                  targets: [14],
-                },
-                {
-                  className: "colPurchaseDescription hiddenColumn",
-                  targets: [15],
-                },
-                {
-                  className: "colProdCustField1 hiddenColumn",
-                  targets: [16],
-                },
-                {
-                  className: "colProdCustField2 hiddenColumn",
-                  targets: [17],
-                },
-              ],
+              // columnDefs: [
+              //   {
+              //     className: "colProductID hiddenColumn",
+              //     targets: [0],
+              //   },
+              //   {
+              //     className: "colProductName",
+              //     targets: [1],
+              //   },
+              //   {
+              //     className: "colSalesDescription",
+              //     targets: [2],
+              //   },
+              //   {
+              //     className: "colAvailable text-right",
+              //     targets: [3],
+              //   },
+              //   {
+              //     className: "colOnSO text-right",
+              //     targets: [4],
+              //   },
+              //   {
+              //     className: "colOnBO text-right",
+              //     targets: [5],
+              //   },
+              //   {
+              //     className: "colInStock text-right",
+              //     targets: [6],
+              //   },
+              //   {
+              //     className: "colOnOrder text-right",
+              //     targets: [7],
+              //   },
+              //   {
+              //     className: "colCostPrice hiddenColumn text-right",
+              //     targets: [8],
+              //   },
+              //   {
+              //     className: "colCostPriceInc  text-right",
+              //     targets: [9],
+              //   },
+              //   {
+              //     className: "colSalePrice hiddenColumn text-right",
+              //     targets: [10],
+              //   },
+              //   {
+              //     className: "colSalePriceInc  text-right",
+              //     targets: [11],
+              //   },
+              //   {
+              //     className: "colSerialNo  text-center hiddenColumn",
+              //     targets: [12],
+              //   },
+              //   {
+              //     className: "colBarcode hiddenColumn",
+              //     targets: [13],
+              //   },
+              //   {
+              //     className: "colDepartment hiddenColumn",
+              //     targets: [14],
+              //   },
+              //   {
+              //     className: "colPurchaseDescription hiddenColumn",
+              //     targets: [15],
+              //   },
+              //   {
+              //     className: "colProdCustField1 hiddenColumn",
+              //     targets: [16],
+              //   },
+              //   {
+              //     className: "colProdCustField2 hiddenColumn",
+              //     targets: [17],
+              //   },
+              // ],
               select: true,
               destroy: true,
               colReorder: true,
-              buttons: [
-                {
-                  extend: "excelHtml5",
-                  text: "",
-                  download: "open",
-                  className: "btntabletocsv hiddenColumn",
-                  filename: "inventory_" + moment().format(),
-                  orientation: "portrait",
-                  exportOptions: {
-                    columns: ":visible",
-                  },
-                },
-                {
-                  extend: "print",
-                  download: "open",
-                  className: "btntabletopdf hiddenColumn",
-                  text: "",
-                  title: "Inventory List",
-                  filename: "inventory_" + moment().format(),
-                  exportOptions: {
-                    columns: ":visible",
-                  },
-                },
-              ],
+              // buttons: [
+              //   {
+              //     extend: "excelHtml5",
+              //     text: "",
+              //     download: "open",
+              //     className: "btntabletocsv hiddenColumn",
+              //     filename: "inventory_" + moment().format(),
+              //     orientation: "portrait",
+              //     exportOptions: {
+              //       columns: ":visible",
+              //     },
+              //   },
+              //   {
+              //     extend: "print",
+              //     download: "open",
+              //     className: "btntabletopdf hiddenColumn",
+              //     text: "",
+              //     title: "Inventory List",
+              //     filename: "inventory_" + moment().format(),
+              //     exportOptions: {
+              //       columns: ":visible",
+              //     },
+              //   },
+              // ],
               // bStateSave: true,
               // rowId: 0,
               // paging: false,
@@ -4202,7 +4233,7 @@ Template.setup.onRendered(function () {
               responsive: true,
               order: [[0, "asc"]],
               action: function () {
-                $("#tblInventory").DataTable().ajax.reload();
+                $("#InventoryTable").DataTable().ajax.reload();
               },
               fnDrawCallback: function (oSettings) {
                 $(".paginate_button.page-item").removeClass("disabled");
@@ -4317,12 +4348,12 @@ Template.setup.onRendered(function () {
                         splashArrayProductList.push(dataListDupp);
                       }
                       let uniqueChars = [...new Set(splashArrayProductList)];
-                      var datatable = $("#tblInventory").DataTable();
+                      var datatable = $("#InventoryTable").DataTable();
                       datatable.clear();
                       datatable.rows.add(uniqueChars);
                       datatable.draw(false);
                       setTimeout(function () {
-                        $("#tblInventory").dataTable().fnPageChange("last");
+                        $("#InventoryTable").dataTable().fnPageChange("last");
                       }, 400);
 
                       $(".fullScreenSpin").css("display", "none");
@@ -4360,7 +4391,7 @@ Template.setup.onRendered(function () {
           $("div.dataTables_filter input").addClass(
             "form-control form-control-sm"
           );
-        }, 0);
+        }, 150);
       }
     }
   };
@@ -8920,10 +8951,84 @@ Template.setup.events({
 
   },
   // TODO: Step 9
+  "click .lblCostEx": function (event) {
+    var $earch = $(event.currentTarget);
+    var offset = $earch.offset();
+    if (event.pageX > offset.left + $earch.width() - 10) {
+    } else {
+      $(".lblCostEx").addClass("hiddenColumn");
+      $(".lblCostInc").removeClass("hiddenColumn");
 
+      $(".colCostPriceInc").removeClass("hiddenColumn");
+
+      $(".colCostPrice").addClass("hiddenColumn");
+
+      //$('.lblCostInc').css('width','10.1%');
+    }
+  },
+  "click .lblCostInc": function (event) {
+    var $earch = $(event.currentTarget);
+    var offset = $earch.offset();
+    if (event.pageX > offset.left + $earch.width() - 10) {
+    } else {
+      $(".lblCostInc").addClass("hiddenColumn");
+
+      $(".lblCostEx").removeClass("hiddenColumn");
+
+      $(".colCostPrice").removeClass("hiddenColumn");
+
+      $(".colCostPriceInc").addClass("hiddenColumn");
+      //$('.lblCostEx').css('width','10%');
+    }
+  },
+  "click .lblPriceEx": function (event) {
+    var $earch = $(event.currentTarget);
+    var offset = $earch.offset();
+    if (event.pageX > offset.left + $earch.width() - 10) {
+    } else {
+      $(".lblPriceEx").addClass("hiddenColumn");
+      $(".lblPriceInc").removeClass("hiddenColumn");
+
+      $(".colSalePriceInc").removeClass("hiddenColumn");
+      $(".colSalePrice").addClass("hiddenColumn");
+
+      //$('.lblPriceInc').css('width','10.1%');
+    }
+  },
+  "click .lblPriceInc": function (event) {
+    var $earch = $(event.currentTarget);
+    var offset = $earch.offset();
+    if (event.pageX > offset.left + $earch.width() - 10) {
+    } else {
+      $(".lblPriceInc").addClass("hiddenColumn");
+      $(".lblPriceEx").removeClass("hiddenColumn");
+
+      $(".colSalePrice").removeClass("hiddenColumn");
+      $(".colSalePriceInc").addClass("hiddenColumn");
+
+      //$('.lblPriceEx').css('width','10%');
+    }
+  },
+  "click #btnNewProduct": (e) => {
+    $($(e.currentTarget).attr('data-toggle')).modal("toggle");
+  },
   "click .btnRefresh": () => {
     Meteor._reload.reload();
   },
+  "change #isProductAdded": (E) => {
+    console.log('Product added');
+    //$(".btnRefresh").click();
+    $('#addProductModal').modal("toggle");
+    LoadingOverlay.show();
+    let templateObject = Template.instance();
+
+    setTimeout(() => {
+      templateObject.loadInventory();
+      LoadingOverlay.hide();
+    }, 1500);
+   
+  }
+  
 });
 
 Template.setup.helpers({
