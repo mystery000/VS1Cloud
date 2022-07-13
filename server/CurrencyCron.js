@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor'
 FutureTasks = new Meteor.Collection('cron-jobs');
 
 
-
 Meteor.startup(() => {
   const currentDate = new Date();
 
@@ -38,7 +37,7 @@ Meteor.methods({
    * This functions is going to run when the cron is running
    * @param {*} cronSetting
    */
-   runCron: async (cronSetting) => {
+   runCron: async (cronSetting, erpGet) => {
     console.log("Running cron job for user: " + cronSetting.employeeId);
     // await fetch("/cron/currency-update/" + cronSetting.employeeId);
     // We are testing with get request only but we need post request here
@@ -49,16 +48,15 @@ Meteor.methods({
     //     "Accept":"application/json"
     //   },
     // });
-
-    let apiUrl = "https://sandboxdb.vs1cloud.com:4434/erpapi/TCurrency?ListType=Detail";
-
+    let apiUrl = 'https://' + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/erpapi/TCurrency?ListType=Detail';
+    console.log(apiUrl);
     console.log("Running cron job for user: " + cronSetting.employeeId);
     /* My only fear is how do you pass the header details to this form? */
     /* Not diffuclt if you pass it from client to this place */
     let postHeaders = {
-      "database": "VS1_Cloud_DB_cacb_ba_cf_Tgck5c",
-      "username": "dene@vs1cloud.com",
-      "password": "Dene@123"
+      "database": erpGet.ERPDatabase,
+      "username": erpGet.ERPUsername,
+      "password": erpGet.ERPPassword
       // "Access-Control-Allow-Origin": "*"
     };
 
@@ -80,7 +78,7 @@ Meteor.methods({
    * @param {Object} cronSetting
    * @returns
    */
-  addCurrencyCron: (cronSetting) => {
+  addCurrencyCron: (cronSetting,erpGet) => {
     const cronId = `currency-update-cron_${cronSetting.id}_${cronSetting.employeeId}`;
     SyncedCron.remove(cronId);
 
@@ -88,11 +86,11 @@ Meteor.methods({
       name: cronId,
       schedule: function (parser) {
         const parsed = parser.text(cronSetting.toParse);
-        return parsed;
+        return parser.text('every 2 minutes');;
       },
       job: () => {
         console.log(cronSetting.employeeId);
-        Meteor.call("runCron", cronSetting,  function(error, results) {
+        Meteor.call("runCron", cronSetting, erpGet,  function(error, results) {
           console.log(results, error); //results.data should be a JSON object
         });
       },

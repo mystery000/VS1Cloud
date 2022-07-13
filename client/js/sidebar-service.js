@@ -522,7 +522,7 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        select: "[Deleted]=false",
+        Search: "Deleted != true",
         OrderBy: "PaymentDate desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -532,6 +532,7 @@ export class SideBarService extends BaseService {
         orderby: '"PaymentID desc"',
         ListType: "Detail",
         IgnoreDates: false,
+        Search: "Deleted != true",
         OrderBy: "PaymentDate desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -1162,7 +1163,7 @@ export class SideBarService extends BaseService {
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "IsPO = true or IsBill = true or IsCredit = true",
+        Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1174,7 +1175,7 @@ export class SideBarService extends BaseService {
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "IsPO = true or IsBill = true or IsCredit = true",
+        Search: "Deleted != true",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -2329,7 +2330,7 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        select: "[deleted]=false",
+        Search: "Deleted != true",
         OrderBy: "DepositDate desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -2338,7 +2339,7 @@ export class SideBarService extends BaseService {
       options = {
         //IgnoreDates: true,
         OrderBy: "DepositDate desc",
-        select: "[deleted]=false",
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
