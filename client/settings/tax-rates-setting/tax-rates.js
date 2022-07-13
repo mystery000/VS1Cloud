@@ -16,6 +16,8 @@ Template.taxRatesSettings.onCreated(function () {
 
   templateObject.isChkUSRegionTax = new ReactiveVar();
   templateObject.isChkUSRegionTax.set(false);
+
+  templateObject.subtaxcodes = new ReactiveVar([]);
 });
 
 Template.taxRatesSettings.onRendered(function () {
@@ -614,6 +616,61 @@ Template.taxRatesSettings.onRendered(function () {
 
   templateObject.chkSubTaxRateSetting();
 
+  templateObject.getSubTaxCodes = function () {
+    getVS1Data('TSubTaxVS1').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        // taxRateService.getSubTaxVS1().then(function (data) {
+        let data = taxRateService.getSubTaxVS1();
+        for (let i = 0; i < data.tsubtaxvs1.length; i++) {
+          var dataList = {
+            id: data.tsubtaxvs1[i].Id || '',
+            codename: data.tsubtaxvs1[i].CodeName || '-',
+            description: data.tsubtaxvs1[i].Description || '-',
+            category: data.tsubtaxvs1[i].Category || '-'
+          };
+
+          dataTableList.push(dataList);
+        }
+
+        templateObject.subtaxcodes.set(dataTableList);
+
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.ttaxcodevs1;
+        for (let i = 0; i < useData.length; i++) {
+          var dataList = {
+            id: useData[i].Id || '',
+            codename: useData[i].CodeName || '-',
+            description: useData[i].Description || '-',
+            category: useData[i].Category || '-'
+          };
+
+          dataTableList.push(dataList);
+        }
+
+        templateObject.subtaxcodes.set(dataTableList);
+
+      }
+    }).catch(function (err) {
+      // taxRateService.getSubTaxVS1().then(function (data) {
+      let data = taxRateService.getSubTaxVS1();
+      for (let i = 0; i < data.tsubtaxvs1.length; i++) {
+        var dataList = {
+          id: data.tsubtaxvs1[i].Id || '',
+          codename: data.tsubtaxvs1[i].CodeName || '-',
+          description: data.tsubtaxvs1[i].Description || '-',
+          category: data.tsubtaxvs1[i].Category || '-'
+        };
+
+        dataTableList.push(dataList);
+      }
+
+      templateObject.subtaxcodes.set(dataTableList);
+    });
+  }
+
+  templateObject.getSubTaxCodes();
+
   $(document).on('click', '.table-remove', function () {
     event.stopPropagation();
     var targetID = $(event.target).closest('tr').attr('id'); // table row ID
@@ -623,10 +680,7 @@ Template.taxRatesSettings.onRendered(function () {
 
   $('#taxRatesList tbody').on('click', 'tr .colName, tr .colDescription, tr .colRate', function () {
     var listData = $(this).closest('tr').attr('id');
-    // var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
-    // var accountName = $(event.target).closest("tr").find(".colAccountName").text();
-    // let columnBalClass = $(event.target).attr('class');
-    // let accountService = new AccountService();
+    
     if (listData) {
       $('#add-tax-title').text('Edit Tax Rate');
       $('#edtTaxName').prop('readonly', true);
@@ -649,15 +703,9 @@ Template.taxRatesSettings.onRendered(function () {
 
         //});
 
-        // $(this).closest('tr').attr('data-target', '#addNewTaxRate');
-        // $(this).closest('tr').attr('data-toggle', 'modal');
-
         $("#addNewTaxRate").modal("toggle");
-
       }
-
     }
-
   });
 
 });
@@ -1255,6 +1303,9 @@ Template.taxRatesSettings.helpers({
         return a.codename.toUpperCase() > b.codename.toUpperCase() ? 1 : -1;
         // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
       });
+  },
+  subtaxcodes: () => {
+    return Template.instance().subtaxcodes.get();
   },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();

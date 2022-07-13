@@ -161,6 +161,9 @@
                                                                         <select class="form-control" id="subTaxCode"
                                                                             name="subTaxCode">
                                                                             <option disabled>Select</option>
+                                                                            {{#each item in subtaxcodes}}
+                                                                            <option value="{{item.id}}">{{item.codename}}</option>
+                                                                            {{/each}}
                                                                         </select>
                                                                     </div>
                                                                 </div>
