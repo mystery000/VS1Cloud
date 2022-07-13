@@ -3,11 +3,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4>
-                    <div id="add-customer-title" name="add-customer-title" style="float: left;">Add New Employee</div>
+                    <div id="add-customer-title" name="add-customer-title" style="float: left;">{{#if editableEmployee}} {{editableEmployee.lid}} {{else}} Add New Employee {{/if}}</div>
                 </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body" style="padding: 0.5rem !important;">
                 <input type="hidden" class="form-control" id="edtEmployeePOPID" name="edtEmployeePOPID" style="display:none;">
+                <input type="hidden" class="form-control" id="edtEmployeeId" name="edtEmployeeId" value="{{editableEmployee.id}}" style="display:none;">
                 <style>
                     .results tr[visible='false'],
                     .no-result {
@@ -89,41 +90,41 @@
                         <div class="row">
                             <!--<div class="form-group flex-grow-0" style="margin: 4px;"><label class="text-nowrap">Employe ID</label><input type="text" class="form-control" style="width: 95px;min-width: 95px;max-width: 95px;" id="edtEmployeeID" name="edtEmployeeID" value="{{record.clientID}}"></div>-->
                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>Employee Name</label><input type="text" class="form-control" id="edtCustomerCompany" name="edtCustomerCompany"
-                                    value="{{record.company}}" readonly></div>
+                                    value="{{# if editableEmployee}} {{editableEmployee.company}} {{ else }} {{record.company}} {{/if}}" readonly></div>
                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>Employee Email</label><input type="email" class="form-control" id="edtEmailAddress" name="edtEmailAddress"
-                                    value="{{record.email}}"></div>
+                                    value="{{# if editableEmployee}} {{editableEmployee.email}} {{ else }} {{record.email}} {{/if}}"></div>
                         </div>
                         <div class="row">
                             <div class="col d-xl-flex align-items-xl-start" style="padding: 0px;">
                                 <div class="form-group" style="margin: 4px;"><label class="text-nowrap">Title</label><input type="text" class="form-control" style="width: 50px;min-width: 75px;max-width: 75px;"
-                                        id="edtTitle" name="edtTitle" value="{{record.title}}"></div>
+                                        id="edtTitle" name="edtTitle" value="{{# if editableEmployee}} {{editableEmployee.title}} {{ else }}{{record.title}} {{/if}}"></div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">First Name</label><input type="text" class="form-control" id="edtFirstName" name="edtFirstName"
-                                        value="{{record.firstname}}"></div>
+                                        value="{{# if editableEmployee}} {{editableEmployee.firstname}} {{ else }} {{record.firstname}} {{/if}}"></div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Middle Name</label><input type="text" class="form-control" id="edtMiddleName" name="edtMiddleName"
-                                        value="{{record.middlename}}"></div>
+                                        value="{{# if editableEmployee}} {{editableEmployee.middlename}} {{ else }}{{record.middlename}} {{/if}}"></div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Last Name</label><input type="text" class="form-control" id="edtLastName" name="edtLastName"
-                                        value="{{record.lastname}}"></div>
+                                        value="{{# if editableEmployee}} {{editableEmployee.lastname}} {{ else }} {{record.lastname}} {{/if}}"></div>
                                 <div class="form-group" style="margin: 4px;"><label class="text-nowrap">Suffix</label><input type="text" class="form-control" style="width: 75px;min-width: 60px;max-width: 75px;"
-                                        id="edtSuffix" name="edtSuffix" value="{{record.tfn}}"></div>
+                                        id="edtSuffix" name="edtSuffix" value="{{# if editableEmployee}} {{editableEmployee.tfn}} {{ else }}{{record.tfn}} {{/if}}"></div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0px;">
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Phone</label><input type="text" class="form-control" id="edtPhone" name="edtPhone"
-                                        value="{{record.phone}}"></div>
+                                        value="{{# if editableEmployee}} {{editableEmployee.phone}} {{ else }}{{record.phone}} {{/if}}"></div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Mobile</label><input type="text" class="form-control" id="edtMobile" name="edtMobile"
-                                        value="{{record.mobile}}"></div>
-                                <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Fax</label><input type="text" class="form-control" id="edtFax" name="edtFax" value="{{record.fax}}"></div>
+                                        value="{{# if editableEmployee}} {{editableEmployee.mobile}} {{ else }} {{record.mobile}} {{/if}}"></div>
+                                <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Fax</label><input type="text" class="form-control" id="edtFax" name="edtFax" value="{{# if editableEmployee}} {{editableEmployee.fax}} {{ else }} {{record.fax}} {{/if}}"></div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0px;">
                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Skype ID</label><input type="text" class="form-control" id="edtSkype" name="edtSkype"
-                                        value="{{record.skype}}"></div>
+                                        value="{{# if editableEmployee}} {{editableEmployee.skype}} {{ else }}{{record.skype}} {{/if}}"></div>
                                 <div class="form-group flex-grow-1" style="margin: 4px;">
                                     <label>Gender</label>
                                     <select class="form-control" id="edtGender" name="edtGender" style="cursor: pointer;">
-                                        <option value="{{record.gender}}" selected="">{{record.gender}}</option>
+                                        <option value="{{# if editableEmployee}}{{editableEmployee.gender}}{{ else }}{{record.gender}}{{/if}}" selected="">{{# if editableEmployee}} {{editableEmployee.gender}} {{ else }} {{record.gender}} {{/if}}</option>
                                         <option value="Female">F</option>
                                         <option value="Male">M</option>
                                         <!-- <option value="Other">Other</option> -->
@@ -132,7 +133,7 @@
                                 <div class="form-group flex-grow-1" style="margin: 4px;">
                                     <label>Date of Birth</label>
                                     <div class="input-group date">
-                                        <input type="text" class="form-control highlightInput" id="dtDOB" name="dtDOB" value="{{record.dob}}">
+                                        <input type="text" class="form-control highlightInput" id="dtDOB" name="dtDOB" value="{{# if editableEmployee}} {{editableEmployee.dob}} {{ else }}{{record.dob}} {{/if}}">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -141,7 +142,7 @@
                                 <div class="form-group flex-grow-1" style="margin: 4px;">
                                     <label>Starting Date</label>
                                     <div class="input-group date">
-                                        <input type="text" class="form-control" id="dtStartingDate" name="dtStartingDate" value="{{record.startdate}}">
+                                        <input type="text" class="form-control" id="dtStartingDate" name="dtStartingDate" value="{{# if editableEmployee}} {{editableEmployee.startdate}} {{ else }} {{record.startdate}} {{/if}}">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -177,25 +178,25 @@
                                                 <div class="col" style="padding: 0px;">
                                                     <div class="form-group d-flex d-sm-flex d-xl-flex flex-column flex-grow-1 align-items-start align-items-sm-start align-items-xl-start" style="margin: 4px;"><label>Street
                                                             Address</label><textarea class="border rounded flex-grow-1" style="width: 100%;height: 116px;" rows="4" id="edtStreetAddress" name="edtStreetAddress"
-                                                            value="{{record.streetaddress}}"></textarea></div>
+                                                            value="{{# if editableEmployee}} {{editableEmployee.streetaddress}} {{ else }} {{record.streetaddress}} {{/if}}" ></textarea></div>
                                                 </div>
                                                 <div class="col d-xl-flex align-items-xl-start" style="padding: 0px;">
                                                     <div class="row no-gutters d-xl-flex flex-column flex-grow-1 justify-content-xl-start">
                                                         <div class="col d-xl-flex flex-grow-1 align-items-xl-start">
                                                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>City / Town</label><input type="text" class="form-control" id="edtCity" name="edtCity"
-                                                                    value="{{record.city}}"></div>
+                                                                    value="{{# if editableEmployee}} {{editableEmployee.city}} {{ else }} {{record.city}} {{/if}}"></div>
                                                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>State / Region</label><input type="text" class="form-control" id="edtState" name="edtState"
-                                                                    value="{{record.state}}"></div>
+                                                                    value="{{# if editableEmployee}} {{editableEmployee.state}} {{ else }} {{record.state}} {{/if}}"></div>
                                                         </div>
                                                         <div class="col d-xl-flex align-items-xl-start">
                                                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>ZIP Code</label><input type="text" class="form-control" id="edtPostalCode" name="edtPostalCode"
-                                                                    value="{{record.postalcode}}"></div>
+                                                                    value="{{# if editableEmployee}} {{editableEmployee.postalcode}} {{ else }}  {{record.postalcode}} {{/if}}"></div>
                                                             <div class="form-group d-xl-flex flex-column flex-grow-1 justify-content-xl-start" style="margin: 4px;"><label>Country</label>
                                                                 <select class="form-control" id="edtCountry" name="edtCountry" style=" cursor: pointer;">
-                                                                    <option value="{{record.country}}" selected="">{{record.country}}</option>
+                                                                    <option value="{{# if editableEmployee}} {{editableEmployee.country}} {{ else }} {{record.country}} {{/if}}" selected="">{{# if editableEmployee}} {{editableEmployee.country}} {{ else }}  {{record.country}} {{/if}}</option>
                                                                     {{#each item in countryList}}
                                                                         {{#if equals item record.country }}
-                                                                            <option value="{{record.country}}" selected="">{{record.country}}</option>
+                                                                            <option value="{{# if editableEmployee}} {{editableEmployee.country}} {{ else }}  {{record.country}} {{/if}}" selected="">{{# if editableEmployee}} {{editableEmployee.country}} {{ else }} {{record.country}} {{/if}}</option>
                                                                         {{else}}
                                                                             <option value="{{item}}">{{item}}</option>
                                                                         {{/if}}
@@ -237,25 +238,25 @@
                                                     <div class="col" style="padding: 0px;">
                                                         <div class="form-group d-flex d-sm-flex d-xl-flex flex-column flex-grow-1 align-items-start align-items-sm-start align-items-xl-start" style="margin: 4px;">
                                                             <label>Street Address</label><textarea class="border rounded flex-grow-1" style="width: 100%;height: 116px;" rows="4" id="bedtStreetAddress"
-                                                                name="bedtStreetAddress" value="{{record.streetaddress}}"></textarea>
+                                                                name="bedtStreetAddress" value="{{# if editableEmployee}} {{editableEmployee.streetaddress}} {{ else }} {{record.streetaddress}} {{/if}}"></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col d-xl-flex align-items-xl-start" style="padding: 0px;">
                                                         <div class="row no-gutters d-xl-flex flex-column flex-grow-1 justify-content-xl-start">
                                                             <div class="col d-xl-flex align-items-xl-start">
                                                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label>City / Town</label><input type="text" class="form-control" id="bedtCity" name="bedtCity"
-                                                                        value="{{record.city}}"></div>
+                                                                        value="{{# if editableEmployee}} {{editableEmployee.city}} {{ else }} {{record.city}} {{/if}}"></div>
                                                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label>State / Region</label><input type="text" class="form-control" id="bedtState" name="bedtState"
-                                                                        value="{{record.state}}"></div>
+                                                                        value="{{# if editableEmployee}} {{editableEmployee.state}} {{ else }} {{record.state}} {{/if}}"></div>
                                                             </div>
                                                             <div class="col d-xl-flex align-items-xl-start">
                                                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label>ZIP Code</label><input type="text" class="form-control" id="bedtPostalCode"
-                                                                        name="bedtPostalCode" value="{{record.postalcode}}"></div>
+                                                                        name="bedtPostalCode" value="{{# if editableEmployee}} {{editableEmployee.postalcode}} {{ else }} {{record.postalcode}} {{/if}}"></div>
                                                                 <div class="form-group flex-grow-1" style="margin: 4px;"><label>Country</label><select class="form-control" id="bedtCountry" name="bedtCountry"
                                                                         style=" cursor: pointer;">
                                                                         {{#each item in countryList}}
                                                                             {{#if equals item record.country }}
-                                                                                <option value="{{record.country}}" selected="">{{record.country}}</option>
+                                                                                <option value="{{# if editableEmployee}} {{editableEmployee.country}} {{ else }}  {{record.country}} {{/if}}" selected="">{{# if editableEmployee}} {{editableEmployee.country}} {{ else }}  {{record.country}} {{/if}}</option>
                                                                             {{else}}
                                                                                 <option value="{{item}}">{{item}}</option>
                                                                             {{/if}}
@@ -273,7 +274,7 @@
                                     <div class="row no-gutters" style="margin: 12px;">
                                         <div class="col">
                                             <div class="form-group d-flex d-sm-flex d-xl-flex flex-column flex-grow-1 align-items-start align-items-sm-start align-items-xl-start" style="margin: 4px;">
-                                                <label>Notes</label><textarea class="border rounded flex-grow-1" style="width: 100%;height: 116px;" rows="4" id="txaNotes" name="txaNotes">{{record.notes}}</textarea>
+                                                <label>Notes</label><textarea class="border rounded flex-grow-1" style="width: 100%;height: 116px;" rows="4" id="txaNotes" name="txaNotes">{{# if editableEmployee}} {{editableEmployee.notes }} {{ else }} {{record.notes}} {{/if}}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -287,8 +288,13 @@
                                                         {{#if equals item record.preferedpayment }}
                                                             <option value="{{record.preferedpayment}}" selected="">{{record.preferedpayment}}</option>
                                                         {{else}}
-                                                            <option value="{{item}}">{{item}}</option>
+                                                            {{#if equals item editableEmployee.preferedpayment }}
+                                                                <option value="{{# if editableEmployee}} {{editableEmployee.preferedpayment}} {{ else }} {{record.preferedpayment}} {{/if}}" selected="">{{# if editableEmployee}} {{editableEmployee.preferedpayment}} {{ else }} {{record.preferedpayment}} {{/if}}</option>
+                                                            {{else}}
+                                                                <option value="{{item}}">{{item}}</option>
+                                                            {{/if}}
                                                         {{/if}}
+                                                        
                                                     {{/each}}
                                                 </select>
                                             </div>
@@ -296,9 +302,13 @@
                                                 <select class="form-control" style="width: 260px;" id="sltTerms" name="sltTerms">
                                                     {{#each item in termsList}}
                                                         {{#if equals item record.terms }}
-                                                            <option value="{{record.terms}}" selected="">{{record.terms}}</option>
+                                                            <option value="{{# if editableEmployee}} {{editableEmployee.terms}} {{ else }} {{record.terms}} {{/if}}" selected="">{{# if editableEmployee}} {{editableEmployee.terms}} {{ else }} {{record.terms}} {{/if}}</option>
                                                         {{else}}
-                                                            <option value="{{item}}">{{item}}</option>
+                                                            {{#if equals item editableEmployee.terms }}
+                                                                <option value="{{# if editableEmployee}} {{editableEmployee.terms}} {{ else }} {{record.terms}} {{/if}}" selected="">{{# if editableEmployee}} {{editableEmployee.terms}} {{ else }} {{record.terms}} {{/if}}</option>
+                                                            {{else}}
+                                                                <option value="{{item}}">{{item}}</option>
+                                                            {{/if}}
                                                         {{/if}}
                                                     {{/each}}
                                                 </select>
@@ -311,17 +321,21 @@
                                                         {{#if equals item record.deliverymethod }}
                                                             <option value="{{record.deliverymethod}}" selected="">{{record.deliverymethod}}</option>
                                                         {{else}}
-                                                            <option value="{{item}}">{{item}}</option>
+                                                            {{#if equals item editableEmployee.deliverymethod }}
+                                                                <option value="{{editableEmployee.deliverymethod}}" selected="">{{editableEmployee.deliverymethod}}</option>
+                                                            {{else}}
+                                                                <option value="{{item}}">{{item}}</option>
+                                                            {{/if}}
                                                         {{/if}}
                                                     {{/each}}
                                                 </select>
                                             </div>
                                             <div class="form-group" style="margin: 4px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">Opening Balance</label><input
-                                                    type="text" class="form-control" id="custOpeningBalance" name="custOpeningBalance" style="width: 260px;" value="{{record.openingbalance}}"></div>
+                                                    type="text" class="form-control" id="custOpeningBalance" name="custOpeningBalance" style="width: 260px;" value="{{#if editableEmployee}} {{ editableEmployee.openingbalance}} {{ else }} {{record.openingbalance}} {{/if}}"></div>
                                             <div class="form-group" style="margin: 4px;width: 260px;"><label class="text-nowrap d-xl-flex flex-column justify-content-xl-start align-items-xl-start">As Of</label>
                                                 <!-- <input type="text" class="form-control" id="asOfDate" name="asOfDate">\ -->
                                                 <div class="input-group date" style="width: 160px;">
-                                                    <input type="text" class="form-control" id="dtAsOf" name="dtAsOf" value="{{record.openingbalancedate}}">
+                                                    <input type="text" class="form-control" id="dtAsOf" name="dtAsOf" value="{{#if editableEmployee}} {{ editableEmployee.openingbalancedate}} {{ else }} {{record.openingbalancedate}} {{/if}}">
                                                     <div class="input-group-addon">
                                                         <span class="glyphicon glyphicon-th"></span>
                                                     </div>
@@ -576,19 +590,19 @@
                                         <div class="col d-xl-flex align-items-xl-center">
                                             <div class="form-group flex-grow-1 checkbox1div" style="margin: 4px;">
                                                 <label class="lblCustomField1">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[0].label}}{{else}}Custom Field 1{{/if}}</label>
-                                                <input type="text" class="form-control" id="edtCustomeField1" name="edtCustomeField1" value="{{record.custfield1}}">
+                                                <input type="text" class="form-control" id="edtCustomeField1" name="edtCustomeField1" value="{{#if editableEmployee}} {{ editableEmployee.custfield1}} {{ else }} {{record.custfield1}} {{/if}}">
                                             </div>
                                             <div class="form-group flex-grow-1 checkbox2div" style="margin: 4px;">
                                                 <label class="lblCustomField2">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[1].label}}{{else}}Custom Field 2{{/if}}</label>
-                                                <input type="text" class="form-control" id="edtCustomeField2" name="edtCustomeField2" value="{{record.custfield2}}">
+                                                <input type="text" class="form-control" id="edtCustomeField2" name="edtCustomeField2" value="{{#if editableEmployee}} {{ editableEmployee.custfield2}} {{ else }}  {{record.custfield2}} {{/if}}">
                                             </div>
                                             <div class="form-group flex-grow-1 checkbox3div" style="margin: 4px;">
                                                 <label class="lblCustomField3">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[2].label}}{{else}}Custom Field 3{{/if}}</label>
-                                                <input type="text" class="form-control" id="edtCustomeField3" name="edtCustomeField3" value="{{record.custfield3}}">
+                                                <input type="text" class="form-control" id="edtCustomeField3" name="edtCustomeField3" value="{{#if editableEmployee}} {{ editableEmployee.custfield3}} {{ else }} {{record.custfield3}} {{/if}}">
                                             </div>
                                             <div class="form-group flex-grow-1 checkbox4div" style="margin: 4px;">
                                                 <label class="lblCustomField4">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[3].label}}{{else}}Custom Field 4{{/if}}</label>
-                                                <input type="text" class="form-control" id="edtCustomeField4" name="edtCustomeField4" value="{{record.custfield4}}">
+                                                <input type="text" class="form-control" id="edtCustomeField4" name="edtCustomeField4" value="{{#if editableEmployee}} {{ editableEmployee.custfield4}} {{ else }} {{record.custfield4}} {{/if}}">
                                             </div>
                                         </div>
                                     </div>
@@ -609,7 +623,11 @@
                                                             {{#if equals item record.taxcode }}
                                                                 <option value="{{record.taxcode}}" selected="">{{record.taxcode}}</option>
                                                             {{else}}
-                                                                <option value="{{item}}">{{item}}</option>
+                                                                {{#if equals item editableEmployee.taxcode }}
+                                                                    <option value="{{editableEmployee.taxcode}}" selected="">{{editableEmployee.taxcode}}</option>
+                                                                {{else}}
+                                                                    <option value="{{item}}">{{item}}</option>
+                                                                {{/if}}
                                                             {{/if}}
                                                         {{/each}}
                                                     </select>
@@ -798,10 +816,12 @@
                                         <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
                                             {{> productlistpop}}
                                         </div>
-
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-                                            {{> newproductpop}}
-                                        </div>
+                                        {{#if isSetup}}
+                                        {{else}}
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+                                                {{> newproductpop}}
+                                            </div>
+                                        {{/if}}
                                     </div>
                                 </div>
                             </div>
