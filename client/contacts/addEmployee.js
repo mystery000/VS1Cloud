@@ -3051,7 +3051,16 @@ Template.employeescard.onRendered(function () {
             }
         });
 
-        templateObject.payTemplateEarningLineInfo.set(useData);
+        await templateObject.payTemplateEarningLineInfo.set(useData);
+        await templateObject.setEarningLineDropDown();
+        if( useData.length ){
+            Array.prototype.forEach.call(useData, (item) => {
+                // amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+                // amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                $(`#ptEarningRate${item.fields.ID}`).val( item.fields.EarningRate );
+                $(`#ptEarningAmount${item.fields.ID}`).val( item.fields.Amount );
+            })
+        }
 
     };
 
@@ -4946,15 +4955,15 @@ Template.employeescard.events({
             });
 
         try {
-            // const ApiResponse = await apiEndpoint.fetch(null, {
-            //     method: "POST",
-            //     headers: ApiService.getPostHeaders(),
-            //     body: JSON.stringify(payEarningLines),
-            // });
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payEarningLines),
+            });
         
-            // if (ApiResponse.ok == true) {
-                // const jsonResponse = await ApiResponse.json();
-                // payEarningLines.fields.ID = jsonResponse.fields.ID;
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                payEarningLines.fields.ID = jsonResponse.fields.ID;
 
                 let dataObject = await getVS1Data('TPayTemplateEarningLine')  
                 if ( dataObject.length == 0 ) {   
@@ -4963,7 +4972,6 @@ Template.employeescard.events({
                     let earningData = [];
                     earningData = JSON.parse(dataObject[0].data);
                     earningData.tpaytemplateearningline.push(payEarningLines);
-                    console.log('earningData', earningData)
                     await addVS1Data('TPayTemplateEarningLine', JSON.stringify(earningData))
                 }
                 await templateObject.getPayEarningLines();
