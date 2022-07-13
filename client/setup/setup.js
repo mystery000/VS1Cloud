@@ -4441,24 +4441,28 @@ Template.setup.events({
   },
   "click .btnBack": function (event) {
     let templateObject = Template.instance();
+    let skippedSteps = templateObject.skippedSteps.get();
     let stepId = parseInt($(event.target).attr("data-step-id"));
+    skippedSteps.push(stepId);
+    templateObject.skippedSteps.set(skippedSteps);
     addSkippedStep(stepId);
     stepId = stepId +1;
     $(".setup-step").css("display", "none");
-    $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
-    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
-    $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
-    if (stepId !== numberOfSteps) {
-      $(".setup-step-" + stepId).css("display", "block");
-    } else {
-      $(".setup-complete").css("display", "flex");
-    }
+    // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
+    // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
+    // $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
+    $(".setup-step-" + stepId).css("display", "block");
+    // if (stepId !== numberOfSteps) {
+    //   $(".setup-step-" + stepId).css("display", "block");
+    // } else {
+    //   $(".setup-complete").css("display", "flex");
+    // }
     // let _steps = templateObject.steps.get();
     // _steps.skippedSteps.push(stepId);
 
-    let skippedSteps = templateObject.skippedSteps.get();
-    skippedSteps.push(stepId);
-    templateObject.skippedSteps.set(skippedSteps);
+    
+   
+   
     
     setCurrentStep(stepId);
     templateObject.loadSteps();
