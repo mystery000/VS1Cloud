@@ -103,8 +103,8 @@
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        {{#if subTaxes}}
-                                                                        {{#each item in subTaxes}}
+                                                                        {{#if subtaxes}}
+                                                                        {{#each item in subtaxes}}
                                                                         <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                                                             <td contenteditable="false" class="colName">{{item.codename}}</td>
                                                                             <td contenteditable="false" class="colPercent">{{item.percent}}</td>
@@ -160,7 +160,7 @@
                                                                             data-placement="bottom">Code</label>
                                                                         <select class="form-control" id="subTaxCode"
                                                                             name="subTaxCode">
-                                                                            <option disabled>Select</option>
+                                                                            <option value="" disabled>Select</option>
                                                                             {{#each item in subtaxcodes}}
                                                                             <option value="{{item.id}}">{{item.codename}}</option>
                                                                             {{/each}}
