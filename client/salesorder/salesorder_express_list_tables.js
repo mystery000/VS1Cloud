@@ -410,7 +410,7 @@ Template.salesorderslist.onRendered(function() {
                         $('.fullScreenSpin').css('display','none');
 
                     }, 0);
-                    
+
                     var columns = $('#tblSalesOrderlist th');
                     let sTible = "";
                     let sWidth = "";
@@ -426,7 +426,7 @@ Template.salesorderslist.onRendered(function() {
                             columVisible = false;
                         }
                         sWidth = v.style.width.replace('px', "");
-                        
+
 
                         let datatablerecordObj = {
                             custid: $(this).attr("custid") || 0,
@@ -738,7 +738,7 @@ Template.salesorderslist.onRendered(function() {
                 let sIndex = "";
                 let sVisible = "";
                 let columVisible = false;
-                let sClass = ""; 
+                let sClass = "";
 
                 $.each(columns, function(i,v) {
                     if(v.hidden == false){
@@ -1057,7 +1057,7 @@ Template.salesorderslist.onRendered(function() {
               let sIndex = "";
               let sVisible = "";
               let columVisible = false;
-              let sClass = ""; 
+              let sClass = "";
               $.each(columns, function(i,v) {
                   if(v.hidden == false){
                       columVisible =  true;
@@ -1066,7 +1066,7 @@ Template.salesorderslist.onRendered(function() {
                       columVisible = false;
                   }
                   sWidth = v.style.width.replace('px', "");
-                  
+
 
                   let datatablerecordObj = {
                       custid: $(this).attr("custid") || 0,
@@ -1404,7 +1404,7 @@ Template.salesorderslist.onRendered(function() {
                     let sVisible = "";
                     let columVisible = false;
                     let sClass = "";
-                    
+
                     $.each(columns, function(i,v) {
                         if(v.hidden == false){
                             columVisible =  true;
@@ -1413,7 +1413,7 @@ Template.salesorderslist.onRendered(function() {
                             columVisible = false;
                         }
                         sWidth = v.style.width.replace('px', "");
-                        
+
 
                         let datatablerecordObj = {
                             custid: $(this).attr("custid") || 0,
@@ -1728,7 +1728,7 @@ Template.salesorderslist.onRendered(function() {
                 let sVisible = "";
                 let columVisible = false;
                 let sClass = "";
-                
+
                 $.each(columns, function(i,v) {
                     if(v.hidden == false){
                         columVisible =  true;
@@ -1737,7 +1737,7 @@ Template.salesorderslist.onRendered(function() {
                         columVisible = false;
                     }
                     sWidth = v.style.width.replace('px', "");
-                    
+
 
                     let datatablerecordObj = {
                         custid: $(this).attr("custid") || 0,
@@ -2051,7 +2051,7 @@ Template.salesorderslist.onRendered(function() {
               let sVisible = "";
               let columVisible = false;
               let sClass = "";
-              
+
               $.each(columns, function(i,v) {
                   if(v.hidden == false){
                       columVisible =  true;
@@ -2060,7 +2060,7 @@ Template.salesorderslist.onRendered(function() {
                       columVisible = false;
                   }
                   sWidth = v.style.width.replace('px', "");
-                  
+
 
                   let datatablerecordObj = {
                       custid: $(this).attr("custid") || 0,
@@ -2130,12 +2130,10 @@ Template.salesorderslist.onRendered(function() {
         { label: 'Status', class: 'colStatus', active: true },
         { label: 'Employee', class: 'colEmployee', active: false },
         { label: 'Converted?', class: 'colConverted', active: true },
-        { label: 'Comments', class: 'colComments', active: true }, 
-      ]; 
+        { label: 'Comments', class: 'colComments', active: true },
+      ];
 
-      sideBarService
-      .getAllCustomFields()
-      .then(function (data) {
+      sideBarService.getAllCustomFields().then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
             customData = {
@@ -2164,7 +2162,7 @@ Template.salesorderslist.onRendered(function() {
 
         if (custFields.length < 3) {
           let remainder = 3 - custFields.length;
-          let getRemCustomFields = parseInt(custFields.length); 
+          let getRemCustomFields = parseInt(custFields.length);
           for (let r = 0; r < remainder; r++) {
             getRemCustomFields++;
             customData = {
@@ -2182,7 +2180,7 @@ Template.salesorderslist.onRendered(function() {
 
         if (dispFields.length < customFieldCount) {
           let remainder = customFieldCount - dispFields.length;
-          let getRemCustomFields = parseInt(dispFields.length); 
+          let getRemCustomFields = parseInt(dispFields.length);
           for (let r = 0; r < remainder; r++) {
             customData = {
               active: reset_data[getRemCustomFields].active,
@@ -2201,41 +2199,12 @@ Template.salesorderslist.onRendered(function() {
         for (let index = 0; index < custFields.length; index++) {
           const element = custFields[index];
           dispFields.push(element);
-          
+
         }
 
         templateObject.custfields.set(custFields);
         templateObject.displayfields.set(dispFields);
-
-        // if (custFields) { 
-        //   $(".colCustFieldHeader1").html(custFields[0].custfieldlabel);
-        //   $(".colCustFieldHeader2").html(custFields[1].custfieldlabel);
-        //   $(".colCustFieldHeader3").html(custFields[2].custfieldlabel);
-
-        //   if (custFields[0].active) {
-        //     $(".colSaleCustField1").removeClass('hiddenColumn');
-        //     $(".colSaleCustField1").addClass('showColumn');
-        //   } else {
-        //     $(".colSaleCustField1").addClass('hiddenColumn');
-        //     $(".colSaleCustField1").removeClass('showColumn');
-        //   }
-    
-        //   if (custFields[1].active) {
-        //     $(".colSaleCustField2").removeClass('hiddenColumn');
-        //     $(".colSaleCustField2").addClass('showColumn');
-        //   } else {
-        //     $(".colSaleCustField2").addClass('hiddenColumn');
-        //     $(".colSaleCustField2").removeClass('showColumn');
-        //   }
-
-        //   if (custFields[2].active) {
-        //     $(".colSaleCustField3").removeClass('hiddenColumn');
-        //     $(".colSaleCustField3").addClass('showColumn');
-        //   } else {
-        //     $(".colSaleCustField3").addClass('hiddenColumn');
-        //     $(".colSaleCustField3").removeClass('showColumn');
-        //   }
-        // }
+ 
       })
     }
 
@@ -2473,10 +2442,10 @@ Template.salesorderslist.events({
         { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },
         { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
         { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
-      ]; 
+      ];
 
-      $('.displaySettings').each(function(index) { 
-        var $tblrow = $(this); 
+      $('.displaySettings').each(function(index) {
+        var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
@@ -2490,27 +2459,9 @@ Template.salesorderslist.events({
         } else {
           $('.' + reset_data[index].class).css('display', 'none');
         }
- 
-      }); 
-        // var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        // if(getcurrentCloudDetails){
-        //     if (getcurrentCloudDetails._id.length > 0) {
-        //         var clientID = getcurrentCloudDetails._id;
-        //         var clientUsername = getcurrentCloudDetails.cloudUsername;
-        //         var clientEmail = getcurrentCloudDetails.cloudEmail;
-        //         var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblSalesOrderlist'});
-        //         if (checkPrefDetails) {
-        //             CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
-        //                 if (err) {
 
-        //                 }else{
-        //                     Meteor._reload.reload();
-        //                 }
-        //             });
-
-        //         }
-        //     }
-        // }
+      });
+         
     },
 
     // custom field displaysettings
@@ -2522,7 +2473,7 @@ Template.salesorderslist.events({
       $(".fullScreenSpin").css("display", "inline-block");
 
       $('.displaySettings').each(function(index) {
-        var $tblrow = $(this); 
+        var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
         var colTitle = $tblrow.find(".divcolumn").text() || '';
         var colWidth = $tblrow.find(".custom-range").val() || 0;
@@ -2564,9 +2515,7 @@ Template.salesorderslist.events({
           };
         }
 
-        organisationService
-        .saveCustomField(objDetails1)
-        .then(function (objDetails) { 
+        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         })
@@ -2588,43 +2537,8 @@ Template.salesorderslist.events({
           $('#myModal2').modal('hide');
         });
       });
-
-        // var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        // if(getcurrentCloudDetails){
-        //     if (getcurrentCloudDetails._id.length > 0) {
-        //         var clientID = getcurrentCloudDetails._id;
-        //         var clientUsername = getcurrentCloudDetails.cloudUsername;
-        //         var clientEmail = getcurrentCloudDetails.cloudEmail;
-        //         var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblSalesOrderlist'});
-        //         if (checkPrefDetails) {
-        //             CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-        //                                                                        PrefGroup:'salesform',PrefName:'tblSalesOrderlist',published:true,
-        //                                                                        customFields:lineItems,
-        //                                                                        updatedAt: new Date() }}, function(err, idTag) {
-        //                 if (err) {
-        //                     $('#myModal2').modal('toggle');
-        //                 } else {
-        //                     $('#myModal2').modal('toggle');
-        //                 }
-        //             });
-
-        //         }else{
-        //             CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-        //                                     PrefGroup:'salesform',PrefName:'tblSalesOrderlist',published:true,
-        //                                     customFields:lineItems,
-        //                                     createdAt: new Date() }, function(err, idTag) {
-        //                 if (err) {
-        //                     $('#myModal2').modal('toggle');
-        //                 } else {
-        //                     $('#myModal2').modal('toggle');
-
-        //                 }
-        //             });
-        //         }
-        //     }
-        // }
-
     },
+    
     'blur .divcolumn' : function(event){
         let columData = $(event.target).text();
 
@@ -2654,7 +2568,7 @@ Template.salesorderslist.events({
     },
     'click .btnOpenSettings' : function(event){
         let templateObject = Template.instance();
-        var columns = $('#tblSalesOrderlist th'); 
+        var columns = $('#tblSalesOrderlist th');
 
         const tableHeaderList = [];
         let sTible = "";
@@ -2663,7 +2577,7 @@ Template.salesorderslist.events({
         let sVisible = "";
         let columVisible = false;
         let sClass = "";
-        
+
         $.each(columns, function(i,v) {
 
             if(v.hidden == false){
@@ -2673,7 +2587,7 @@ Template.salesorderslist.events({
                 columVisible = false;
             }
             sWidth = v.style.width.replace('px', "");
-            
+
 
             let datatablerecordObj = {
                 custid: $(this).attr("custid") || 0,
@@ -2767,7 +2681,31 @@ Template.salesorderslist.events({
             addVS1Data('TSalesOrderList',JSON.stringify(dataSaleOrder)).then(function (datareturn) {
               sideBarService.getAllSalesOrderList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TSalesOrderEx',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/salesorderslist','_self');
+                    sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+                       addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
+                           sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
+                               addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
+                                   window.open('/salesorderslist','_self');
+                                 }).catch(function (err) {
+                                   window.open('/salesorderslist','_self');
+                                 });
+                             }).catch(function (err) {
+                               window.open('/salesorderslist','_self');
+                             });
+                         }).catch(function (err) {
+                           sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
+                               addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
+                                 window.open('/salesorderslist','_self');
+                                 }).catch(function (err) {
+                                   window.open('/salesorderslist','_self');
+                                 });
+                             }).catch(function (err) {
+                               window.open('/salesorderslist','_self');
+                             });
+                         });
+                     }).catch(function (err) {
+                       window.open('/salesorderslist','_self');
+                     });
                   }).catch(function (err) {
                       window.open('/salesorderslist','_self');
                   });

@@ -5662,6 +5662,7 @@ Template.appointments.onRendered(function () {
 
     $(document).on("mouseenter", "#tblEmployeeSideList tbody tr", function () {
         let calOptions = templateObject.globalSettings.get();
+        let calendarSet = templateObject.globalSettings.get();
         let draggedEmployeeID = templateObject.empID.get();
         let employee = templateObject.employeerecords.get();
         let overridesettings = employee.filter(employeeData => {
@@ -6750,6 +6751,7 @@ Template.appointments.events({
     'click .droppable': function (event) {
         let templateObject = Template.instance();
         let calOptions = templateObject.globalSettings.get();
+        let calendarSet = templateObject.globalSettings.get();
         let getAllEmployeeData = templateObject.employeerecords.get() || '';
         $('#frmAppointment')[0].reset();
         let element = $(event.target);

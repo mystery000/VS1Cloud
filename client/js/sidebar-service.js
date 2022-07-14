@@ -522,7 +522,7 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        select: "[Deleted]=false",
+        Search: "Deleted != true",
         OrderBy: "PaymentDate desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -532,6 +532,7 @@ export class SideBarService extends BaseService {
         orderby: '"PaymentID desc"',
         ListType: "Detail",
         IgnoreDates: false,
+        Search: "Deleted != true",
         OrderBy: "PaymentDate desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -1162,7 +1163,7 @@ export class SideBarService extends BaseService {
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "IsPO = true or IsBill = true or IsCredit = true",
+        Search: "Deleted != true and SupplierName != ''",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1174,7 +1175,7 @@ export class SideBarService extends BaseService {
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "IsPO = true or IsBill = true or IsCredit = true",
+        Search: "Deleted != true and SupplierName != ''",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -2033,7 +2034,8 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        orderby: '"AppointID desc"',
+        // orderby: '"AppointID desc"',
+        OrderBy: "CreationDate desc",
         ListType: "Detail",
         select: "[Active]=true",
         LimitCount: '"' + limitcount + '"',
@@ -2329,7 +2331,7 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        select: "[deleted]=false",
+        Search: "Deleted != true",
         OrderBy: "DepositDate desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -2338,7 +2340,7 @@ export class SideBarService extends BaseService {
       options = {
         //IgnoreDates: true,
         OrderBy: "DepositDate desc",
-        select: "[deleted]=false",
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -2552,7 +2554,7 @@ export class SideBarService extends BaseService {
         OrderBy: "ReconciliationID desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
-        Search: "Deleted != " + true + "",
+        Search: "Deleted != true",
       };
     } else {
       options = {
@@ -2562,7 +2564,7 @@ export class SideBarService extends BaseService {
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
-        Search: "Deleted != " + true + "",
+        Search: "Deleted != true",
       };
     }
     return this.getList(this.ERPObjects.TReconciliationList, options);
@@ -2584,7 +2586,7 @@ export class SideBarService extends BaseService {
       IgnoreDates: false,
       DateFrom: '"' + dateFrom + '"',
       DateTo: '"' + dateTo + '"',
-      Search: "Deleted != " + true + "",
+      Search: "Deleted != true",
     };
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }

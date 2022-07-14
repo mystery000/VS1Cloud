@@ -264,7 +264,8 @@ Template._frequencyModal.onRendered(function () {
     cronSetting.buildParsedText();
 
     try {
-      Meteor.call("addCurrencyCron", cronSetting);
+     var erpGet = erpDb();
+      Meteor.call("addCurrencyCron", cronSetting, erpGet);
       LoadingOverlay.hide(0);
       swal({
         title: "Success",

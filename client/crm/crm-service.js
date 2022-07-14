@@ -13,12 +13,7 @@ export class CRMService extends BaseService {
   getTasksByNameOrID(dataSearchName) {
     let options = {
       ListType: "Detail",
-      select:
-        '[Active]=true and [TaskName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select: '[Active]=true and [TaskName] f7like "' + dataSearchName + '" OR [ID] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
@@ -42,12 +37,7 @@ export class CRMService extends BaseService {
   getProjectsByNameOrID(dataSearchName) {
     let options = {
       ListType: "Detail",
-      select:
-        '[ProjectName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select: '[ProjectName] f7like "' + dataSearchName + '" OR [ID] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.Tprojectlist, options);
   }
@@ -71,12 +61,7 @@ export class CRMService extends BaseService {
   getLabelsByNameOrID(dataSearchName) {
     let options = {
       ListType: "Detail",
-      select:
-        '[Active]=true and [TaskLabelName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select: '[Active]=true and [TaskLabelName] f7like "' + dataSearchName + '" OR [ID] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.Tprojecttask_TaskLabel, options);
   }

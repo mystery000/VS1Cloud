@@ -1332,7 +1332,7 @@ Template.registerHelper('equals', function (a, b) {
 });
 
 export const TaxRatesEditListener = (e) => {
-  if (!e) return;
+  if (!e) return false;
 
   const tr = $(e.currentTarget).parent();
   var listData = tr.attr("id");
@@ -1343,6 +1343,7 @@ export const TaxRatesEditListener = (e) => {
   if (listData) {
     $("#add-tax-title").text("Edit Tax Rate");
     $("#edtTaxName").prop("readonly", true);
+    $("#addTaxRateModal").modal("toggle");
     if (listData !== "") {
       listData = Number(listData);
       //taxRateService.getOneTaxRate(listData).then(function (data) {
