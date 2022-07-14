@@ -16,6 +16,9 @@ Template.taxRatesSettings.onCreated(function () {
 
   templateObject.isChkUSRegionTax = new ReactiveVar();
   templateObject.isChkUSRegionTax.set(false);
+
+  templateObject.subtaxcodes = new ReactiveVar([]);
+  templateObject.subtaxes = new ReactiveVar([]);
 });
 
 Template.taxRatesSettings.onRendered(function () {
@@ -306,7 +309,6 @@ Template.taxRatesSettings.onRendered(function () {
                   let columnindex = customcolumn[i].index + 1;
 
                   if (hiddenColumn == true) {
-
                     $("." + columnClass + "").addClass('hiddenColumn');
                     $("." + columnClass + "").removeClass('showColumn');
                   } else if (hiddenColumn == false) {
@@ -439,12 +441,9 @@ Template.taxRatesSettings.onRendered(function () {
             description: data.ttaxcodevs1[i].Description || '-',
             region: data.ttaxcodevs1[i].RegionName || '-',
             rate: taxRate || '-',
-
-
           };
 
           dataTableList.push(dataList);
-          //}
         }
 
         templateObject.datatablerecords.set(dataTableList);
@@ -614,6 +613,61 @@ Template.taxRatesSettings.onRendered(function () {
 
   templateObject.chkSubTaxRateSetting();
 
+  templateObject.getSubTaxCodes = function () {
+    getVS1Data('TSubTaxVS1').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        // taxRateService.getSubTaxVS1().then(function (data) {
+        let data = taxRateService.getSubTaxVS1();
+        for (let i = 0; i < data.tsubtaxvs1.length; i++) {
+          var dataList = {
+            id: data.tsubtaxvs1[i].Id || '',
+            codename: data.tsubtaxvs1[i].CodeName || '-',
+            description: data.tsubtaxvs1[i].Description || '-',
+            category: data.tsubtaxvs1[i].Category || '-'
+          };
+
+          dataTableList.push(dataList);
+        }
+
+        templateObject.subtaxcodes.set(dataTableList);
+
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.ttaxcodevs1;
+        for (let i = 0; i < useData.length; i++) {
+          var dataList = {
+            id: useData[i].Id || '',
+            codename: useData[i].CodeName || '-',
+            description: useData[i].Description || '-',
+            category: useData[i].Category || '-'
+          };
+
+          dataTableList.push(dataList);
+        }
+
+        templateObject.subtaxcodes.set(dataTableList);
+
+      }
+    }).catch(function (err) {
+      // taxRateService.getSubTaxVS1().then(function (data) {
+      let data = taxRateService.getSubTaxVS1();
+      for (let i = 0; i < data.tsubtaxvs1.length; i++) {
+        var dataList = {
+          id: data.tsubtaxvs1[i].Id || '',
+          codename: data.tsubtaxvs1[i].CodeName || '-',
+          description: data.tsubtaxvs1[i].Description || '-',
+          category: data.tsubtaxvs1[i].Category || '-'
+        };
+
+        dataTableList.push(dataList);
+      }
+
+      templateObject.subtaxcodes.set(dataTableList);
+    });
+  }
+
+  templateObject.getSubTaxCodes();
+
   $(document).on('click', '.table-remove', function () {
     event.stopPropagation();
     var targetID = $(event.target).closest('tr').attr('id'); // table row ID
@@ -623,10 +677,7 @@ Template.taxRatesSettings.onRendered(function () {
 
   $('#taxRatesList tbody').on('click', 'tr .colName, tr .colDescription, tr .colRate', function () {
     var listData = $(this).closest('tr').attr('id');
-    // var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
-    // var accountName = $(event.target).closest("tr").find(".colAccountName").text();
-    // let columnBalClass = $(event.target).attr('class');
-    // let accountService = new AccountService();
+    
     if (listData) {
       $('#add-tax-title').text('Edit Tax Rate');
       $('#edtTaxName').prop('readonly', true);
@@ -640,7 +691,6 @@ Template.taxRatesSettings.onRendered(function () {
         var taxRate = $(event.target).closest("tr").find(".colRate").text().replace('%', '') || '0';
         //data.fields.Rate || '';
 
-
         $('#edtTaxID').val(taxid);
         $('#edtTaxName').val(taxname);
 
@@ -649,19 +699,12 @@ Template.taxRatesSettings.onRendered(function () {
 
         //});
 
-        // $(this).closest('tr').attr('data-target', '#addNewTaxRate');
-        // $(this).closest('tr').attr('data-toggle', 'modal');
-
         $("#addNewTaxRate").modal("toggle");
-
       }
-
     }
-
   });
 
 });
-
 
 Template.taxRatesSettings.events({
   "click #btnNewInvoice": function (event) {
@@ -1008,7 +1051,46 @@ Template.taxRatesSettings.events({
       event.preventDefault();
     }
   },
+  "click .btnNewSubTax": function() {
+    $('#subTaxCode').val('');
+    $('#subTaxPercent').val('');
+    $('#subTaxPercentageOn').prop('readonly', false);
+    $('#subTaxCapAmt').val('');
+    $('#subTaxThresholdAmt').val('');
+  },
+  "click .btnAddSubTax": function () {
+    let templateObject = Template.instance();
+    let subTaxId = $('#subTaxCode').val();
+    let subTaxCodes = templateObject.subtaxcodes.get();
+    let subTaxCode = subTaxCodes.find((v) => v.id === subTaxId);
+
+    let subTaxPercent = parseFloat($('#subTaxPercent').val());
+    let subTaxPercentageOn = $('#subTaxPercentageOn').val();
+    let subTaxCapAmt = parseFloat($('#subTaxCapAmt').val());
+    let subTaxThresholdAmt = parseFloat($('#subTaxThresholdAmt').val());
+
+    let newSubTax = {
+      id: subTaxId,
+      codename: subTaxCode.codename,
+      detail: subTaxCode,
+      percent: subTaxPercent,
+      percentageOn: subTaxPercentageOn,
+      capAmt: subTaxCapAmt,
+      thresholdAmt: subTaxThresholdAmt
+    };
+
+    let subTaxes = templateObject.subtaxes.get();
+    subTaxes.push(newSubTax);
+    templateObject.subtaxes.set(subTaxes);
+
+    let taxPercent = 0;
+    subTaxes.map((v) => taxPercent += v.percent);
+    $('#edtTaxRate').val(Math.min(taxPercent, 100) / 100);
+
+    $('#addSubTaxModal').modal('hide');
+  },
   'click .btnSaveTaxRate': function () {
+    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let taxRateService = new TaxRateService();
     let taxtID = $('#edtTaxID').val();
@@ -1036,6 +1118,7 @@ Template.taxRatesSettings.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
+              SubTaxes: templateObject.subtaxes.get(),
             },
           };
           taxRateService
@@ -1082,6 +1165,7 @@ Template.taxRatesSettings.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
+              SubTaxes: templateObject.subtaxes.get(),
             },
           };
 
@@ -1129,6 +1213,7 @@ Template.taxRatesSettings.events({
           Description: taxDesc,
           Rate: taxRate,
           PublishOnVS1: true,
+          SubTaxes: templateObject.subtaxes.get(),
         },
       };
       taxRateService
@@ -1175,6 +1260,8 @@ Template.taxRatesSettings.events({
     $('#edtTaxName').prop('readonly', false);
     $('#edtTaxRate').val('');
     $('#edtTaxDesc').val('');
+    let templateObject = Template.instance();
+    templateObject.subtaxes.set([]);
   },
   'click .btnSubTaxes': function () {
     FlowRouter.go('/subtaxsettings');
@@ -1256,6 +1343,12 @@ Template.taxRatesSettings.helpers({
         // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
       });
   },
+  subtaxcodes: () => {
+    return Template.instance().subtaxcodes.get();
+  },
+  subtaxes: () => {
+    return Template.instance().subtaxes.get();
+  },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
   },
@@ -1292,7 +1385,6 @@ export const TaxRatesEditListener = (e) => {
   if (listData) {
     $("#add-tax-title").text("Edit Tax Rate");
     $("#edtTaxName").prop("readonly", true);
-    $("#addTaxRateModal").modal("toggle");
     if (listData !== "") {
       listData = Number(listData);
       //taxRateService.getOneTaxRate(listData).then(function (data) {

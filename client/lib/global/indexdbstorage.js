@@ -41,6 +41,7 @@ openDb = function (dbName) {
       db.createObjectStore("TSupplierVS1", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TAccountVS1", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTaxcodeVS1", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TSubTaxVS1", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTermsVS1", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TDeptClass", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCurrency", { keyPath: "EmployeeEmail" });
@@ -246,6 +247,13 @@ openDb = function (dbName) {
       db.createObjectStore('TemplateSettings', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TVS1Superannuation',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayrollHolidayGroup',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TLeave',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TPaySlips',{ keyPath: "EmployeeEmail"});   
+      db.createObjectStore('TPayTemplateEarningLine',{ keyPath: "EmployeeEmail"});   
+      db.createObjectStore('TPayTemplateDeductionLine',{ keyPath: "EmployeeEmail"}); 
+      db.createObjectStore('TPayTemplateSuperannuationLine',{ keyPath: "EmployeeEmail"}); 
+      db.createObjectStore('TPayTemplateReiumbursementLine',{ keyPath: "EmployeeEmail"}); 
+      
 
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));

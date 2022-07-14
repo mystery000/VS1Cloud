@@ -659,6 +659,9 @@ Template.leadscard.events({
         let lastname = $('#edtLastName').val();
         let phone = $('#edtLeadPhone').val();
         let mobile = $('#edtLeadMobile').val();
+        if(mobile != '') {
+            mobile = contactService.changeMobileFormat(mobile)
+        }
         let fax = $('#edtLeadFax').val();
         let skype = $('#edtSkypeID').val();
         let website = $('#edtWebsite').val();
@@ -1304,7 +1307,11 @@ Template.leadscard.events({
 
 Template.leadscard.helpers({
     record: () => {
-        return Template.instance().records.get();
+        let temp =  Template.instance().records.get();
+        if(temp && temp.mobile) {
+            temp.mobile = temp.mobile.replace('+61', '0')
+        }
+        return temp;
     },
     countryList: () => {
         return Template.instance().countryData.get();

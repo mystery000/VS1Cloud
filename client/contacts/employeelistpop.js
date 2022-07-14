@@ -108,12 +108,13 @@ Template.employeelistpop.onRendered(function () {
                         };
 
                         dataTableList.push(dataList);
+                        let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
                         var dataListEmployee = [
                             data.temployee[i].fields.EmployeeName || '-',
                             data.temployee[i].fields.FirstName || '',
                             data.temployee[i].fields.LastName || '',
                             data.temployee[i].fields.Phone || '',
-                            data.temployee[i].fields.Mobile || '',
+                            mobile || '',
                             data.temployee[i].fields.Email || '',
                             data.temployee[i].fields.DefaultClassName || '',
                             data.temployee[i].fields.Country || '',
@@ -289,12 +290,13 @@ Template.employeelistpop.onRendered(function () {
                                                         };
 
                                                         dataTableList.push(dataList);
+                                                        let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile)
                                                         var dataListEmployeeDupp = [
                                                             dataObjectnew.temployee[j].fields.EmployeeName || '-',
                                                             dataObjectnew.temployee[j].fields.FirstName || '',
                                                             dataObjectnew.temployee[j].fields.LastName || '',
                                                             dataObjectnew.temployee[j].fields.Phone || '',
-                                                            dataObjectnew.temployee[j].fields.Mobile || '',
+                                                            mobile || '',
                                                             dataObjectnew.temployee[j].fields.Email || '',
                                                             dataObjectnew.temployee[j].fields.DefaultClassName || '',
                                                             dataObjectnew.temployee[j].fields.Country || '',
@@ -397,12 +399,13 @@ Template.employeelistpop.onRendered(function () {
                                               };
 
                                               dataTableList.push(dataList);
+                                              let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
                                               var dataListEmployee = [
                                                   data.temployee[i].fields.EmployeeName || '-',
                                                   data.temployee[i].fields.FirstName || '',
                                                   data.temployee[i].fields.LastName || '',
                                                   data.temployee[i].fields.Phone || '',
-                                                  data.temployee[i].fields.Mobile || '',
+                                                  mobile || '',
                                                   data.temployee[i].fields.Email || '',
                                                   data.temployee[i].fields.DefaultClassName || '',
                                                   data.temployee[i].fields.Country || '',
@@ -518,13 +521,13 @@ Template.employeelistpop.onRendered(function () {
                 let lineItems = [];
                 let lineItemObj = {};
                 for (let i = 0; i < data.temployee.length; i++) {
-
+                    let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile)
                     var dataListEmployee = [
                         data.temployee[i].fields.EmployeeName || '-',
                         data.temployee[i].fields.FirstName || '',
                         data.temployee[i].fields.LastName || '',
                         data.temployee[i].fields.Phone || '',
-                        data.temployee[i].fields.Mobile || '',
+                        mobile || '',
                         data.temployee[i].fields.Email || '',
                         data.temployee[i].fields.DefaultClassName || '',
                         data.temployee[i].fields.Country || '',
@@ -702,13 +705,13 @@ Template.employeelistpop.onRendered(function () {
 
                                                     dataTableList.push(dataList);
 
-
+                                                    let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile);
                                                     var dataListEmployeeDupp = [
                                                         dataObjectnew.temployee[j].fields.EmployeeName || '-',
                                                         dataObjectnew.temployee[j].fields.FirstName || '',
                                                         dataObjectnew.temployee[j].fields.LastName || '',
                                                         dataObjectnew.temployee[j].fields.Phone || '',
-                                                        dataObjectnew.temployee[j].fields.Mobile || '',
+                                                        mobile || '',
                                                         dataObjectnew.temployee[j].fields.Email || '',
                                                         dataObjectnew.temployee[j].fields.DefaultClassName || '',
                                                         dataObjectnew.temployee[j].fields.Country || '',
@@ -813,13 +816,13 @@ Template.employeelistpop.onRendered(function () {
 
                                           dataTableList.push(dataList);
 
-
+                                          let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
                                           var dataListEmployee = [
                                               data.temployee[i].fields.EmployeeName || '-',
                                               data.temployee[i].fields.FirstName || '',
                                               data.temployee[i].fields.LastName || '',
                                               data.temployee[i].fields.Phone || '',
-                                              data.temployee[i].fields.Mobile || '',
+                                              mobile || '',
                                               data.temployee[i].fields.Email || '',
                                               data.temployee[i].fields.DefaultClassName || '',
                                               data.temployee[i].fields.Country || '',
@@ -965,12 +968,13 @@ Template.employeelistpop.onRendered(function () {
                     };
 
                     dataTableList.push(dataList);
+                    let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
                     var dataListEmployee = [
                         data.temployee[i].fields.EmployeeName || '-',
                         data.temployee[i].fields.FirstName || '',
                         data.temployee[i].fields.LastName || '',
                         data.temployee[i].fields.Phone || '',
-                        data.temployee[i].fields.Mobile || '',
+                        mobile || '',
                         data.temployee[i].fields.Email || '',
                         data.temployee[i].fields.DefaultClassName || '',
                         data.temployee[i].fields.Country || '',
@@ -1155,12 +1159,13 @@ Template.employeelistpop.onRendered(function () {
                                                     };
 
                                                     dataTableList.push(dataList);
+                                                    let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile);
                                                     var dataListEmployeeDupp = [
                                                         dataObjectnew.temployee[j].fields.EmployeeName || '-',
                                                         dataObjectnew.temployee[j].fields.FirstName || '',
                                                         dataObjectnew.temployee[j].fields.LastName || '',
                                                         dataObjectnew.temployee[j].fields.Phone || '',
-                                                        dataObjectnew.temployee[j].fields.Mobile || '',
+                                                        mobile || '',
                                                         dataObjectnew.temployee[j].fields.Email || '',
                                                         dataObjectnew.temployee[j].fields.DefaultClassName || '',
                                                         dataObjectnew.temployee[j].fields.Country || '',
@@ -1263,12 +1268,13 @@ Template.employeelistpop.onRendered(function () {
                                           };
 
                                           dataTableList.push(dataList);
+                                          let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
                                           var dataListEmployee = [
                                               data.temployee[i].fields.EmployeeName || '-',
                                               data.temployee[i].fields.FirstName || '',
                                               data.temployee[i].fields.LastName || '',
                                               data.temployee[i].fields.Phone || '',
-                                              data.temployee[i].fields.Mobile || '',
+                                              mobile || '',
                                               data.temployee[i].fields.Email || '',
                                               data.temployee[i].fields.DefaultClassName || '',
                                               data.temployee[i].fields.Country || '',
@@ -1405,6 +1411,7 @@ Template.employeelistpop.events({
         }, 1000);
     },
     'click .btnRefreshEmployee': function (event) {
+        let contactService = new ContactService();
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         const employeeList = [];
@@ -1454,12 +1461,13 @@ Template.employeelistpop.events({
                         };
 
                         dataTableList.push(dataList);
+                        let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
                         var dataListEmployee = [
                             data.temployee[i].fields.EmployeeName || '-',
                             data.temployee[i].fields.FirstName || '',
                             data.temployee[i].fields.LastName || '',
                             data.temployee[i].fields.Phone || '',
-                            data.temployee[i].fields.Mobile || '',
+                            mobile || '',
                             data.temployee[i].fields.Email || '',
                             data.temployee[i].fields.DefaultClassName || '',
                             data.temployee[i].fields.Country || '',
@@ -1540,12 +1548,13 @@ Template.employeelistpop.events({
                     };
 
                     dataTableList.push(dataList);
+                    let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
                     var dataListEmployee = [
                         data.temployee[i].fields.EmployeeName || '-',
                         data.temployee[i].fields.FirstName || '',
                         data.temployee[i].fields.LastName || '',
                         data.temployee[i].fields.Phone || '',
-                        data.temployee[i].fields.Mobile || '',
+                        mobile || '',
                         data.temployee[i].fields.Email || '',
                         data.temployee[i].fields.DefaultClassName || '',
                         data.temployee[i].fields.Country || '',
