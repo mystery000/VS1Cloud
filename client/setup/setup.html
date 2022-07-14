@@ -50,6 +50,15 @@
         .clickDisabled {
             pointer-events: none;
         }
+        .addEmployeeModalNew .row.no-gutters .chkaddress {
+            width: auto !important;
+        }
+        .addEmployeeModalNew .row.no-gutters .chkaddress .custom-control-label {
+            position: relative;
+        }
+        .addEmployeeModalNew .justify-content-xl-center .nav.nav-tabs.nav-justified {
+            align-items: end;
+        }
     </style>
     <div class="setup-wizard">
         <!-- First page -->
@@ -969,7 +978,7 @@
                                     <div class="card-body">
                                         <div class="card-body p-3 rounded">
                                             <div class="bg-white row d-xl-flex flex-row justify-content-xl-center m-0 p-2" >
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="addEmployeeModal">
+                                                <div class="modal fade addEmployeeModalNew" role="dialog" tabindex="-1" id="addEmployeeModal">
                                                     {{> addemployeepop editableEmployee=editableEmployee isSetup="true" }}
                                                 </div>
                 
@@ -2311,7 +2320,7 @@
             max-width: 60%;
             background: rgba(255,255,255,0.78);
             box-shadow: 3px 3px 4px rgb(0 0 0 / 20%);
-            padding: 70px;
+            padding: 50px;
             border-radius: 4px;
         }
         .first-page-container h1:nth-child(2) {
