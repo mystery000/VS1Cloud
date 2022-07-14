@@ -507,7 +507,7 @@ Template.subTaxesSettings.onRendered(function () {
         $("#edtTaxID").val(taxid);
         $("#edtTaxCode").val(taxname);
         $("#edtTaxDesc").val(taxDesc);
-        $(`[name='optTaxCategory'][value='${taxCate}']`).prop("checked", true);
+        $(`[name='optTaxCategory'][value='${taxCate.toLowerCase()}']`).prop("checked", true);
 
         $("#addSubTaxModal").modal("toggle");
       }
@@ -956,7 +956,7 @@ export const SubTaxesEditListener = (e) => {
       $("#edtTaxID").val(taxid);
       $("#edtTaxCode").val(taxname);
       $("#edtTaxDesc").val(taxDesc);
-      $(`[name='optTaxCategory'][value='${taxCate}']`).prop("checked", true);
+      $(`[name='optTaxCategory'][value='${taxCate.toLowerCase()}']`).prop("checked", true);
 
       $("#addSubTaxModal").modal("toggle");
     }
