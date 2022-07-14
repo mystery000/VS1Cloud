@@ -70,6 +70,7 @@ async function saveCharts() {
   ChartHandler.buildPositions();
 
   const charts = $(".chart-visibility.editCharts");
+
   /**
    * @property {Tvs1ChartDashboardPreference[]}
    */
@@ -104,7 +105,7 @@ async function saveCharts() {
   });
 
   for (const _chart of chartList) {
-    // chartList.forEach(async (chart) => {
+
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
@@ -113,8 +114,8 @@ async function saveCharts() {
 
     if (ApiResponse.ok == true) {
       const jsonResponse = await ApiResponse.json();
+      
     }
-    //});
   }
 }
 
@@ -175,6 +176,7 @@ Template.allChartLists.onRendered(function () {
     if( chartList.length > 0 ){
       // Hide all charts
       $('.sortable-chart-widget-js').addClass("hideelement");
+      // the goal here is to get the right names so it can be used for preferences
       chartList.forEach((chart) => {
         setTimeout(() => {
           //chart.fields.active = false; // Will set evething to false
@@ -189,8 +191,23 @@ Template.allChartLists.onRendered(function () {
             chart.fields.ID
           );
 
+          // Default charts          
+          let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
+          $(`[key='${chart.fields._chartSlug}']`).addClass(defaultClass);
+          $(`[key='${chart.fields._chartSlug}']`).attr('width', '100%');
+          $(`[key='${chart.fields._chartSlug}']`).css('height', "auto");
+          $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
+            "width",
+            "100%"
+          );
+          $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
+            "height",
+            "auto"
+          );
+          
+
           if (chart.fields.ChartGroup == _chartGroup) {
-            // Default charts
+
             defaultChartList.push(chart.fields._chartSlug);
 
             $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
@@ -258,8 +275,7 @@ Template.allChartLists.onRendered(function () {
       // if charts to be displayed are specified
       tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
         setTimeout(() => {
-        // this is good to see how the charts are apearing or not
-        //if (tvs1chart.fields.ChartGroup == "Dashboard") {
+
         const itemName =
           tvs1chart.fields.ChartGroup.toLowerCase() +
           "__" +
@@ -267,8 +283,6 @@ Template.allChartLists.onRendered(function () {
 
         $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
         $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
-
-
         $(`[key='${itemName}']`).attr("pref-id", tvs1chart.fields.ID);
         $(`[key='${itemName}']`).attr("position", tvs1chart.fields.Position);
         $(`[key='${itemName}']`).attr("chart-id", tvs1chart.fields.ChartID);
@@ -310,7 +324,6 @@ Template.allChartLists.onRendered(function () {
           }
 
           $(`[key='${itemName}']`).removeClass("hideelement");
-          //$(`[key='${itemName}']`).attr("is-hidden", false);
         } else {
           let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
           $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
@@ -322,8 +335,6 @@ Template.allChartLists.onRendered(function () {
             "true"
           );
         }
-        //}
-        //}
         }, 500);
       });
 
@@ -370,12 +381,10 @@ Template.allChartLists.events({
   "click .on-editor-change-mode": (e) => {
     // this will toggle the visibility of the widget
     if ($(e.currentTarget).attr("is-hidden") == "true") {
-
       $(e.currentTarget).attr("is-hidden", "false");
 
       $(e.currentTarget).html("<i class='far fa-eye'></i>");
     } else {
-
       $(e.currentTarget).attr("is-hidden", "true");
       $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
     }

@@ -1777,9 +1777,7 @@
                                                                             Leave Type</button>
                                                                     </div>
                                                                 </div>
-                                                                <div class="modal fade" role="dialog" tabindex="-1" id="leaveTypeSettingsModal" style="z-index:99999;">
-                                                                    {{> leaveTypeSettings}}
-                                                                </div>
+                                                                {{> leaveTypeSettings}}
                                                                 <div class="modal fade" id="assignLeaveTypeModal" role="dialog" aria-labelledby="assignLeaveTypeModal" aria-hidden="true" style="z-index:9999;">
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                                         <div class="modal-content">
@@ -2427,23 +2425,16 @@
                                                                             <table id="tblPayslipHistory" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayslipHistory">
                                                                                 <thead>
                                                                                     <tr class="dnd-moved">
-                                                                                        <th class="th colPayslipPeriod" style="">Period</th>
-                                                                                        <th class="th colPayslipPaymentDate" style="">Payment Date</th>
-                                                                                        <th class="th colPayslipTotalPay" style="">Total Pay</th>
+                                                                                        <th class="th colPayslipID hiddenColumn">ID</th>
+                                                                                        <th class="th colPayslipPeriod">Period</th>
+                                                                                        <th class="th colPayslipPaymentDate">Payment Date</th>
+                                                                                        <th class="th colPayslipTotalPay">Total Pay</th>
                                                                                         <th class="th colPayslipDownload" style="width: 3% !important;"></th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                                        <td contenteditable="false" class="colDescription"></td>
-                                                                                        <td contenteditable="false" class="colLeavePeriod"></td>
-                                                                                        <td contenteditable="false" class="colLeaveType"></td>
-                                                                                        <td contenteditable="false" class="colPayslipDownload" style="width: 3% !important;">
-                                                                                            <button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
 
+                                                                                </tbody>
                                                                             </table>
                                                                         </div>
                                                                     </div>
@@ -2495,17 +2486,17 @@
                                                                                             <div class="col-6 col-md-7">
                                                                                                 <div class="form-group">
                                                                                                     <label class="borderBottom1">Earnings Rate</label>
-                                                                                                    <input type="search" class="form-control earningLineDropDown" id="ptEarningRate{{ @index }}" name="ptEarningRate{{ @index }}" value="{{ item.fields.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;" />
+                                                                                                    <input type="text" class="form-control earningLineDropDown" id="ptEarningRate{{ item.fields.ID }}" value="{{ item.fields.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;" />
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempEarning" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempEarning" data-id="{{ item.fields.ID }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -2560,7 +2551,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Expense Account</label>
-                                                                                                                <input type="text" class="form-control" id="expenseAccount" name="expenseAccount">
+                                                                                                                <input type="text" class="form-control edtExpenseAccountDropDown" id="expenseAccount" name="expenseAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </div>
@@ -2592,7 +2583,7 @@
                                                                                         <div class="col-6 col-md-7">
                                                                                             <div class="form-group">
                                                                                                 <label class="borderBottom1">Deduction Type</label>
-                                                                                                <input type="search" class="form-control deductionLineDropDown" id="ptDeductionType{{ @index }}" value="{{ item.fields.DeductionType }}">
+                                                                                                <input type="search" class="form-control deductionLineDropDown" id="ptDeductionType{{ item.fields.ID }}" value="{{ item.fields.DeductionType }}">
                                                                                                 <!-- <div class="ordanryHoursDiv">
                                                                                                     <a href="javascript:void(0)">{{ item.fields.DeductionType }}</a>
                                                                                                 </div> -->
@@ -2603,14 +2594,14 @@
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control edtPercentFormatting" id="ptDeductionPercentage{{ @index }}" value="{{ formatPercent item.fields.Percentage }}">
+                                                                                                    <input type="text" class="form-control edtPercentFormatting" id="ptDeductionPercentage{{ item.fields.ID }}" value="{{ formatPercent item.fields.Percentage }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{/if}}
@@ -2670,7 +2661,7 @@
                                                                                                             <div class="col-12">
                                                                                                                 <div class="form-group">
                                                                                                                     <label>Control Account</label>
-                                                                                                                    <input type="text" class="form-control" id="controlAccountDeduction">
+                                                                                                                    <input type="text" class="form-control edtExpenseAccountDropDown" id="controlAccountDeduction">
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
@@ -2791,7 +2782,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Expense Account</label>
-                                                                                                                <input type="text" class="form-control" id="expenseSuperannuationAccount">
+                                                                                                                <input type="text" class="form-control edtExpenseAccountDropDown" id="expenseSuperannuationAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div class="col-12">
@@ -2897,7 +2888,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Control of Expense Account</label>
-                                                                                                                <input type="text" class="form-control" id="controlExpenseAccount">
+                                                                                                                <input type="text" class="form-control earningLineDropDown" id="controlExpenseAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </div>
@@ -3291,16 +3282,6 @@
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    {{#if notesrecords}}
-                                                                                        {{#each item in notesrecords}}
-                                                                                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                                                <td contenteditable="false" class="colEmpPayrollID hiddenColumn">{{item.id}}</td>
-                                                                                                <td contenteditable="false" class="colEmpPayrollNotesDate">{{item.createdat}}</td>
-                                                                                                <td contenteditable="false" class="colEmpPayrollNotesUser">{{item.username}}</td>
-                                                                                                <td contenteditable="false" class="colEmpPayrollNotes">{{item.notes}}</td>
-                                                                                            </tr>
-                                                                                        {{/each}}
-                                                                                    {{/if}}
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>
