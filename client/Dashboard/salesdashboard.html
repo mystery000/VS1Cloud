@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-12 col-md-6">
             <header class="pt-2 pb-3 d-flex">
-                <h2 class="mr-1"> New Sales Performance Dashboard</h2>
+                <h2 class="mr-1"> Sales Performance Dashboard</h2>
                 <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
             </header>
         </div>
@@ -36,14 +36,39 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 col-md-6"></div>
-        <div class="col-12 col-md-6"></div>
 
-    
-    </div>
-                <!-- All Cards List -->
+    <div class="row">
+
+        <!-- left side  -->
+        <div class="col-12 col-md-8">
+            <div class="row">
+                <!-- number card  -->
                 {{> allCardsListsec tabGroupID="1" chartGroup="Dashboard"}}
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <!-- bar chart  -->
+                </div>
+
+                <div class="col-12 col-md-8">
+                    <!-- meter chart  -->
+                </div>
+            </div>
+        </div>
+
+        <!-- right side  -->
+        <div class="col-12 col-md-4">
+            <div class="row">
+                <!-- my task  -->
+            </div>
+
+            <div class="row">
+                <!-- my calendar  -->
+                <h5>My calendar</h5>
+            </div>
+        </div>
+    </div>
 
                 <!-- All charts list -->
                 {{> allChartListssec  tabGroupID="1" chartGroup="Dashboard" }}
