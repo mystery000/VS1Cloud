@@ -66,6 +66,7 @@ Template.customerlistpop.onRendered(function () {
     }
 
     templateObject.getCustomers = function () {
+      let contactService = new ContactService();
       var customerpage = 0;
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -108,6 +109,8 @@ Template.customerlistpop.onRendered(function () {
                         };
 
                         dataTableList.push(dataList);
+
+                        let mobile = contactService.changeMobileFormat(data.tcustomervs1[i].fields.Mobile);
                         var dataListCustomer = [
                             data.tcustomervs1[i].fields.ClientName || '-',
                             data.tcustomervs1[i].fields.JobName || '',
@@ -134,7 +137,7 @@ Template.customerlistpop.onRendered(function () {
                             data.tcustomervs1[i].fields.FirstName || '',
                             data.tcustomervs1[i].fields.LastName || '',
                             data.tcustomervs1[i].fields.TaxCodeName || 'E',
-                            data.tcustomervs1[i].fields.Mobile || ''
+                            mobile || ''
                         ];
 
                         splashArrayCustomerList.push(dataListCustomer);
@@ -607,6 +610,8 @@ Template.customerlistpop.onRendered(function () {
 
                     dataTableList.push(dataList);
 
+                    let mobile = contactService.changeMobileFormat(data.tcustomervs1[i].fields.Mobile);
+
                     var dataListCustomer = [
                         data.tcustomervs1[i].fields.ClientName || '-',
                         data.tcustomervs1[i].fields.JobName || '',
@@ -633,7 +638,7 @@ Template.customerlistpop.onRendered(function () {
                         data.tcustomervs1[i].fields.FirstName || '',
                         data.tcustomervs1[i].fields.LastName || '',
                         data.tcustomervs1[i].fields.TaxCodeName || 'E',
-                        data.tcustomervs1[i].fields.Mobile || ''
+                        mobile || ''
                     ];
 
                     splashArrayCustomerList.push(dataListCustomer);
@@ -841,6 +846,7 @@ Template.customerlistpop.onRendered(function () {
                                                     };
 
                                                     dataTableList.push(dataList);
+                                                    let mobile = contactService.changeMobileFormat(dataObjectnew.tcustomervs1[j].fields.Mobile);
                                                     var dataListCustomerDupp = [
                                                         dataObjectnew.tcustomervs1[j].fields.ClientName || '-',
                                                         dataObjectnew.tcustomervs1[j].fields.JobName || '',
@@ -867,7 +873,7 @@ Template.customerlistpop.onRendered(function () {
                                                         dataObjectnew.tcustomervs1[j].fields.FirstName || '',
                                                         dataObjectnew.tcustomervs1[j].fields.LastName || '',
                                                         dataObjectnew.tcustomervs1[j].fields.TaxCodeName || 'E',
-                                                        dataObjectnew.tcustomervs1[j].fields.Mobile || ''
+                                                        mobile || ''
                                                     ];
 
                                                     splashArrayCustomerList.push(dataListCustomerDupp);
@@ -962,6 +968,8 @@ Template.customerlistpop.onRendered(function () {
                                           };
 
                                           dataTableList.push(dataList);
+
+                                          let mobile = contactService.changeMobileFormat(data.tcustomervs1[i].fields.Mobile);
                                           var dataListCustomer = [
                                               data.tcustomervs1[i].fields.ClientName || '-',
                                               data.tcustomervs1[i].fields.JobName || '',
@@ -988,7 +996,7 @@ Template.customerlistpop.onRendered(function () {
                                               data.tcustomervs1[i].fields.FirstName || '',
                                               data.tcustomervs1[i].fields.LastName || '',
                                               data.tcustomervs1[i].fields.TaxCodeName || 'E',
-                                              data.tcustomervs1[i].fields.Mobile || ''
+                                              mobile || ''
                                           ];
 
                                           splashArrayCustomerList.push(dataListCustomer);
@@ -1214,6 +1222,8 @@ Template.customerlistpop.onRendered(function () {
                     };
 
                     dataTableList.push(dataList);
+
+                    let mobile = contactService.changeMobileFormat(data.tcustomervs1[i].fields.Mobile);
                     var dataListCustomer = [
                         data.tcustomervs1[i].fields.ClientName || '-',
                         data.tcustomervs1[i].fields.JobName || '',
@@ -1240,7 +1250,7 @@ Template.customerlistpop.onRendered(function () {
                         data.tcustomervs1[i].fields.FirstName || '',
                         data.tcustomervs1[i].fields.LastName || '',
                         data.tcustomervs1[i].fields.TaxCodeName || 'E',
-                        data.tcustomervs1[i].fields.Mobile || ''
+                        mobile || ''
                     ];
 
                     splashArrayCustomerList.push(dataListCustomer);
@@ -1759,6 +1769,7 @@ Template.customerlistpop.events({
                         };
 
                         dataTableList.push(dataList);
+                        let mobile = contactService.changeMobileFormat(data.tcustomervs1[i].fields.Mobile);
                         var dataListCustomer = [
                             data.tcustomervs1[i].fields.ClientName || '-',
                             data.tcustomervs1[i].fields.JobName || '',
@@ -1785,7 +1796,7 @@ Template.customerlistpop.events({
                             data.tcustomervs1[i].fields.FirstName || '',
                             data.tcustomervs1[i].fields.LastName || '',
                             data.tcustomervs1[i].fields.TaxCodeName || 'E',
-                            data.tcustomervs1[i].fields.Mobile || ''
+                            mobile || ''
                         ];
 
                         splashArrayCustomerList.push(dataListCustomer);
@@ -1859,6 +1870,7 @@ Template.customerlistpop.events({
                     };
 
                     dataTableList.push(dataList);
+                    let mobile = contactService.changeMobileFormat(data.tcustomervs1[i].fields.Mobile)
                     var dataListCustomer = [
                         data.tcustomervs1[i].fields.ClientName || '-',
                         data.tcustomervs1[i].fields.JobName || '',
@@ -1885,7 +1897,7 @@ Template.customerlistpop.events({
                         data.tcustomervs1[i].fields.FirstName || '',
                         data.tcustomervs1[i].fields.LastName || '',
                         data.tcustomervs1[i].fields.TaxCodeName || 'E',
-                        data.tcustomervs1[i].fields.Mobile || ''
+                        mobile || ''
                     ];
 
                     splashArrayCustomerList.push(dataListCustomer);

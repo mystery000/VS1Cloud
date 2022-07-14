@@ -14,6 +14,7 @@ Template.leadlist.onCreated(function(){
 
 Template.leadlist.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
+    let contactService = new ContactService();
     let templateObject = Template.instance();
     let splashArrayLeadList = [];
     const tableHeaderList = [];
@@ -50,13 +51,14 @@ Template.leadlist.onRendered(function() {
         for (let i = 0; i < data.tprospect.length; i++) {
             // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
             // const city = contactContacts?contactContacts.fields.ContactCity:'';
+            let mobile = contactService.changeMobileFormat(data.tprospect[i].fields.Mobile);
             const dataList = {
                 id: data.tprospect[i].fields.ID || '',
                 employeeName: data.tprospect[i].fields.ClientName || '',
                 firstName: data.tprospect[i].fields.FirstName || '',
                 lastName: data.tprospect[i].fields.LastName || '',
                 phone: data.tprospect[i].fields.Phone || '',
-                mobile: data.tprospect[i].fields.Mobile || '',
+                mobile: mobile || '',
                 email: data.tprospect[i].fields.Email || '',
                 department: data.tprospect[i].fields.CompanyName || '',
                 address: data.tprospect[i].fields.Street || '',
@@ -204,6 +206,7 @@ Template.leadlist.events({
           }
       },
     'click .btnRefreshLeads':function(event){
+        let contactService = new ContactService();
         let templateObject = Template.instance();
         const dataTableList = [];
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -215,13 +218,14 @@ Template.leadlist.events({
                     for (let i=0; i< data.tprospect.length; i++) {
                         // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
                         // const city = contactContacts?contactContacts.fields.ContactCity:'';
+                        let mobile = contactService.changeMobileFormat(data.tprospect[i].fields.Mobile)
                         const dataList = {
                             id: data.tprospect[i].fields.ID || '',
                             employeeName: data.tprospect[i].fields.ClientName || '',
                             firstName: data.tprospect[i].fields.FirstName || '',
                             lastName: data.tprospect[i].fields.LastName || '',
                             phone: data.tprospect[i].fields.Phone || '',
-                            mobile: data.tprospect[i].fields.Mobile || '',
+                            mobile: mobile || '',
                             email: data.tprospect[i].fields.Email || '',
                             department: data.tprospect[i].fields.CompanyName || '',
                             address: data.tprospect[i].fields.Street || '',

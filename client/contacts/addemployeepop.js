@@ -1976,6 +1976,9 @@ Template.addemployeepop.events({
         let email = $('#edtEmailAddress').val() || '';
         let phone = $('#edtPhone').val() || '';
         let mobile = $('#edtMobile').val() || '';
+        if(mobile != '') {
+            mobile = contactService.changeMobileFormat(mobile)
+        }
         let fax = $('#edtFax').val() || '';
         let skype = $('#edtSkype').val() || '';
         let gender = $('#edtGender').val() || '';
@@ -3720,7 +3723,12 @@ Template.addemployeepop.helpers({
         return Template.instance().isCloudUserPass.get();
     },
     record: () => {
-        return Template.instance().records.get();
+        let temp =  Template.instance().records.get();
+        if(temp && temp.mobile) {
+            temp.mobile = temp.mobile.replace('+61', '0')
+        }
+        return temp;
+
     },
     extraUserPrice: () => {
         return addExtraUserPrice || '$35';

@@ -72,31 +72,35 @@
                                         cursor: default !important;
                                     }
 
-                                    .colTransType {
-                                        width: 30% !important;
+                                    th.colTransType {
+                                        width: 25% !important;
                                     }
 
-                                    .colFrequency {
-                                        width: 40% !important;
-                                    }
-
-                                    .colSend {
+                                    th.colFrequency {
                                         width: 20% !important;
                                     }
 
-                                    .colRecipients {
-                                        width: 30% !important;
+                                    /* th.colSend {
+                                        width: 20% !important;
+                                    } */
+
+                                    th.colRecipients {
+                                        width: 35% !important;
+                                    }
+
+                                    th.colHistory {
+                                        width: 20% !important;
                                     }
                                 </style>
                                 <table id="tblEssentialAutomatedEmails" style="width:100%"
                                     class="dataTable table table-hover table-striped table-bordered tblEssentialAutomatedEmails">
                                     <thead>
                                         <tr class="dnd-moved">
-                                            <th class="th colTransType" style="width: 30% !important;">Transaction Type
-                                            </th>
-                                            <th class="th colFrequency" style="width: 20% !important;">Frequency</th>
-                                            <!-- <th class="th colSend" style="width: 20% !important;">Send</th> -->
-                                            <th class="th colRecipients" style="width: 30% !important;">Recipients</th>
+                                            <th class="th colTransType">Transaction Type</th>
+                                            <th class="th colFrequency">Frequency</th>
+                                            <!-- <th class="th colSend">Send</th> -->
+                                            <th class="th colRecipients">Recipients</th>
+                                            <th class="th colHistory">History & Upcoming</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -130,6 +134,13 @@
                                                     <!-- <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-inout="{{item.isEmpty}}">{{item.basedOnType}}</td> -->
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
                                                             class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}"></td>
+                                                            <td contenteditable="false"
+                                                            class="d-flex justify-content-center align-items-center colHistory">
+                                                            <button
+                                                                class="btn btn-primary btn-show-history d-flex align-items-center justify-content-around col-xl-6 col-md-8 col-md-9 col-10 mx-auto ">
+                                                                <span class="fa fa-history"></span>
+                                                            </button>
+                                                        </td>
                                                 </tr>
                                             {{/if}}
                                         {{/each}}
@@ -245,35 +256,40 @@
                                     }
                                 </style>
                                 <style>
-                                    .arrow {
+                                    #tblAutomatedEmails .arrow {
                                         cursor: default !important;
                                     }
 
-                                    .colTransType {
-                                        width: 30% !important;
+                                    #tblAutomatedEmails .colTransType {
+                                        width: 25% !important;
                                     }
 
-                                    .colFrequency {
-                                        width: 40% !important;
-                                    }
-
-                                    .colSend {
+                                    #tblAutomatedEmails .colFrequency {
                                         width: 20% !important;
                                     }
 
-                                    .colRecipients {
-                                        width: 30% !important;
+                                    /* #tblAutomatedEmails .colSend {
+                                        width: 20% !important;
+                                    } */
+
+                                    #tblAutomatedEmails .colRecipients {
+                                        width: 35% !important;
+                                    }
+
+                                    #tblAutomatedEmails th.colHistory {
+                                        width: 20% !important;
                                     }
                                 </style>
                                 <table id="tblAutomatedEmails" style="width:100%"
                                     class="dataTable table table-hover table-striped table-bordered tblPayRollRulesList">
                                     <thead>
                                         <tr class="dnd-moved">
-                                            <th class="th colTransType" style="width: 30% !important;">Transaction Type
+                                            <th class="th colTransType" >Transaction Type
                                             </th>
-                                            <th class="th colFrequency" style="width: 20% !important;">Frequency</th>
+                                            <th class="th colFrequency" >Frequency</th>
                                             <!-- <th class="th colSend" style="width: 20% !important;">Send</th> -->
-                                            <th class="th colRecipients" style="width: 30% !important;">Recipients</th>
+                                            <th class="th colRecipients" >Recipients</th>
+                                            <th class="th colHistory" >History & Upcoming</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -312,11 +328,55 @@
                                                     <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
                                                             class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}"></td>
+                                                            <td contenteditable="false"
+                                                            class="d-flex justify-content-center align-items-center colHistory">
+                                                            <button
+                                                                class="btn btn-primary btn-show-history d-flex align-items-center justify-content-around col-xl-6 col-md-8 col-md-9 col-10 mx-auto ">
+                                                                <span class="fa fa-history"></span>
+                                                            </button>
+                                                        </td>
                                                 </tr>
                                             {{/if}}
                                         {{/each}}
                                     </tbody>
                                 </table>
+                                <div class="modal fade" id="historyUpcomingModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="historyUpcomingModal" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="historyUpcomingLabel">History and Upcoming</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table id="tblHistoryUpcoming" style="width:100%"
+                                                    class="dataTable table table-hover table-striped table-bordered tblPayRollRulesList">
+                                                    <thead>
+                                                        <tr class="dnd-moved">
+                                                            <th class="th colTransType" style="width: 30% !important;">Trans Type</th>
+                                                            <th class="th colSendDate" style="width: 20% !important;">Date Sent</th>
+                                                            <th class="th colSendDate" style="width: 20% !important;">Next Send</th>
+                                                            <th class="th colRecipients" style="width: 30% !important;">Recipients</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{#each item in essentialReportSchedules}}
+                                                        <tr class="dnd-moved" id="history{{item.formID}}" data-id="{{item.formID}}">
+                                                            <td contenteditable="false" class="arrow">{{item.transactionType}}</td>
+                                                            <td contenteditable="false" class="arrow">{{item.fields.LastEmaileddate}}</td>
+                                                            <td contenteditable="false" class="arrow">{{item.fields.NextDueDate}}</td>
+                                                            <td contenteditable="false" class="arrow">{{item.fields.Recipients}}</td>
+                                                        </tr>
+                                                        {{/each}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="modal fade" id="frequencyModal" tabindex="-1" role="dialog"
                                     aria-labelledby="frequencyModal" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
