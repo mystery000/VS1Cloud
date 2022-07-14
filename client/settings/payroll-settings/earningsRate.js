@@ -249,7 +249,87 @@ templateObject.getEarnings = async function(){
 
 
 templateObject.getEarnings();
+    $('.edtExpenseAccountDropDown').editableSelect();
+    $('.edtExpenseAccountDropDown').editableSelect().on('click.editable-select', async function (e, li) {
+        let $search = $(this);
+        let dropDownID = $search.attr('id')
+        $('#selectLineID').val(dropDownID);
+        let offset = $search.offset();
+        let searchName = e.target.value || '';
+        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#accountListModal').modal('show');
+        } else {
+            if (searchName.replace(/\s/g, '') == '') {             
+                $('#accountListModal').modal('show');
+                return false
+            }
+            let dataObject =  await getVS1Data('TAccountVS1');
+            if( dataObject.length > 0 ){
+                data = JSON.parse(dataObject[0].data);
+                let tAccounts = data.taccountvs1.filter((item) => {
+                    if( item.fields.AccountName == searchName ){
+                        return item;
+                    }
+                });   
 
+                var accountid = tAccounts[0].fields.ID || '';
+                var accounttype = tAccounts[0].fields.AccountTypeName;
+                var accountname = tAccounts[0].fields.AccountName || '';
+                var accountno = tAccounts[0].fields.AccountNumber || '';
+                var taxcode = tAccounts[0].fields.TaxCode || '';
+                var accountdesc = tAccounts[0].fields.Description || '';
+                var bankaccountname = tAccounts[0].fields.BankAccountName || '';
+                var bankbsb = tAccounts[0].fields.BSB || '';
+                var bankacountno = tAccounts[0].fields.BankAccountNumber || '';
+
+                var swiftCode = tAccounts[0].fields.Extra || '';
+                var routingNo = tAccounts[0].fields.BankCode || '';
+
+                var showTrans = tAccounts[0].fields.IsHeader || false;
+
+                var cardnumber = tAccounts[0].fields.CarNumber || '';
+                var cardcvc = tAccounts[0].fields.CVC || '';
+                var cardexpiry = tAccounts[0].fields.ExpiryDate || '';
+
+                if ((accounttype === "BANK")) {
+                    $('.isBankAccount').removeClass('isNotBankAccount');
+                    $('.isCreditAccount').addClass('isNotCreditAccount');
+                }else if ((accounttype === "CCARD")) {
+                    $('.isCreditAccount').removeClass('isNotCreditAccount');
+                    $('.isBankAccount').addClass('isNotBankAccount');
+                } else {
+                    $('.isBankAccount').addClass('isNotBankAccount');
+                    $('.isCreditAccount').addClass('isNotCreditAccount');
+                }
+
+                $('#edtAccountID').val(accountid);
+                $('#sltAccountType').val(accounttype);
+                $('#sltAccountType').append('<option value="'+accounttype+'" selected="selected">'+accounttype+'</option>');
+                $('#edtAccountName').val(accountname);
+                $('#edtAccountNo').val(accountno);
+                $('#sltTaxCode').val(taxcode);
+                $('#txaAccountDescription').val(accountdesc);
+                $('#edtBankAccountName').val(bankaccountname);
+                $('#edtBSB').val(bankbsb);
+                $('#edtBankAccountNo').val(bankacountno);
+                $('#swiftCode').val(swiftCode);
+                $('#routingNo').val(routingNo);
+                $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
+
+                $('#edtCardNumber').val(cardnumber);
+                $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
+                $('#edtCvc').val(cardcvc);
+
+                if(showTrans == 'true'){
+                    $('.showOnTransactions').prop('checked', true);
+                }else{
+                    $('.showOnTransactions').prop('checked', false);
+                }
+
+                $('#addAccountModal').modal('show');  
+            }      
+        }
+    });
     // Standard drop down
     $('.earningLineDropDown').editableSelect();
     $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
@@ -266,6 +346,7 @@ templateObject.getEarnings();
                 $('#earningRateSettingsModal').modal('show');
                 return false
             }
+            let data = {};
             let dataObject = await getVS1Data('TEarnings');   
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
@@ -304,6 +385,15 @@ templateObject.getEarnings();
         let earningRate = table.find(".colEarningsNames").text()||'';
         $('#' + earningRateID).val(earningRate);
         $('#earningRateSettingsModal').modal('toggle');
+    });
+
+    $(document).on("click", "#tblAccount tbody tr", function (e) {
+        var table = $(this);
+        let name = table.find(".productName").text()||'';
+        // let searchFilterID = templateObject.currentDrpDownID.get()
+        let searchFilterID = $('#selectLineID').val();
+        $('#' + searchFilterID).val(name);
+        $('#accountListModal').modal('toggle');
     });
 
 });

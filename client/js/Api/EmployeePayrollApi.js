@@ -20,7 +20,10 @@ export default class EmployeePayrollApi {
         TPaySlips: "TPaySlips",
         TPayNotes: "TPayNotes",
         TAssignLeaveType: "TAssignLeaveType",
-        TPayTemplateEarningLine: "TPayTemplateEarningLine"
+        TPayTemplateEarningLine: "TPayTemplateEarningLine",
+        TPayTemplateDeductionLine: "TPayTemplateDeductionLine",
+        TPayTemplateSuperannuationLine: "TPayTemplateSuperannuationLine",
+        TPayTemplateReiumbursementLine: "TPayTemplateReiumbursementLine"
     };
 
     this.collection = new ApiCollection([
@@ -73,8 +76,22 @@ export default class EmployeePayrollApi {
           name: this.collectionNames.TPayTemplateEarningLine,
           url: ApiService.getBaseUrl({ endpoint: "TPayTemplateEarningLine" }),
           headers: ApiService.getHeaders()
-        })     
-           
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TPayTemplateDeductionLine,
+          url: ApiService.getBaseUrl({ endpoint: "TPayTemplateDeductionLine" }),
+          headers: ApiService.getHeaders()
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TPayTemplateSuperannuationLine,
+          url: ApiService.getBaseUrl({ endpoint: "TPayTemplateSuperannuationLine" }),
+          headers: ApiService.getHeaders()
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TPayTemplateReiumbursementLine,
+          url: ApiService.getBaseUrl({ endpoint: "TPayTemplateReiumbursementLine" }),
+          headers: ApiService.getHeaders()
+        })
     ]);
   }
 }

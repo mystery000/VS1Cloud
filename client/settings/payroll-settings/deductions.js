@@ -276,7 +276,7 @@ Template.deductionSettings.onRendered(function() {
                     $('#deductionSettingsModal').modal('show');
                     return false
                 }
-                let dataObject = await getVS1Data('TEarnings');   
+                let dataObject = await getVS1Data('TDeduction');   
                 if ( dataObject.length == 0) {
                     data = await templateObject.saveDataLocalDB();
                 }else{

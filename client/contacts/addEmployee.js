@@ -3068,6 +3068,183 @@ Template.employeescard.onRendered(function () {
 
     templateObject.getPayEarningLines();
 
+    templateObject.saveDeductionLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateDeductionLine
+        );
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );                
+        
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tpaytemplatedeductionline.length ){
+                await addVS1Data('TPayTemplateDeductionLine', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }  
+        return '';
+    };
+    templateObject.getPayDeducitonLines = async function(){
+        let data = [];
+        let dataObject = await getVS1Data('TPayTemplateDeductionLine')  
+        if ( dataObject.length == 0) {   
+            data = await templateObject.saveDeductionLocalDB(); 
+        }else{
+            data = JSON.parse(dataObject[0].data);
+        }
+        
+        let useData = PayTemplateDeductionLine.fromList(
+            data.tpaytemplatedeductionline
+        ).filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                return item;
+            }
+        });
+
+        await templateObject.payTemplateDeductionLineInfo.set(useData);
+        await templateObject.setDeductionLineDropDown();
+        if( useData.length ){
+            setTimeout(function () {
+                Array.prototype.forEach.call(useData, (item) => {
+                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                    $(`#ptDeductionType${item.fields.ID}`).val( item.fields.DeductionType );
+                    $(`#ptDeductionAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
+                    let percentage = ( item.fields.Percentage === undefined || item.fields.Percentage === null || item.fields.Percentage.length === 0) ? 0 : item.fields.Percentage;
+                    let percentVal = ( percentage )? Number(percentage.replace(/[^0-9.-]+/g,"")): 0;
+                    $(`#ptDeductionPercentage${item.fields.ID}`).val( `${parseFloat(percentVal).toFixed(2)}%` );
+                })
+            }, 500);
+        }
+
+    };
+
+    templateObject.getPayDeducitonLines();
+
+    templateObject.saveSuperannuationLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
+        );
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );                
+        
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tpaytemplatesuperannuationline.length ){
+                await addVS1Data('TPayTemplateSuperannuationLine', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }  
+        return '';
+    };
+
+    templateObject.getPaySuperannuationLines = async function(){
+        let data = [];
+        let dataObject = await getVS1Data('TPayTemplateSuperannuationLine')  
+        if ( dataObject.length == 0) {   
+            data = await templateObject.saveSuperannuationLocalDB(); 
+        }else{
+            data = JSON.parse(dataObject[0].data);
+        }
+        let useData = PayTemplateSuperannuationLine.fromList(
+            data.tpaytemplatesuperannuationline
+        ).filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                return item;
+            }
+        });
+
+        await templateObject.payTemplateSuperannuationLineInfo.set(useData);
+        await templateObject.setSuperannuationDropDown();
+        if( useData.length ){
+            setTimeout(function () {
+                Array.prototype.forEach.call(useData, (item) => {
+                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;                    
+                    $(`#ptSuperannuationFund${item.fields.ID}`).val( item.fields.Fund );
+                    $(`#ptSuperannuationAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
+                    let percentage = ( item.fields.Percentage === undefined || item.fields.Percentage === null || item.fields.Percentage.length === 0) ? 0 : item.fields.Percentage;
+                    let percentVal = ( percentage )? Number(percentage.replace(/[^0-9.-]+/g,"")): 0;
+                    $(`#ptSuperannuationPercentage${item.fields.ID}`).val( `${parseFloat(percentVal).toFixed(2)}%` );
+                })
+            }, 500);
+        }
+
+    };
+
+    templateObject.getPaySuperannuationLines();
+
+    templateObject.saveReiumbursementLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
+        );
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );                
+        
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tpaytemplatereiumbursementline.length ){
+                await addVS1Data('TPayTemplateReiumbursementLine', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }  
+        return '';
+    };
+
+    templateObject.getPayReiumbursementLines = async function(){
+        let data = [];
+        let dataObject = await getVS1Data('TPayTemplateReiumbursementLine')  
+        if ( dataObject.length == 0) {   
+            data = await templateObject.saveReiumbursementLocalDB(); 
+        }else{
+            data = JSON.parse(dataObject[0].data);
+        }
+        let useData = PayTemplateReiumbursementLine.fromList(
+            data.tpaytemplatereiumbursementline
+        ).filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                return item;
+            }
+        });
+
+        await templateObject.payTemplateReiumbursementLineInfo.set(useData);
+        await templateObject.setReiumbursementDropDown();
+        if( useData.length ){
+            setTimeout(function () {
+                Array.prototype.forEach.call(useData, (item) => {
+                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;                    
+                    $(`#ptReimbursementType${item.fields.ID}`).val( item.fields.ReiumbursementType );
+                    $(`#ptReimbursementAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
+                });
+            }, 500);
+        }
+
+    };
+
+    templateObject.getPayReiumbursementLines();
+
     templateObject.getAssignLeaveTypes = async () => {
         let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
         if( TAssignLeaveTypes.length ){
@@ -3104,7 +3281,6 @@ Template.employeescard.onRendered(function () {
     };
 
     templateObject.getOpeningBalances = async () => {
-        // TO DO
         let TOpeningBalances = await getVS1Data('TOpeningBalances');
         if( TOpeningBalances.length ){
             let TOpeningBalancesData = JSON.parse(TOpeningBalances[0].data);
@@ -3127,7 +3303,7 @@ Template.employeescard.onRendered(function () {
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
                 let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data);
-                //console.log('TEmployeepaysettingData', TEmployeepaysettingData)
+
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -3136,7 +3312,6 @@ Template.employeescard.onRendered(function () {
                     }
                 });
 
-                console.log('useData', useData)
                 let employeePaySettings = {}
                 let objEmployeePaySettings = {}
                 if( useData.length == 0 ){
@@ -3169,7 +3344,6 @@ Template.employeescard.onRendered(function () {
                     templateObject.employeePaySettings.set(objEmployeePaySettings);                 
                 }else{
                     employeePaySettings = useData[0]
-                    console.log( employeePaySettings )
                     objEmployeePaySettings = {
                         EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
                         BankAccountName: employeePaySettings.fields.BankAccountName,
@@ -3512,18 +3686,47 @@ Template.employeescard.onRendered(function () {
     }
 
     templateObject.setEarningLineDropDown = function(){
-        setTimeout(function () {
+        setTimeout( function () {
             $('.earningLineDropDown').editableSelect();
-            $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {
+            $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
                 let $search = $(this);
                 let offset = $search.offset();
                 let dropDownID = $search.attr('id')
                 templateObject.currentDrpDownID.set(dropDownID);
-                let currencyDataName = e.target.value || '';
+                let searchName = e.target.value || '';
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                     $('#earningRateSettingsModal').modal('show');
                 } else {
-                    $('#earningRateSettingsModal').modal('show');
+                    if (searchName.replace(/\s/g, '') == '') {             
+                        $('#earningRateSettingsModal').modal('show');
+                        return false
+                    }
+                    let data = {};
+                    let dataObject = await getVS1Data('TEarnings');   
+                    if ( dataObject.length > 0) {
+                        data = JSON.parse(dataObject[0].data);
+                        let tEarnings = data.tearnings.filter((item) => {
+                            if( item.fields.EarningsName == searchName ){
+                                return item;
+                            }
+                        });
+                        $('#earningRateForm')[0].reset();
+                        $('#addEarningsLineModal').modal('hide');                
+                        if( tEarnings.length > 0 ){
+                            let earningRate = tEarnings[0];
+                            $('#earningID').val(earningRate.fields.ID)
+                            $('#edtEarningsName').val(earningRate.fields.EarningsName)
+                            $('#edtEarningsType').val(earningRate.fields.EarningType)
+                            $('#edtDisplayName').val(earningRate.fields.EarningsDisplayName)
+                            $('#edtRateType').val(earningRate.fields.EarningsRateType)
+                            $('#edtExpenseAccount').val(earningRate.fields.ExpenseAccount)
+                            $('#formCheck-ExemptPAYG').prop('checked', earningRate.fields.EarningsExemptPaygWithholding)
+                            $('#formCheck-ExemptSuperannuation').prop('checked', earningRate.fields.EarningsExemptSuperannuationGuaranteeCont)
+                            $('#formCheck-ExemptReportable').prop('checked', earningRate.fields.EarningsReportableW1onActivityStatement)
+                        }
+                        $('#earningRateSettingsModal').modal('hide');
+                        $('#ordinaryTimeEarningsModal').modal('show');
+                    }
                 }
             });
         }, 500)
@@ -3533,19 +3736,54 @@ Template.employeescard.onRendered(function () {
         setTimeout(function () {
             $('.deductionLineDropDown').editableSelect();
             $('.deductionLineDropDown').editableSelect()
-                .on('click.editable-select', function (e, li) {
+                .on('click.editable-select', async function (e, li) {
                     let $search = $(this);
                     let offset = $search.offset();
                     let dropDownID = $search.attr('id')
                     templateObject.currentDrpDownID.set(dropDownID);
-                    let currencyDataName = e.target.value || '';
+                    let searchName = e.target.value || '';
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                         $('#deductionSettingsModal').modal('show');
                     } else {
-                        if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
+                        if (searchName.replace(/\s/g, '') == '') {               
+                            $('#deductionSettingsModal').modal('show');
+                            return false
                         }
-                        $('#deductionSettingsModal').modal('show');
+                        let data = {};
+                        let dataObject = await getVS1Data('TDeduction');   
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            let tDeduction = data.tdeduction.filter((item) => {
+                                if( item.fields.Description == searchName ){
+                                    return item;
+                                }
+                            });
+                            $('#deductionRateForm')[0].reset();
+                            $('#deductionSettingsModal').modal('hide');  
+                            if( tDeduction.length > 0 ){
+                                let deductionType = 'None';
+                                if(tDeduction[0].fields.Taxexempt == true){
+                                    deductionType = 'None';
+                                }else{
+                                    if(tDeduction[0].fields.IsWorkPlacegiving == true){
+                                        deductionType = 'Workplace Giving';
+                                    }
+                                    if(tDeduction[0].fields.Unionfees == true){
+                                        deductionType = 'Union / Association Fees';
+                                    }
+                                }
+                                $('#edtDeductionID').val(tDeduction[0].fields.ID)
+                                $('#edtDeductionName').val(tDeduction[0].fields.Description)
+                                $('#edtDeductionType').val(deductionType)
+                                $('#edtDeductionAccount').val(tDeduction[0].fields.Accountname)
+                                $('#edtDeductionAccountID').val(tDeduction[0].fields.Accountid)
+                                $('#formCheck-ReducesPAYGDeduction').prop('checked', tDeduction[0].fields.Payrolltaxexempt || false)
+                                $('#formCheck-ReducesSuperannuationDeduction').prop('checked', tDeduction[0].fields.Superinc || false)
+                                $('#formCheck-ExcludedDeduction').prop('checked', tDeduction[0].fields.Workcoverexempt || false)
+                            }
+                            $('#deductionSettingsModal').modal('hide');
+                            $('#noneModal').modal('show');
+                        }
                     }
                 });
         }, 500);
@@ -3556,67 +3794,117 @@ Template.employeescard.onRendered(function () {
         setTimeout(function () {
             $('.superannuationDropDown').editableSelect();
             $('.superannuationDropDown').editableSelect()
-                .on('click.editable-select', function (e, li) {
+                .on('click.editable-select', async function (e, li) {
                     let $search = $(this);
                     let dropDownID = $search.attr('id')
                     templateObject.currentDrpDownID.set(dropDownID);
                     let offset = $search.offset();
-                    let currencyDataName = e.target.value || '';
+                    let searchName = e.target.value || '';
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                         $('#superannuationSettingsModal').modal('show');
                     } else {
-                        if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
+                        if (searchName.replace(/\s/g, '') == '') {               
+                            $('#superannuationSettingsModal').modal('show');
+                            return false
                         }
-                        $('#superannuationSettingsModal').modal('show');
+                        let dataObject = await getVS1Data('TSuperannuation');   
+                        if ( dataObject.length > 0) {
+                            let tSuperannuation = data.tsuperannuation.filter((item) => {
+                                if( item.fields.Description == searchName ){
+                                    return item;
+                                }
+                            });
+                            
+                            if( tSuperannuation.length > 0 ){
+                                if( tsuperannuation[0].fields.Supertypeid == 'Self-Managed Superannuation Fund')
+                                {
+                                    $('#acountabmandelectronic').css('display','block');
+                                    $('#accountbsb').css('display','block');
+                                    $('#account_name').css('display','block');
+                                }else{
+                                    $('#acountabmandelectronic').css('display','none');
+                                    $('#accountbsb').css('display','none');
+                                    $('#account_name').css('display','none');
+                                }
+                                
+                                $('#newSuperannuationFundId').val(tSuperannuation[0].fields.ID);
+                                $('#edtFundType').val(tSuperannuation[0].fields.area);
+                                $('#edtFundName').val(tSuperannuation[0].fields.Superfund);
+                                $('#edtelectronicsalias').val(tSuperannuation[0].fields.ElectronicsServiceAddressAlias);
+                                $('#edtEmployerNumber').val(tSuperannuation[0].fields.Employeeid);
+                                $('#edtaccountnumber').val(tSuperannuation[0].fields.Accountno);
+                                $('#edtbsb').val(tSuperannuation[0].fields.BSB);
+                                $('#edtaccountname').val(tSuperannuation[0].fields.AccountName);
+                            }
+                            $('#superannuationSettingsModal').modal('hide');
+                            $('#newSuperannuationFundModal').modal('show');
+                        }
                     }
                 });
         }, 500);
     }
     templateObject.setSuperannuationDropDown();
 
-    templateObject.setReimbursementDropDown = function() {
+    templateObject.setReiumbursementDropDown = function() {
         setTimeout(function () {
             $('.reimbursementDropDown').editableSelect();
             $('.reimbursementDropDown').editableSelect()
-                .on('click.editable-select', function (e, li) {
+                .on('click.editable-select', async function (e, li) {
                     let $search = $(this);
                     let dropDownID = $search.attr('id')
                     templateObject.currentDrpDownID.set(dropDownID);
                     let offset = $search.offset();
-                    let currencyDataName = e.target.value || '';
+                    let searchName = e.target.value || '';
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                         $('#reimbursementSettingsModal').modal('show');
                     } else {
-                        if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
+                        if (searchName.replace(/\s/g, '') == '') {               
+                            $('#reimbursementSettingsModal').modal('show');
+                            return false
                         }
-                        $('#reimbursementSettingsModal').modal('show');
+                        let dataObject = await getVS1Data('TReimbursement');   
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            let tReimbursement = data.treimbursement.filter((item) => {
+                                if( item.fields.Description == searchName ){
+                                    return item;
+                                }
+                            });
+                            
+                            if( tReimbursement.length > 0 ){
+                                $('#res_id').val(tReimbursement[0].fields.ID) || 0 ;
+                                $('#edtReimbursementName').val(tReimbursement[0].fields.ReimbursementName) || '';
+                                $('#edtReimbursementAccount').val(tReimbursement[0].fields.ReimbursementAccount) || '';
+                            }
+                            $('#reimbursementSettingsModal').modal('hide');
+                            $('#newReimbursementModal').modal('show');
+                        }
                     }
                 });
         }, 500);
     }
-    templateObject.setReimbursementDropDown();
 
     $(document).ready(function () {
-        setTimeout(function () {
-        $('#edtExpenseAccount').editableSelect();
-        $('#edtExpenseAccount').editableSelect()
-            .on('click.editable-select', function (e, li) {
-                let $search = $(this);
-                let dropDownID = $search.attr('id')
-                templateObject.currentDrpDownID.set(dropDownID);
-                let offset = $search.offset();
-                let currencyDataName = e.target.value || '';
-                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                    $('#accountListModal').modal('show');
-                } else {
-                    if (currencyDataName.replace(/\s/g, '') != '') {
-                        // console.log('step 2')
-                    }
-                }
-            });
-        }, 1000);
+        // setTimeout(function () {
+        //     $('.edtExpenseAccountDropDown').editableSelect();
+        //     $('.edtExpenseAccountDropDown').editableSelect()
+        //         .on('click.editable-select', function (e, li) {
+        //             let $search = $(this);
+        //             let dropDownID = $search.attr('id')
+        //             $('#selectLineID').val(dropDownID);
+        //             let offset = $search.offset();
+        //             let currencyDataName = e.target.value || '';
+        //             console.log('currencyDataName', currencyDataName)
+        //             if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+        //                 $('#accountListModal').modal('show');
+        //             } else {
+        //                 if (currencyDataName.replace(/\s/g, '') != '') {
+        //                     // console.log('step 2')
+        //                 }
+        //                 $('#accountListModal').modal('show');
+        //             }
+        //         });
+        // }, 1000);
         
         //On Click Earnings List
         $(document).on("click", "#tblEarnings tbody tr", function (e) {
@@ -3673,15 +3961,6 @@ Template.employeescard.onRendered(function () {
                 $('#controlExpenseAccount').val(account)
             }
             $('#reimbursementSettingsModal').modal('toggle');
-        });
-
-
-        $(document).on("click", "#tblAccount tbody tr", function (e) {
-            var table = $(this);
-            let name = table.find(".productName").text()||'';
-            let searchFilterID = templateObject.currentDrpDownID.get()
-            $('#' + searchFilterID).val(name);
-            $('#accountListModal').modal('toggle');
         });
 
     });
@@ -4720,7 +4999,7 @@ Template.employeescard.events({
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obReimbursementType').val('');
         $('#addReimbursementLineModal2').modal('hide');
-        await templateObject.setReimbursementDropDown();
+        await templateObject.setReiumbursementDropDown();
         // Set Dropdown fields manually
         openingBalanceFilter = openingBalances.filter((item) => {
             if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'ReimbursementLine' ) {
@@ -4880,7 +5159,6 @@ Template.employeescard.events({
         
     },
 
-    // TO DO
     'click #savePayRollNotes': async function(){
         $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
@@ -4964,20 +5242,10 @@ Template.employeescard.events({
             });
         
             if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                payEarningLines.fields.ID = jsonResponse.fields.ID;
-
-                let dataObject = await getVS1Data('TPayTemplateEarningLine')  
-                if ( dataObject.length == 0 ) {   
-                    await templateObject.saveEarningLocalDB(); 
-                }else{
-                    let earningData = [];
-                    earningData = JSON.parse(dataObject[0].data);
-                    earningData.tpaytemplateearningline.push(payEarningLines);
-                    await addVS1Data('TPayTemplateEarningLine', JSON.stringify(earningData))
-                }
+                const jsonResponse = await ApiResponse.json(); 
+                // Load all the earnings Line from Database
+                await templateObject.saveEarningLocalDB();
                 await templateObject.getPayEarningLines();
-                $('.earningLineDropDown').editableSelect();
                 $('input[name=calculationType]:checked').attr('checked', false);
                 $('#expenseAccount').val('');
                 $('#addEarningsLineModal').modal('hide');
@@ -4988,52 +5256,58 @@ Template.employeescard.events({
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
-
-        return false
-        setTimeout(function () {
-            let index = payEarningLinesTemp.length - 1;
-            $('#ptEarningRate' + index).val(payEarningLinesTemp[index].fields.EarningRate);
-        }, 500);
-        $('#addEarningsLineModal').modal('hide');
     },
 
     'click #addDeductionLine': async function(){
+        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let DeductionType = $('#deductionTypeSelect').val();
         let CalculationType = $('input[name=calculationTypeDeduction]:checked').val();
         let ControlAccount = $('#controlAccountDeduction').val();
-        let payDeductionLinesTemp = [];
-        let payDeductionLinesTempExist = templateObject.payTemplateDeductionLineInfo.get();
-        if( Array.isArray( payDeductionLinesTempExist ) ){
-            payDeductionLinesTemp = payDeductionLinesTempExist
-        }
-
-        payDeductionLinesTemp.push(
-            new PayTemplateDeductionLine({
-                type: 'TPayTemplateDeductionLine',
-                fields: new PayTemplateDeductionLineFields({
-                    EmployeeID: employeeID,
-                    DeductionType: DeductionType,
-                    CalculationType: CalculationType,
-                    ExpenseAccount: ControlAccount,
-                    Amount: 0,
-                    Percentage: 0
-                })
+        
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateDeductionLine
+        );
+        let payDeductionLines = new PayTemplateDeductionLine({
+            type: 'TPayTemplateDeductionLine',
+            fields: new PayTemplateDeductionLineFields({
+                ID: 0,
+                EmployeeID: parseInt(employeeID),
+                DeductionType: DeductionType,
+                CalculationType: CalculationType,
+                ExpenseAccount: ControlAccount,
+                Amount: 0,
+                Percentage: 0
             })
-        )
+        })
 
-        templateObject.payTemplateDeductionLineInfo.set(payDeductionLinesTemp);
-        $('#deductionTypeSelect').val('FBT');
-        $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
-        $('#controlAccountDeduction').val('');
-        await templateObject.setDeductionLineDropDown();
-        setTimeout(function () {
-            let index = payDeductionLinesTemp.length - 1;
-            $('#ptDeductionType' + index).val(payDeductionLinesTemp[index].fields.DeductionType);
-        }, 1000);
-        $('#addDeductionLineModal').modal('hide');
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payDeductionLines),
+            });
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json(); 
+                // Load all the earnings Line from Database
+                await templateObject.saveDeductionLocalDB();
+                await templateObject.getPayDeducitonLines();
+                $('#deductionTypeSelect').val('');
+                $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
+                $('#controlAccountDeduction').val('');
+                $('#addDeductionLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+            }       
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click #addSuperannuationLine': async function(){
@@ -5049,47 +5323,112 @@ Template.employeescard.events({
         let LiabilityAccount = $('#liabilityAccount').val();
         let PaymentFrequency = $('#paymentFrequency').val();
         let PeriodPaymentDate = $('#edtPeriodPaymentDate').val();
-        let payLinesTemp = [];
-        let payLinesTempExist = templateObject.payTemplateSuperannuationLineInfo.get();
-        if( Array.isArray( payLinesTempExist ) ){
-            payLinesTemp = payLinesTempExist
-        }
-        payLinesTemp.push(
-            new PayTemplateSuperannuationLine({
-                type: 'TPayTemplateSuperannuationLine',
-                fields: new PayTemplateSuperannuationLineFields({
-                    EmployeeID: employeeID,
-                    Fund: Fund,
-                    ContributionType: ContributionType,
-                    ReducesSGC: ReducesSGC,
-                    CalculationType: CalculationType,
-                    MinimumMonthlyEarnings: MinimumMonthlyEarnings,
-                    ExpenseAccount: ExpenseAccount,
-                    LiabilityAccount: LiabilityAccount,
-                    PaymentFrequency: PaymentFrequency,
-                    PeriodPaymentDate: PeriodPaymentDate,
-                    Percentage: 0,
-                    Amount: 0
-                })
-            })
-        )
+        
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
+        );
 
-        templateObject.payTemplateSuperannuationLineInfo.set(payLinesTemp);
-        $('#superannuationFund').val('');
-        $('#superannuationTypeSelect').val('Superannuation Guarantee Contribution (SGC)');
-        $('#reducesSGC').attr('checked', false);
-        $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
-        $('#minimumMonthlyEarnings').val('');
-        $('#expenseSuperannuationAccount').val('');
-        $('#liabilityAccount').val('');
-        $('#paymentFrequency').val('Monthly');
-        $('#edtPeriodPaymentDate').val('');
-        await templateObject.setSuperannuationDropDown();
-        setTimeout(function () {
-            let index = payLinesTemp.length - 1;
-            $('#ptSuperannuationFund' + index).val(payLinesTemp[index].fields.Fund);
-        }, 1000);
-        $('#addSuperannuationLineModal').modal('hide');
+        let paySuperannuationLines = new PayTemplateSuperannuationLine({
+            type: 'TPayTemplateSuperannuationLine',
+            fields: new PayTemplateSuperannuationLineFields({
+                ID: 0,
+                EmployeeID: employeeID,
+                Fund: Fund,
+                ContributionType: ContributionType,
+                ReducesSGC: ReducesSGC,
+                CalculationType: CalculationType,
+                MinimumMonthlyEarnings: MinimumMonthlyEarnings,
+                ExpenseAccount: ExpenseAccount,
+                LiabilityAccount: LiabilityAccount,
+                PaymentFrequency: PaymentFrequency,
+                PeriodPaymentDate: PeriodPaymentDate,
+                Percentage: 0,
+                Amount: 0
+            })
+        });
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(paySuperannuationLines),
+            });
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json(); 
+                // Load all the earnings Line from Database
+                await templateObject.saveSuperannuationLocalDB();
+                await templateObject.getPaySuperannuationLines();
+                $('#superannuationFund').val('');
+                $('#superannuationTypeSelect').val('');
+                $('#reducesSGC').attr('checked', false);
+                $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
+                $('#minimumMonthlyEarnings').val('');
+                $('#expenseSuperannuationAccount').val('');
+                $('#liabilityAccount').val('');
+                $('#paymentFrequency').val('Monthly');
+                $('#edtPeriodPaymentDate').val('');
+                $('#addSuperannuationLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+            }       
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+        }
+    },
+
+    'click #addReiumbursementLine': async function(){
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let ReiumbursementType = $('#reimbursementTypeSelect').val();
+        let Description = $('#reiumbursementDescription').val();
+        let ControlExpenseAccount = $('#controlExpenseAccount').val();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
+        );
+
+        let payReiumbursementLines = new PayTemplateReiumbursementLine({
+            type: 'TPayTemplateReiumbursementLine',
+            fields: new PayTemplateReiumbursementLineFields({
+                ID: 0,
+                EmployeeID: employeeID,
+                ReiumbursementType: ReiumbursementType,
+                Description: Description,
+                ExpenseAccount: ControlExpenseAccount,
+                Amount: 0
+            })
+        })
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payReiumbursementLines),
+            });
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json(); 
+                // Load all the earnings Line from Database
+                await templateObject.saveReiumbursementLocalDB();
+                await templateObject.getPayReiumbursementLines();
+                $('#reimbursementTypeSelect').val('');
+                $('#reiumbursementDescription').val('');
+                $('#controlExpenseAccount').val('');
+                $('#addReimbursementLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+            }       
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'change #superannuationTypeSelect': function(){
@@ -5107,43 +5446,6 @@ Template.employeescard.events({
             default:
             break;
         }
-    },
-
-    'click #addReiumbursementLine': async function(){
-        let templateObject = Template.instance();
-        let currentId = FlowRouter.current().queryParams;
-        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-        let ReiumbursementType = $('#reimbursementTypeSelect').val();
-        let Description = $('#reiumbursementDescription').val();
-        let ControlExpenseAccount = $('#controlExpenseAccount').val();
-        let payLinesTemp = [];
-        let payLinesTempExist = templateObject.payTemplateReiumbursementLineInfo.get();
-        if( Array.isArray( payLinesTempExist ) ){
-            payLinesTemp = payLinesTempExist
-        }
-        payLinesTemp.push(
-            new PayTemplateReiumbursementLine({
-                type: 'TPayTemplateReiumbursementLine',
-                fields: new PayTemplateReiumbursementLineFields({
-                    EmployeeID: employeeID,
-                    ReiumbursementType: ReiumbursementType,
-                    Description: Description,
-                    ExpenseAccount: ControlExpenseAccount,
-                    Amount: 0
-                })
-            })
-        )
-
-        templateObject.payTemplateReiumbursementLineInfo.set(payLinesTemp);
-        $('#reimbursementTypeSelect').val('');
-        $('#reiumbursementDescription').val('');
-        $('#controlExpenseAccount').val('');
-        await templateObject.setReimbursementDropDown();
-        setTimeout(function () {
-            let index = payLinesTemp.length - 1;
-            $('#ptReimbursementType' + index).val(payLinesTemp[index].fields.ReiumbursementType);
-        }, 1000);
-        $('#addReimbursementLineModal').modal('hide');
     },
 
     // Pay Template Earning Line Drop Down
@@ -5579,7 +5881,6 @@ Template.employeescard.events({
 
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
-                console.log('jsonResponse', jsonResponse)
             }
 
             return false

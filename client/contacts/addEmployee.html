@@ -2551,7 +2551,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Expense Account</label>
-                                                                                                                <input type="text" class="form-control" id="expenseAccount" name="expenseAccount">
+                                                                                                                <input type="text" class="form-control edtExpenseAccountDropDown" id="expenseAccount" name="expenseAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </div>
@@ -2583,7 +2583,7 @@
                                                                                         <div class="col-6 col-md-7">
                                                                                             <div class="form-group">
                                                                                                 <label class="borderBottom1">Deduction Type</label>
-                                                                                                <input type="search" class="form-control deductionLineDropDown" id="ptDeductionType{{ @index }}" value="{{ item.fields.DeductionType }}">
+                                                                                                <input type="search" class="form-control deductionLineDropDown" id="ptDeductionType{{ item.fields.ID }}" value="{{ item.fields.DeductionType }}">
                                                                                                 <!-- <div class="ordanryHoursDiv">
                                                                                                     <a href="javascript:void(0)">{{ item.fields.DeductionType }}</a>
                                                                                                 </div> -->
@@ -2594,14 +2594,14 @@
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control edtPercentFormatting" id="ptDeductionPercentage{{ @index }}" value="{{ formatPercent item.fields.Percentage }}">
+                                                                                                    <input type="text" class="form-control edtPercentFormatting" id="ptDeductionPercentage{{ item.fields.ID }}" value="{{ formatPercent item.fields.Percentage }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{/if}}
@@ -2661,7 +2661,7 @@
                                                                                                             <div class="col-12">
                                                                                                                 <div class="form-group">
                                                                                                                     <label>Control Account</label>
-                                                                                                                    <input type="text" class="form-control" id="controlAccountDeduction">
+                                                                                                                    <input type="text" class="form-control edtExpenseAccountDropDown" id="controlAccountDeduction">
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
@@ -2782,7 +2782,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Expense Account</label>
-                                                                                                                <input type="text" class="form-control" id="expenseSuperannuationAccount">
+                                                                                                                <input type="text" class="form-control edtExpenseAccountDropDown" id="expenseSuperannuationAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div class="col-12">
@@ -2888,7 +2888,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Control of Expense Account</label>
-                                                                                                                <input type="text" class="form-control" id="controlExpenseAccount">
+                                                                                                                <input type="text" class="form-control earningLineDropDown" id="controlExpenseAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </div>
