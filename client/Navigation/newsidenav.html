@@ -463,15 +463,28 @@
             {{/if}}
             {{#if includeDashboard}}
                 <li class="dashboardLi" id="sidenavdashbaord">
-                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard</a>
+                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard – Sales Manager</a>
                 </li>
             {{/if}}
+<!-- custom nav  -->
+
+           
+                <li class="salesdashboardLi" id="sidenavsalesDashboard">
+                    <!-- <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Sales Dashboard</a> -->
+                    <a href="/salesdashboard" class="liHeader sidenavsalesdashboard"><i class="fas fa-tachometer-alt faHeader"></i> Salesdashboard</a>
+                </li> 
+               
+            
+ 
+
+ <!-- custom nav end  -->
 
             {{#if isGreenTrack}}
                 <li class="gsemployeesLi" id="sidenavemployeesGreenTrack">
                     <a class="liHeader sidenavemployeesGreenTrack"><i class="fa fa-user faHeader"></i><span> Employees</span></a>
                 </li>
             {{/if}}
+        
 
             {{#if includeInventory}}
                 <li class="inventoryLi" id="sidenavinventory">

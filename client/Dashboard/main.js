@@ -7,6 +7,8 @@ Template.home.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.includeDashboard = new ReactiveVar();
     templateObject.includeDashboard.set(false);
+    templateObject.includeSalesdashboard = new ReactiveVar();
+    templateObject.includeSalesdashboard.set(false);
     templateObject.includeMain = new ReactiveVar();
     templateObject.includeMain.set(false);
     templateObject.includeInventory = new ReactiveVar();
@@ -72,6 +74,12 @@ Template.home.onRendered(function () {
     if(isDashboard){
       templateObject.includeDashboard.set(true);
     }
+    if(isSalesDashboard){
+      templateObject.includeSalesdashboard.set(true);
+    }
+    // if(issalesDashboard){
+    //   templateObject.includeDashboard.set(true);
+    // }
     if(isMain){
       templateObject.includeMain.set(true);
     }
@@ -153,6 +161,9 @@ Template.home.helpers({
     includeDashboard: () => {
         return Template.instance().includeDashboard.get();
     },
+    includeSalesdashboard:()=>{
+      return Template.instance().includeSalesdashboard.get();
+    },
     includeMain: () => {
         return Template.instance().includeMain.get();
     },
@@ -216,6 +227,9 @@ Template.home.events({
   },
   'click .includeDashboard': function (event) {
     FlowRouter.go('/dashboard');
+  },
+  'click .includeSalesdashboard': function (event) {
+    FlowRouter.go('/salesdashboard');
   },
   'click .includeExpenseClaims': function (event) {
     FlowRouter.go('/expenseclaims/current-claims');
