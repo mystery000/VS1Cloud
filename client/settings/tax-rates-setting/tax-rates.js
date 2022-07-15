@@ -25,7 +25,7 @@ Template.taxRatesSettings.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
-  const dataTableList = [];
+  
   const tableHeaderList = [];
 
   let purchasetaxcode = '';
@@ -80,6 +80,7 @@ Template.taxRatesSettings.onRendered(function () {
   };
 
   templateObject.getTaxRates = function () {
+    const dataTableList = [];
     getVS1Data('TTaxcodeVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         taxRateService.getTaxRateVS1().then(function (data) {
@@ -264,8 +265,6 @@ Template.taxRatesSettings.onRendered(function () {
           });
           templateObject.tableheaderrecords.set(tableHeaderList);
           $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
 
         }).catch(function (err) {
           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -614,10 +613,14 @@ Template.taxRatesSettings.onRendered(function () {
   templateObject.chkSubTaxRateSetting();
 
   templateObject.getSubTaxCodes = function () {
+    
+    let subTaxTableList = [];
+
     getVS1Data('TSubTaxVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         // taxRateService.getSubTaxVS1().then(function (data) {
         let data = taxRateService.getSubTaxVS1();
+        
         for (let i = 0; i < data.tsubtaxvs1.length; i++) {
           var dataList = {
             id: data.tsubtaxvs1[i].Id || '',
@@ -626,10 +629,10 @@ Template.taxRatesSettings.onRendered(function () {
             category: data.tsubtaxvs1[i].Category || '-'
           };
 
-          dataTableList.push(dataList);
+          subTaxTableList.push(dataList);
         }
 
-        templateObject.subtaxcodes.set(dataTableList);
+        templateObject.subtaxcodes.set(subTaxTableList);
 
       } else {
         let data = JSON.parse(dataObject[0].data);
@@ -642,10 +645,10 @@ Template.taxRatesSettings.onRendered(function () {
             category: useData[i].Category || '-'
           };
 
-          dataTableList.push(dataList);
+          subTaxTableList.push(dataList);
         }
 
-        templateObject.subtaxcodes.set(dataTableList);
+        templateObject.subtaxcodes.set(subTaxTableList);
 
       }
     }).catch(function (err) {
@@ -659,10 +662,10 @@ Template.taxRatesSettings.onRendered(function () {
           category: data.tsubtaxvs1[i].Category || '-'
         };
 
-        dataTableList.push(dataList);
+        subTaxTableList.push(dataList);
       }
 
-      templateObject.subtaxcodes.set(dataTableList);
+      templateObject.subtaxcodes.set(subTaxTableList);
     });
   }
 
@@ -1062,7 +1065,7 @@ Template.taxRatesSettings.events({
     let templateObject = Template.instance();
     let subTaxId = $('#subTaxCode').val();
     let subTaxCodes = templateObject.subtaxcodes.get();
-    let subTaxCode = subTaxCodes.find((v) => v.id === subTaxId);
+    let subTaxCode = subTaxCodes.find((v) => String(v.id) === String(subTaxId));
 
     let subTaxPercent = parseFloat($('#subTaxPercent').val());
     let subTaxPercentageOn = $('#subTaxPercentageOn').val();
