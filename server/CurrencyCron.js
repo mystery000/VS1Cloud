@@ -87,6 +87,37 @@ async function _updateCurrency(currency) {
   }
 }
 
+async function _saveCurrencies(currencies = [], erpGet) {
+  console.log("Running _saveCurrencies");
+  const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency?ListType=Detail`;
+  const _headers = {
+    database: erpGet.ERPDatabase,
+    username: erpGet.ERPUsername,
+    password: erpGet.ERPPassword,
+    // url: apiUrl,
+  };
+
+    // console.log("saving currency: ", currencies.length);
+
+    /**
+     * Here we will save ht big object list
+     */
+    Meteor.http.call(
+      "POST",
+      apiUrl,
+      {
+        data: currencies,
+        headers: _headers,
+      },
+      (error, result) => {
+        if (error) {
+        } else {
+          console.log(result);
+        }
+      }
+    );
+}
+
 const cronRun = (cronSetting, erpGet, cb) => {
   _getCurrencies(erpGet, (error, response) => {
     if(error) {
@@ -94,6 +125,9 @@ const cronRun = (cronSetting, erpGet, cb) => {
     } else if(response.data) {
       _updateCurrencies(response.data.tcurrency, (currencies) => {
         console.log("Time to save currencies");
+        if(currencies) {
+          _saveCurrencies(currencies);
+        }
       });
     }
   });
