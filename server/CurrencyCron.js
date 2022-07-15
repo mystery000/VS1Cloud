@@ -126,7 +126,7 @@ const cronRun = (cronSetting, erpGet, cb) => {
       _updateCurrencies(response.data.tcurrency, (currencies) => {
         console.log("Time to save currencies");
         if(currencies) {
-          _saveCurrencies(currencies);
+          _saveCurrencies(currencies, erpGet);
         }
       });
     }
