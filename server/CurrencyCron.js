@@ -82,9 +82,11 @@ async function _updateCurrencies(currencies, cb = (currencies) => {}) {
 async function _updateCurrency(currency) {
   console.log("Updating currency", currency.fields.Code);
   const response = await FxApi.getExchangeRate(currency.fields.Code);
-  currency.fields.BuyRate = response.buy;
-  currency.fields.SellRate = response.sell;
-  return currency;
+  if(response) {
+    currency.fields.BuyRate = response.buy;
+    currency.fields.SellRate = response.sell;
+    return currency;
+  }
 }
 
 const cronRun = (cronSetting, erpGet, cb) => {
