@@ -1,4 +1,4 @@
-import { Meteor } from "meteor/meteor";
+import { Meteor, fetch } from "meteor/meteor";
 import CronSetting from "./Currency/CronSetting";
 import FxApi from "./Currency/FxApi";
 FutureTasks = new Meteor.Collection("cron-jobs");
@@ -40,31 +40,112 @@ Meteor.startup(() => {
   SyncedCron.start();
 });
 
-async function updateCurrencies() {}
+async function _getCurrencies(erpGet, cb = (error, result) => {}) {
+  const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency?ListType=Detail`;
+  const _headers = {
+    database: erpGet.ERPDatabase,
+    username: erpGet.ERPUsername,
+    password: erpGet.ERPPassword,
+    // url: apiUrl,
+  };
 
-async function updateCurrency(currency) {}
+  try {
+      /**
+     * Here we GET all tCurrency of the currency user
+     */
+    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+      if (error) {
+        console.log("_getCurrencies", "error");
+        // console.log("error", error);
+        cb(error, null);
+      } else {
+        console.log("_getCurrencies", "success");
+        cb(null, result);
+        // console.log("result",result);
+      }
+    });
+  } catch(e) {
+    console.log(e);
+  }
+}
+
+async function _updateCurrencies(currencies, cb = (currencies) => {}) {
+  console.log("Running _updateCurrencies");
+  await asyncForEach(currencies, async (currency, index) => {
+   
+    currencies[index] = await _updateCurrency(currency);
+  });
+  cb(currencies);
+  return currencies;
+}
+
+async function _updateCurrency(currency) {
+  console.log("Updating currency", currency.fields.Code);
+  const response = await FxApi.getExchangeRate(currency.fields.Code);
+  currency.fields.BuyRate = response.buy;
+  currency.fields.SellRate = response.sell;
+  return currency;
+}
+
+const cronRun = (cronSetting, erpGet, cb) => {
+  _getCurrencies(erpGet, (error, response) => {
+    if(response.data) {
+      _updateCurrencies(response.data.tcurrency, (currencies) => {
+        console.log("Time to save currencies");
+      });
+    }
+  });
+};
 
 Meteor.methods({
   /**
-   * Here we load only currencies
-   * @param {CronSetting} cronSetting 
-   * @param {Object} erpGet 
-   * @param {CallableFunction} callback 
+   * This function is going to simply hit the client side URL
+   * It will hit the URL but wont work since the client side has be done.
    */
-  getCurrencies: async (cronSetting, erpGet, callback) => {
+  updateCurrenciesFromClient: (cronSetting, erpGet) => {
+    const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency?ListType=Detail`;
+    const _headers = {
+      database: erpGet.ERPDatabase,
+      username: erpGet.ERPUsername,
+      password: erpGet.ERPPassword,
+      // url: apiUrl,
+    };
+
+    /**
+     * Here we GET all tCurrency of the currency user
+     */
+    Meteor.http.call(
+      "POST",
+      "http://localhost:7000/cron/currency-update/" + cronSetting.employeeId,
+      {
+        headers: _headers,
+        body: {
+          cronSetting: cronSetting,
+          //url: apiUrl,
+        },
+      },
+      (error, result) => {
+        if (error) {
+          console.log("error");
+        } else {
+          console.log("result");
+          console.log(result);
+        }
+      }
+    );
+  },
+  /**
+   * Here we load only currencies
+   * @param {CronSetting} cronSetting
+   * @param {Object} erpGet
+   * @param {CallableFunction} cb
+   */
+  getCurrencies: (cronSetting, erpGet, cb) => {
     console.log("Running cron job for user: " + cronSetting.employeeId);
-
-    let apiUrl =
-      "https://" +
-      erpGet.ERPIPAddress +
-      ":" +
-      erpGet.ERPPort +
-      "/erpapi/TCurrency?ListType=Detail";
-    console.log(apiUrl);
-
+    const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency?ListType=Detail`;
     /* My only fear is how do you pass the header details to this form? */
     /* Not diffuclt if you pass it from client to this place */
-    let postHeaders = {
+    const _headers = {
       database: erpGet.ERPDatabase,
       username: erpGet.ERPUsername,
       password: erpGet.ERPPassword,
@@ -74,20 +155,27 @@ Meteor.methods({
     /**
      * Here we GET all tCurrency of the currency user
      */
-    await Meteor.http.call("GET", apiUrl, { headers: postHeaders }, (error, result) => {
-      if(error) {
-        console.log("error");
-      } else {
-        console.log("result");
-        // console.log(result);
+    Meteor.http.call(
+      "GET",
+      apiUrl,
+      { headers: _headers },
+      (error, result) => {
+        if (error) {
+          console.log("error");
+          cb(error, null);
+        } else {
+          console.log("result");
+          // console.log(result);
+          cb(null, result);
+        }
       }
-    });
+    );
   },
 
   /**
-   * 
-   * @param {Object} currencies 
-   * @param {CallableFunction} onFinishedCallback 
+   *
+   * @param {Object} currencies
+   * @param {CallableFunction} onFinishedCallback
    */
   updateCurrencies: async (currencies, onFinishedCallback) => {
     /**
@@ -100,7 +188,7 @@ Meteor.methods({
     await onFinishedCallback(currencies);
   },
   updateCurrency: async (currency) => {
-    console.log('updating currency', currency.fields.Code);
+    console.log("updating currency", currency.fields.Code);
     /**
      * We need to make an API call to get the object
      */
@@ -132,7 +220,7 @@ Meteor.methods({
       // "Access-Control-Allow-Origin": "*"
     };
 
-    console.log("saving currency: ", currencies.length);
+    // console.log("saving currency: ", currencies.length);
 
     /**
      * Here we will save ht big object list
@@ -167,18 +255,20 @@ Meteor.methods({
     //   },
     // });
 
-    /**
-     * now we need to loop and update each objects
-     */
-    Meteor.call("getCurrencies", cronSetting, erpGet, (error, result) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log(result);
-        console.log("get currencies success");
-        Meteor.call('updateCurrencies', result.data.tcurrency)
-      }
-    });
+    // /**
+    //  * now we need to loop and update each objects
+    //  */
+    // Meteor.call("getCurrencies", cronSetting, erpGet, function (error, result) {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log(result);
+    //     console.log("get currencies success");
+
+    //   }
+    // });
+
+    cronRun(cronSetting, erpGet, (error, result) => {});
   },
   /**
    * This function will just add the cron job
