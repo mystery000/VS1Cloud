@@ -4,14 +4,14 @@ export default class PayTemplateReiumbursementLineFields {
         EmployeeID,
         ReiumbursementType,
         Description,
-        ControlExpenseAccount,
+        ExpenseAccount,
         Amount
     }){
         this.ID = ID;
         this.EmployeeID = EmployeeID;
         this.ReiumbursementType = ReiumbursementType;
         this.Description = Description;
-        this.ControlExpenseAccount = ControlExpenseAccount;
+        this.ExpenseAccount = ExpenseAccount;
         this.Amount = Amount;
     }
 }

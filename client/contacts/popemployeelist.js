@@ -55,6 +55,7 @@ Template.popemployeelist.onRendered(function() {
             let lineItems = [];
             let lineItemObj = {};
             for(let i=0; i<data.temployee.length; i++){
+              let mobile = contactService.changeMobileFormat(data.temployee[i].Mobile);
                  var dataList = {
                    id: data.temployee[i].Id || '',
                    employeeno: data.temployee[i].EmployeeNo || '',
@@ -62,7 +63,7 @@ Template.popemployeelist.onRendered(function() {
                    firstname: data.temployee[i].FirstName || '',
                    lastname: data.temployee[i].LastName || '',
                    phone: data.temployee[i].Phone || '',
-                   mobile: data.temployee[i].Mobile || '',
+                   mobile: mobile || '',
                    email: data.temployee[i].Email || '',
                    address: data.temployee[i].Street || '',
                    country: data.temployee[i].Country || '',
@@ -220,37 +221,38 @@ Template.popemployeelist.onRendered(function() {
           let data = JSON.parse(dataObject[0].data);
           let useData = data.temployee;
           let lineItems = [];
-  let lineItemObj = {};
-  for(let i=0; i<useData.length; i++){
-     var dataList = {
-       id: useData[i].fields.ID || '',
-       employeeno: useData[i].fields.EmployeeNo || '',
-       employeename:useData[i].fields.EmployeeName || '',
-       firstname: useData[i].fields.FirstName || '',
-       lastname: useData[i].fields.LastName || '',
-       phone: useData[i].fields.Phone || '',
-       mobile: useData[i].fields.Mobile || '',
-       email: useData[i].fields.Email || '',
-       address: useData[i].fields.Street || '',
-       country: useData[i].fields.Country || '',
-       department: useData[i].fields.DefaultClassName || '',
-       custFld1: useData[i].fields.CustFld1 || '',
-       custFld2: useData[i].fields.CustFld2 || '',
-       custFld3: useData[i].fields.CustFld3 || '',
-       custFld4: useData[i].fields.CustFld4 || ''
-   };
+          let lineItemObj = {};
+          for(let i=0; i<useData.length; i++){
+            let mobile = contactService.changeMobileFormat(useData[i].fields.Mobile);
+            var dataList = {
+              id: useData[i].fields.ID || '',
+              employeeno: useData[i].fields.EmployeeNo || '',
+              employeename:useData[i].fields.EmployeeName || '',
+              firstname: useData[i].fields.FirstName || '',
+              lastname: useData[i].fields.LastName || '',
+              phone: useData[i].fields.Phone || '',
+              mobile: mobile || '',
+              email: useData[i].fields.Email || '',
+              address: useData[i].fields.Street || '',
+              country: useData[i].fields.Country || '',
+              department: useData[i].fields.DefaultClassName || '',
+              custFld1: useData[i].fields.CustFld1 || '',
+              custFld2: useData[i].fields.CustFld2 || '',
+              custFld3: useData[i].fields.CustFld3 || '',
+              custFld4: useData[i].fields.CustFld4 || ''
+            };
 
-   if(useData[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-    dataTableList.push(dataList);
-  }
-    //}
-  }
+            if(useData[i].fields.EmployeeName.replace(/\s/g, '') != ''){
+              dataTableList.push(dataList);
+            }
+        //}
+          }
 
-  templateObject.datatablerecords.set(dataTableList);
+          templateObject.datatablerecords.set(dataTableList);
 
-  if(templateObject.datatablerecords.get()){
+          if(templateObject.datatablerecords.get()){
 
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
+              Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
   if(error){
 
   }else{
@@ -383,6 +385,7 @@ Template.popemployeelist.onRendered(function() {
           let lineItems = [];
           let lineItemObj = {};
           for(let i=0; i<data.temployee.length; i++){
+              let mobile = contactService.changeMobileFormat(data.temployee[i].Mobile);
                var dataList = {
                  id: data.temployee[i].Id || '',
                  employeeno: data.temployee[i].EmployeeNo || '',
@@ -390,7 +393,7 @@ Template.popemployeelist.onRendered(function() {
                  firstname: data.temployee[i].FirstName || '',
                  lastname: data.temployee[i].LastName || '',
                  phone: data.temployee[i].Phone || '',
-                 mobile: data.temployee[i].Mobile || '',
+                 mobile: mobile || '',
                  email: data.temployee[i].Email || '',
                  address: data.temployee[i].Street || '',
                  country: data.temployee[i].Country || '',

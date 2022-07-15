@@ -286,13 +286,15 @@ export class ReportService extends BaseService {
       options = {
         IgnoreDates: true,
         ReportType: "Summary",
-        ClientID:contactID
+        ClientID:contactID,
+        IncludeRefunds:false
       };
     }else{
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
         ReportType: "Summary",
+        IncludeRefunds:false
       };
     } else {
       options = {
@@ -300,6 +302,7 @@ export class ReportService extends BaseService {
         ReportType: "Summary",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
+        IncludeRefunds:false
       };
     }
     }

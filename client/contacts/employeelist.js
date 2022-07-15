@@ -58,6 +58,7 @@ Template.employeelist.onRendered(function() {
                     let lineItems = [];
                     let lineItemObj = {};
                     for(let i=0; i<data.temployee.length; i++){
+                        let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile)
                         var dataList = {
                             id: data.temployee[i].fields.ID || '',
                             employeeno: data.temployee[i].fields.EmployeeNo || '',
@@ -65,7 +66,7 @@ Template.employeelist.onRendered(function() {
                             firstname: data.temployee[i].fields.FirstName || '',
                             lastname: data.temployee[i].fields.LastName || '',
                             phone: data.temployee[i].fields.Phone || '',
-                            mobile: data.temployee[i].fields.Mobile || '',
+                            mobile:  mobile || '',
                             email: data.temployee[i].fields.Email || '',
                             address: data.temployee[i].fields.Street || '',
                             country: data.temployee[i].fields.Country || '',
@@ -230,6 +231,8 @@ Template.employeelist.onRendered(function() {
                 let lineItems = [];
                 let lineItemObj = {};
                 for(let i=0; i<useData.length; i++){
+
+                    let mobile = contactService.changeMobileFormat(useData[i].fields.Mobile);
                     var dataList = {
                         id: useData[i].fields.ID || '',
                         employeeno: useData[i].fields.EmployeeNo || '',
@@ -237,7 +240,7 @@ Template.employeelist.onRendered(function() {
                         firstname: useData[i].fields.FirstName || '',
                         lastname: useData[i].fields.LastName || '',
                         phone: useData[i].fields.Phone || '',
-                        mobile: useData[i].fields.Mobile || '',
+                        mobile: mobile || '',
                         email: useData[i].fields.Email || '',
                         address: useData[i].fields.Street || '',
                         country: useData[i].fields.Country || '',
@@ -396,6 +399,7 @@ Template.employeelist.onRendered(function() {
                 let lineItems = [];
                 let lineItemObj = {};
                 for(let i=0; i<data.temployee.length; i++){
+                    let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
                     var dataList = {
                         id: data.temployee[i].fields.ID || '',
                         employeeno: data.temployee[i].fields.EmployeeNo || '',
@@ -403,7 +407,7 @@ Template.employeelist.onRendered(function() {
                         firstname: data.temployee[i].fields.FirstName || '',
                         lastname: data.temployee[i].fields.LastName || '',
                         phone: data.temployee[i].fields.Phone || '',
-                        mobile: data.temployee[i].fields.Mobile || '',
+                        mobile: mobile || '',
                         email: data.temployee[i].fields.Email || '',
                         address: data.temployee[i].fields.Street || '',
                         country: data.temployee[i].fields.Country || '',
@@ -630,6 +634,7 @@ Template.employeelist.events({
     'click .btnRefreshEmployees':function(event){
          let templateObject = Template.instance();
         let utilityService = new UtilityService();
+        let contactService = new ContactService();
         let tableProductList;
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
@@ -643,29 +648,30 @@ Template.employeelist.events({
                 let lineItemObj = {};
                 if (data.temployee.length > 0) {
                     for(let i=0; i<data.temployee.length; i++){
-                    var dataList = {
-                        id: data.temployee[i].fields.ID || '',
-                        employeeno: data.temployee[i].fields.EmployeeNo || '',
-                        employeename:data.temployee[i].fields.EmployeeName || '',
-                        firstname: data.temployee[i].fields.FirstName || '',
-                        lastname: data.temployee[i].fields.LastName || '',
-                        phone: data.temployee[i].fields.Phone || '',
-                        mobile: data.temployee[i].fields.Mobile || '',
-                        email: data.temployee[i].fields.Email || '',
-                        address: data.temployee[i].fields.Street || '',
-                        country: data.temployee[i].fields.Country || '',
-                        department: data.temployee[i].fields.DefaultClassName || '',
-                        custFld1: data.temployee[i].fields.CustFld1 || '',
-                        custFld2: data.temployee[i].fields.CustFld2 || '',
-                        custFld3: data.temployee[i].fields.CustFld3 || '',
-                        custFld4: data.temployee[i].fields.CustFld4 || ''
-                    };
+                        let mobile = contactService.changeMobileFormat();
+                        var dataList = {
+                            id: data.temployee[i].fields.ID || '',
+                            employeeno: data.temployee[i].fields.EmployeeNo || '',
+                            employeename:data.temployee[i].fields.EmployeeName || '',
+                            firstname: data.temployee[i].fields.FirstName || '',
+                            lastname: data.temployee[i].fields.LastName || '',
+                            phone: data.temployee[i].fields.Phone || '',
+                            mobile: mobile || '',
+                            email: data.temployee[i].fields.Email || '',
+                            address: data.temployee[i].fields.Street || '',
+                            country: data.temployee[i].fields.Country || '',
+                            department: data.temployee[i].fields.DefaultClassName || '',
+                            custFld1: data.temployee[i].fields.CustFld1 || '',
+                            custFld2: data.temployee[i].fields.CustFld2 || '',
+                            custFld3: data.temployee[i].fields.CustFld3 || '',
+                            custFld4: data.temployee[i].fields.CustFld4 || ''
+                        };
 
-                    if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
-                        dataTableList.push(dataList);
-                    }
+                        if(data.temployee[i].fields.EmployeeName.replace(/\s/g, '') != ''){
+                            dataTableList.push(dataList);
+                        }
                     //}
-                }
+                    }
 
                     templateObject.datatablerecords.set(dataTableList);
 

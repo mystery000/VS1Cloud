@@ -23,6 +23,7 @@ Template.emailsettings.onCreated(function () {
     templateObject.employeescheduledrecord = new ReactiveVar([]);
     templateObject.essentialemployeescheduledrecord = new ReactiveVar([]);
     templateObject.formsData = new ReactiveVar([]);
+    templateObject.essentialReportSchedules = new ReactiveVar([]);
     templateObject.formsData.set(
         [
             {
@@ -1355,6 +1356,27 @@ Template.emailsettings.events({
         }
         $("#groupedReportsModal").modal('toggle');
     },
+
+    'click .btn-show-history': function (event) {
+        const templateObject = Template.instance();
+        var items = [];
+        var _rowElement = $(event.target).closest('tr')
+        var _id = _rowElement.attr('data-id');
+        var _transType = _rowElement.find('>td:first-child').html();
+        var taxRateService = new TaxRateService();
+
+        taxRateService.getScheduleSettings().then(function (data) {
+            items = data.treportschedules.filter((item) => {
+                return item.fields.FormID.toString() === _id
+            });
+            items.map((item) => {
+                item.transactionType = _transType
+            })
+            templateObject.essentialReportSchedules.set(items);
+            $("#historyUpcomingModal").modal('toggle');
+        });
+
+    },
     'click input[name="frequencyRadio"]': function () {
         if (event.target.id == "frequencyMonthly") {
             document.getElementById("monthlySettings").style.display = "block";
@@ -1517,6 +1539,10 @@ Template.emailsettings.helpers({
             return (a.code.toUpperCase() > b.code.toUpperCase()) ? 1 : -1;
             // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
         });
+    },
+
+    essentialReportSchedules: () => {
+        return Template.instance().essentialReportSchedules.get();
     },
     employeescheduledrecord: () => {
         return Template.instance().employeescheduledrecord.get();
