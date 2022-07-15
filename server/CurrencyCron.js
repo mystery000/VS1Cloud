@@ -3,12 +3,10 @@ import CronSetting from "./Currency/CronSetting";
 import FxApi from "./Currency/FxApi";
 FutureTasks = new Meteor.Collection("cron-jobs");
 
-async function asyncForEach(array, callback, onFinished) {
+async function asyncForEach(array, callback) {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array);
   }
-
-  await onFinished();
 }
 
 Meteor.startup(() => {
@@ -91,7 +89,9 @@ async function _updateCurrency(currency) {
 
 const cronRun = (cronSetting, erpGet, cb) => {
   _getCurrencies(erpGet, (error, response) => {
-    if(response.data) {
+    if(error) {
+      console.log("error", error);
+    } else if(response.data) {
       _updateCurrencies(response.data.tcurrency, (currencies) => {
         console.log("Time to save currencies");
       });
@@ -136,112 +136,112 @@ Meteor.methods({
       }
     );
   },
-  /**
-   * Here we load only currencies
-   * @param {CronSetting} cronSetting
-   * @param {Object} erpGet
-   * @param {CallableFunction} cb
-   */
-  getCurrencies: (cronSetting, erpGet, cb) => {
-    console.log("Running cron job for user: " + cronSetting.employeeId);
-    const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency?ListType=Detail`;
-    /* My only fear is how do you pass the header details to this form? */
-    /* Not diffuclt if you pass it from client to this place */
-    const _headers = {
-      database: erpGet.ERPDatabase,
-      username: erpGet.ERPUsername,
-      password: erpGet.ERPPassword,
-      // "Access-Control-Allow-Origin": "*"
-    };
+  // /**
+  //  * Here we load only currencies
+  //  * @param {CronSetting} cronSetting
+  //  * @param {Object} erpGet
+  //  * @param {CallableFunction} cb
+  //  */
+  // getCurrencies: (cronSetting, erpGet, cb) => {
+  //   console.log("Running cron job for user: " + cronSetting.employeeId);
+  //   const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency?ListType=Detail`;
+  //   /* My only fear is how do you pass the header details to this form? */
+  //   /* Not diffuclt if you pass it from client to this place */
+  //   const _headers = {
+  //     database: erpGet.ERPDatabase,
+  //     username: erpGet.ERPUsername,
+  //     password: erpGet.ERPPassword,
+  //     // "Access-Control-Allow-Origin": "*"
+  //   };
 
-    /**
-     * Here we GET all tCurrency of the currency user
-     */
-    Meteor.http.call(
-      "GET",
-      apiUrl,
-      { headers: _headers },
-      (error, result) => {
-        if (error) {
-          console.log("error");
-          cb(error, null);
-        } else {
-          console.log("result");
-          // console.log(result);
-          cb(null, result);
-        }
-      }
-    );
-  },
+  //   /**
+  //    * Here we GET all tCurrency of the currency user
+  //    */
+  //   Meteor.http.call(
+  //     "GET",
+  //     apiUrl,
+  //     { headers: _headers },
+  //     (error, result) => {
+  //       if (error) {
+  //         console.log("error");
+  //         cb(error, null);
+  //       } else {
+  //         console.log("result");
+  //         // console.log(result);
+  //         cb(null, result);
+  //       }
+  //     }
+  //   );
+  // },
 
-  /**
-   *
-   * @param {Object} currencies
-   * @param {CallableFunction} onFinishedCallback
-   */
-  updateCurrencies: async (currencies, onFinishedCallback) => {
-    /**
-     * First we update the list of currencies
-     */
-    await asyncForEach(currencies, async (currency, index) => {
-      console.log("currency", index, currency.fields.Code);
-      //currencies[index] = await Meteor.call("updateCurrency", currency);
-    });
-    await onFinishedCallback(currencies);
-  },
-  updateCurrency: async (currency) => {
-    console.log("updating currency", currency.fields.Code);
-    /**
-     * We need to make an API call to get the object
-     */
-    const response = await FxApi.getExchangeRate(
-      currency.fields.Code,
-      "AUD",
-      1
-    );
+  // /**
+  //  *
+  //  * @param {Object} currencies
+  //  * @param {CallableFunction} onFinishedCallback
+  //  */
+  // updateCurrencies: async (currencies, onFinishedCallback = (currencies) => {}) => {
+  //   /**
+  //    * First we update the list of currencies
+  //    */
+  //   await asyncForEach(currencies, async (currency, index) => {
+  //     console.log("currency", index, currency.fields.Code);
+  //     //currencies[index] = await Meteor.call("updateCurrency", currency);
+  //   });
+  //   await onFinishedCallback(currencies);
+  // },
+  // updateCurrency: async (currency) => {
+  //   console.log("updating currency", currency.fields.Code);
+  //   /**
+  //    * We need to make an API call to get the object
+  //    */
+  //   const response = await FxApi.getExchangeRate(
+  //     currency.fields.Code,
+  //     "AUD",
+  //     1
+  //   );
 
-    currency.fields.BuyRate = response.buy;
-    currency.fields.SellRate = response.sell;
+  //   currency.fields.BuyRate = response.buy;
+  //   currency.fields.SellRate = response.sell;
 
-    return currency;
+  //   return currency;
 
-    // return currency;
-  },
-  saveCurrencies: async (currencies = [], erpGet) => {
-    let apiUrl =
-      "https://" +
-      erpGet.ERPIPAddress +
-      ":" +
-      erpGet.ERPPort +
-      "/erpapi/TCurrency?ListType=Detail";
+  //   // return currency;
+  // },
+  // saveCurrencies: async (currencies = [], erpGet) => {
+  //   let apiUrl =
+  //     "https://" +
+  //     erpGet.ERPIPAddress +
+  //     ":" +
+  //     erpGet.ERPPort +
+  //     "/erpapi/TCurrency?ListType=Detail";
 
-    let postHeaders = {
-      database: erpGet.ERPDatabase,
-      username: erpGet.ERPUsername,
-      password: erpGet.ERPPassword,
-      // "Access-Control-Allow-Origin": "*"
-    };
+  //   let postHeaders = {
+  //     database: erpGet.ERPDatabase,
+  //     username: erpGet.ERPUsername,
+  //     password: erpGet.ERPPassword,
+  //     // "Access-Control-Allow-Origin": "*"
+  //   };
 
-    // console.log("saving currency: ", currencies.length);
+  //   // console.log("saving currency: ", currencies.length);
 
-    /**
-     * Here we will save ht big object list
-     */
-    Meteor.http.call(
-      "POST",
-      apiUrl,
-      {
-        data: currencies,
-        headers: postHeaders,
-      },
-      (error, result) => {
-        if (error) {
-        } else {
-          console.log(result);
-        }
-      }
-    );
-  },
+  //   /**
+  //    * Here we will save ht big object list
+  //    */
+  //   Meteor.http.call(
+  //     "POST",
+  //     apiUrl,
+  //     {
+  //       data: currencies,
+  //       headers: postHeaders,
+  //     },
+  //     (error, result) => {
+  //       if (error) {
+  //       } else {
+  //         console.log(result);
+  //       }
+  //     }
+  //   );
+  // },
   /**
    * This functions is going to run when the cron is running
    * @param {*} cronSetting
