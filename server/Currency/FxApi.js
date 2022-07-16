@@ -15,12 +15,35 @@ class FxApi {
    * @param {float} amount
    * @returns {Promise<{buy: float, sell: float}>}
    */
-  async getExchangeRate(to = "EUR", from = "AUD", amount = 1, res) {
+  async getExchangeRate(to = "EUR", from = "AUD", amount = 1, callback = (response) => {}) {
+
+    // const response = await fetch(`https://xecdapi.xe.com/v1/convert_to.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`, {
+    //   // data: postData,
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: "Basic " + FxApi.encodedApiKey,
+    //   },
+    // });
+
+    // if (response.status >= 200 && response.status <= 302) {
+    //   let data = await response.json();
+
+    //   const buyRate = data.from[0].mid;
+    //   const sellRate = data.from[0].inverse;
+
+    //   callback({
+    //     buy: buyRate,
+    //     sell: sellRate,
+    //   });
+    // } else {
+    //   callback({
+    //     buy: 1.21,
+    //     sell: 1.19,
+    //   });
+    // }
   
       
-      Meteor.http.call(
-        "GET",
-        `https://xecdapi.xe.com/v1/convert_to.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`,
+      Meteor.http.get(`https://xecdapi.xe.com/v1/convert_to.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`,
         {
           // data: postData,
           headers: {
@@ -30,21 +53,26 @@ class FxApi {
         },
         (error, response) => {
           if (error) {
+            //console.log("Meteor", error);
+            callback({
+              buy: 1.21,
+              sell: 1.19,
+            });
           } else {
             console.log('Fetched repsoons: ', response);
             console.log('Final repsonse');
             if (response.status >= 200 && response.status <= 302) {
-                let data = response.json();
+                let data = response.data;
         
                 const buyRate = data.from[0].mid;
                 const sellRate = data.from[0].inverse;
         
-               res({
+                callback({
                   buy: buyRate,
                   sell: sellRate,
                 });
               } else {
-                res({
+                callback({
                   buy: 1.21,
                   sell: 1.19,
                 });

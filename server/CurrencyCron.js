@@ -48,7 +48,7 @@ async function _getCurrencies(erpGet, cb = (error, result) => {}) {
   };
 
   try {
-      /**
+    /**
      * Here we GET all tCurrency of the currency user
      */
     Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
@@ -62,33 +62,43 @@ async function _getCurrencies(erpGet, cb = (error, result) => {}) {
         // console.log("result",result);
       }
     });
-  } catch(e) {
+  } catch (e) {
     console.log(e);
   }
 }
 
 async function _updateCurrencies(currencies, cb = (currencies) => {}) {
   console.log("Running _updateCurrencies");
+  let _currencies = [];
   await asyncForEach(currencies, async (currency, index) => {
-   
-    currencies[index] = await _updateCurrency(currency);
+    await _updateCurrency(currency, (_currency) => {
+      if(_currency) {
+        //console.log("Currency updated", _currency);
+        _currencies.push(_currency);
+      }
+    });
   });
-  cb(currencies);
+  cb(_currencies);
   return currencies;
 }
 
-async function _updateCurrency(currency) {
-  console.log("Updating currency", currency.fields.Code);
-  const response = await FxApi.getExchangeRate(currency.fields.Code);
-  if(response) {
-    currency.fields.BuyRate = response.buy;
-    currency.fields.SellRate = response.sell;
-    return currency;
-  }
+async function _updateCurrency(currency, callback = (currency) => {}) {
+  //console.log("Updating currency", currency.fields.Code);
+  await FxApi.getExchangeRate(currency.fields.Code, "AUD", 1, (response) => {
+    if (response) {
+      currency.fields.BuyRate = parseFloat(response.buy);
+      currency.fields.SellRate = parseFloat(response.sell);
+      callback(currency);
+    }
+  });
 }
 
-async function _saveCurrencies(currencies = [], erpGet) {
-  console.log("Running _saveCurrencies");
+/**
+ * This functions will save one currency
+ * @param {*} currency
+ */
+async function _saveCurrency(currency, erpGet) {
+  console.log('Saving currency: ', currency.Code, " BuyRate: ", currency.BuyRate , " SellRate: ", currency.SellRate);
   const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency?ListType=Detail`;
   const _headers = {
     database: erpGet.ERPDatabase,
@@ -97,35 +107,65 @@ async function _saveCurrencies(currencies = [], erpGet) {
     // url: apiUrl,
   };
 
-    // console.log("saving currency: ", currencies.length);
-
-    /**
-     * Here we will save ht big object list
-     */
-    Meteor.http.call(
-      "POST",
-      apiUrl,
-      {
-        data: currencies,
-        headers: _headers,
-      },
-      (error, result) => {
-        if (error) {
-        } else {
-          console.log(result);
-        }
+  /**
+   * Here we will save ht big object list
+   */
+  Meteor.http.call(
+    "POST",
+    apiUrl,
+    {
+      data: currency,
+      headers: _headers,
+    },
+    (error, result) => {
+      if (error) {
+      } else {
+        console.log(result);
       }
-    );
+    }
+  );
+}
+
+/**
+ * This functions will save all currencies
+ * @param {*} currencies
+ * @param {*} erpGet
+ */
+async function _saveCurrencies(currencies = [], erpGet) {
+  console.log("Running _saveCurrencies");
+ 
+  // console.log("saving currency: ", currencies.length);
+
+  /**
+   * 1st way to save currencies. We save one per one
+   * This method should be avoided
+   */
+  if (currencies) {
+    console.log("Currencies to be saved: ", currencies.length);
+    // console.log(currencies);
+    //console.log("Currency: ", currencies[0].fields.Code);
+
+    await asyncForEach(currencies, async (currency, index) => {
+      if(currencies[index]) {
+        console.log("Saving currency", currency.fields.Code);
+        await _saveCurrency(currency, erpGet);
+      }
+    });
+  }
+
+  /**
+   * We should save everything in one single request.
+   */
 }
 
 const cronRun = (cronSetting, erpGet, cb) => {
   _getCurrencies(erpGet, (error, response) => {
-    if(error) {
+    if (error) {
       console.log("error", error);
-    } else if(response.data) {
+    } else if (response.data) {
       _updateCurrencies(response.data.tcurrency, (currencies) => {
         console.log("Time to save currencies");
-        if(currencies) {
+        if (currencies) {
           _saveCurrencies(currencies, erpGet);
         }
       });
