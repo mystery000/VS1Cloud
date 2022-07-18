@@ -19,186 +19,185 @@ Template.subTaxesSettings.onRendered(function () {
   templateObject.getSubTaxes = function () {
     getVS1Data('TSubTaxVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
-        // taxRateService.getSubTaxVS1().then(function (data) {
-        let data = taxRateService.getSubTaxVS1();
-        for (let i = 0; i < data.tsubtaxvs1.length; i++) {
-          var dataList = {
-            id: data.tsubtaxvs1[i].Id || '',
-            codename: data.tsubtaxvs1[i].CodeName || '-',
-            description: data.tsubtaxvs1[i].Description || '-',
-            category: data.tsubtaxvs1[i].Category || '-'
-          };
+        taxRateService.getSubTaxCode().then(function (data) {
+          for (let i = 0; i < data.tsubtaxcode.length; i++) {
+            var dataList = {
+              id: data.tsubtaxcode[i].Id || '',
+              codename: data.tsubtaxcode[i].Code || '-',
+              description: data.tsubtaxcode[i].Description || '-',
+              category: data.tsubtaxcode[i].Category || '-'
+            };
 
-          dataTableList.push(dataList);
-        }
+            dataTableList.push(dataList);
+          }
 
-        templateObject.datatablerecords.set(dataTableList);
+          templateObject.datatablerecords.set(dataTableList);
 
-        if (templateObject.datatablerecords.get()) {
-          Meteor.call(
-            "readPrefMethod",
-            Session.get("mycloudLogonID"),
-            "subTaxList",
-            function (error, result) {
-              if (error) {
-              } else {
-                if (result) {
-                  for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(
-                      / /g,
-                      "."
-                    );
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split(".")[1];
-                    let columnWidth = customcolumn[i].width;
-                    let columnindex = customcolumn[i].index + 1;
+          if (templateObject.datatablerecords.get()) {
+            Meteor.call(
+              "readPrefMethod",
+              Session.get("mycloudLogonID"),
+              "subTaxList",
+              function (error, result) {
+                if (error) {
+                } else {
+                  if (result) {
+                    for (let i = 0; i < result.customFields.length; i++) {
+                      let customcolumn = result.customFields;
+                      let columData = customcolumn[i].label;
+                      let columHeaderUpdate = customcolumn[i].thclass.replace(
+                        / /g,
+                        "."
+                      );
+                      let hiddenColumn = customcolumn[i].hidden;
+                      let columnClass = columHeaderUpdate.split(".")[1];
+                      let columnWidth = customcolumn[i].width;
+                      let columnindex = customcolumn[i].index + 1;
 
-                    if (hiddenColumn == true) {
-                      $("." + columnClass + "").addClass("hiddenColumn");
-                      $("." + columnClass + "").removeClass("showColumn");
-                    } else if (hiddenColumn == false) {
-                      $("." + columnClass + "").removeClass("hiddenColumn");
-                      $("." + columnClass + "").addClass("showColumn");
+                      if (hiddenColumn == true) {
+                        $("." + columnClass + "").addClass("hiddenColumn");
+                        $("." + columnClass + "").removeClass("showColumn");
+                      } else if (hiddenColumn == false) {
+                        $("." + columnClass + "").removeClass("hiddenColumn");
+                        $("." + columnClass + "").addClass("showColumn");
+                      }
                     }
                   }
                 }
               }
-            }
-          );
+            );
 
-        }
-
-        $(".fullScreenSpin").css("display", "none");
-
-        setTimeout(function () {
-          $("#subTaxList")
-            .DataTable({
-              columnDefs: [
-                { type: "date", targets: 0 },
-                { orderable: false, targets: -1 },
-              ],
-              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-              buttons: [
-                {
-                  extend: 'excelHtml5',
-                  text: '',
-                  download: 'open',
-                  className: "btntabletocsv hiddenColumn",
-                  filename: "subtaxlist_" + moment().format(),
-                  orientation: 'portrait',
-                  exportOptions: {
-                    columns: ":visible",
-                  },
-                },
-                {
-                  extend: "print",
-                  download: "open",
-                  className: "btntabletopdf hiddenColumn",
-                  text: "",
-                  title: "Sub Tax List",
-                  filename: "subtaxlist_" + moment().format(),
-                  exportOptions: {
-                    columns: ":visible",
-                  },
-                  // bStateSave: true,
-                  // rowId: 0,
-                  // pageLength: 25,
-                  paging: false,
-                  //                      "scrollY": "400px",
-                  //                      "scrollCollapse": true,
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                    $('#subTaxList').DataTable().ajax.reload();
-                  },
-                },
-                {
-                  extend: "print",
-                  download: "open",
-                  className: "btntabletopdf hiddenColumn",
-                  text: "",
-                  title: "Tax Rate List",
-                  filename: "subtaxlist_" + moment().format(),
-                  exportOptions: {
-                    columns: ":visible",
-                  },
-                },
-              ],
-              select: true,
-              destroy: true,
-              // colReorder: true,
-              colReorder: {
-                fixedColumnsRight: 1,
-              },
-              // bStateSave: true,
-              // rowId: 0,
-              // pageLength: 25,
-              paging: false,
-              //                    "scrollY": "400px",
-              //                    "scrollCollapse": true,
-              info: true,
-              responsive: true,
-              order: [[0, "asc"]],
-              action: function () {
-                $("#subTaxList").DataTable().ajax.reload();
-              },
-              fnDrawCallback: function (oSettings) {
-
-              },
-            })
-            .on("page", function () {
-              let draftRecord = templateObject.datatablerecords.get();
-              templateObject.datatablerecords.set(draftRecord);
-            })
-            .on("column-reorder", function () { })
-            .on("length.dt", function (e, settings, len) {
-
-            });
+          }
 
           $(".fullScreenSpin").css("display", "none");
-        }, 0);
 
-        var columns = $("#subTaxList th");
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function (i, v) {
-          if (v.hidden == false) {
-            columVisible = true;
-          }
-          if (v.className.includes("hiddenColumn")) {
-            columVisible = false;
-          }
-          sWidth = v.style.width.replace("px", "");
+          setTimeout(function () {
+            $("#subTaxList")
+              .DataTable({
+                columnDefs: [
+                  { type: "date", targets: 0 },
+                  { orderable: false, targets: -1 },
+                ],
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [
+                  {
+                    extend: 'excelHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "subtaxlist_" + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                      columns: ":visible",
+                    },
+                  },
+                  {
+                    extend: "print",
+                    download: "open",
+                    className: "btntabletopdf hiddenColumn",
+                    text: "",
+                    title: "Sub Tax List",
+                    filename: "subtaxlist_" + moment().format(),
+                    exportOptions: {
+                      columns: ":visible",
+                    },
+                    // bStateSave: true,
+                    // rowId: 0,
+                    // pageLength: 25,
+                    paging: false,
+                    //                      "scrollY": "400px",
+                    //                      "scrollCollapse": true,
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                      $('#subTaxList').DataTable().ajax.reload();
+                    },
+                  },
+                  {
+                    extend: "print",
+                    download: "open",
+                    className: "btntabletopdf hiddenColumn",
+                    text: "",
+                    title: "Tax Rate List",
+                    filename: "subtaxlist_" + moment().format(),
+                    exportOptions: {
+                      columns: ":visible",
+                    },
+                  },
+                ],
+                select: true,
+                destroy: true,
+                // colReorder: true,
+                colReorder: {
+                  fixedColumnsRight: 1,
+                },
+                // bStateSave: true,
+                // rowId: 0,
+                // pageLength: 25,
+                paging: false,
+                //                    "scrollY": "400px",
+                //                    "scrollCollapse": true,
+                info: true,
+                responsive: true,
+                order: [[0, "asc"]],
+                action: function () {
+                  $("#subTaxList").DataTable().ajax.reload();
+                },
+                fnDrawCallback: function (oSettings) {
 
-          let datatablerecordObj = {
-            sTitle: v.innerText || "",
-            sWidth: sWidth || "",
-            sIndex: v.cellIndex || "",
-            sVisible: columVisible || false,
-            sClass: v.className || "",
-          };
-          tableHeaderList.push(datatablerecordObj);
+                },
+              })
+              .on("page", function () {
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+              })
+              .on("column-reorder", function () { })
+              .on("length.dt", function (e, settings, len) {
+
+              });
+
+            $(".fullScreenSpin").css("display", "none");
+          }, 0);
+
+          var columns = $("#subTaxList th");
+          let sTible = "";
+          let sWidth = "";
+          let sIndex = "";
+          let sVisible = "";
+          let columVisible = false;
+          let sClass = "";
+          $.each(columns, function (i, v) {
+            if (v.hidden == false) {
+              columVisible = true;
+            }
+            if (v.className.includes("hiddenColumn")) {
+              columVisible = false;
+            }
+            sWidth = v.style.width.replace("px", "");
+
+            let datatablerecordObj = {
+              sTitle: v.innerText || "",
+              sWidth: sWidth || "",
+              sIndex: v.cellIndex || "",
+              sVisible: columVisible || false,
+              sClass: v.className || "",
+            };
+            tableHeaderList.push(datatablerecordObj);
+          });
+          templateObject.tableheaderrecords.set(tableHeaderList);
+          $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
         });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-        // }).catch(function (err) {
-        //   $(".fullScreenSpin").css("display", "none");
-        // });
       } else {
         let data = JSON.parse(dataObject[0].data);
-        let useData = data.ttaxcodevs1;
+        let useData = data.tsubtaxcode;
         for (let i = 0; i < useData.length; i++) {
           var dataList = {
             id: useData[i].Id || '',
-            codename: useData[i].CodeName || '-',
+            codename: useData[i].Code || '-',
             description: useData[i].Description || '-',
             category: useData[i].Category || '-'
           };
@@ -336,149 +335,148 @@ Template.subTaxesSettings.onRendered(function () {
 
       }
     }).catch(function (err) {
-      // taxRateService.getSubTaxVS1().then(function (data) {
-      let data = taxRateService.getSubTaxVS1();
-      for (let i = 0; i < data.tsubtaxvs1.length; i++) {
-        var dataList = {
-          id: data.tsubtaxvs1[i].Id || '',
-          codename: data.tsubtaxvs1[i].CodeName || '-',
-          description: data.tsubtaxvs1[i].Description || '-',
-          category: data.tsubtaxvs1[i].Category || '-'
-        };
+      taxRateService.getSubTaxCode().then(function (data) {
+        for (let i = 0; i < data.tsubtaxcode.length; i++) {
+          var dataList = {
+            id: data.tsubtaxcode[i].Id || '',
+            codename: data.tsubtaxcode[i].Code || '-',
+            description: data.tsubtaxcode[i].Description || '-',
+            category: data.tsubtaxcode[i].Category || '-'
+          };
 
-        dataTableList.push(dataList);
-      }
+          dataTableList.push(dataList);
+        }
 
-      templateObject.datatablerecords.set(dataTableList);
+        templateObject.datatablerecords.set(dataTableList);
 
-      if (templateObject.datatablerecords.get()) {
+        if (templateObject.datatablerecords.get()) {
 
-        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'subTaxList', function (error, result) {
-          if (error) {
+          Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'subTaxList', function (error, result) {
+            if (error) {
 
-          } else {
-            if (result) {
-              for (let i = 0; i < result.customFields.length; i++) {
-                let customcolumn = result.customFields;
-                let columData = customcolumn[i].label;
-                let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                let hiddenColumn = customcolumn[i].hidden;
-                let columnClass = columHeaderUpdate.split('.')[1];
-                let columnWidth = customcolumn[i].width;
-                let columnindex = customcolumn[i].index + 1;
+            } else {
+              if (result) {
+                for (let i = 0; i < result.customFields.length; i++) {
+                  let customcolumn = result.customFields;
+                  let columData = customcolumn[i].label;
+                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                  let hiddenColumn = customcolumn[i].hidden;
+                  let columnClass = columHeaderUpdate.split('.')[1];
+                  let columnWidth = customcolumn[i].width;
+                  let columnindex = customcolumn[i].index + 1;
 
-                if (hiddenColumn == true) {
+                  if (hiddenColumn == true) {
 
-                  $("." + columnClass + "").addClass('hiddenColumn');
-                  $("." + columnClass + "").removeClass('showColumn');
-                } else if (hiddenColumn == false) {
-                  $("." + columnClass + "").removeClass('hiddenColumn');
-                  $("." + columnClass + "").addClass('showColumn');
+                    $("." + columnClass + "").addClass('hiddenColumn');
+                    $("." + columnClass + "").removeClass('showColumn');
+                  } else if (hiddenColumn == false) {
+                    $("." + columnClass + "").removeClass('hiddenColumn');
+                    $("." + columnClass + "").addClass('showColumn');
+                  }
+
                 }
-
               }
+
             }
+          });
+        }
 
-          }
-        });
-      }
-
-      $('.fullScreenSpin').css('display', 'none');
-      setTimeout(function () {
-        $('#subTaxList').DataTable({
-          columnDefs: [
-            { type: 'date', targets: 0 },
-            { "orderable": false, "targets": -1 }
-          ],
-          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          buttons: [
-            {
-              extend: 'excelHtml5',
-              text: '',
-              download: 'open',
-              className: "btntabletocsv hiddenColumn",
-              filename: "subtaxlist_" + moment().format(),
-              orientation: 'portrait',
-              exportOptions: {
-                columns: ':visible'
-              }
-            }, {
-              extend: 'print',
-              download: 'open',
-              className: "btntabletopdf hiddenColumn",
-              text: '',
-              title: 'Tax Rate List',
-              filename: "subtaxlist_" + moment().format(),
-              exportOptions: {
-                columns: ':visible'
-              }
-            }],
-          select: true,
-          destroy: true,
-          // colReorder: true,
-          colReorder: {
-            fixedColumnsRight: 1
-          },
-          // bStateSave: true,
-          // rowId: 0,
-          // pageLength: 25,
-          paging: false,
-          //                    "scrollY": "400px",
-          //                    "scrollCollapse": true,
-          info: true,
-          responsive: true,
-          "order": [[0, "asc"]],
-          action: function () {
-            $('#subTaxList').DataTable().ajax.reload();
-          },
-          "fnDrawCallback": function (oSettings) {
-
-          },
-
-        }).on('page', function () {
-          let draftRecord = templateObject.datatablerecords.get();
-          templateObject.datatablerecords.set(draftRecord);
-        }).on('column-reorder', function () {
-
-        }).on('length.dt', function (e, settings, len) {
-
-        });
-
-        // $('#subTaxList').DataTable().column( 0 ).visible( true );
         $('.fullScreenSpin').css('display', 'none');
-      }, 0);
+        setTimeout(function () {
+          $('#subTaxList').DataTable({
+            columnDefs: [
+              { type: 'date', targets: 0 },
+              { "orderable": false, "targets": -1 }
+            ],
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            buttons: [
+              {
+                extend: 'excelHtml5',
+                text: '',
+                download: 'open',
+                className: "btntabletocsv hiddenColumn",
+                filename: "subtaxlist_" + moment().format(),
+                orientation: 'portrait',
+                exportOptions: {
+                  columns: ':visible'
+                }
+              }, {
+                extend: 'print',
+                download: 'open',
+                className: "btntabletopdf hiddenColumn",
+                text: '',
+                title: 'Tax Rate List',
+                filename: "subtaxlist_" + moment().format(),
+                exportOptions: {
+                  columns: ':visible'
+                }
+              }],
+            select: true,
+            destroy: true,
+            // colReorder: true,
+            colReorder: {
+              fixedColumnsRight: 1
+            },
+            // bStateSave: true,
+            // rowId: 0,
+            // pageLength: 25,
+            paging: false,
+            //                    "scrollY": "400px",
+            //                    "scrollCollapse": true,
+            info: true,
+            responsive: true,
+            "order": [[0, "asc"]],
+            action: function () {
+              $('#subTaxList').DataTable().ajax.reload();
+            },
+            "fnDrawCallback": function (oSettings) {
 
-      var columns = $('#subTaxList th');
-      let sTible = "";
-      let sWidth = "";
-      let sIndex = "";
-      let sVisible = "";
-      let columVisible = false;
-      let sClass = "";
-      $.each(columns, function (i, v) {
-        if (v.hidden == false) {
-          columVisible = true;
-        }
-        if ((v.className.includes("hiddenColumn"))) {
-          columVisible = false;
-        }
-        sWidth = v.style.width.replace('px', "");
+            },
 
-        let datatablerecordObj = {
-          sTitle: v.innerText || '',
-          sWidth: sWidth || '',
-          sIndex: v.cellIndex || '',
-          sVisible: columVisible || false,
-          sClass: v.className || ''
-        };
-        tableHeaderList.push(datatablerecordObj);
+          }).on('page', function () {
+            let draftRecord = templateObject.datatablerecords.get();
+            templateObject.datatablerecords.set(draftRecord);
+          }).on('column-reorder', function () {
+
+          }).on('length.dt', function (e, settings, len) {
+
+          });
+
+          // $('#subTaxList').DataTable().column( 0 ).visible( true );
+          $('.fullScreenSpin').css('display', 'none');
+        }, 0);
+
+        var columns = $('#subTaxList th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function (i, v) {
+          if (v.hidden == false) {
+            columVisible = true;
+          }
+          if ((v.className.includes("hiddenColumn"))) {
+            columVisible = false;
+          }
+          sWidth = v.style.width.replace('px', "");
+
+          let datatablerecordObj = {
+            sTitle: v.innerText || '',
+            sWidth: sWidth || '',
+            sIndex: v.cellIndex || '',
+            sVisible: columVisible || false,
+            sClass: v.className || ''
+          };
+          tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+      }).catch(function (err) {
+        $('.fullScreenSpin').css('display', 'none');
       });
-      templateObject.tableheaderrecords.set(tableHeaderList);
-      $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-      // }).catch(function (err) {
-      //   $('.fullScreenSpin').css('display', 'none');
-      // });
     });
   }
 
@@ -507,7 +505,7 @@ Template.subTaxesSettings.onRendered(function () {
         $("#edtTaxID").val(taxid);
         $("#edtTaxCode").val(taxname);
         $("#edtTaxDesc").val(taxDesc);
-        $(`[name='optTaxCategory'][value='${taxCate.toLowerCase()}']`).prop("checked", true);
+        $(`[name='optTaxCategory'][value='${taxCate}']`).prop("checked", true);
 
         $("#addSubTaxModal").modal("toggle");
       }
@@ -683,7 +681,7 @@ Template.subTaxesSettings.events({
   },
   'click .btnRefresh': function () {
     $('.fullScreenSpin').css('display', 'inline-block');
-    taxRateService.getSubTaxVS1().then(function (dataReload) {
+    taxRateService.getSubTaxCode().then(function (dataReload) {
       addVS1Data('TSubTaxVS1', JSON.stringify(dataReload)).then(function (datareturn) {
         location.reload(true);
       }).catch(function (err) {
@@ -697,11 +695,11 @@ Template.subTaxesSettings.events({
     $('.fullScreenSpin').css('display', 'inline-block');
     let taxRateService = new TaxRateService();
     let taxtID = $('#edtTaxID').val();
-    let taxName = $('#edtTaxCode').val();
+    let taxCode = $('#edtTaxCode').val();
     let taxDesc = $('#edtTaxDesc').val();
     let taxCate = $('#optTaxCategory').val();
     let objDetails = '';
-    if (taxName === '') {
+    if (taxCode === '') {
       Bert.alert('<strong>WARNING:</strong> Tax cannot be blank!', 'warning');
       $('.fullScreenSpin').css('display', 'none');
       e.preventDefault();
@@ -709,15 +707,15 @@ Template.subTaxesSettings.events({
 
     if (taxtID == "") {
       taxRateService
-        .checkSubTaxByName(taxName)
+        .checkSubTaxByName(taxCode)
         .then(function (data) {
           taxtID = data.ttaxcode[0].Id;
           objDetails = {
-            type: "TSubTaxcode",
+            type: "TSubTaxCode",
             fields: {
               ID: parseInt(taxtID),
               Active: true,
-              // CodeName: taxName,
+              // Code: taxCode,
               Description: taxDesc,
               Category: taxCate
             },
@@ -726,7 +724,7 @@ Template.subTaxesSettings.events({
             .saveSubTax(objDetails)
             .then(function (objDetails) {
               taxRateService
-                .getSubTaxVS1()
+                .getSubTaxCode()
                 .then(function (dataReload) {
                   addVS1Data("TSubTaxVS1", JSON.stringify(dataReload))
                     .then(function (datareturn) {
@@ -758,22 +756,22 @@ Template.subTaxesSettings.events({
         })
         .catch(function (err) {
           objDetails = {
-            type: "TSubTaxcode",
+            type: "TSubTaxCode",
             fields: {
               Active: true,
-              CodeName: taxName,
+              Code: taxCode,
               Description: taxDesc,
               Category: taxCate,
             },
           };
 
           taxRateService
-            .saveTaxRate(objDetails)
+            .saveSubTax(objDetails)
             .then(function (objDetails) {
               taxRateService
-                .getTaxRateVS1()
+                .getSubTaxCode()
                 .then(function (dataReload) {
-                  addVS1Data("TTaxcodeVS1", JSON.stringify(dataReload))
+                  addVS1Data("TSubTaxVS1", JSON.stringify(dataReload))
                     .then(function (datareturn) {
                       Meteor._reload.reload();
                     })
@@ -803,11 +801,11 @@ Template.subTaxesSettings.events({
         });
     } else {
       objDetails = {
-        type: "TSubTaxcode",
+        type: "TSubTaxCode",
         fields: {
           ID: parseInt(taxtID),
           Active: true,
-          CodeName: taxName,
+          Code: taxCode,
           Description: taxDesc,
           Category: taxCate,
         },
@@ -816,7 +814,7 @@ Template.subTaxesSettings.events({
         .saveSubTax(objDetails)
         .then(function (objDetails) {
           taxRateService
-            .getSubTaxVS1()
+            .getSubTaxCode()
             .then(function (dataReload) {
               addVS1Data("TSubTaxVS1", JSON.stringify(dataReload))
                 .then(function (datareturn) {
@@ -861,7 +859,7 @@ Template.subTaxesSettings.events({
     let taxCodeId = $('#selectDeleteLineID').val();
 
     let objDetails = {
-      type: "TSubTaxcode",
+      type: "TSubTaxCode",
       fields: {
         Id: parseInt(taxCodeId),
         Active: false
@@ -872,7 +870,7 @@ Template.subTaxesSettings.events({
       .saveSubTax(objDetails)
       .then(function (objDetails) {
         taxRateService
-          .getSubTaxVS1()
+          .getSubTaxCode()
           .then(function (dataReload) {
             addVS1Data("TSubTaxVS1", JSON.stringify(dataReload))
               .then(function (datareturn) {
@@ -956,7 +954,7 @@ export const SubTaxesEditListener = (e) => {
       $("#edtTaxID").val(taxid);
       $("#edtTaxCode").val(taxname);
       $("#edtTaxDesc").val(taxDesc);
-      $(`[name='optTaxCategory'][value='${taxCate.toLowerCase()}']`).prop("checked", true);
+      $(`[name='optTaxCategory'][value='${taxCate}']`).prop("checked", true);
 
       $("#addSubTaxModal").modal("toggle");
     }

@@ -618,22 +618,20 @@ Template.taxRatesSettings.onRendered(function () {
 
     getVS1Data('TSubTaxVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
-        // taxRateService.getSubTaxVS1().then(function (data) {
-        let data = taxRateService.getSubTaxVS1();
-        
-        for (let i = 0; i < data.tsubtaxvs1.length; i++) {
-          var dataList = {
-            id: data.tsubtaxvs1[i].Id || '',
-            codename: data.tsubtaxvs1[i].CodeName || '-',
-            description: data.tsubtaxvs1[i].Description || '-',
-            category: data.tsubtaxvs1[i].Category || '-'
-          };
-
-          subTaxTableList.push(dataList);
-        }
-
-        templateObject.subtaxcodes.set(subTaxTableList);
-
+        taxRateService.getSubTaxCode().then(function (data) {
+          for (let i = 0; i < data.tsubtaxcode.length; i++) {
+            var dataList = {
+              id: data.tsubtaxcode[i].Id || '',
+              codename: data.tsubtaxcode[i].CodeName || '-',
+              description: data.tsubtaxcode[i].Description || '-',
+              category: data.tsubtaxcode[i].Category || '-'
+            };
+  
+            subTaxTableList.push(dataList);
+          }
+  
+          templateObject.subtaxcodes.set(subTaxTableList);
+        });
       } else {
         let data = JSON.parse(dataObject[0].data);
         let useData = data.ttaxcodevs1;
@@ -649,23 +647,23 @@ Template.taxRatesSettings.onRendered(function () {
         }
 
         templateObject.subtaxcodes.set(subTaxTableList);
-
       }
     }).catch(function (err) {
-      // taxRateService.getSubTaxVS1().then(function (data) {
-      let data = taxRateService.getSubTaxVS1();
-      for (let i = 0; i < data.tsubtaxvs1.length; i++) {
-        var dataList = {
-          id: data.tsubtaxvs1[i].Id || '',
-          codename: data.tsubtaxvs1[i].CodeName || '-',
-          description: data.tsubtaxvs1[i].Description || '-',
-          category: data.tsubtaxvs1[i].Category || '-'
-        };
+      taxRateService.getSubTaxCode().then(function (data) {
+        for (let i = 0; i < data.tsubtaxcode.length; i++) {
+          var dataList = {
+            id: data.tsubtaxcode[i].Id || '',
+            codename: data.tsubtaxcode[i].CodeName || '-',
+            description: data.tsubtaxcode[i].Description || '-',
+            category: data.tsubtaxcode[i].Category || '-'
+          };
 
-        subTaxTableList.push(dataList);
-      }
+          subTaxTableList.push(dataList);
+        }
 
-      templateObject.subtaxcodes.set(subTaxTableList);
+        templateObject.subtaxcodes.set(subTaxTableList);
+      });
+      
     });
   }
 

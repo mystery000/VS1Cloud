@@ -88,14 +88,14 @@ export class TaxRateService extends BaseService {
 
     checkTaxRateByName(codeName) {
         let options = {
-            select: "[CodeName]='" + codeName + "'"
+            select: "[Code]='" + codeName + "'"
         };
         return this.getList(this.ERPObjects.TTaxCode, options);
     }
 
     getSubTaxDropDown() {
         let options = {
-            PropertyList: "CodeName",
+            PropertyList: "Code",
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TSubTaxCode, options);
@@ -105,57 +105,17 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TSubTaxCode, data);
     }
 
-    getSubTaxVS1() {
+    getSubTaxCode() {
         let options = {
-            PropertyList: "ID,CodeName,Description,Category,Active",
+            PropertyList: "ID,Code,Description,Category,Active,GlobalRef,ISEmpty,RegionName",
             select: "[Active]=true",
         };
-        // return this.getList(this.ERPObjects.TSubTaxVS1, options);
-        let demoData = {
-            tsubtaxvs1: [
-                {
-                    Id: 1,
-                    CodeName: "STRT",
-                    Description: "State Rate",
-                    Category: "State",
-                    Active: true
-                },
-                {
-                    Id: 2,
-                    CodeName: "CTRT",
-                    Description: "City Rate",
-                    Category: "City",
-                    Active: true
-                },
-                {
-                    Id: 3,
-                    CodeName: "SPRT",
-                    Description: "Special Rate",
-                    Category: "Other",
-                    Active: true
-                },
-                {
-                    Id: 4,
-                    CodeName: "CONRT",
-                    Description: "Country Rate",
-                    Category: "Country",
-                    Active: true
-                },
-                {
-                    Id: 5,
-                    CodeName: "EXT",
-                    Description: "Exercise Tax",
-                    Category: "Other",
-                    Active: true
-                },
-            ]
-        };
-        return demoData;
+        return this.getList(this.ERPObjects.TSubTaxCode, options);
     }
 
     checkSubTaxByName(codeName) {
         let options = {
-            select: "[CodeName]='" + codeName + "'"
+            select: "[Code]='" + codeName + "'"
         };
         return this.getList(this.ERPObjects.TSubTaxCode, options);
     }
