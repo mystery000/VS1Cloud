@@ -325,7 +325,9 @@ overflow-y: auto;
 
 #myModal2 > .modal-dialog > .modal-content > .modal-body {
     max-height: 500px !important;
-    overflow-x: scroll !important;
+    /* overflow-x: scroll !important; */
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
 }
 
 .btn-sm.btn-danger {

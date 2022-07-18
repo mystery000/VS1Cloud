@@ -120,7 +120,7 @@ Template.alltaskdatatable.onRendered(function () {
           {
             orderable: false,
             targets: 1,
-            className: "colPriority openEditTaskModal",
+            className: "colPriority openEditSubTaskModal hiddenColumn",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[8]);
             },
@@ -150,15 +150,22 @@ Template.alltaskdatatable.onRendered(function () {
           },
           {
             targets: 5,
-            className: "colTaskLabels hiddenColumn",
+            className: "colTaskLabels openEditSubTaskModal hiddenColumn",
+            createdCell: function (td, cellData, rowData, row, col) {
+              $(td).attr("data-id", rowData[8]);
+            },
+          },
+          {
+            targets: 6,
+            className: "colTaskProjects openEditSubTaskModal hiddenColumn",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[8]);
             },
           },
           {
             orderable: false,
-            targets: 6,
-            className: "colSubTaskActions",
+            targets: 7,
+            className: "colTaskActions",
             createdCell: function (td, cellData, rowData, row, col) {
               $(td).attr("data-id", rowData[8]);
             },
@@ -168,75 +175,7 @@ Template.alltaskdatatable.onRendered(function () {
         colReorder: {
           fixedColumnsLeft: 0,
         },
-        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        // buttons: [
-        //   {
-        //     extend: "excelHtml5",
-        //     text: "",
-        //     download: "open",
-        //     className: "btntabletocsv hiddenColumn",
-        //     filename: "All Tasks List" + moment().format(),
-        //     title: "All Tasks",
-        //     orientation: "portrait",
-        //     exportOptions: {
-        //       // columns: ":visible",
-        //       columns: function (idx, data, node) {
-        //         if (idx == 0 || idx == 5) {
-        //           return false;
-        //         }
-        //         return true;
-        //       },
-        //       format: {
-        //         body: function (data, row, column) {
-        //           let col_lbl = "";
-        //           let lbl = "";
-        //           if (data.includes("</span>")) {
-        //             var res = data.split("</span>");
-        //             res.forEach((element) => {
-        //               lbl = element.split("</i>");
-        //               if (lbl[1] != undefined) {
-        //                 col_lbl += lbl[1].replace("</a>", "") + ", ";
-        //               }
-        //             });
-        //           } else {
-        //             col_lbl = data;
-        //           }
-
-        //           if (Number.isInteger(col_lbl)) {
-        //             col_lbl = col_lbl.toString();
-        //           }
-        //           if (col_lbl.includes("</label>")) {
-        //             var res = col_lbl.split("</label>");
-        //             col_lbl = res[1];
-        //           }
-
-        //           return column === 1
-        //             ? col_lbl.replace(/<.*?>/gi, "").slice(0, -1)
-        //             : col_lbl.slice(0, -1);
-        //         },
-        //       },
-        //       stripHtml: false,
-        //     },
-        //   },
-        //   {
-        //     extend: "print",
-        //     download: "open",
-        //     className: "btntabletopdf hiddenColumn",
-        //     text: "",
-        //     title: "All Tasks List",
-        //     filename: "All Tasks List" + moment().format(),
-        //     exportOptions: {
-        //       // columns: ":visible",
-        //       columns: function (idx, data, node) {
-        //         if (idx == 0 || idx == 5) {
-        //           return false;
-        //         }
-        //         return true;
-        //       },
-        //       stripHtml: false,
-        //     },
-        //   },
-        // ],
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B", 
         select: true,
         destroy: true,
         colReorder: true,
@@ -248,27 +187,15 @@ Template.alltaskdatatable.onRendered(function () {
         info: true,
         responsive: true,
         order: [
-          [4, "desc"],
           [1, "desc"],
         ],
         action: function () {
           $("#tblSubtaskDatatable").DataTable().ajax.reload();
-        },
-        fnDrawCallback: function (oSettings) {
-          setTimeout(function () {
-            // MakeNegative();
-          }, 100);
-        },
-        fnInitComplete: function () {
-          // $(
-          //   "<button class='btn btn-primary btnSearchCrm btnSearchAllTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
-          //   btnFilterName +
-          //   "</span></button>"
-          // ).insertAfter("#tblSubtaskDatatable_filter");
-        },
+        }, 
       });
 
     } catch (error) {
+      console.log(error)
     }
   }
 
@@ -433,8 +360,7 @@ Template.alltaskdatatable.onRendered(function () {
       info: true,
       responsive: true,
       order: [
-        [4, "desc"],
-        [1, "desc"],
+        [2, "desc"],
       ],
       action: function () {
         $("#tblAllTaskDatatable").DataTable().ajax.reload();
@@ -656,8 +582,7 @@ Template.alltaskdatatable.onRendered(function () {
       info: true,
       responsive: true,
       order: [
-        [4, "desc"],
-        [1, "desc"],
+        [2, "desc"],
       ],
       action: function () {
         $("#tblTodayTaskDatatable").DataTable().ajax.reload();
@@ -838,8 +763,7 @@ Template.alltaskdatatable.onRendered(function () {
       info: true,
       responsive: true,
       order: [
-        [4, "desc"],
-        [1, "desc"],
+        [2, "desc"],
       ],
       action: function () {
         $("#tblUpcomingTaskDatatable").DataTable().ajax.reload();
@@ -1806,8 +1730,7 @@ Template.alltaskdatatable.onRendered(function () {
       info: true,
       responsive: true,
       order: [
-        [4, "desc"],
-        [1, "desc"],
+        [2, "desc"],
       ],
       action: function () {
         $("#tblProjectTasks").DataTable().ajax.reload();
@@ -2226,6 +2149,7 @@ Template.alltaskdatatable.events({
                 try {
                   // add labels to New task
                   // tempcode until api is updated
+                  // current label and task is 1:1 relationship
                   selected_lbls.forEach((lbl) => {
                     crmService.updateLabel({
                       type: "Tprojecttask_TaskLabel",
@@ -2240,6 +2164,8 @@ Template.alltaskdatatable.events({
                   });
                   // tempcode until api is updated
                 } catch (error) {
+                  swal(error, "", "error");
+
                   templateObject.getAllTaskList();
                   templateObject.getTProjectList();
                 }
@@ -2250,6 +2176,7 @@ Template.alltaskdatatable.events({
               }
 
             }
+
           }).catch(function (err) {
             $(".fullScreenSpin").css("display", "none");
             swal(err, "", "error");
@@ -2257,6 +2184,11 @@ Template.alltaskdatatable.events({
           });
         }
       }
+
+      templateObject.getAllTaskList();
+      templateObject.getTProjectList();
+
+      $(".btnRefresh").addClass('btnSearchAlert');
 
       $(".fullScreenSpin").css("display", "none");
 

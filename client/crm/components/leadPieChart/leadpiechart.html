@@ -1,0 +1,42 @@
+<template name="leadpiechart">
+  <style type="text/css">
+    .hideelement {
+      display: none !important;
+    }
+
+    .showelement {
+      display: block;
+    }
+  </style>
+  <div id="leadpiechart" class="minHeight100">
+    <div
+      class="overflow-hidden card shadow mb-4 portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="text-primary font-weight-bold m-0">Revenue Streams</h6>
+
+        <div class="dropdown no-arrow">
+          <a id="hidesales1" class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+          <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown"
+            aria-expanded="false" type="button">
+            <i class="fas fa-ellipsis-v text-gray-400"></i>
+          </button>
+
+          <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+            <a id="profitloss2" class="dropdown-item" role="presentation" href="/newprofitandloss">More
+              Details</a>
+            <div class="dropdown-divider"></div>
+            <a id="editchartsquotedinvoicedamounts" class="dropdown-item editchartsbtn pointer" role="presentation"
+              data-toggle="modal" data-target="#editDashboardModal">&nbsp;Edit
+              Chart</a>
+            <a id="" class="dropdown-item pointer" role="presentation">&nbsp;Reset Chart</a>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="canvasParentDiv canvasHeight100">
+          <canvas id="lead_pie_chart" name="lead_pie_chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
