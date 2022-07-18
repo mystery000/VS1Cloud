@@ -4289,6 +4289,7 @@ Template.setup.events({
 
     setCurrentStep(stepId);
     templateObject.loadSteps();
+    window.scrollTo(0, 0);
   },
   "click .btnBack": function (event) {
     let templateObject = Template.instance();
@@ -4315,6 +4316,7 @@ Template.setup.events({
 
     setCurrentStep(stepId);
     templateObject.loadSteps();
+    window.scrollTo(0, 0);
   },
   "click .gotToStepID": function (event) {
     let templateObj = Template.instance();
