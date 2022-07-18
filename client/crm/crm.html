@@ -5,11 +5,19 @@
 
   <div style="margin-top: -24px;">
 
-    <header style="padding: 16px;padding-bottom: 0px;">
-      <h2 style="margin: 14px;margin-bottom: 0px;">CRM Overview
+    <header style="padding: 16px;padding-bottom: 24px;">
+      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">CRM Overview</span>
         {{> crm_help_modal}}
       </h2>
     </header>
+
+    <!-- <div class="charts row connectedChartSortable connectedSortable">
+      <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" position="2" data-default-class="col-md-8" >
+        {{> leadpiechart}}
+      </div>
+      <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" position="2" data-default-class="col-md-8" >
+      </div>
+    </div> -->
 
     <!-- All Cards List -->
     <div class="container-fluid">
@@ -17,12 +25,13 @@
         {{> allCardsLists tabGroupID="3" chartGroup="CRMOverview"}}
       </div>
     </div>
+    <!-- All Cards List -->
+
     {{> crm_top_menu}}
 
     {{> alltaskdatatable}}
 
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
       <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
         <div class="modal-content">
           <div class="modal-header">
@@ -36,42 +45,40 @@
                 <div class="flex-grow-1">
 
                   {{#each item in tableheaderrecords}}
-                  {{#if equals item.sTitle ""}}
-                  {{else}}
-                  {{#if equals item.sIndex ""}}
-                  {{else}}
-                  <div id="{{item.sIndex}}" class="columnSettings">
-                    <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                      <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}"
-                        name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}unchecked{{/if}}"
-                        value="{{item.sTitle}}">
-                      <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
-                      <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}"
-                        valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                    </div>
-                    <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                      <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:
-                        <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
-                      </label>
-                      <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}"
-                        min="0" max="1000">
-                      <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
-                    </div>
-                  </div>
+                    {{#if equals item.sTitle ""}}
+                    {{else}}
+                      {{#if equals item.sIndex ""}}
+                      {{else}}
+                        <div id="{{item.sIndex}}" class="columnSettings">
+                          <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                            <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}"
+                              name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}unchecked{{/if}}"
+                              value="{{item.sTitle}}">
+                            <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
+                            <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}"
+                              valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                          </div>
+                          <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                            <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:
+                            </label>
+                            <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}"
+                              min="0" max="1000">
+                          </div>
+                        </div>
 
-                  {{#if equals item.sVisible true}}
-                  <script>
-                    $("#" + {{ item.sIndex }}+".chkDatatable").attr("checked", "checked");
-                  </script>
-                  {{else}}
-                  <script>
-                    $("#" + {{ item.sIndex }}+".chkDatatable").removeAttr("checked");
-                  </script>
-                  {{/if}}
+                        {{#if equals item.sVisible true}}
+                          <script>
+                            $("#" + {{ item.sIndex }}+".chkDatatable").attr("checked", "checked");
+                          </script>
+                        {{else}}
+                          <script>
+                            $("#" + {{ item.sIndex }}+".chkDatatable").removeAttr("checked");
+                          </script>
+                        {{/if}}
 
-                  {{/if}}
+                      {{/if}}
 
-                  {{/if}}
+                    {{/if}}
                   {{/each}}
                 </div>
               </form>
@@ -88,7 +95,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
   </div>
 
@@ -136,23 +143,19 @@
     }
 
     .colTaskName {
-      width: 20%;
+      width: 20% !important;
     }
     .colTaskProjects {
-      width: 20%;
+      width: 20% !important;
     }
 
     .colTaskDesc {
-      width: 20%;
+      width: 20% !important;
       max-width: 390px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-
-    .colTaskActions {
-      width: 14%;
-    }
+    } 
 
     .colSubComplete {
       width: 30px !important;
@@ -167,7 +170,8 @@
     }
 
     .colSubTaskName {
-      width: calc(100% - 370px) !important;
+      /* width: calc(100% - 320px) !important; */
+      width: 50% !important;
     }
 
     .btnTaskTableAction {
@@ -752,7 +756,9 @@
     }
 
     .colTaskActions {
-      width: 160px !important;
+      width: 145px !important;
+      display: flex;
+      justify-content: center;
     }
 
     #addTaskLabelWrapper,
