@@ -1,5 +1,6 @@
 export default class AssignLeaveTypeFields {
     constructor({
+        ID,
         LeaveType,
         EmployeeID,
         LeaveCalcMethod,
@@ -12,6 +13,7 @@ export default class AssignLeaveTypeFields {
         EFTLeaveType,
         SuperannuationGuarantee
     }){
+        this.ID = ID;
         this.LeaveType = LeaveType;
         this.EmployeeID = EmployeeID;
         this.LeaveCalcMethod = LeaveCalcMethod;
@@ -25,5 +27,5 @@ export default class AssignLeaveTypeFields {
         this.SuperannuationGuarantee = SuperannuationGuarantee;
     }
 }
-  
+
   
