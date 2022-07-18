@@ -105,6 +105,20 @@ function isStepSkipped(stepId) {
   return steps.includes(stepId);
 }
 
+/**
+ * This function will check if the link is clickable or not
+ * @param {*} stepId 
+ * @returns 
+ */
+function isClickableStep(stepId) {
+  const confirmedSteps = getConfirmedSteps();
+  const skippedSteps = getSkippedSteps();
+  if(confirmedSteps.includes(stepId) || skippedSteps.includes(stepId)) {
+    return true;
+  }
+  return false;
+}
+
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.currentStep = new ReactiveVar(1);
@@ -244,7 +258,7 @@ Template.setup.onRendered(function () {
         id: i,
         index: i,
         active: getCurrentStep() == i ? true : false,
-        clickable: i <= getCurrentStep() ? !true : !false,
+        clickable: !isClickableStep(i),
         isConfirmed: isConfirmedStep(i),
         skippedSteps: isStepSkipped(i),
       });
