@@ -622,7 +622,7 @@ Template.taxRatesSettings.onRendered(function () {
           for (let i = 0; i < data.tsubtaxcode.length; i++) {
             var dataList = {
               id: data.tsubtaxcode[i].Id || '',
-              codename: data.tsubtaxcode[i].CodeName || '-',
+              codename: data.tsubtaxcode[i].Code || '-',
               description: data.tsubtaxcode[i].Description || '-',
               category: data.tsubtaxcode[i].Category || '-'
             };
@@ -634,11 +634,11 @@ Template.taxRatesSettings.onRendered(function () {
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
-        let useData = data.ttaxcodevs1;
+        let useData = data.tsubtaxcode;
         for (let i = 0; i < useData.length; i++) {
           var dataList = {
             id: useData[i].Id || '',
-            codename: useData[i].CodeName || '-',
+            codename: useData[i].Code || '-',
             description: useData[i].Description || '-',
             category: useData[i].Category || '-'
           };
@@ -653,7 +653,7 @@ Template.taxRatesSettings.onRendered(function () {
         for (let i = 0; i < data.tsubtaxcode.length; i++) {
           var dataList = {
             id: data.tsubtaxcode[i].Id || '',
-            codename: data.tsubtaxcode[i].CodeName || '-',
+            codename: data.tsubtaxcode[i].Code || '-',
             description: data.tsubtaxcode[i].Description || '-',
             category: data.tsubtaxcode[i].Category || '-'
           };
@@ -1119,7 +1119,7 @@ Template.taxRatesSettings.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
-              SubTaxes: templateObject.subtaxes.get(),
+              SubTaxes: JSON.stringify(templateObject.subtaxes.get()),
             },
           };
           taxRateService
@@ -1166,7 +1166,7 @@ Template.taxRatesSettings.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
-              SubTaxes: templateObject.subtaxes.get(),
+              SubTaxes: JSON.stringify(templateObject.subtaxes.get()),
             },
           };
 
@@ -1214,7 +1214,7 @@ Template.taxRatesSettings.events({
           Description: taxDesc,
           Rate: taxRate,
           PublishOnVS1: true,
-          SubTaxes: templateObject.subtaxes.get(),
+          SubTaxes: JSON.stringify(templateObject.subtaxes.get()),
         },
       };
       taxRateService
