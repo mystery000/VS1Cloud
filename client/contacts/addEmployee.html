@@ -1384,7 +1384,7 @@
                                                                     <div class="col-12 col-md-6">
                                                                         <p style="float: right;">
                                                                             Status: <span style="font-weight: 600; color:#17a673;" class="statusSaved">Saved</span>
-                                                                            <span style="font-weight: 600; color:#e02d1b; display: none;" class="statusUnsaved">Unsaved</span>
+                                                                            <span style="font-weight: 600; color:#e02d1b; display: none;" class="statusUnsaved">Changed</span>
                                                                         </p>
                                                                     </div>
                                                                 </div>
@@ -1532,11 +1532,11 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row">
+                                                                <!-- <div class="row">
                                                                     <div class="col-12">
                                                                         <button class="btn btn-primary float-right " type="button" style="margin: 16px; margin-top: 0px;"><i class="fas fa-file-signature" style="margin-right: 5px;"></i>File Now</button>
                                                                     </div>
-                                                                </div>
+                                                                </div> -->
                                                             </div>
                                                             <script>
                                                                 var accCnt = 3;
@@ -1793,6 +1793,7 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Leave</label>
+                                                                                            <input type="hidden" name="assignteavetypeID" id="assignteavetypeID" value="0">
                                                                                             <select type="search" class="form-control" id="leaveTypeSelect" name="leaveTypeSelect" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                                             </select>
                                                                                         </div>
@@ -1902,7 +1903,7 @@
                                                                         <h4>Leave Requests</h4>
                                                                     </div>
                                                                     <div class="col-12 col-md-6">
-                                                                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newLeaveRequestModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Leave
+                                                                        <button type="button" class="btn btn-primary float-right" id="newLeaveRequestbtn" data-toggle="modal" data-target="#newLeaveRequestModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Leave
                                                                             Request</button>
                                                                     </div>
                                                                 </div>
@@ -1920,12 +1921,7 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Type of Request</label>
-                                                                                            <select class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
-                                                                                                {{#if assignLeaveTypeInfo}}
-                                                                                                    {{#each item in assignLeaveTypeInfo}}
-                                                                                                        <option value="{{item.fields.LeaveType}}">{{ item.fields.LeaveType }}</option>
-                                                                                                    {{/each}}
-                                                                                                {{/if}}
+                                                                                            <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -1960,7 +1956,7 @@
                                                                                     <div class="col-8">
                                                                                         <div class="form-group">
                                                                                             <label>Pay Period</label>
-                                                                                            <input type="text" class="form-control" id="edtLeavePayPeriod" name="edtLeavePayPeriod">
+                                                                                            <input type="search" class="form-control"  style="cursor: pointer;" id="edtLeavePayPeriod" name="edtLeavePayPeriod" placeholder="How often will you pay your employees?">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-4">
@@ -1971,7 +1967,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="modal-footer">
+                                                                            <div class="modal-footer" style="justify-content: space-between;">
                                                                                 <div class="col-6">
                                                                                     <div class="dropdown float-left">
                                                                                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -2518,17 +2514,19 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Calculation Type</label><br />
-                                                                                                                <div class="form-check form-check-inline">
-                                                                                                                    <input class="form-check-input calculationType" type="radio" name="calculationType" id="CalculationType1" value="useearningsrate">
-                                                                                                                    <label class="form-check-label" for="CalculationType1">Use Earnings Rate</label>
-                                                                                                                </div>
-                                                                                                                <div class="form-check form-check-inline">
-                                                                                                                    <input class="form-check-input calculationType" type="radio" name="calculationType" id="CalculationType2" value="enterrate">
-                                                                                                                    <label class="form-check-label" for="CalculationType2">Enter Rate</label>
-                                                                                                                </div>
-                                                                                                                <div class="form-check form-check-inline">
-                                                                                                                    <input class="form-check-input calculationType" type="radio" name="calculationType" id="CalculationType3" value="annualsalary">
-                                                                                                                    <label class="form-check-label" for="CalculationType3">Annual Salary</label>
+                                                                                                                <div class="d-flex">
+                                                                                                                    <div class="custom-control custom-switch col-md-3">
+                                                                                                                        <input class="custom-control-input calculationType" type="radio" name="calculationType" id="CalculationType1" value="useearningsrate">
+                                                                                                                        <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="CalculationType1">Use Earnings Rate</label>
+                                                                                                                    </div>
+                                                                                                                    <div class="custom-control custom-switch col-md-3">
+                                                                                                                        <input class="custom-control-input calculationType" type="radio" name="calculationType" id="CalculationType2" value="enterrate">
+                                                                                                                        <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="CalculationType2">Enter Rate</label>
+                                                                                                                    </div>
+                                                                                                                    <div class="custom-control custom-switch col-md-3">
+                                                                                                                        <input class="custom-control-input calculationType" type="radio" name="calculationType" id="CalculationType3" value="annualsalary">
+                                                                                                                        <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="CalculationType3">Annual Salary</label>
+                                                                                                                    </div>
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
@@ -2628,17 +2626,19 @@
                                                                                                             <div class="col-12">
                                                                                                                 <div class="form-group">
                                                                                                                     <label>Calculation Type</label><br />
-                                                                                                                    <div class="form-check form-check-inline">
-                                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction1" value="fixedamount">
-                                                                                                                        <label class="form-check-label" for="calculationTypeDeduction1">Fixed Amount</label>
-                                                                                                                    </div>
-                                                                                                                    <div class="form-check form-check-inline">
-                                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction2" value="pretax">
-                                                                                                                        <label class="form-check-label" for="calculationTypeDeduction2">Pre-Tax %</label>
-                                                                                                                    </div>
-                                                                                                                    <div class="form-check form-check-inline">
-                                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction3" value="posttax">
-                                                                                                                        <label class="form-check-label" for="calculationTypeDeduction3">Post-Tax %</label>
+                                                                                                                    <div class="d-flex">
+                                                                                                                        <div class="custom-control custom-switch col-md-3">
+                                                                                                                            <input class="custom-control-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction1" value="fixedamount">
+                                                                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="calculationTypeDeduction1">Fixed Amount</label>
+                                                                                                                        </div>
+                                                                                                                        <div class="custom-control custom-switch col-md-3">
+                                                                                                                            <input class="custom-control-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction2" value="pretax">
+                                                                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="calculationTypeDeduction2">Pre-Tax %</label>
+                                                                                                                        </div>
+                                                                                                                        <div class="custom-control custom-switch col-md-3">
+                                                                                                                            <input class="custom-control-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction3" value="posttax">
+                                                                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="calculationTypeDeduction3">Post-Tax %</label>
+                                                                                                                        </div>
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>
@@ -2743,17 +2743,19 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Calculation Type</label><br />
-                                                                                                                <div class="form-check form-check-inline">
-                                                                                                                    <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation1" value="fixedamount">
-                                                                                                                    <label class="form-check-label" for="calculationTypeSuperannuation1">Fixed Amount</label>
-                                                                                                                </div>
-                                                                                                                <div class="form-check form-check-inline">
-                                                                                                                    <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation2" value="pretax">
-                                                                                                                    <label class="form-check-label" for="calculationTypeSuperannuation2">Percentage of Earnings</label>
-                                                                                                                </div>
-                                                                                                                <div class="form-check form-check-inline" id="statutoryRateContainer">
-                                                                                                                    <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation3" value="posttax">
-                                                                                                                    <label class="form-check-label" for="calculationTypeSuperannuation3">Statutory Rate</label>
+                                                                                                                <div class="d-flex">
+                                                                                                                    <div class="custom-control custom-switch col-md-3">
+                                                                                                                        <input class="custom-control-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation1" value="fixedamount">
+                                                                                                                        <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="calculationTypeSuperannuation1">Fixed Amount</label>
+                                                                                                                    </div>
+                                                                                                                    <div class="custom-control custom-switch col-md-3">
+                                                                                                                        <input class="custom-control-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation2" value="PercentageofEarnings">
+                                                                                                                        <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="calculationTypeSuperannuation2">Percentage of Earnings</label>
+                                                                                                                    </div>
+                                                                                                                    <div class="custom-control custom-switch col-md-3">
+                                                                                                                        <input class="custom-control-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation3" value="StatutoryRate">
+                                                                                                                        <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="calculationTypeSuperannuation3">Statutory Rate</label>
+                                                                                                                    </div>
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
