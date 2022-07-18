@@ -697,7 +697,7 @@ Template.subTaxesSettings.events({
     let taxtID = $('#edtTaxID').val();
     let taxCode = $('#edtTaxCode').val();
     let taxDesc = $('#edtTaxDesc').val();
-    let taxCate = $('#optTaxCategory').val();
+    let taxCate = $('[name="optTaxCategory"]:checked').val();
     let objDetails = '';
     if (taxCode === '') {
       Bert.alert('<strong>WARNING:</strong> Tax cannot be blank!', 'warning');
