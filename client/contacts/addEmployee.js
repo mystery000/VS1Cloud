@@ -36,6 +36,7 @@ import { functionsIn } from "lodash";
 import moment from "moment";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+const employeePayrollServices = new EmployeePayrollService();
 let edtProductSelect = "";
 
 function handleTotalAmount( amountField, totalAmountCont ) {
@@ -116,7 +117,7 @@ Template.employeescard.onRendered(function () {
     Session.setPersistent('cloudCurrentLogonName', '');
     //var splashArrayRepServiceList = new Array();
     let templateObject = Template.instance();
-    let contactService = new ContactService();
+    const contactService = new ContactService();
     var countryService = new CountryService();
     let paymentService = new PaymentsService();
     let productService = new ProductService();
@@ -3237,12 +3238,18 @@ Template.employeescard.onRendered(function () {
 
     templateObject.getPayReiumbursementLines();
 
-    templateObject.getAssignLeaveTypes = async () => {
-        let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
-        if( TAssignLeaveTypes.length ){
-            let TAssignLeaveTypesData = JSON.parse(TAssignLeaveTypes[0].data);
+    templateObject.getAssignLeaveTypes = async () => {        
+        let data = [];
+        let dataObject = await getVS1Data('TAssignLeaveType')  
+        if ( dataObject.length == 0) {   
+            data = await employeePayrollServices.saveAssignLeaveType(); 
+        }else{
+            data = JSON.parse(dataObject[0].data);
+        }
+
+        if( data.length ){
             let useData = AssignLeaveType.fromList(
-                TAssignLeaveTypesData.tassignteavetype
+                data.tassignteavetype
             ).filter((item) => {
                 if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
                     return item;
@@ -3250,8 +3257,8 @@ Template.employeescard.onRendered(function () {
             });
             templateObject.assignLeaveTypeInfos.set(useData);
         }
-
     };
+    
     templateObject.getAssignLeaveTypes();
 
     templateObject.filterOpeningBalance = ( type ) => {

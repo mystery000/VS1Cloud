@@ -1778,6 +1778,7 @@
                                                                     </div>
                                                                 </div>
                                                                 {{> leaveTypeSettings}}
+                                                                {{> assignLeaveTypePop}}
                                                                 <div class="modal fade" id="assignLeaveTypeModal" role="dialog" aria-labelledby="assignLeaveTypeModal" aria-hidden="true" style="z-index:9999;">
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                                         <div class="modal-content">
@@ -1794,23 +1795,6 @@
                                                                                             <label>Leave</label>
                                                                                             <select type="search" class="form-control" id="leaveTypeSelect" name="leaveTypeSelect" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                                                             </select>
-                                                                                            <!-- <input type="text" class="form-control" id="leaveTypeSelect" list="leaveTypeSelectOptions">
-                                                                                            <datalist id="leaveTypeSelectOptions">
-                                                                                                <option value="Carer's Leave (unpaid)"></option>
-                                                                                                <option value="Community Service Leave"></option>
-                                                                                                <option value="Compassionate Leave (paid)"></option>
-                                                                                                <option value="Compassionate Leave (unpaid)"></option>
-                                                                                                <option value="Long Service Leave"></option>
-                                                                                                <option value="Other Unpaid Leave"></option>
-                                                                                                <option value="Parental Leave (unpaid)"></option>
-                                                                                            </datalist> -->
-                                                                                            <!-- <select class="form-control" id="leaveTypeSelect" name="leaveTypeSelect" style="cursor: pointer;">
-                                                                                                {{#if leaveTypeInfo}}
-                                                                                                    {{#each item in leaveTypeInfo}}
-                                                                                                        <option value="{{item.fields.LeaveType}}">{{item.fields.LeaveType}}</option>
-                                                                                                    {{/each}}
-                                                                                                {{/if}}
-                                                                                            </select> -->
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12">
