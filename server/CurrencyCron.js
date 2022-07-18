@@ -67,30 +67,82 @@ async function _getCurrencies(erpGet, cb = (error, result) => {}) {
   }
 }
 
-async function _updateCurrencies(currencies, cb = (currencies) => {}) {
+async function _updateCurrencies(currencies = [], callback = (currencies = []) => {}) {
   console.log("Running _updateCurrencies");
-  let _currencies = [];
-  await asyncForEach(currencies, async (currency, index) => {
-    await _updateCurrency(currency, (_currency) => {
-      if(_currency) {
-        //console.log("Currency updated", _currency);
-        _currencies.push(_currency);
-      }
-    });
+  //let _currencies = [];
+  // await asyncForEach(currencies, async (currency, index) => {
+  //   await _updateCurrency(currency, (_currency) => {
+  //     if(_currency) {
+  //       //console.log("Currency updated", _currency);
+  //       _currencies.push(_currency);
+  //     }
+  //   });
+  // });
+
+  FxApi.getAllRates('*', "AUD", 1, (result) => {
+    if(result) {
+      //console.log("type", typeof result);
+      //result = JSON.stringify(result);
+      //console.log("stirng " ,JSON.parse(JSON.stringify(result.to)));
+      //console.log("currencies", currencies);
+      let _currencies = _updateRates(currencies, result.to);
+      callback(_currencies);
+    }
   });
-  cb(_currencies);
-  return currencies;
+
+  
+}
+
+/**
+ * This function will simply update rates from db
+ * with one call API to FX
+ * 
+ * @param {*} dbCurrencies 
+ * @param {*} FxCurrencies 
+ * @returns 
+ */
+async function _updateRates(dbCurrencies = [], FxCurrencies = [], callback = (currencies = []) => {}) {
+  console.log("currencies to check", dbCurrencies.length);
+  if(dbCurrencies) {
+    await asyncForEach(dbCurrencies, async (currency, index) => {
+      const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == currency.fields.Code);
+      if(fxCurrencyRates) {
+        dbCurrencies[index].fields.BuyRate = fxCurrencyRates.mid;
+        dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
+      }
+    }).then(() => {
+      callback(dbCurrencies);
+    });
+    // dbCurrencies.foreach((dbCurrency, index) => {
+    //   const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == dbCurrency.fields.Code);
+    //   if(fxCurrencyRates) {
+    //     dbCurrencies[index].fields.BuyRate = fxCurrencyRates.mid;
+    //     dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
+    //   }
+    // });
+  }
+  // console.log("db currencies", dbCurrencies);
+  // console.log("db currencies lenght", dbCurrencies.length);
+  
+  return dbCurrencies;
 }
 
 async function _updateCurrency(currency, callback = (currency) => {}) {
   //console.log("Updating currency", currency.fields.Code);
-  await FxApi.getExchangeRate(currency.fields.Code, "AUD", 1, (response) => {
-    if (response) {
-      currency.fields.BuyRate = parseFloat(response.buy);
-      currency.fields.SellRate = parseFloat(response.sell);
-      callback(currency);
-    }
+  // await FxApi.getExchangeRate(currency.fields.Code, "AUD", 1, (response) => {
+  //   if (response) {
+  //     currency.fields.BuyRate = parseFloat(response.buy);
+  //     currency.fields.SellRate = parseFloat(response.sell);
+  //     callback(currency);
+  //   }
+  // });
+
+  await FxApi.getAllRates("*", "AUD", 1, (result) => {
+    console.log('result', result);
   });
+
+
+  callback()
 }
 
 /**
@@ -99,7 +151,7 @@ async function _updateCurrency(currency, callback = (currency) => {}) {
  */
 async function _saveCurrency(currency, erpGet) {
   console.log('Saving currency: ', currency.Code, " BuyRate: ", currency.BuyRate , " SellRate: ", currency.SellRate);
-  const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency?ListType=Detail`;
+  const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency`;
   const _headers = {
     database: erpGet.ERPDatabase,
     username: erpGet.ERPUsername,
@@ -147,7 +199,7 @@ async function _saveCurrencies(currencies = [], erpGet) {
 
     await asyncForEach(currencies, async (currency, index) => {
       if(currencies[index]) {
-        console.log("Saving currency", currency.fields.Code);
+        //console.log("Saving currency", currency.fields.Code);
         await _saveCurrency(currency, erpGet);
       }
     });
@@ -164,8 +216,9 @@ const cronRun = (cronSetting, erpGet, cb) => {
       console.log("error", error);
     } else if (response.data) {
       _updateCurrencies(response.data.tcurrency, (currencies) => {
-        console.log("Time to save currencies");
+      
         if (currencies) {
+          console.log("Time to save currencies", currencies.length);
           _saveCurrencies(currencies, erpGet);
         }
       });
