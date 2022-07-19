@@ -689,14 +689,15 @@ Template.newprofitandloss.onRendered(function () {
     );
 
     // Fetch list type details
+    profitLossLayoutEndpoint.url.searchParams.append("LayoutToUse", 0);
     // profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
-    profitLossLayoutEndpoint.url.searchParams.append("LayoutToUse", 2);
 
     const profitLossLayoutEndResponse = await profitLossLayoutEndpoint.fetch();
     if (profitLossLayoutEndResponse.ok == true) {
       let profitLossLayouts = [];
       let jsonResponse = await profitLossLayoutEndResponse.json();
-
+      console.log('jsonResponse', jsonResponse)
+      return false
       const profitLossLists = ProfitLossLayout.fromList(
         jsonResponse.tprofitlosslayout
       );
