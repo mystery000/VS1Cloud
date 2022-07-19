@@ -602,6 +602,33 @@ Template.crmoverview.events({
     swal("You are not set up yet, do you wish to create an account with Mail Chimp", "", "warning");
     return;
   },
+
+  "click .menu_all_task": function (e) {
+    $('#allTasks-tab').click();
+    $('#crm_header_title').html('All Tasks');
+  },
+
+  "click .menu_today": function (e) {
+    $('#todayTab-tab').click();
+    $('#crm_header_title').html('Today Tasks');
+  },
+
+  "click .menu_upcoming": function (e) {
+    $('#upcomingTab-tab').click();
+    $('#crm_header_title').html('Upcoming Tasks');
+  },
+
+  "click .menu_project": function (e) {
+    $('#projectsTab-tab').click();
+    $('#crm_header_title').html('Projects');
+  },
+
+  "click .menu_label": function (e) {
+    $('#filterLabelsTab-tab').click();
+    $('#crm_header_title').html('Labels');
+  },
+
+
 });
 
 Template.crmoverview.helpers({

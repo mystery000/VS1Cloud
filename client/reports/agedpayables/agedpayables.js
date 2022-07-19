@@ -121,19 +121,19 @@ Template.agedpayables.onRendered(() => {
 
                         //
                     ];
-
-                    if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
-                         || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
-                         || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
-                        if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
-
-                            if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
-                                records.push(recordObj);
-                            }
-                        } else {
-                            records.push(recordObj);
-                        }
-                    }
+                    records.push(recordObj);
+                    // if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
+                    //      || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
+                    //      || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
+                    //     if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
+                    //
+                    //         if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
+                    //             records.push(recordObj);
+                    //         }
+                    //     } else {
+                    //         records.push(recordObj);
+                    //     }
+                    // }
 
                 }
                 records = _.sortBy(records, 'SupplierName');
@@ -347,18 +347,20 @@ Template.agedpayables.onRendered(() => {
                         //
                     ];
 
-                    if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
-                         || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
-                         || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
-                        if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
+                    records.push(recordObj);
 
-                            if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
-                                records.push(recordObj);
-                            }
-                        } else {
-                            records.push(recordObj);
-                        }
-                    }
+                    // if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
+                    //      || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
+                    //      || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
+                    //     if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
+                    //
+                    //         if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
+                    //             records.push(recordObj);
+                    //         }
+                    //     } else {
+                    //         records.push(recordObj);
+                    //     }
+                    // }
 
                 }
                 records = _.sortBy(records, 'SupplierName');
