@@ -89,19 +89,19 @@ export default class ChartHandler {
       );
     });
 
-    for (const _chart of chartList) {
+    // for (const _chart of chartList) {
 
       const ApiResponse = await apiEndpoint.fetch(null, {
         method: "POST",
         headers: ApiService.getPostHeaders(),
-        body: JSON.stringify(_chart),
+        body: JSON.stringify(chartList),
       });
 
       if (ApiResponse.ok == true) {
         const jsonResponse = await ApiResponse.json();
       }
       //});
-    }
+    // }
   }
 
   static async saveChart(chart) {
