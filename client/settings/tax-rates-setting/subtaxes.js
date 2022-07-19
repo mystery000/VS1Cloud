@@ -910,6 +910,10 @@ Template.subTaxesSettings.events({
   'click .btnBack': function (event) {
     event.preventDefault();
     history.back(1);
+  },
+  'click .btnTaxRates': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/taxratesettings');
   }
 });
 

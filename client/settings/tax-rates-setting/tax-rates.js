@@ -84,8 +84,6 @@ Template.taxRatesSettings.onRendered(function () {
     getVS1Data('TTaxcodeVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         taxRateService.getTaxRateVS1().then(function (data) {
-          let lineItems = [];
-          let lineItemObj = {};
           for (let i = 0; i < data.ttaxcodevs1.length; i++) {
             let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + '%';
             var dataList = {
@@ -239,12 +237,8 @@ Template.taxRatesSettings.onRendered(function () {
           }, 0);
 
           var columns = $("#taxRatesList th");
-          let sTible = "";
           let sWidth = "";
-          let sIndex = "";
-          let sVisible = "";
           let columVisible = false;
-          let sClass = "";
           $.each(columns, function (i, v) {
             if (v.hidden == false) {
               columVisible = true;
@@ -274,8 +268,6 @@ Template.taxRatesSettings.onRendered(function () {
       } else {
         let data = JSON.parse(dataObject[0].data);
         let useData = data.ttaxcodevs1;
-        let lineItems = [];
-        let lineItemObj = {};
         for (let i = 0; i < useData.length; i++) {
           let taxRate = (useData[i].Rate * 100).toFixed(2) + '%';
           var dataList = {
@@ -400,12 +392,8 @@ Template.taxRatesSettings.onRendered(function () {
         }, 0);
 
         var columns = $('#taxRatesList th');
-        let sTible = "";
         let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
         let columVisible = false;
-        let sClass = "";
         $.each(columns, function (i, v) {
           if (v.hidden == false) {
             columVisible = true;
@@ -430,8 +418,6 @@ Template.taxRatesSettings.onRendered(function () {
       }
     }).catch(function (err) {
       taxRateService.getTaxRateVS1().then(function (data) {
-        let lineItems = [];
-        let lineItemObj = {};
         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
           let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + '%';
           var dataList = {
