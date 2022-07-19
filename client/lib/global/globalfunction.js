@@ -270,7 +270,7 @@ $('.dropdown-toggle').on("click",function(event){
     });
   };
 
-batchUpdateCall = function (url) {
+batchUpdateCall = async function (url) {
     var erpGet = erpDb();
     let dashboardArray = [];
     var oReq = new XMLHttpRequest();
@@ -303,21 +303,21 @@ batchUpdateCall = function (url) {
 
           if (~responseBack.indexOf("Finished Batch Update")){
 
-            sideBarService.getTTransactionListReport('').then(function(data) {
-                addVS1Data('TTransactionListReport',JSON.stringify(data));
-            }).catch(function(err) {
-
-            });
-            sideBarService.getTAPReport(prevMonth11Date,toDate, false).then(function(data) {
-              addVS1Data('TAPReport',JSON.stringify(data));
-            }).catch(function(err) {
-            });
-            sideBarService.getTARReport(prevMonth11Date,toDate, false).then(function(data) {
-              addVS1Data('TARReport',JSON.stringify(data));
-
-            }).catch(function(err) {
-
-            });
+            // sideBarService.getTTransactionListReport('').then(function(data) {
+            //     addVS1Data('TTransactionListReport',JSON.stringify(data));
+            // }).catch(function(err) {
+            //
+            // });
+            // sideBarService.getTAPReport(prevMonth11Date,toDate, false).then(function(data) {
+            //   addVS1Data('TAPReport',JSON.stringify(data));
+            // }).catch(function(err) {
+            // });
+            // sideBarService.getTARReport(prevMonth11Date,toDate, false).then(function(data) {
+            //   addVS1Data('TARReport',JSON.stringify(data));
+            //
+            // }).catch(function(err) {
+            //
+            // });
             //Meteor._reload.reload();
             oReq2.open("GET",URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/Vs1_Dashboard', true);
             oReq2.setRequestHeader("database",erpGet.ERPDatabase);
@@ -380,9 +380,15 @@ batchUpdateCall = function (url) {
                   localStorage.setItem('VS1PNLPeriodReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_pnl_period.items)||'');
                   localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
                   localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
-                  getVS1Data('vscloudlogininfo').then(function (dataObject) {
+                  getVS1Data('vscloudlogininfo').then(async function (dataObject) {
                     if(dataObject.length == 0){
-
+                      setTimeout(function () {
+                        if(url){
+                          window.open(url,'_self');
+                        }else{
+                          location.reload(true);
+                        }
+                      }, 10000);
                     }else{
                       //let userData = dataObject[0].data;
                       dashboardArray = dataObject[0].data;
@@ -405,60 +411,58 @@ batchUpdateCall = function (url) {
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TVS1_Dashboard_summary = dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary;
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TransactionTableLastUpdated = dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated;
 
-
-                    }
-
-                    addLoginData(dashboardArray).then(function (datareturnCheck) {
-                      setTimeout(function () {
-                      if(url){
-                        window.open(url,'_self');
-                      }else{
-                        location.reload(true);
-                      }
-                    }, 500);
-
-                      // setTimeout(function () {
-                      //   if(url){
-                      //     window.open(url,'_self');
-                      //   }else{
-                      //     location.reload(true);
-                      //   }
-                      //
-                      // }, 10000);
-                    }).catch(function (err) {
-                      //setTimeout(function () {
+                      await addLoginData(dashboardArray).then(function (datareturnCheck) {
+                        setTimeout(function () {
                         if(url){
                           window.open(url,'_self');
                         }else{
                           location.reload(true);
                         }
-                      //}, 10000);
-                    });
+                      }, 500);
+                      }).catch(function (err) {
+                          if(url){
+                            window.open(url,'_self');
+                          }else{
+                            location.reload(true);
+                          }
+                      });
+                    }
+
+
                   }).catch(function (err) {
 
                   });
 
                 }else if (oReq2.status != 200){
 
-
-                    Meteor._reload.reload();
-
-
+                  setTimeout(function () {
+                    if(url){
+                      window.open(url,'_self');
+                    }else{
+                      location.reload(true);
+                    }
+                  }, 10000);
                 }
             }
           }else{
-
-
-              Meteor._reload.reload();
-
+            setTimeout(function () {
+              if(url){
+                window.open(url,'_self');
+              }else{
+                location.reload(true);
+              }
+            }, 10000);
           }
           //if(responseBack.ResponseStatus == )
             //Meteor._reload.reload();
         }else if (oReq.status != 200){
-
-
-            Meteor._reload.reload();
-
+          setTimeout(function () {
+            if(url){
+              window.open(url,'_self');
+            }else{
+              location.reload(true);
+            }
+          }, 10000);
         }
     }
 };

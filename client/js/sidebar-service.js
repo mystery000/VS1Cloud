@@ -1959,21 +1959,22 @@ export class SideBarService extends BaseService {
     if(contactID != ''){
       options = {
         IgnoreDates: true,
-        ClientID:contactID
+        ClientID:contactID,
+        AgeByTransactionDate:true
       };
     }else{
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        select: "[deleted]=false",
+        AgeByTransactionDate:true
       };
     } else {
       options = {
         IgnoreDates: false,
-        select: "[deleted]=false",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + initialReportLoad + '"',
+        AgeByTransactionDate:true
       };
     }
   }
