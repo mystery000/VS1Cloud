@@ -1436,22 +1436,22 @@ Template.purchasesoverview.events({
           addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
             sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
                 addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
-                    window.open("/purchasesoverview", "_self");
+                    batchUpdateCall('/purchasesoverview');
                   }).catch(function (err) {
-                    window.open("/purchasesoverview", "_self");
+                    batchUpdateCall('/purchasesoverview');
                   });
               }).catch(function (err) {
-                window.open("/purchasesoverview", "_self");
+                batchUpdateCall('/purchasesoverview');
               });
             }).catch(function (err) {
               sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
                   addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
-                      window.open("/purchasesoverview", "_self");
+                      batchUpdateCall('/purchasesoverview');
                     }).catch(function (err) {
-                      window.open("/purchasesoverview", "_self");
+                      batchUpdateCall('/purchasesoverview');
                     });
                 }).catch(function (err) {
-                  window.open("/purchasesoverview", "_self");
+                  batchUpdateCall('/purchasesoverview');
                 });
             });
         }).catch(function (err) {

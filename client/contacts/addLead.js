@@ -615,7 +615,7 @@ Template.leadscard.events({
         let currentId = FlowRouter.current().queryParams.id||'';
         let customerName = $('#edtLeadEmployeeName').val() ||'';
         if(customerName !== "") {
-          await addVS1Data('TAwaitingCustomerPayment', []);
+          await clearData('TAwaitingCustomerPayment');
           FlowRouter.go('/customerawaitingpayments?contact='+customerName+'&contactid='+currentId);
         }
     },

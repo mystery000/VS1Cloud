@@ -103,7 +103,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
 
         getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObject) {
             if (dataObject.length == 0) {
-              sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+              sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                   let lineItems = [];
                   let lineItemObj = {};
                   addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data));
@@ -723,7 +723,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
 
             }
         }).catch(function (err) {
-            sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+            sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data));

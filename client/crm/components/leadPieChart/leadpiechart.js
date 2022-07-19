@@ -69,7 +69,7 @@ Template.leadpiechart.onRendered(function () {
       });
 
     } catch (error) {
-      console.log(error)
+
     }
   };
   templateObject.displayExpenseChart();

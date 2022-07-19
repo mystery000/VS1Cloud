@@ -270,7 +270,7 @@ Template.profitlossreport.events({
     var accountName = id[1].split("_").join(" ");
     let toDate = moment($("#dateTo").val()).clone().endOf("month").format("YYYY-MM-DD");
     let fromDate = moment($("#dateFrom").val()).clone().startOf("year").format("YYYY-MM-DD");
-      await addVS1Data('TAccountRunningBalanceReport', []);
+      await clearData('TAccountRunningBalanceReport');
     //Session.setPersistent('showHeader',true);
     window.open(
       "/balancetransactionlist?accountName=" +

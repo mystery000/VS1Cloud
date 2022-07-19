@@ -179,7 +179,7 @@ Template.leadbarchart.onRendered(() => {
       });
 
     } catch (error) {
-      console.log(error)
+
     }
   };
 
@@ -193,7 +193,7 @@ Template.leadbarchart.onRendered(() => {
         drawBarChart(data)
       }
     }).catch(function (err) {
-      console.log(err)
+
     });
 
     getVS1Data("TCRMLeadPieChart").then(function (dataObject) {
@@ -202,7 +202,7 @@ Template.leadbarchart.onRendered(() => {
         drawPieChart(data)
       }
     }).catch(function (err) {
-      console.log(err)
+
     });
 
     crmService.getAllLeads(dateFrom).then(function (data) {
@@ -253,11 +253,10 @@ Template.leadbarchart.onRendered(() => {
       drawBarChart(bar_records)
 
     }).catch(function (err) {
-      console.log(err)
+
     });
   }
 
   templateObject.getLeadBarChartData();
 
 });
-

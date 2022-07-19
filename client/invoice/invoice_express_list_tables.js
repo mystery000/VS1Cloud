@@ -1621,20 +1621,61 @@ Template.invoicelist.events({
         var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
+        sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+            addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
+
+              }).catch(function (err) {
+
+               });
+        }).catch(function (err) {
+
+        });
+
 
         sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataInvoice) {
             addVS1Data('TInvoiceList', JSON.stringify(dataInvoice)).then(function (datareturn) {
               sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
                   addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
-                    sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
-                        addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
-                          window.open('/invoicelist', '_self');
-                          }).catch(function (err) {
-                            window.open('/invoicelist', '_self');
-                           });
-                    }).catch(function (err) {
-                      window.open('/invoicelist', '_self');
+                    sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
+            addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
+                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataSuppPay) {
+                    addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
+                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
+                            addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+                              setTimeout(function () {
+                                window.open('/supplierawaitingpurchaseorder', '_self');
+                              }, 2000);
+                            }).catch(function(err) {
+                              setTimeout(function () {
+                                window.open('/supplierawaitingpurchaseorder', '_self');
+                              }, 2000);
+                            });
+                        }).catch(function(err) {
+                          setTimeout(function () {
+                            window.open('/supplierawaitingpurchaseorder', '_self');
+                          }, 2000);
+                        });
+                    }).catch(function(err) {
+                        setTimeout(function () {
+                            window.open('/supplierawaitingpurchaseorder', '_self');
+                         }, 2000);
                     });
+                }).catch(function(err) {
+                  setTimeout(function () {
+                    window.open('/supplierawaitingpurchaseorder', '_self');
+                  }, 2000);
+                });
+            }).catch(function(err) {
+              setTimeout(function () {
+                window.open('/supplierawaitingpurchaseorder', '_self');
+              }, 2000);
+            });
+        }).catch(function(err) {
+          setTimeout(function () {
+            window.open('/supplierawaitingpurchaseorder', '_self');
+          }, 2000);
+
+        });
                   }).catch(function (err) {
                       window.open('/invoicelist', '_self');
                   });
@@ -1663,6 +1704,7 @@ Template.invoicelist.events({
               window.open('/invoicelist', '_self');
           });
         });
+
 
 
     },
