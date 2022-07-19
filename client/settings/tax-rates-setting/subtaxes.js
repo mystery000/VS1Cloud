@@ -3,6 +3,8 @@ import { SideBarService } from '../../js/sidebar-service';
 import { TaxRateService } from "../settings-service";
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
+let taxRateService = new TaxRateService();
+
 Template.subTaxesSettings.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -12,7 +14,6 @@ Template.subTaxesSettings.onCreated(function () {
 Template.subTaxesSettings.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
-  let taxRateService = new TaxRateService();
   const dataTableList = [];
   const tableHeaderList = [];
 
@@ -690,7 +691,6 @@ Template.subTaxesSettings.events({
   },
   'click .btnSaveSubTax': function () {
     $('.fullScreenSpin').css('display', 'inline-block');
-    let taxRateService = new TaxRateService();
     let taxtID = $('#edtTaxID').val();
     let taxCode = $('#edtTaxCode').val();
     let taxDesc = $('#edtTaxDesc').val();
@@ -852,7 +852,6 @@ Template.subTaxesSettings.events({
   },
   'click .btnDeleteSubTax': function () {
     // add actions
-    let taxRateService = new TaxRateService();
     let taxCodeId = $('#selectDeleteLineID').val();
 
     let objDetails = {
