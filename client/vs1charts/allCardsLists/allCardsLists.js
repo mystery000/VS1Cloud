@@ -157,11 +157,17 @@ Template.allCardsLists.onRendered(function () {
             );
         }
         if( cardList ){
+
+             let cardJSON = {
+                type: "Tvs1CardPreference",
+                objects:cardList
+             };
+
             try {
                 const ApiResponse = await apiEndpoint.fetch(null, {
                     method: "POST",
                     headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(cardList),
+                    body: JSON.stringify(cardJSON),
                 });
 
                 if (ApiResponse.ok == true) {
@@ -171,7 +177,7 @@ Template.allCardsLists.onRendered(function () {
                 }
             } catch (error) {
                 $(".fullScreenSpin").css("display", "none");
-            }           
+            }
         }
     };
 });
