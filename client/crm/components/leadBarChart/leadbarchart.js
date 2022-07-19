@@ -217,6 +217,7 @@ Template.leadbarchart.onRendered(() => {
           recordObj.Id = data.tprospect[i].fields.ID;
           CreationDate = data.tprospect[i].fields.CreationDate ? data.tprospect[i].fields.CreationDate.substr(0, 10) : "";
 
+          recordObj.CreationDateSort = CreationDate ? CreationDate : "-";
           recordObj.CreationDate = CreationDate ? getModdayOfCurrentWeek(CreationDate) + "~" : "-";
           bar_records.push(recordObj);
 
@@ -226,7 +227,7 @@ Template.leadbarchart.onRendered(() => {
           pie_records.push(pieRecordObj);
         }
 
-        bar_records = _.sortBy(bar_records, 'CreationDate');
+        bar_records = _.sortBy(bar_records, 'CreationDateSort');
         bar_records = _.groupBy(bar_records, 'CreationDate');
 
         pie_records = _.sortBy(pie_records, 'SourceName');
