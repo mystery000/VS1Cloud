@@ -64,6 +64,7 @@ Template.allCardsLists.onRendered(function () {
                         return card;
                     }
                 });
+                console.log('cardList', cardList)
             }
             if( cardList.length > 0 ){
                 cardList.forEach((card) => {
@@ -156,20 +157,22 @@ Template.allCardsLists.onRendered(function () {
             );
         }
         if( cardList ){
-            for (const _card of cardList) {
+            try {
                 const ApiResponse = await apiEndpoint.fetch(null, {
                     method: "POST",
                     headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(_card),
+                    body: JSON.stringify(cardList),
                 });
 
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
+                    await templateObject.saveCardsLocalDB();
+                    $(".fullScreenSpin").css("display", "none");
                 }
-            }
-            await templateObject.saveCardsLocalDB();
+            } catch (error) {
+                $(".fullScreenSpin").css("display", "none");
+            }           
         }
-        $(".fullScreenSpin").css("display", "none");
     };
 });
 
