@@ -93,7 +93,19 @@
                        
                     </ul>
                 </div>
-                <div class="setup-step setup-step-1">
+
+                <style>
+                    .setup-step {
+                        display: none;
+                    }
+
+                    .setup-step.show {
+                        display: block;
+                    }
+                </style>
+
+               
+                <div class="setup-step setup-step-1 {{#if isActive currentStep '1'}} show {{/if}}"  >
                     <div class="container-fluid">
                         <h3 class="text-dark mb-4">Organization Settings</h3>
                         <div class="row d-xl-flex justify-content-center justify-content-xl-center">
@@ -353,7 +365,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-2" style="display: none;">
+                <div class="setup-step setup-step-2 {{#if isActive currentStep '2'}} show {{/if}}"  >
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col">
@@ -532,7 +544,7 @@
 
                     {{> DeleteLineModal}}
                 </div>
-                <div class="setup-step setup-step-3" style="display: none;">
+                <div class="setup-step setup-step-3 {{#if isActive currentStep '3'}} show {{/if}}" >
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col">
@@ -783,7 +795,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-4" style="display: none;">
+                <div class="setup-step setup-step-4 {{#if isActive currentStep '4'}} show {{/if}}" >
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col">
@@ -946,7 +958,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-5" style="display: none;">
+                <div class="setup-step setup-step-5 {{#if isActive currentStep '5'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                             <div class="col">
@@ -1144,7 +1156,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-6" style="display: none;">
+                <div class="setup-step setup-step-6 {{#if isActive currentStep '6'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                            <div class="col">
@@ -1452,7 +1464,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-7" style="display: none;">
+                <div class="setup-step setup-step-7 {{#if isActive currentStep '7'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                             <div class="col">
@@ -1673,7 +1685,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-8" style="display: none;">
+                <div class="setup-step setup-step-8 {{#if isActive currentStep '8'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                             <div class="col">
@@ -1872,7 +1884,7 @@
                         {{> addsupplierpop}}
                     </div>
                 </div>               
-                <div class="setup-step setup-step-9" style="display: none;">
+                <div class="setup-step setup-step-9 {{#if isActive currentStep '9'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                             <div class="col">
@@ -2181,7 +2193,7 @@
                         {{> newproductpop}}
                     </div>
                 </div>
-                <div class="setup-step setup-step-10" style="display: none;">
+                <div class="setup-step setup-step-10 {{#if isActive currentStep '10'}} show {{/if}}" >
                     <div class="first-page-container" style="margin: auto;">
                         <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png"/></div>
                         <h1 class="text-center">Initial set up is completed</h1>

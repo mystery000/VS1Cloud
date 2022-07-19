@@ -37,7 +37,8 @@ function getCurrentStep() {
 }
 
 function setCurrentStep(stepId) {
-  const templateObject = Template.instance();
+  if(isNaN(stepId)) return false;
+  let templateObject = Template.instance();
   templateObject.currentStep.set(stepId);
   return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
 }
@@ -56,12 +57,15 @@ function setConfirmedSteps(steps = []) {
 }
 
 function addConfirmedStep(step) {
+  if(isNaN(step)) return false;
   let steps = getConfirmedSteps();
-  console.log(steps);
-  steps = JSON.parse(steps);
-  console.log(steps);
-  steps.push(step);
-  setConfirmedSteps(steps);
+  if(!steps.includes(step)) {
+    //console.log(steps);
+    steps = JSON.parse(steps);
+    //console.log(steps);
+    steps.push(step);
+    setConfirmedSteps(steps);
+  }
 }
 
 /**
@@ -70,6 +74,7 @@ function addConfirmedStep(step) {
  * @returns {boolean}
  */
 function isConfirmedStep(stepId) {
+  if(isNaN(stepId)) return false;
   let steps = getConfirmedSteps();
   return steps.includes(stepId);
 }
@@ -81,11 +86,14 @@ function getSkippedSteps() {
 }
 
 function addSkippedStep(step) {
+  if(isNaN(step)) return false;
   let steps = getSkippedSteps();
-  steps = JSON.parse(steps);
-  console.log(steps);
-  steps.push(step);
-  setSkippedSteps(steps);
+  if(!steps.includes(step)) {
+    steps = JSON.parse(steps);
+   // console.log(steps);
+    steps.push(step);
+    setSkippedSteps(steps);
+  }
 }
 
 function setSkippedSteps(steps = []) {
@@ -107,8 +115,8 @@ function isStepSkipped(stepId) {
 
 /**
  * This function will check if the link is clickable or not
- * @param {*} stepId 
- * @returns 
+ * @param {*} stepId
+ * @returns
  */
 function isClickableStep(stepId) {
   const confirmedSteps = getConfirmedSteps();
@@ -271,7 +279,8 @@ Template.setup.onRendered(function () {
   if (currentStep !== null) {
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
-    $(".setup-step").css("display", "none");
+    // $(".setup-step").css("display", "none");
+    
     let confirmedSteps =
       localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
     for (let i = 0; i < currentStep; i++) {
@@ -286,10 +295,10 @@ Template.setup.onRendered(function () {
       }
     }
     if (currentStep !== numberOfSteps) {
-      $(".setup-step-" + currentStep).css("display", "block");
+      // $(".setup-step-" + currentStep).css("display", "block");
       $(`.setup-stepper li:nth-child(${currentStep})`).addClass("current");
     } else {
-      $(".setup-complete").css("display", "block");
+      // $(".setup-complete").css("display", "block");
     }
   }
 
@@ -741,7 +750,7 @@ Template.setup.onRendered(function () {
                     // ],
                     // bStateSave: true,
                     // rowId: 0,
-                    
+
                     pageLength: 25,
                     paging: true,
                     //                      "scrollY": "400px",
@@ -3524,14 +3533,14 @@ Template.setup.onRendered(function () {
               MakeNegative();
             }, 100);
           });
-  
+
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
       }, 1000);
     }
 
     LoadingOverlay.hide();
-    
+
 
     // var columns = $("#tblCustomerlist th");
     // let sTible = "";
@@ -4275,6 +4284,14 @@ function isStepActive(stepId) {
   }
 }
 
+function goToNextStep(stepId, isConfirmed = false) {
+  isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
+  stepId = stepId + 1;
+  setCurrentStep(stepId);
+  $('.setup-step').removeClass('show');
+  $(`.setup-step-${stepId}`).addClass('show');
+}
+
 Template.setup.events({
   "click #start-wizard": (e) => {
     let templateObject = Template.instance();
@@ -4284,39 +4301,50 @@ Template.setup.events({
     setCurrentStep(1);
     templateObject.loadSteps();
   },
-  "click .confirmBtn": function (event) {
+  "click .confirmBtn":(event) => {
+    LoadingOverlay.show();
     let templateObject = Template.instance();
-    let stepId = $(event.target).attr("data-step-id");
-    addConfirmedStep(stepId);
-    stepId = parseInt(stepId) + 1;
-    $(".setup-step").css("display", "none");
+    let stepId = $(event.currentTarget).attr("data-step-id");
+    goToNextStep(stepId, true);
+    //addConfirmedStep(stepId);
+
+    // stepId = parseInt(stepId) + 1;
+    // $(".setup-step").css("display", "none");
+    // $(`.setup-step-${stepId}`).css("display", "block");
+
+  // $(".setup-step").css("display", "none");
     // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
     // $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
     // $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
-    $(".setup-step-" + stepId).css("display", "block");
+  // $(".setup-step-" + stepId).css("display", "block");
     // if (stepId !== numberOfSteps) {
     //   $(".setup-step-" + stepId).css("display", "block");
     // } else {
     //   $(".setup-complete").css("display", "block");
     // }
 
-    setCurrentStep(stepId);
+    //setCurrentStep(stepId);
     templateObject.loadSteps();
     window.scrollTo(0, 0);
+    LoadingOverlay.hide();
   },
   "click .btnBack": function (event) {
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let skippedSteps = templateObject.skippedSteps.get();
-    let stepId = parseInt($(event.target).attr("data-step-id"));
+    let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
-    addSkippedStep(stepId);
-    stepId = stepId + 1;
-    $(".setup-step").css("display", "none");
+    goToNextStep(stepId, false);
+    //addSkippedStep(stepId);
+
+    // stepId = stepId + 1;
+    // $(".setup-step").css("display", "none");
+    // $(`.setup-step-${stepId}`).css("display", "block");
+
     // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
     // $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
-    $(".setup-step-" + stepId).css("display", "block");
     // if (stepId !== numberOfSteps) {
     //   $(".setup-step-" + stepId).css("display", "block");
     // } else {
@@ -4325,27 +4353,32 @@ Template.setup.events({
     // let _steps = templateObject.steps.get();
     // _steps.skippedSteps.push(stepId);
 
-    skippedSteps.push(stepId);
+    if(!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
     templateObject.skippedSteps.set(skippedSteps);
 
-    setCurrentStep(stepId);
+    //setCurrentStep(stepId);
     templateObject.loadSteps();
     window.scrollTo(0, 0);
+    LoadingOverlay.hide();
   },
-  "click .gotToStepID": function (event) {
+  "click .gotToStepID":  (event) => {
     let templateObj = Template.instance();
-    const stepId = parseInt($(event.target).attr("data-step-id"));
+    const stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
-    $(".setup-step").css("display", "none");
+    $('.setup-step').removeClass('show');
+    $(`.setup-step-${stepId}`).addClass('show');
+
+    // $(".setup-step").css("display", "none");
     $(`.setup-stepper li`).removeClass("current");
     // $(`.setup-stepper li`).removeClass("clickDisabled");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     // $(`.setup-stepper li:nth-child(n+${stepId})`).addClass("clickDisabled");
-    if (stepId !== numberOfSteps) {
-      $(".setup-step-" + stepId).css("display", "block");
-    } else {
-      $(".setup-complete").css("display", "flex");
-    }
+
+    // if (stepId !== numberOfSteps) {
+    //   $(".setup-step-" + stepId).css("display", "block");
+    // } else {
+    //   $(".setup-complete").css("display", "flex");
+    // }
     setCurrentStep(stepId);
     templateObj.loadSteps();
   },
@@ -8900,13 +8933,10 @@ Template.setup.events({
 });
 
 Template.setup.helpers({
-  isStepActive: (step) => {
-    const currentStep = getCurrentStep();
-    if (currentStep == step) {
-      return 'style="display: none"';
-    }
-    return 'style="display: block"';
-  },
+  // isStepActive: (step = 1) => {
+  //   const currentStep = getCurrentStep();
+  //   return step == currentStep;
+  // },
   currentStep: () => {
     return getCurrentStep() || 1;
   },
@@ -9233,5 +9263,11 @@ Template.setup.helpers({
 });
 
 Template.registerHelper("equals", function (a, b) {
+  //console.log(a + " == " + b, a == b);
   return a === b;
+});
+
+Template.registerHelper("isActive", function (currentStep, step) {
+  //console.log(currentStep + " == " + step, currentStep == step);
+  return  currentStep == step;
 });
