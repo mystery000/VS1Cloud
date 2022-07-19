@@ -75,13 +75,13 @@ export default class ChartHandler {
               $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true"
                 ? false
                 : true,
-            ChartID: $(chart).attr("chart-id"),
-            ID: $(chart).attr("pref-id"), // This is empty when it is the first time, but the next times it is filled
+            ChartID: parseInt($(chart).attr("chart-id")),
+            ID: parseInt($(chart).attr("pref-id")), // This is empty when it is the first time, but the next times it is filled
             EmployeeID: Session.get("mySessionEmployeeLoggedID"),
             Chartname: $(chart).attr("chart-name"),
             Position: parseInt($(chart).attr("position")),
             ChartGroup: $(chart).attr("chart-group"),
-            TabGroup: $(chart).parents(".charts").attr("data-tabgroup"),
+            TabGroup: parseInt($(chart).parents(".charts").attr("data-tabgroup")),
             ChartWidth: ChartHandler.calculateWidth(chart),
             ChartHeight: ChartHandler.calculateHeight(chart),
           }),
@@ -90,16 +90,19 @@ export default class ChartHandler {
     });
 
     // for (const _chart of chartList) {
+    let chartJSON = {
+        type: "Tvs1dashboardpreferences",
+        objects:chartList
+    };
+    const ApiResponse = await apiEndpoint.fetch(null, {
+      method: "POST",
+      headers: ApiService.getPostHeaders(),
+      body: JSON.stringify(chartJSON),
+    });
 
-      const ApiResponse = await apiEndpoint.fetch(null, {
-        method: "POST",
-        headers: ApiService.getPostHeaders(),
-        body: JSON.stringify(chartList),
-      });
-
-      if (ApiResponse.ok == true) {
-        const jsonResponse = await ApiResponse.json();
-      }
+    if (ApiResponse.ok == true) {
+      const jsonResponse = await ApiResponse.json();
+    }
       //});
     // }
   }
@@ -162,10 +165,9 @@ export default class ChartHandler {
 
     const dashboardPreferencesEndpointResponse =
       await dashboardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
-
+    let dashboardPreferencesEndpointJsonResponse = {};  
     if (dashboardPreferencesEndpointResponse.ok == true) {
-      dashboardPreferencesEndpointJsonResponse =
-        await dashboardPreferencesEndpointResponse.json();
+      dashboardPreferencesEndpointJsonResponse = await dashboardPreferencesEndpointResponse.json();
     }
     await addVS1Data('Tvs1dashboardpreferences', JSON.stringify(dashboardPreferencesEndpointJsonResponse))
     return true

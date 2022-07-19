@@ -64,7 +64,6 @@ Template.allCardsLists.onRendered(function () {
                         return card;
                     }
                 });
-                console.log('cardList', cardList)
             }
             if( cardList.length > 0 ){
                 cardList.forEach((card) => {
@@ -92,6 +91,8 @@ Template.allCardsLists.onRendered(function () {
                 // Set default cards list
                 $('.card-visibility').each(function(){
                     $(this).find('.cardShowBtn .far').removeClass('fa-eye');
+                    let position = $(this).data('default-position');
+                    $(this).attr('position', position);
                     $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
                     $(this).attr("card-active", 'false');
                 })
@@ -191,9 +192,11 @@ Template.allCardsLists.events({
             $('.cardShowBtn').removeClass('hideelement');
             $('.editCardBtn').find('i').removeClass('fa-cog')
             $('.editCardBtn').find('i').addClass('fa-save')
+            $('#resetcards').removeClass('hideelement');
         }else{
             $(".fullScreenSpin").css("display", "block");
             $('.cardShowBtn').addClass('hideelement');
+            $('#resetcards').addClass('hideelement');
             $('.editCardBtn').find('i').removeClass('fa-save')
             $('.editCardBtn').find('i').addClass('fa-cog');
             // Save cards
@@ -207,7 +210,6 @@ Template.allCardsLists.events({
         }else{
             $('.card-visibility').addClass('dimmedChart');
         }
-        return false
     },
     "click .cardShowBtn": function(e){
         e.preventDefault();
@@ -221,6 +223,49 @@ Template.allCardsLists.events({
             $(e.target).find('.far').addClass('fa-eye')
             $(e.target).parents('.card-visibility').attr('card-active', 'true')
         }
-        return false
     },
+    "click .resetcards": async function(e){
+        e.preventDefault();
+        $(".fullScreenSpin").css("display", "block");
+        let templateObject = Template.instance();
+        let _tabGroup = $(".connectedCardSortable").data("tabgroup");
+        let employeeId = Session.get("mySessionEmployeeLoggedID");
+
+        const cardsApis = new ChartsApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = cardsApis.collection.findByName(
+            cardsApis.collectionNames.Tvs1CardPreference
+        );
+        let resetCards = {
+            type: "Tvs1CardPreference",
+            delete: true,
+            fields: {
+              EmployeeID: parseInt(employeeId),
+              TabGroup: _tabGroup,
+            }
+        }
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+              method: "POST",
+              headers: ApiService.getPostHeaders(),
+              body: JSON.stringify(resetCards),
+            });
+        
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('.cardShowBtn').addClass('hideelement');
+                $('#resetcards').addClass('hideelement');
+                $('.editCardBtn').find('i').removeClass('fa-save')
+                $('.editCardBtn').find('i').addClass('fa-cog');
+                await templateObject.saveCardsLocalDB();
+                await templateObject.setCardPositions();
+                $('.card-visibility').removeClass('dimmedChart');
+                $('.cardShowBtn').removeClass('hideelement');
+                $(".fullScreenSpin").css("display", "none");
+            }
+        } catch (error) {
+            $(".fullScreenSpin").css("display", "none");
+        }
+
+    }
 });
