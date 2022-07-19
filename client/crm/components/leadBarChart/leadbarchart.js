@@ -1,3 +1,4 @@
+import '../../../lib/global/indexdbstorage.js';
 import { CRMService } from "../../crm-service"
 let _ = require('lodash');
 
@@ -186,6 +187,24 @@ Template.leadbarchart.onRendered(() => {
     let crmService = new CRMService();
     let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD") + " 00:00:00";
 
+    getVS1Data("TCRMLeadBarChart").then(function (dataObject) {
+      if (dataObject.length) {
+        let data = JSON.parse(dataObject[0].data);
+        drawBarChart(data)
+      }
+    }).catch(function (err) {
+      console.log(err)
+    });
+
+    getVS1Data("TCRMLeadPieChart").then(function (dataObject) {
+      if (dataObject.length) {
+        let data = JSON.parse(dataObject[0].data);
+        drawPieChart(data)
+      }
+    }).catch(function (err) {
+      console.log(err)
+    });
+
     crmService.getAllLeads(dateFrom).then(function (data) {
 
       let bar_records = [];
@@ -225,6 +244,10 @@ Template.leadbarchart.onRendered(() => {
         bar_records.push(recordObj);
         pie_records.push(pieRecordObj);
       }
+
+      addVS1Data("TCRMLeadBarChart", JSON.stringify(bar_records));
+      addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records));
+
       drawPieChart(pie_records)
       drawBarChart(bar_records)
 

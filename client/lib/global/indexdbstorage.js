@@ -245,6 +245,7 @@ openDb = function (dbName) {
       db.createObjectStore('TCRMLabelList', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMLeadBarChart', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMLeadPieChart', { keyPath: "EmployeeEmail" });
+      
       db.createObjectStore('TProfitLossEditLayout', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TemplateSettings', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TVS1Superannuation',{ keyPath: "EmployeeEmail"});
