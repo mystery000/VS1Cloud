@@ -224,7 +224,6 @@ Template.subTaxesSettings.onRendered(function () {
                   let columnindex = customcolumn[i].index + 1;
 
                   if (hiddenColumn == true) {
-
                     $("." + columnClass + "").addClass('hiddenColumn');
                     $("." + columnClass + "").removeClass('showColumn');
                   } else if (hiddenColumn == false) {
@@ -234,7 +233,6 @@ Template.subTaxesSettings.onRendered(function () {
 
                 }
               }
-
             }
           });
 
@@ -617,7 +615,6 @@ Template.subTaxesSettings.events({
               $('#myModal2').modal('toggle');
             } else {
               $('#myModal2').modal('toggle');
-
             }
           });
         }

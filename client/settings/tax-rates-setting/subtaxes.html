@@ -263,14 +263,14 @@
                                                     <th class="th colCode" style="width: 100px">Code</th>
                                                     <th class="th colDescription">Description</th>
                                                     <th class="th colCategory" style="width: 150px">Category</th>
-                                                    <th  class="th colDelete" style="width: 23px"></th>
+                                                    <th class="th colDelete" style="width: 23px"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {{#if datatablerecords}}
                                                 {{#each item in datatablerecords}}
                                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                    <td contenteditable="false" class="colName clickable">{{item.codename}}</td>
+                                                    <td contenteditable="false" class="colCode clickable">{{item.codename}}</td>
                                                     <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
                                                     <td contenteditable="false" class="colCategory clickable">{{item.category}}</td>
                                                     <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
