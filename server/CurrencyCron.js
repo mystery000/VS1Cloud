@@ -53,22 +53,18 @@ async function _getCurrencies(erpGet, cb = (error, result) => {}) {
      */
     Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
       if (error) {
-        console.log("_getCurrencies", "error");
-        // console.log("error", error);
         cb(error, null);
       } else {
-        console.log("_getCurrencies", "success");
         cb(null, result);
-        // console.log("result",result);
       }
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    cb(error, null);
   }
 }
 
-async function _updateCurrencies(currencies = [], callback = (currencies = []) => {}) {
-  console.log("Running _updateCurrencies");
+async function _updateCurrencies(currencies = [], erpGet, callback = (currencies = []) => {}) {
+  // console.log("Running _updateCurrencies");
   //let _currencies = [];
   // await asyncForEach(currencies, async (currency, index) => {
   //   await _updateCurrency(currency, (_currency) => {
@@ -85,11 +81,11 @@ async function _updateCurrencies(currencies = [], callback = (currencies = []) =
       //result = JSON.stringify(result);
       //console.log("stirng " ,JSON.parse(JSON.stringify(result.to)));
       //console.log("currencies", currencies);
-      let _currencies = _updateRates(currencies, result.to);
-      callback(_currencies);
+      Meteor.wrapAsync(_updateRates)(currencies, result.to, erpGet);
+      // let _currencies = _updateRates(currencies, result.to);
+      // callback(_currencies);
     }
   });
-
   
 }
 
@@ -101,30 +97,39 @@ async function _updateCurrencies(currencies = [], callback = (currencies = []) =
  * @param {*} FxCurrencies 
  * @returns 
  */
-async function _updateRates(dbCurrencies = [], FxCurrencies = [], callback = (currencies = []) => {}) {
-  console.log("currencies to check", dbCurrencies.length);
+function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (currencies = []) => {}) {
   if(dbCurrencies) {
-    await asyncForEach(dbCurrencies, async (currency, index) => {
-      const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == currency.fields.Code);
-      if(fxCurrencyRates) {
-        dbCurrencies[index].fields.BuyRate = fxCurrencyRates.mid;
-        dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
-      }
-    }).then(() => {
-      callback(dbCurrencies);
-    });
-    // dbCurrencies.foreach((dbCurrency, index) => {
-    //   const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == dbCurrency.fields.Code);
+    
+    // for (let index = 0; index < dbCurrencies.length; index++) {
+    //   await callback(array[index], index, array);
+    // }
+
+    // await asyncForEach(dbCurrencies, async (currency, index) => {
+    //   const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == currency.fields.Code);
     //   if(fxCurrencyRates) {
     //     dbCurrencies[index].fields.BuyRate = fxCurrencyRates.mid;
     //     dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
     //   }
+    // }).then(() => {
+    //   callback(dbCurrencies);
     // });
+    // return new Promise(function (resolve, reject) {
+      dbCurrencies.forEach((dbCurrency, index) => {
+        const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == dbCurrency.fields.Code);
+        if(fxCurrencyRates) {
+          // dbCurrencies[index].fields.BuyRate = fxCurrencyRates.mid;
+          // dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
+          dbCurrency.fields.BuyRate = fxCurrencyRates.mid;
+          dbCurrency.fields.SellRate = fxCurrencyRates.inverse;
+          // save funciton here
+          // console.log( 'dbCurrency', dbCurrency )
+          Meteor.wrapAsync(_saveCurrency)(dbCurrency, erpGet);
+        }
+      });
+    // })
   }
   // console.log("db currencies", dbCurrencies);
   // console.log("db currencies lenght", dbCurrencies.length);
-  
-  return dbCurrencies;
 }
 
 async function _updateCurrency(currency, callback = (currency) => {}) {
@@ -150,7 +155,7 @@ async function _updateCurrency(currency, callback = (currency) => {}) {
  * @param {*} currency
  */
 async function _saveCurrency(currency, erpGet) {
-  console.log('Saving currency: ', currency.Code, " BuyRate: ", currency.BuyRate , " SellRate: ", currency.SellRate);
+  console.log('Saving currency: ', currency.fields.Code, " BuyRate: ", currency.fields.BuyRate , " SellRate: ", currency.fields.SellRate);
   const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency`;
   const _headers = {
     database: erpGet.ERPDatabase,
@@ -211,19 +216,20 @@ async function _saveCurrencies(currencies = [], erpGet) {
 }
 
 const cronRun = (cronSetting, erpGet, cb) => {
-  _getCurrencies(erpGet, (error, response) => {
-    if (error) {
-      console.log("error", error);
-    } else if (response.data) {
-      _updateCurrencies(response.data.tcurrency, (currencies) => {
+  console.log('running cron fuctions');
+  // _getCurrencies(erpGet, (error, response) => {
+  //   if (error) {
+  //     console.log("error", error);
+  //   } else if (response.data) {
+  //     _updateCurrencies(response.data.tcurrency, (currencies) => {
       
-        if (currencies) {
-          console.log("Time to save currencies", currencies.length);
-          _saveCurrencies(currencies, erpGet);
-        }
-      });
-    }
-  });
+  //       if (currencies) {
+  //         console.log("Time to save currencies", currencies.length);
+  //         _saveCurrencies(currencies, erpGet);
+  //       }
+  //     });
+  //   }
+  // });
 };
 
 Meteor.methods({
@@ -396,8 +402,25 @@ Meteor.methods({
 
     //   }
     // });
+    try {
+      let response = Meteor.wrapAsync(_getCurrencies)( erpGet );
+      if (response.data) {
+        Meteor.wrapAsync(_updateCurrencies)(response.data.tcurrency, erpGet);
+        // console.log('currencies', currencies)
+        // _updateCurrencies(response.data.tcurrency, (currencies) => {
+        
+        //     if (currencies) {
+        //       console.log("Time to save currencies", currencies.length);
+        //       _saveCurrencies(currencies, erpGet);
+        //     }
+        //   });
+      }
+    } catch (error) {
+      console.log('error', error)
+    }
+    // return Meteor.wrapAsync(cronRun)(cronSetting, erpGet);
 
-    cronRun(cronSetting, erpGet, (error, result) => {});
+    // cronRun(cronSetting, erpGet, (error, result) => {});
   },
   /**
    * This function will just add the cron job
