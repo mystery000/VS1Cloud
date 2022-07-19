@@ -4304,7 +4304,7 @@ Template.setup.events({
   "click .confirmBtn":(event) => {
     LoadingOverlay.show();
     let templateObject = Template.instance();
-    let stepId = $(event.currentTarget).attr("data-step-id");
+    let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
     goToNextStep(stepId, true);
     //addConfirmedStep(stepId);
 
