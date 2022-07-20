@@ -51,8 +51,8 @@ Template.receiptsoverview.onRendered(function() {
         $('.btnRefresh').addClass('btnSearchAlert');
     }
 
-    sessionCurrency = Session.get('ERPCountryAbbr');
-    multipleRecords = [];
+    let sessionCurrency = Session.get('ERPCountryAbbr');
+    let multipleRecords = [];
     for (i = 0; i < 10; i++) {
         item = {
             date: moment().format("DD/MM/YYYY"),
@@ -63,7 +63,7 @@ Template.receiptsoverview.onRendered(function() {
             accountId: 0,
             currency: sessionCurrency,
             description: ""
-        }
+        };
         multipleRecords.push(item);
     }
     templateObject.multiReceiptRecords.set(multipleRecords);
@@ -892,7 +892,7 @@ Template.receiptsoverview.onRendered(function() {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
+            // colReorder: true,
             colReorder: {
                 fixedColumnsLeft: 0
             },
@@ -1077,7 +1077,7 @@ Template.receiptsoverview.onRendered(function() {
                             }],
                             select: true,
                             destroy: true,
-                            colReorder: true,
+                            // colReorder: true,
                             colReorder: {
                                 fixedColumnsLeft: 0
                             },
@@ -1253,7 +1253,7 @@ Template.receiptsoverview.onRendered(function() {
                         }],
                         select: true,
                         destroy: true,
-                        colReorder: true,
+                        // colReorder: true,
                         colReorder: {
                             fixedColumnsLeft: 0
                         },
@@ -1379,8 +1379,8 @@ Template.receiptsoverview.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
             let from = $('#employeeListModal').attr('data-from');
 
-            paymenttype = data.payment_type;
-            transactionTypeName = "Cash";
+            let paymenttype = data.payment_type;
+            let transactionTypeName = "Cash";
             if (paymenttype == "master_card") {
                 transactionTypeName = "Master Card";
             } else if (paymenttype == "credit_card") {
@@ -1404,14 +1404,14 @@ Template.receiptsoverview.onRendered(function() {
 
 
             if (!data.vendor.name) {
-                isExistSupplier = false;
+                let isExistSupplier = false;
                 templateObject.suppliers.get().forEach(supplier => {
                     if (data.vendor.name == supplier.suupliername) {
                         isExistSupplier = true;
                         $(parentElement + ' .merchants').val(data.vendor.name);
                         $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
                     }
-                })
+                });
 
                 if (!isExistSupplier) {
                     // create supplier with vendor data
@@ -1431,7 +1431,6 @@ Template.receiptsoverview.onRendered(function() {
                             State: '',
                             PostCode: '',
                             Country: '',
-
                             BillStreet: '',
                             BillStreet2: '',
                             BillState: '',
@@ -1470,7 +1469,7 @@ Template.receiptsoverview.onRendered(function() {
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
         });
-    }
+    };
 
     templateObject.base64data = function(file) {
         return new Promise((resolve, reject) => {
@@ -1478,13 +1477,13 @@ Template.receiptsoverview.onRendered(function() {
             fr.onerror = reject;
             fr.onload = function() {
                 resolve(fr.result);
-            }
+            };
             fr.readAsDataURL(file);
         })
     };
 
     templateObject.refreshSplitTable = function(rows) {
-        $splitDataTable = $('#tblSplitExpense').DataTable();
+        let $splitDataTable = $('#tblSplitExpense').DataTable();
         $splitDataTable.clear();
         $splitDataTable.rows.add(rows);
         $splitDataTable.columns.adjust().draw();
@@ -1507,8 +1506,8 @@ Template.receiptsoverview.onRendered(function() {
         $('select[id^="splitAccount-"]').editableSelect();
         setTimeout(() => {
             for (i = 0; i < rows.length; i++) {
-                $('#splitAccount-' + i).attr('data-id', rows[i].AccountId)
-                $('#splitAccount-' + i).val(rows[i].AccountName)
+                $('#splitAccount-' + i).attr('data-id', rows[i].AccountId);
+                $('#splitAccount-' + i).val(rows[i].AccountName);
             }
         }, 100);
     }
@@ -1550,7 +1549,6 @@ Template.receiptsoverview.events({
         $('#nav-expense .edtTotal').val('');
         $('#nav-expense .swtReiumbursable').attr('checked', false);
         $('#nav-expense #txaDescription').val('');
-
         $('#nav-expense .receiptPhoto').css('background-image', 'none');
         $('#nav-expense .receiptPhoto').attr('data-name', "");
         $('#nav-expense .img-placeholder').css('opacity', 1);
@@ -1558,10 +1556,8 @@ Template.receiptsoverview.events({
     'click a#showMultiple, click #newReceiptModal #nav-multiple-tab': function() {
         $('a.nav-link.active').removeClass('active');
         $('a.nav-link#nav-multiple-tab').addClass('active');
-
         $('#newReceiptModal .tab-pane.show.active').removeClass('show active');
         $('#newReceiptModal .tab-pane#nav-multiple').addClass('show active');
-
         $('.dtMultiple').val(moment().format('DD/MM/YYYY'));
         $('.multipleAmount').val('$0');
         $('.multipleMerchant').val('');
@@ -1611,7 +1607,6 @@ Template.receiptsoverview.events({
     'click #viewReceiptModal .btn-upload': function(event) {
         $('#viewReceiptModal .attachment-upload').trigger('click');
     },
-
     'change #viewReceiptModal .attachment-upload': function(event) {
         let files = $(event.target)[0].files;
         let imageFile = files[0];
@@ -1623,7 +1618,6 @@ Template.receiptsoverview.events({
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
-
     'change #nav-expense .attachment-upload': function(event) {
         let files = $(event.target)[0].files;
         let imageFile = files[0];
@@ -1635,7 +1629,6 @@ Template.receiptsoverview.events({
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
-
     'change #nav-time .attachment-upload': function(event) {
         let files = $(event.target)[0].files;
         let imageFile = files[0];
@@ -1647,7 +1640,6 @@ Template.receiptsoverview.events({
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
-
     'change #dateFrom, change #dateTo': function(event) {
         var receiptTable = $('#tblReceiptList').DataTable();
         receiptTable.draw();
@@ -1656,7 +1648,6 @@ Template.receiptsoverview.events({
         var receiptTable = $('#tblMerge').DataTable();
         receiptTable.draw();
     },
-
     'click #formCheck-All': function(event) {
         if ($(event.target).is(':checked')) {
             $(".chkBox").prop("checked", true);
@@ -1669,8 +1660,8 @@ Template.receiptsoverview.events({
         if ($(event.target).is(':checked')) {
             $(".chkBoxMerge").prop("checked", true);
 
-            mergeTable = $('#tblMerge').DataTable();
-            var lineItems = mergeTable.rows().data();
+            let mergeTable = $('#tblMerge').DataTable();
+            const lineItems = mergeTable.rows().data();
             template.mergeReceiptRecords.set(lineItems);
         } else {
             $(".chkBoxMerge").prop("checked", false);
@@ -1697,7 +1688,6 @@ Template.receiptsoverview.events({
             template.mergeReceiptRecords.set(mergeReceipts);
         }
     },
-
     'click .timeFilter': function(event) {
         let id = event.target.id;
         let template = Template.instance();
@@ -1708,17 +1698,14 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         template.setMergeTimeFilter(id);
     },
-
     'click #tblReceiptList tbody tr td:not(:first-child)': function(event) {
         let template = Template.instance();
-        var selectedId = $(event.target).closest('tr').attr('id');
+        const selectedId = $(event.target).closest('tr').attr('id');
         let selectedClaim = template.expenseClaimList.get().filter(claim => claim.ID == selectedId)[0];
         template.editExpenseClaim.set(selectedClaim);
 
         $('#employeeListModal').attr('data-from', 'ViewReceipt');
-
         $('#viewReceiptModal').modal('toggle');
-
         $('#viewReceiptModal .receiptID').html(selectedId);
         $('#viewReceiptModal .employees').val(selectedClaim.EmployeeName);
         $('#viewReceiptModal .employees').attr('data-id', selectedClaim.EmployeeID);
@@ -1825,12 +1812,9 @@ Template.receiptsoverview.events({
         } else if (from.includes('splitAccount-')) {
             $('#' + from).val(accountName);
             $('#' + from).attr('data-id', accountID);
-
             let index = from.split('-')[1];
-
-            splitDataTable = $('#tblSplitExpense').DataTable();
-            rowData = splitDataTable.row(index).data();
-
+            let splitDataTable = $('#tblSplitExpense').DataTable();
+            let rowData = splitDataTable.row(index).data();
             rowData.AccountId = parseInt(accountID);
             rowData.AccountName = accountName;
         } else if (from.includes('multipleAccount-')) {
@@ -1860,7 +1844,6 @@ Template.receiptsoverview.events({
         }
         $('#paymentMethodModal').modal('toggle');
     },
-
     'change .multipleAmount': function(e) {
         var val = e.target.value;
         val = val.replace('$', '');
@@ -1872,33 +1855,31 @@ Template.receiptsoverview.events({
         e.target.value = '$' + val;
     },
     'change #claimHours': function(e) {
-        var val = e.target.value;
-        numVal = parseFloat(val) || 0;
+        const val = e.target.value;
+        let numVal = parseFloat(val) || 0;
         e.target.value = numVal;
 
-        rate = parseFloat($('#claimRate').val().replace('$', '')) || 0;
+        let rate = parseFloat($('#claimRate').val().replace('$', '')) || 0;
         $('#nav-time .edtTotal').val('$' + (numVal * rate));
     },
     'change #claimRate': function(e) {
-        var val = e.target.value;
-        numVal = parseFloat(val.replace('$', '')) || 0;
+        const val = e.target.value;
+        let numVal = parseFloat(val.replace('$', '')) || 0;
         e.target.value = '$' + numVal;
 
-        hours = parseFloat($('#claimHours').val()) || 0;
+        let hours = parseFloat($('#claimHours').val()) || 0;
         $('#nav-time .edtTotal').val('$' + (numVal * hours));
     },
-
     // update receipt record
     'click #viewReceiptModal .btnSave': function(e) {
 
-        imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
-        imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
-
-        var attachment;
+        let imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
+        let imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
+        let attachment;
         if (imageData != 'none') {
             imageData = imageData.split(/"/)[1];
-            imageBase64 = imageData.split(',')[1];
-            imageDescryption = imageData.split(',')[0];
+            let imageBase64 = imageData.split(',')[1];
+            let imageDescryption = imageData.split(',')[0];
             attachment = [{
                 type: "TAttachment",
                 fields: {
@@ -1912,7 +1893,6 @@ Template.receiptsoverview.events({
 
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
-
         let employeeId = $('#viewReceiptModal .employees').attr('data-id');
         let employeeName = $('#viewReceiptModal .employees').val() || ' ';
         let transactionTypeId = $('#viewReceiptModal .transactionTypes').attr('data-id');
@@ -1964,7 +1944,7 @@ Template.receiptsoverview.events({
                 RequestToEmployeeID: employeeId ? parseInt(employeeId) : 0,
                 RequestToEmployeeName: employeeName,
             }
-        }
+        };
 
 
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1978,13 +1958,13 @@ Template.receiptsoverview.events({
 
     'click #viewReceiptModal .btn-download': function(e) {
 
-        imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
-        imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
+        let imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
+        let imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
 
         if (imageData != 'none') {
             imageData = imageData.split(/"/)[1];
 
-            var a = document.createElement("a"); //Create <a>
+            const a = document.createElement("a"); //Create <a>
             a.href = imageData; //Image Base64 Goes here
             a.download = imageName; //File name Here
             a.click();
@@ -1995,7 +1975,7 @@ Template.receiptsoverview.events({
 
     'click .btn-detach': function(e) {
         let from = $('#employeeListModal').attr('data-from');
-        var parentElement;
+        let parentElement;
         if (from == "ViewReceipt") {
             parentElement = "#viewReceiptModal";
         } else if (from == "NavExpense") {
@@ -2008,26 +1988,22 @@ Template.receiptsoverview.events({
         $(parentElement + ' .receiptPhoto').attr('data-name', '');
         $(parentElement + ' .img-placeholder').css('opacity', 1);
     },
-
     'click #newReceiptModal .btnSave': function(e) {
-
         let template = Template.instance();
-
         if ($('#newReceiptModal .tab-pane#nav-multiple').hasClass('active')) {
-
-            var receipts = [];
+            const receipts = [];
             let loggedUserName = Session.get('mySessionEmployee');
             let loggedUserId = Session.get('mySessionEmployeeLoggedID');
             for (i = 0; i < 10; i++) {
-                var amount = $('#multipleAmount-' + i).val().replace('$', '');
-                numAmount = parseFloat(amount) || 0;
+                const amount = $('#multipleAmount-' + i).val().replace('$', '');
+                let numAmount = parseFloat(amount) || 0;
                 if (numAmount > 0) {
-                    accountName = $('#multipleAccount-' + i).val();
-                    accountId = $('#multipleAccount-' + i).attr('data-id');
-                    merchantName = $('#multipleMerchant-' + i).val();
-                    merchantId = $('#multipleMerchant-' + i).attr('data-id');
-                    description = $('#multipleDescription-' + i).val();
-                    date = $('#multipleDate-' + i).val();
+                    let accountName = $('#multipleAccount-' + i).val();
+                    let accountId = $('#multipleAccount-' + i).attr('data-id');
+                    let merchantName = $('#multipleMerchant-' + i).val();
+                    let merchantId = $('#multipleMerchant-' + i).attr('data-id');
+                    let description = $('#multipleDescription-' + i).val();
+                    let date = $('#multipleDate-' + i).val();
 
                     if (!accountName || !merchantName) {
                         swal("Select merchant and account for saving receipt", '', 'warning');
@@ -2062,7 +2038,7 @@ Template.receiptsoverview.events({
                             RequestToEmployeeID: loggedUserId,
                             RequestToEmployeeName: loggedUserName,
                         }
-                    }
+                    };
 
                     receipts.push(expenseClaim);
                 }
@@ -2081,16 +2057,16 @@ Template.receiptsoverview.events({
             }
         } else {
             let from = $('#employeeListModal').attr('data-from');
-            let parentElement = from == 'NavExpense' ? '#nav-expense' : '#nav-time'
+            let parentElement = from == 'NavExpense' ? '#nav-expense' : '#nav-time';
 
-            imageData = $(parentElement + ' .receiptPhoto').css('background-image');
-            imageName = $(parentElement + ' .receiptPhoto').attr('data-name');
+            let imageData = $(parentElement + ' .receiptPhoto').css('background-image');
+            let imageName = $(parentElement + ' .receiptPhoto').attr('data-name');
 
-            var attachment;
+            let attachment;
             if (imageData != 'none') {
                 imageData = imageData.split(/"/)[1];
-                imageBase64 = imageData.split(',')[1];
-                imageDescryption = imageData.split(',')[0];
+                let imageBase64 = imageData.split(',')[1];
+                let imageDescryption = imageData.split(',')[0];
                 attachment = [{
                     type: "TAttachment",
                     fields: {
@@ -2305,8 +2281,8 @@ Template.receiptsoverview.events({
 
     'click #btnAddSplit': function(e) {
         let template = Template.instance();
-        splitDataTable = $('#tblSplitExpense').DataTable();
-        var lineItems = splitDataTable.rows().data();
+        let splitDataTable = $('#tblSplitExpense').DataTable();
+        const lineItems = splitDataTable.rows().data();
 
         let lineItem = Object.assign({}, lineItems[lineItems.length - 1]);
         lineItem.AmountInc = 0;
@@ -2318,8 +2294,8 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
 
-        splitDataTable = $('#tblSplitExpense').DataTable();
-        var lineItems = splitDataTable.rows().data();
+        let splitDataTable = $('#tblSplitExpense').DataTable();
+        const lineItems = splitDataTable.rows().data();
 
         let amount = Math.round(receipt.AmountInc * 100 / (lineItems.length)) / 100;
 
@@ -2338,10 +2314,10 @@ Template.receiptsoverview.events({
         let receipt = template.editExpenseClaim.get();
         receipt.Description = receipt.Description ? receipt.Description : "Receipt Claim";
 
-        splitDataTable = $('#tblSplitExpense').DataTable();
-        var lineItems = splitDataTable.rows().data();
+        let splitDataTable = $('#tblSplitExpense').DataTable();
+        const lineItems = splitDataTable.rows().data();
 
-        var totalAmount = 0;
+        let totalAmount = 0;
         for (i = 0; i < lineItems.length; i++) {
             let amount = lineItems[i].AmountInc;
             totalAmount += amount;
@@ -2381,7 +2357,7 @@ Template.receiptsoverview.events({
                         // CurrencyName: currencyName,
                     }
                 };
-                expenseClaim = {
+                let expenseClaim = {
                     type: "TExpenseClaimEx",
                     fields: {
                         EmployeeID: receipt.EmployeeID,
@@ -2417,7 +2393,7 @@ Template.receiptsoverview.events({
                         // CurrencyName: currencyName,
                     }
                 };
-                expenseClaim = {
+                let expenseClaim = {
                     type: "TExpenseClaimEx",
                     fields: {
                         ID: receipt.ExpenseClaimID,
@@ -2441,8 +2417,8 @@ Template.receiptsoverview.events({
         let index = e.target.id.split('-')[1];
         let newValue = e.target.value.replace('$', '');
 
-        splitDataTable = $('#tblSplitExpense').DataTable();
-        rowData = splitDataTable.row(index).data();
+        let splitDataTable = $('#tblSplitExpense').DataTable();
+        let rowData = splitDataTable.row(index).data();
 
         rowData.AmountInc = newValue ? parseFloat(newValue) : 0;
     },
@@ -2466,8 +2442,8 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
 
-        splitDataTable = $('#tblSplitExpense').DataTable();
-        var lineItems = splitDataTable.rows().data();
+        let splitDataTable = $('#tblSplitExpense').DataTable();
+        const lineItems = splitDataTable.rows().data();
 
         var newLineItems = [];
         for (i = 0; i < lineItems.length; i++) {
@@ -2517,7 +2493,7 @@ Template.receiptsoverview.events({
                 // CurrencyName: currencyName,
             }
         };
-        expenseClaim = {
+        let expenseClaim = {
             type: "TExpenseClaimEx",
             fields: {
                 EmployeeID: lineItem.EmployeeID,
@@ -2528,7 +2504,7 @@ Template.receiptsoverview.events({
                 RequestToEmployeeID: lineItem.EmployeeID,
                 RequestToEmployeeName: lineItem.EmployeeName,
             }
-        }
+        };
 
         $('.fullScreenSpin').css('display', 'inline-block');
         accountService.saveReceipt(expenseClaim).then(function(data) {
@@ -2574,7 +2550,7 @@ Template.receiptsoverview.events({
     },
     'click #btnMergeDetail': function() {
         let template = Template.instance();
-        mergeList = template.mergeReceiptRecords.get();
+        let mergeList = template.mergeReceiptRecords.get();
         if (mergeList.length < 2) {
             swal('Select more than 2 records to merge', '', 'warning');
             return;
