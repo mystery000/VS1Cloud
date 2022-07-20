@@ -2832,8 +2832,8 @@ Template.employeescard.onRendered(function () {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -2842,13 +2842,13 @@ Template.employeescard.onRendered(function () {
                 await addVS1Data('TPayNotes', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
 
     templateObject.getPayNotesTypes = async () => {
 
-        let dataObject = await getVS1Data('TPayNotes')  
+        let dataObject = await getVS1Data('TPayNotes')
         if ( dataObject.length == 0) {
             TPayNotesData = await templateObject.saveNotesLocalDB();
         }else{
@@ -2873,7 +2873,7 @@ Template.employeescard.onRendered(function () {
             splashArrayPayNotesList.push(dataListAllowance);
         }
         setTimeout(function () {
-            $('#tblEmpPayrollNotes').DataTable({  
+            $('#tblEmpPayrollNotes').DataTable({
                 data: splashArrayPayNotesList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
@@ -3014,8 +3014,8 @@ Template.employeescard.onRendered(function () {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -3024,19 +3024,19 @@ Template.employeescard.onRendered(function () {
                 await addVS1Data('TPayTemplateEarningLine', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
 
     templateObject.getPayEarningLines = async function(){
         let data = [];
-        let dataObject = await getVS1Data('TPayTemplateEarningLine')  
-        if ( dataObject.length == 0) {   
-            data = await templateObject.saveEarningLocalDB(); 
+        let dataObject = await getVS1Data('TPayTemplateEarningLine')
+        if ( dataObject.length == 0) {
+            data = await templateObject.saveEarningLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
-        
+
         let useData = PayTemplateEarningLine.fromList(
             data.tpaytemplateearningline
         ).filter((item) => {
@@ -3072,8 +3072,8 @@ Template.employeescard.onRendered(function () {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -3082,18 +3082,18 @@ Template.employeescard.onRendered(function () {
                 await addVS1Data('TPayTemplateDeductionLine', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
     templateObject.getPayDeducitonLines = async function(){
         let data = [];
-        let dataObject = await getVS1Data('TPayTemplateDeductionLine')  
-        if ( dataObject.length == 0) {   
-            data = await templateObject.saveDeductionLocalDB(); 
+        let dataObject = await getVS1Data('TPayTemplateDeductionLine')
+        if ( dataObject.length == 0) {
+            data = await templateObject.saveDeductionLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
-        
+
         let useData = PayTemplateDeductionLine.fromList(
             data.tpaytemplatedeductionline
         ).filter((item) => {
@@ -3132,8 +3132,8 @@ Template.employeescard.onRendered(function () {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -3142,15 +3142,15 @@ Template.employeescard.onRendered(function () {
                 await addVS1Data('TPayTemplateSuperannuationLine', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
 
     templateObject.getPaySuperannuationLines = async function(){
         let data = [];
-        let dataObject = await getVS1Data('TPayTemplateSuperannuationLine')  
-        if ( dataObject.length == 0) {   
-            data = await templateObject.saveSuperannuationLocalDB(); 
+        let dataObject = await getVS1Data('TPayTemplateSuperannuationLine')
+        if ( dataObject.length == 0) {
+            data = await templateObject.saveSuperannuationLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
@@ -3168,7 +3168,7 @@ Template.employeescard.onRendered(function () {
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
                     amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;                    
+                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
                     $(`#ptSuperannuationFund${item.fields.ID}`).val( item.fields.Fund );
                     $(`#ptSuperannuationAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
                     let percentage = ( item.fields.Percentage === undefined || item.fields.Percentage === null || item.fields.Percentage.length === 0) ? 0 : item.fields.Percentage;
@@ -3192,8 +3192,8 @@ Template.employeescard.onRendered(function () {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -3202,15 +3202,15 @@ Template.employeescard.onRendered(function () {
                 await addVS1Data('TPayTemplateReiumbursementLine', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
 
     templateObject.getPayReiumbursementLines = async function(){
         let data = [];
-        let dataObject = await getVS1Data('TPayTemplateReiumbursementLine')  
-        if ( dataObject.length == 0) {   
-            data = await templateObject.saveReiumbursementLocalDB(); 
+        let dataObject = await getVS1Data('TPayTemplateReiumbursementLine')
+        if ( dataObject.length == 0) {
+            data = await templateObject.saveReiumbursementLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
@@ -3228,7 +3228,7 @@ Template.employeescard.onRendered(function () {
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
                     amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;                    
+                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
                     $(`#ptReimbursementType${item.fields.ID}`).val( item.fields.ReiumbursementType );
                     $(`#ptReimbursementAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
                 });
@@ -3249,8 +3249,8 @@ Template.employeescard.onRendered(function () {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -3259,15 +3259,15 @@ Template.employeescard.onRendered(function () {
                 await addVS1Data('TAssignLeaveType', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
 
-    templateObject.getAssignLeaveTypes = async () => {        
+    templateObject.getAssignLeaveTypes = async () => {
         let data = [];
-        let dataObject = await getVS1Data('TAssignLeaveType')  
-        if ( dataObject.length == 0) {   
-            data = await templateObject.saveAssignLeaveType(); 
+        let dataObject = await getVS1Data('TAssignLeaveType')
+        if ( dataObject.length == 0) {
+            data = await templateObject.saveAssignLeaveType();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
@@ -3282,7 +3282,7 @@ Template.employeescard.onRendered(function () {
             });
             templateObject.assignLeaveTypeInfos.set(useData);
 
-            
+
             for (let i = 0; i < useData.tassignteavetype.length; i++) {
                 let dataListAllowance = [
                     useData.tassignteavetype[i].fields.ID || '',
@@ -3299,7 +3299,7 @@ Template.employeescard.onRendered(function () {
             }
         }
         setTimeout(function () {
-            $('#tblAssignLeaveTypes').DataTable({  
+            $('#tblAssignLeaveTypes').DataTable({
                 data: splashArrayAssignLeaveList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
@@ -3453,7 +3453,7 @@ Template.employeescard.onRendered(function () {
             });
         }, 0);
     };
-    
+
     templateObject.getAssignLeaveTypes();
 
     templateObject.filterOpeningBalance = ( type ) => {
@@ -3650,7 +3650,7 @@ Template.employeescard.onRendered(function () {
         try {
             let data = {};
             let splashArrayPaySlipList = new Array();
-            let dataObject = await getVS1Data('TPaySlips')  
+            let dataObject = await getVS1Data('TPaySlips')
             if ( dataObject.length == 0) {
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
@@ -3661,8 +3661,8 @@ Template.employeescard.onRendered(function () {
                 employeePayrolEndpoint.url.searchParams.append(
                     "ListType",
                     "'Detail'"
-                );                
-                
+                );
+
                 const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
                 if (employeePayrolEndpointResponse.ok == true) {
@@ -3690,7 +3690,7 @@ Template.employeescard.onRendered(function () {
             templateObject.datatablerecords.set(splashArrayPaySlipList);
             $('.fullScreenSpin').css('display', 'none');
             setTimeout(function () {
-                $('#tblPayslipHistory').DataTable({  
+                $('#tblPayslipHistory').DataTable({
                     data: splashArrayPaySlipList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     columnDefs: [
@@ -3731,24 +3731,24 @@ Template.employeescard.onRendered(function () {
                         $('#tblPayslipHistory_ellipsis').addClass('disabled');
                         if (oSettings._iDisplayLength == -1) {
                             if (oSettings.fnRecordsDisplay() > 150) {
-    
+
                             }
                         } else {
-    
+
                         }
                         if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                             $('.paginate_button.page-item.next').addClass('disabled');
                         }
-    
+
                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
                             .on('click', function () {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 var splashArrayPaySlipListDupp = new Array();
                                 let dataLenght = oSettings._iDisplayLength;
                                 let customerSearch = $('#tblPayslipHistory_filter input').val();
-    
+
                                 sideBarService.getPaySlip(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-    
+
                                     for (let i = 0; i < data.tpayslips.length; i++) {
 
                                         let dataListAllowance = [
@@ -3758,7 +3758,7 @@ Template.employeescard.onRendered(function () {
                                             data.tpayslips[i].fields.TotalPay || '',
                                             '<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>',
                                         ];
-                        
+
                                         splashArrayPaySlipList.push(dataListAllowance);
                                     }
 
@@ -3770,14 +3770,14 @@ Template.employeescard.onRendered(function () {
                                     setTimeout(function () {
                                         $("#tblPayslipHistory").dataTable().fnPageChange('last');
                                     }, 400);
-    
+
                                     $('.fullScreenSpin').css('display', 'none');
-    
-    
+
+
                                 }).catch(function (err) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 });
-    
+
                             });
                         setTimeout(function () {
                             MakeNegative();
@@ -3786,27 +3786,27 @@ Template.employeescard.onRendered(function () {
                     "fnInitComplete": function () {
                         $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
                     }
-    
+
                 }).on('page', function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
-    
+
                 }).on('column-reorder', function () {
-    
+
                 }).on('length.dt', function (e, settings, len) {
                     //$('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayPaySlipList = [];
                     if (dataLenght == -1) {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
                             sideBarService.getPaySlip(dataLenght, 0).then(function (dataNonBo) {
-    
+
                                 addVS1Data('TPaySlips', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     // templateObject.resetData(dataNonBo);
                                     $('.fullScreenSpin').css('display', 'none');
@@ -3827,8 +3827,8 @@ Template.employeescard.onRendered(function () {
             $('.fullScreenSpin').css('display', 'none');
         }
     };
-    
-    
+
+
     templateObject.getPaySlips();
 
 
@@ -3888,12 +3888,12 @@ Template.employeescard.onRendered(function () {
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                     $('#earningRateSettingsModal').modal('show');
                 } else {
-                    if (searchName.replace(/\s/g, '') == '') {             
+                    if (searchName.replace(/\s/g, '') == '') {
                         $('#earningRateSettingsModal').modal('show');
                         return false
                     }
                     let data = {};
-                    let dataObject = await getVS1Data('TEarnings');   
+                    let dataObject = await getVS1Data('TEarnings');
                     if ( dataObject.length > 0) {
                         data = JSON.parse(dataObject[0].data);
                         let tEarnings = data.tearnings.filter((item) => {
@@ -3902,7 +3902,7 @@ Template.employeescard.onRendered(function () {
                             }
                         });
                         $('#earningRateForm')[0].reset();
-                        $('#addEarningsLineModal').modal('hide');                
+                        $('#addEarningsLineModal').modal('hide');
                         if( tEarnings.length > 0 ){
                             let earningRate = tEarnings[0];
                             $('#earningID').val(earningRate.fields.ID)
@@ -3936,12 +3936,12 @@ Template.employeescard.onRendered(function () {
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                         $('#deductionSettingsModal').modal('show');
                     } else {
-                        if (searchName.replace(/\s/g, '') == '') {               
+                        if (searchName.replace(/\s/g, '') == '') {
                             $('#deductionSettingsModal').modal('show');
                             return false
                         }
                         let data = {};
-                        let dataObject = await getVS1Data('TDeduction');   
+                        let dataObject = await getVS1Data('TDeduction');
                         if ( dataObject.length > 0) {
                             data = JSON.parse(dataObject[0].data);
                             let tDeduction = data.tdeduction.filter((item) => {
@@ -3950,7 +3950,7 @@ Template.employeescard.onRendered(function () {
                                 }
                             });
                             $('#deductionRateForm')[0].reset();
-                            $('#deductionSettingsModal').modal('hide');  
+                            $('#deductionSettingsModal').modal('hide');
                             if( tDeduction.length > 0 ){
                                 let deductionType = 'None';
                                 if(tDeduction[0].fields.Taxexempt == true){
@@ -3994,18 +3994,18 @@ Template.employeescard.onRendered(function () {
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                         $('#superannuationSettingsModal').modal('show');
                     } else {
-                        if (searchName.replace(/\s/g, '') == '') {               
+                        if (searchName.replace(/\s/g, '') == '') {
                             $('#superannuationSettingsModal').modal('show');
                             return false
                         }
-                        let dataObject = await getVS1Data('TSuperannuation');   
+                        let dataObject = await getVS1Data('TSuperannuation');
                         if ( dataObject.length > 0) {
                             let tSuperannuation = data.tsuperannuation.filter((item) => {
                                 if( item.fields.Description == searchName ){
                                     return item;
                                 }
                             });
-                            
+
                             if( tSuperannuation.length > 0 ){
                                 if( tsuperannuation[0].fields.Supertypeid == 'Self-Managed Superannuation Fund')
                                 {
@@ -4017,7 +4017,7 @@ Template.employeescard.onRendered(function () {
                                     $('#accountbsb').css('display','none');
                                     $('#account_name').css('display','none');
                                 }
-                                
+
                                 $('#newSuperannuationFundId').val(tSuperannuation[0].fields.ID);
                                 $('#edtFundType').val(tSuperannuation[0].fields.area);
                                 $('#edtFundName').val(tSuperannuation[0].fields.Superfund);
@@ -4049,11 +4049,11 @@ Template.employeescard.onRendered(function () {
                     if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                         $('#reimbursementSettingsModal').modal('show');
                     } else {
-                        if (searchName.replace(/\s/g, '') == '') {               
+                        if (searchName.replace(/\s/g, '') == '') {
                             $('#reimbursementSettingsModal').modal('show');
                             return false
                         }
-                        let dataObject = await getVS1Data('TReimbursement');   
+                        let dataObject = await getVS1Data('TReimbursement');
                         if ( dataObject.length > 0) {
                             data = JSON.parse(dataObject[0].data);
                             let tReimbursement = data.treimbursement.filter((item) => {
@@ -4061,7 +4061,7 @@ Template.employeescard.onRendered(function () {
                                     return item;
                                 }
                             });
-                            
+
                             if( tReimbursement.length > 0 ){
                                 $('#res_id').val(tReimbursement[0].fields.ID) || 0 ;
                                 $('#edtReimbursementName').val(tReimbursement[0].fields.ReimbursementName) || '';
@@ -5257,7 +5257,7 @@ Template.employeescard.events({
         let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
         let EFTLeaveType = $("#eftLeaveType").is(':checked') ? true : false;
         let SuperannuationGuarantee = ( EFTLeaveType )? $("#superannuationGuarantee").is(':checked') ? true : false : false;
-        
+
         // const assignLeaveTypes = [];
         // let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
         // if( TAssignLeaveTypes.length ){
@@ -5285,13 +5285,6 @@ Template.employeescard.events({
                     Active: true
                 }),
             })
-        // );
-        // let updatedAssignLeaveTypes = {
-        //     tassignteavetype: assignLeaveTypes,
-        // }
-        // await addVS1Data('TAssignLeaveType', JSON.stringify(updatedAssignLeaveTypes));
-
-        // console.log('assignLeaveTypes', assignLeaveTypes)
 
         try {
             const ApiResponse = await apiEndpoint.fetch(null, {
@@ -5299,8 +5292,8 @@ Template.employeescard.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(assignLeaveTypes),
             });
-            
-            
+
+
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 // $('#deductionRateForm')[0].reset();
@@ -5314,7 +5307,7 @@ Template.employeescard.events({
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
-        
+
     },
 
     'click #savePayRollNotes': async function(){
@@ -5346,7 +5339,7 @@ Template.employeescard.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(noteSetting),
             });
-        
+
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 await templateObject.saveNotesLocalDB();
@@ -5356,13 +5349,13 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
             }else{
                 $('.fullScreenSpin').css('display', 'none');
-            }             
+            }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
-               
+
     },
-    
+
     // NEXT TASK HERE
     'click #newLeaveRequestbtn':function(){
         var today = new Date();
@@ -5414,9 +5407,9 @@ Template.employeescard.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(payEarningLines),
             });
-        
+
             if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json(); 
+                const jsonResponse = await ApiResponse.json();
                 // Load all the earnings Line from Database
                 await templateObject.saveEarningLocalDB();
                 await templateObject.getPayEarningLines();
@@ -5426,7 +5419,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
             }else{
                 $('.fullScreenSpin').css('display', 'none');
-            }             
+            }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
@@ -5440,7 +5433,7 @@ Template.employeescard.events({
         let DeductionType = $('#deductionTypeSelect').val();
         let CalculationType = $('input[name=calculationTypeDeduction]:checked').val();
         let ControlAccount = $('#controlAccountDeduction').val();
-        
+
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -5465,9 +5458,9 @@ Template.employeescard.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(payDeductionLines),
             });
-        
+
             if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json(); 
+                const jsonResponse = await ApiResponse.json();
                 // Load all the earnings Line from Database
                 await templateObject.saveDeductionLocalDB();
                 await templateObject.getPayDeducitonLines();
@@ -5478,7 +5471,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
             }else{
                 $('.fullScreenSpin').css('display', 'none');
-            }       
+            }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
@@ -5497,7 +5490,7 @@ Template.employeescard.events({
         let LiabilityAccount = $('#liabilityAccount').val();
         let PaymentFrequency = $('#paymentFrequency').val();
         let PeriodPaymentDate = $('#edtPeriodPaymentDate').val();
-        
+
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -5529,9 +5522,9 @@ Template.employeescard.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(paySuperannuationLines),
             });
-        
+
             if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json(); 
+                const jsonResponse = await ApiResponse.json();
                 // Load all the earnings Line from Database
                 await templateObject.saveSuperannuationLocalDB();
                 await templateObject.getPaySuperannuationLines();
@@ -5548,7 +5541,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
             }else{
                 $('.fullScreenSpin').css('display', 'none');
-            }       
+            }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
@@ -5586,9 +5579,9 @@ Template.employeescard.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(payReiumbursementLines),
             });
-        
+
             if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json(); 
+                const jsonResponse = await ApiResponse.json();
                 // Load all the earnings Line from Database
                 await templateObject.saveReiumbursementLocalDB();
                 await templateObject.getPayReiumbursementLines();
@@ -5599,7 +5592,7 @@ Template.employeescard.events({
                 $('.fullScreenSpin').css('display', 'none');
             }else{
                 $('.fullScreenSpin').css('display', 'none');
-            }       
+            }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
@@ -6022,7 +6015,7 @@ Template.employeescard.events({
             let UpwardvariationRequested = $("#taxesUpwardVariationRequested").is(':checked') ? true : false;
             let SeniorandPensionersTaxOffsetClaimed = $("#taxesSeniorPensionersTaxOffsetClaimed").is(':checked') ? true : false;
             let HasApprovedWithholdingVariation = $("#taxesHasApprovedWithholdingVariation").is(':checked') ? true : false;
-            
+
             let employeePaySettings = {
                 type: 'TEmployeepaysettings',
                 fields: {

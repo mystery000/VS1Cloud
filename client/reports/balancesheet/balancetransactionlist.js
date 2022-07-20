@@ -1128,6 +1128,8 @@ Template.balancetransactionlist.onRendered(function() {
           //window.open('/creditcard?id=' + listData,'_self');
         }else if(transactiontype === 'Customer Payment'){
           window.open('/paymentcard?id=' + listData,'_self');
+        }else if(transactiontype === 'Cheque'){
+          window.open('/chequecard?id=' + listData,'_self');
         }
 
       }

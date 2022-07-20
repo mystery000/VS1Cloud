@@ -2100,7 +2100,7 @@ Template.salesorderslist.onRendered(function() {
       if(FlowRouter.current().queryParams.page){
 
       }else{
-      addVS1Data('TSalesOrderFilterList', []);
+      clearData('TSalesOrderFilterList');
       }
       setTimeout(function () {
         let checkConverted = FlowRouter.current().queryParams.converted || false;
@@ -2204,7 +2204,7 @@ Template.salesorderslist.onRendered(function() {
 
         templateObject.custfields.set(custFields);
         templateObject.displayfields.set(dispFields);
- 
+
       })
     }
 
@@ -2461,7 +2461,7 @@ Template.salesorderslist.events({
         }
 
       });
-         
+
     },
 
     // custom field displaysettings
@@ -2538,7 +2538,7 @@ Template.salesorderslist.events({
         });
       });
     },
-    
+
     'blur .divcolumn' : function(event){
         let columData = $(event.target).text();
 

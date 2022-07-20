@@ -243,17 +243,20 @@ openDb = function (dbName) {
       db.createObjectStore('TCRMProjectList', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMTaskList', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMLabelList', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TCRMLeadBarChart', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TCRMLeadPieChart', { keyPath: "EmployeeEmail" });
+
       db.createObjectStore('TProfitLossEditLayout', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TemplateSettings', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TVS1Superannuation',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayrollHolidayGroup',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TLeave',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TPaySlips',{ keyPath: "EmployeeEmail"});   
-      db.createObjectStore('TPayTemplateEarningLine',{ keyPath: "EmployeeEmail"});   
-      db.createObjectStore('TPayTemplateDeductionLine',{ keyPath: "EmployeeEmail"}); 
-      db.createObjectStore('TPayTemplateSuperannuationLine',{ keyPath: "EmployeeEmail"}); 
-      db.createObjectStore('TPayTemplateReiumbursementLine',{ keyPath: "EmployeeEmail"}); 
-      
+      db.createObjectStore('TPaySlips',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TPayTemplateEarningLine',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TPayTemplateDeductionLine',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TPayTemplateSuperannuationLine',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TPayTemplateReiumbursementLine',{ keyPath: "EmployeeEmail"});
+
 
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
@@ -360,6 +363,29 @@ addVS1Data = async function (objectName, vs1Data) {
 
   let objectStore = transaction.objectStore(objectName);
   objectStore.put(loginInfo);
+};
+
+clearData = async function (objectName) {
+  // open a read/write db transaction, ready for clearing the data
+  const db = await openDb(localStorage.getItem("vs1Db"));
+  const transaction = await db.transaction([objectName], "readwrite");
+
+  // report on the success of the transaction completing, when everything is done
+  transaction.oncomplete = function(event) {
+  };
+
+  transaction.onerror = function(event) {
+  };
+
+  // create an object store on the transaction
+  const objectStore = transaction.objectStore(objectName);
+
+  // Make a request to clear all the data out of the object store
+  const objectStoreRequest = objectStore.clear();
+
+  objectStoreRequest.onsuccess = function(event) {
+    // report the success of our request
+  };
 };
 
 queryLoginDataObject = function (objectStore, VS1AdminUserName) {
@@ -497,7 +523,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 50);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 51);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };

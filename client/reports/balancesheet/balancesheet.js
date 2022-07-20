@@ -1040,7 +1040,7 @@ Template.balancesheetreport.events({
     let toDate = moment($("#balanceDate").val()).clone().endOf("month").format("YYYY-MM-DD");
     let fromDate = "1899-01-01";
     Session.setPersistent("showHeader", true);
-    await addVS1Data('TAccountRunningBalanceReport', []);
+    await clearData('TAccountRunningBalanceReport');
     window.open("/balancetransactionlist?accountName=" +accountName +"&toDate=" +toDate +"&fromDate=" +fromDate +"&isTabItem=" +false,"_self");
   },
   "click #moreOptionBal": function () {

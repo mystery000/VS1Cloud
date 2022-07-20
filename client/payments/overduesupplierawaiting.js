@@ -100,7 +100,7 @@ Template.overduesupplierawaiting.onRendered(function () {
 
         getVS1Data('TOverdueAwaitingSupplierPayment').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllOverDueAwaitingSupplierPaymentOver(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllOverDueAwaitingSupplierPaymentOver(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     let totalPaidCal = 0;
@@ -769,7 +769,7 @@ Template.overduesupplierawaiting.onRendered(function () {
                 });
             }
         }).catch(function (err) {
-            sideBarService.getAllOverDueAwaitingSupplierPaymentOver(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+            sideBarService.getAllOverDueAwaitingSupplierPaymentOver(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 let totalPaidCal = 0;
@@ -1127,7 +1127,7 @@ Template.overduesupplierawaiting.onRendered(function () {
       if(FlowRouter.current().queryParams.page){
 
       }else{
-      addVS1Data('TOverdueAwaitingSupplierPayment', []);
+      clearData('TOverdueAwaitingSupplierPayment');
       }
     }else{
       templateObject.getAllSupplierPaymentData();

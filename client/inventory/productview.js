@@ -851,7 +851,8 @@ Template.productview.onRendered(function() {
                             data.taccountvs1[i].fields.AccountNumber || '',
                             data.taccountvs1[i].fields.AccountTypeName || '',
                             accBalance,
-                            data.taccountvs1[i].fields.TaxCode || ''
+                            data.taccountvs1[i].fields.TaxCode || '',
+                            data.taccountvs1[i].fields.ID || ''
                         ];
 
                         if (useData[i].fields.AccountTypeName == accountType) {
@@ -890,7 +891,8 @@ Template.productview.onRendered(function() {
                         useData[i].fields.AccountNumber || '',
                         useData[i].fields.AccountTypeName || '',
                         accBalance,
-                        useData[i].fields.TaxCode || ''
+                        useData[i].fields.TaxCode || '',
+                        useData[i].fields.ID || ''
                     ];
 
                     if (useData[i].fields.AccountTypeName == accountType) {
@@ -924,7 +926,8 @@ Template.productview.onRendered(function() {
                         data.taccountvs1[i].fields.AccountNumber || '',
                         data.taccountvs1[i].fields.AccountTypeName || '',
                         accBalance,
-                        data.taccountvs1[i].fields.TaxCode || ''
+                        data.taccountvs1[i].fields.TaxCode || '',
+                        data.taccountvs1[i].fields.ID || ''
                     ];
                     if (useData[i].fields.AccountTypeName == accountType) {
                         splashArrayAccountList.push(dataList);

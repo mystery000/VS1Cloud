@@ -1,26 +1,24 @@
 <template name="addaccountpop">
-  <style>
-
-      .hiddenColumn{
+    <style>
+        .hiddenColumn{
           display:none;
-      }
-      .showColumn {
+        }
+        .showColumn {
           display:table-cell;
           padding:.75rem;
           vertical-align:top;
-      }
-
-      input[type=number]::-webkit-inner-spin-button,
-      input[type=number]::-webkit-outer-spin-button {
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
           opacity: 1;
-      }
-      .isNotBankAccount {
+        }
+        .isNotBankAccount {
           display: none!important;
-      }
-      .isNotCreditAccount {
+        }
+        .isNotCreditAccount {
           display: none!important;
-      }
-  </style>
+        }
+    </style>
     <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -63,7 +61,7 @@
                         </div>
                     </div>
                     <div>
-                        <hr class="reporthr" style="width: 100%;margin: 4px;">
+                        <hr class="reporthr" style="width: 100%; margin: 4px;">
                     </div>
                     <div class="d-xl-flex align-items-xl-center">
                         <div class="flex-grow-1">
@@ -71,7 +69,8 @@
                             <div class="d-xl-flex align-items-xl-start">
                                 <div class="flex-grow-1">
                                     <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label>Account Description</label>
-                                        <textarea class="border rounded" rows="3" id="txaAccountDescription" name="txaAccountDescription" style="width: 100%; color: rgb(110, 112, 126);"></textarea></div>
+                                        <textarea class="border rounded" rows="3" id="txaAccountDescription" name="txaAccountDescription" style="width: 100%; color: rgb(110, 112, 126);"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -84,49 +83,51 @@
                         <div class="flex-grow-1">
                             <label><b>Bank Account Details</b></label>
                             <div class="d-xl-flex align-items-xl-start">
-                              <div class="flex-grow-1">
-                                  <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
-                                      <input type="text" class="form-control" id="edtBankName" name="edtBankName"></div>
-                              </div>
+                                <div class="flex-grow-1">
+                                    <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
+                                        <input type="text" class="form-control" id="edtBankName" name="edtBankName">
+                                    </div>
+                                </div>
                                 <div class="flex-grow-1">
                                     <div class="form-group" style="margin: 4px;"><label>Bank Account Name</label>
-                                        <input type="text" class="form-control" id="edtBankAccountName" name="edtBankAccountName"></div>
+                                        <input type="text" class="form-control" id="edtBankAccountName" name="edtBankAccountName">
+                                    </div>
                                 </div>
-
-
-
                                 <div class="flex-grow-0">
                                     <div class="form-group" style="margin: 4px; width: 150px;"><label>{{bsbRegionName}}</label>
-                                        <input type="text" class="form-control" id="edtBSB" name="edtBSB"></div>
+                                        <input type="text" class="form-control" id="edtBSB" name="edtBSB">
+                                    </div>
                                 </div>
                             </div>
-
-                             <div class="d-xl-flex align-items-xl-start">
-                               <div class="flex-grow-1">
-                                   <div class="form-group" style="margin: 4px;"><label>Bank Account No</label>
-                                       <input type="text" class="form-control" id="edtBankAccountNo" name="edtBankAccountNo"></div>
-                               </div>
+                            <div class="d-xl-flex align-items-xl-start">
                                 <div class="flex-grow-1">
-                                    <div class="form-group" style="margin: 4px;"><label>Swift Code</label>
-                                        <input type="text" class="form-control" id="swiftCode" name="swiftCode"></div>
+                                    <div class="form-group" style="margin: 4px;"><label>Bank Account No</label>
+                                        <input type="text" class="form-control" id="edtBankAccountNo" name="edtBankAccountNo">
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="form-group" style="margin: 4px;">
+                                        <label>Swift Code</label>
+                                        <input type="text" class="form-control" id="swiftCode" name="swiftCode">
+                                    </div>
                                 </div>
                                 <div class="flex-grow-0">
-                                    <div class="form-group" style="margin: 4px; width: 150px;"><label>Routing Number</label>
-                                        <input type="text" class="form-control" id="routingNo" name="routingNo"></div>
+                                    <div class="form-group" style="margin: 4px; width: 150px;">
+                                        <label>Routing Number</label>
+                                        <input type="text" class="form-control" id="routingNo" name="routingNo">
+                                    </div>
                                 </div>
                             </div>
-
-                    <div class="d-xl-flex align-items-xl-center">
-                      <div class="flex-grow-1">
-                        <div class = "custom-control custom-switch" >
-                            <input type = "checkbox" class = "custom-control-input showOnTransactions" id="showOnTransactions"/>
-                            <label class = "custom-control-label" for  = "showOnTransactions" >Show On Transactions</label>
-                        </div >
-                    </div>
-                    </div>
+                            <div class="d-xl-flex align-items-xl-center">
+                                <div class="flex-grow-1">
+                                    <div class="custom-control custom-switch" >
+                                        <input type="checkbox" class = "custom-control-input showOnTransactions" id="showOnTransactions"/>
+                                        <label class="custom-control-label" for="showOnTransactions" >Show On Transactions</label>
+                                    </div >
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                     <div class="d-xl-flex align-items-xl-center isCreditAccount isNotCreditAccount">
                         <div class="flex-grow-1">
                             <label><b>Credit Card Details</b></label>
@@ -160,7 +161,6 @@
                     </div>
                     <!-- {{/if}} -->
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success btnSaveAccountPOP" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
