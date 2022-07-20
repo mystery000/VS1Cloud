@@ -4,27 +4,79 @@
             <div class="spinner"></div>
         </div>
         <h3 class="text-dark mb-4">EDI and Integration's</h3>
+        <style>
+          .customEdiIntigrationTab {
+            display: inline-block;
+            width: 100%;
+          }
+          .customEdiIntigrationTab li {
+            display: inline-block;
+            width: 100%;
+            margin: 0 0 10px 0 !important;
+          }
+          .customEdiIntigrationTab li .nav-link {
+            color: #fff !important;
+            background-color: rgb(0, 163, 211) !important;
+            border-color: #00a3d3 !important;
+            border-radius: 5px !important;
+            overflow: hidden;
+            margin: 0px !important;
+            display: inline-block;
+            width: 100%;
+            outline: none !important;
+          }
+
+
+        </style>
         <div class="row d-xl-flex mb-3">
             <div class="col-md-3">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <ul class="nav nav-tabs customEdiIntigrationTab" id="ediIntigrtionTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+                      <button class="nav-link active" id="smsSettingTab" data-toggle="tab" data-target="#smsSetting" type="button" role="tab" aria-controls="smsSetting" aria-selected="true">SMS Settings</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+                      <button class="nav-link" id="xeCurrenciesTab" data-toggle="tab" data-target="#xeCurrencies" type="button" role="tab" aria-controls="xeCurrencies" aria-selected="false">XE Currencies</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
+                      <button class="nav-link" id="receiptClaimsTab" data-toggle="tab" data-target="#receiptClaims" type="button" role="tab" aria-controls="receiptClaims" aria-selected="false">Receipt Claims</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="trueERPTab" data-toggle="tab" data-target="#trueERP" type="button" role="tab" aria-controls="trueERP" aria-selected="false">TrueERP</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="mailChimpTab" data-toggle="tab" data-target="#mailChimp" type="button" role="tab" aria-controls="mailChimp" aria-selected="false">Mail Chimp</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="adpTab" data-toggle="tab" data-target="#adp" type="button" role="tab" aria-controls="adp" aria-selected="false">ADP</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="paycheckTab" data-toggle="tab" data-target="#paycheck" type="button" role="tab" aria-controls="paycheck" aria-selected="false">Paycheck</button>
                     </li>
                   </ul>
             </div>
             <div class="col-md-9">
-                <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="tab-content" id="ediIntigrtionTabContent">
+                    <div class="tab-pane fade show active" id="smsSetting" role="tabpanel" aria-labelledby="smsSettingTab">
                         {{> smssettings}}
                     </div>
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                    <div class="tab-pane fade" id="xeCurrencies" role="tabpanel" aria-labelledby="xeCurrenciesTab">
+                        {{> xecurrencies}}
+                    </div>
+                    <div class="tab-pane fade" id="receiptClaims" role="tabpanel" aria-labelledby="receiptClaimsTab">
+                      {{> receiptclaims}}
+                    </div>
+                    <div class="tab-pane fade" id="trueERP" role="tabpanel" aria-labelledby="trueERPTab">
+                      {{> trueerp}}
+                    </div>
+                    <div class="tab-pane fade" id="mailChimp" role="tabpanel" aria-labelledby="mailChimpTab">
+                      {{> mailchimp}}
+                    </div>
+                    <div class="tab-pane fade" id="adp" role="tabpanel" aria-labelledby="adpTab">
+                      {{> adp}}
+                    </div>
+                    <div class="tab-pane fade" id="paycheck" role="tabpanel" aria-labelledby="paycheckTab">
+                      {{> paycheck}}
+                    </div>
                   </div>
             </div>
         </div>
