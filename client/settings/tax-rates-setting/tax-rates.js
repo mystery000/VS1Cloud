@@ -1406,7 +1406,10 @@ export const TaxRatesEditListener = (e) => {
       // tr.attr("data-target", "#addNewTaxRate");
       // tr.attr("data-toggle", "modal");
 
-      $("#addNewTaxRate").modal("toggle");
+      // console.log(tr.attr('data-modal'));
+      tr.attr('data-modal') ? $(tr.attr('data-modal')).modal("toggle") : $("#newTaxRateModal").modal("toggle");
+
+     // $("#newTaxRateModal").modal("toggle");
     }
   }
 };
