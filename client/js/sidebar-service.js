@@ -2989,4 +2989,18 @@ export class SideBarService extends BaseService {
     }
     return this.getList(this.ERPObjects.TEarnings, options);
   }
+
+  getAllCustomFieldsWithQuery(query='') {
+    let options = {
+      ListType: "Detail",
+    };
+    if(query == 'ltSalesOverview') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltSalesOverview'",
+      };
+    }
+
+    return this.getList(this.ERPObjects.TCustomFieldList, options);
+  }
 }
