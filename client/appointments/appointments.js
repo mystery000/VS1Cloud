@@ -23,6 +23,15 @@ let smsService = new SMSService();
 let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
 let startAndStopAppointmentOnly = Session.get('CloudAppointmentStartStopAccessLevel') || false;
 
+const refreshButton = {
+    refresh: {
+        text: 'Refresh',
+        click: function(){
+            window.open('/appointments', '_self');
+        }
+    }
+}
+
 Template.appointments.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.employeerecords = new ReactiveVar([]);
@@ -491,10 +500,11 @@ Template.appointments.onRendered(function () {
                     click: function () {
                         $('#allocationModal').modal();
                     }
-                }
+                },
+                ...refreshButton
             },
             headerToolbar: {
-                left: 'prev,next today appointments allocation',
+                left: 'prev,next today appointments allocation refresh',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
@@ -915,10 +925,11 @@ Template.appointments.onRendered(function () {
                     click: function () {
                         $('#allocationModal').modal();
                     }
-                }
+                },
+                ...refreshButton
             },
             headerToolbar: {
-                left: 'prev,next today appointments allocation',
+                left: 'prev,next today appointments allocation refresh',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
@@ -2875,10 +2886,11 @@ Template.appointments.onRendered(function () {
                                 click: function () {
                                     $('#allocationModal').modal();
                                 }
-                            }
+                            },
+                            ...refreshButton
                         },
                         headerToolbar: {
-                            left: 'prev,next today appointments allocation',
+                            left: 'prev,next today appointments allocation refresh',
                             center: 'title',
                             right: 'dayGridMonth,timeGridWeek,timeGridDay'
                         },
@@ -4473,10 +4485,11 @@ Template.appointments.onRendered(function () {
                             click: function () {
                                 $('#allocationModal').modal();
                             }
-                        }
+                        },
+                        ...refreshButton
                     },
                     headerToolbar: {
-                        left: 'prev,next today appointments allocation',
+                        left: 'prev,next today appointments allocation refresh',
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
@@ -5904,10 +5917,11 @@ Template.appointments.onRendered(function () {
                             click: function () {
                                 $('#allocationModal').modal();
                             }
-                        }
+                        },
+                        ...refreshButton
                     },
                     headerToolbar: {
-                        left: 'prev,next today appointments allocation',
+                        left: 'prev,next today appointments allocation refresh',
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
