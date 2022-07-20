@@ -4,7 +4,7 @@ class FxApi {
   static ApiID = "xecurrency321962766";
   static ApiKey = "igl1bnnnutj04e4jcdh1kuumsb";
   static encodedApiKey =
-    "eGVjdXJyZW5jeTMyMTk2Mjc2NjppZ2wxYm5ubnV0ajA0ZTRqY2RoMWt1dW1zYg==";
+    "c2Rmc2RmMTY3NDgyOTU4OnRlZ242NXVmbmc1MWp1OWhqZWt2ZnZubWlr";
 
   constructor() {}
 
