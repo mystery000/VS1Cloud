@@ -11,13 +11,7 @@
       </h2>
     </header>
 
-    <!-- <div class="charts row connectedChartSortable connectedSortable">
-      <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" position="2" data-default-class="col-md-8" >
-        {{> leadpiechart}}
-      </div>
-      <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" position="2" data-default-class="col-md-8" >
-      </div>
-    </div> -->
+    {{> leadbarchart}}
 
     <!-- All Cards List -->
     <div class="container-fluid">
@@ -145,17 +139,18 @@
     .colTaskName {
       width: 20% !important;
     }
+
     .colTaskProjects {
       width: 20% !important;
     }
 
     .colTaskDesc {
-      width: 20% !important;
+      width: 25% !important;
       max-width: 390px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    } 
+    }
 
     .colSubComplete {
       width: 30px !important;
@@ -176,12 +171,13 @@
 
     .btnTaskTableAction {
       height: 38px !important;
-      width: 44px !important;
+      /* width: 44px !important; */
       margin-right: 2px;
     }
 
     td .btnTaskTableAction {
       display: inline-flex;
+      justify-content: center;
     }
 
     .banklink:hover {
@@ -752,11 +748,12 @@
     }
 
     .colTaskLabels {
-      width: auto !important;
+      /* width: auto !important; */
+      width: 15% !important;
     }
 
     .colTaskActions {
-      width: 145px !important;
+      width: 122px !important;
       display: flex;
       justify-content: center;
     }

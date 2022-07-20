@@ -57,9 +57,7 @@ function setConfirmedSteps(steps = []) {
 
 function addConfirmedStep(step) {
   let steps = getConfirmedSteps();
-  console.log(steps);
   steps = JSON.parse(steps);
-  console.log(steps);
   steps.push(step);
   setConfirmedSteps(steps);
 }
@@ -83,7 +81,6 @@ function getSkippedSteps() {
 function addSkippedStep(step) {
   let steps = getSkippedSteps();
   steps = JSON.parse(steps);
-  console.log(steps);
   steps.push(step);
   setSkippedSteps(steps);
 }
@@ -727,7 +724,7 @@ Template.setup.onRendered(function () {
                     // ],
                     // bStateSave: true,
                     // rowId: 0,
-                    
+
                     pageLength: 25,
                     paging: true,
                     //                      "scrollY": "400px",
@@ -3510,14 +3507,14 @@ Template.setup.onRendered(function () {
               MakeNegative();
             }, 100);
           });
-  
+
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
       }, 1000);
     }
 
     LoadingOverlay.hide();
-    
+
 
     // var columns = $("#tblCustomerlist th");
     // let sTible = "";
@@ -3958,13 +3955,11 @@ Template.setup.onRendered(function () {
           _inventoryList.push({ ...product.fields });
       });
 
-      console.log("Inventory list", _inventoryList);
 
       templateObject.inventoryList.set(_inventoryList);
 
       if (templateObject.inventoryList.get()) {
         setTimeout(function () {
-          //console.log($("#InventoryTable"));
           $("#InventoryTable")
             .dataTable({
               // data: splashArrayProductList,
@@ -5182,7 +5177,6 @@ Template.setup.events({
       });
   },
   "click #taxRatesTable tbody td.clickable": (e) => {
-    console.log(e);
     TaxRatesEditListener(e);
   },
   "click .table-remove-tax-rate": (e) => {
@@ -6345,7 +6339,6 @@ Template.setup.events({
 
   // TODO: Step 5
   "click .btnSaveEmpPop": (e) => {
-    //console.log("Save employee clicked", e);
     $("#addEmployeeModal").modal("toggle");
   },
   "click .employees-js": (e) => {
@@ -6354,16 +6347,13 @@ Template.setup.events({
     LoadingOverlay.show();
     const employeeID = $(e.currentTarget).attr("id");
     if (!isNaN(employeeID)) {
-      console.log(employeeID);
 
       let employeeList = templateObject.currentEmployees.get();
-      console.log(employeeList);
 
       let data = employeeList.filter(
         (employee) => employee.fields.ID == employeeID
       );
       data = data[0];
-      console.log("FOUND: ", data);
 
       let editableEmployee = {
         id: data.fields.ID,
@@ -6406,11 +6396,9 @@ Template.setup.events({
         notes: data.fields.Notes || "",
       };
 
-      console.log(editableEmployee);
 
       templateObject.editableEmployee.set(editableEmployee);
 
-      console.log(templateObject.editableEmployee.get());
     }
     LoadingOverlay.hide();
   },
@@ -8781,22 +8769,7 @@ Template.setup.events({
     var listData = tr.attr("id");
     var transactiontype = tr.attr("isjob");
     var url = FlowRouter.current().path;
-    console.log(listData, tr);
-    // if (listData) {
-    //   if (url.indexOf("?type") > 0) {
-    //     if (transactiontype != "") {
-    //       FlowRouter.go("/customerscard?jobid=" + listData + "&transTab=job");
-    //     } else {
-    //       FlowRouter.go("/customerscard?id=" + listData + "&transTab=job");
-    //     }
-    //   } else {
-    //     if (transactiontype != "") {
-    //       FlowRouter.go("/customerscard?jobid=" + listData);
-    //     } else {
-    //       FlowRouter.go("/customerscard?id=" + listData);
-    //     }
-    //   }
-    // }
+
   },
 
   // TODO: Step 8
@@ -8870,7 +8843,6 @@ Template.setup.events({
     Meteor._reload.reload();
   },
   "change #isProductAdded": (E) => {
-    console.log("Product added");
     //$(".btnRefresh").click();
     $("#addProductModal").modal("toggle");
     LoadingOverlay.show();

@@ -6921,14 +6921,14 @@ Template.supplierpaymentcard.events({
         let appliedAmount = $('#edtApplied').val();
 
         let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
-        if(checkSuppInvoiceNo){
-
-        }else{
-          $('.fullScreenSpin').css('display', 'none');
-          swal('You need to apply an Invoice Number', '', 'warning');
-          event.preventDefault();
-          return false;
-        }
+        // if(checkSuppInvoiceNo){
+        //
+        // }else{
+        //   $('.fullScreenSpin').css('display', 'none');
+        //   swal('You need to apply an Invoice Number', '', 'warning');
+        //   event.preventDefault();
+        //   return false;
+        // }
         var url = FlowRouter.current().path;
         let newURL = '/paymentoverview?success=true';
         if(FlowRouter.current().queryParams.trans){

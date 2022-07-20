@@ -1048,7 +1048,7 @@ Template.supplierscard.events({
       let currentId = FlowRouter.current().queryParams.id||'';
       let supplierName = $('#edtSupplierCompany').val() || '';
       if (supplierName !== "") {
-            await addVS1Data('TAwaitingSupplierPayment', []);
+            await clearData('TAwaitingSupplierPayment');
             FlowRouter.go('/supplierawaitingpurchaseorder?contact='+supplierName+'&contactid='+currentId);
         }
     },

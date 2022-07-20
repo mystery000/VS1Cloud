@@ -1546,7 +1546,7 @@ Template.accounttypepop.onRendered(function () {
         var accountName = $(event.target).closest("tr").find(".colAccountName").text();
         let columnBalClass = $(event.target).attr('class');
         let accountService = new AccountService();
-        await addVS1Data('TAccountRunningBalanceReport', []);
+        await clearData('TAccountRunningBalanceReport');
         FlowRouter.go('/balancetransactionlist?accountName=' + accountName + "&isTabItem=" + false);
         //window.open('/balancetransactionlist?accountName=' + accountName+ '&isTabItem='+false,'_self');
 

@@ -1516,18 +1516,18 @@ Template.paymentoverview.events({
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/customerawaitingpayments');
     },
-    'click .customerOverdue, click .custOverdueAmt': function(event) {
+    'click .customerOverdue, click .custOverdueAmt': async function(event) {
         $('.modal-backdrop').css('display', 'none');
-        addVS1Data('TOverdueAwaitingCustomerPayment', []);
+        await clearData('TOverdueAwaitingCustomerPayment');
         FlowRouter.go('/overduecustomerawaitingpayments');
     },
     'click .supplierAwaitingPayment': function(event) {
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/supplierawaitingpurchaseorder');
     },
-    'click .supplierOverdue': function(event) {
+    'click .supplierOverdue': async function(event) {
         $('.modal-backdrop').css('display', 'none');
-        addVS1Data('TOverdueAwaitingSupplierPayment', []);
+        await clearData('TOverdueAwaitingSupplierPayment');
         FlowRouter.go('/overduesupplierawaiting');
     },
 
@@ -1855,32 +1855,32 @@ Template.paymentoverview.events({
                         sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
-                                window.open('/paymentoverview', '_self');
+                                batchUpdateCall('/paymentoverview');
                               }, 2000);
                             }).catch(function(err) {
                               setTimeout(function () {
-                                window.open('/paymentoverview', '_self');
+                              batchUpdateCall('/paymentoverview');
                               }, 2000);
                             });
                         }).catch(function(err) {
                           setTimeout(function () {
-                            window.open('/paymentoverview', '_self');
+                            batchUpdateCall('/paymentoverview');
                           }, 2000);
                         });
                     }).catch(function(err) {
                         sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
-                                window.open('/paymentoverview', '_self');
+                                batchUpdateCall('/paymentoverview');
                               }, 2000);
                             }).catch(function(err) {
                               setTimeout(function () {
-                                window.open('/paymentoverview', '_self');
+                                batchUpdateCall('/paymentoverview');
                               }, 2000);
                             });
                         }).catch(function(err) {
                           setTimeout(function () {
-                            window.open('/paymentoverview', '_self');
+                          batchUpdateCall('/paymentoverview');
                           }, 2000);
                         });
                     });
@@ -1896,7 +1896,7 @@ Template.paymentoverview.events({
             });
         }).catch(function(err) {
           setTimeout(function () {
-            window.open('/paymentoverview', '_self');
+            batchUpdateCall('/paymentoverview');
           }, 2000);
 
         });
