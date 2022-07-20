@@ -69,7 +69,12 @@
             text-decoration: none;
             color: #dddfeb;
         }
-
+        a.cardShowBtn .fa-eye {
+            color: #1cc88a;
+        }
+        a.cardShowBtn .fa-eye-slash {
+            color: #e74a3b;
+        } 
         a.cardHideBtn:hover,
         a.cardShowBtn:hover,
         a.cardHideBtn.active,
@@ -112,11 +117,24 @@
         a {
             text-decoration: none !important;
         }
-    </style>
+        .dimmedChart .text-dark *,
+        .dimmedChart .text-dark,
+        .dimmedChart .text-gray-300 {
+            color: #666666 !important;
+        }
+    </style> 
     <div class="container-New">
-        <button class="btn btn-warning hideelement resetcards" id="resetcards" type="button" style="margin:0 8px 16px;">
-            <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Cards
-        </button>
+        <div class="text-right actionButtonCardsTop hideelement">
+            <button class="btn btn-success editCardBtn" id="saveCards" type="button" style="margin:0 8px 16px;">
+                <i class="fas fa-save" style="margin-right: 5px;"></i>Save Cards
+            </button>
+            <button class="btn btn-primary cancelCards" id="cancelCards" type="button" style="margin:0 8px 16px;">
+                <i class="fas fa-times-circle" style="margin-right: 5px;"></i>Cancel
+            </button>
+            <button class="btn btn-warning resetcards" id="resetcards" type="button" style="margin:0 8px 16px;">
+                <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Cards
+            </button>
+        </div>
         <div class="row connectedCardSortable" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
             {{> purchasesaleschart}}
             {{> bankingoverviewcards}}

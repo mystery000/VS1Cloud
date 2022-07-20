@@ -192,11 +192,11 @@ Template.allCardsLists.events({
             $('.cardShowBtn').removeClass('hideelement');
             $('.editCardBtn').find('i').removeClass('fa-cog')
             $('.editCardBtn').find('i').addClass('fa-save')
-            $('#resetcards').removeClass('hideelement');
+            $('.actionButtonCardsTop').removeClass('hideelement');
         }else{
             $(".fullScreenSpin").css("display", "block");
             $('.cardShowBtn').addClass('hideelement');
-            $('#resetcards').addClass('hideelement');
+            $('.actionButtonCardsTop').addClass('hideelement');
             $('.editCardBtn').find('i').removeClass('fa-save')
             $('.editCardBtn').find('i').addClass('fa-cog');
             // Save cards
@@ -228,6 +228,7 @@ Template.allCardsLists.events({
         e.preventDefault();
         $(".fullScreenSpin").css("display", "block");
         let templateObject = Template.instance();
+        console.log('template = ', Template.instance());
         let _tabGroup = $(".connectedCardSortable").data("tabgroup");
         let employeeId = Session.get("mySessionEmployeeLoggedID");
 
@@ -254,7 +255,7 @@ Template.allCardsLists.events({
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 $('.cardShowBtn').addClass('hideelement');
-                $('#resetcards').addClass('hideelement');
+                $('.actionButtonCardsTop').addClass('hideelement');
                 $('.editCardBtn').find('i').removeClass('fa-save')
                 $('.editCardBtn').find('i').addClass('fa-cog');
                 await templateObject.saveCardsLocalDB();
@@ -267,5 +268,18 @@ Template.allCardsLists.events({
             $(".fullScreenSpin").css("display", "none");
         }
 
+    },
+    "click .cancelCards": async function(e){
+        e.preventDefault();
+        let templateObject = Template.instance();
+        $(".fullScreenSpin").css("display", "block");
+        $('.cardShowBtn').addClass('hideelement');
+        $('.actionButtonCardsTop').addClass('hideelement');
+        $('.editCardBtn').find('i').removeClass('fa-save')
+        $('.editCardBtn').find('i').addClass('fa-cog');
+        await templateObject.setCardPositions();
+        $('.card-visibility').removeClass('dimmedChart');
+        $('.cardShowBtn').removeClass('hideelement');
+        $(".fullScreenSpin").css("display", "none");
     }
 });
