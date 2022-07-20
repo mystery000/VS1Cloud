@@ -90,13 +90,13 @@ async function saveCharts() {
             $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true"
             ? false
             : true,
-          ChartID: $(chart).attr("chart-id"),
-          ID: $(chart).attr("pref-id"),
+          ChartID: parseInt($(chart).attr("chart-id")),
+          ID: parseInt($(chart).attr("pref-id")),
           EmployeeID: employeeId,
           Chartname: $(chart).attr("chart-name"),
           Position: parseInt($(chart).attr("position")),
           ChartGroup: $(chart).attr("chart-group"),
-          TabGroup: _tabGroup,
+          TabGroup: parseInt(_tabGroup),
           ChartWidth: ChartHandler.calculateWidth(chart),
           ChartHeight: ChartHandler.calculateHeight(chart),
         }),
@@ -104,19 +104,22 @@ async function saveCharts() {
     );
   });
 
-  for (const _chart of chartList) {
-
+  // for (const _chart of chartList) {
+    let chartJSON = {
+        type: "Tvs1dashboardpreferences",
+        objects:chartList
+    };
+  
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
-      body: JSON.stringify(_chart),
+      body: JSON.stringify(chartJSON),
     });
 
     if (ApiResponse.ok == true) {
       const jsonResponse = await ApiResponse.json();
-      
     }
-  }
+  // }
 }
 
 Template.allChartLists.onRendered(function () {
@@ -186,6 +189,7 @@ Template.allChartLists.onRendered(function () {
             chart.fields.ChartName.toLowerCase().split(" ").join("_");
 
           $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
+          $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
           $(`[key='${chart.fields._chartSlug}']`).attr(
             "chart-id",
             chart.fields.ID
@@ -193,7 +197,9 @@ Template.allChartLists.onRendered(function () {
 
           // Default charts          
           let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
+          let defaultPosition = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-position');
           $(`[key='${chart.fields._chartSlug}']`).addClass(defaultClass);
+          $(`[key='${chart.fields._chartSlug}']`).attr('position', defaultPosition);
           $(`[key='${chart.fields._chartSlug}']`).attr('width', '100%');
           $(`[key='${chart.fields._chartSlug}']`).css('height', "auto");
           $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
@@ -351,19 +357,19 @@ Template.allChartLists.onRendered(function () {
           $(`[key='${item}']`).removeClass("hideelement");
           $(`[key='${item}']`).addClass("chart-visibility");
         }
-      }
-      await ChartHandler.buildPositions();
-      // Handle sorting
-      setTimeout(() => {
-        let $chartWrappper = $(".connectedChartSortable");
-        $chartWrappper
-          .find(".sortable-chart-widget-js")
-          .sort(function (a, b) {
-            return +a.getAttribute("position") - +b.getAttribute("position");
-          })
-          .appendTo($chartWrappper);
-      }, 500)
+      }      
     }
+    await ChartHandler.buildPositions();
+    // Handle sorting
+    setTimeout(() => {
+      let $chartWrappper = $(".connectedChartSortable");
+      $chartWrappper
+        .find(".sortable-chart-widget-js")
+        .sort(function (a, b) {
+          return +a.getAttribute("position") - +b.getAttribute("position");
+        })
+        .appendTo($chartWrappper);
+    }, 500)
   };
   templateObject.deactivateDraggable = () => {
     draggableCharts.disable();
@@ -408,7 +414,9 @@ Template.allChartLists.events({
     templateObject.showChartElements();
   },
 
-  "click #resetcharts": () => {
+  "click .resetchartbtn": async ( event ) => {
+    event.preventDefault();
+    $(".fullScreenSpin").css("display", "block");
     chartsEditor.disable();
     const templateObject = Template.instance();
 
@@ -421,16 +429,41 @@ Template.allChartLists.events({
     $(".btnchartdropdown").removeClass("hideelement");
     $(".btnchartdropdown").addClass("showelement");
 
-    // set everything to true
-    localStorage.setItem("profitchat", true);
-    localStorage.setItem("profitloss", true);
-    localStorage.setItem("resaleschat", true);
-    localStorage.setItem("quotedinvoicedchart", true);
-    localStorage.setItem("earningschat", true);
-    localStorage.setItem("expenseschart", true);
+    const dashboardApis = new DashboardApi(); // Load all dashboard APIS
+
+    let _tabGroup = $("#connectedSortable").data("tabgroup");
+    let employeeId = Session.get("mySessionEmployeeLoggedID");
 
     templateObject.hideChartElements();
-    templateObject.checkChartToDisplay();
+
+    const apiEndpoint = dashboardApis.collection.findByName(
+      dashboardApis.collectionNames.Tvs1dashboardpreferences
+    );
+  
+    let resetCharts = {
+      type: "Tvs1dashboardpreferences",
+      delete: true,
+      fields: {
+        EmployeeID: parseInt(employeeId),
+        TabGroup: _tabGroup,
+      }
+    }
+    try {
+      const ApiResponse = await apiEndpoint.fetch(null, {
+        method: "POST",
+        headers: ApiService.getPostHeaders(),
+        body: JSON.stringify(resetCharts),
+      });
+  
+      if (ApiResponse.ok == true) {
+        const jsonResponse = await ApiResponse.json();
+        await ChartHandler.saveChartsInLocalDB();
+        await templateObject.checkChartToDisplay();
+        $(".fullScreenSpin").css("display", "none");
+      }
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+    }
     // templateObject.deactivateDraggable();
   },
   "click #btnCancel": async () => {

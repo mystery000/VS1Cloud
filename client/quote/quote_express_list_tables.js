@@ -2138,7 +2138,7 @@ Template.quoteslist.onRendered(function() {
       if(FlowRouter.current().queryParams.page){
 
       }else{
-      addVS1Data('TQuoteFilterList', []);
+      clearData('TQuoteFilterList');
       }
       setTimeout(function () {
         let checkConverted = FlowRouter.current().queryParams.converted || false;

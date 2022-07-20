@@ -25,7 +25,7 @@ Template.taxRatesSettings.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
-  
+
   const tableHeaderList = [];
 
   let purchasetaxcode = '';
@@ -584,7 +584,7 @@ Template.taxRatesSettings.onRendered(function () {
   templateObject.chkSubTaxRateSetting = function () {
     organisationService.getChkUSRegionTaxSetting().then(function (dataListRet) {
       let mainData = dataListRet.tcompanyinfo[0];
-      if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
+      if (mainData.IsUSRegionTax || mainData.Country == "United States") {
         templateObject.isChkUSRegionTax.set(true);
         $(".btnSubTaxes").show();
         $("#edtTaxRate").prop("disabled", true);
@@ -599,7 +599,7 @@ Template.taxRatesSettings.onRendered(function () {
   templateObject.chkSubTaxRateSetting();
 
   templateObject.getSubTaxCodes = function () {
-    
+
     let subTaxTableList = [];
 
     getVS1Data('TSubTaxVS1').then(function (dataObject) {
@@ -612,10 +612,10 @@ Template.taxRatesSettings.onRendered(function () {
               description: data.tsubtaxcode[i].Description || '-',
               category: data.tsubtaxcode[i].Category || '-'
             };
-  
+
             subTaxTableList.push(dataList);
           }
-  
+
           templateObject.subtaxcodes.set(subTaxTableList);
         });
       } else {
@@ -649,7 +649,7 @@ Template.taxRatesSettings.onRendered(function () {
 
         templateObject.subtaxcodes.set(subTaxTableList);
       });
-      
+
     });
   }
 
@@ -664,7 +664,7 @@ Template.taxRatesSettings.onRendered(function () {
 
   $('#taxRatesList tbody').on('click', 'tr .colName, tr .colDescription, tr .colRate', function () {
     var listData = $(this).closest('tr').attr('id');
-    
+
     if (listData) {
       $('#add-tax-title').text('Edit Tax Rate');
       $('#edtTaxName').prop('readonly', true);

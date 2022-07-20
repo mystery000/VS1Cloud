@@ -1784,7 +1784,7 @@ Template.customerscard.events({
             if(customerName.indexOf('^') > 0) {
               customerName = customerName.split('^')[0]
             }
-            await addVS1Data('TAwaitingCustomerPayment', []);
+            await clearData('TAwaitingCustomerPayment');
             FlowRouter.go('/customerawaitingpayments?contact='+customerName+'&contactid='+currentId);
         }
     },

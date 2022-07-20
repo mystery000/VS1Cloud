@@ -175,7 +175,7 @@ Template.alltaskdatatable.onRendered(function () {
         colReorder: {
           fixedColumnsLeft: 0,
         },
-        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B", 
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         select: true,
         destroy: true,
         colReorder: true,
@@ -195,7 +195,6 @@ Template.alltaskdatatable.onRendered(function () {
       });
 
     } catch (error) {
-      console.log(error)
     }
   }
 

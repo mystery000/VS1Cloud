@@ -1507,8 +1507,8 @@ Template.salesoverview.onRendered(function () {
         { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
         { label: 'Status', class: 'colStatus', active: true },
         { label: 'Employee', class: 'colEmployee', active: false },
-        { label: 'Comments', class: 'colComments', active: true }, 
-      ]; 
+        { label: 'Comments', class: 'colComments', active: true },
+      ];
 
       sideBarService.getAllCustomFields().then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
@@ -1539,7 +1539,7 @@ Template.salesoverview.onRendered(function () {
 
         if (custFields.length < 3) {
           let remainder = 3 - custFields.length;
-          let getRemCustomFields = parseInt(custFields.length); 
+          let getRemCustomFields = parseInt(custFields.length);
           for (let r = 0; r < remainder; r++) {
             getRemCustomFields++;
             customData = {
@@ -1557,7 +1557,7 @@ Template.salesoverview.onRendered(function () {
 
         if (dispFields.length < customFieldCount) {
           let remainder = customFieldCount - dispFields.length;
-          let getRemCustomFields = parseInt(dispFields.length); 
+          let getRemCustomFields = parseInt(dispFields.length);
           for (let r = 0; r < remainder; r++) {
             customData = {
               active: reset_data[getRemCustomFields].active,
@@ -1576,7 +1576,7 @@ Template.salesoverview.onRendered(function () {
         for (let index = 0; index < custFields.length; index++) {
           const element = custFields[index];
           dispFields.push(element);
-          
+
         }
 
         templateObject.custfields.set(custFields);
@@ -1622,14 +1622,15 @@ Template.salesoverview.events({
               .then(function (data) {
                 addVS1Data("TInvoiceEx", JSON.stringify(data))
                   .then(function (datareturn) {
-                    window.open("/salesoverview", "_self");
+
+                    batchUpdateCall('/salesoverview');
                   })
                   .catch(function (err) {
-                    window.open("/salesoverview", "_self");
+                    batchUpdateCall('/salesoverview');
                   });
               })
               .catch(function (err) {
-                window.open("/salesoverview", "_self");
+                batchUpdateCall('/salesoverview');
               });
           })
           .catch(function (err) {
@@ -1638,7 +1639,7 @@ Template.salesoverview.events({
               .then(function (data) {
                 addVS1Data("TInvoiceEx", JSON.stringify(data))
                   .then(function (datareturn) {
-                    window.open("/salesoverview", "_self");
+                    batchUpdateCall('/salesoverview');
                   })
                   .catch(function (err) {
                     window.open("/salesoverview", "_self");
@@ -2042,7 +2043,7 @@ Template.salesoverview.events({
     let templateObject = Template.instance();
     let custFields = templateObject.custfields.get();
     var datable = $('#tblSalesOverview').DataTable();
-    
+
     let reset_data = [
       { label: 'Sale Date', class: 'colSaleDate', active: true },
       { label: 'Sales No.', class: 'colSalesNo', active: true },
@@ -2055,15 +2056,15 @@ Template.salesoverview.events({
       { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
       { label: 'Status', class: 'colStatus', active: true },
       { label: 'Employee', class: 'colEmployee', active: false },
-      { label: 'Comments', class: 'colComments', active: true }, 
+      { label: 'Comments', class: 'colComments', active: true },
       { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },
       { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
       { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
-    ]; 
+    ];
 
 
-    $('.displaySettings').each(function(index) { 
-      var $tblrow = $(this); 
+    $('.displaySettings').each(function(index) {
+      var $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
       $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
@@ -2077,8 +2078,8 @@ Template.salesoverview.events({
       } else {
         $('.' + reset_data[index].class).css('display', 'none');
       }
-    }); 
-    
+    });
+
   },
   "click .saveTable": function (event) {
     let lineItems = [];
@@ -2088,7 +2089,7 @@ Template.salesoverview.events({
       $(".fullScreenSpin").css("display", "inline-block");
 
       $('.displaySettings').each(function(index) {
-        var $tblrow = $(this); 
+        var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
         var colTitle = $tblrow.find(".divcolumn").text() || '';
         var colWidth = $tblrow.find(".custom-range").val() || 0;
@@ -2130,7 +2131,7 @@ Template.salesoverview.events({
           };
         }
 
-        organisationService.saveCustomField(objDetails1).then(function (objDetails) { 
+        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         })
@@ -2152,7 +2153,7 @@ Template.salesoverview.events({
           $('#myModal2').modal('hide');
         });
       });
- 
+
   },
 
   "blur .divcolumn": function (event) {
