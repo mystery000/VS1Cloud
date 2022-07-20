@@ -13377,7 +13377,7 @@ Template.supplierpaymentcard.events({
   }
 });
 
-function onExchangeRateChange(e) {
+export function onExchangeRateChange(e) {
  const templateObject = Template.instance();
   const mainValue = localStorage.getItem('APPLIED_AMOUNT') || 0.0;
   const rate = parseFloat($("#exchange_rate").val());
@@ -13399,7 +13399,7 @@ function onExchangeRateChange(e) {
   //templateObject.record.set(data);
 }
 
-function calculateApplied() {
+export function calculateApplied() {
 
     const _foreignAmount = $('#edtForeignAmount').val();
     const _variation = $('#edtVariation').val();
