@@ -3,7 +3,17 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { CountryService } from '../js/country-service';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import LoadingOverlay from "../LoadingOverlay";
 let sideBarService = new SideBarService();
+
+export function setCurrentCurrencySymbol(symbol = "N/A") {
+    return localStorage.setItem("_SELECTED_CURRENCY_SYMBOL", symbol);
+}
+
+export function getCurrentCurrencySymbol() {
+    return localStorage.getItem("_SELECTED_CURRENCY_SYMBOL") || "N/A";
+}
+
 Template.currencypop.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecordscurrencypop = new ReactiveVar([]);
@@ -12,7 +22,7 @@ Template.currencypop.onCreated(function() {
 });
 
 Template.currencypop.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -634,6 +644,7 @@ Template.currencypop.onRendered(function() {
 
     });
 
+    LoadingOverlay.hide();
 });
 
 
@@ -933,6 +944,8 @@ Template.currencypop.events({
                         var currencyDesc = data.tcurrency[i].CurrencyDesc;
                         var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
                         var currencySellRate = data.tcurrency[i].SellRate || 0;
+
+                        setCurrentCurrencySymbol(currencySymbol);
 
                         $('#edtCurrencyID').val(currencyid);
                         // $('#sedtCountry').val(country);

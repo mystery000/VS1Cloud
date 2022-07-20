@@ -9,12 +9,14 @@ import { Random } from "meteor/random";
 import "jquery-editable-select";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
+import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
 let clickedTableID = 0;
 
 var template_list = ["Supplier Payments"];
+let defaultCurrencyCode = CountryAbbr;
 
 Template.supplierpaymentcard.onCreated(() => {
   const templateObject = Template.instance();
@@ -8802,7 +8804,7 @@ Template.supplierpaymentcard.events({
     }
   },
   "change #sltCurrency": (e) => {
-    if ($("#sltCurrency").val() && $("#sltCurrency").val() != "AUD") {
+    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
       $(".foreign-currency-js").css("display", "block");
     } else {
       $(".foreign-currency-js").css("display", "none");
@@ -13364,6 +13366,14 @@ Template.supplierpaymentcard.events({
   },
   "keyup #edtVariation": (e) => {
     calculateApplied();
+  },
+  "change #edtApplied": (e) => {
+    const currency = getCurrentCurrencySymbol();
+    $('.appliedAmount').text(currency + $(e.currentTarget).val());
+  },
+  "keyup #edtApplied": (e) => {
+    const currency = getCurrentCurrencySymbol();
+    $('.appliedAmount').text(currency + $(e.currentTarget).val());
   }
 });
 
@@ -13394,7 +13404,7 @@ function calculateApplied() {
     const _foreignAmount = $('#edtForeignAmount').val();
     const _variation = $('#edtVariation').val();
 
-    const currency = utilityService.extractCurrency(_foreignAmount);
+    const currency = getCurrentCurrencySymbol();
     const foreignAmount = isNaN(_foreignAmount) ? utilityService.removeCurrency(_foreignAmount) : _foreignAmount;
     const variation  = isNaN(_variation) ? utilityService.removeCurrency(_variation) : _variation;
     const isNegative = utilityService.isNegative(foreignAmount);
