@@ -210,9 +210,9 @@ Template.salesoverview.onRendered(function () {
                   totalpaid: totalPaid || 0.0,
                   totaloustanding: totalOutstanding || 0.0,
                   salestatus: salestatus || "",
-                  // custfield1: data.tsalesorderlist[i].SaleCustField1 || '',
-                  // custfield2: data.tsalesorderlist[i].SaleCustField2 || '',
-                  // custfield3: data.tsalesorderlist[i].SaleCustField3 || '',
+                  custfield1: data.tsaleslist[i].SaleCustField1 || '',
+                  custfield2: data.tsaleslist[i].SaleCustField2 || '',
+                  custfield3: data.tsaleslist[i].SaleCustField3 || '',
                   comments: data.tsaleslist[i].Comments || "",
                   type: data.tsaleslist[i].Type || "",
                 };
@@ -536,7 +536,12 @@ Template.salesoverview.onRendered(function () {
                     templateObject.datatablerecords.set(draftRecord);
                   })
                   .on("column-reorder", function () {});
+
               }, 0);
+
+              setTimeout(function () {
+                templateObject.getAllCustomFieldDisplaySettings();
+              }, 500);
 
               var columns = $("#tblSalesOverview th");
               let sTible = "";
@@ -644,9 +649,9 @@ Template.salesoverview.onRendered(function () {
               totalpaid: totalPaid || 0.0,
               totaloustanding: totalOutstanding || 0.0,
               salestatus: salestatus || "",
-              // custfield1: data.tsalesorderlist[i].SaleCustField1 || '',
-              // custfield2: data.tsalesorderlist[i].SaleCustField2 || '',
-              // custfield3: data.tsalesorderlist[i].SaleCustField3 || '',
+              custfield1: useData[i].SaleCustField1 || '',
+              custfield2: useData[i].SaleCustField2 || '',
+              custfield3: useData[i].SaleCustField3 || '',
               comments: useData[i].Comments || "",
               type: useData[i].Type || "",
             };
@@ -941,8 +946,12 @@ Template.salesoverview.onRendered(function () {
                 let draftRecord = templateObject.datatablerecords.get();
                 templateObject.datatablerecords.set(draftRecord);
               })
-              .on("column-reorder", function () {});
+              .on("column-reorder", function () {}); 
           }, 0);
+
+          setTimeout(function () {
+            templateObject.getAllCustomFieldDisplaySettings();
+          }, 500);
 
           var columns = $("#tblSalesOverview th");
           let sTible = "";
@@ -1051,9 +1060,9 @@ Template.salesoverview.onRendered(function () {
                 totalpaid: totalPaid || 0.0,
                 totaloustanding: totalOutstanding || 0.0,
                 salestatus: salestatus || "",
-                // custfield1: data.tsalesorderlist[i].SaleCustField1 || '',
-                // custfield2: data.tsalesorderlist[i].SaleCustField2 || '',
-                // custfield3: data.tsalesorderlist[i].SaleCustField3 || '',
+                custfield1: data.tsaleslist[i].SaleCustField1 || '',
+                custfield2: data.tsaleslist[i].SaleCustField2 || '',
+                custfield3: data.tsaleslist[i].SaleCustField3 || '',
                 comments: data.tsaleslist[i].Comments || "",
                 type: data.tsaleslist[i].Type || "",
               };
@@ -1367,8 +1376,12 @@ Template.salesoverview.onRendered(function () {
                   let draftRecord = templateObject.datatablerecords.get();
                   templateObject.datatablerecords.set(draftRecord);
                 })
-                .on("column-reorder", function () {});
+                .on("column-reorder", function () {}); 
             }, 0);
+
+            setTimeout(function () {
+              templateObject.getAllCustomFieldDisplaySettings();
+            }, 500);
 
             var columns = $("#tblSalesOverview th");
             let sTible = "";
@@ -1489,11 +1502,11 @@ Template.salesoverview.onRendered(function () {
 
   // custom field displaysettings
   templateObject.getAllCustomFieldDisplaySettings = function () {
-    let custFields = [];
+      let custFields = [];
       let dispFields = [];
       let customData = {};
       let customFieldCount = 12;
-      let listType = "ltSmartorderLines";        // tempcode. every settings need its own type
+      let listType = "ltSalesOverview";       
 
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -1507,10 +1520,10 @@ Template.salesoverview.onRendered(function () {
         { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
         { label: 'Status', class: 'colStatus', active: true },
         { label: 'Employee', class: 'colEmployee', active: false },
-        { label: 'Comments', class: 'colComments', active: true }, 
-      ]; 
+        { label: 'Comments', class: 'colComments', active: true },
+      ];
 
-      sideBarService.getAllCustomFields().then(function (data) {
+      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
             customData = {
@@ -1539,7 +1552,7 @@ Template.salesoverview.onRendered(function () {
 
         if (custFields.length < 3) {
           let remainder = 3 - custFields.length;
-          let getRemCustomFields = parseInt(custFields.length); 
+          let getRemCustomFields = parseInt(custFields.length);
           for (let r = 0; r < remainder; r++) {
             getRemCustomFields++;
             customData = {
@@ -1557,7 +1570,7 @@ Template.salesoverview.onRendered(function () {
 
         if (dispFields.length < customFieldCount) {
           let remainder = customFieldCount - dispFields.length;
-          let getRemCustomFields = parseInt(dispFields.length); 
+          let getRemCustomFields = parseInt(dispFields.length);
           for (let r = 0; r < remainder; r++) {
             customData = {
               active: reset_data[getRemCustomFields].active,
@@ -1576,7 +1589,7 @@ Template.salesoverview.onRendered(function () {
         for (let index = 0; index < custFields.length; index++) {
           const element = custFields[index];
           dispFields.push(element);
-          
+
         }
 
         templateObject.custfields.set(custFields);
@@ -1585,7 +1598,7 @@ Template.salesoverview.onRendered(function () {
     })
   }
 
-  templateObject.getAllCustomFieldDisplaySettings();
+  // templateObject.getAllCustomFieldDisplaySettings();
 
 });
 
@@ -1622,14 +1635,15 @@ Template.salesoverview.events({
               .then(function (data) {
                 addVS1Data("TInvoiceEx", JSON.stringify(data))
                   .then(function (datareturn) {
-                    window.open("/salesoverview", "_self");
+
+                    batchUpdateCall('/salesoverview');
                   })
                   .catch(function (err) {
-                    window.open("/salesoverview", "_self");
+                    batchUpdateCall('/salesoverview');
                   });
               })
               .catch(function (err) {
-                window.open("/salesoverview", "_self");
+                batchUpdateCall('/salesoverview');
               });
           })
           .catch(function (err) {
@@ -1638,7 +1652,7 @@ Template.salesoverview.events({
               .then(function (data) {
                 addVS1Data("TInvoiceEx", JSON.stringify(data))
                   .then(function (datareturn) {
-                    window.open("/salesoverview", "_self");
+                    batchUpdateCall('/salesoverview');
                   })
                   .catch(function (err) {
                     window.open("/salesoverview", "_self");
@@ -2042,7 +2056,7 @@ Template.salesoverview.events({
     let templateObject = Template.instance();
     let custFields = templateObject.custfields.get();
     var datable = $('#tblSalesOverview').DataTable();
-    
+
     let reset_data = [
       { label: 'Sale Date', class: 'colSaleDate', active: true },
       { label: 'Sales No.', class: 'colSalesNo', active: true },
@@ -2055,15 +2069,15 @@ Template.salesoverview.events({
       { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
       { label: 'Status', class: 'colStatus', active: true },
       { label: 'Employee', class: 'colEmployee', active: false },
-      { label: 'Comments', class: 'colComments', active: true }, 
+      { label: 'Comments', class: 'colComments', active: true },
       { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },
       { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
       { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
-    ]; 
+    ];
 
 
-    $('.displaySettings').each(function(index) { 
-      var $tblrow = $(this); 
+    $('.displaySettings').each(function(index) {
+      var $tblrow = $(this);
       $tblrow.find(".divcolumn").text(reset_data[index].label);
       $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
@@ -2077,18 +2091,18 @@ Template.salesoverview.events({
       } else {
         $('.' + reset_data[index].class).css('display', 'none');
       }
-    }); 
-    
+    });
+
   },
   "click .saveTable": function (event) {
     let lineItems = [];
       let organisationService = new OrganisationService();
-      let listType = "ltSmartorderLines";        // tempcode. every settings need its own type
+      let listType = "ltSalesOverview";    
 
       $(".fullScreenSpin").css("display", "inline-block");
 
       $('.displaySettings').each(function(index) {
-        var $tblrow = $(this); 
+        var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
         var colTitle = $tblrow.find(".divcolumn").text() || '';
         var colWidth = $tblrow.find(".custom-range").val() || 0;
@@ -2130,7 +2144,7 @@ Template.salesoverview.events({
           };
         }
 
-        organisationService.saveCustomField(objDetails1).then(function (objDetails) { 
+        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         })
@@ -2152,7 +2166,7 @@ Template.salesoverview.events({
           $('#myModal2').modal('hide');
         });
       });
- 
+
   },
 
   "blur .divcolumn": function (event) {

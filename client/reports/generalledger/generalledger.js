@@ -48,7 +48,7 @@ Template.generalledger.onRendered(() => {
 
   let prevMonth = moment().subtract(1, 'months').format('MM')
 
-   
+
 
   if (currentDate.getDate() < 10) {
     fromDateDay = "0" + currentDate.getDate();
@@ -86,23 +86,14 @@ Template.generalledger.onRendered(() => {
   $("#dateFrom").val(fromDate);
   $("#dateTo").val(begunDate);
 
-  templateObject.getGeneralLedgerReports = function (
-    dateFrom,
-    dateTo,
-    ignoreDate
-  ) {
-    if (!localStorage.getItem("VS1GeneralLedger_Report")) {
-      reportService
-        .getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate)
-        .then(function (data) {
+  templateObject.getGeneralLedgerReports = function (dateFrom,dateTo,ignoreDate) {
+    if (!localStorage.getItem("VS1GeneralLedger_Report1")) {
+      reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(function (data) {
           let totalRecord = [];
           let grandtotalRecord = [];
 
           if (data.tgeneralledgerreport.length) {
-            localStorage.setItem(
-              "VS1GeneralLedger_Report",
-              JSON.stringify(data) || ""
-            );
+            localStorage.setItem("VS1GeneralLedger_Report",JSON.stringify(data) || "");
             let records = [];
             let allRecords = [];
             let current = [];
@@ -129,11 +120,7 @@ Template.generalledger.onRendered(() => {
                 data.tgeneralledgerreport[i]["CLIENT NAME"],
                 data.tgeneralledgerreport[i].MEMO || "-",
                 // moment(data.tgeneralledgerreport[i].DATE).format("DD MMM YYYY") || '-',
-                data.tgeneralledgerreport[i].DATE != ""
-                  ? moment(data.tgeneralledgerreport[i].DATE).format(
-                      "DD/MM/YYYY"
-                    )
-                  : data.tgeneralledgerreport[i].DATE,
+                data.tgeneralledgerreport[i].DATE != ""? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY"): data.tgeneralledgerreport[i].DATE,
                 // utilityService.modifynegativeCurrencyFormat(
                 //   data.tgeneralledgerreport[i].AMOUNTINC
                 // ) || "-",
@@ -146,27 +133,18 @@ Template.generalledger.onRendered(() => {
                 // ) || "-",
                 {
                   type: "amount",
-                  value:
-                    utilityService.modifynegativeCurrencyFormat(
-                      data.tgeneralledgerreport[i].AMOUNTINC
-                    ) || "-",
+                  value:utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].AMOUNTINC) || "-",
                   amount: data.tgeneralledgerreport[i].AMOUNTINC || "-",
                 },
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].Current) || '-',
                 {
                   type: "amount",
-                  value:
-                    utilityService.modifynegativeCurrencyFormat(
-                      data.tgeneralledgerreport[i].DEBITSEX
-                    ) || "-",
+                  value:utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].DEBITSEX) || "-",
                   amount: data.tgeneralledgerreport[i].DEBITSEX || "-",
                 },
                 {
                   type: "amount",
-                  value:
-                    utilityService.modifynegativeCurrencyFormat(
-                      data.tgeneralledgerreport[i].CREDITSEX
-                    ) || "-",
+                  value:utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].CREDITSEX) || "-",
                   amount: data.tgeneralledgerreport[i].CREDITSEX || "-",
                 },
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i]["60-90Days"]) || '-',
@@ -203,23 +181,9 @@ Template.generalledger.onRendered(() => {
               const currencyLength = Currency.length;
               for (let k = 0; k < allRecords[i][1].data.length; k++) {
                 // amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
-                Currenttotal =
-                  Currenttotal +
-                  utilityService.convertSubstringParseFloat(
-                    allRecords[i][1].data[k].dataArr[6]
-                  );
-                oneMonth =
-                  oneMonth +
-                  utilityService.convertSubstringParseFloat(
-                    allRecords[i][1].data[k].dataArr[7]
-                  );
-                twoMonth =
-                  twoMonth +
-                  utilityService.convertSubstringParseFloat(
-                    allRecords[i][1].data[k].dataArr[8]
-                  );
-                // threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
-                // Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
+                Currenttotal = Currenttotal +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6].value);
+                oneMonth = oneMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7].value);
+                twoMonth =twoMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8].value);
               }
               let val = [
                 "Total " + allRecords[i][0].key + "",
@@ -232,22 +196,9 @@ Template.generalledger.onRendered(() => {
                 // utilityService.modifynegativeCurrencyFormat(Currenttotal),
                 // utilityService.modifynegativeCurrencyFormat(oneMonth),
                 // utilityService.modifynegativeCurrencyFormat(twoMonth),
-                {
-                  type: "amount",
-                  value:
-                    utilityService.modifynegativeCurrencyFormat(Currenttotal),
-                  amount: Currenttotal,
-                },
-                {
-                  type: "amount",
-                  value: utilityService.modifynegativeCurrencyFormat(oneMonth),
-                  amount: oneMonth,
-                },
-                {
-                  type: "amount",
-                  value: utilityService.modifynegativeCurrencyFormat(twoMonth),
-                  amount: twoMonth,
-                },
+                {type: "amount",value:utilityService.modifynegativeCurrencyFormat(Currenttotal),amount: Currenttotal,},
+                {type: "amount",value: utilityService.modifynegativeCurrencyFormat(oneMonth),amount: oneMonth,},
+                {type: "amount",value: utilityService.modifynegativeCurrencyFormat(twoMonth),amount: twoMonth,},
               ];
               current.push(val);
             }
@@ -263,18 +214,9 @@ Template.generalledger.onRendered(() => {
 
             for (let n = 0; n < current.length; n++) {
               const grandcurrencyLength = Currency.length;
-
-              //for (let m = 0; m < current[n].data.length; m++) {
-
-              grandtwoMonth =
-                grandtwoMonth +
-                utilityService.convertSubstringParseFloat(current[n][6]);
-              grandthreeMonth =
-                grandthreeMonth +
-                utilityService.convertSubstringParseFloat(current[n][7]);
-              grandOlder =
-                grandOlder +
-                utilityService.convertSubstringParseFloat(current[n][8]);
+              grandtwoMonth =grandtwoMonth +utilityService.convertSubstringParseFloat(current[n][6].value);
+              grandthreeMonth =grandthreeMonth +utilityService.convertSubstringParseFloat(current[n][7].value);
+              grandOlder =grandOlder +utilityService.convertSubstringParseFloat(current[n][8].value);
             }
 
             let grandval = [
@@ -385,8 +327,7 @@ Template.generalledger.onRendered(() => {
             templateObject.grandrecords.set("");
             $(".fullScreenSpin").css("display", "none");
           }
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
           //Bert.alert('<strong>' + err + '</strong>!', 'danger');
           $(".fullScreenSpin").css("display", "none");
         });
@@ -395,7 +336,7 @@ Template.generalledger.onRendered(() => {
       let totalRecord = [];
       let grandtotalRecord = [];
 
-       
+
 
       if (data.tgeneralledgerreport.length) {
         let records = [];
@@ -488,23 +429,9 @@ Template.generalledger.onRendered(() => {
           const currencyLength = Currency.length;
           for (let k = 0; k < allRecords[i][1].data.length; k++) {
             // amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
-            Currenttotal =
-              Currenttotal +
-              utilityService.convertSubstringParseFloat(
-                allRecords[i][1].data[k].dataArr[6].value
-              );
-            oneMonth =
-              oneMonth +
-              utilityService.convertSubstringParseFloat(
-                allRecords[i][1].data[k].dataArr[7].value
-              );
-            twoMonth =
-              twoMonth +
-              utilityService.convertSubstringParseFloat(
-                allRecords[i][1].data[k].dataArr[8].value
-              );
-            // threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
-            // Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
+            Currenttotal = Currenttotal +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6].value);
+            oneMonth = oneMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7].value);
+            twoMonth =twoMonth +utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8].value);
           }
           let val = [
             "Total " + allRecords[i][0].key + "",
@@ -544,18 +471,9 @@ Template.generalledger.onRendered(() => {
 
         for (let n = 0; n < current.length; n++) {
           const grandcurrencyLength = Currency.length;
-
-          //for (let m = 0; m < current[n].data.length; m++) {
-
-          grandtwoMonth =
-            grandtwoMonth +
-            utilityService.convertSubstringParseFloat(current[n][6].value);
-          grandthreeMonth =
-            grandthreeMonth +
-            utilityService.convertSubstringParseFloat(current[n][7].value);
-          grandOlder =
-            grandOlder +
-            utilityService.convertSubstringParseFloat(current[n][8].value);
+          grandtwoMonth =grandtwoMonth +utilityService.convertSubstringParseFloat(current[n][6].value);
+          grandthreeMonth =grandthreeMonth +utilityService.convertSubstringParseFloat(current[n][7].value);
+          grandOlder =grandOlder +utilityService.convertSubstringParseFloat(current[n][8].value);
         }
 
         let grandval = [
@@ -656,12 +574,7 @@ Template.generalledger.onRendered(() => {
   var currentDate2 = new Date();
   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
-  let getDateFrom =
-    currentDate2.getFullYear() +
-    "-" +
-    currentDate2.getMonth() +
-    "-" +
-    currentDate2.getDate();
+  let getDateFrom =currentDate2.getFullYear() +"-" +currentDate2.getMonth() +"-" +currentDate2.getDate();
 
   templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
 
@@ -736,7 +649,7 @@ Template.generalledger.events({
       _currencySelectedList.push(_currency);
     }
 
-     
+
 
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
@@ -760,7 +673,7 @@ Template.generalledger.events({
 
     LoadingOverlay.hide();
   },
-  "click td a": function (event) {
+  "click td a": async function (event) {
     let id = $(event.target).closest("tr").attr("id").split("item-value-");
     var accountName = id[1].split("_").join(" ");
     let toDate = moment($("#dateTo").val())
@@ -772,7 +685,7 @@ Template.generalledger.events({
       .startOf("year")
       .format("YYYY-MM-DD");
     //Session.setPersistent('showHeader',true);
-    addVS1Data("TAccountRunningBalanceReport", []);
+    await clearData("TAccountRunningBalanceReport");
     window.open(
       "/balancetransactionlist?accountName=" +
         accountName +
@@ -1189,7 +1102,7 @@ Template.generalledger.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-     
+
     if (!amount || amount.trim() == "") {
       return "";
     }
@@ -1208,16 +1121,16 @@ Template.generalledger.helpers({
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
     // )[0];
-     
+
     // amount = amount.replace(_defaultCurrency.symbol, "");
 
-     
+
     // amount =
     //   isNaN(amount) == true
     //     ? parseFloat(amount.substring(1))
     //     : parseFloat(amount);
-     
-     
+
+
 
     // Get the selected date
     let dateTo = $("#dateTo").val();
@@ -1226,7 +1139,7 @@ Template.generalledger.helpers({
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-     
+
 
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
@@ -1257,25 +1170,25 @@ Template.generalledger.helpers({
     });
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-     
-     
+
+
 
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
 
-     
-     
-     
+
+
+
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
-     
+
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-     
+
 
     return convertedAmount;
   },
@@ -1294,7 +1207,7 @@ Template.generalledger.helpers({
   },
   isNegativeAmount(amount) {
     if (Math.sign(amount) === -1) {
-       
+
       return true;
     }
     return false;
@@ -1307,7 +1220,7 @@ Template.generalledger.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
-       
+
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -1377,9 +1290,9 @@ Template.registerHelper("containsequals", function (a, b) {
     const result = await taxRateService.getCurrencies();
 
     //taxRateService.getCurrencies().then((result) => {
-     
+
     const data = result.tcurrency;
-     
+
     for (let i = 0; i < data.length; i++) {
       // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
       var dataList = {
@@ -1408,7 +1321,7 @@ Template.registerHelper("containsequals", function (a, b) {
         .localeCompare(b.currency.split("")[0].toLowerCase());
     });
 
-     
+
 
     templateObject.currencyList.set(_currencyList);
 

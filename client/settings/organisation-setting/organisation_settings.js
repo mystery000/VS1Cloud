@@ -170,7 +170,7 @@ Template.organisationsettings.onRendered(function () {
     $("#edtPostalCountry").val(mainData.PoCountry);
     $("#edtPostalCountry").append('<option selected="selected" value="' +mainData.PoCountry +'">' +mainData.PoCountry +"</option>");
 
-    if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
+    if (mainData.IsUSRegionTax || mainData.Country == "United States") {
       templateObject.isChkUSRegionTax.set(true);
       $("#chkusregiontax").prop("checked", true);
       $(".chkusregiontax-col").show();
@@ -501,7 +501,7 @@ Template.organisationsettings.events({
         PoPostcode: poPostCode,
         PoCountry: poCountry,
         TrackEmails: isDefaultEmail,
-        ChkUSRegionTax: isChkUSRegionTax,
+        IsUSRegionTax: isChkUSRegionTax,
       },
     };
     organisationService

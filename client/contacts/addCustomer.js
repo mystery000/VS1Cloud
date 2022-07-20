@@ -1784,7 +1784,7 @@ Template.customerscard.events({
             if(customerName.indexOf('^') > 0) {
               customerName = customerName.split('^')[0]
             }
-            await addVS1Data('TAwaitingCustomerPayment', []);
+            await clearData('TAwaitingCustomerPayment');
             FlowRouter.go('/customerawaitingpayments?contact='+customerName+'&contactid='+currentId);
         }
     },
@@ -3316,6 +3316,7 @@ Template.customerscard.helpers({
         if(temp && temp.mobile) {
             temp.mobile = temp.mobile.replace('+61', '0')
         }
+        return Template.instance().records.get();
     },
     countryList: () => {
         return Template.instance().countryData.get();

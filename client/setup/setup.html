@@ -60,6 +60,12 @@
         .addEmployeeModalNew .justify-content-xl-center .nav.nav-tabs.nav-justified {
             align-items: end;
         }
+        .dataTable.table.table-bordered,
+        .dataTable.table.table-bordered td,
+        .dataTable.table.table-bordered th {
+            border: 1px solid #e3e6f0 !important;
+            border-collapse: collapse !important;
+        }
     </style>
     <div class="setup-wizard">
         <!-- First page -->
@@ -93,7 +99,19 @@
                        
                     </ul>
                 </div>
-                <div class="setup-step setup-step-1">
+
+                <style>
+                    .setup-step {
+                        display: none;
+                    }
+
+                    .setup-step.show {
+                        display: block;
+                    }
+                </style>
+
+               
+                <div class="setup-step setup-step-1 {{#if isActive currentStep '1'}} show {{/if}}"  >
                     <div class="container-fluid">
                         <h3 class="text-dark mb-4">Organization Settings</h3>
                         <div class="row d-xl-flex justify-content-center justify-content-xl-center">
@@ -353,7 +371,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-2" style="display: none;">
+                <div class="setup-step setup-step-2 {{#if isActive currentStep '2'}} show {{/if}}"  >
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col">
@@ -480,7 +498,7 @@
                                                             <tbody>
                                                                 {{#if taxRates}}
                                                                 {{#each item in taxRates}}
-                                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;" data-mdoal="#addTaxRateModal">
                                                                     <td contenteditable="false" class="colName clickable">{{item.codename}}</td>
                                                                     <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
                                                                     <td contenteditable="false" class="colRate clickable text-right">{{item.rate}}</td>
@@ -532,7 +550,7 @@
 
                     {{> DeleteLineModal}}
                 </div>
-                <div class="setup-step setup-step-3" style="display: none;">
+                <div class="setup-step setup-step-3 {{#if isActive currentStep '3'}} show {{/if}}" >
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col">
@@ -783,7 +801,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-4" style="display: none;">
+                <div class="setup-step setup-step-4 {{#if isActive currentStep '4'}} show {{/if}}" >
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col">
@@ -946,7 +964,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-5" style="display: none;">
+                <div class="setup-step setup-step-5 {{#if isActive currentStep '5'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                             <div class="col">
@@ -959,7 +977,7 @@
                                                         <div class="modal-header" style="padding-bottom: 8px;">
                                                             <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                         <div class="modal-body">
-                                                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalEmployee" class="btn btn-primary helpModal">View Help Video</a></p>
                                                             <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank" class="btn btn-primary">Download Help File</a></p>
                                                             <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                             <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
@@ -968,6 +986,27 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!-- Start Help Video Modal -->
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="helpModalEmployee">
+                                                    <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                        <div class="modal-content" >
+                                                            <div class="modal-header" >
+
+                                                                <h4 class="title-header" >Employee</h4>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                                                                <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/employeeslist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                                                                <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                                                    <source src="https://erphelpes.com/vs1videos/employees.mp4" type="video/mp4">
+                                                                </video>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <!-- End Help Video Modal -->
                                             <style>
                                                 @media screen and (max-width: 376px) {
                                                     .btnOpenSettings {
@@ -1144,21 +1183,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-6" style="display: none;">
+                <div class="setup-step setup-step-6 {{#if isActive currentStep '6'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                            <div class="col">
                                 <div class="card shadow">
                                     <div class="card-header py-3">
-                                        <p class="text-primary m-0 font-weight-bold">Accounts <a role="button" data-toggle="modal" href="#helpViewModalEmployee"  style="float: right;">Help <i class="fa fa-question-circle-o"></i></a></p>
+                                        <p class="text-primary m-0 font-weight-bold">Accounts <a role="button" data-toggle="modal" href="#helpViewModalAccount"  style="float: right;">Help <i class="fa fa-question-circle-o"></i></a></p>
                                                 <!-- Start Help View Modal -->
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalEmployee">
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAccount">
                                                     <div class="modal-dialog modal-sm" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header" style="padding-bottom: 8px;">
                                                                 <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                             <div class="modal-body">
-                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAccount" class="btn btn-primary helpModal">View Help Video</a></p>
                                                                 <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank" class="btn btn-primary">Download Help File</a></p>
                                                                 <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                                 <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
@@ -1168,6 +1207,28 @@
                                                     </div>
                                                 </div>
                                                 <!-- End Help View Modal -->
+
+                                                 <!-- Start Help Video Modal -->
+                                                    <div class="modal fade" role="dialog" tabindex="-1" id="helpModalAccount">
+                                                        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+
+                                                                    <h4 class="title-header">Accounts Overview</h4>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                                                                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/newaccount.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                                                                    <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                                                        <source src="https://erphelpes.com/vs1videos/accountsoverview.mp4" type="video/mp4">
+                                                                    </video>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <!-- End Help Video Modal -->
+
                                             <style>
                                                 @media screen and (max-width: 376px) {
                                                     .btnOpenSettings {
@@ -1452,22 +1513,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-7" style="display: none;">
+                <div class="setup-step setup-step-7 {{#if isActive currentStep '7'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                             <div class="col">
                                 <div class="card shadow">
                                     <div class="card-header py-3">
-                                        <p class="text-primary m-0 font-weight-bold">Customers <a role="button" data-toggle="modal" href="#helpViewModal3"  style="float: right;">Help <i class="fa fa-question-circle-o"></i></a></p>
+                                        <p class="text-primary m-0 font-weight-bold">Customers <a role="button" data-toggle="modal" href="#helpViewModalCustomers"  style="float: right;">Help <i class="fa fa-question-circle-o"></i></a></p>
                 
                                         <!-- Start Help View Modal -->
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal3">
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalCustomers">
                                             <div class="modal-dialog modal-sm" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header" style="padding-bottom: 8px;">
                                                         <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                     <div class="modal-body">
-                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalCustomers" class="btn btn-primary helpModal">View Help Video</a></p>
                                                         <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
                                                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                         <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
@@ -1477,6 +1538,26 @@
                                             </div>
                                         </div>
                                         <!-- End Help View Modal -->
+
+                                         <!-- Start Help Video Modal -->
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="helpModalCustomers">
+                                                <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-content" >
+                                                        <div class="modal-header" >
+
+                                                            <h4 class="title-header" >Customer</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                                                            <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/customerlist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                                                            <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                                                <source src="https://erphelpes.com/vs1videos/customers.mp4" type="video/mp4">
+                                                            </video>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                 
                                         <style>
                                             @media screen and (max-width: 376px) {
@@ -1673,22 +1754,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="setup-step setup-step-8" style="display: none;">
+                <div class="setup-step setup-step-8 {{#if isActive currentStep '8'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                             <div class="col">
                                 <div class="card shadow">
                                     <div class="card-header py-3">
-                                        <p class="text-primary m-0 font-weight-bold">Suppliers <a role="button" data-toggle="modal" href="#helpViewModal"  style="float: right;">Help <i class="fa fa-question-circle-o"></i></a></p>
+                                        <p class="text-primary m-0 font-weight-bold">Suppliers <a role="button" data-toggle="modal" href="#helpViewModalSuppliers"  style="float: right;">Help <i class="fa fa-question-circle-o"></i></a></p>
                 
                                         <!-- Start Help View Modal -->
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalSuppliers">
                                             <div class="modal-dialog modal-sm" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header" style="padding-bottom: 8px;">
                                                         <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                     <div class="modal-body">
-                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalSuppliers" class="btn btn-primary helpModal">View Help Video</a></p>
                                                         <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
                                                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                         <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
@@ -1698,6 +1779,28 @@
                                             </div>
                                         </div>
                                         <!-- End Help View Modal -->
+
+                                        <!-- Start Help Video Modal -->
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="helpModalSuppliers">
+                                                <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-content" >
+                                                        <div class="modal-header" >
+
+                                                            <h4 class="title-header" >Supplier</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                                                            <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/supplierlist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                                                            <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                                                <source src="https://erphelpes.com/vs1videos/supplierlist.mp4" type="video/mp4">
+                                                            </video>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        <!-- End Help Video Modal -->
                                         <style>
                                             @media screen and (max-width: 376px) {
                                                 .btnOpenSettings {
@@ -1872,22 +1975,22 @@
                         {{> addsupplierpop}}
                     </div>
                 </div>               
-                <div class="setup-step setup-step-9" style="display: none;">
+                <div class="setup-step setup-step-9 {{#if isActive currentStep '9'}} show {{/if}}" >
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row">
                             <div class="col">
                                 <div class="card shadow">
                                     <div class="card-header py-3">
-                                        <p class="text-primary m-0 font-weight-bold">Inventory List <a role="button" data-toggle="modal" href="#helpViewModal2"  style="float: right;">Help <i class="fa fa-question-circle-o"></i></a></p>
+                                        <p class="text-primary m-0 font-weight-bold">Inventory List <a role="button" data-toggle="modal" href="#helpViewModalInventory"  style="float: right;">Help <i class="fa fa-question-circle-o"></i></a></p>
                 
                                         <!-- Start Help View Modal -->
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal2">
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalInventory">
                                             <div class="modal-dialog modal-sm" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header" style="padding-bottom: 8px;">
                                                         <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                     <div class="modal-body">
-                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal">View Help Video</a></p>
                                                         <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
                                                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                                                         <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
@@ -1897,6 +2000,28 @@
                                             </div>
                                         </div>
                                         <!-- End Help View Modal -->
+
+                                        <!-- Start Help Video Modal -->
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="helpModalInventory">
+                                                <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+
+                                                            <h4 class="title-header">Inventory Overview</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                                                            <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
+                                                            <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                                                <source src="https://erphelpes.com/vs1videos/inventoryoverview.mp4" type="video/mp4">
+                                                            </video>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        <!-- End Help Video Modal -->
                     
                                         <style>
                                             @media screen and (max-width: 376px) {
@@ -2181,7 +2306,7 @@
                         {{> newproductpop}}
                     </div>
                 </div>
-                <div class="setup-step setup-step-10" style="display: none;">
+                <div class="setup-step setup-step-10 {{#if isActive currentStep '10'}} show {{/if}}" >
                     <div class="first-page-container" style="margin: auto;">
                         <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png"/></div>
                         <h1 class="text-center">Initial set up is completed</h1>

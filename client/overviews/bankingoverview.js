@@ -1925,7 +1925,7 @@ Template.bankingoverview.events({
     'click .opentrans': async function(event) {
         let bankAccountName = $(event.target).closest('.openaccountreceivable').attr('id');
         // FlowRouter.go('/accounttransactions?id=' + id);
-        await addVS1Data('TAccountRunningBalanceReport', []);
+        await clearData('TAccountRunningBalanceReport');
         FlowRouter.go("/balancetransactionlist?accountName=" +bankAccountName +"&isTabItem=" +false);
     },
     'click .btnPrinStatment': function() {

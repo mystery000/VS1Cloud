@@ -689,14 +689,15 @@ Template.newprofitandloss.onRendered(function () {
     );
 
     // Fetch list type details
+    profitLossLayoutEndpoint.url.searchParams.append("LayoutToUse", 0);
     // profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
-    profitLossLayoutEndpoint.url.searchParams.append("LayoutToUse", 2);
 
     const profitLossLayoutEndResponse = await profitLossLayoutEndpoint.fetch();
     if (profitLossLayoutEndResponse.ok == true) {
       let profitLossLayouts = [];
       let jsonResponse = await profitLossLayoutEndResponse.json();
-      // handle API json reponse
+      console.log('jsonResponse', jsonResponse)
+      return false
       const profitLossLists = ProfitLossLayout.fromList(
         jsonResponse.tprofitlosslayout
       );
@@ -898,7 +899,7 @@ $('.tblAvoid').each(function(){
 Template.newprofitandloss.events({
   "click .pnlReportAccount": async function (e) {
     let templateObject = Template.instance();
-    addVS1Data("TAccountRunningBalanceReport", []);
+    await clearData("TAccountRunningBalanceReport");
     let accountName = $(e.target).data("account");
     const options = await templateObject.reportOptions.get();
     let dateTo =
@@ -1000,7 +1001,7 @@ Template.newprofitandloss.events({
   "click .accountingBasisDropdown": function (e) {
     e.stopPropagation();
   },
-  "click td a": function (event) {
+  "click td a": async function (event) {
     let id = $(event.target).closest("tr").attr("id").split("item-value-");
     var accountName = id[1].split("_").join(" ");
     let toDate = moment($("#dateTo").val())
@@ -1011,7 +1012,7 @@ Template.newprofitandloss.events({
       .clone()
       .startOf("year")
       .format("YYYY-MM-DD");
-    addVS1Data("TAccountRunningBalanceReport", []);
+    await clearData("TAccountRunningBalanceReport");
     //Session.setPersistent('showHeader',true);
     window.open(
       "/balancetransactionlist?accountName=" +

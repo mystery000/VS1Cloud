@@ -1275,5 +1275,48 @@ export class UtilityService {
         }
     }
 
+    /**
+     * This function will convert a string to a float number
+     * 
+     * @param {string} stringNumber 
+     * @returns {float}
+     */
+    removeCurrency(stringNumber = "$10.5") {
+        const isNegative = stringNumber.includes("-");
+        if(isNegative) {
+            stringNumber = stringNumber.replace('-', "");
+        }
+
+        const currency = stringNumber.split('')[0];
+        stringNumber = stringNumber.replace(currency, "");
+
+        const value = parseFloat(stringNumber);
+        if(isNegative) value = value * -1;
+
+        return value;
+    }
+
+    extractCurrency(stringNumber) {
+        if(!isNaN(stringNumber)) {
+            return '';
+        }
+        stringNumber = stringNumber.replace('-', ''); // remove the negative sign
+        const currency = stringNumber.split('')[0];
+        return currency;
+    }
+
+
+    /**
+     * 
+     * @param {string|number} number 
+     * @returns {boolean}
+     */
+    isNegative(number) {
+        if(isNaN(number)) {
+            return number.includes("-");
+        } else {
+            return number < 0;
+        }
+    }
 
 }

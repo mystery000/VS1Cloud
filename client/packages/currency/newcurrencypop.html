@@ -6,7 +6,7 @@
                 <h4 id="add-currency-title" name="add-currency-title">Add New Currency</h4><button type="button"
                     class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body addNewCurrency">
                 <input type="hidden" class="form-control" id="edtCurrencyID" name="edtCurrencyID" style="display:none;">
                 <div class="row no-gutters">
                     <div class="col d-xl-flex align-items-xl-end">
@@ -37,13 +37,13 @@
                                 data-bs-tooltip="" data-placement="bottom"
                                 title="The name for the Tax Rate to appear in VS1 Cloud">Code</label>
                             <input type="text" class="form-control" id="currencyCode" name="currencyCode"
-                                style="width: 110px;">
+                                style="width: 110px;" required>
                         </div>
                         <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip"
                                 data-bs-tooltip="" data-placement="bottom"
-                                title="The name for the Tax Rate to appear in VS1 Cloud">Symbol</label>
+                                title="The name for the Tax Rate to appear in VS1 Cloud" >Symbol</label>
                             <input type="text" class="form-control" id="currencySymbol" name="currencySymbol"
-                                style="width: 110px;">
+                                style="width: 110px;" required>
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <div class="col d-xl-flex align-items-xl-end">
                         <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip"
                                 data-bs-tooltip="" data-placement="bottom">Currency Name</label>
-                            <input type="text" class="form-control" id="edtCurrencyName" name="edtCurrencyName">
+                            <input type="text" class="form-control" id="edtCurrencyName" name="edtCurrencyName" required>
                         </div>
                         <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
                             <input type="text" class="form-control" id="edtCurrencyDesc" name="edtCurrencyDesc">
@@ -62,17 +62,17 @@
                     <div class="col d-xl-flex align-items-xl-end">
                         <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip"
                                 data-bs-tooltip="" data-placement="bottom">Buy Rate</label>
-                            <input type="text" class="form-control" id="edtBuyRate" name="edtBuyRate">
+                            <input type="text" class="form-control" id="edtBuyRate" name="edtBuyRate" required>
                         </div>
                         <div class="form-group flex-grow-1" style="margin: 8px;"><label>Sell Rate</label>
-                            <input type="text" class="form-control" id="edtSellRate" name="edtSellRate">
+                            <input type="text" class="form-control" id="edtSellRate" name="edtSellRate" required>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-success btnSaveCurrency" type="button"><i class="fa fa-save"
-                        style="padding-right: 8px;"></i>Save</button>
+                <button class="btn btn-success btnSaveCurrency" type="button" disabled><i class="fa fa-save"
+                        style="padding-right: 8px;" ></i>Save</button>
                 <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
                         style="margin-right: 8px;"></i>Close</button>
             </div>

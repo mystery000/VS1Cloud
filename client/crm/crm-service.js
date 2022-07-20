@@ -95,4 +95,12 @@ export class CRMService extends BaseService {
   getAllFilters() {
     return;
   }
+
+  getAllLeads(fromDate) {
+    options = {
+      ListType: "Detail",
+      select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true and [CreationDate]>'" + fromDate + "'",
+    };
+    return this.getList(this.ERPObjects.TProspect, options);
+  }
 }
