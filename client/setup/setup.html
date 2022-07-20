@@ -498,7 +498,7 @@
                                                             <tbody>
                                                                 {{#if taxRates}}
                                                                 {{#each item in taxRates}}
-                                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;" data-mdoal="#addTaxRateModal">
                                                                     <td contenteditable="false" class="colName clickable">{{item.codename}}</td>
                                                                     <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
                                                                     <td contenteditable="false" class="colRate clickable text-right">{{item.rate}}</td>
