@@ -92,6 +92,210 @@ Template.FxCurrencyHistory.onRendered(function () {
     });
   }
 
+  templateInstance.loadCurrencies  = async () => {
+    LoadingOverlay.show();
+    let result = await taxRateService.getCurrencyHistory();
+
+    if(result.tcurrencyratehistory) {
+      const data = result.tcurrencyratehistory;
+
+      for (let i = 0; i < data.length; i++) {
+        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+        var dataList = {
+          id: data[i].Id || "",
+          code: data[i].Code || "-",
+          currency: data[i].Currency || "-",
+          symbol: data[i].CurrencySymbol || "-",
+          buyrate: data[i].BuyRate || "-",
+          sellrate: data[i].SellRate || "-",
+          country: data[i].Country || "-",
+          description: data[i].CurrencyDesc || "-",
+          ratelastmodified: data[i].RateLastModified || "-",
+          createdAt: new Date(data[i].MsTimeStamp) || "-",
+          formatedCreatedAt: formatDateToString(
+            new Date(data[i].MsTimeStamp)
+          ),
+        };
+
+        dataTableList.push(dataList);
+        //}
+      }
+
+      if (urlParams.get("currency")) {
+        // Filter by currency
+        dataTableList = dataTableList.filter((value, index) => {
+          return value.code == urlParams.get("currency");
+        });
+      }
+
+      if (urlParams.get("dateFrom") && urlParams.get("dateTo")) {
+        const _dateFrom = formatDateFromUrl(begunDate);
+        const _dateTo = formatDateFromUrl(fromDate);
+        dataTableList = dataTableList.filter((value, index) => {
+          if (_dateFrom > value.createdAt && _dateTo < value.createdAt) {
+            return true;
+          }
+          return false;
+        });
+      }
+
+      // Sort by created at
+      dataTableList = dataTableList.sort(sortById);
+      dataTableList.reverse();
+
+      await templateInstance.datatablerecords.set(dataTableList);
+
+      if (await templateInstance.datatablerecords.get()) {
+        Meteor.call(
+          "readPrefMethod",
+          Session.get("mycloudLogonID"),
+          "currencyLists",
+          function (error, result) {
+            if (error) {
+            } else {
+              if (result) {
+                for (let i = 0; i < result.customFields.length; i++) {
+                  let customcolumn = result.customFields;
+                  let columData = customcolumn[i].label;
+                  let columHeaderUpdate = customcolumn[i].thclass.replace(
+                    / /g,
+                    "."
+                  );
+                  let hiddenColumn = customcolumn[i].hidden;
+                  let columnClass = columHeaderUpdate.split(".")[1];
+                  let columnWidth = customcolumn[i].width;
+                  let columnindex = customcolumn[i].index + 1;
+
+                  if (hiddenColumn == true) {
+                    $("." + columnClass + "").addClass("hiddenColumn");
+                    $("." + columnClass + "").removeClass("showColumn");
+                  } else if (hiddenColumn == false) {
+                    $("." + columnClass + "").removeClass("hiddenColumn");
+                    $("." + columnClass + "").addClass("showColumn");
+                  }
+                }
+              }
+            }
+          }
+        );
+
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+
+        setTimeout(function () {
+          $("#tblFxCurrencyHistory")
+            .DataTable({
+              columnDefs: [
+                { type: "date", targets: 0 },
+                { orderable: false, targets: -1 },
+              ],
+              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              buttons: [
+                {
+                  extend: "excelHtml5",
+                  text: "",
+                  download: "open",
+                  className: "btntabletocsv hiddenColumn",
+                  filename: "FX Currency History List - " + moment().format(),
+                  orientation: "portrait",
+                  exportOptions: {
+                    columns: ":visible",
+                  },
+                },
+                {
+                  extend: "print",
+                  download: "open",
+                  className: "btntabletopdf hiddenColumn",
+                  text: "",
+                  title: "FX Currency History List",
+                  filename: "FX Currency History List - " + moment().format(),
+                  exportOptions: {
+                    columns: ":visible",
+                  },
+                },
+              ],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              colReorder: {
+                fixedColumnsRight: 1,
+              },
+              // bStateSave: true,
+              // rowId: 0,
+              pageLength: 25,
+              paging: true,
+              //                    "scrollY": "400px",
+              //                    "scrollCollapse": true,
+              info: true,
+              responsive: true,
+              order: [[0, "desc"]],
+              action: function () {
+                $("#tblFxCurrencyHistory").DataTable().ajax.reload();
+              },
+              fnDrawCallback: function (oSettings) {
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              },
+            })
+            .on("page", function () {
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
+              let draftRecord = templateInstance.datatablerecords.get();
+              templateInstance.datatablerecords.set(draftRecord);
+            })
+            .on("column-reorder", function () {})
+            .on("length.dt", function (e, settings, len) {
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
+            });
+
+          // $('#tblFxCurrencyHistory').DataTable().column( 0 ).visible( true );
+         
+        }, 300);
+      }
+
+     
+      
+
+      var columns = $("#tblFxCurrencyHistory th");
+      let sTible = "";
+      let sWidth = "";
+      let sIndex = "";
+      let sVisible = "";
+      let columVisible = false;
+      let sClass = "";
+      $.each(columns, function (i, v) {
+        if (v.hidden == false) {
+          columVisible = true;
+        }
+        if (v.className.includes("hiddenColumn")) {
+          columVisible = false;
+        }
+        sWidth = v.style.width.replace("px", "");
+
+        let datatablerecordObj = {
+          sTitle: v.innerText || "",
+          sWidth: sWidth || "",
+          sIndex: v.cellIndex || "",
+          sVisible: columVisible || false,
+          sClass: v.className || "",
+        };
+        tableHeaderList.push(datatablerecordObj);
+      });
+      templateInstance.tableheaderrecords.set(tableHeaderList);
+      $("div.dataTables_filter input").addClass(
+        "form-control form-control-sm"
+      );
+    }
+    LoadingOverlay.hide();
+  }
+
+ 
+
   templateInstance.getTaxRates = function () {
     taxRateService.getCurrencyHistory().then((result) => {
         const data = result.tcurrencyratehistory;
@@ -180,81 +384,84 @@ Template.FxCurrencyHistory.onRendered(function () {
           setTimeout(function () {
             MakeNegative();
           }, 100);
-        }
 
-        LoadingOverlay.hide();
-        setTimeout(function () {
-          $("#tblFxCurrencyHistory")
-            .DataTable({
-              columnDefs: [
-                { type: "date", targets: 0 },
-                { orderable: false, targets: -1 },
-              ],
-              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-              buttons: [
-                {
-                  extend: "excelHtml5",
-                  text: "",
-                  download: "open",
-                  className: "btntabletocsv hiddenColumn",
-                  filename: "currencylist_" + moment().format(),
-                  orientation: "portrait",
-                  exportOptions: {
-                    columns: ":visible",
+          setTimeout(function () {
+            $("#tblFxCurrencyHistory")
+              .DataTable({
+                columnDefs: [
+                  { type: "date", targets: 0 },
+                  { orderable: false, targets: -1 },
+                ],
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [
+                  {
+                    extend: "excelHtml5",
+                    text: "",
+                    download: "open",
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "currencylist_" + moment().format(),
+                    orientation: "portrait",
+                    exportOptions: {
+                      columns: ":visible",
+                    },
                   },
-                },
-                {
-                  extend: "print",
-                  download: "open",
-                  className: "btntabletopdf hiddenColumn",
-                  text: "",
-                  title: "Currency List",
-                  filename: "currencylist_" + moment().format(),
-                  exportOptions: {
-                    columns: ":visible",
+                  {
+                    extend: "print",
+                    download: "open",
+                    className: "btntabletopdf hiddenColumn",
+                    text: "",
+                    title: "Currency List",
+                    filename: "currencylist_" + moment().format(),
+                    exportOptions: {
+                      columns: ":visible",
+                    },
                   },
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                colReorder: {
+                  fixedColumnsRight: 1,
                 },
-              ],
-              select: true,
-              destroy: true,
-              colReorder: true,
-              colReorder: {
-                fixedColumnsRight: 1,
-              },
-              // bStateSave: true,
-              // rowId: 0,
-              paging: true,
-              //                    "scrollY": "400px",
-              //                    "scrollCollapse": true,
-              info: true,
-              responsive: true,
-              order: [[0, "desc"]],
-              action: function () {
-                $("#tblFxCurrencyHistory").DataTable().ajax.reload();
-              },
-              fnDrawCallback: function (oSettings) {
+                // bStateSave: true,
+                // rowId: 0,
+                pageLenght: 25,
+                paging: true,
+                //                    "scrollY": "400px",
+                //                    "scrollCollapse": true,
+                info: true,
+                responsive: true,
+                order: [[0, "desc"]],
+                action: function () {
+                  $("#tblFxCurrencyHistory").DataTable().ajax.reload();
+                },
+                fnDrawCallback: function (oSettings) {
+                  setTimeout(function () {
+                    MakeNegative();
+                  }, 100);
+                },
+              })
+              .on("page", function () {
                 setTimeout(function () {
                   MakeNegative();
                 }, 100);
-              },
-            })
-            .on("page", function () {
-              setTimeout(function () {
-                MakeNegative();
-              }, 100);
-              let draftRecord = templateInstance.datatablerecords.get();
-              templateInstance.datatablerecords.set(draftRecord);
-            })
-            .on("column-reorder", function () {})
-            .on("length.dt", function (e, settings, len) {
-              setTimeout(function () {
-                MakeNegative();
-              }, 100);
-            });
+                let draftRecord = templateInstance.datatablerecords.get();
+                templateInstance.datatablerecords.set(draftRecord);
+              })
+              .on("column-reorder", function () {})
+              .on("length.dt", function (e, settings, len) {
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              });
+  
+            // $('#tblFxCurrencyHistory').DataTable().column( 0 ).visible( true );
+            LoadingOverlay.hide();
+          }, 300);
+        }
 
-          // $('#tblFxCurrencyHistory').DataTable().column( 0 ).visible( true );
-          LoadingOverlay.hide();
-        }, 0);
+        LoadingOverlay.hide();
+        
 
         var columns = $("#tblFxCurrencyHistory th");
         let sTible = "";
@@ -293,7 +500,7 @@ Template.FxCurrencyHistory.onRendered(function () {
       });
   };
 
-  templateInstance.getTaxRates();
+  //templateInstance.getTaxRates();
 
   templateInstance.getCountryData = function () {
     getVS1Data("TCountries")
@@ -326,8 +533,11 @@ Template.FxCurrencyHistory.onRendered(function () {
         });
       });
   };
-  templateInstance.getCountryData();
+ 
 
+  templateInstance.loadCurrencies();
+  templateInstance.getCountryData();
+  
   LoadingOverlay.hide();
 });
 
