@@ -3316,6 +3316,7 @@ Template.customerscard.helpers({
         if(temp && temp.mobile) {
             temp.mobile = temp.mobile.replace('+61', '0')
         }
+        return Template.instance().records.get();
     },
     countryList: () => {
         return Template.instance().countryData.get();
