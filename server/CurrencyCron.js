@@ -155,7 +155,7 @@ async function _updateCurrency(currency, callback = (currency) => {}) {
  * @param {*} currency
  */
 async function _saveCurrency(currency, erpGet) {
-  console.log('Saving currency: ', currency.fields.Code, " BuyRate: ", currency.fields.BuyRate , " SellRate: ", currency.fields.SellRate);
+  //console.log('Saving currency: ', currency.fields.Code, " BuyRate: ", currency.fields.BuyRate , " SellRate: ", currency.fields.SellRate);
   const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency`;
   const _headers = {
     database: erpGet.ERPDatabase,
@@ -176,8 +176,9 @@ async function _saveCurrency(currency, erpGet) {
     },
     (error, result) => {
       if (error) {
+        console.log("Error: ", error);
       } else {
-        console.log(result);
+        console.log("Result: ", result);
       }
     }
   );
