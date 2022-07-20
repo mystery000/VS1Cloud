@@ -228,7 +228,6 @@ Template.allCardsLists.events({
         e.preventDefault();
         $(".fullScreenSpin").css("display", "block");
         let templateObject = Template.instance();
-        console.log('template = ', Template.instance());
         let _tabGroup = $(".connectedCardSortable").data("tabgroup");
         let employeeId = Session.get("mySessionEmployeeLoggedID");
 
