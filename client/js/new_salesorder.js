@@ -9231,7 +9231,7 @@ Template.new_salesorder.events({
         }
     },
 
-
+    // displaysettings
     'click .chkTaxCode': function(event) {
         if ($(event.target).is(':checked')) {
             $('.colTaxCode').css('display', 'table-cell');
