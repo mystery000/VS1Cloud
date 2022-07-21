@@ -1730,7 +1730,6 @@ Template.accountsoverview.events({
           ExpiryDate: expiryDate || "",
         },
       };
-      console.log(data);
 
       accountService
         .saveAccount(data)

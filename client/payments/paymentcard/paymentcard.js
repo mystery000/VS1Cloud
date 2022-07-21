@@ -8828,11 +8828,9 @@ Template.paymentcard.events({
         }
       },
     "keyup #exchange_rate": (e) => {
-        console.log("echange rate keuppped");
         onExchangeRateChange(e);
       },
       "change #exchange_rate": (e) => {
-        console.log("echange rate changed");
         onExchangeRateChange(e);
       },
       "change #edtForeignAmount": (e) => {
