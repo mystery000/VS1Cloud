@@ -57,14 +57,11 @@ class FxApi {
       },
       (error, response) => {
         if (error) {
-          //console.log("Meteor", error);
           callback({
             buy: 1.21,
             sell: 1.19,
           });
         } else {
-          console.log("Fetched repsoons: ", response);
-          console.log("Final repsonse");
           if (response.status >= 200 && response.status <= 302) {
             let data = response.data;
 
@@ -103,14 +100,10 @@ class FxApi {
       },
       (error, response) => {
         if (error) {
-          console.log("Meteor", error);
           callback(null);
         } else {
-          //console.log(response.data.to);
           if (response.data.to) {
             let data = response.data;
-           
-            // console.log(data);
 
             callback(data);
             return data;

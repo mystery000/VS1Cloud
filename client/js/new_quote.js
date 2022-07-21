@@ -21,7 +21,7 @@ let times = 0;
 let clickedInput = "";
 let isDropDown = false;
 
-var template_list = [
+var template_list = [ 
     "Quotes",
   ];
 
@@ -72,6 +72,7 @@ Template.new_quote.onCreated(() => {
 
 Template.new_quote.onRendered(() => {
 
+    $('#choosetemplate').attr('checked', true);
     $(window).on('load', function() {
         const win = $(this); //this = window
         if (win.width() <= 1024 && win.width() >= 450) {
@@ -89,11 +90,11 @@ Template.new_quote.onRendered(() => {
     const templateObject = Template.instance();
 
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
-
+    
         title = $(this).parent().attr("data-id");
         number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
         templateObject.generateInvoiceData(title,number);
-
+           
      });
     const salesService = new SalesBoardService();
     const clientsService = new SalesBoardService();
@@ -110,12 +111,12 @@ Template.new_quote.onRendered(() => {
     templateObject.generateInvoiceData = function (template_title,number) {
         object_invoce = [];
          switch (template_title) {
-
+     
          case "Quotes":
             showQuotes1(template_title,number);
             break;
          }
-
+   
       };
 
     templateObject.getTemplateInfo = function() {
@@ -136,15 +137,15 @@ Template.new_quote.onRendered(() => {
                 $('#choosetemplate').attr("checked", "checked");
 
                 if($('#choosetemplate').is(':checked'))
-                {
-                    $('#templateselection').modal('show');
+                {        
+                   // $('#templateselection').modal('show');
                 }
                 else
-                {
+                {   
                 $('#templateselection').modal('hide');
                 }
             }
-
+    
 
         });
 
@@ -156,9 +157,9 @@ Template.new_quote.onRendered(() => {
     function showQuotes1(template_title,number)
     {
                 var array_data = [];
-                let lineItems = [];
+                let lineItems = [];   
                 object_invoce = [];
-
+             
 
                 let quoteData = templateObject.quoterecord.get();
                 let stripe_id = templateObject.accountID.get() || '';
@@ -168,7 +169,7 @@ Template.new_quote.onRendered(() => {
                 var customfield1 = $('#edtSaleCustField1').val() || '-';
                 var customfield2 = $('#edtSaleCustField2').val() || '-';
                 var customfield3 = $('#edtSaleCustField3').val() || '-';
-
+    
                 var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
                 var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
                 var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
@@ -195,8 +196,8 @@ Template.new_quote.onRendered(() => {
 
                 $('#tblQuoteLine > tbody > tr').each(function () {
                     var lineID = this.id;
-
-
+                
+                
                     let tdproduct = $('#' + lineID + " .lineProductName").val();
                     let tddescription = $('#' + lineID + " .lineProductDesc").text();
                     let tdQty = $('#' + lineID + " .lineQty").val();
@@ -205,8 +206,8 @@ Template.new_quote.onRendered(() => {
                     let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
                     let tdlineamt = $('#' + lineID + " .colAmountEx").text();
                     let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
-
-
+                
+                
                     array_data.push([
                         tdproduct,
                         tddescription,
@@ -215,7 +216,7 @@ Template.new_quote.onRendered(() => {
                         taxAmount,
                         tdlineamt,
                     ]);
-
+                
                     lineItemObj = {
                         description: tddescription || '',
                         quantity: tdQty || 0,
@@ -223,7 +224,7 @@ Template.new_quote.onRendered(() => {
                             minimumFractionDigits: 2
                         }) || 0
                     }
-
+                
                     lineItems.push(lineItemObj);
                 });
 
@@ -378,7 +379,7 @@ Template.new_quote.onRendered(() => {
 
 
             }
-
+     
 
             object_invoce.push(item_quote);
             $("#templatePreviewModal .field_payment").show();
@@ -393,9 +394,9 @@ Template.new_quote.onRendered(() => {
     function showQuotes(template_title,number)
     {
         var array_data = [];
-        let lineItems = [];
+        let lineItems = [];   
         object_invoce = [];
-
+     
 
         let quoteData = templateObject.quoterecord.get();
         let stripe_id = templateObject.accountID.get() || '';
@@ -431,8 +432,8 @@ Template.new_quote.onRendered(() => {
 
         $('#tblQuoteLine > tbody > tr').each(function () {
             var lineID = this.id;
-
-
+        
+        
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
             let tdQty = $('#' + lineID + " .lineQty").val();
@@ -441,8 +442,8 @@ Template.new_quote.onRendered(() => {
             let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
-
-
+        
+        
             array_data.push([
                 tdproduct,
                 tddescription,
@@ -451,7 +452,7 @@ Template.new_quote.onRendered(() => {
                 taxAmount,
                 tdlineamt,
             ]);
-
+        
             lineItemObj = {
                 description: tddescription || '',
                 quantity: tdQty || 0,
@@ -459,7 +460,7 @@ Template.new_quote.onRendered(() => {
                     minimumFractionDigits: 2
                 }) || 0
             }
-
+        
             lineItems.push(lineItemObj);
         });
 
@@ -619,11 +620,11 @@ Template.new_quote.onRendered(() => {
             object_invoce.push(item_quote);
             $("#templatePreviewModal .field_payment").show();
             $("#templatePreviewModal .field_amount").show();
-
+  
             updateTemplate(object_invoce);
 
             saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-
+        
     }
 
     function updateTemplate1(object_invoce) {
@@ -640,7 +641,7 @@ Template.new_quote.onRendered(() => {
           $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
           $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
           $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
-
+    
           if(object_invoce[0]["applied"] == ""){
             $("#templatePreviewModal .applied").hide()
             $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
@@ -658,7 +659,7 @@ Template.new_quote.onRendered(() => {
           }
           $("#templatePreviewModal .customer").empty();
           $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
-
+    
           if(object_invoce[0]["supplier_name"] == ""){
             $("#templatePreviewModal .pdfCustomerName").hide()
           }else{
@@ -666,7 +667,7 @@ Template.new_quote.onRendered(() => {
           }
           $("#templatePreviewModal .pdfCustomerName").empty();
           $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-
+    
           if(object_invoce[0]["supplier_addr"] == ""){
             $("#templatePreviewModal .pdfCustomerAddress").hide()
           }else{
@@ -674,11 +675,11 @@ Template.new_quote.onRendered(() => {
           }
           $("#templatePreviewModal .pdfCustomerAddress").empty();
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-
-
+    
+          
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
-            object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
+            object_invoce[0]["title"] + " "+ " Template"
           );
 
           if(object_invoce[0]["value"]=="")
@@ -689,9 +690,9 @@ Template.new_quote.onRendered(() => {
           else{
              $('.print-header-value').text(object_invoce[0]["value"]);
           }
-
+    
           if(object_invoce[0]["bsb"]=="")
-          {
+          { 
               $('#templatePreviewModal .field_payment').hide();
 
           }
@@ -699,29 +700,29 @@ Template.new_quote.onRendered(() => {
 
               $('#templatePreviewModal .field_payment').show();
           }
-
-
+         
+    
           $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
           $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
           $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-
-
+    
+    
           if(object_invoce[0]["date"] == ""){
             $("#templatePreviewModal .dateNumber").hide();
           }else{
             $("#templatePreviewModal .dateNumber").show();
           }
-
+    
           $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
-
+    
           if(object_invoce[0]["pqnumber"] == ""){
             $("#templatePreviewModal .pdfPONumber").hide();
           }else{
             $("#templatePreviewModal .pdfPONumber").show();
           }
-
+    
           $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-
+    
           if(object_invoce[0]["invoicenumber"] == ""){
             $("#templatePreviewModal .invoiceNumber").hide();
           }else{
@@ -762,28 +763,28 @@ Template.new_quote.onRendered(() => {
 
 
           if(object_invoce[0]["customfield1"] == "NA")
-          {
+          {   
                   $('#customfieldtablenew').css('display', 'none');
                   $('#customdatatablenew').css('display', 'none');
                   $('#templatePreviewModal .customfield1').text('');
                   $('#templatePreviewModal .customfield2').text('');
                   $('#templatePreviewModal .customfield3').text('');
-
-
+                  
+                  
                   $('#templatePreviewModal .customfield1data').text('');
                   $('#templatePreviewModal .customfield2data').text('');
                   $('#templatePreviewModal .customfield3data').text('');
-
+    
           }
           else
           {
                 $('#customfieldtablenew').css('display', 'block');
                 $('#customdatatablenew').css('display', 'block');
-
+                
                 $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
                 $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
                 $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-
+                
                 if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
                 {
                   $('#templatePreviewModal .customfield1data').text('');
@@ -792,7 +793,7 @@ Template.new_quote.onRendered(() => {
                 {
                   $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
                 }
-
+  
                 if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
                 {
                   $('#templatePreviewModal .customfield2data').text('');
@@ -937,7 +938,7 @@ Template.new_quote.onRendered(() => {
 
 
         $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
-
+        
         $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
          );
@@ -954,7 +955,7 @@ Template.new_quote.onRendered(() => {
 
 
         if(object_invoce[0]["bsb"]=="")
-        {
+        { 
             $('#html-2-pdfwrapper_new .field_payment').hide();
 
         }
@@ -998,22 +999,22 @@ Template.new_quote.onRendered(() => {
                 $('#html-2-pdfwrapper_new .customfield1').text('');
                 $('#html-2-pdfwrapper_new .customfield2').text('');
                 $('#html-2-pdfwrapper_new .customfield3').text('');
-
-
+                
+                
                 $('#html-2-pdfwrapper_new .customfield1data').text('');
                 $('#html-2-pdfwrapper_new .customfield2data').text('');
                 $('#html-2-pdfwrapper_new .customfield3data').text('');
-
+  
         }
         else
         {
               $('#customfieldtablenew').css('display', 'block');
               $('#customdatatablenew').css('display', 'block');
-
+              
               $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
               $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
               $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-
+              
               if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
               {
                 $('#html-2-pdfwrapper_new .customfield1data').text('');
@@ -1040,37 +1041,37 @@ Template.new_quote.onRendered(() => {
               {
                 $('#html-2-pdfwrapper_new .customfield3data').text( object_invoce[0]["customfield3"]);
               }
-
-
-
+              
+            
+             
         }
 
-
-
+       
+    
         $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
-
+    
         if(object_invoce[0]["invoicenumber"] == ""){
             $("#html-2-pdfwrapper_new .invoiceNumber").hide();
         }else{
             $("#html-2-pdfwrapper_new .invoiceNumber").show();
         }
-
+       
         $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
-
+    
         if(object_invoce[0]["refnumber"] == ""){
             $("#html-2-pdfwrapper_new .refNumber").hide();
         }else{
             $("#html-2-pdfwrapper_new .refNumber").show();
         }
         $("#html-2-pdfwrapper_new .ro").text(object_invoce[0]["refnumber"]);
-
+        
         if(object_invoce[0]["duedate"] == ""){
             $("#html-2-pdfwrapper_new .pdfTerms").hide();
         }else{
             $("#html-2-pdfwrapper_new .pdfTerms").show();
         }
         $("#html-2-pdfwrapper_new .due").text(object_invoce[0]["duedate"]);
-
+        
         if (object_invoce[0]["paylink"] == "") {
             $("#html-2-pdfwrapper_new .link").hide();
             $("#html-2-pdfwrapper_new .linkText").hide();
@@ -1080,7 +1081,7 @@ Template.new_quote.onRendered(() => {
         }
 
          if(object_invoce[0]["customfield1"] == "")
-         {
+         {   
                     $('#customfieldlable').css('display', 'none');
                     $('#customfieldlabledata').css('display', 'none');
 
@@ -1090,7 +1091,7 @@ Template.new_quote.onRendered(() => {
                     $('#customfieldlable').css('display', 'block');
                     $('#customfieldlabledata').css('display', 'block');
          }
-
+    
         //   table header
         var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
         tbl_header.empty()
@@ -1098,12 +1099,12 @@ Template.new_quote.onRendered(() => {
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
         }
         }
-
+    
         // table content
         var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
         tbl_content.empty()
         const data = object_invoce[0]["data"]
-
+        
         for(item of data){
             tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
             var content = ""
@@ -1113,17 +1114,17 @@ Template.new_quote.onRendered(() => {
             tbl_content.append(content)
             tbl_content.append("</tr>")
         }
-
-        // total amount
-
+        
+        // total amount 
+        
         if(object_invoce[0]["subtotal"] == "")
-        {
+        {     
             $("#html-2-pdfwrapper_new .field_amount").hide();
         }
         else
         {
             $("#html-2-pdfwrapper_new .field_amount").show();
-
+          
             if(object_invoce[0]["subtotal"] != ""){
               $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
               $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
@@ -1133,22 +1134,22 @@ Template.new_quote.onRendered(() => {
                 $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
                 $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
             }
-
-
+            
+    
             if(object_invoce[0]["total"] != ""){
                 $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
             }
-
+    
             if(object_invoce[0]["bal_due"] != ""){
                 $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
             }
-
+    
             if(object_invoce[0]["paid_amount"] != ""){
                 $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
             }
-
+    
         }
-
+       
     }
 
 
@@ -1265,7 +1266,7 @@ Template.new_quote.onRendered(() => {
     templateObject.getSalesCustomFieldsList= function () {
       return;
     }
-
+      
     setTimeout(function(){
         templateObject.getSalesCustomFieldsList()
     },500);
@@ -5179,13 +5180,13 @@ Template.new_quote.onRendered(() => {
     exportSalesToPdf = async function (template_title,number)
     {
 
-
+                     
         if(template_title == 'Quotes')
         {
             await showQuotes(template_title,number);
 
         }
-
+      
 
         let margins = {
             top: 0,
@@ -5204,8 +5205,8 @@ Template.new_quote.onRendered(() => {
             {
                 file = 'Quote -' + quoteData.id + '.pdf';
             }
-
-
+           
+        
         }
 
         var opt = {
@@ -5392,7 +5393,6 @@ Template.new_quote.onRendered(() => {
     }, 10);
 
 });
-
 Template.new_quote.onRendered(function() {
     let tempObj = Template.instance();
     let utilityService = new UtilityService();
@@ -7156,30 +7156,30 @@ Template.new_quote.events({
             if($('#print_quote').is(':checked') || $('#print_quote_second').is(':checked')) {
                 printTemplate.push('Quotes');
             }
-
-
-
+        
+        
+      
             if(printTemplate.length > 0) {
-
+                  
                   for(var i = 0; i < printTemplate.length; i++)
-                  {
+                  {  
                     if(printTemplate[i] == 'Quotes')
                     {
                         var template_number = $('input[name="Quotes"]:checked').val();
                     }
-
-
+        
+                   
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
 
                     }
-
+                     
                   }
-
+                 
             }
 
-
+         
 
         } else {
             swal({

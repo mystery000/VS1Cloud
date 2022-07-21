@@ -853,7 +853,7 @@ Template.invoicelist.onRendered(function () {
               templateObject.datatablerecords.set(dataTableList);
 
               if (templateObject.datatablerecords.get()) {
- 
+
 
                   setTimeout(function () {
                       MakeNegative();
@@ -1178,8 +1178,8 @@ Template.invoicelist.onRendered(function () {
       let dispFields = [];
       let customData = {};
       let customFieldCount = 12;
-      let listType = "ltInvoiceList";   
- 
+      let listType = "ltInvoiceList";
+
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
         { label: 'Sales No.', class: 'colSalesNo', active: true },
@@ -1192,7 +1192,7 @@ Template.invoicelist.onRendered(function () {
         { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
         { label: 'Status', class: 'colStatus', active: true },
         { label: 'Employee', class: 'colEmployee', active: true },
-        { label: 'Comments', class: 'colComments', active: false } 
+        { label: 'Comments', class: 'colComments', active: false }
       ];
 
       sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
@@ -1503,7 +1503,7 @@ Template.invoicelist.events({
     'click .saveTable' : function(event){
       let lineItems = [];
       let organisationService = new OrganisationService();
-      let listType = "ltInvoiceList";    
+      let listType = "ltInvoiceList";
 
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1696,36 +1696,36 @@ Template.invoicelist.events({
                         sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
-                                window.open('/supplierawaitingpurchaseorder', '_self');
+                                window.open('/invoicelist', '_self');
                               }, 2000);
                             }).catch(function(err) {
                               setTimeout(function () {
-                                window.open('/supplierawaitingpurchaseorder', '_self');
+                                window.open('/invoicelist', '_self');
                               }, 2000);
                             });
                         }).catch(function(err) {
                           setTimeout(function () {
-                            window.open('/supplierawaitingpurchaseorder', '_self');
+                            window.open('/invoicelist', '_self');
                           }, 2000);
                         });
                     }).catch(function(err) {
                         setTimeout(function () {
-                            window.open('/supplierawaitingpurchaseorder', '_self');
+                            window.open('/invoicelist', '_self');
                          }, 2000);
                     });
                 }).catch(function(err) {
                   setTimeout(function () {
-                    window.open('/supplierawaitingpurchaseorder', '_self');
+                    window.open('/invoicelist', '_self');
                   }, 2000);
                 });
             }).catch(function(err) {
               setTimeout(function () {
-                window.open('/supplierawaitingpurchaseorder', '_self');
+                window.open('/invoicelist', '_self');
               }, 2000);
             });
         }).catch(function(err) {
           setTimeout(function () {
-            window.open('/supplierawaitingpurchaseorder', '_self');
+            window.open('/invoicelist', '_self');
           }, 2000);
 
         });

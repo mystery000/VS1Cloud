@@ -946,7 +946,7 @@ Template.salesoverview.onRendered(function () {
                 let draftRecord = templateObject.datatablerecords.get();
                 templateObject.datatablerecords.set(draftRecord);
               })
-              .on("column-reorder", function () {}); 
+              .on("column-reorder", function () {});
           }, 0);
 
           setTimeout(function () {
@@ -1376,7 +1376,7 @@ Template.salesoverview.onRendered(function () {
                   let draftRecord = templateObject.datatablerecords.get();
                   templateObject.datatablerecords.set(draftRecord);
                 })
-                .on("column-reorder", function () {}); 
+                .on("column-reorder", function () {});
             }, 0);
 
             setTimeout(function () {
@@ -1506,8 +1506,8 @@ Template.salesoverview.onRendered(function () {
       let dispFields = [];
       let customData = {};
       let customFieldCount = 12;
-      let listType = "ltSalesOverview";       
-      try { 
+      let listType = "ltSalesOverview";
+      try {
 
         let reset_data = [
           { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -1597,10 +1597,9 @@ Template.salesoverview.onRendered(function () {
 
           templateObject.custfields.set(custFields);
           templateObject.displayfields.set(dispFields);
-        
+
         });
       } catch (error) {
-        console.log(error)
       }
   }
 
@@ -2103,7 +2102,7 @@ Template.salesoverview.events({
   "click .saveTable": function (event) {
     let lineItems = [];
       let organisationService = new OrganisationService();
-      let listType = "ltSalesOverview";    
+      let listType = "ltSalesOverview";
 
       $(".fullScreenSpin").css("display", "inline-block");
 

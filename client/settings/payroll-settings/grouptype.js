@@ -69,7 +69,7 @@ Template.grouptypelistpop.onRendered(function() {
                             info: true,
                             responsive: true,
                             "fnInitComplete": function () {
-                              $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#addGroupModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist_filter");
+                              $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist_filter");
                               $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist_filter");
                             }
 
@@ -115,7 +115,7 @@ Template.grouptypelistpop.onRendered(function() {
                         info: true,
                         responsive: true,
                         "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#addGroupModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist_filter");
+                          $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist_filter");
                           $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist_filter");
                         }
 
@@ -161,7 +161,7 @@ Template.grouptypelistpop.onRendered(function() {
                         info: true,
                         responsive: true,
                         "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#addGroupModel' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist_filter");
+                          $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist_filter");
                           $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist_filter");
                         }
 

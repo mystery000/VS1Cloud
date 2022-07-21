@@ -1412,15 +1412,6 @@ export const TaxRatesEditListener = (e) => {
       $("#edtTaxDesc").val(tax.description);
 
       templateObject.subTaxLines.set(tax.lines);
-
-      //});
-
-      // tr.attr("data-target", "#addNewTaxRate");
-      // tr.attr("data-toggle", "modal");
-
-      // console.log(tr.attr('data-modal'));
-      // tr.attr('data-modal') ? $(tr.attr('data-modal')).modal("toggle") : $("#newTaxRateModal").modal("toggle");
-
       $("#addNewTaxRate").modal("toggle");
     }
   }
