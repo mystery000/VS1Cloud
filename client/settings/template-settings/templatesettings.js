@@ -25,7 +25,7 @@ var template_list = [
 var modal_data = [];
 
 Template.templatesettings.onCreated(() => {
-
+ 
       let templateObject = Template.instance();
       templateObject.invoice_data = new ReactiveVar([]);
 });
@@ -34,14 +34,14 @@ Template.templatesettings.onRendered(function () {
       let templateObject = Template.instance();
 
       $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
-
+        
         title = $(this).parent().attr("data-id");
         number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
         templateObject.generateInvoiceData(title,number);
-
+          
       });
 
-
+     
       templateObject.getTemplateInfo = function() {
 
              getVS1Data('TemplateSettings').then(function(dataObject) {
@@ -54,7 +54,7 @@ Template.templatesettings.onRendered(function () {
 
               if(data.fields)
               {
-                  var bill = data.fields.bill;
+                  var bill = data.fields.bill;           
                   var credits = data.fields.credits;
                   var customer_payment = data.fields.customer_payment;
                   var invoices = data.fields.invoices;
@@ -67,6 +67,7 @@ Template.templatesettings.onRendered(function () {
                   var statements = data.fields.statements;
                   var customer_statement =  data.fields.customer_statement;
                   var delivery_docket = data.fields.delivery_docket;
+
                   $('#Bills_'+bill).attr("checked", "checked");
                   $('#Credits_'+credits).attr("checked", "checked");
                   $("[id='Customer Payments_"+customer_payment+"']").attr("checked", "checked");
@@ -80,11 +81,11 @@ Template.templatesettings.onRendered(function () {
                   $('#Statements_'+statements).attr("checked", "checked");
                   $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
                   $("[id='Customer Statements_"+customer_statement+"']").attr("checked", "checked");
-
+              
               }
+      
 
-
-        });
+             });
 
 
       };
@@ -97,13 +98,13 @@ Template.templatesettings.onRendered(function () {
         // Session.set("template",data)
       });
 
-  //save template fields in the localstorage
+  //save template fields in the localstorage   
       function saveTemplateFields(key, value){
         localStorage.setItem(key, value)
       }
 
 
-  //update template with invoice type
+  //update template with invoice type   
     function updateTemplate(object_invoce) {
 
       $("#templatePreviewModal").modal("toggle");
@@ -119,7 +120,7 @@ Template.templatesettings.onRendered(function () {
         $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
         $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
         $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
-
+  
         if(object_invoce[0]["applied"] == ""){
           $("#templatePreviewModal .applied").hide()
           $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
@@ -128,6 +129,7 @@ Template.templatesettings.onRendered(function () {
           $("#templatePreviewModal .applied").text("Applied : " +  object_invoce[0]["applied"]);
         }
 
+         
 
 
         if(object_invoce[0]["supplier_type"] == ""){
@@ -137,7 +139,7 @@ Template.templatesettings.onRendered(function () {
         }
         $("#templatePreviewModal .customer").empty();
         $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
-
+  
         if(object_invoce[0]["supplier_name"] == ""){
           $("#templatePreviewModal .pdfCustomerName").hide()
         }else{
@@ -145,7 +147,7 @@ Template.templatesettings.onRendered(function () {
         }
         $("#templatePreviewModal .pdfCustomerName").empty();
         $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-
+  
         if(object_invoce[0]["supplier_addr"] == ""){
           $("#templatePreviewModal .pdfCustomerAddress").hide()
         }else{
@@ -153,12 +155,13 @@ Template.templatesettings.onRendered(function () {
         }
         $("#templatePreviewModal .pdfCustomerAddress").empty();
         $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-
-
+  
+        
         $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
         $("#templatePreviewModal .modal-title").text(
-          object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
+          object_invoce[0]["title"] + " "+ " template"
         );
+
 
         if(object_invoce[0]["value"]=="")
         {
@@ -168,9 +171,9 @@ Template.templatesettings.onRendered(function () {
         else{
            $('.print-header-value').text(object_invoce[0]["value"]);
         }
-
+  
         if(object_invoce[0]["bsb"]=="")
-        {
+        { 
             $('#templatePreviewModal .field_payment').hide();
 
         }
@@ -178,34 +181,35 @@ Template.templatesettings.onRendered(function () {
 
             $('#templatePreviewModal .field_payment').show();
         }
-
-
+       
+  
         $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
         $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
         $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-
-
+  
+  
         if(object_invoce[0]["date"] == ""){
           $("#templatePreviewModal .dateNumber").hide();
         }else{
           $("#templatePreviewModal .dateNumber").show();
         }
-
+  
         $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
-
+  
         if(object_invoce[0]["pqnumber"] == ""){
           $("#templatePreviewModal .pdfPONumber").hide();
         }else{
           $("#templatePreviewModal .pdfPONumber").show();
         }
-
+  
         $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-
+  
         if(object_invoce[0]["invoicenumber"] == ""){
           $("#templatePreviewModal .invoiceNumber").hide();
         }else{
           $("#templatePreviewModal .invoiceNumber").show();
         }
+      
         $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
         if(object_invoce[0]["refnumber"] == ""){
@@ -241,28 +245,28 @@ Template.templatesettings.onRendered(function () {
 
 
         if(object_invoce[0]["customfield1"] == "NA")
-        {
+        {   
                 $('#customfieldtablenew').css('display', 'none');
                 $('#customdatatablenew').css('display', 'none');
                 $('#templatePreviewModal .customfield1').text('');
                 $('#templatePreviewModal .customfield2').text('');
                 $('#templatePreviewModal .customfield3').text('');
-
-
+                
+                
                 $('#templatePreviewModal .customfield1data').text('');
                 $('#templatePreviewModal .customfield2data').text('');
                 $('#templatePreviewModal .customfield3data').text('');
-
+  
         }
         else
         {
               $('#customfieldtablenew').css('display', 'block');
               $('#customdatatablenew').css('display', 'block');
-
+              
               $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
               $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
               $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-
+              
               if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
               {
                 $('#templatePreviewModal .customfield1data').text('');
@@ -364,7 +368,7 @@ Template.templatesettings.onRendered(function () {
       }
 
 
-
+    
     }
 
   // show bill data with dummy data
@@ -379,12 +383,12 @@ Template.templatesettings.onRendered(function () {
       ]);
 
       let item = '';
-
+  
 
       if(number == 1)
       {
 
-
+        
             item = {
               o_url: "vs1cloud.com",
               o_name: "Sample Company",
@@ -472,7 +476,7 @@ Template.templatesettings.onRendered(function () {
       }
       else{
 
-
+          
         item = {
           o_url: "vs1cloud.com",
           o_name: "Sample Company",
@@ -519,7 +523,7 @@ Template.templatesettings.onRendered(function () {
 
 
       }
-
+    
       object_invoce.push(item);
       $("#templatePreviewModal .field_payment").hide();
       $("#templatePreviewModal .field_amount").show();
@@ -546,7 +550,7 @@ Template.templatesettings.onRendered(function () {
       ]);
 
       let item_credits = '';
-
+      
       if(number == 1)
       {
         item_credits = {
@@ -682,7 +686,7 @@ Template.templatesettings.onRendered(function () {
 
 
       }
-
+    
 
       object_invoce.push(item_credits);
 
@@ -732,14 +736,14 @@ Template.templatesettings.onRendered(function () {
               supplier_name : "<p>Brand New <br> Company </p>",
               supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
               fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-              subtotal : "",
-              gst : "",
-              total : "",
-              paid_amount : "",
-              bal_due : "",
-              bsb : '',
-              account : '',
-              swift : '',
+              subtotal : "$0.00",
+              gst : "$0.00",
+              total : "$0.00",
+              paid_amount : "$0.00",
+              bal_due : "$0.00",
+              bsb : "",
+              account : "",
+              swift : "",
               data: array_data,
               applied : "$50.00",
               customfield1:'NA',
@@ -750,8 +754,8 @@ Template.templatesettings.onRendered(function () {
               customfieldlabel3:'NA',
               showFX:'',
               comment:"Customer Payment Template Preview"
-
-
+              
+              
             };
 
       }
@@ -840,11 +844,11 @@ Template.templatesettings.onRendered(function () {
           customfieldlabel2:'customfield2',
           customfieldlabel3:'customfield3',
           showFX:'AUD',
-          comment:"Customer Payment Template Preview"
+          comment:"Customer Payment Template Preview"         
         };
 
       }
-
+    
 
       object_invoce.push(item_payments);
 
@@ -889,7 +893,7 @@ Template.templatesettings.onRendered(function () {
               "$0.00",
               "-$15,000.00",
             ]);
-
+        
           let item_statement = '';
           if(number == 1)
           {
@@ -936,7 +940,7 @@ Template.templatesettings.onRendered(function () {
 
           }
           else if(number == 2)
-          {
+          {  
             item_statement = {
               o_url: "vs1cloud.com",
               o_name: "Sample Company",
@@ -1026,8 +1030,8 @@ Template.templatesettings.onRendered(function () {
 
 
           }
-
-
+        
+      
           object_invoce.push(item_statement);
 
           $("#templatePreviewModal .field_payment").hide();
@@ -1194,8 +1198,8 @@ Template.templatesettings.onRendered(function () {
           };
 
       }
-
-
+    
+      
 
       object_invoce.push(item_invoices);
 
@@ -1364,9 +1368,9 @@ Template.templatesettings.onRendered(function () {
           };
 
       }
+     
 
-
-
+      
 
       object_invoce.push(item_invoices);
       $("#templatePreviewModal .field_payment").show();
@@ -1433,7 +1437,7 @@ Template.templatesettings.onRendered(function () {
             applied : "",
             showFX:"",
             comment:"Purchases Order Template Preview",
-
+            
           };
 
 
@@ -1525,13 +1529,13 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel3:"customfieldlabel3",
             showFX:'AUD',
             comment:"Purchases Order Template Preview",
-
+            
           };
 
 
         }
 
-
+       
 
         object_invoce.push(item_purchase);
         $("#templatePreviewModal .field_payment").hide();
@@ -1690,7 +1694,7 @@ Template.templatesettings.onRendered(function () {
 
 
         }
-
+     
 
         object_invoce.push(item_quote);
         $("#templatePreviewModal .field_payment").show();
@@ -1846,12 +1850,12 @@ Template.templatesettings.onRendered(function () {
                 customfieldlabel3:'customfield3',
                 showFX:'AUD',
                 comment:"Refund Template Preview",
-
+            
           };
 
 
         }
-
+       
 
         object_invoce.push(item_refund);
         $("#templatePreviewModal .field_payment").hide();
@@ -1865,9 +1869,9 @@ Template.templatesettings.onRendered(function () {
         object_invoce = [];
         var array_data = [];
         array_data.push([
-          "",
-          "",
-          "",
+          "Test",
+          "Test description",
+          "2",
           "$0",
           "$0.00",
           "$0.00",
@@ -1878,7 +1882,7 @@ Template.templatesettings.onRendered(function () {
         if(number == 1)
         {
           item_invoices = {
-
+  
                 o_url: 'vs1cloud.com',
                 o_name: "Sample Company",
                 o_address:"123 street",
@@ -1918,7 +1922,7 @@ Template.templatesettings.onRendered(function () {
                 showFX:"",
                 comment:"Sales Order Template Preview",
             };
-
+  
         }
         else if(number == 2)
         {
@@ -1962,7 +1966,7 @@ Template.templatesettings.onRendered(function () {
               showFX:"",
               comment:"Sales Order Template Preview",
             };
-
+  
         }
         else
         {
@@ -2006,7 +2010,7 @@ Template.templatesettings.onRendered(function () {
               showFX:"AUD",
               comment:"Sales Order Template Preview",
             };
-
+  
         }
 
         object_invoce.push(item_invoices);
@@ -2021,9 +2025,9 @@ Template.templatesettings.onRendered(function () {
     //show suppliers order  info with DummyData
     function showSuppliers(template_title,number) {
         object_invoce = [];
-
+        
         var array_data = [];
-
+      
         array_data.push([
             "30/03/2022",
             "Bill",
@@ -2075,7 +2079,7 @@ Template.templatesettings.onRendered(function () {
                 customfieldlabel3:'NA',
                 showFX:'',
                 comment:"Supplier Payment Preview"
-
+                
               };
         }
         else if(number == 2)
@@ -2328,7 +2332,7 @@ Template.templatesettings.onRendered(function () {
 
 
         }
-
+      
 
         object_invoce.push(item_statement);
 
@@ -2351,18 +2355,14 @@ Template.templatesettings.onRendered(function () {
         "Fanta Grape Can",
         "Fanta Grape Can SODA",
         "1",
-        "",
-        "",
-        "",
-      ]);
 
+      ]);
+  
       array_data.push([
           "Fanta Grape Can",
           "Fanta Grape Can SODA",
           "1",
-          "",
-          "",
-          "",
+    
         ]);
       let item_invoices = '';
       if(number == 1)
@@ -2377,7 +2377,7 @@ Template.templatesettings.onRendered(function () {
               o_reg:"",
               o_abn: "ABN : 5678905",
               o_phone:"Phone : 25151944",
-              title: 'Delivery DOcket',
+              title: 'Delivery Docket',
               value: '751',
               date: '25/05/2022',
               invoicenumber:'751',
@@ -2388,7 +2388,7 @@ Template.templatesettings.onRendered(function () {
               supplier_type: "Customer",
               supplier_name : "Amar",
               supplier_addr : "Gwalior, Madhya Pradesh",
-              fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+              fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10"},
               subtotal :"",
               gst : "",
               total : "",
@@ -2421,7 +2421,7 @@ Template.templatesettings.onRendered(function () {
             o_reg:"",
             o_abn: "ABN : 5678905",
             o_phone:"Phone : 25151944",
-            title: 'Delivery DOcket',
+            title: 'Delivery Docket',
             value: '751',
             date: '25/05/2022',
             invoicenumber:'751',
@@ -2432,7 +2432,7 @@ Template.templatesettings.onRendered(function () {
             supplier_type: "Customer",
             supplier_name : "Amar",
             supplier_addr : "Gwalior, Madhya Pradesh",
-            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10"},
             subtotal :"",
             gst : "",
             total : "",
@@ -2465,7 +2465,7 @@ Template.templatesettings.onRendered(function () {
             o_reg:"",
             o_abn: "ABN : 5678905",
             o_phone:"Phone : 25151944",
-            title: 'Delivery DOcket',
+            title: 'Delivery Docket',
             value: '751',
             date: '25/05/2022',
             invoicenumber:'751',
@@ -2476,7 +2476,7 @@ Template.templatesettings.onRendered(function () {
             supplier_type: "Customer",
             supplier_name : "Amar",
             supplier_addr : "Gwalior, Madhya Pradesh",
-            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10"},
             subtotal :"",
             gst : "",
             total : "",
@@ -2498,13 +2498,13 @@ Template.templatesettings.onRendered(function () {
           };
 
       }
-
-
+     
+  
       object_invoce.push(item_invoices);
-
+  
       $("#templatePreviewModal .field_payment").show();
       $("#templatePreviewModal .field_amount").show();
-
+  
       updateTemplate(object_invoce);
 
       saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
@@ -2526,10 +2526,10 @@ Template.templatesettings.onRendered(function () {
         showCustomerPayment(template_title,number);
         break;
 
-
+      
     case "Customer Statements":
         showCustomerStatments(template_title,number);
-        break;
+        break;  
 
       case "Invoices":
         showInvoice(template_title,number);
@@ -2558,11 +2558,11 @@ Template.templatesettings.onRendered(function () {
       case "Supplier Payments":
         showSuppliers(template_title,number)
         break;
-
-      case "Statements":
+      
+      case "Statements": 
         showStatements(template_title,number);
         break;
-
+      
       case "Delivery Docket":
         showDeliveryDocket(template_title,number);
         break;
@@ -2585,7 +2585,7 @@ Template.templatesettings.helpers({
 Template.templatesettings.events({
 
 'click .btnTopGlobalSave':function(){
-
+ 
     var bill = $('input[name="Bills"]:checked').val();
     var credits = $('input[name="Credits"]:checked').val();
     var customer_payment = $('input[name="Customer Payments"]:checked').val();
@@ -2605,7 +2605,7 @@ Template.templatesettings.events({
 
     var print_options  =  {
       type:"TemplateSettings",
-      fields:{
+      fields:{                              
                  client_id:loggedCompany,
                  bill:bill,
                  credits:credits,
@@ -2623,7 +2623,7 @@ Template.templatesettings.events({
             }
 
 
-
+            
     }
 
     addVS1Data("TemplateSettings", JSON.stringify(print_options)).then(function (datareturn) {
@@ -2637,7 +2637,7 @@ Template.templatesettings.events({
 
         }).then((result) => {
         if (result.value) {
-
+           
         }else if (result.dismiss === 'cancel') {
 
         }
@@ -2653,15 +2653,15 @@ Template.templatesettings.events({
           type: 'error',
           showCancelButton: false,
           confirmButtonText: 'Done'
-
+  
           }).then((result) => {
           if (result.value) {
-
+             
           }else if (result.dismiss === 'cancel') {
-
+  
           }
           });
-    });
+    }); 
 
 },
 
