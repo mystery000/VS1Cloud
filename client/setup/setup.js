@@ -6,7 +6,6 @@ import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import LoadingOverlay from "../LoadingOverlay";
-import { TaxRatesEditListener } from "../settings/tax-rates-setting/tax-rates";
 import Employee, { EmployeeFields } from "../js/Api/Model/Employee";
 import User from "../js/Api/Model/User";
 import { AccountService } from "../accounts/account-service";
@@ -9246,3 +9245,45 @@ Template.registerHelper("isActive", function (currentStep, step) {
   //console.log(currentStep + " == " + step, currentStep == step);
   return  currentStep == step;
 });
+
+
+
+const TaxRatesEditListener = (e) => {
+  if (!e) return false;
+
+  const templateObject = Template.instance();
+
+  const tr = $(e.currentTarget).parent();
+  console.log(tr);
+  var listData = tr.attr("id");
+  console.log(listData);
+  // var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
+  // var accountName = $(event.target).closest("tr").find(".colAccountName").text();
+  // let columnBalClass = $(event.target).attr('class');
+  // let accountService = new AccountService();
+  if (listData) {
+    $("#add-tax-title").text("Edit Tax Rate");
+    $("#edtTaxName").prop("readonly", true);
+    if (listData !== "") {
+      listData = Number(listData);
+      //taxRateService.getOneTaxRate(listData).then(function (data) {
+
+      var taxid = listData || "";
+      let tax = templateObject.taxRates.get().find((v) => String(v.id) === String(taxid));
+
+      // var taxname = tr.find(".colName").text() || "";
+      // var taxDesc = tr.find(".colDescription").text() || "";
+      // var taxRate = tr.find(".colRate").text().replace("%", "") || "0";
+      //data.fields.Rate || '';
+
+      $("#edtTaxID").val(tax.id);
+      $("#edtTaxName").val(tax.codename);
+
+      $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
+      $("#edtTaxDesc").val(tax.description);
+
+
+      tr.attr('data-modal') ? $(tr.attr('data-modal')).modal("toggle") : $("#newTaxRateModal").modal("toggle");
+    }
+  }
+};
