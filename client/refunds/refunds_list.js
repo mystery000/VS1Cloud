@@ -23,12 +23,16 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {OrganisationService} from '../js/organisation-service';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.refundlist.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.custfields = new ReactiveVar([]);
+    templateObject.displayfields = new ReactiveVar([]);
 });
 
 Template.refundlist.onRendered(function () {
@@ -125,11 +129,27 @@ Template.refundlist.onRendered(function () {
     templateObject.getCustomFieldData = function() {
 
       let custFields = [];
+      let dispFields = [];
       let customData = {};
+      let customFieldCount = 12;
+      let listType = "ltRefundList";   
+ 
+      let reset_data = [
+        { label: 'Sale Date', class: 'colSaleDate', active: true },
+        { label: 'Sales No.', class: 'colSalesNo', active: true },
+        { label: 'Due Date', class: 'colDueDate', active: true },
+        { label: 'Customer', class: 'colCustomer', active: true },
+        { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
+        { label: 'Tax', class: 'colTax', active: true },
+        { label: 'Amount', class: 'colAmount', active: true },
+        { label: 'Paid', class: 'colPaid', active: true },
+        { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
+        { label: 'Status', class: 'colStatus', active: true },
+        { label: 'Employee', class: 'colEmployee', active: true },
+        { label: 'Comments', class: 'colComments', active: false } 
+      ];
 
-      sideBarService
-      .getAllCustomFields()
-      .then(function (data) {
+      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
             customData = {
@@ -142,6 +162,17 @@ Template.refundlist.onRendered(function () {
               dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
             };
             custFields.push(customData);
+          } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
+            customData = {
+              active: data.tcustomfieldlist[x].fields.Active || false,
+              id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+              custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+              datatype: data.tcustomfieldlist[x].fields.DataType || "",
+              isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+              iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+              dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+            };
+            dispFields.push(customData);
           }
         }
 
@@ -162,38 +193,36 @@ Template.refundlist.onRendered(function () {
             custFields.push(customData);
           }
         }
-        if (custFields) {
-          $(".colCustFieldHeader1").html(custFields[0].custfieldlabel);
-          $(".colCustFieldHeader2").html(custFields[1].custfieldlabel);
-          $(".colCustFieldHeader3").html(custFields[2].custfieldlabel);
 
-          if (custFields[0].active) {
-            $(".colSaleCustField1").removeClass('hiddenColumn');
-            $(".colSaleCustField1").addClass('showColumn');
-          } else {
-            $(".colSaleCustField1").addClass('hiddenColumn');
-            $(".colSaleCustField1").removeClass('showColumn');
-          }
-
-          if (custFields[1].active) {
-            $(".colSaleCustField2").removeClass('hiddenColumn');
-            $(".colSaleCustField2").addClass('showColumn');
-          } else {
-            $(".colSaleCustField2").addClass('hiddenColumn');
-            $(".colSaleCustField2").removeClass('showColumn');
-          }
-
-          if (custFields[2].active) {
-            $(".colSaleCustField3").removeClass('hiddenColumn');
-            $(".colSaleCustField3").addClass('showColumn');
-          } else {
-            $(".colSaleCustField3").addClass('hiddenColumn');
-            $(".colSaleCustField3").removeClass('showColumn');
+        if (dispFields.length < customFieldCount) {
+          let remainder = customFieldCount - dispFields.length;
+          let getRemCustomFields = parseInt(dispFields.length);
+          for (let r = 0; r < remainder; r++) {
+            customData = {
+              active: reset_data[getRemCustomFields].active,
+              id: "",
+              custfieldlabel: reset_data[getRemCustomFields].label,
+              datatype: "",
+              isempty: true,
+              iscombo: false,
+            };
+            getRemCustomFields++;
+            // count++;
+            dispFields.push(customData);
           }
         }
+
+        for (let index = 0; index < custFields.length; index++) {
+          const element = custFields[index];
+          dispFields.push(element);
+
+        }
+
+        templateObject.custfields.set(custFields);
+        templateObject.displayfields.set(dispFields);
+
       })
     }
-
 
     templateObject.getAllRefundData = function () {
 
@@ -503,6 +532,7 @@ Template.refundlist.onRendered(function () {
                         sWidth = v.style.width.replace('px', "");
 
                         let datatablerecordObj = {
+                            custid: $(this).attr("custid") || 0,
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
                             sIndex: v.cellIndex || '',
@@ -821,6 +851,7 @@ Template.refundlist.onRendered(function () {
                     sWidth = v.style.width.replace('px', "");
 
                     let datatablerecordObj = {
+                        custid: $(this).attr("custid") || 0,
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
                         sIndex: v.cellIndex || '',
@@ -1134,6 +1165,7 @@ Template.refundlist.onRendered(function () {
                   sWidth = v.style.width.replace('px', "");
 
                   let datatablerecordObj = {
+                    custid: $(this).attr("custid") || 0,
                       sTitle: v.innerText || '',
                       sWidth: sWidth || '',
                       sIndex: v.cellIndex || '',
@@ -1344,116 +1376,129 @@ Template.refundlist.events({
             }
         });
     },
-    'click .resetTable': function (event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblRefundlist'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function (err, idTag) {
-                        if (err) {}
-                        else {
-                            Meteor._reload.reload();
-                        }
-                    });
 
-                }
-            }
+    // custom field displaysettings
+    'click .resetTable' : function(event) {
+
+      let templateObject = Template.instance();
+      let custFields = templateObject.custfields.get();
+      var datable = $('#tblRefundlist').DataTable();
+
+      let reset_data = [
+        { label: 'Sale Date', class: 'colSaleDate', active: true },
+        { label: 'Sales No.', class: 'colSalesNo', active: true },
+        { label: 'Due Date', class: 'colDueDate', active: true },
+        { label: 'Customer', class: 'colCustomer', active: true },
+        { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
+        { label: 'Tax', class: 'colTax', active: true },
+        { label: 'Amount', class: 'colAmount', active: true },
+        { label: 'Paid', class: 'colPaid', active: true },
+        { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
+        { label: 'Status', class: 'colStatus', active: true },
+        { label: 'Employee', class: 'colEmployee', active: true },
+        { label: 'Comments', class: 'colComments', active: false },
+        { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },
+        { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
+        { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
+      ];
+
+      $('.displaySettings').each(function(index) {
+        var $tblrow = $(this);
+        $tblrow.find(".divcolumn").text(reset_data[index].label);
+        $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
+
+        var title = datable.column( index+1 ).header();
+        $(title).html(reset_data[index].label);
+
+        if (reset_data[index].active) {
+          $('.' + reset_data[index].class).css('display', 'table-cell');
+          $('.' + reset_data[index].class).css('padding', '.75rem');
+          $('.' + reset_data[index].class).css('vertical-align', 'top');
+        } else {
+          $('.' + reset_data[index].class).css('display', 'none');
         }
+
+      });
+
     },
-    'click .saveTable': function (event) {
-        let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
 
-            lineItems.push(lineItemObj);
-        });
+    // custom field displaysettings
+    'click .saveTable' : function(event){
+      let lineItems = [];
+      let organisationService = new OrganisationService();
+      let listType = "ltRefundList";    
 
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get('mycloudLogonID'),
-            clouddatabaseID: Session.get('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblRefundlist'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblRefundlist',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
+      $(".fullScreenSpin").css("display", "inline-block");
 
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblRefundlist',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-                }
-            }
+      $('.displaySettings').each(function(index) {
+        var $tblrow = $(this);
+        var fieldID = $tblrow.attr("custid") || 0;
+        var colTitle = $tblrow.find(".divcolumn").text() || '';
+        var colWidth = $tblrow.find(".custom-range").val() || 0;
+        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+        var colHidden = false;
+        if ($tblrow.find(".custom-control-input").is(':checked')) {
+            colHidden = true;
+        } else {
+            colHidden = false;
         }
-        $('#myModal2').modal('toggle');
+        let lineItemObj = {
+            index: index,
+            label: colTitle,
+            hidden: colHidden,
+            width: colWidth,
+            thclass: colthClass
+        }
+
+        lineItems.push(lineItemObj);
+
+        if(fieldID && parseInt(fieldID) != 0){
+          objDetails1 = {
+            type: "TCustomFieldList",
+            fields: {
+              Active: colHidden,
+              ID: parseInt(fieldID),
+              Description: colTitle,
+              Width: colWidth
+            },
+          };
+        } else {
+          objDetails1 = {
+            type: "TCustomFieldList",
+            fields: {
+              Active: colHidden,
+              DataType: "ftString",
+              Description: colTitle,
+              ListType: listType,
+              Width: colWidth
+            },
+          };
+        }
+
+        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
+          $(".fullScreenSpin").css("display", "none");
+          $('#myModal2').modal('hide');
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {
+            if (result.value) {
+              $(".fullScreenSpin").css("display", "none");
+            } else if (result.dismiss === "cancel") {
+            }
+            $('#myModal2').modal('hide');
+          });
+          $(".fullScreenSpin").css("display", "none");
+          $('#myModal2').modal('hide');
+        });
+      });
     },
+
     'blur .divcolumn': function (event) {
         let columData = $(event.target).text();
 
@@ -1502,6 +1547,7 @@ Template.refundlist.events({
             sWidth = v.style.width.replace('px', "");
 
             let datatablerecordObj = {
+              custid: $(this).attr("custid") || 0,
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
                 sIndex: v.cellIndex || '',
@@ -1822,5 +1868,16 @@ Template.refundlist.helpers({
             userid: Session.get('mycloudLogonID'),
             PrefName: 'tblRefundlist'
         });
-    }
+    },
+
+
+    // custom fields displaysettings
+    custfields: () => {
+      return Template.instance().custfields.get();
+    },
+
+    // custom fields displaysettings
+    displayfields: () => {
+      return Template.instance().displayfields.get();
+    },
 });

@@ -3019,6 +3019,11 @@ export class SideBarService extends BaseService {
         ListType: "Detail",
         select: "[ListType]='ltSales' OR [ListType]='ltQuoteList'",
       };
+    } else if(query == 'ltRefundList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltRefundList'",
+      };
     }
 
     return this.getList(this.ERPObjects.TCustomFieldList, options);
