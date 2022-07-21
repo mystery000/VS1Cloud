@@ -5162,7 +5162,7 @@ Template.refundcard.helpers({
     displayfields: () => {
       return Template.instance().displayfields.get();
     }, 
-    
+
         getTemplateList: function () {
             return template_list;
         },
@@ -7225,6 +7225,27 @@ Template.refundcard.events({
             $('.colAmount').css('display', 'none');
         }
     },
+    'click .chkTaxCode': function(event) {
+      if ($(event.target).is(':checked')) {
+          $('.colTaxCode').css('display', 'table-cell');
+          $('.colTaxCode').css('padding', '.75rem');
+          $('.colTaxCode').css('vertical-align', 'top');
+      } else {
+          $('.colTaxCode').css('display', 'none');
+      }
+    },
+
+    'click .chkTaxAmount': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colTaxAmount').css('display', 'table-cell');
+            $('.colTaxAmount').css('padding', '.75rem');
+            $('.colTaxAmount').css('vertical-align', 'top');
+        } else {
+            $('.colTaxAmount').css('display', 'none');
+        }
+    },
+    // display settings
+    
     'change .rngRangeProductName': function(event) {
 
         let range = $(event.target).val();
