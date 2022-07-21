@@ -86,6 +86,15 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TTaxCode, data);
     }
 
+    getTaxRateVS1() {
+        let options = {
+            PropertyList: "ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Lines,Active",
+            select: "[Active]=true",
+        };
+        // return this.getList(this.ERPObjects.TTaxcodeVS1, options);
+        return this.getList(this.ERPObjects.TTaxCode, options);
+    }
+
     checkTaxRateByName(codeName) {
         let options = {
             select: "[Code]='" + codeName + "'"
@@ -406,14 +415,6 @@ export class TaxRateService extends BaseService {
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TTermsVS1, options);
-    }
-
-    getTaxRateVS1() {
-        let options = {
-            PropertyList: "ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Lines,Active",
-            select: "[Active]=true",
-        };
-        return this.getList(this.ERPObjects.TTaxcodeVS1, options);
     }
 
     getOneTerms(id) {

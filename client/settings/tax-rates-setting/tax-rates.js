@@ -692,7 +692,7 @@ Template.taxRatesSettings.onRendered(function () {
         $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
         $("#edtTaxDesc").val(tax.description);
 
-        templateObject.subTaxLines.set(tax.lines);
+        templateObject.subtaxlines.set(tax.lines);
 
         //});
 
@@ -1411,7 +1411,7 @@ export const TaxRatesEditListener = (e) => {
       $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
       $("#edtTaxDesc").val(tax.description);
 
-      templateObject.subTaxLines.set(tax.lines);
+      templateObject.subtaxlines.set(tax.lines);
 
       //});
 
