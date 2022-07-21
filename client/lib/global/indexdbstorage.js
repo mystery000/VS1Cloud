@@ -256,6 +256,7 @@ openDb = function (dbName) {
       db.createObjectStore('TPayTemplateDeductionLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateSuperannuationLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateReiumbursementLine',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TXeCurrencySettings',{ keyPath: "EmployeeEmail"});
 
       db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
 

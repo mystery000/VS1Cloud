@@ -692,7 +692,10 @@ Template.newcurrencypop.events({
             var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
             var currencySellRate = data.tcurrency[i].SellRate || 0;
 
-            let currencyRates = await fxApi.getExchangeRate(currencyName, defaultCurrencyCode); // we were using currencyCode instead...
+            let currencyRates = await fxApi.getExchangeRate(
+              currencyName,
+              defaultCurrencyCode
+            ); // we were using currencyCode instead...
             if (currencyRates) {
               currencyBuyRate = currencyRates.buy;
               currencySellRate = currencyRates.sell;
@@ -707,6 +710,9 @@ Template.newcurrencypop.events({
             $("#edtCurrencyDesc").val(currencyDesc);
             $("#edtBuyRate").val(currencyBuyRate);
             $("#edtSellRate").val(currencySellRate);
+            setTimeout(() => {
+              triggerChangeEventOnRequiredFields();
+            }, 1000);
           }
         }
       }
@@ -1105,6 +1111,12 @@ Template.newcurrencypop.events({
         $(".fullScreenSpin").css("display", "none");
       });
   },
+  "change .addNewCurrency input": (e) => {
+    $(".btnSaveCurrency").attr("disabled", !isAllRequiredInputsFilled());
+  },
+  "keyup .addNewCurrency input": (e) => {
+    $(".btnSaveCurrency").attr("disabled", !isAllRequiredInputsFilled());
+  },
 });
 
 Template.newcurrencypop.helpers({
@@ -1137,3 +1149,28 @@ Template.newcurrencypop.helpers({
     return localStorage.getItem("mySession") || "";
   },
 });
+
+export function triggerChangeEventOnRequiredFields() {
+  console.log("change triggered");
+  $("#newCurrencyModal .addNewCurrency input[required]").each((i, element) => {
+    $(element).trigger("change");
+  });
+}
+
+function isAllRequiredInputsFilled() {
+  const inputs = $("#newCurrencyModal .addNewCurrency input[required]");
+  //console.log(inputs);
+  let filledCount = 0;
+
+  $(inputs).each((i, input) => {
+    //console.log(input, $(input).val());
+    if ($.trim($(input).val()).length > 0) {
+      //console.log(filledCount);
+      filledCount = filledCount +1;
+    }
+  });
+
+  //console.log(inputs.length + " == " + filledCount, inputs.length == filledCount);
+
+  return inputs.length == filledCount;
+}
