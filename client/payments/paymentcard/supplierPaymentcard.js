@@ -13348,11 +13348,9 @@ Template.supplierpaymentcard.events({
     }
   },
   "keyup #exchange_rate": (e) => {
-    console.log("echange rate keuppped");
     onExchangeRateChange(e);
   },
   "change #exchange_rate": (e) => {
-    console.log("echange rate changed");
     onExchangeRateChange(e);
   },
   "change #edtForeignAmount": (e) => {
@@ -13382,9 +13380,6 @@ export function onExchangeRateChange(e) {
   const mainValue = localStorage.getItem('APPLIED_AMOUNT') || 0.0;
   const rate = parseFloat($("#exchange_rate").val());
   const currency = utilityService.extractCurrency(mainValue);
-  console.log("currency", currency);
-
-  //console.log(mainValue, rate, utilityService.removeCurrency(mainValue));
 
   let foreignAmount = rate * utilityService.removeCurrency(mainValue);
   let appliedAmount = rate * utilityService.removeCurrency(mainValue);
@@ -13411,9 +13406,6 @@ export function calculateApplied() {
 
     const cal = foreignAmount - variation;
     const calculatedApplied = isNegative ? `-${currency}${cal}` : `${currency}${cal}`;
-
-    console.log(foreignAmount, " - ", variation, cal);
-    console.log('calculated price', calculateApplied);
 
     $('#edtApplied').val(calculatedApplied);
     $('.appliedAmount').text(calculatedApplied);

@@ -59,9 +59,7 @@ function addConfirmedStep(step) {
   if(isNaN(step)) return false;
   let steps = getConfirmedSteps();
   if(!steps.includes(step)) {
-    //console.log(steps);
     steps = JSON.parse(steps);
-    //console.log(steps);
     steps.push(step);
     setConfirmedSteps(steps);
   }
@@ -89,7 +87,6 @@ function addSkippedStep(step) {
   let steps = getSkippedSteps();
   if(!steps.includes(step)) {
     steps = JSON.parse(steps);
-   // console.log(steps);
     steps.push(step);
     setSkippedSteps(steps);
   }
@@ -279,7 +276,7 @@ Template.setup.onRendered(function () {
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
     // $(".setup-step").css("display", "none");
-    
+
     let confirmedSteps =
       localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
     for (let i = 0; i < currentStep; i++) {
@@ -9237,12 +9234,10 @@ Template.setup.helpers({
 });
 
 Template.registerHelper("equals", function (a, b) {
-  //console.log(a + " == " + b, a == b);
   return a === b;
 });
 
 Template.registerHelper("isActive", function (currentStep, step) {
-  //console.log(currentStep + " == " + step, currentStep == step);
   return  currentStep == step;
 });
 
