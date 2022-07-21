@@ -257,6 +257,7 @@ openDb = function (dbName) {
       db.createObjectStore('TPayTemplateSuperannuationLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateReiumbursementLine',{ keyPath: "EmployeeEmail"});
 
+      db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
 
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));

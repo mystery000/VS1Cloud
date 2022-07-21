@@ -1382,7 +1382,6 @@ export class SideBarService extends BaseService {
     if(contactID != '' && contactID != undefined){
       options = {
         IgnoreDates: true,
-        IgnoreDates: true,
         IncludeIsInvoice: true,
         IncludeIsQuote: false,
         IncludeIsRefund: true,
