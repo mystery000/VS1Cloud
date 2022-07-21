@@ -174,7 +174,8 @@ Meteor.methods({
       name: cronId,
       schedule: function (parser) {
         const parsed = parser.text(cronSetting.toParse);
-        return parser.text("every 2 minutes");
+        return parsed;
+        //return parser.text("every 2 minutes");
       },
       job: () => {
         // console.log(cronSetting.employeeId);
