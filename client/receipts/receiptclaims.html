@@ -24,7 +24,9 @@
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                 <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
                                 <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                <p class="text-center text-muted" style="margin: 0px;">
+                                    <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a>
+                                </p>
                             </div>
                             <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                         </div>
@@ -177,19 +179,11 @@
 
                                                                 {{#if equals item.sVisible true}}
                                                                     <script>
-                                                                        $("#" + {
-                                                                            {
-                                                                                tem.sIndex
-                                                                            }
-                                                                        } + ".chkDatatable").attr("checked", "checked");
+                                                                        $("#" + {{item.sIndex}} + ".chkDatatable").attr("checked", "checked");
                                                                     </script>
                                                                 {{else}}
                                                                     <script>
-                                                                        $("#" + {
-                                                                            {
-                                                                                item.sIndex
-                                                                            }
-                                                                        } + ".chkDatatable").removeAttr("checked");
+                                                                        $("#" + {{item.sIndex}} + ".chkDatatable").removeAttr("checked");
                                                                     </script>
                                                                 {{/if}}
 
@@ -391,10 +385,10 @@
                                 </div>
 
                                 <div class="col-6 col-md-6">
-                                  <div class="form-group">
-                                    <label>Currency</label>
-                                    <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
-                                  </div>
+                                    <div class="form-group">
+                                        <label>Currency</label>
+                                        <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                    </div>
                                 </div>
 
                                 <div class="col-6">
@@ -403,12 +397,12 @@
                                         <label class="custom-control-label" for="swtReiumbursable" style="cursor: pointer;">Reimbursable</label>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label>Chart of Accounts</label>
-                                        <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
-                                    </div>
-                                </div>
+<!--                                <div class="col-6">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label>Chart of Accounts</label>-->
+<!--                                        <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                                 <!-- <div class="col-6">
                                     <div class="form-group">
                                         <label>Grouped Report</label>
@@ -420,6 +414,18 @@
                                         </select>
                                     </div>
                                 </div> -->
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <select class="form-control" id="expenseCategory">
+                                            <option>Materials</option>
+                                            <option>Meals & Entertainment</option>
+                                            <option>Office Supplies</option>
+                                            <option>Travel</option>
+                                            <option>Vehicle</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>Description</label>
@@ -957,20 +963,25 @@
                                             </div>
                                         </div>
 
-                                      <div class="col-6 col-md-6">
-                                        <div class="form-group">
-                                          <label>Currency</label>
-                                          <input class="form-control currencies" name="sltCurrency" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;">
+                                        <div class="col-6 col-md-6">
+                                            <div class="form-group">
+                                                <label>Currency</label>
+                                                <input class="form-control currencies" name="sltCurrency" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;">
+                                            </div>
                                         </div>
-                                        
-                                      </div>
 
-                                      <div class="col-6 col-md-6">
-                                           
-                                        <div class="form-group">
-                                            {{> CurrencyRate }}
+                                        <div class="col-6 col-md-6">
+                                            <div class="form-group">
+                                                {{> CurrencyRate }}
+                                            </div>
                                         </div>
-                                    </div>
+
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Trip - Group</label>
+                                                <select class="form-control trip-groups" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                            </div>
+                                        </div>
 
                                         <div class="col-6">
                                             <div class="custom-control custom-switch" style="margin-top: 40px;">
@@ -984,6 +995,7 @@
                                                 <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </div>
                                         </div>
+
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label>Description</label>

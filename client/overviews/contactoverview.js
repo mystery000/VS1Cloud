@@ -133,13 +133,13 @@ Template.contactoverview.onRendered(function () {
                   isEmployee == true &&
                   issupplier == true
                 ) {
-                  clienttype = "Customer / Employee / Prospect / Supplier";
+                  clienttype = "Customer / Employee / Supplier";
                 } else if (
                   isprospect == true &&
                   iscustomer == true &&
                   issupplier == true
                 ) {
-                  clienttype = "Customer / Prospect / Supplier";
+                  clienttype = "Customer / Supplier";
                 } else if (iscustomer == true && issupplier == true) {
                   clienttype = "Customer / Supplier";
                 } else if (iscustomer == true) {
@@ -158,7 +158,7 @@ Template.contactoverview.onRendered(function () {
                 } else if (issupplier == true) {
                   clienttype = "Supplier";
                 } else if (isprospect == true) {
-                  clienttype = "Prospect";
+                  clienttype = "Lead";
                 } else {
                   clienttype = " ";
                 }
@@ -385,13 +385,13 @@ Template.contactoverview.onRendered(function () {
                                 issupplier == true
                               ) {
                                 clienttype =
-                                  "Customer / Employee / Prospect / Supplier";
+                                  "Customer / Employee / Supplier";
                               } else if (
                                 isprospect == true &&
                                 iscustomer == true &&
                                 issupplier == true
                               ) {
-                                clienttype = "Customer / Prospect / Supplier";
+                                clienttype = "Customer / Supplier";
                               } else if (
                                 iscustomer == true &&
                                 issupplier == true
@@ -413,7 +413,7 @@ Template.contactoverview.onRendered(function () {
                               } else if (issupplier == true) {
                                 clienttype = "Supplier";
                               } else if (isprospect == true) {
-                                clienttype = "Prospect";
+                                clienttype = "Lead";
                               } else {
                                 clienttype = " ";
                               }
@@ -631,14 +631,7 @@ Template.contactoverview.onRendered(function () {
                   .find(".colType")
                   .text();
                 if (listData && transactiontype) {
-                  if (
-                    transactiontype ===
-                    "Customer / Employee / Prospect / Supplier"
-                  ) {
-                    FlowRouter.go("/customerscard?id=" + listData);
-                  } else if (
-                    transactiontype === "Customer / Prospect / Supplier"
-                  ) {
+                  if (transactiontype === "Customer / Employee / Supplier") {
                     FlowRouter.go("/customerscard?id=" + listData);
                   } else if (transactiontype === "Customer / Supplier") {
                     FlowRouter.go("/customerscard?id=" + listData);
@@ -648,8 +641,8 @@ Template.contactoverview.onRendered(function () {
                     FlowRouter.go("/supplierscard?id=" + listData);
                   } else if (transactiontype === "Employee") {
                     FlowRouter.go("/employeescard?id=" + listData);
-                  } else if (transactiontype === "Prospect") {
-                    FlowRouter.go("/customerscard?id=" + listData);
+                  } else if (transactiontype === "Lead") {
+                    FlowRouter.go("/leadscard?id=" + listData);
                   } else if (transactiontype === "Job") {
                     FlowRouter.go("/customerscard?jobid=" + listData);
                   }
@@ -687,13 +680,13 @@ Template.contactoverview.onRendered(function () {
               isEmployee == true &&
               issupplier == true
             ) {
-              clienttype = "Customer / Employee / Prospect / Supplier";
+              clienttype = "CCustomer / Employee / Supplier";
             } else if (
               isprospect == true &&
               iscustomer == true &&
               issupplier == true
             ) {
-              clienttype = "Customer / Prospect / Supplier";
+              clienttype = "Customer / Supplier";
             } else if (iscustomer == true && issupplier == true) {
               clienttype = "Customer / Supplier";
             } else if (iscustomer == true) {
@@ -708,7 +701,7 @@ Template.contactoverview.onRendered(function () {
             } else if (issupplier == true) {
               clienttype = "Supplier";
             } else if (isprospect == true) {
-              clienttype = "Prospect";
+              clienttype = "Lead";
             } else {
               clienttype = " ";
             }
@@ -948,20 +941,18 @@ Template.contactoverview.onRendered(function () {
                             issupplier == true
                           ) {
                             clienttype =
-                              "Customer / Employee / Prospect / Supplier";
+                              "Customer / Employee / Supplier";
                           } else if (
                             isprospect == true &&
                             iscustomer == true &&
                             issupplier == true
                           ) {
-                            clienttype = "Customer / Prospect / Supplier";
+                            clienttype = "Customer / Supplier";
                           } else if (iscustomer == true && issupplier == true) {
                             clienttype = "Customer / Supplier";
                           } else if (iscustomer == true) {
                             if (
-                              data.terpcombinedcontactsvs1[i].name
-                                .toLowerCase()
-                                .indexOf("^") >= 0
+                              data.terpcombinedcontactsvs1[i].name.toLowerCase().indexOf("^") >= 0
                             ) {
                               clienttype = "Job";
                             } else {
@@ -973,7 +964,7 @@ Template.contactoverview.onRendered(function () {
                           } else if (issupplier == true) {
                             clienttype = "Supplier";
                           } else if (isprospect == true) {
-                            clienttype = "Prospect";
+                            clienttype = "Lead";
                           } else {
                             clienttype = " ";
                           }
@@ -1174,11 +1165,7 @@ Template.contactoverview.onRendered(function () {
               .find(".colType")
               .text();
             if (listData && transactiontype) {
-              if (
-                transactiontype === "Customer / Employee / Prospect / Supplier"
-              ) {
-                FlowRouter.go("/customerscard?id=" + listData);
-              } else if (transactiontype === "Customer / Prospect / Supplier") {
+              if (transactiontype === "Customer / Employee / Supplier") {
                 FlowRouter.go("/customerscard?id=" + listData);
               } else if (transactiontype === "Customer / Supplier") {
                 FlowRouter.go("/customerscard?id=" + listData);
@@ -1188,8 +1175,8 @@ Template.contactoverview.onRendered(function () {
                 FlowRouter.go("/supplierscard?id=" + listData);
               } else if (transactiontype === "Employee") {
                 FlowRouter.go("/employeescard?id=" + listData);
-              } else if (transactiontype === "Prospect") {
-                FlowRouter.go("/customerscard?id=" + listData);
+              } else if (transactiontype === "Lead") {
+                FlowRouter.go("/leadscard?id=" + listData);
               } else if (transactiontype === "Job") {
                 FlowRouter.go("/customerscard?jobid=" + listData);
               }
@@ -1225,13 +1212,13 @@ Template.contactoverview.onRendered(function () {
                 isEmployee == true &&
                 issupplier == true
               ) {
-                clienttype = "Customer / Employee / Prospect / Supplier";
+                clienttype = "Customer / Employee / Supplier";
               } else if (
                 isprospect == true &&
                 iscustomer == true &&
                 issupplier == true
               ) {
-                clienttype = "Customer / Prospect / Supplier";
+                clienttype = "Customer / Supplier";
               } else if (iscustomer == true && issupplier == true) {
                 clienttype = "Customer / Supplier";
               } else if (iscustomer == true) {
@@ -1250,7 +1237,7 @@ Template.contactoverview.onRendered(function () {
               } else if (issupplier == true) {
                 clienttype = "Supplier";
               } else if (isprospect == true) {
-                clienttype = "Prospect";
+                clienttype = "Lead";
               } else {
                 clienttype = " ";
               }
@@ -1466,13 +1453,13 @@ Template.contactoverview.onRendered(function () {
                               issupplier == true
                             ) {
                               clienttype =
-                                "Customer / Employee / Prospect / Supplier";
+                                "Customer / Employee / Supplier";
                             } else if (
                               isprospect == true &&
                               iscustomer == true &&
                               issupplier == true
                             ) {
-                              clienttype = "Customer / Prospect / Supplier";
+                              clienttype = "Customer / Supplier";
                             } else if (
                               iscustomer == true &&
                               issupplier == true
@@ -1494,7 +1481,7 @@ Template.contactoverview.onRendered(function () {
                             } else if (issupplier == true) {
                               clienttype = "Supplier";
                             } else if (isprospect == true) {
-                              clienttype = "Prospect";
+                              clienttype = "Lead";
                             } else {
                               clienttype = " ";
                             }
@@ -1705,14 +1692,7 @@ Template.contactoverview.onRendered(function () {
                 .find(".colType")
                 .text();
               if (listData && transactiontype) {
-                if (
-                  transactiontype ===
-                  "Customer / Employee / Prospect / Supplier"
-                ) {
-                  FlowRouter.go("/customerscard?id=" + listData);
-                } else if (
-                  transactiontype === "Customer / Prospect / Supplier"
-                ) {
+                if (transactiontype === "Customer / Employee / Lead / Supplier") {
                   FlowRouter.go("/customerscard?id=" + listData);
                 } else if (transactiontype === "Customer / Supplier") {
                   FlowRouter.go("/customerscard?id=" + listData);
@@ -1722,8 +1702,8 @@ Template.contactoverview.onRendered(function () {
                   FlowRouter.go("/supplierscard?id=" + listData);
                 } else if (transactiontype === "Employee") {
                   FlowRouter.go("/employeescard?id=" + listData);
-                } else if (transactiontype === "Prospect") {
-                  FlowRouter.go("/customerscard?id=" + listData);
+                } else if (transactiontype === "Lead") {
+                  FlowRouter.go("/leadscard?id=" + listData);
                 } else if (transactiontype === "Job") {
                   FlowRouter.go("/customerscard?jobid=" + listData);
                 }
@@ -2237,9 +2217,9 @@ Template.contactoverview.events({
                         issupplier = data.terpcombinedcontactsvs1[i].issupplier;
 
                         if((isprospect == true) && (iscustomer == true) && (isEmployee == true) && (issupplier == true)){
-                            clienttype = "Customer / Employee / Prospect / Supplier";
+                            clienttype = "Customer / Employee / Supplier";
                         }else if((isprospect == true) && (iscustomer ==true) && (issupplier ==true)){
-                            clienttype = "Customer / Prospect / Supplier";
+                            clienttype = "Customer / Supplier";
                         }else if((iscustomer ==true) && (issupplier ==true)){
                             clienttype = "Customer / Supplier";
                         }else if((iscustomer ==true)){
@@ -2255,7 +2235,7 @@ Template.contactoverview.events({
                         }else if((issupplier ==true)){
                             clienttype = "Supplier";
                         }else if((isprospect ==true)){
-                            clienttype = "Prospect";
+                            clienttype = "Lead";
                         }else{
                             clienttype = " ";
                         }
