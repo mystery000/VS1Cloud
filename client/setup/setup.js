@@ -9249,9 +9249,9 @@ const TaxRatesEditListener = (e) => {
   const templateObject = Template.instance();
 
   const tr = $(e.currentTarget).parent();
-  console.log(tr);
+
   var listData = tr.attr("id");
-  console.log(listData);
+  
   // var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
   // var accountName = $(event.target).closest("tr").find(".colAccountName").text();
   // let columnBalClass = $(event.target).attr('class');
