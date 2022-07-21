@@ -50,19 +50,20 @@ Template.settings.events({
         FlowRouter.go('/currenciessettings');
     },
     'click .btntaxRatesSettings': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        organisationService.getChkUSRegionTaxSetting().then(function (dataListRet) {
-            let mainData = dataListRet.tcompanyinfo[0];
-            $('.fullScreenSpin').css('display', 'none');
-            if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
-                FlowRouter.go('/subtaxsettings');
-            } else {
-                FlowRouter.go('/taxratesettings');
-            }
-        }).catch(function(err) {
-            $('.fullScreenSpin').css('display', 'none');
-            FlowRouter.go('/taxratesettings');
-        });
+        FlowRouter.go('/taxratesettings');
+        // $('.fullScreenSpin').css('display', 'inline-block');
+        // organisationService.getChkUSRegionTaxSetting().then(function (dataListRet) {
+        //     let mainData = dataListRet.tcompanyinfo[0];
+        //     $('.fullScreenSpin').css('display', 'none');
+        //     if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
+        //         FlowRouter.go('/subtaxsettings');
+        //     } else {
+        //         FlowRouter.go('/taxratesettings');
+        //     }
+        // }).catch(function(err) {
+        //     $('.fullScreenSpin').css('display', 'none');
+        //     FlowRouter.go('/taxratesettings');
+        // });
     },
     'click .btnDepartmentSettings': function (event) {
         FlowRouter.go('/departmentSettings');
