@@ -61,7 +61,6 @@ const erpObject = {
     TRepairs: "TRepairs",
     TQuote: "TQuote",
     TQuoteEx: "TQuoteEx",
-    TRefundSale: "TRefundSale",
     TRegionalOptions: "TRegionalOptions",
     TRepObjStatementList: "TRepObjStatementList",
     TSalesOrder: "TSalesOrder",
@@ -255,6 +254,7 @@ const erpObject = {
     TRepairDetails:"TRepairDetails",
     TPayrollHolidayGroup:"TPayrollHolidayGroup",
     TVS1Superannuation:"TVS1Superannuation",
+    TTripGroup: "TTripGroup",
 };
 
 export default erpObject;

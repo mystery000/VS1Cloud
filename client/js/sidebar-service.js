@@ -1382,7 +1382,6 @@ export class SideBarService extends BaseService {
     if(contactID != '' && contactID != undefined){
       options = {
         IgnoreDates: true,
-        IgnoreDates: true,
         IncludeIsInvoice: true,
         IncludeIsQuote: false,
         IncludeIsRefund: true,
@@ -2988,5 +2987,19 @@ export class SideBarService extends BaseService {
       };
     }
     return this.getList(this.ERPObjects.TEarnings, options);
+  }
+
+  getAllCustomFieldsWithQuery(query='') {
+    let options = {
+      ListType: "Detail",
+    };
+    if(query == 'ltSalesOverview') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltSalesOverview'",
+      };
+    }
+
+    return this.getList(this.ERPObjects.TCustomFieldList, options);
   }
 }

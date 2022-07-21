@@ -110,8 +110,12 @@ Template.accountlistpop.onRendered(function() {
                         }
                       }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon"){
                         if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
-                      	splashArrayAccountList.push(dataList);
+                          splashArrayAccountList.push(dataList);
                         }
+                      }else if (currentLoc === "/receiptsoverview"){
+                          if(data.taccountvs1[i].fields.AllowExpenseClaim){
+                              splashArrayAccountList.push(dataList);
+                          }
                       }else{
                         splashArrayAccountList.push(dataList);
                       }
@@ -194,6 +198,10 @@ Template.accountlistpop.onRendered(function() {
                       if((useData[i].fields.AccountTypeName === "BANK")||(useData[i].fields.AccountTypeName === "CCARD")){
                       splashArrayAccountList.push(dataList);
                       }
+                    }else if (currentLoc === "/receiptsoverview"){
+                        if(data.taccountvs1[i].fields.AllowExpenseClaim){
+                            splashArrayAccountList.push(dataList);
+                        }
                     }else{
                       splashArrayAccountList.push(dataList);
                     }
@@ -276,6 +284,10 @@ Template.accountlistpop.onRendered(function() {
                     if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
                     splashArrayAccountList.push(dataList);
                     }
+                  }else if (currentLoc === "/receiptsoverview"){
+                      if(data.taccountvs1[i].fields.AllowExpenseClaim){
+                          splashArrayAccountList.push(dataList);
+                      }
                   }else{
                     splashArrayAccountList.push(dataList);
                   }
@@ -490,6 +502,10 @@ Template.accountlistpop.events({
                       if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
                       splashArrayAccountList.push(dataList);
                       }
+                    }else if (currentLoc === "/receiptsoverview"){
+                        if(data.taccountvs1[i].fields.AllowExpenseClaim){
+                            splashArrayAccountList.push(dataList);
+                        }
                     }else{
                       splashArrayAccountList.push(dataList);
                     }

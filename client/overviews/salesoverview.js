@@ -210,9 +210,9 @@ Template.salesoverview.onRendered(function () {
                   totalpaid: totalPaid || 0.0,
                   totaloustanding: totalOutstanding || 0.0,
                   salestatus: salestatus || "",
-                  // custfield1: data.tsalesorderlist[i].SaleCustField1 || '',
-                  // custfield2: data.tsalesorderlist[i].SaleCustField2 || '',
-                  // custfield3: data.tsalesorderlist[i].SaleCustField3 || '',
+                  custfield1: data.tsaleslist[i].SaleCustField1 || '',
+                  custfield2: data.tsaleslist[i].SaleCustField2 || '',
+                  custfield3: data.tsaleslist[i].SaleCustField3 || '',
                   comments: data.tsaleslist[i].Comments || "",
                   type: data.tsaleslist[i].Type || "",
                 };
@@ -536,7 +536,12 @@ Template.salesoverview.onRendered(function () {
                     templateObject.datatablerecords.set(draftRecord);
                   })
                   .on("column-reorder", function () {});
+
               }, 0);
+
+              setTimeout(function () {
+                templateObject.getAllCustomFieldDisplaySettings();
+              }, 500);
 
               var columns = $("#tblSalesOverview th");
               let sTible = "";
@@ -644,9 +649,9 @@ Template.salesoverview.onRendered(function () {
               totalpaid: totalPaid || 0.0,
               totaloustanding: totalOutstanding || 0.0,
               salestatus: salestatus || "",
-              // custfield1: data.tsalesorderlist[i].SaleCustField1 || '',
-              // custfield2: data.tsalesorderlist[i].SaleCustField2 || '',
-              // custfield3: data.tsalesorderlist[i].SaleCustField3 || '',
+              custfield1: useData[i].SaleCustField1 || '',
+              custfield2: useData[i].SaleCustField2 || '',
+              custfield3: useData[i].SaleCustField3 || '',
               comments: useData[i].Comments || "",
               type: useData[i].Type || "",
             };
@@ -941,8 +946,12 @@ Template.salesoverview.onRendered(function () {
                 let draftRecord = templateObject.datatablerecords.get();
                 templateObject.datatablerecords.set(draftRecord);
               })
-              .on("column-reorder", function () {});
+              .on("column-reorder", function () {}); 
           }, 0);
+
+          setTimeout(function () {
+            templateObject.getAllCustomFieldDisplaySettings();
+          }, 500);
 
           var columns = $("#tblSalesOverview th");
           let sTible = "";
@@ -1051,9 +1060,9 @@ Template.salesoverview.onRendered(function () {
                 totalpaid: totalPaid || 0.0,
                 totaloustanding: totalOutstanding || 0.0,
                 salestatus: salestatus || "",
-                // custfield1: data.tsalesorderlist[i].SaleCustField1 || '',
-                // custfield2: data.tsalesorderlist[i].SaleCustField2 || '',
-                // custfield3: data.tsalesorderlist[i].SaleCustField3 || '',
+                custfield1: data.tsaleslist[i].SaleCustField1 || '',
+                custfield2: data.tsaleslist[i].SaleCustField2 || '',
+                custfield3: data.tsaleslist[i].SaleCustField3 || '',
                 comments: data.tsaleslist[i].Comments || "",
                 type: data.tsaleslist[i].Type || "",
               };
@@ -1367,8 +1376,12 @@ Template.salesoverview.onRendered(function () {
                   let draftRecord = templateObject.datatablerecords.get();
                   templateObject.datatablerecords.set(draftRecord);
                 })
-                .on("column-reorder", function () {});
+                .on("column-reorder", function () {}); 
             }, 0);
+
+            setTimeout(function () {
+              templateObject.getAllCustomFieldDisplaySettings();
+            }, 500);
 
             var columns = $("#tblSalesOverview th");
             let sTible = "";
@@ -1489,11 +1502,11 @@ Template.salesoverview.onRendered(function () {
 
   // custom field displaysettings
   templateObject.getAllCustomFieldDisplaySettings = function () {
-    let custFields = [];
+      let custFields = [];
       let dispFields = [];
       let customData = {};
       let customFieldCount = 12;
-      let listType = "ltSmartorderLines";        // tempcode. every settings need its own type
+      let listType = "ltSalesOverview";       
 
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -1510,7 +1523,7 @@ Template.salesoverview.onRendered(function () {
         { label: 'Comments', class: 'colComments', active: true },
       ];
 
-      sideBarService.getAllCustomFields().then(function (data) {
+      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
             customData = {
@@ -1585,7 +1598,7 @@ Template.salesoverview.onRendered(function () {
     })
   }
 
-  templateObject.getAllCustomFieldDisplaySettings();
+  // templateObject.getAllCustomFieldDisplaySettings();
 
 });
 
@@ -2084,7 +2097,7 @@ Template.salesoverview.events({
   "click .saveTable": function (event) {
     let lineItems = [];
       let organisationService = new OrganisationService();
-      let listType = "ltSmartorderLines";        // tempcode. every settings need its own type
+      let listType = "ltSalesOverview";    
 
       $(".fullScreenSpin").css("display", "inline-block");
 
