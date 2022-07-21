@@ -2998,6 +2998,31 @@ export class SideBarService extends BaseService {
         ListType: "Detail",
         select: "[ListType]='ltSales' OR [ListType]='ltSalesOverview'",
       };
+    } else if(query == 'ltSalesOrderList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltSalesOrderList'",
+      };
+    } else if(query == 'ltSaleslines') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltSaleslines'",
+      };
+    } else if(query == 'ltInvoiceList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltInvoiceList'",
+      };
+    } else if(query == 'ltQuoteList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltQuoteList'",
+      };
+    } else if(query == 'ltRefundList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltRefundList'",
+      };
     }
 
     return this.getList(this.ERPObjects.TCustomFieldList, options);

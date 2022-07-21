@@ -1543,13 +1543,6 @@ Template.new_salesorder.onRendered(() => {
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(data.fields.SaleClassName);
 
-                                // tempcode
-                            // setTimeout(function () {
-                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            // }, 2500);
-
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
                                 if (data.fields.Attachments.length) {
@@ -1885,13 +1878,6 @@ Template.new_salesorder.onRendered(() => {
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(useData[d].fields.SaleClassName);
 
-                                // tempcode
-                                // setTimeout(function () {
-                                //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                                //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                                //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                                // }, 2500);
-
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
                                     if (useData[d].fields.Attachments.length) {
@@ -2164,13 +2150,6 @@ Template.new_salesorder.onRendered(() => {
                                     $('#sltStatus').val(data.fields.SalesStatus);
                                     $('#sltTerms').val(data.fields.TermsName);
                                     $('#sltDept').val(data.fields.SaleClassName);
-
-                                // tempcode
-                                    // setTimeout(function () {
-                                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                                    // }, 2500);
 
                                     templateObject.attachmentCount.set(0);
                                     if (data.fields.Attachments) {
@@ -2452,13 +2431,6 @@ Template.new_salesorder.onRendered(() => {
                         $('#sltStatus').val(data.fields.SalesStatus);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(data.fields.SaleClassName);
-
-                                // tempcode
-                        // setTimeout(function () {
-                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        // }, 2500);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -2909,13 +2881,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#sltStatus').val(data.fields.SalesStatus);
                     $('#sltTerms').val(data.fields.TermsName);
                     $('#sltDept').val(data.fields.SaleClassName);
-
-                                // tempcode
-                    // setTimeout(function () {
-                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                    // }, 2500);
+ 
 
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
@@ -3210,13 +3176,7 @@ Template.new_salesorder.onRendered(() => {
                             $('#sltStatus').val(data.fields.SalesStatus);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(data.fields.SaleClassName);
-
-                                // tempcode
-                            // setTimeout(function () {
-                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            // }, 2500);
+ 
                             /* START attachment */
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -3501,13 +3461,7 @@ Template.new_salesorder.onRendered(() => {
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(useData[d].fields.SaleClassName);
-
-                                // tempcode
-                                // setTimeout(function () {
-                                //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                                //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                                //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                                // }, 2500);
+ 
                                 /* START attachment */
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -3777,14 +3731,7 @@ Template.new_salesorder.onRendered(() => {
                         $('#sltStatus').val(data.fields.SalesStatus);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(data.fields.SaleClassName);
-
-                                // tempcode
-                        // setTimeout(function () {
-                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        // }, 2500);
-
+ 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
                             if (data.fields.Attachments.length) {
@@ -6756,9 +6703,9 @@ Template.new_salesorder.onRendered(function() {
       let custFields = [];
       let customData = {};
       let customFieldCount = 10;
-      let ListType = 'ltSaleslines';   // tempcode. every settings need its own type
+      let ListType = 'ltSaleslines';  
 
-      sideBarService.getAllCustomFields().then(function (data) {
+      sideBarService.getAllCustomFieldsWithQuery(ListType).then(function (data) {
           for (let x = 0; x < data.tcustomfieldlist.length; x++) {
             if (data.tcustomfieldlist[x].fields.ListType == ListType) {
               customData = {
@@ -9284,7 +9231,7 @@ Template.new_salesorder.events({
         }
     },
 
-
+    // displaysettings
     'click .chkTaxCode': function(event) {
         if ($(event.target).is(':checked')) {
             $('.colTaxCode').css('display', 'table-cell');
@@ -9431,7 +9378,6 @@ Template.new_salesorder.events({
 
     // custom field displaysettings
     'click .btnResetGridSettings': function(event) {
-
       let reset_data = [
         { label: 'Product Name', class: 'colProductName', active: true },
         { label: 'Description', class: 'colDescription', active: true },
