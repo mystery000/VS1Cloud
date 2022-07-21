@@ -186,6 +186,9 @@
                                                                             name="subTaxPercentageOn">
                                                                             <option value="" disabled>Select</option>
                                                                             <option value="Selling Price">Selling Price</option>
+                                                                            {{#each item in subtaxcodes}}
+                                                                            <option value="{{item.codename}}">{{item.codename}}</option>
+                                                                            {{/each}}
                                                                         </select>
                                                                     </div>
                                                                 </div>
