@@ -1507,95 +1507,101 @@ Template.salesoverview.onRendered(function () {
       let customData = {};
       let customFieldCount = 12;
       let listType = "ltSalesOverview";       
+      try { 
 
-      let reset_data = [
-        { label: 'Sale Date', class: 'colSaleDate', active: true },
-        { label: 'Sales No.', class: 'colSalesNo', active: true },
-        { label: 'Type', class: 'colType', active: true },
-        { label: 'Customer', class: 'colCustomer', active: true },
-        { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
-        { label: 'Tax', class: 'colTax', active: true },
-        { label: 'Amount', class: 'colAmount', active: true },
-        { label: 'Paid', class: 'colPaid', active: true },
-        { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
-        { label: 'Status', class: 'colStatus', active: true },
-        { label: 'Employee', class: 'colEmployee', active: false },
-        { label: 'Comments', class: 'colComments', active: true },
-      ];
+        let reset_data = [
+          { label: 'Sale Date', class: 'colSaleDate', active: true },
+          { label: 'Sales No.', class: 'colSalesNo', active: true },
+          { label: 'Type', class: 'colType', active: true },
+          { label: 'Customer', class: 'colCustomer', active: true },
+          { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
+          { label: 'Tax', class: 'colTax', active: true },
+          { label: 'Amount', class: 'colAmount', active: true },
+          { label: 'Paid', class: 'colPaid', active: true },
+          { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
+          { label: 'Status', class: 'colStatus', active: true },
+          { label: 'Employee', class: 'colEmployee', active: false },
+          { label: 'Comments', class: 'colComments', active: true },
+        ];
 
-      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-        for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-          if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-            customData = {
-              active: data.tcustomfieldlist[x].fields.Active || false,
-              id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-              custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-              datatype: data.tcustomfieldlist[x].fields.DataType || "",
-              isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-              iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-              dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-            };
-            custFields.push(customData);
-          } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
-            customData = {
-              active: data.tcustomfieldlist[x].fields.Active || false,
-              id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-              custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-              datatype: data.tcustomfieldlist[x].fields.DataType || "",
-              isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-              iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-              dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-            };
-            dispFields.push(customData);
+        sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+            if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+              customData = {
+                active: data.tcustomfieldlist[x].fields.Active || false,
+                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+                datatype: data.tcustomfieldlist[x].fields.DataType || "",
+                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+              };
+              custFields.push(customData);
+            } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
+              customData = {
+                active: data.tcustomfieldlist[x].fields.Active || false,
+                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+                datatype: data.tcustomfieldlist[x].fields.DataType || "",
+                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+                // width: data.tcustomfieldlist[x].fields.Width || 0,
+              };
+              dispFields.push(customData);
+            }
           }
-        }
 
-        if (custFields.length < 3) {
-          let remainder = 3 - custFields.length;
-          let getRemCustomFields = parseInt(custFields.length);
-          for (let r = 0; r < remainder; r++) {
-            getRemCustomFields++;
-            customData = {
-              active: false,
-              id: "",
-              custfieldlabel: "Custom Field " + getRemCustomFields,
-              datatype: "",
-              isempty: true,
-              iscombo: false,
-            };
-            // count++;
-            custFields.push(customData);
+          if (custFields.length < 3) {
+            let remainder = 3 - custFields.length;
+            let getRemCustomFields = parseInt(custFields.length);
+            for (let r = 0; r < remainder; r++) {
+              getRemCustomFields++;
+              customData = {
+                active: false,
+                id: "",
+                custfieldlabel: "Custom Field " + getRemCustomFields,
+                datatype: "",
+                isempty: true,
+                iscombo: false,
+              };
+              // count++;
+              custFields.push(customData);
+            }
           }
-        }
 
-        if (dispFields.length < customFieldCount) {
-          let remainder = customFieldCount - dispFields.length;
-          let getRemCustomFields = parseInt(dispFields.length);
-          for (let r = 0; r < remainder; r++) {
-            customData = {
-              active: reset_data[getRemCustomFields].active,
-              id: "",
-              custfieldlabel: reset_data[getRemCustomFields].label,
-              datatype: "",
-              isempty: true,
-              iscombo: false,
-            };
-            getRemCustomFields++;
-            // count++;
-            dispFields.push(customData);
+          if (dispFields.length < customFieldCount) {
+            let remainder = customFieldCount - dispFields.length;
+            let getRemCustomFields = parseInt(dispFields.length);
+            for (let r = 0; r < remainder; r++) {
+              customData = {
+                active: reset_data[getRemCustomFields].active,
+                id: "",
+                custfieldlabel: reset_data[getRemCustomFields].label,
+                datatype: "",
+                isempty: true,
+                iscombo: false,
+                // width: reset_data[getRemCustomFields].width,
+              };
+              getRemCustomFields++;
+              // count++;
+              dispFields.push(customData);
+            }
           }
-        }
 
-        for (let index = 0; index < custFields.length; index++) {
-          const element = custFields[index];
-          dispFields.push(element);
+          for (let index = 0; index < custFields.length; index++) {
+            const element = custFields[index];
+            dispFields.push(element);
 
-        }
+          }
 
-        templateObject.custfields.set(custFields);
-        templateObject.displayfields.set(dispFields);
-
-    })
+          templateObject.custfields.set(custFields);
+          templateObject.displayfields.set(dispFields);
+        
+        });
+      } catch (error) {
+        console.log(error)
+      }
   }
 
   // templateObject.getAllCustomFieldDisplaySettings();
@@ -2058,21 +2064,21 @@ Template.salesoverview.events({
     var datable = $('#tblSalesOverview').DataTable();
 
     let reset_data = [
-      { label: 'Sale Date', class: 'colSaleDate', active: true },
-      { label: 'Sales No.', class: 'colSalesNo', active: true },
-      { label: 'Type', class: 'colType', active: true },
-      { label: 'Customer', class: 'colCustomer', active: true },
-      { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
-      { label: 'Tax', class: 'colTax', active: true },
-      { label: 'Amount', class: 'colAmount', active: true },
-      { label: 'Paid', class: 'colPaid', active: true },
-      { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
-      { label: 'Status', class: 'colStatus', active: true },
-      { label: 'Employee', class: 'colEmployee', active: false },
-      { label: 'Comments', class: 'colComments', active: true },
-      { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },
-      { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
-      { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
+      { label: 'Sale Date', class: 'colSaleDate', active: true, width: 0 },
+      { label: 'Sales No.', class: 'colSalesNo', active: true, width: 0 },
+      { label: 'Type', class: 'colType', active: true, width: 0 },
+      { label: 'Customer', class: 'colCustomer', active: true, width: 0 },
+      { label: 'Amount(Ex)', class: 'colAmountEx', active: true, width: 0 },
+      { label: 'Tax', class: 'colTax', active: true, width: 0 },
+      { label: 'Amount', class: 'colAmount', active: true, width: 0 },
+      { label: 'Paid', class: 'colPaid', active: true, width: 0 },
+      { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true, width: 0 },
+      { label: 'Status', class: 'colStatus', active: true, width: 0 },
+      { label: 'Employee', class: 'colEmployee', active: false, width: 0 },
+      { label: 'Comments', class: 'colComments', active: true, width: 0 },
+      { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active, width: 0},
+      { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active, width: 0},
+      { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active, width: 0}
     ];
 
 
@@ -2123,13 +2129,14 @@ Template.salesoverview.events({
 
         lineItems.push(lineItemObj);
 
-        if(fieldID && fieldID != 0){
+        if(fieldID && parseInt(fieldID) != 0){
           objDetails1 = {
             type: "TCustomFieldList",
             fields: {
               Active: colHidden,
               ID: parseInt(fieldID),
-              Description: colTitle
+              Description: colTitle,
+              Width: colWidth
             },
           };
         } else {
@@ -2139,7 +2146,8 @@ Template.salesoverview.events({
               Active: colHidden,
               DataType: "ftString",
               Description: colTitle,
-              ListType: listType
+              ListType: listType,
+              Width: colWidth
             },
           };
         }

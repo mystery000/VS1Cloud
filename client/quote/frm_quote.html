@@ -556,119 +556,119 @@
                                                                 margin-top: 20px;
                                                             }
                                                         </style>
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[0].id}}">
-                                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkProductName" type="checkbox" id="formCheck-01" checked="">
-                                                                <label class="custom-control-label" for="formCheck-01"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[0].label}}{{else}}Product Name{{/if}}" valueupdate="th.colProductName">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[0].label}}{{else}}Product Name{{/if}}</div>
-                                                            </div>
-                                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeProductName" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[0].width}}{{else}}0{{/if}}" min="0" max="1000">
-                                                            </div>
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[0].id}}">
+                                                          <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                              <input class="custom-control-input chkProductName" type="checkbox" id="formCheck-01" checked="{{displayfields.[0].active}}">
+                                                              <label class="custom-control-label" for="formCheck-01"></label>
+                                                              <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[0].custfieldlabel}}{{else}}Product Name{{/if}}" valueupdate="th.colProductName">{{#if displayfields}}{{displayfields.[0].custfieldlabel}}{{else}}Product Name{{/if}}</div>
+                                                          </div>
+                                                          <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                              <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                              <input class="custom-range widthElement rngRangeProductName" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[0].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                          </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[1].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[1].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkDescription" type="checkbox" id="formCheck-02" checked="">
+                                                                <input class="custom-control-input chkDescription" type="checkbox" id="formCheck-02" checked="{{displayfields.[1].active}}">
                                                                 <label class="custom-control-label" for="formCheck-02"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[1].label}}{{else}}Description{{/if}}" valueupdate="th.colDescription">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[1].label}}{{else}}Description{{/if}}</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[1].custfieldlabel}}{{else}}Description{{/if}}" valueupdate="th.colDescription">{{#if displayfields}}{{displayfields.[1].custfieldlabel}}{{else}}Description{{/if}}</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeDescription" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[1].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeDescription" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[1].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[2].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[2].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="">
+                                                                <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="{{displayfields.[2].active}}">
                                                                 <label class="custom-control-label" for="formCheck-03"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[2].label}}{{else}}Qty{{/if}}" valueupdate="th.colQty">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[2].label}}{{else}}Qty{{/if}}</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}" valueupdate="th.colQty">{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[3].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[3].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkUnitPrice" type="checkbox" id="formCheck-04" checked="">
+                                                                <input class="custom-control-input chkUnitPrice" type="checkbox" id="formCheck-04" checked="{{displayfields.[3].active}}">
                                                                 <label class="custom-control-label" for="formCheck-04"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[3].label}}{{else}}Unit Price{{/if}}" valueupdate="th.colUnitPrice">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[3].label}}{{else}}Unit Price{{/if}}</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[3].custfieldlabel}}{{else}}Unit Price{{/if}}" valueupdate="th.colUnitPrice">{{#if displayfields}}{{displayfields.[3].custfieldlabel}}{{else}}Unit Price{{/if}}</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeUnitPrice" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[3].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeUnitPrice" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[3].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[4].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[4].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkCostPrice" type="checkbox" id="formCheck-07">
+                                                                <input class="custom-control-input chkCostPrice" type="checkbox" id="formCheck-07" checked="{{displayfields.[4].active}}">
                                                                 <label class="custom-control-label" for="formCheck-07"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].label}}{{else}}Cost Price{{/if}}" valueupdate="th.colCostPrice">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].label}}{{else}}Cost Price{{/if}}</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[4].custfieldlabel}}{{else}}Cost Price{{/if}}" valueupdate="th.colCostPrice">{{#if displayfields}}{{displayfields.[4].custfieldlabel}}{{else}}Cost Price{{/if}}</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeCostPrice" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeCostPrice" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[4].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[5].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[5].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkSalesLinesCustField1" type="checkbox" id="formCheck-08">
+                                                                <input class="custom-control-input chkSalesLinesCustField1" type="checkbox" id="formCheck-08"  checked="{{displayfields.[5].active}}">
                                                                 <label class="custom-control-label" for="formCheck-08"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[5].label}}{{else}}SalesLinesCustField1{{/if}}" valueupdate="th.colSalesLinesCustField1">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[5].label}}{{else}}SalesLinesCustField1{{/if}}</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[5].custfieldlabel}}{{else}}SalesLinesCustField1{{/if}}" valueupdate="th.colSalesLinesCustField1">{{#if displayfields}}{{displayfields.[5].custfieldlabel}}{{else}}SalesLinesCustField1{{/if}}</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeSalesLinesCustField1" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[5].width}}{{else}}80{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeSalesLinesCustField1" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[5].width}}{{else}}80{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[6].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[6].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkTaxRate" type="checkbox" id="formCheck-05">
+                                                                <input class="custom-control-input chkTaxRate" type="checkbox" id="formCheck-05" checked="{{displayfields.[6].active}}">
                                                                 <label class="custom-control-label" for="formCheck-05"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[6].label}}{{else}}Tax Rate{{/if}}" valueupdate="th.colTaxRate">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[6].label}}{{else}}Tax Rate{{/if}}</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[6].custfieldlabel}}{{else}}Tax Rate{{/if}}" valueupdate="th.colTaxRate">{{#if displayfields}}{{displayfields.[6].custfieldlabel}}{{else}}Tax Rate{{/if}}</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeTaxRate" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[6].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeTaxRate" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[6].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[7].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[7].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkTaxCode" type="checkbox" id="formCheck-06" checked="">
+                                                                <input class="custom-control-input chkTaxCode" type="checkbox" id="formCheck-06" checked="{{displayfields.[7].active}}">
                                                                 <label class="custom-control-label" for="formCheck-06"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[7].label}}{{else}}Tax Code{{/if}}" valueupdate="th.colTaxCode">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[7].label}}{{else}}Tax Code{{/if}}</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[7].custfieldlabel}}{{else}}Tax Code{{/if}}" valueupdate="th.colTaxCode">{{#if displayfields}}{{displayfields.[7].custfieldlabel}}{{else}}Tax Code{{/if}}</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeTaxCode" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[7].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeTaxCode" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[7].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[8].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[8].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkAmount" type="checkbox" id="formCheck-16" checked="">
+                                                                <input class="custom-control-input chkAmount" type="checkbox" id="formCheck-16" checked="{{displayfields.[8].active}}">
                                                                 <label class="custom-control-label" for="formCheck-16"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[8].label}}{{else}}Amount{{/if}}" valueupdate="th.colAmount">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[8].label}}{{else}}Amount{{/if}}</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[8].custfieldlabel}}{{else}}Amount{{/if}}" valueupdate="th.colAmount">{{#if displayfields}}{{displayfields.[8].custfieldlabel}}{{else}}Amount{{/if}}</div>
                                                             </div> 
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[8].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[8].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings displaySettings" custid="{{custfields.[9].id}}">
+                                                        <div class="columnSettings displaySettings" custid="{{displayfields.[9].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkTaxAmount" type="checkbox" id="formCheck-09" checked="">
+                                                                <input class="custom-control-input chkTaxAmount" type="checkbox" id="formCheck-09" checked="{{displayfields.[9].active}}">
                                                                 <label class="custom-control-label" for="formCheck-09"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="" valueupdate="th.colTaxAmount">Tax Amount</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Amount{{/if}}" valueupdate="th.colTaxAmount">{{#if displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Tax Amount{{/if}}</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
@@ -682,7 +682,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button class="btn btn-success btnSaveGridSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                            <button class="btn btn-warning btnResetGridSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                            <button class="btn btn-warning btnResetGridSettings" type="button"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                                             <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
                                     </div>
@@ -834,53 +834,91 @@
 
                         <table id="tblQuoteLine" style="width:100%" class="table table-striped table-bordered tblQuoteLine">
                             <thead>
-                                <tr class="dnd-moved">
-                                    <th class="th colProductName" style="width: 300px;">Product Name</th>
-                                    <th class="th colDescription">Description</th>
-                                    <th class="th colQty" style="width: 75px;">Qty</th>
-                                    <th class="th colUnitPrice colUnitPriceEx" style="width: 115px; text-align: left!important;">Unit Price (Ex) <i class="fas fa-random"></i></th>
-                                    <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Unit Price (Inc) <i class="fas fa-random fa-trans"></i></th>
-
-                                    <th data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="th colDiscount" style="width: 95px; text-align: left!important;">Disc %</th>
-                                    <th class="th colCostPrice thLinceCostPrice hiddenColumn" style="width: 110px; text-align: left!important;">Cost Price</th>
-                                    <th class="th colSalesLinesCustField1 thSalesLinesCustField1 hiddenColumn" style="width: 110px;">SalesLinesCustField1</th>
-                                    <th class="th colTaxRate hiddenColumn" style="width: 91px; text-align: left!important;">Tax Rate</th>
-                                    <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
-                                    <th class="th colTaxAmount " style="width: 95px; text-align: left!important;">Tax Amt</th>
+                                <tr class="dnd-moved"> 
+                                    <th class="th colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}" style="width: 300px;">{{#if
+                                      displayfields}}{{displayfields.[0].custfieldlabel}}{{else}}Product Name{{/if}}</th>
+                                    <th class="th colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{#if
+                                      displayfields}}{{displayfields.[1].custfieldlabel}}{{else}}Description{{/if}}</th>
+                                    <th class="th colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" style="width: 75px;">{{#if
+                                      displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}</th>
+                                    <th class="th colUnitPrice colUnitPriceEx {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 115px; text-align: left!important;">{{#if
+                                      displayfields}}{{displayfields.[3].custfieldlabel}}{{else}}Unit Price (Ex){{/if}} <i class="fas fa-random"></i></th>
+                                    <th class="th colUnitPrice colUnitPriceInc  {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 115px; text-align: left!important;">Unit Price (Inc) <i
+                                        class="fas fa-random fa-trans"></i></th>
+                                    <th data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="th colDiscount"
+                                      style="width: 95px; text-align: left!important;">Disc %</th>
+                                    <th class="th colCostPrice thLinceCostPrice  {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 110px; text-align: left!important;">{{#if
+                                      displayfields}}{{displayfields.[4].custfieldlabel}}{{else}}Cost Price{{/if}}</th>
+                                    <th
+                                      class="th colSalesLinesCustField1 thSalesLinesCustField1  {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 110px;">{{#if displayfields}}{{displayfields.[5].custfieldlabel}}{{else}}SalesLines CustField1{{/if}}
+                                    </th>
+                                    <th class="th colTaxRate  {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 91px; text-align: left!important;">{{#if displayfields}}{{displayfields.[6].custfieldlabel}}{{else}}Tax
+                                      Rate{{/if}}</th>
+                                    <th class="th colTaxCode  {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 95px; text-align: left!important;">{{#if displayfields}}{{displayfields.[7].custfieldlabel}}{{else}}Tax
+                                      Code{{/if}}</th>
+                                    <th class="th colTaxAmount  {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 95px; text-align: left!important;">{{#if displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Tax
+                                      Amt{{/if}}</th>
                                     {{#if isBatchSerialNoTracking 'true'}}
-                                        <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
-                                    {{/if}} 
-                                    <th class="th colAmount colAmountEx" style="width: 140px; text-align: left!important;">Amount (Ex) <i class="fas fa-random"></i></th>
-                                    <th class="th colTaxAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i></th>
-                                    <!-- <th class="th">Tax Price</th> -->
+                                    <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
+                                    {{/if}}
+                                    <th class="th colAmount colAmountEx {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 140px; text-align: left!important;">{{#if
+                                      displayfields}}{{displayfields.[8].custfieldlabel}}{{else}}Amount (Ex){{/if}} <i class="fas fa-random"></i></th>
+                                    <th class="th colAmount colAmountInc  {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
+                                      style="width: 140px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i>
+                                    </th>
                                     <th class="th" style="width: 25px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {{#each item in quoterecord.LineItems}}
                                 <tr class="dnd-moved" id={{item.lineID}}>
-                                    <!-- <td contenteditable="false" class="lineProductName colProductName pointer" prodid=' '>{{item.item}}</td> -->
-                                    <td contenteditable="false" class="colProductName"><input class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}" ></td>
-                                    <td contenteditable="true" class="lineProductDesc colDescription">{{item.description}}</td>
-                                    <td class="colQty"><input class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
-                                    <!--                                    <td contenteditable="true" class="lineUnitPrice colUnitPrice" style="text-align: right!important;">{{item.unitPrice}}</td>-->
-                                    <!-- <td><input class="lineUnitPrice colUnitPrice highlightInput" type="text" value="{{item.unitPrice}}"></td> -->
-                                    <td class="colUnitPriceEx colUnitPrice"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}"></td>
-                                    <td class="colUnitPriceInc colUnitPrice hiddenColumn"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{item.unitPriceInc}}"></td>
-
-                                    <td contenteditable="false" class="lineDiscount colDiscount" style="text-align: right!important;">{{item.DiscountPercent}}</td>
-                                    <!--                                    <td contenteditable="true" class="lineCostPrice colCostPrice hiddenColumn" style="text-align: right!important;">{{item.lineCost}}</td>-->
-                                    <td class="hiddenColumn colCostPrice"><input class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
-                                    <td contenteditable="true" class="lineSalesLinesCustField1 colSalesLinesCustField1 hiddenColumn">{{item.SalesLinesCustField1}}</td>
-                                    <td contenteditable="false" class="lineTaxRate colTaxRate pointer hiddenColumn" style="text-align: right!important;">{{item.taxRate}}</td>
-                                    <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
-                                    <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
-                                    {{#if isBatchSerialNoTracking 'true'}}
-                                        <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
-                                    {{/if}} 
-                                    <td contenteditable="false" class="lineAmt colAmountEx colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td>
-                                    <td contenteditable="false" class="lineAmt colAmountInc colTaxAmount hiddenColumn" style="text-align: right!important;">{{item.TotalAmtInc}}</td>
-                                    <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
+                                  <td contenteditable="false" class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
+                                      class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}"></td>
+                                  <td contenteditable="true"
+                                    class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                                    {{item.description}}</td>
+                                  <td class="colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
+                                      class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
+                                  <td class="colUnitPriceEx colUnitPrice {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
+                                      class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
+                                  </td>
+                                  <td class="colUnitPriceInc colUnitPrice  {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"><input
+                                      class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text"
+                                      value="{{item.unitPriceInc}}"></td>
+                                  <td contenteditable="false" class="lineDiscount colDiscount" style="text-align: right!important;">
+                                    {{item.DiscountPercent}}</td>
+                                  <td class="colCostPrice {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
+                                      class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
+                                  <td contenteditable="true"
+                                    class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}">
+                                    {{item.SalesLinesCustField1}}</td>
+                                  <td contenteditable="false"
+                                    class="lineTaxRate colTaxRate pointer  {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"
+                                    style="text-align: right!important;">{{item.taxRate}}</td>
+                                  <td contenteditable="false" class="colTaxCode {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
+                                      class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
+                                  <td contenteditable="false"
+                                    class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"
+                                    style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
+                                  {{#if isBatchSerialNoTracking 'true'}}
+                                  <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"
+                                      style="margin-left: 40px; font-size: 22px;"></i></td>
+                                  {{/if}}
+                                  <td contenteditable="false"
+                                    class="lineAmt colAmountEx colAmount {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
+                                    style="text-align: right!important;">{{item.TotalAmt}}</td>
+                                  <td contenteditable="false" class="lineAmt colAmountInc colAmount {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
+                                    style="text-align: right!important;">{{item.TotalAmtInc}}</td>
+                                  <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
+                                          class="fa fa-remove"></i></button></span></td>
                                 </tr>
                                 {{/each}}
                             </tbody>
