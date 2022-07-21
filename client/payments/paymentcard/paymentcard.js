@@ -21,6 +21,8 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
+import { calculateApplied, onExchangeRateChange } from "./supplierPaymentcard";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -29,6 +31,8 @@ var template_list = [
 
     "Customer Payments",
  ];
+
+ const defaultCurrencyCode = CountryAbbr;
 
 Template.paymentcard.onCreated(() => {
     const templateObject = Template.instance();
@@ -5031,6 +5035,9 @@ Template.paymentcard.onRendered(() => {
 });
 
 Template.paymentcard.helpers({
+    isCurrencyEnable: () => {
+        return Session.get("CloudUseForeignLicence");
+      },
 
     getTemplateList: function () {
         return template_list;
@@ -8812,5 +8819,38 @@ Template.paymentcard.events({
                 } else {}
             }
         } else {}
-    }
+    },
+    "change #sltCurrency": (e) => {
+        if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+          $(".foreign-currency-js").css("display", "block");
+        } else {
+          $(".foreign-currency-js").css("display", "none");
+        }
+      },
+    "keyup #exchange_rate": (e) => {
+        onExchangeRateChange(e);
+      },
+      "change #exchange_rate": (e) => {
+        onExchangeRateChange(e);
+      },
+      "change #edtForeignAmount": (e) => {
+        calculateApplied();
+      },
+      "keyup #edtForeignAmount": (e) => {
+        calculateApplied();
+      },
+      "change #edtVariation": (e) => {
+        calculateApplied();
+      },
+      "keyup #edtVariation": (e) => {
+        calculateApplied();
+      },
+      "change #edtApplied": (e) => {
+        const currency = getCurrentCurrencySymbol();
+        $('.appliedAmount').text(currency + $(e.currentTarget).val());
+      },
+      "keyup #edtApplied": (e) => {
+        const currency = getCurrentCurrencySymbol();
+        $('.appliedAmount').text(currency + $(e.currentTarget).val());
+      }
 });

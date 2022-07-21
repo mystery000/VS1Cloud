@@ -38,9 +38,11 @@
 
                                     <div class="row no-gutters">
                                         <div class="col">
-                                            <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px 0px; margin-right: 32px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                            <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px 0px; margin-right: 24px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
 
-                                            <a class="btn btn-primary btnAddSubTax" role="button" data-toggle="modal" href="#addSubTaxModal" style="margin-top: 16px; margin-right: 32px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Sub Tax<br></a>
+                                            <button class="btn btn-primary btnAddSubTax float-left" role="button" data-toggle="modal" href="#addSubTaxModal" style="margin-top: 16px; margin-right: 24px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Sub Tax<br></button>
+
+                                            <button class="btn btn-primary btnTaxRates float-left" type="button" style="margin: 16px 0px;"><i class="fa fa-list" style="margin-right: 8px;"></i>Tax Rates</button>
 
                                             <div class="modal fade" role="dialog" tabindex="-1" id="addSubTaxModal">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -69,18 +71,50 @@
                                                                 <div class="col d-xl-flex align-items-xl-end">
                                                                     <div class="form-group flex-grow-1" style="margin: 8px;">
                                                                         <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Category</label>
-                                                                        <div class="form-group align-items-xl-end">
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input type="radio" class="form-check-input" name="optTaxCategory" id="opt-city" value="T"><label class="form-check-label" for="opt-city">City</label>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="custom-control custom-checkbox chkBox pointer">
+                                                                                    <input
+                                                                                        class="custom-control-input chkBoxCity pointer"
+                                                                                        type="radio" name="optTaxCategory" id="opt-city"
+                                                                                        value="T" checked>
+                                                                                    <label
+                                                                                        class="custom-control-label chkBox pointer"
+                                                                                        for="opt-city">City</label>
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input type="radio" class="form-check-input" name="optTaxCategory" id="opt-state" value="S"><label class="form-check-label" for="opt-state">State</label>
+                                                                            <div class="col">
+                                                                                <div class="custom-control custom-checkbox chkBox pointer">
+                                                                                    <input
+                                                                                        class="custom-control-input chkBoxState pointer"
+                                                                                        type="radio" name="optTaxCategory" id="opt-state"
+                                                                                        value="S">
+                                                                                    <label
+                                                                                        class="custom-control-label chkBox pointer"
+                                                                                        for="opt-state">State</label>
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input type="radio" class="form-check-input" name="optTaxCategory" id="opt-country" value="C"><label class="form-check-label" for="opt-country">Country</label>
+                                                                            <div class="col">
+                                                                                <div class="custom-control custom-checkbox chkBox pointer">
+                                                                                    <input
+                                                                                        class="custom-control-input chkBoxCountry pointer"
+                                                                                        type="radio" name="optTaxCategory" id="opt-country"
+                                                                                        value="C">
+                                                                                    <label
+                                                                                        class="custom-control-label chkBox pointer"
+                                                                                        for="opt-country">Country</label>
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="form-check form-check-inline">
-                                                                                <input type="radio" class="form-check-input" name="optTaxCategory" id="opt-other" value="O"><label class="form-check-label" for="opt-other">Other</label>
+                                                                            <div class="col">
+                                                                                <div class="custom-control custom-checkbox chkBox pointer">
+                                                                                    <input
+                                                                                        class="custom-control-input chkBoxOther pointer"
+                                                                                        type="radio" name="optTaxCategory" id="opt-other"
+                                                                                        value="O">
+                                                                                    <label
+                                                                                        class="custom-control-label chkBox pointer"
+                                                                                        for="opt-other">Other</label>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -213,7 +247,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p>Please click "Delete" to delete sub tax</p>
+                                                        <p>Please click "Delete" to delete the choosen Sub Tax</p>
 
                                                         <button class="btn btn-danger float-right btnDeleteSubTax" type="button">
                                                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
@@ -226,17 +260,17 @@
                                         <table id="subTaxList" style="width:100%" class="dataTable table table-hover table-striped table-bordered subTaxList">
                                             <thead>
                                                 <tr class="dnd-moved">
-                                                    <th class="th colCode" style="width:100px">Code</th>
+                                                    <th class="th colCode" style="width: 100px">Code</th>
                                                     <th class="th colDescription">Description</th>
-                                                    <th class="th colCategory" style="width:150px">Category</th>
-                                                    <th  class="th colDelete" style="width:50px"></th>
+                                                    <th class="th colCategory" style="width: 150px">Category</th>
+                                                    <th class="th colDelete" style="width: 23px"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {{#if datatablerecords}}
                                                 {{#each item in datatablerecords}}
                                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                    <td contenteditable="false" class="colName clickable">{{item.codename}}</td>
+                                                    <td contenteditable="false" class="colCode clickable">{{item.codename}}</td>
                                                     <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
                                                     <td contenteditable="false" class="colCategory clickable">{{item.category}}</td>
                                                     <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
@@ -251,7 +285,7 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <div class="col">
-                                        <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 16px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                        <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 16px;"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button>
                                     </div>
                                 </div>
                             </div>

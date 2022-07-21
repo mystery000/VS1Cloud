@@ -110,26 +110,26 @@ Template.accountlistpop.onRendered(function() {
                         }
                       }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon"){
                         if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
-                      	splashArrayAccountList.push(dataList);
+                          splashArrayAccountList.push(dataList);
                         }
+                      }else if (currentLoc === "/receiptsoverview"){
+                          if(data.taccountvs1[i].fields.AllowExpenseClaim){
+                              splashArrayAccountList.push(dataList);
+                          }
                       }else{
                         splashArrayAccountList.push(dataList);
                       }
 
                   }
                     //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
-
                     if (splashArrayAccountList) {
-
                         $('#tblAccount').dataTable({
                             data: splashArrayAccountList,
-
                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             // paging: true,
                             // "aaSorting": [],
                             // "orderMulti": true,
                             columnDefs: [
-
                                 { className: "productName", "targets": [0] },
                                 { className: "productDesc", "targets": [1] },
                                 { className: "accountnumber", "targets": [2] },
@@ -149,17 +149,13 @@ Template.accountlistpop.onRendered(function() {
                               $("<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAccount_filter");
                                 $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
                             }
-
                         });
-
                         $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
                     }
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.taccountvs1;
-
                 let records = [];
                 let inventoryData = [];
                 for (let i = 0; i < useData.length; i++) {
@@ -202,6 +198,10 @@ Template.accountlistpop.onRendered(function() {
                       if((useData[i].fields.AccountTypeName === "BANK")||(useData[i].fields.AccountTypeName === "CCARD")){
                       splashArrayAccountList.push(dataList);
                       }
+                    }else if (currentLoc === "/receiptsoverview"){
+                        if(data.taccountvs1[i].fields.AllowExpenseClaim){
+                            splashArrayAccountList.push(dataList);
+                        }
                     }else{
                       splashArrayAccountList.push(dataList);
                     }
@@ -209,16 +209,13 @@ Template.accountlistpop.onRendered(function() {
                 }
                 //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
                 if (splashArrayAccountList) {
-
                     $('#tblAccount').dataTable({
                         data: splashArrayAccountList,
-
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         paging: true,
                         "aaSorting": [],
                         "orderMulti": true,
                         columnDefs: [
-
                             { className: "productName", "targets": [0] },
                             { className: "productDesc", "targets": [1] },
                             { className: "accountnumber", "targets": [2] },
@@ -228,14 +225,9 @@ Template.accountlistpop.onRendered(function() {
                             { className: "colAccountID hiddenColumn", "targets": [6] }
                         ],
                         colReorder: true,
-
-
-
                         "order": [
                             [0, "asc"]
                         ],
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                         info: true,
@@ -244,16 +236,12 @@ Template.accountlistpop.onRendered(function() {
                             $("<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAccount_filter");
                             $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccount_filter");
                         }
-
                     });
-
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
                 }
             }
         }).catch(function(err) {
             sideBarService.getAccountListVS1().then(function(data) {
-
                 let records = [];
                 let inventoryData = [];
                 for (let i = 0; i < data.taccountvs1.length; i++) {
@@ -296,18 +284,19 @@ Template.accountlistpop.onRendered(function() {
                     if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
                     splashArrayAccountList.push(dataList);
                     }
+                  }else if (currentLoc === "/receiptsoverview"){
+                      if(data.taccountvs1[i].fields.AllowExpenseClaim){
+                          splashArrayAccountList.push(dataList);
+                      }
                   }else{
                     splashArrayAccountList.push(dataList);
                   }
 
               }
                 //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
-
                 if (splashArrayAccountList) {
-
                     $('#tblAccount').dataTable({
                         data: splashArrayAccountList,
-
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         paging: true,
                         "aaSorting": [],
@@ -323,14 +312,9 @@ Template.accountlistpop.onRendered(function() {
                             { className: "colAccountID hiddenColumn", "targets": [6] }
                         ],
                         colReorder: true,
-
-
-
                         "order": [
                             [0, "asc"]
                         ],
-
-
                         pageLength: initialDatatableLoad,
                         lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                         info: true,
@@ -341,9 +325,7 @@ Template.accountlistpop.onRendered(function() {
                         }
 
                     });
-
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
                 }
             });
         });
@@ -520,6 +502,10 @@ Template.accountlistpop.events({
                       if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
                       splashArrayAccountList.push(dataList);
                       }
+                    }else if (currentLoc === "/receiptsoverview"){
+                        if(data.taccountvs1[i].fields.AllowExpenseClaim){
+                            splashArrayAccountList.push(dataList);
+                        }
                     }else{
                       splashArrayAccountList.push(dataList);
                     }

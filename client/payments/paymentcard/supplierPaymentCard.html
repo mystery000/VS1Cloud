@@ -165,13 +165,27 @@
                             <input class="form-control form-control" type="text" value="{{record.foreignAmount}}" id="edtForeignCurrency" name='ForeignCurrency'>
                         </div> -->
                         <div class="form-group"><label>Foreign Amount</label>
-                            <input class="form-control form-control" type="text" value="$0.00" data-value="0.00" id="edtForeignAmount" name='foreignAmount'>
+
+                            <div class="input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text currency-symbol">N/A</span>
+                                </div> -->
+                                <input class="form-control form-control" type="text" value="$0.00" data-value="0.00" id="edtForeignAmount" name='foreignAmount'>
+
+                           </div>
+        
                         </div>
                         <div class="form-group"><label>Variation</label>
                             <input class="form-control form-control" type="text" value="$0.00" data-value="0.00"  id="edtVariation" name='variation'>
                         </div>
-                        <div class="form-group"><label>Applied</label>
-                            <input class="form-control form-control" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
+                        <div class="form-group ">
+                            <label>Applied</label>
+                           <div class="input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text currency-symbol">N/A</span>
+                                </div> -->
+                                <input class="form-control form-control" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
+                           </div>
                         </div>
                     </div>
                 

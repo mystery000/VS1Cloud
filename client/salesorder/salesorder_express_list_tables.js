@@ -2117,7 +2117,7 @@ Template.salesorderslist.onRendered(function() {
       let dispFields = [];
       let customData = {};
       let customFieldCount = 11;
-      let listType = "ltExpenseLines";        // tempcode. every settings need its own type
+      let listType = "ltSalesOrderList";   
 
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -2133,7 +2133,7 @@ Template.salesorderslist.onRendered(function() {
         { label: 'Comments', class: 'colComments', active: true },
       ];
 
-      sideBarService.getAllCustomFields().then(function (data) {
+      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
             customData = {
@@ -2468,7 +2468,7 @@ Template.salesorderslist.events({
     'click .saveTable' : function(event){
       let lineItems = [];
       let organisationService = new OrganisationService();
-      let listType = "ltExpenseLines";        // tempcode. every settings need its own type
+      let listType = "ltSalesOrderList";    
 
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -2494,13 +2494,14 @@ Template.salesorderslist.events({
 
         lineItems.push(lineItemObj);
 
-        if(fieldID){
+        if(fieldID && parseInt(fieldID) != 0){
           objDetails1 = {
             type: "TCustomFieldList",
             fields: {
               Active: colHidden,
               ID: parseInt(fieldID),
-              Description: colTitle
+              Description: colTitle,
+              Width: colWidth
             },
           };
         } else {
@@ -2510,7 +2511,8 @@ Template.salesorderslist.events({
               Active: colHidden,
               DataType: "ftString",
               Description: colTitle,
-              ListType: listType
+              ListType: listType,
+              Width: colWidth
             },
           };
         }

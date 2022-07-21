@@ -1382,7 +1382,6 @@ export class SideBarService extends BaseService {
     if(contactID != '' && contactID != undefined){
       options = {
         IgnoreDates: true,
-        IgnoreDates: true,
         IncludeIsInvoice: true,
         IncludeIsQuote: false,
         IncludeIsRefund: true,
@@ -2988,5 +2987,44 @@ export class SideBarService extends BaseService {
       };
     }
     return this.getList(this.ERPObjects.TEarnings, options);
+  }
+
+  getAllCustomFieldsWithQuery(query='') {
+    let options = {
+      ListType: "Detail",
+    };
+    if(query == 'ltSalesOverview') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltSalesOverview'",
+      };
+    } else if(query == 'ltSalesOrderList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltSalesOrderList'",
+      };
+    } else if(query == 'ltSaleslines') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltSaleslines'",
+      };
+    } else if(query == 'ltInvoiceList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltInvoiceList'",
+      };
+    } else if(query == 'ltQuoteList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltQuoteList'",
+      };
+    } else if(query == 'ltRefundList') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltSales' OR [ListType]='ltRefundList'",
+      };
+    }
+
+    return this.getList(this.ERPObjects.TCustomFieldList, options);
   }
 }

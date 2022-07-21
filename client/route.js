@@ -1650,6 +1650,15 @@ authenticatedRoutes.route('/smssettings', {
     }
 });
 
+authenticatedRoutes.route('/settings/edi-integrations', {
+    name: 'ediintegrations',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'ediintegrations'
+        });
+    }
+});
+
 authenticatedRoutes.route('/settings/fx-update', {
     name: 'fixUpdates',
     action() {
