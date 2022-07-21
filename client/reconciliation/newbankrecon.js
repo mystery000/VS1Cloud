@@ -2253,7 +2253,7 @@ function setOneSupplierDataExByName(supplierDataName) {
     $('.fullScreenSpin').css('display', 'inline-block');
     sideBarService.getOneSupplierDataExByName(supplierDataName).then(function (data) {
         $('.fullScreenSpin').css('display', 'none');
-        setCustomerModal(data.tsupplier[0]);
+        setSupplierModal(data.tsupplier[0]);
     }).catch(function (err) {
         $('.fullScreenSpin').css('display', 'none');
     });

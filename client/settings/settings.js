@@ -93,6 +93,9 @@ Template.settings.events({
     },
     'click .btnUomSettings': function (event) {
         FlowRouter.go('/uomSettings');
+    },
+    'click .btnEDIIntegrations': function(event) {
+        FlowRouter.go('/settings/edi-integrations');
     }
 });
 
