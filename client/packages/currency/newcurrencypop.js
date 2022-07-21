@@ -1151,7 +1151,6 @@ Template.newcurrencypop.helpers({
 });
 
 export function triggerChangeEventOnRequiredFields() {
-  console.log("change triggered");
   $("#newCurrencyModal .addNewCurrency input[required]").each((i, element) => {
     $(element).trigger("change");
   });
@@ -1159,18 +1158,13 @@ export function triggerChangeEventOnRequiredFields() {
 
 function isAllRequiredInputsFilled() {
   const inputs = $("#newCurrencyModal .addNewCurrency input[required]");
-  //console.log(inputs);
   let filledCount = 0;
 
   $(inputs).each((i, input) => {
-    //console.log(input, $(input).val());
     if ($.trim($(input).val()).length > 0) {
-      //console.log(filledCount);
       filledCount = filledCount +1;
     }
   });
-
-  //console.log(inputs.length + " == " + filledCount, inputs.length == filledCount);
 
   return inputs.length == filledCount;
 }

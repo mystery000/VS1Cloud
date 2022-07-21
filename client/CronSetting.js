@@ -51,13 +51,13 @@ export default class CronSetting {
           (minutes < 10 ? "0" : "") +
           minutes;
 
-        text +=
-          " starting on the " +
-          date.getDay() +
-          " day of " +
-          date.toDateString().split(" ")[1] +
-          " in " +
-          date.toDateString().split(" ")[3];
+        // text +=
+        //   " starting on the " +
+        //   date.getDay() +
+        //   " day of " +
+        //   date.toDateString().split(" ")[1] +
+        //   " in " +
+        //   date.toDateString().split(" ")[3];
       }
     } else if (this.type == "Weekly") {
 
@@ -68,13 +68,13 @@ export default class CronSetting {
       const minutes = this.convertToDate(this.startAt).getMinutes();
       const hours = this.convertToDate(this.startAt).getHours();
 
-      text +=
-        " starting on the " +
-        date.getDay() +
-        " day of " +
-        date.toDateString().split(" ")[1] +
-        " in " +
-        date.toDateString().split(" ")[3];
+      // text +=
+      //   " starting on the " +
+      //   date.getDay() +
+      //   " day of " +
+      //   date.toDateString().split(" ")[1] +
+      //   " in " +
+      //   date.toDateString().split(" ")[3];
     } else if (this.type == "Daily") {
 
       const date = this.convertToDate(this.startAt);
@@ -88,13 +88,13 @@ export default class CronSetting {
           ? (text += " on " + lastDay)
           : (text += " on " + this.days.join(",") + " and " + lastDay);
 
-        text +=
-          " starting on the " +
-          this.convertDayNumberToString(date.getDay()) +
-          " day in " +
-          date.toDateString().split(" ")[1] +
-          " in " +
-          date.toDateString().split(" ")[3];
+        // text +=
+        //   " starting on the " +
+        //   this.convertDayNumberToString(date.getDay()) +
+        //   " day in " +
+        //   date.toDateString().split(" ")[1] +
+        //   " in " +
+        //   date.toDateString().split(" ")[3];
       } else {
         text += " every " + this.every + " day";
       }
@@ -119,13 +119,13 @@ export default class CronSetting {
         (minutes < 10 ? "0" : "") +
         minutes;
 
-      text +=
-        " starting on the " +
-        date.getDay() +
-        " day of " +
-        date.toDateString().split(" ")[1] +
-        " in " +
-        date.toDateString().split(" ")[3];
+      // text +=
+      //   " starting on the " +
+      //   date.getDay() +
+      //   " day of " +
+      //   date.toDateString().split(" ")[1] +
+      //   " in " +
+      //   date.toDateString().split(" ")[3];
     }
 
     this.toParse = text;
