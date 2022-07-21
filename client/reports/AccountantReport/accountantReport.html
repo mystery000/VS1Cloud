@@ -1,0 +1,77 @@
+<template name="accountant">
+    <div style="margin-top: -24px;">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <header style="padding: 16px;">
+            <h2 style="margin: 16px;">Accountant Details <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
+        </header>
+    </div>
+    <div style="padding: 10px 100px 0 40px">
+        <div class="row">
+            <div class="col-6 col-md-6">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input class="form-control" type="text" name="edtFirstName" value="">
+                </div>
+            </div>
+            <div class="col-6 col-md-6">
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input class="form-control" name="edtLastName" type="search">
+                </div>            
+            </div>
+            <div class="col-6 col-md-12">
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input class="form-control" name="edtCompanyName" type="search">
+                </div>            
+            </div>
+            <div class="col-6 col-md-12">
+                <div class="form-group">
+                    <label>Address</label>
+                    <input class="form-control" name="edtAddress" type="search">
+                </div>            
+            </div>
+            <div class="col-6 col-md-6">
+                <div class="form-group">
+                    <label>Town / City</label>
+                    <input class="form-control" type="text" name="edtTownCity" value="">
+                </div>
+            </div>
+            <div class="col-6 col-md-6">
+                <div class="form-group">
+                    <label>Postal / ZIP Code</label>
+                    <input class="form-control" name="edtPostalZip" type="search">
+                </div>            
+            </div>
+            <div class="col-6 col-md-6">
+                <div class="form-group">
+                    <label>State / Region</label>
+                    <input class="form-control" type="text" name="edtStateRegion" value="">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label>Country</label>
+                    <select class="form-control" id="edtCountry" name="edtCountry">
+                        {{#each item in countryList}}
+                        <option value="{{item}}">{{item}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+            <!--<div class="col-6">
+                <div class="form-group">
+                    <label>Date</label>
+                    <div class="input-group date" style="cursor: pointer;">
+                        <input type="text" class="form-control dtReceiptDate" name="dtExpenseDate" value="">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</template>
