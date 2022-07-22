@@ -84,6 +84,7 @@ Template.taxRatesSettings.onRendered(function () {
     getVS1Data('TTaxcodeVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         taxRateService.getTaxRateVS1().then(function (data) {
+          console.log(data);
           for (let i = 0; i < data.ttaxcodevs1.length; i++) {
             let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + '%';
             var dataList = {
@@ -1027,6 +1028,72 @@ Template.taxRatesSettings.events({
       });
   },
   "keydown #edtTaxRate": function (event) {
+    if (
+      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+      // Allow: Ctrl+A, Command+A
+      (event.keyCode === 65 &&
+        (event.ctrlKey === true || event.metaKey === true)) ||
+      // Allow: home, end, left, right, down, up
+      (event.keyCode >= 35 && event.keyCode <= 40)
+    ) {
+      // let it happen, don't do anything
+      return;
+    }
+
+    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+      (event.keyCode >= 96 && event.keyCode <= 105) ||
+      event.keyCode == 8 || event.keyCode == 9 ||
+      event.keyCode == 37 || event.keyCode == 39 ||
+      event.keyCode == 46 || event.keyCode == 190) {
+    } else {
+      event.preventDefault();
+    }
+  },
+  "keydown #subTaxPercent": function (event) {
+    if (
+      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+      // Allow: Ctrl+A, Command+A
+      (event.keyCode === 65 &&
+        (event.ctrlKey === true || event.metaKey === true)) ||
+      // Allow: home, end, left, right, down, up
+      (event.keyCode >= 35 && event.keyCode <= 40)
+    ) {
+      // let it happen, don't do anything
+      return;
+    }
+
+    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+      (event.keyCode >= 96 && event.keyCode <= 105) ||
+      event.keyCode == 8 || event.keyCode == 9 ||
+      event.keyCode == 37 || event.keyCode == 39 ||
+      event.keyCode == 46 || event.keyCode == 190) {
+    } else {
+      event.preventDefault();
+    }
+  },
+  "keydown #subTaxCapAmt": function (event) {
+    if (
+      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+      // Allow: Ctrl+A, Command+A
+      (event.keyCode === 65 &&
+        (event.ctrlKey === true || event.metaKey === true)) ||
+      // Allow: home, end, left, right, down, up
+      (event.keyCode >= 35 && event.keyCode <= 40)
+    ) {
+      // let it happen, don't do anything
+      return;
+    }
+
+    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+      (event.keyCode >= 96 && event.keyCode <= 105) ||
+      event.keyCode == 8 || event.keyCode == 9 ||
+      event.keyCode == 37 || event.keyCode == 39 ||
+      event.keyCode == 46 || event.keyCode == 190) {
+    } else {
+      event.preventDefault();
+    }
+  },
+  "keydown #subTaxThresholdAmt": function (event) {
     if (
       $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
       // Allow: Ctrl+A, Command+A

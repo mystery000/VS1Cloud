@@ -91,8 +91,7 @@ export class TaxRateService extends BaseService {
             PropertyList: "ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Lines,Active",
             select: "[Active]=true",
         };
-        // return this.getList(this.ERPObjects.TTaxcodeVS1, options);
-        return this.getList(this.ERPObjects.TTaxCode, options);
+        return this.getList(this.ERPObjects.TTaxcodeVS1, options);
     }
 
     checkTaxRateByName(codeName) {
