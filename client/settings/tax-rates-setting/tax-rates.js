@@ -107,7 +107,6 @@ Template.taxRatesSettings.onRendered(function () {
     getVS1Data('TTaxcodeVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         taxRateService.getTaxRateVS1().then(function (data) {
-          console.log(data);
           for (let i = 0; i < data.ttaxcodevs1.length; i++) {
             let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + '%';
             var dataList = {
@@ -1121,7 +1120,7 @@ Template.taxRatesSettings.events({
         .checkTaxRateByName(taxName)
         .then(function (data) {
           taxtID = data.ttaxcode[0].Id;
-          objDetails = {
+          let objDetails = {
             type: "TTaxcode",
             fields: {
               ID: parseInt(taxtID),
@@ -1130,9 +1129,11 @@ Template.taxRatesSettings.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
-              Lines: JSON.stringify(lines),
             },
           };
+          if (templateObject.isChkUSRegionTax.get()) {
+            objDetails.fields.Lines = JSON.stringify(lines);
+          }
           taxRateService
             .saveTaxRate(objDetails)
             .then(function (objDetails) {
@@ -1168,7 +1169,7 @@ Template.taxRatesSettings.events({
             });
         })
         .catch(function (err) {
-          objDetails = {
+          let objDetails = {
             type: "TTaxcode",
             fields: {
               // Id: taxCodeId,
@@ -1177,9 +1178,11 @@ Template.taxRatesSettings.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
-              Lines: JSON.stringify(lines),
             },
           };
+          if (templateObject.isChkUSRegionTax.get()) {
+            objDetails.fields.Lines = JSON.stringify(lines);
+          }
 
           taxRateService
             .saveTaxRate(objDetails)
@@ -1216,7 +1219,7 @@ Template.taxRatesSettings.events({
             });
         });
     } else {
-      objDetails = {
+      let objDetails = {
         type: "TTaxcode",
         fields: {
           ID: parseInt(taxtID),
@@ -1225,9 +1228,12 @@ Template.taxRatesSettings.events({
           Description: taxDesc,
           Rate: taxRate,
           PublishOnVS1: true,
-          Lines: JSON.stringify(lines),
         },
       };
+      if (templateObject.isChkUSRegionTax.get()) {
+        objDetails.fields.Lines = JSON.stringify(lines);
+      }
+
       taxRateService
         .saveTaxRate(objDetails)
         .then(function (objDetails) {
@@ -1236,6 +1242,7 @@ Template.taxRatesSettings.events({
             .then(function (dataReload) {
               addVS1Data("TTaxcodeVS1", JSON.stringify(dataReload))
                 .then(function (datareturn) {
+                  alert("dfefef");
                   Meteor._reload.reload();
                 })
                 .catch(function (err) {
