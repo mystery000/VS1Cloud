@@ -42,6 +42,7 @@ Template.appointmenttimelist.onRendered(function () {
         for (let i = 0; i < result.customFields.length; i++) {
           let customcolumn = result.customFields;
           let columData = customcolumn[i].label;
+          console.log(columData)
           let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
           let hiddenColumn = customcolumn[i].hidden;
           let columnClass = columHeaderUpdate.split('.')[1];
@@ -419,6 +420,7 @@ Template.appointmenttimelist.onRendered(function () {
             }
           }
 
+          console.log("1")
           templateObject.datatablerecords.set(dataTableList);
 
           if (templateObject.datatablerecords.get()) {
@@ -609,6 +611,8 @@ Template.appointmenttimelist.onRendered(function () {
             let searchID = parseInt(url.searchParams.get("id")) || 0;
             if (Array.isArray(useData[i].fields.AppointmentsTimeLog)) {
               for (let a = 0; a < useData[i].fields.AppointmentsTimeLog.length; a++) {
+                const appointmentdate = useData[i].fields.StartTime != '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : useData[i].fields.StartTime;
+                
                 if (searchID != 0) {
                   if (searchID == useData[i].fields.AppointmentsTimeLog[a].fields.AppointID) {
                     if (useData[i].fields.AppointmentsTimeLog[a].fields.StartDatetime != "") {
@@ -629,7 +633,7 @@ Template.appointmenttimelist.onRendered(function () {
                     }
                       dataList = {
                       id: useData[i].fields.AppointmentsTimeLog[a].fields.AppointID || '',
-                      appointmentdate: useData[i].fields.MsTimeStamp != '' ? moment(useData[i].fields.MsTimeStamp).format("DD/MM/YYYY") : useData[i].fields.MsTimeStamp,
+                      appointmentdate,
                       accountname: useData[i].fields.ClientName || '',
                       statementno: useData[i].fields.TrainerName || '',
                       employeename: useData[i].fields.TrainerName || '',
@@ -686,7 +690,7 @@ Template.appointmenttimelist.onRendered(function () {
                   }
                   dataList = {
                     id: useData[i].fields.AppointmentsTimeLog[a].fields.AppointID || '',
-                    appointmentdate: useData[i].fields.MsTimeStamp != '' ? moment(useData[i].fields.MsTimeStamp).format("DD/MM/YYYY") : useData[i].fields.MsTimeStamp,
+                    appointmentdate,
                     accountname: useData[i].fields.ClientName || '',
                     statementno: useData[i].fields.TrainerName || '',
                     employeename: useData[i].fields.TrainerName || '',
@@ -727,13 +731,15 @@ Template.appointmenttimelist.onRendered(function () {
               }
             } else {
               if (searchID != 0) {
+                
+                if (useData[i].fields.AppointmentsTimeLog.fields.StartDatetime != "") {
+                  useData[i].fields.AppointmentsTimeLog.fields.StartDatetime = moment(useData[i].fields.AppointmentsTimeLog.fields.StartDatetime).format('h:mm a');
+                }
+                if (useData[i].fields.AppointmentsTimeLog.fields.EndDatetime != "") {
+                  useData[i].fields.AppointmentsTimeLog.fields.EndDatetime = moment(useData[i].fields.AppointmentsTimeLog.fields.EndDatetime).format('h:mm a');
+                }
+                
                 if (searchID == useData[i].fields.AppointmentsTimeLog.fields.AppointID) {
-                  if (useData[i].fields.AppointmentsTimeLog.fields.StartDatetime != "") {
-                    useData[i].fields.AppointmentsTimeLog.fields.StartDatetime = moment(useData[i].fields.AppointmentsTimeLog.fields.StartDatetime).format('h:mm a')
-                  }
-                  if (useData[i].fields.AppointmentsTimeLog.fields.EndDatetime != "") {
-                    useData[i].fields.AppointmentsTimeLog.fields.EndDatetime = moment(useData[i].fields.AppointmentsTimeLog.fields.EndDatetime).format('h:mm a')
-                  }
 
                   let time = new Date();
                   let dt1 = new Date(time.getFullYear() +'-'+("0"+(time.getMonth()+1)).slice(-2)+'-'+("0"+(time.getDate())).slice(-2) + ' '+ useData[i].fields.AppointmentsTimeLog.fields.StartDatetime.split(' ')[0]);
@@ -745,7 +751,7 @@ Template.appointmenttimelist.onRendered(function () {
                   }
                   dataList = {
                     id: useData[i].fields.AppointmentsTimeLog.fields.AppointID || '',
-                    appointmentdate: useData[i].fields.MsTimeStamp != '' ? moment(useData[i].fields.MsTimeStamp).format("DD/MM/YYYY") : useData[i].fields.MsTimeStamp,
+                    appointmentdate,
                     accountname: useData[i].fields.ClientName || '',
                     statementno: useData[i].fields.TrainerName || '',
                     employeename: useData[i].fields.TrainerName || '',
@@ -784,14 +790,6 @@ Template.appointmenttimelist.onRendered(function () {
                 }
               } else {
 
-                if (useData[i].fields.AppointmentsTimeLog.fields.StartDatetime != "") {
-                  useData[i].fields.AppointmentsTimeLog.fields.StartDatetime = moment(useData[i].fields.AppointmentsTimeLog.fields.StartDatetime).format('h:mm a');
-                }
-
-                if (useData[i].fields.AppointmentsTimeLog.fields.EndDatetime != "") {
-                  useData[i].fields.AppointmentsTimeLog.fields.EndDatetime = moment(useData[i].fields.AppointmentsTimeLog.fields.EndDatetime).format('h:mm a');
-                }
-
                 let time = new Date();
                 let dt1 = new Date(time.getFullYear() +'-'+("0"+(time.getMonth()+1)).slice(-2)+'-'+("0"+(time.getDate())).slice(-2) + ' '+ useData[i].fields.AppointmentsTimeLog.fields.StartDatetime.split(' ')[0]);
                 let dt2 = new Date(time.getFullYear() +'-'+("0"+(time.getMonth()+1)).slice(-2)+'-'+("0"+(time.getDate())).slice(-2) + ' '+  useData[i].fields.AppointmentsTimeLog.fields.EndDatetime.split(' ')[0]);
@@ -803,7 +801,7 @@ Template.appointmenttimelist.onRendered(function () {
                 }
                 dataList = {
                   id: useData[i].fields.AppointmentsTimeLog.fields.AppointID || '',
-                  appointmentdate: useData[i].fields.MsTimeStamp != '' ? moment(useData[i].fields.MsTimeStamp).format("DD/MM/YYYY") : useData[i].fields.MsTimeStamp,
+                  appointmentdate,
                   accountname: useData[i].fields.ClientName || '',
                   statementno: useData[i].fields.TrainerName || '',
                   employeename: useData[i].fields.TrainerName || '',
@@ -844,6 +842,7 @@ Template.appointmenttimelist.onRendered(function () {
 
         }
       }
+      console.log("3")
       templateObject.datatablerecords.set(dataTableList);
       templateObject.appointmentInfo.set(appointmentTable);
       if (templateObject.datatablerecords.get()) {
@@ -940,6 +939,7 @@ Template.appointmenttimelist.onRendered(function () {
           setTimeout(function () {
             MakeNegative();
           }, 100);
+          console.log("4")
           let draftRecord = templateObject.datatablerecords.get();
           templateObject.datatablerecords.set(draftRecord);
         }).on('column-reorder', function () {
@@ -1072,6 +1072,7 @@ Template.appointmenttimelist.onRendered(function () {
 
           }
         }
+        console.log("5")
         templateObject.datatablerecords.set(dataTableList);
 
         if (templateObject.datatablerecords.get()) {
@@ -1165,6 +1166,7 @@ Template.appointmenttimelist.onRendered(function () {
             setTimeout(function () {
               MakeNegative();
             }, 100);
+            console.log("6")
             let draftRecord = templateObject.datatablerecords.get();
             templateObject.datatablerecords.set(draftRecord);
           }).on('column-reorder', function () {
