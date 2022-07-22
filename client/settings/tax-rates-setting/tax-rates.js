@@ -6,6 +6,29 @@ import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
+const numberInputValidate = (event) => {
+  if (
+    $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+    // Allow: Ctrl+A, Command+A
+    (event.keyCode === 65 &&
+      (event.ctrlKey === true || event.metaKey === true)) ||
+    // Allow: home, end, left, right, down, up
+    (event.keyCode >= 35 && event.keyCode <= 40)
+  ) {
+    // let it happen, don't do anything
+    return;
+  }
+
+  if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+    (event.keyCode >= 96 && event.keyCode <= 105) ||
+    event.keyCode == 8 || event.keyCode == 9 ||
+    event.keyCode == 37 || event.keyCode == 39 ||
+    event.keyCode == 46 || event.keyCode == 190) {
+  } else {
+    event.preventDefault();
+  }
+}
+
 Template.taxRatesSettings.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -1027,95 +1050,11 @@ Template.taxRatesSettings.events({
         });
       });
   },
-  "keydown #edtTaxRate": function (event) {
-    if (
-      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-      // Allow: Ctrl+A, Command+A
-      (event.keyCode === 65 &&
-        (event.ctrlKey === true || event.metaKey === true)) ||
-      // Allow: home, end, left, right, down, up
-      (event.keyCode >= 35 && event.keyCode <= 40)
-    ) {
-      // let it happen, don't do anything
-      return;
-    }
-
-    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-      (event.keyCode >= 96 && event.keyCode <= 105) ||
-      event.keyCode == 8 || event.keyCode == 9 ||
-      event.keyCode == 37 || event.keyCode == 39 ||
-      event.keyCode == 46 || event.keyCode == 190) {
-    } else {
-      event.preventDefault();
-    }
-  },
-  "keydown #subTaxPercent": function (event) {
-    if (
-      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-      // Allow: Ctrl+A, Command+A
-      (event.keyCode === 65 &&
-        (event.ctrlKey === true || event.metaKey === true)) ||
-      // Allow: home, end, left, right, down, up
-      (event.keyCode >= 35 && event.keyCode <= 40)
-    ) {
-      // let it happen, don't do anything
-      return;
-    }
-
-    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-      (event.keyCode >= 96 && event.keyCode <= 105) ||
-      event.keyCode == 8 || event.keyCode == 9 ||
-      event.keyCode == 37 || event.keyCode == 39 ||
-      event.keyCode == 46 || event.keyCode == 190) {
-    } else {
-      event.preventDefault();
-    }
-  },
-  "keydown #subTaxCapAmt": function (event) {
-    if (
-      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-      // Allow: Ctrl+A, Command+A
-      (event.keyCode === 65 &&
-        (event.ctrlKey === true || event.metaKey === true)) ||
-      // Allow: home, end, left, right, down, up
-      (event.keyCode >= 35 && event.keyCode <= 40)
-    ) {
-      // let it happen, don't do anything
-      return;
-    }
-
-    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-      (event.keyCode >= 96 && event.keyCode <= 105) ||
-      event.keyCode == 8 || event.keyCode == 9 ||
-      event.keyCode == 37 || event.keyCode == 39 ||
-      event.keyCode == 46 || event.keyCode == 190) {
-    } else {
-      event.preventDefault();
-    }
-  },
-  "keydown #subTaxThresholdAmt": function (event) {
-    if (
-      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-      // Allow: Ctrl+A, Command+A
-      (event.keyCode === 65 &&
-        (event.ctrlKey === true || event.metaKey === true)) ||
-      // Allow: home, end, left, right, down, up
-      (event.keyCode >= 35 && event.keyCode <= 40)
-    ) {
-      // let it happen, don't do anything
-      return;
-    }
-
-    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-      (event.keyCode >= 96 && event.keyCode <= 105) ||
-      event.keyCode == 8 || event.keyCode == 9 ||
-      event.keyCode == 37 || event.keyCode == 39 ||
-      event.keyCode == 46 || event.keyCode == 190) {
-    } else {
-      event.preventDefault();
-    }
-  },
-  "click .btnNewSubTax": function() {
+  "keydown #edtTaxRate": numberInputValidate,
+  "keydown #subTaxPercent": numberInputValidate,
+  "keydown #subTaxCapAmt": numberInputValidate,
+  "keydown #subTaxThresholdAmt": numberInputValidate,
+  "click .btnNewSubTax": function () {
     $('#subTaxCode').val('');
     $('#subTaxPercent').val('');
     $('#subTaxPercentageOn').prop('readonly', false);
