@@ -42,7 +42,6 @@ Template.appointmenttimelist.onRendered(function () {
         for (let i = 0; i < result.customFields.length; i++) {
           let customcolumn = result.customFields;
           let columData = customcolumn[i].label;
-          console.log(columData)
           let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
           let hiddenColumn = customcolumn[i].hidden;
           let columnClass = columHeaderUpdate.split('.')[1];
@@ -420,7 +419,6 @@ Template.appointmenttimelist.onRendered(function () {
             }
           }
 
-          console.log("1")
           templateObject.datatablerecords.set(dataTableList);
 
           if (templateObject.datatablerecords.get()) {
@@ -842,7 +840,6 @@ Template.appointmenttimelist.onRendered(function () {
 
         }
       }
-      console.log("3")
       templateObject.datatablerecords.set(dataTableList);
       templateObject.appointmentInfo.set(appointmentTable);
       if (templateObject.datatablerecords.get()) {
@@ -939,7 +936,6 @@ Template.appointmenttimelist.onRendered(function () {
           setTimeout(function () {
             MakeNegative();
           }, 100);
-          console.log("4")
           let draftRecord = templateObject.datatablerecords.get();
           templateObject.datatablerecords.set(draftRecord);
         }).on('column-reorder', function () {
@@ -1072,7 +1068,6 @@ Template.appointmenttimelist.onRendered(function () {
 
           }
         }
-        console.log("5")
         templateObject.datatablerecords.set(dataTableList);
 
         if (templateObject.datatablerecords.get()) {
@@ -1166,7 +1161,6 @@ Template.appointmenttimelist.onRendered(function () {
             setTimeout(function () {
               MakeNegative();
             }, 100);
-            console.log("6")
             let draftRecord = templateObject.datatablerecords.get();
             templateObject.datatablerecords.set(draftRecord);
           }).on('column-reorder', function () {
