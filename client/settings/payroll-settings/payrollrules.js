@@ -9698,16 +9698,17 @@ Template.payrollrules.onRendered(function() {
       $('#edtDeductionAmount').val(deductionAmount);
       $('#edtDeductionAccount').val(deductionAccount);
       $('#edtDeductionAccountID').val(deductionAccountID);
+      
         if(deductionType == 'None'){
-            $('#noneLabel').html('None');
+            $('#noneLabels').html('Edit Deduction');
             $('#edtDeductionTitle').val('None');
         }
         if(deductionType == 'Workplace Giving'){
-          $('#noneLabel').html('Workplace Giving');
+          $('#noneLabels').html('Edit Deduction');
           $('#edtDeductionTitle').val('WorkplaceGiving');
         }
         if(deductionType == 'Union / Association Fees'){
-          $('#noneLabel').html('Union / Association Fees');
+          $('#noneLabels').html('Edit Deduction');
           $('#edtDeductionTitle').val('UnionAssociationFees');
         }
 
