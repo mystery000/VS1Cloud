@@ -255,6 +255,7 @@ const erpObject = {
     TRepairDetails:"TRepairDetails",
     TPayrollHolidayGroup:"TPayrollHolidayGroup",
     TVS1Superannuation:"TVS1Superannuation",
+    TTripGroup: "TTripGroup",
 };
 
 export default erpObject;

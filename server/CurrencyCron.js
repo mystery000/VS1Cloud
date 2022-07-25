@@ -74,38 +74,37 @@ async function _updateCurrencies(currencies = [], erpGet, callback = (currencies
 /**
  * This function will simply update rates from db
  * with one call API to FX
- * 
- * @param {*} dbCurrencies 
- * @param {*} FxCurrencies 
- * @returns 
+ *
+ * @param {*} dbCurrencies
+ * @param {*} FxCurrencies
+ * @returns
  */
 function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (currencies = []) => {}) {
   let _currencies = [];
   if(dbCurrencies) {
-    
- 
+
+
       dbCurrencies.forEach((dbCurrency, index) => {
         const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == dbCurrency.fields.Code);
-     
+
         if(fxCurrencyRates) {
           // dbCurrencies[index].fields.BuyRate = fxCurrencyRates.mid;
           // dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
           dbCurrency.fields.BuyRate = fxCurrencyRates.mid;
           dbCurrency.fields.SellRate = fxCurrencyRates.inverse;
           // save funciton here
-         
+
           _currencies.push(dbCurrency);
-        
+
         }
       });
 
-      //console.log(_currencies);
       Meteor.wrapAsync(_saveCurrency)({
         type: "TCurrency",
         objects: _currencies
       }, erpGet);
   }
-  
+
 }
 
 /**
@@ -113,7 +112,6 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
  * @param {*} currency
  */
 async function _saveCurrency(currency, erpGet) {
-  //console.log('Saving currency: ', currency.fields.Code, " BuyRate: ", currency.fields.BuyRate , " SellRate: ", currency.fields.SellRate);
   const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency`;
   const _headers = {
     database: erpGet.ERPDatabase,
@@ -134,9 +132,7 @@ async function _saveCurrency(currency, erpGet) {
     },
     (error, result) => {
       if (error) {
-        console.log("Error: ", error);
       } else {
-        console.log("Result: ", result);
       }
     }
   );
@@ -149,16 +145,15 @@ Meteor.methods({
    * @param {*} cronSetting
    */
   runCron: async (cronSetting, erpGet) => {
-    
+
     try {
       let response = Meteor.wrapAsync(_getCurrencies)( erpGet );
       if (response.data) {
         Meteor.wrapAsync(_updateCurrencies)(response.data.tcurrency, erpGet);
       }
     } catch (error) {
-      console.log('error', error)
     }
-  
+
   },
   /**
    * This function will just add the cron job
@@ -174,12 +169,11 @@ Meteor.methods({
       name: cronId,
       schedule: function (parser) {
         const parsed = parser.text(cronSetting.toParse);
-        return parser.text("every 2 minutes");
+        return parsed;
+        //return parser.text("every 2 minutes");
       },
       job: () => {
-        // console.log(cronSetting.employeeId);
         Meteor.call("runCron", cronSetting, erpGet, function (error, results) {
-          // console.log(results, error); //results.data should be a JSON object
         });
       },
     });

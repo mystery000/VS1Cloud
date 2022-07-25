@@ -3,6 +3,8 @@ import { SideBarService } from '../../js/sidebar-service';
 import { TaxRateService } from "../settings-service";
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
+let taxRateService = new TaxRateService();
+
 Template.subTaxesSettings.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -12,7 +14,6 @@ Template.subTaxesSettings.onCreated(function () {
 Template.subTaxesSettings.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
-  let taxRateService = new TaxRateService();
   const dataTableList = [];
   const tableHeaderList = [];
 
@@ -224,7 +225,6 @@ Template.subTaxesSettings.onRendered(function () {
                   let columnindex = customcolumn[i].index + 1;
 
                   if (hiddenColumn == true) {
-
                     $("." + columnClass + "").addClass('hiddenColumn');
                     $("." + columnClass + "").removeClass('showColumn');
                   } else if (hiddenColumn == false) {
@@ -234,7 +234,6 @@ Template.subTaxesSettings.onRendered(function () {
 
                 }
               }
-
             }
           });
 
@@ -617,7 +616,6 @@ Template.subTaxesSettings.events({
               $('#myModal2').modal('toggle');
             } else {
               $('#myModal2').modal('toggle');
-
             }
           });
         }
@@ -693,11 +691,10 @@ Template.subTaxesSettings.events({
   },
   'click .btnSaveSubTax': function () {
     $('.fullScreenSpin').css('display', 'inline-block');
-    let taxRateService = new TaxRateService();
     let taxtID = $('#edtTaxID').val();
     let taxCode = $('#edtTaxCode').val();
     let taxDesc = $('#edtTaxDesc').val();
-    let taxCate = $('#optTaxCategory').val();
+    let taxCate = $('[name="optTaxCategory"]:checked').val();
     let objDetails = '';
     if (taxCode === '') {
       Bert.alert('<strong>WARNING:</strong> Tax cannot be blank!', 'warning');
@@ -855,7 +852,6 @@ Template.subTaxesSettings.events({
   },
   'click .btnDeleteSubTax': function () {
     // add actions
-    let taxRateService = new TaxRateService();
     let taxCodeId = $('#selectDeleteLineID').val();
 
     let objDetails = {
@@ -910,6 +906,10 @@ Template.subTaxesSettings.events({
   'click .btnBack': function (event) {
     event.preventDefault();
     history.back(1);
+  },
+  'click .btnTaxRates': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/taxratesettings');
   }
 });
 

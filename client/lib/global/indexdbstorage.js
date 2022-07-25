@@ -222,6 +222,7 @@ openDb = function (dbName) {
       db.createObjectStore("TPayNotes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
+      
 
       db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });
@@ -256,8 +257,9 @@ openDb = function (dbName) {
       db.createObjectStore('TPayTemplateDeductionLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateSuperannuationLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateReiumbursementLine',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TPayrollOrganization', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TXeCurrencySettings',{ keyPath: "EmployeeEmail"});
-
+      db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
 
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
@@ -322,10 +324,14 @@ addLoginData = async function (loginData) {
 
 };
 
+
 addVS1Data = async function (objectName, vs1Data) {
+
+  
   const db = await openDb(localStorage.getItem("vs1Db"));
   //const db1 = await openDb2();
   //let transaction1 = await db1.transaction(["TDatabases"], "readwrite")
+
   let transaction = await db.transaction([objectName], "readwrite");
 
   transaction.oncomplete = function (event) {
@@ -524,7 +530,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 51);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 52);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };

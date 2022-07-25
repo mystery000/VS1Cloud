@@ -70,12 +70,7 @@
                                                    </div>
                                                     
                                                 </div>
-                                                <!-- <div class="col-12 col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="edtRateName">Bank Account</label>
-                                                        <input type="text" class="form-control" id="">
-                                                    </div>
-                                                </div> -->
+                                       
                                                 <div class="col-12 col-md-4">
                                                     <div class="form-group">
                                                         <label for="editpaygbankaccount">PAYG Liability Account</label>
@@ -212,14 +207,14 @@
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group">
                                                         <label for="edtRateName">Employee Group <span><span style="font-weight: 200;">(optional)</span></span></label>
-                                                        <input type="search" style="cursor: pointer;" class="form-control" id="employegroup" name="employegroup" placeholder="Select Employee Group">
+                                                        <input type="search" style="cursor: pointer;" class="form-control" id="employegroup" name="employegroup" >
                                                       
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group">
                                                         <label for="edtRateName">Timesheet Categories <span><span style="font-weight: 200;">(optional)</span></span></label>
-                                                        <input type="search" style="cursor: pointer;" class="form-control" id="timesheetcat" name="timesheetcat" placeholder="Select Timesheet Categories">
+                                                        <input type="search" style="cursor: pointer;" class="form-control" id="timesheetcat" name="timesheetcat">
                                                        
                                                     </div>
                                                 </div>
@@ -345,7 +340,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <span>This pay period ends on 13 Dec 2021 and repeats twice a month</span>
+                                                                    
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <div class="form-group">
@@ -357,7 +352,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <span>Upcoming Payment Dates: 24 Dec, 07 Jan, 21 Jan</span>
+                                                                 
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -446,7 +441,24 @@
                                                     </div>
                                                 </div>
 
+                                               <style>
+                                               .colPayCalendarName{
+                                                   width: 25%;
+                                                }
+                                               .colPayPeriod{
+                                                width: 25%;
+                                               }
 
+                                               .colNextPayPeriod{
+                                                width: 25%;
+                                               }
+
+                                               .colNextPaymentDate{
+
+                                                width: 25%;
+                                               }
+
+                                               </style>
 
                                                 <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
                                                     <thead>
@@ -569,7 +581,7 @@
                                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
-                                                                            <h5 class="modal-title" id="newGroupLabel">New Group</h5>
+                                                                            <h5 class="modal-title" id="add-grouptype-title">New Group</h5>
                                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                 <span aria-hidden="true">&times;</span>
                                                                             </button>
@@ -579,7 +591,7 @@
                                                                                 <div class="col-12">
                                                                                     <div class="form-group">
                                                                                         <label for="edtRateName">Name</label>
-                                                                                        <input type="text" class="form-control" id="">
+                                                                                        <input type="text" class="form-control" id="edtGroupDescription" name="edtGroupDescription">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-12">
@@ -591,7 +603,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                            <button type="button" class="btn btn-success btnSaveGroup"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                         </div>
                                                                     </div>
@@ -866,7 +878,7 @@
                                                     <div class="col-6">
                                                         <h5 style="font-weight: 600;">Earnings</h5>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <!-- <div class="col-6">
                                                         <div class="dropdown float-right">
                                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 Add
@@ -881,14 +893,14 @@
                                                                 <a class="dropdown-item pointer btnAdddirectorsFees" data-toggle="modal" data-target="#directorsFeesModal">Directors Fees</a>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
 
                                                 <div class="modal fade" id="ordinaryTimeEarningsModal" tabindex="-1" role="dialog" aria-labelledby="ordinaryTimeEarningsLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="ordinaryTimeEarningsLabel">Ordinary Time Earnings</h5>
+                                                                <h5 class="modal-title" id="ordinaryTimeEarningsLabel">Earnings</h5>
                                                                 <button type="button" class="close" id="closeaddordintimemodel" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
@@ -901,6 +913,13 @@
                                                                             <input type="text" class="form-control" id="edtEarningsName">
                                                                             <input type="hidden" id="ordinaryTimeEarningsid" value="0"/>
                                                                         </div>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <div class="form-group">
+                                                                        <label for="edtEarningType">Earnings Type</label>
+                                                                        <input type="search" style="cursor: pointer;" class="form-control " id="edtEarningType" name="edtEarningType" >
+                                                                       </div>
+                                                              
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
@@ -1371,29 +1390,18 @@
                                                     <div class="col-6">
                                                         <h5 style="font-weight: 600;">Deductions</h5>
                                                     </div>
-                                                    <div class="col-6">
-                                                        <div class="dropdown float-right">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                Add
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item pointer noneModal" data-toggle="modal" >None</a>
-                                                                <a class="dropdown-item pointer workplaceGivingModal" data-toggle="modal" >Workplace Giving</a>
-                                                                <a class="dropdown-item pointer unionAssociationFeesModal" data-toggle="modal" >Union / Association Fees</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                 
                                                 </div>
 
                                                 <div class="modal fade" id="deductionModal" tabindex="-1" role="dialog" aria-labelledby="noneLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="noneLabel">None</h5>
+                                                                <h5 class="modal-title" id="noneLabels">New Deduction</h5>
                                                                 <input type="hidden" class="form-control" id="edtDeductionTitle" name="edtDeductionTitle">
-                                                                <button type="button" class="close" id="addductionmodelhide" data-dismiss="modal" aria-label="Close">
+                                                                 <button type="button" class="close" id="addductionmodelhide" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
-                                                                </button>
+                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
                                                               <input type="hidden" class="form-control" id="edtDeductionID" name="edtDeductionID">
@@ -1404,6 +1412,15 @@
                                                                             <input type="text" class="form-control" id="edtDeductionName" name="edtDeductionName">
                                                                         </div>
                                                                     </div>
+
+                                                                      <div class="col-12">
+                                                                        <div class="form-group">
+                                                                        <label for="edtDeductionType">Deduction Type</label>
+                                                                        <input type="search" style="cursor: pointer;" class="form-control " id="edtDeductionType" name="edtDeductionType" >
+                                                                       </div>
+                                                              
+                                                                    </div>
+
                                                                     <div class="col-12">
                                                                       <div class="form-group">
                                                                           <label for="edtDeductionAmount">Amount</label>
@@ -1585,9 +1602,7 @@
                                                     <div class="col-6">
                                                         <h5 style="font-weight: 600;">Reimbursements</h5>
                                                     </div>
-                                                    <div class="col-6">
-                                                        <button type="button" class="btn btn-primary btnAddNewReimbursements float-right" data-toggle="modal" data-target="#newReimbursementModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add</button>
-                                                    </div>
+                                                 
                                                 </div>
 
                                                 <div class="modal fade" id="newReimbursementModal" tabindex="-1" role="dialog" aria-labelledby="newReimbursementLabel" aria-hidden="true">
@@ -1672,7 +1687,7 @@
                                                     <div class="col-6">
                                                         <h5 style="font-weight: 600;">Leave</h5>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <!-- <div class="col-6">
                                                         <div class="dropdown float-right">
                                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 Add
@@ -1682,7 +1697,7 @@
                                                                 <a class="dropdown-item pointer addunpaidleave" data-toggle="modal" data-target="#unpaidLeaveModal">Unpaid Leave</a>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
 
                                                 <div class="modal fade" id="paidLeaveModal" tabindex="-1" role="dialog" aria-labelledby="paidLeaveLabel" aria-hidden="true">
@@ -1702,6 +1717,13 @@
                                                                             <label for="edtLeaveName">Leave Name</label>
                                                                             <input type="text" class="form-control" id="edtLeaveName">
                                                                             <input type="hidden" id="paidleaveid" value="0"/>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="edtLeaveName">Leave Type</label>
+                                                                            <input type="search" class="form-control" id="edtLeaveType" name="edtLeaveType">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 mb-1">
