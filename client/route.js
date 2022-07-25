@@ -716,6 +716,24 @@ authenticatedRoutes.route('/allreports', {
     }
 });
 
+authenticatedRoutes.route('/accountant', {
+    name: 'accountant',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'accountant'
+        });
+    }
+});
+
+authenticatedRoutes.route('/accountant/:_id', {
+    name: 'accountant',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'accountant'
+        });
+    }
+});
+
 authenticatedRoutes.route('/productsalesreport', {
     name: 'productsalesreport',
     action() {
