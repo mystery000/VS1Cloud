@@ -2,20 +2,28 @@ import { ReportService } from "../report-service";
 import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
+import { TaxRateService } from "../../settings/settings-service";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
+let taxRateService = new TaxRateService();
+let defaultCurrencyCode = CountryAbbr;
 
 const currentDate = new Date();
 
 Template.payrollhistoryreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
+
+  templateObject.currencyList = new ReactiveVar([]);
+  templateObject.activeCurrencyList = new ReactiveVar([]);
+  templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
 Template.payrollhistoryreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
+
   templateObject.initDate = () => {
     const currentDate = new Date();
 
@@ -76,6 +84,15 @@ Template.payrollhistoryreport.onRendered(() => {
       $("#uploadedImage").attr("src", imageData);
       $("#uploadedImage").attr("width", "50%");
     }
+  };
+
+  //----------- CURRENCY MODULE ------------------//
+  templateObject.loadCurrency = async () => {
+    await loadCurrency();
+  };
+
+  templateObject.loadCurrencyHistory = async () => {
+    await loadCurrencyHistory();
   };
 
   templateObject.initDate();
@@ -342,11 +359,205 @@ Template.payrollhistoryreport.events({
     templateObject.dateAsAt.set("Current Date");
     // templateObject.getGeneralLedgerReports("", "", true);
   },
+
+  // CURRENCY MODULE //
+  "click .fx-rate-btn": async (e) => {
+    await loadCurrency();
+    //loadCurrencyHistory();
+  },
+  "click .currency-modal-save": (e) => {
+    //$(e.currentTarget).parentsUntil(".modal").modal("hide");
+    LoadingOverlay.show();
+
+    let templateObject = Template.instance();
+
+    // Get all currency list
+    let _currencyList = templateObject.currencyList.get();
+
+    // Get all selected currencies
+    const currencySelected = $(".currency-selector-js:checked");
+    let _currencySelectedList = [];
+    if (currencySelected.length > 0) {
+      $.each(currencySelected, (index, e) => {
+        const sellRate = $(e).attr("sell-rate");
+        const buyRate = $(e).attr("buy-rate");
+        const currencyCode = $(e).attr("currency");
+        const currencyId = $(e).attr("currency-id");
+        let _currency = _currencyList.find((c) => c.id == currencyId);
+        _currency.active = true;
+        _currencySelectedList.push(_currency);
+      });
+    } else {
+      let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
+      _currency.active = true;
+      _currencySelectedList.push(_currency);
+    }
+
+    _currencyList.forEach((value, index) => {
+      if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
+        _currencyList[index].active = _currencySelectedList.find(
+          (c) => c.id == _currencyList[index].id
+        ).active;
+      } else {
+        _currencyList[index].active = false;
+      }
+    });
+
+    _currencyList = _currencyList.sort((a, b) => {
+      if (a.code == defaultCurrencyCode) {
+        return -1;
+      }
+      return 1;
+    });
+
+    // templateObject.activeCurrencyList.set(_activeCurrencyList);
+    templateObject.currencyList.set(_currencyList);
+
+    LoadingOverlay.hide();
+  },
 });
 
 Template.payrollhistoryreport.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
+  },
+
+  convertAmount: (amount, currencyData) => {
+    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
+    if (!amount || amount.trim() == "") {
+      return "";
+    }
+    if (currencyData.code == defaultCurrencyCode) {
+      // default currency
+      return amount;
+    }
+
+    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+
+    // Lets remove the minus character
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1; // Make it positive
+
+    // get default currency symbol
+    // let _defaultCurrency = currencyList.filter(
+    //   (a) => a.Code == defaultCurrencyCode
+    // )[0];
+
+    //amount = amount.replace(_defaultCurrency.symbol, "");
+
+    // amount =
+    //   isNaN(amount) == true
+    //     ? parseFloat(amount.substring(1))
+    //     : parseFloat(amount);
+
+    // Get the selected date
+    let dateTo = $("#balancedate").val();
+    const day = dateTo.split("/")[0];
+    const m = dateTo.split("/")[1];
+    const y = dateTo.split("/")[2];
+    dateTo = new Date(y, m, day);
+    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+
+    // Filter by currency code
+    currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+
+    // if(currencyList.length == 0) {
+    //   currencyList = Template.instance().currencyList.get();
+    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+    // }
+
+    // Sort by the closest date
+    currencyList = currencyList.sort((a, b) => {
+      a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
+      a.setHours(0);
+      a.setMinutes(0);
+      a.setSeconds(0);
+
+      b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
+      b.setHours(0);
+      b.setMinutes(0);
+      b.setSeconds(0);
+
+      var distancea = Math.abs(dateTo - a);
+      var distanceb = Math.abs(dateTo - b);
+      return distancea - distanceb; // sort a before b when the distance is smaller
+
+      // const adate= new Date(a.MsTimeStamp);
+      // const bdate = new Date(b.MsTimeStamp);
+
+      // if(adate < bdate) {
+      //   return 1;
+      // }
+      // return -1;
+    });
+
+    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
+
+    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+    //amount = amount + 0.36;
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }); // Add commas
+
+    // amount = amount.toLocaleString();
+
+    let convertedAmount =
+      isMinus == true
+        ? `- ${currencyData.symbol} ${amount}`
+        : `${currencyData.symbol} ${amount}`;
+
+    return convertedAmount;
+  },
+  count: (array) => {
+    return array.length;
+  },
+  countActive: (array) => {
+    if (array.length == 0) {
+      return 0;
+    }
+    let activeArray = array.filter((c) => c.active == true);
+    return activeArray.length;
+  },
+  currencyList: () => {
+    return Template.instance().currencyList.get();
+  },
+  isNegativeAmount(amount) {
+    if (Math.sign(amount) === -1) {
+      return true;
+    }
+    return false;
+  },
+  isOnlyDefaultActive() {
+    const array = Template.instance().currencyList.get();
+    if (array.length == 0) {
+      return false;
+    }
+    let activeArray = array.filter((c) => c.active == true);
+
+    if (activeArray.length == 1) {
+      if (activeArray[0].code == defaultCurrencyCode) {
+        return !true;
+      } else {
+        return !false;
+      }
+    } else {
+      return !false;
+    }
+  },
+  isCurrencyListActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    return activeArray.length > 0;
+  },
+  isObject: (variable) => {
+    return typeof variable === "object" && variable !== null;
+  },
+  currency: () => {
+    return Currency;
   },
 });
 
@@ -361,3 +572,62 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
+
+/**
+ *
+ */
+async function loadCurrency() {
+  let templateObject = Template.instance();
+
+  if ((await templateObject.currencyList.get().length) == 0) {
+    LoadingOverlay.show();
+
+    let _currencyList = [];
+    const result = await taxRateService.getCurrencies();
+
+    //taxRateService.getCurrencies().then((result) => {
+
+    const data = result.tcurrency;
+
+    for (let i = 0; i < data.length; i++) {
+      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        id: data[i].Id || "",
+        code: data[i].Code || "-",
+        currency: data[i].Currency || "NA",
+        symbol: data[i].CurrencySymbol || "NA",
+        buyrate: data[i].BuyRate || "-",
+        sellrate: data[i].SellRate || "-",
+        country: data[i].Country || "NA",
+        description: data[i].CurrencyDesc || "-",
+        ratelastmodified: data[i].RateLastModified || "-",
+        active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
+        //active: false,
+        // createdAt: new Date(data[i].MsTimeStamp) || "-",
+        // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+      };
+
+      _currencyList.push(dataList);
+      //}
+    }
+    _currencyList = _currencyList.sort((a, b) => {
+      return a.currency
+        .split("")[0]
+        .toLowerCase()
+        .localeCompare(b.currency.split("")[0].toLowerCase());
+    });
+
+    templateObject.currencyList.set(_currencyList);
+
+    await loadCurrencyHistory(templateObject);
+    LoadingOverlay.hide();
+    //});
+  }
+}
+
+async function loadCurrencyHistory(templateObject) {
+  let result = await taxRateService.getCurrencyHistory();
+  const data = result.tcurrencyratehistory;
+  templateObject.tcurrencyratehistory.set(data);
+  LoadingOverlay.hide();
+}
