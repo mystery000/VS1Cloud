@@ -47,3 +47,8 @@ Template.CurrencyWidget.helpers({
     return Session.get("CloudUseForeignLicence");
   },
 });
+
+
+export const isCurrencyEnable = () => {
+  return Session.get("CloudUseForeignLicence");
+};
