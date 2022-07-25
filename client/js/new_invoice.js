@@ -118,48 +118,46 @@ Template.new_invoice.onRendered(() => {
 
         templateObject.getTemplateInfo = function() {
 
-        getVS1Data('TemplateSettings').then(function(dataObject) {
+            getVS1Data('TemplateSettings').then(function(dataObject) {
 
-             let data = JSON.parse(dataObject[0].data);
-             let useData = data;
-             let lineItems = [];
-             let lineItemObj = {};
+                if (dataObject.length === 0) {
+                    return;
+                }
 
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data;
+                let lineItems = [];
+                let lineItemObj = {};
 
-             if(data.fields)
-             {
- 
-               var invoices = data.fields.invoices;
-               var invoices_back_order = data.fields.invoices_back_order;
-               var delivery_docket = data.fields.delivery_docket;
+                if(data.fields)
+                {
 
-           
-               $('#Invoices_'+invoices).attr("checked", "checked");
-               $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
-               $("[id='Invoice Back Orders_"+invoices_back_order+"']").attr("checked", "checked");
+                var invoices = data.fields.invoices;
+                var invoices_back_order = data.fields.invoices_back_order;
+                var delivery_docket = data.fields.delivery_docket;
 
-               $('#choosetemplate').attr("checked", "checked");
+                $('#Invoices_'+invoices).attr("checked", "checked");
+                $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
+                $("[id='Invoice Back Orders_"+invoices_back_order+"']").attr("checked", "checked");
 
-               if($('#choosetemplate').is(':checked'))
-               {        
-                   //$('#templateselection').modal('show');
-               }
-               else
-               {   
-               $('#templateselection').modal('hide');
-               }
-           
+                $('#choosetemplate').attr("checked", "checked");
 
-             }
-     
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    //$('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
+            
+                }
+        
+            });
 
-        });
+        };
 
-
-     };
-
-
-     templateObject.getTemplateInfo();
+        templateObject.getTemplateInfo();
 
         $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
         
@@ -9445,9 +9443,9 @@ Template.new_invoice.onRendered(function () {
             }
           }
           tempObj.displayfields.set(custFields);
-          
         })
     }
+
     tempObj.getAllCustomFieldDisplaySettings();
 });
 
