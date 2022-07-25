@@ -97,9 +97,30 @@ export class TaxRateService extends BaseService {
             that.getList(that.ERPObjects.TTaxcodeVS1, options).then(function (data) {
                 let ttaxcodevs1 = data.ttaxcodevs1.map((v) => {
                     let fields = v.fields;
+                    let lines = fields.Lines;
+                    if (lines !== null) {
+                        if (typeof lines === 'object') {
+                            lines = [
+                                {
+                                    ...{Id: lines.fields.ID},
+                                    ...lines.fields
+                                }
+                            ];
+                        }
+                        else {
+                            lines = lines.map((line) => {
+                                let f = line.fields;
+                                return {
+                                    ...{Id: f.ID},
+                                    ...f,
+                                }
+                            })
+                        }
+                    }
                     return {
-                        ...{Id: fields.ID},
+                        ...{ Id: fields.ID },
                         ...fields,
+                        ...{ Lines: lines }
                     }
                 });
                 resolve({ ttaxcodevs1 });

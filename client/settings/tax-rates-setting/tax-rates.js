@@ -1073,7 +1073,7 @@ Template.taxRatesSettings.events({
 
     let newSubTaxLine = {
       Id: subTaxId,
-      Code: subTaxCode.codename,
+      SubTaxCode: subTaxCode.codename,
       Detail: subTaxCode,
       Percentage: subTaxPercent,
       PercentageOn: subTaxPercentageOn,
@@ -1108,11 +1108,14 @@ Template.taxRatesSettings.events({
 
     let lines = templateObject.subtaxlines.get().map((v) => {
       return {
-        SubTaxCode: v.Code,
-        Percentage: v.Percentage,
-        PercentageOn: v.PercentageOn,
-        CapAmount: v.CapAmount,
-        ThresholdAmount: v.ThresholdAmount
+        type: "TTaxCodeLines",
+        fields: {
+          SubTaxCode: v.SubTaxCode,
+          Percentage: v.Percentage,
+          PercentageOn: v.PercentageOn,
+          CapAmount: v.CapAmount,
+          ThresholdAmount: v.ThresholdAmount
+        }
       }
     });
     if (taxtID == "") {
@@ -1132,7 +1135,7 @@ Template.taxRatesSettings.events({
             },
           };
           if (templateObject.isChkUSRegionTax.get()) {
-            objDetails.fields.Lines = JSON.stringify(lines);
+            objDetails.fields.Lines = lines;
           }
           taxRateService
             .saveTaxRate(objDetails)
@@ -1181,7 +1184,7 @@ Template.taxRatesSettings.events({
             },
           };
           if (templateObject.isChkUSRegionTax.get()) {
-            objDetails.fields.Lines = JSON.stringify(lines);
+            objDetails.fields.Lines = lines;
           }
 
           taxRateService
@@ -1231,7 +1234,7 @@ Template.taxRatesSettings.events({
         },
       };
       if (templateObject.isChkUSRegionTax.get()) {
-        objDetails.fields.Lines = JSON.stringify(lines);
+        objDetails.fields.Lines = lines;
       }
 
       taxRateService
@@ -1242,7 +1245,6 @@ Template.taxRatesSettings.events({
             .then(function (dataReload) {
               addVS1Data("TTaxcodeVS1", JSON.stringify(dataReload))
                 .then(function (datareturn) {
-                  alert("dfefef");
                   Meteor._reload.reload();
                 })
                 .catch(function (err) {
