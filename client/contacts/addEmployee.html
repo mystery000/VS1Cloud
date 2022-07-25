@@ -1426,10 +1426,10 @@
                                                                                         <!-- <input type="text" class="form-control" id="edtTfnExemption" name="edtTfnExemption"> -->
                                                                                         <select class="form-control" id="edtTfnExemption" name="edtTfnExemption" style="cursor: pointer;">
                                                                                             <option value=""></option>
-                                                                                            <option value="No TFN Quoted">No TFN Quoted</option>
-                                                                                            <option value="TFN Pending">TFN Pending</option>
-                                                                                            <option value="TFN Exempt - Under 18">TFN Exempt - Under 18</option>
-                                                                                            <option value="TFN Exempt - Pensioner">TFN Exempt - Pensioner</option>
+                                                                                            <option value="0">No TFN Quoted</option>
+                                                                                            <option value="1">TFN Pending</option>
+                                                                                            <option value="2">TFN Exempt - Under 18</option>
+                                                                                            <option value="3">TFN Exempt - Pensioner</option>
                                                                                         </select>
                                                                                     </div>
                                                                                 </div>
@@ -1457,9 +1457,9 @@
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Residency Status</label>
                                                                             <select class="form-control" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
-                                                                                <option value="Australian Resident">Australian Resident</option>
-                                                                                <option value="Foreign Resident">Foreign Resident</option>
-                                                                                <option value="Working Holiday Maker">Working Holiday Maker</option>
+                                                                                <option value="true">Australian Resident</option>
+                                                                                <option value="false">Foreign Resident</option>
+                                                                                <!-- <option value="Working Holiday Maker">Working Holiday Maker</option> -->
                                                                             </select>
 
                                                                         </div>
@@ -2511,7 +2511,7 @@
                                                                                                 <div class="modal-header">
                                                                                                     <h5 class="modal-title" id="newPayCalendarLabel">Add an Earnings Line</h5>
                                                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                                        <span aria-hidden="false">&times;</span>
                                                                                                     </button>
                                                                                                 </div>
                                                                                                 <div class="modal-body">

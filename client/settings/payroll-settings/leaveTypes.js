@@ -354,54 +354,50 @@ Template.leaveTypeSettings.events({
             employeePayrolApis.collectionNames.TLeave
         );
 
-        return false;
-        // We need api's with fields to update this API
+        let leaveName=$("#edtLeaveName").val();
+        let leaveType=$("#edtLeaveType").val();
+        let typeOfUnit=$("#edtTypeOfUnits").val();
+        let loadingRate=$("#edtLeaveLoadingRate").val();
+        let leaveNormalEntitlement=$("#edtNormalEntitlement").val();
+        let showBalance=$("#formCheck-ShowBalance").val();
 
-        let isTaxexempt = false;
-        let isIsWorkPlacegiving = false;
-        let isUnionfees = false;
-        let deductionType = $('#edtDeductionType').val();
-        if(deductionType == 'None'){
-          isTaxexempt = true;
-        }else if(deductionType == 'WorkplaceGiving'){
-          isIsWorkPlacegiving = true;
-        }else if(deductionType == 'UnionAssociationFees'){
-          isUnionfees = true;
-        }
-        let deductionID = $('#edtDeductionID').val();
-        let deductionAccount = $('#edtDeductionAccount').val();
-        let deductionAccountID = $('#edtDeductionAccountID').val();
-        let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
-        let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
-        let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
-        /**
-         * Saving Earning Object in localDB
-        */
-        
-        let deductionRateSettings = {
-            type: "TLeave",
-            fields: {
-                ID: parseInt(deductionID),
-                Active: true,
-                Accountid: deductionAccountID,
-                Accountname: deductionAccount,
-                IsWorkPlacegiving:isIsWorkPlacegiving,
-                Taxexempt:isTaxexempt,
-                Unionfees:isUnionfees,
-                Description: deductionName,
-                DisplayIn: displayName,
-                // Superinc: ExemptSuperannuation,
-                // Workcoverexempt: ExemptReportable,
-                // Payrolltaxexempt: ExemptPAYG
+        let leaveDetails="";
+        if(leaveType == "Paid Leave"){
+            leaveDetails= {
+                type : "TPaidLeave",
+                fields : {
+                    LeavePaidName:leaveName,
+                    LeavePaidUnits:typeOfUnit,
+                    LeavePaidLeaveLoadingRate:loadingRate,
+                    LeavePaidNormalEntitlement:leaveNormalEntitlement,
+                    LeavePaidShowBalanceOnPayslip:showBalance,
+                    LeavePaidActive:true
+                }
             }
-        };
+        }
+        else if(leaveType == "Unpaid Leave"){
+            leaveDetails= {
+                type : "TUnpaidLeave",
+                fields : {
+                    LeaveUnPaidName:leaveName,
+                    LeaveUnPaidUnits:typeOfUnit,
+                    LeaveUnPaidLeaveLoadingRate:loadingRate,
+                    LeaveUnPaidNormalEntitlement:leaveNormalEntitlement,
+                    LeaveUnPaidShowBalanceOnPayslip:showBalance,
+                    LeaveUnPaidActive:true
+                }
+            }
+        }
 
         const ApiResponse = await apiEndpoint.fetch(null, {
             method: "POST",
             headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(deductionRateSettings),
+            body: JSON.stringify(leaveDetails),
         });
-    
+        
+        console.log("leave-data", ApiResponse);
+        console.log("leavedetails-data", leaveDetails);
+
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#leaveRateForm')[0].reset();
@@ -412,6 +408,67 @@ Template.leaveTypeSettings.events({
         }else{
             $('.fullScreenSpin').css('display', 'none');
         }
+
+
+
+        return false;
+        // We need api's with fields to update this API
+
+        // let isTaxexempt = false;
+        // let isIsWorkPlacegiving = false;
+        // let isUnionfees = false;
+        // let deductionType = $('#edtDeductionType').val();
+        // if(deductionType == 'None'){
+        //   isTaxexempt = true;
+        // }else if(deductionType == 'WorkplaceGiving'){
+        //   isIsWorkPlacegiving = true;
+        // }else if(deductionType == 'UnionAssociationFees'){
+        //   isUnionfees = true;
+        // }
+        // let deductionID = $('#edtDeductionID').val();
+        // let deductionAccount = $('#edtDeductionAccount').val();
+        // let deductionAccountID = $('#edtDeductionAccountID').val();
+        // let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
+        // let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
+        // let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
+        // /**
+        //  * Saving Earning Object in localDB
+        // */
+        
+        // let deductionRateSettings = {
+        //     type: "TLeave",
+        //     fields: {
+        //         ID: parseInt(deductionID),
+        //         Active: true,
+        //         Accountid: deductionAccountID,
+        //         Accountname: deductionAccount,
+        //         IsWorkPlacegiving:isIsWorkPlacegiving,
+        //         Taxexempt:isTaxexempt,
+        //         Unionfees:isUnionfees,
+        //         Description: deductionName,
+        //         DisplayIn: displayName,
+        //         // Superinc: ExemptSuperannuation,
+        //         // Workcoverexempt: ExemptReportable,
+        //         // Payrolltaxexempt: ExemptPAYG
+        //     }
+        // };
+
+        // const ApiResponse = await apiEndpoint.fetch(null, {
+        //     method: "POST",
+        //     headers: ApiService.getPostHeaders(),
+        //     body: JSON.stringify(deductionRateSettings),
+        // });
+    
+        // if (ApiResponse.ok == true) {
+        //     const jsonResponse = await ApiResponse.json();
+        //     $('#leaveRateForm')[0].reset();
+        //     await templateObject.saveDataLocalDB();
+        //     await templateObject.getDeductions();
+        //     $('#leaveModal').modal('hide');
+        //     $('.fullScreenSpin').css('display', 'none');
+        // }else{
+        //     $('.fullScreenSpin').css('display', 'none');
+        // }
         
         
     },

@@ -455,6 +455,8 @@ Template.superannuationSettings.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(superannuationRateSettings),
         });
+        console.log("super-data", ApiResponse);
+
     
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();

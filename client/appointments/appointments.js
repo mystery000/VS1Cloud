@@ -10249,8 +10249,8 @@ Template.appointments.events({
         let status = "Not Converted";
         let uploadedItems = templateObject.uploadedFiles.get();
         
-        let CustomerEmail=$('.customerEmail').is(':checked') ? true : false;
-        let UserEmail=$('.userEmail').is(':checked') ? true : false;
+        let customerEmail=$('.customerEmail').is(':checked') ? true : false;
+        let userEmail=$('.userEmail').is(':checked') ? true : false;
         if (aStartTime != '') {
             aStartDate = savedStartDate + ' ' + aStartTime;
         } else {
@@ -10368,8 +10368,8 @@ Template.appointments.events({
                       CUSTFLD12: messageSid||'',
                       CUSTFLD13: !!messageSid ? "Yes" : "No",
 
-                    //   CustomerEmail: CustomerEmail,
-                    //   UserEmail: UserEmail
+                    //   CustomerEmail: customerEmail,
+                    //   UserEmail: userEmail
                   }
               };
 
