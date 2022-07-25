@@ -61,6 +61,7 @@ const erpObject = {
     TRepairs: "TRepairs",
     TQuote: "TQuote",
     TQuoteEx: "TQuoteEx",
+    TRefundSale: "TRefundSale",
     TRegionalOptions: "TRegionalOptions",
     TRepObjStatementList: "TRepObjStatementList",
     TSalesOrder: "TSalesOrder",

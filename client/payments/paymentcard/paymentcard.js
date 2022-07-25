@@ -56,6 +56,8 @@ Template.paymentcard.onCreated(() => {
 });
 
 Template.paymentcard.onRendered(() => {
+
+        $('#choosetemplate').attr('checked', true);
         const dataTableList = [];
         const tableHeaderList = [];
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -151,12 +153,12 @@ Template.paymentcard.onRendered(() => {
         templateObject.getTemplateInfo = function() {
 
             getVS1Data('TemplateSettings').then(function(dataObject) {
-
+    
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data;
                 let lineItems = [];
                 let lineItemObj = {};
-
+      
                 if(data.fields)
                 {
                     var customer_payment = data.fields.customer_payment;
@@ -164,21 +166,21 @@ Template.paymentcard.onRendered(() => {
                     $('#choosetemplate').attr("checked", "checked");
 
                     if($('#choosetemplate').is(':checked'))
-                    {
-                        $('#templateselection').modal('show');
+                    {        
+                        //$('#templateselection').modal('show');
                     }
                     else
-                    {
+                    {   
                     $('#templateselection').modal('hide');
-                    }
+                    }                
                 }
-
-
+        
+    
             });
-
+    
        };
-
-
+    
+    
        templateObject.getTemplateInfo();
 
 
@@ -715,7 +717,7 @@ Template.paymentcard.onRendered(() => {
 
               $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
               $("#templatePreviewModal .modal-title").text(
-                object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
+                object_invoce[0]["title"] + " "+ " Template"
               );
 
               if(object_invoce[0]["value"]=="")

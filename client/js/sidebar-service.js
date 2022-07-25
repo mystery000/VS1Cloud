@@ -158,6 +158,19 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TLumpSumE, options);
   }
 
+  getNewHolidayGroup(datasearch)
+  { 
+      let options = "";
+  
+      options = {
+          ListType: "Detail",
+          select:  "[PayrollHolidaysGroupName]='" + datasearch + "'",
+        };
+    
+      return this.getList(this.ERPObjects.TPayrollHolidays, options);
+
+  }
+
   getsuperannuationBonusesCommissions(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {

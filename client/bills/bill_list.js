@@ -1434,36 +1434,36 @@ Template.billlist.events({
                         sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
-                                window.open('/supplierawaitingpurchaseorder', '_self');
+                                window.open('/billlist', '_self');
                               }, 2000);
                             }).catch(function(err) {
                               setTimeout(function () {
-                                window.open('/supplierawaitingpurchaseorder', '_self');
+                                window.open('/billlist', '_self');
                               }, 2000);
                             });
                         }).catch(function(err) {
                           setTimeout(function () {
-                            window.open('/supplierawaitingpurchaseorder', '_self');
+                            window.open('/billlist', '_self');
                           }, 2000);
                         });
                     }).catch(function(err) {
                         setTimeout(function () {
-                            window.open('/supplierawaitingpurchaseorder', '_self');
+                            window.open('/billlist', '_self');
                          }, 2000);
                     });
                 }).catch(function(err) {
                   setTimeout(function () {
-                    window.open('/supplierawaitingpurchaseorder', '_self');
+                    window.open('/billlist', '_self');
                   }, 2000);
                 });
             }).catch(function(err) {
               setTimeout(function () {
-                window.open('/supplierawaitingpurchaseorder', '_self');
+                window.open('/billlist', '_self');
               }, 2000);
             });
         }).catch(function(err) {
           setTimeout(function () {
-            window.open('/supplierawaitingpurchaseorder', '_self');
+            window.open('/billlist', '_self');
           }, 2000);
 
         });
