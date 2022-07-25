@@ -7214,14 +7214,14 @@ Template.employeescard.events({
         let columData = $(event.target).val();
 
         $('#cloudEmpLogonName').val(columData);
-        $('#edtEmailAddress').val(columData);
+        // $('#edtEmailAddress').val(columData);
 
     },
     'keyup #edtEmailAddress': function (event) {
         let columData = $(event.target).val();
 
-        $('#cloudEmpLogonName').val(columData);
-        $('#cloudEmpEmailAddress').val(columData);
+        // $('#cloudEmpLogonName').val(columData);
+        // $('#cloudEmpEmailAddress').val(columData);
 
     },
     'blur #cloudEmpEmailAddress, blur #edtEmailAddress': function (event) {
