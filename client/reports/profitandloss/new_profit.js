@@ -694,6 +694,7 @@ Template.newprofitandloss.onRendered(function () {
     if (profitLossLayoutEndResponse.ok == true) {
       let profitLossLayouts = [];
       let jsonResponse = await profitLossLayoutEndResponse.json();
+      console.log('jsonResponse', jsonResponse)
       const profitLossLists = ProfitLossLayout.fromList(
         jsonResponse.tprofitlosslayout
       );
