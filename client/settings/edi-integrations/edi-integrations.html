@@ -12,45 +12,50 @@
           .customEdiIntigrationTab li {
             display: inline-block;
             width: 100%;
-            margin: 0 0 10px 0 !important;
+            margin: 0px 0px 16px !important;
           }
           .customEdiIntigrationTab li .nav-link {
-            color: #fff !important;
+            /* color: #fff !important;
             background-color: rgb(0, 163, 211) !important;
             border-color: #00a3d3 !important;
             border-radius: 5px !important;
             overflow: hidden;
             margin: 0px !important;
+            outline: none !important; */
             display: inline-block;
             width: 100%;
-            outline: none !important;
+            height: 60px;
           }
-
+          .customEdiIntigrationTab li .nav-link i {
+            display: inline-block;
+            margin-right: 5px;
+          }
+          
 
         </style>
         <div class="row d-xl-flex mb-3">
             <div class="col-md-3">
                 <ul class="nav nav-tabs customEdiIntigrationTab" id="ediIntigrtionTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="smsSettingTab" data-toggle="tab" data-target="#smsSetting" type="button" role="tab" aria-controls="smsSetting" aria-selected="true">SMS Settings</button>
+                      <button class="nav-link btn btn-primary" id="adpTab" data-toggle="tab" data-target="#adp" type="button" role="tab" aria-controls="adp" aria-selected="false"><i class="fa fa-cog"></i> ADP</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="xeCurrenciesTab" data-toggle="tab" data-target="#xeCurrencies" type="button" role="tab" aria-controls="xeCurrencies" aria-selected="false">XE Currencies</button>
+                      <button class="nav-link btn btn-primary" id="mailChimpTab" data-toggle="tab" data-target="#mailChimp" type="button" role="tab" aria-controls="mailChimp" aria-selected="false"><i class="fa fa-cog"></i> Mail Chimp</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="receiptClaimsTab" data-toggle="tab" data-target="#receiptClaims" type="button" role="tab" aria-controls="receiptClaims" aria-selected="false">Receipt Claims</button>
+                      <button class="nav-link btn btn-primary" id="paycheckTab" data-toggle="tab" data-target="#paycheck" type="button" role="tab" aria-controls="paycheck" aria-selected="false"><i class="fa fa-cog"></i> Paycheck</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="trueERPTab" data-toggle="tab" data-target="#trueERP" type="button" role="tab" aria-controls="trueERP" aria-selected="false">TrueERP</button>
+                      <button class="nav-link btn btn-primary" id="receiptClaimsTab" data-toggle="tab" data-target="#receiptClaims" type="button" role="tab" aria-controls="receiptClaims" aria-selected="false"><i class="fa fa-cog"></i> Receipt Claims</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="mailChimpTab" data-toggle="tab" data-target="#mailChimp" type="button" role="tab" aria-controls="mailChimp" aria-selected="false">Mail Chimp</button>
+                      <button class="nav-link btn btn-primary active" id="smsSettingTab" data-toggle="tab" data-target="#smsSetting" type="button" role="tab" aria-controls="smsSetting" aria-selected="true"><i class="fa fa-cog"></i> SMS Settings</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="adpTab" data-toggle="tab" data-target="#adp" type="button" role="tab" aria-controls="adp" aria-selected="false">ADP</button>
+                      <button class="nav-link btn btn-primary" id="trueERPTab" data-toggle="tab" data-target="#trueERP" type="button" role="tab" aria-controls="trueERP" aria-selected="false"><i class="fa fa-cog"></i> TrueERP</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="paycheckTab" data-toggle="tab" data-target="#paycheck" type="button" role="tab" aria-controls="paycheck" aria-selected="false">Paycheck</button>
+                      <button class="nav-link btn btn-primary" id="xeCurrenciesTab" data-toggle="tab" data-target="#xeCurrencies" type="button" role="tab" aria-controls="xeCurrencies" aria-selected="false"><i class="fa fa-cog"></i> XE Currencies</button>
                     </li>
                   </ul>
             </div>
