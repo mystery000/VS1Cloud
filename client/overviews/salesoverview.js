@@ -539,9 +539,9 @@ Template.salesoverview.onRendered(function () {
 
               }, 0);
 
-              setTimeout(function () {
-                templateObject.getAllCustomFieldDisplaySettings();
-              }, 500);
+              // setTimeout(function () {
+              //   templateObject.getAllCustomFieldDisplaySettings();
+              // }, 500);
 
               var columns = $("#tblSalesOverview th");
               let sTible = "";
@@ -949,9 +949,9 @@ Template.salesoverview.onRendered(function () {
               .on("column-reorder", function () {});
           }, 0);
 
-          setTimeout(function () {
-            templateObject.getAllCustomFieldDisplaySettings();
-          }, 500);
+          // setTimeout(function () {
+          //   templateObject.getAllCustomFieldDisplaySettings();
+          // }, 500);
 
           var columns = $("#tblSalesOverview th");
           let sTible = "";
@@ -1379,9 +1379,9 @@ Template.salesoverview.onRendered(function () {
                 .on("column-reorder", function () {});
             }, 0);
 
-            setTimeout(function () {
-              templateObject.getAllCustomFieldDisplaySettings();
-            }, 500);
+            // setTimeout(function () {
+            //   templateObject.getAllCustomFieldDisplaySettings();
+            // }, 500);
 
             var columns = $("#tblSalesOverview th");
             let sTible = "";
@@ -1499,111 +1499,126 @@ Template.salesoverview.onRendered(function () {
     }
   }
 
+  function initCustomFieldDisplaySettings(data, listType) {
+    let custFields = [];
+    let dispFields = [];
+    let customData = {};
+    let customFieldCount = 12;
+
+    let reset_data = [
+      { label: 'Sale Date', class: 'colSaleDate', active: true },
+      { label: 'Sales No.', class: 'colSalesNo', active: true },
+      { label: 'Type', class: 'colType', active: true },
+      { label: 'Customer', class: 'colCustomer', active: true },
+      { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
+      { label: 'Tax', class: 'colTax', active: true },
+      { label: 'Amount', class: 'colAmount', active: true },
+      { label: 'Paid', class: 'colPaid', active: true },
+      { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
+      { label: 'Status', class: 'colStatus', active: true },
+      { label: 'Employee', class: 'colEmployee', active: false },
+      { label: 'Comments', class: 'colComments', active: true },
+    ];
+
+    for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+      if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+        customData = {
+          active: data.tcustomfieldlist[x].fields.Active || false,
+          id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+          datatype: data.tcustomfieldlist[x].fields.DataType || "",
+          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+        };
+        custFields.push(customData);
+      } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
+        customData = {
+          active: data.tcustomfieldlist[x].fields.Active || false,
+          id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+          datatype: data.tcustomfieldlist[x].fields.DataType || "",
+          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+          // width: data.tcustomfieldlist[x].fields.Width || 0,
+        };
+        dispFields.push(customData);
+      }
+    }
+
+    if (custFields.length < 3) {
+      let remainder = 3 - custFields.length;
+      let getRemCustomFields = parseInt(custFields.length);
+      for (let r = 0; r < remainder; r++) {
+        getRemCustomFields++;
+        customData = {
+          active: false,
+          id: "",
+          custfieldlabel: "Custom Field " + getRemCustomFields,
+          datatype: "",
+          isempty: true,
+          iscombo: false,
+        };
+        // count++;
+        custFields.push(customData);
+      }
+    }
+
+    if (dispFields.length < customFieldCount) {
+      let remainder = customFieldCount - dispFields.length;
+      let getRemCustomFields = parseInt(dispFields.length);
+      for (let r = 0; r < remainder; r++) {
+        customData = {
+          active: reset_data[getRemCustomFields].active,
+          id: "",
+          custfieldlabel: reset_data[getRemCustomFields].label,
+          datatype: "",
+          isempty: true,
+          iscombo: false,
+          // width: reset_data[getRemCustomFields].width,
+        };
+        getRemCustomFields++;
+        // count++;
+        dispFields.push(customData);
+      }
+    }
+
+    for (let index = 0; index < custFields.length; index++) {
+      const element = custFields[index];
+      dispFields.push(element);
+
+    }
+
+    templateObject.custfields.set(custFields);
+    templateObject.displayfields.set(dispFields);
+  }
 
   // custom field displaysettings
   templateObject.getAllCustomFieldDisplaySettings = function () {
-      let custFields = [];
-      let dispFields = [];
-      let customData = {};
-      let customFieldCount = 12;
+      
       let listType = "ltSalesOverview";
-      try {
-
-        let reset_data = [
-          { label: 'Sale Date', class: 'colSaleDate', active: true },
-          { label: 'Sales No.', class: 'colSalesNo', active: true },
-          { label: 'Type', class: 'colType', active: true },
-          { label: 'Customer', class: 'colCustomer', active: true },
-          { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
-          { label: 'Tax', class: 'colTax', active: true },
-          { label: 'Amount', class: 'colAmount', active: true },
-          { label: 'Paid', class: 'colPaid', active: true },
-          { label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true },
-          { label: 'Status', class: 'colStatus', active: true },
-          { label: 'Employee', class: 'colEmployee', active: false },
-          { label: 'Comments', class: 'colComments', active: true },
-        ];
-
-        sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-            if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              custFields.push(customData);
-            } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-                // width: data.tcustomfieldlist[x].fields.Width || 0,
-              };
-              dispFields.push(customData);
-            }
+      try { 
+        getVS1Data("TltSalesOverview").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              initCustomFieldDisplaySettings(data, listType);
+              addVS1Data("TltSalesOverview", JSON.stringify(data));
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            initCustomFieldDisplaySettings(data, listType);
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              addVS1Data("TltSalesOverview", JSON.stringify(data));
+            });
           }
+        })
 
-          if (custFields.length < 3) {
-            let remainder = 3 - custFields.length;
-            let getRemCustomFields = parseInt(custFields.length);
-            for (let r = 0; r < remainder; r++) {
-              getRemCustomFields++;
-              customData = {
-                active: false,
-                id: "",
-                custfieldlabel: "Custom Field " + getRemCustomFields,
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              // count++;
-              custFields.push(customData);
-            }
-          }
-
-          if (dispFields.length < customFieldCount) {
-            let remainder = customFieldCount - dispFields.length;
-            let getRemCustomFields = parseInt(dispFields.length);
-            for (let r = 0; r < remainder; r++) {
-              customData = {
-                active: reset_data[getRemCustomFields].active,
-                id: "",
-                custfieldlabel: reset_data[getRemCustomFields].label,
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-                // width: reset_data[getRemCustomFields].width,
-              };
-              getRemCustomFields++;
-              // count++;
-              dispFields.push(customData);
-            }
-          }
-
-          for (let index = 0; index < custFields.length; index++) {
-            const element = custFields[index];
-            dispFields.push(element);
-
-          }
-
-          templateObject.custfields.set(custFields);
-          templateObject.displayfields.set(dispFields);
-
-        });
       } catch (error) {
       }
   }
 
-  // templateObject.getAllCustomFieldDisplaySettings();
+  templateObject.getAllCustomFieldDisplaySettings();
 
 });
 
@@ -2101,78 +2116,84 @@ Template.salesoverview.events({
   },
   "click .saveTable": function (event) {
     let lineItems = [];
-      let organisationService = new OrganisationService();
-      let listType = "ltSalesOverview";
+    let organisationService = new OrganisationService();
+    let listType = "ltSalesOverview";
 
-      $(".fullScreenSpin").css("display", "inline-block");
+    $(".fullScreenSpin").css("display", "inline-block");
 
-      $('.displaySettings').each(function(index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || '';
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(':checked')) {
-            colHidden = true;
-        } else {
-            colHidden = false;
-        }
-        let lineItemObj = {
-            index: index,
-            label: colTitle,
-            hidden: colHidden,
-            width: colWidth,
-            thclass: colthClass
-        }
+    $('.displaySettings').each(function(index) {
+      var $tblrow = $(this);
+      var fieldID = $tblrow.attr("custid") || 0;
+      var colTitle = $tblrow.find(".divcolumn").text() || '';
+      var colWidth = $tblrow.find(".custom-range").val() || 0;
+      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+      var colHidden = false;
+      if ($tblrow.find(".custom-control-input").is(':checked')) {
+          colHidden = true;
+      } else {
+          colHidden = false;
+      }
+      let lineItemObj = {
+          index: index,
+          label: colTitle,
+          hidden: colHidden,
+          width: colWidth,
+          thclass: colthClass
+      }
 
-        lineItems.push(lineItemObj);
+      lineItems.push(lineItemObj);
 
-        if(fieldID && parseInt(fieldID) != 0){
-          objDetails1 = {
-            type: "TCustomFieldList",
-            fields: {
-              Active: colHidden,
-              ID: parseInt(fieldID),
-              Description: colTitle,
-              Width: colWidth
-            },
-          };
-        } else {
-          objDetails1 = {
-            type: "TCustomFieldList",
-            fields: {
-              Active: colHidden,
-              DataType: "ftString",
-              Description: colTitle,
-              ListType: listType,
-              Width: colWidth
-            },
-          };
-        }
+      if(fieldID && parseInt(fieldID) != 0){
+        objDetails1 = {
+          type: "TCustomFieldList",
+          fields: {
+            Active: colHidden,
+            ID: parseInt(fieldID),
+            Description: colTitle,
+            Width: colWidth
+          },
+        };
+      } else {
+        objDetails1 = {
+          type: "TCustomFieldList",
+          fields: {
+            Active: colHidden,
+            DataType: "ftString",
+            Description: colTitle,
+            ListType: listType,
+            Width: colWidth
+          },
+        };
+      }
 
-        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
-          $(".fullScreenSpin").css("display", "none");
-          $('#myModal2').modal('hide');
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              $(".fullScreenSpin").css("display", "none");
-            } else if (result.dismiss === "cancel") {
-            }
-            $('#myModal2').modal('hide');
-          });
-          $(".fullScreenSpin").css("display", "none");
+      organisationService.saveCustomField(objDetails1).then(function (objDetails) {
+        $(".fullScreenSpin").css("display", "none");
+        $('#myModal2').modal('hide');
+      })
+      .catch(function (err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => {
+          if (result.value) {
+            $(".fullScreenSpin").css("display", "none");
+          } else if (result.dismiss === "cancel") {
+          }
           $('#myModal2').modal('hide');
         });
+        $(".fullScreenSpin").css("display", "none");
+        $('#myModal2').modal('hide');
       });
+    });
+
+    setTimeout(() => {
+      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+        addVS1Data("TltSalesOverview", JSON.stringify(data));
+      });
+    }, 8000);
 
   },
 

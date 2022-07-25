@@ -19,9 +19,9 @@ Template.leadbarchart.onCreated(() => {
 Template.leadbarchart.onRendered(() => {
   const templateObject = Template.instance();
 
-  // function chartClickEvent() {
-  //   FlowRouter.go("/newprofitandloss?daterange=ignore&?show=loss");
-  // }
+  function chartClickEvent() {
+    FlowRouter.go("/leadlist");
+  }
 
   function getModdayOfCurrentWeek(date) {
     const today = new Date(date);
@@ -63,17 +63,9 @@ Template.leadbarchart.onRendered(() => {
         }]
       },
       options: {
-        // 'onClick': chartClickEvent,
+        'onClick': chartClickEvent,
         maintainAspectRatio: false,
-        responsive: true,
-        // tooltips: {
-        //   callbacks: {
-        //     label: function (tooltipItem, data) {
-        //       return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel)) || 0.00;
-
-        //     }
-        //   }
-        // },
+        responsive: true, 
         "legend": {
           "display": false
         },
@@ -140,13 +132,7 @@ Template.leadbarchart.onRendered(() => {
       labels.push(key);
       data.push(records[key].length);
       borderColors.push('#ffffff00');
-    }
-
-    // function chartClickEvent(event, array) {
-    //   if (array[0] != undefined) {
-    //     FlowRouter.go("/newprofitandloss?daterange=ignore&?show=loss");
-    //   }
-    // }
+    } 
 
     var ctx = document.getElementById("chart_leadpiechart").getContext("2d");
     try {
@@ -164,7 +150,7 @@ Template.leadbarchart.onRendered(() => {
           ],
         },
         options: {
-          // 'onClick': chartClickEvent,
+          'onClick': chartClickEvent,
           maintainAspectRatio: false,
           responsive: true,
           legend: {

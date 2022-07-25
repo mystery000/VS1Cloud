@@ -9403,51 +9403,115 @@ Template.new_invoice.onRendered(function () {
     tempObj.getAllTaxCodes();
 
 
+    // // custom field displaysettings
+    // tempObj.getAllCustomFieldDisplaySettings = function () {
+    //   let custFields = [];
+    //   let customData = {};
+    //   let customFieldCount = 12;
+    //   let ListType = 'ltSaleslines';  // tempcode until InvoiceLines is added on backend
+
+    //   sideBarService.getAllCustomFieldsWithQuery(ListType).then(function (data) {
+    //       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+    //         if (data.tcustomfieldlist[x].fields.ListType == ListType) {
+    //           customData = {
+    //             active: data.tcustomfieldlist[x].fields.Active || false,
+    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
+    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+    //           };
+    //           custFields.push(customData);
+    //         }
+    //       }
+
+    //       if (custFields.length < customFieldCount) {
+    //         let remainder = customFieldCount - custFields.length;
+    //         let getRemCustomFields = parseInt(custFields.length);
+    //         // count = count + remainder;
+    //         for (let r = 0; r < remainder; r++) {
+    //           getRemCustomFields++;
+    //           customData = {
+    //             active: false,
+    //             id: "",
+    //             custfieldlabel: "",
+    //             datatype: "",
+    //             isempty: true,
+    //             iscombo: false,
+    //           };
+    //           // count++;
+    //           custFields.push(customData);
+    //         }
+    //       }
+    //       tempObj.displayfields.set(custFields);
+          
+    //     })
+    // } 
     // custom field displaysettings
-    tempObj.getAllCustomFieldDisplaySettings = function () {
+    function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
       let customData = {};
-      let customFieldCount = 10;
-      let ListType = 'ltSaleslines';  // tempcode until InvoiceLines is added on backend
+      let customFieldCount = 14;
+  
+      for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+        if (data.tcustomfieldlist[x].fields.ListType == listType) {
+          customData = {
+            active: data.tcustomfieldlist[x].fields.Active || false,
+            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+            datatype: data.tcustomfieldlist[x].fields.DataType || "",
+            isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+            iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+            dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+          };
+          custFields.push(customData);
+        }
+      }
 
-      sideBarService.getAllCustomFieldsWithQuery(ListType).then(function (data) {
-          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-            if (data.tcustomfieldlist[x].fields.ListType == ListType) {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              custFields.push(customData);
-            }
-          }
-
-          if (custFields.length < customFieldCount) {
-            let remainder = customFieldCount - custFields.length;
-            let getRemCustomFields = parseInt(custFields.length);
-            // count = count + remainder;
-            for (let r = 0; r < remainder; r++) {
-              getRemCustomFields++;
-              customData = {
-                active: false,
-                id: "",
-                custfieldlabel: "",
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              // count++;
-              custFields.push(customData);
-            }
-          }
-          tempObj.displayfields.set(custFields);
-          
-        })
+      if (custFields.length < customFieldCount) {
+        let remainder = customFieldCount - custFields.length;
+        let getRemCustomFields = parseInt(custFields.length);
+        for (let r = 0; r < remainder; r++) {
+          getRemCustomFields++;
+          customData = {
+            active: false,
+            id: "",
+            custfieldlabel: "",
+            datatype: "",
+            isempty: true,
+            iscombo: false,
+          };
+          custFields.push(customData);
+        }
+      }
+      tempObj.displayfields.set(custFields);
     }
+
+    tempObj.getAllCustomFieldDisplaySettings = function () {
+      
+      let listType = 'ltSaleslines';   // tempcode until InvoiceLines is added on backend
+      try {
+        getVS1Data("TltSaleslines").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              initCustomFieldDisplaySettings(data, listType);
+              addVS1Data("TltSaleslines", JSON.stringify(data));
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            initCustomFieldDisplaySettings(data, listType);
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              addVS1Data("TltSaleslines", JSON.stringify(data));
+            });
+          }
+        })
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     tempObj.getAllCustomFieldDisplaySettings();
 });
 
@@ -12937,6 +13001,44 @@ Template.new_invoice.events({
             $('.colTaxAmount').css('display', 'none');
         }
     },
+
+    'click .chkAmountInc': function(event) {
+      if ($(event.target).is(':checked')) {
+          $('.colAmountInc').css('display', 'table-cell');
+          $('.colAmountInc').css('padding', '.75rem');
+          $('.colAmountInc').css('vertical-align', 'top');
+      } else {
+          $('.colAmountInc').css('display', 'none');
+      }
+    },
+    'click .chkUnitPriceInc': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colUnitPriceInc').css('display', 'table-cell');
+            $('.colUnitPriceInc').css('padding', '.75rem');
+            $('.colUnitPriceInc').css('vertical-align', 'top');
+        } else {
+            $('.colUnitPriceInc').css('display', 'none');
+        }
+    },
+
+    'click .chkDiscount': function(event) {
+      if ($(event.target).is(':checked')) {
+          $('.colDiscount').css('display', 'table-cell');
+          $('.colDiscount').css('padding', '.75rem');
+          $('.colDiscount').css('vertical-align', 'top');
+      } else {
+          $('.colDiscount').css('display', 'none');
+      }
+    },
+    'click .chkSerialNo': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colSerialNo').css('display', 'table-cell');
+            $('.colSerialNo').css('padding', '.75rem');
+            $('.colSerialNo').css('vertical-align', 'top');
+        } else {
+            $('.colSerialNo').css('display', 'none');
+        }
+    },
     // display settings
     
     'change .rngRangeProductName': function (event) {
@@ -13073,7 +13175,15 @@ Template.new_invoice.events({
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         });
+
       });
+
+      setTimeout(() => {
+        // tempcode until InvoiceLines is added on backend
+        sideBarService.getAllCustomFieldsWithQuery("ltSalesLines").then(function (data) {
+          addVS1Data("TltSaleslines", JSON.stringify(data));
+        });
+      }, 8000);
 
     },
  
@@ -13083,15 +13193,19 @@ Template.new_invoice.events({
         { label: 'Product Name', class: 'colProductName', active: true },
         { label: 'Description', class: 'colDescription', active: true },
         { label: 'Qty', class: 'colQty', active: true },
-        { label: 'Unit Price', class: 'colUnitPrice', active: true },
+        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: true },
+        { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Cost Price', class: 'colCostPrice', active: false },
         { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
         { label: 'Tax Rate', class: 'colTaxRate', active: false },
         { label: 'Tax Code', class: 'colTaxCode', active: true },
-        { label: 'Amount', class: 'colAmount', active: true },
-        { label: 'Tax Amount', class: 'colTaxAmount', active: true }
+        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+        { label: 'Amount (Ex)', class: 'colAmount', active: true },
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: true }
       ];
-      var datable = $('#tblSalesOrderLine').DataTable();
+      var datable = $('#tblInvoiceLine').DataTable();
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);

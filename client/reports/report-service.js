@@ -167,21 +167,6 @@ export class ReportService extends BaseService {
     );
   }
 
-  updateProfitandLossLayout(id, Level0Order, Level1Order, Level2Order, Level3Order ) {
-    let options = "";
-    options = {
-      Level0Order: Level0Order,
-      Level1Order: Level1Order,
-      Level2Order: Level2Order,
-      Level3Order: Level3Order
-    };
-
-    return this.getList(
-    'TProfitLossLayout/' + id,
-      options
-    );
-  }
-
   getDepartment() {
     let options = {
       PropertyList: "DeptClassName",
@@ -483,5 +468,30 @@ export class ReportService extends BaseService {
     }
 
     return this.getList(this.ERPObjects.TContractorPaymentSummary, options);
+  }
+
+  /**
+   * This function will return CustomerDetails
+   * 
+   * @param {*} dateFrom 
+   * @param {*} dateTo 
+   * @param {*} ignoreDate 
+   * @returns 
+   */
+  getCustomerDetails(dateFrom, dateTo, ignoreDate = false) {
+    console.log("report-service: ", "getCustomerDetails endpoint needed");
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TCustomerPayment, options);
   }
 }
