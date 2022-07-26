@@ -6,6 +6,7 @@ import { CountryService } from '../js/country-service';
 import { PaymentsService } from '../payments/payments-service';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import LoadingOverlay from "../LoadingOverlay";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.addcustomerpop.onCreated(function () {
@@ -105,7 +106,7 @@ Template.addcustomerpop.onRendered(function () {
 
     setTimeout(function () {
 
-        $("#dtAsOf").datepicker({
+        $(".addcustomerpop #dtAsOf").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
             buttonImageOnly: true,
@@ -357,7 +358,7 @@ Template.addcustomerpop.onRendered(function () {
     templateObject.getClientTypeData();
 
 
-    //$('#sltCustomerType').append('<option value="' + lineItemObj.custometype + '">' + lineItemObj.custometype + '</option>');
+    //$('.addcustomerpop #sltCustomerType').append('<option value="' + lineItemObj.custometype + '">' + lineItemObj.custometype + '</option>');
     //if (currentId.id == "undefined") {
         let lineItemObj = {
             id: '',
@@ -395,7 +396,7 @@ Template.addcustomerpop.onRendered(function () {
         templateObject.isSameAddress.set(true);
         templateObject.records.set(lineItemObj);
         setTimeout(function () {
-            $('#tblTransactionlist').DataTable();
+            $('.addcustomerpop #tblTransactionlist').DataTable();
             if (currentId.transTab == 'active') {
                 $('.customerTab').removeClass('active');
                 $('.transactionTab').trigger('click');
@@ -543,11 +544,11 @@ Template.addcustomerpop.onRendered(function () {
         function mediaQuery(x) {
             if (x.matches) {
 
-                $("#displayList").removeClass("col-2");
-                $("#displayList").addClass("col-3");
+                $(".addcustomerpop #displayList").removeClass("col-2");
+                $(".addcustomerpop #displayList").addClass("col-3");
 
-                $("#displayInfo").removeClass("col-10");
-                $("#displayInfo").addClass("col-9");
+                $(".addcustomerpop #displayInfo").removeClass("col-10");
+                $(".addcustomerpop #displayInfo").addClass("col-9");
             }
         }
         mediaQuery(x)
@@ -563,14 +564,14 @@ Template.addcustomerpop.onRendered(function () {
         function mediaQuery(x) {
             if (x.matches) {
 
-                $("#displayList").removeClass("col-3");
-                $("#displayList").addClass("col-12");
-                $("#customerListCard").removeClass("cardB");
-                $("#customerListCard").addClass("cardB420");
+                $(".addcustomerpop #displayList").removeClass("col-3");
+                $(".addcustomerpop #displayList").addClass("col-12");
+                $(".addcustomerpop #customerListCard").removeClass("cardB");
+                $(".addcustomerpop #customerListCard").addClass("cardB420");
                 // btnsViewHide.style.display = "none";
 
-                $("#displayInfo").removeClass("col-9");
-                $("#displayInfo").addClass("col-12");
+                $(".addcustomerpop #displayInfo").removeClass("col-9");
+                $(".addcustomerpop #displayInfo").addClass("col-12");
             }
         }
         mediaQuery(x)
@@ -603,12 +604,12 @@ Template.addcustomerpop.events({
         //FlowRouter.go('/customerlist');
     },
     'click .btnSaveDept': function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         let contactService = new ContactService();
 
-        //let headerDept = $('#sltDepartment').val();
-        let custType = $('#edtDeptName').val();
-        let typeDesc = $('#txaDescription').val() || '';
+        //let headerDept = $('.addcustomerpop #sltDepartment').val();
+        let custType = $('.addcustomerpop #edtDeptName').val();
+        let typeDesc = $('.addcustomerpop #txaDescription').val() || '';
         if (custType === '') {
             swal('Client Type name cannot be blank!', '', 'warning');
 
@@ -762,106 +763,106 @@ Template.addcustomerpop.events({
     },
     'click #chkSameAsShipping': function (event) {
         /*if($(event.target).is(':checked')){
-      let streetAddress = $('#edtCustomerShippingAddress').val();
-      let city = $('#edtCustomerShippingCity').val();
-      let state =  $('#edtCustomerShippingState').val();
-      let zipcode =  $('#edtCustomerShippingZIP').val();
-      let country =  $('#sedtCountry').val();
+      let streetAddress = $('.addcustomerpop #edtCustomerShippingAddress').val();
+      let city = $('.addcustomerpop #edtCustomerShippingCity').val();
+      let state =  $('.addcustomerpop #edtCustomerShippingState').val();
+      let zipcode =  $('.addcustomerpop #edtCustomerShippingZIP').val();
+      let country =  $('.addcustomerpop #sedtCountry').val();
 
-       $('#edtCustomerBillingAddress').val(streetAddress);
-       $('#edtCustomerBillingCity').val(city);
-       $('#edtCustomerBillingState').val(state);
-       $('#edtCustomerBillingZIP').val(zipcode);
-       $('#bedtCountry').val(country);
+       $('.addcustomerpop #edtCustomerBillingAddress').val(streetAddress);
+       $('.addcustomerpop #edtCustomerBillingCity').val(city);
+       $('.addcustomerpop #edtCustomerBillingState').val(state);
+       $('.addcustomerpop #edtCustomerBillingZIP').val(zipcode);
+       $('.addcustomerpop #bedtCountry').val(country);
     }else{
-      $('#edtCustomerBillingAddress').val('');
-      $('#edtCustomerBillingCity').val('');
-      $('#edtCustomerBillingState').val('');
-      $('#edtCustomerBillingZIP').val('');
-      $('#bedtCountry').val('');
+      $('.addcustomerpop #edtCustomerBillingAddress').val('');
+      $('.addcustomerpop #edtCustomerBillingCity').val('');
+      $('.addcustomerpop #edtCustomerBillingState').val('');
+      $('.addcustomerpop #edtCustomerBillingZIP').val('');
+      $('.addcustomerpop #bedtCountry').val('');
     }
     */
     },
     'click .btnSaveCustPOP': async function (event) {
         let templateObject = Template.instance();
         let contactService = new ContactService();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let customerPOPID = $('#edtCustomerPOPID').val();
-        let company = $('#edtCustomerCompany').val();
-        let email = $('#edtCustomerPOPEmail').val();
-        let title = $('#edtTitle').val();
-        let firstname = $('#edtFirstName').val();
-        let middlename = $('#edtMiddleName').val();
-        let lastname = $('#edtLastName').val();
-        // let suffix = $('#edtSuffix').val();
-        let phone = $('#edtCustomerPhone').val();
-        let mobile = $('#edtCustomerMobile').val();
+        LoadingOverlay.show();
+        let customerPOPID = $('.addcustomerpop #edtCustomerPOPID').val();
+        let company = $('.addcustomerpop #edtCustomerCompany').val();
+        let email = $('.addcustomerpop #edtCustomerPOPEmail').val();
+        let title = $('.addcustomerpop #edtTitle').val();
+        let firstname = $('.addcustomerpop #edtFirstName').val();
+        let middlename = $('.addcustomerpop #edtMiddleName').val();
+        let lastname = $('.addcustomerpop #edtLastName').val();
+        // let suffix = $('.addcustomerpop #edtSuffix').val();
+        let phone = $('.addcustomerpop #edtCustomerPhone').val();
+        let mobile = $('.addcustomerpop #edtCustomerMobile').val();
         if(mobile && mobile !== '') {
             mobile = contactService.changeMobileFormat(mobile) 
          }
-        let fax = $('#edtCustomerFax').val();
-        let accountno = $('#edtClientNo').val();
-        let skype = $('#edtCustomerSkypeID').val();
-        let website = $('#edtCustomerWebsite').val();
+        let fax = $('.addcustomerpop #edtCustomerFax').val();
+        let accountno = $('.addcustomerpop #edtClientNo').val();
+        let skype = $('.addcustomerpop #edtCustomerSkypeID').val();
+        let website = $('.addcustomerpop #edtCustomerWebsite').val();
 
 
 
-        let streetAddress = $('#edtCustomerShippingAddress').val();
-        let city = $('#edtCustomerShippingCity').val();
-        let state = $('#edtCustomerShippingState').val();
-        let postalcode = $('#edtCustomerShippingZIP').val();
-        let country = $('#sedtCountry').val();
+        let streetAddress = $('.addcustomerpop #edtCustomerShippingAddress').val();
+        let city = $('.addcustomerpop #edtCustomerShippingCity').val();
+        let state = $('.addcustomerpop #edtCustomerShippingState').val();
+        let postalcode = $('.addcustomerpop #edtCustomerShippingZIP').val();
+        let country = $('.addcustomerpop #sedtCountry').val();
         let bstreetAddress = '';
         let bcity = '';
         let bstate = '';
         let bzipcode = '';
         let bcountry = '';
         let isSupplier = false;
-        if ($('#chkSameAsSupplier').is(':checked')) {
+        if ($('.addcustomerpop #chkSameAsSupplier').is(':checked')) {
             isSupplier = true;
         }else{
             isSupplier = false;
         }
-        if ($('#chkSameAsShipping2').is(':checked')) {
+        if ($('.addcustomerpop #chkSameAsShipping2').is(':checked')) {
             bstreetAddress = streetAddress;
             bcity = city;
             bstate = state;
             bzipcode = postalcode;
             bcountry = country;
         } else {
-            bstreetAddress = $('#edtCustomerBillingAddress').val();
-            bcity = $('#edtCustomerBillingCity').val();
-            bstate = $('#edtCustomerBillingState').val();
-            bzipcode = $('#edtCustomerBillingZIP').val();
-            bcountry = $('#bedtCountry').val();
+            bstreetAddress = $('.addcustomerpop #edtCustomerBillingAddress').val();
+            bcity = $('.addcustomerpop #edtCustomerBillingCity').val();
+            bstate = $('.addcustomerpop #edtCustomerBillingState').val();
+            bzipcode = $('.addcustomerpop #edtCustomerBillingZIP').val();
+            bcountry = $('.addcustomerpop #bedtCountry').val();
         }
 
-        let sltPaymentMethodName = $('#sltPreferedPayment').val();
-        let sltTermsName = $('#sltTermsPOP').val();
+        let sltPaymentMethodName = $('.addcustomerpop #sltPreferedPayment').val();
+        let sltTermsName = $('.addcustomerpop #sltTermsPOP').val();
         let sltShippingMethodName = '';
-        let rewardPointsOpeningBalance = $('#custOpeningBalance').val();
-        // let sltRewardPointsOpeningDate =  $('#dtAsOf').val();
+        let rewardPointsOpeningBalance = $('.addcustomerpop #custOpeningBalance').val();
+        // let sltRewardPointsOpeningDate =  $('.addcustomerpop #dtAsOf').val();
 
-        var sltRewardPointsOpeningDate = new Date($("#dtAsOf").datepicker("getDate"));
+        var sltRewardPointsOpeningDate = new Date($(".addcustomerpop #dtAsOf").datepicker("getDate"));
 
         let openingDate = sltRewardPointsOpeningDate.getFullYear() + "-" + (sltRewardPointsOpeningDate.getMonth() + 1) + "-" + sltRewardPointsOpeningDate.getDate();
 
         let sltTaxCodeName = "";
 
-        let isChecked = $(".chkTaxExempt").is(":checked");
+        let isChecked = $(".addcustomerpop .chkTaxExempt").is(":checked");
         if (isChecked) {
             sltTaxCodeName = "NT";
         } else {
-            sltTaxCodeName = $('#sltTaxCode').val();
+            sltTaxCodeName = $('.addcustomerpop #sltTaxCode').val();
         }
 
-        let permanentDiscount = $('#edtCustomerCardDiscount').val()||0;
-        let notes = $('#txaNotes').val();
-        let custField1 = $('#edtCustomeField1').val();
-        let custField2 = $('#edtCustomeField2').val();
-        let custField3 = $('#edtCustomeField3').val();
-        let custField4 = $('#edtCustomeField4').val();
-        let customerType = $('#sltCustomerType').val()||'';
+        let permanentDiscount = $('.addcustomerpop #edtCustomerCardDiscount').val()||0;
+        let notes = $('.addcustomerpop #txaNotes').val();
+        let custField1 = $('.addcustomerpop #edtCustomeField1').val();
+        let custField2 = $('.addcustomerpop #edtCustomeField2').val();
+        let custField3 = $('.addcustomerpop #edtCustomeField3').val();
+        let custField4 = $('.addcustomerpop #edtCustomeField4').val();
+        let customerType = $('.addcustomerpop #sltCustomerType').val()||'';
         let uploadedItems = templateObject.uploadedFiles.get();
 
         var url = FlowRouter.current().path;
@@ -1025,36 +1026,36 @@ Template.addcustomerpop.events({
                     $('.salesmodule #txaShipingInfo').val(postalAddress);
                     $('.salesmodule #sltTerms').val(sltTermsName);
                 }else if (currentLoc == "/billcard" || currentLoc == "/purchaseordercard") {
-                    var selectLineID = $('#customerSelectLineID').val();
-                    $('#' + selectLineID + " .lineCustomerJob").val(company);
+                    var selectLineID = $('.addcustomerpop #customerSelectLineID').val();
+                    $('.addcustomerpop #' + selectLineID + " .lineCustomerJob").val(company);
 
                 }else if (currentLoc == "/payrolloverview" ) {
-                      $("#sltJob").text(company);
+                      $(".addcustomerpop #sltJob").text(company);
                 }else if (currentLoc == "/timesheet") {
-                    var selectLineID = $('#selectLineID').val();
+                    var selectLineID = $('.addcustomerpop #selectLineID').val();
                     if(selectLineID != ''){
-                      $('#' + selectLineID + " .sltJobOne").text(company);
+                      $('.addcustomerpop #' + selectLineID + " .sltJobOne").text(company);
                     }else{
-                      $("#sltJob").text(company);
+                      $(".addcustomerpop #sltJob").text(company);
                     }
 
 
                 }else if (currentLoc == "/depositcard" ) {
-                  var selectLineID = $('#customerSelectLineID').val();
-                  $('#' + selectLineID + " .lineCompany").val(company);
+                  var selectLineID = $('.addcustomerpop #customerSelectLineID').val();
+                  $('.addcustomerpop #' + selectLineID + " .lineCompany").val(company);
                 }else {
                     sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
                         addVS1Data('TCustomerVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-                            location.reload();
+                            $('.setup-wizard') ? $('.setup-wizard .setup-step-7 .btnRefresh').click() : location.reload();
                         }).catch(function (err) {
-                            location.reload();
+                            $('.setup-wizard') ? $('.setup-wizard .setup-step-7 .btnRefresh').click() : location.reload();
                         });
                     }).catch(function (err) {
-                        location.reload();
+                        $('.setup-wizard') ? $('.setup-wizard .setup-step-7 .btnRefresh').click() : location.reload();
                     });
                 }
 
-                $('#addCustomerModal').modal('toggle');
+                $('.addcustomerpop #addCustomerModal').modal('toggle');
                 sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
                     addVS1Data('TCustomerVS1', JSON.stringify(dataReload)).then(function (datareturn) {
 
@@ -1064,7 +1065,7 @@ Template.addcustomerpop.events({
                 });
             }
 
-
+            $('.modal.show').modal('hide');
         }).catch(function (err) {
             swal({
                 title: 'Oooops...',
@@ -1079,36 +1080,36 @@ Template.addcustomerpop.events({
 
                 }
             });
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
-
+       
     },
     'click .btnSaveJob': function (event) {
         let templateObject = Template.instance();
         let contactService = new ContactService();
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
 
-        let companyJob = $('#edtJobCustomerCompany').val();
-        let companyParent = $('#edtParentJobCustomerCompany').val();
+        let companyJob = $('.addcustomerpop #edtJobCustomerCompany').val();
+        let companyParent = $('.addcustomerpop #edtParentJobCustomerCompany').val();
 
         let addressValid = false;
-        let emailJob = $('#edtJobCustomerEmail').val();
-        let titleJob = $('#edtJobTitle').val();
-        let firstnameJob = $('#edtJobFirstName').val();
-        let middlenameJob = $('#edtJobMiddleName').val();
-        let lastnameJob = $('#edtJobLastName').val();
-        // let suffixJob = $('#edtSuffix').val();
-        let phoneJob = $('#edtJobCustomerPhone').val();
-        let mobileJob = $('#edtJobCustomerMobile').val();
-        let faxJob = $('#edtJobCustomerFax').val();
-        // let accountnoJob = $('#edtClientNo').val();
-        let skypeJob = $('#edtJobCustomerSkypeID').val();
-        let websiteJob = $('#edtJobCustomerWebsite').val();
+        let emailJob = $('.addcustomerpop #edtJobCustomerEmail').val();
+        let titleJob = $('.addcustomerpop #edtJobTitle').val();
+        let firstnameJob = $('.addcustomerpop #edtJobFirstName').val();
+        let middlenameJob = $('.addcustomerpop #edtJobMiddleName').val();
+        let lastnameJob = $('.addcustomerpop #edtJobLastName').val();
+        // let suffixJob = $('.addcustomerpop #edtSuffix').val();
+        let phoneJob = $('.addcustomerpop #edtJobCustomerPhone').val();
+        let mobileJob = $('.addcustomerpop #edtJobCustomerMobile').val();
+        let faxJob = $('.addcustomerpop #edtJobCustomerFax').val();
+        // let accountnoJob = $('.addcustomerpop #edtClientNo').val();
+        let skypeJob = $('.addcustomerpop #edtJobCustomerSkypeID').val();
+        let websiteJob = $('.addcustomerpop #edtJobCustomerWebsite').val();
 
-        let jobTitle = $('#edtJob_Title').val();
-        let jobName = $('#edtJobName').val();
-        let jobNumber = $('#edtJobNumber').val();
-        let jobReg = $('#edtJobReg').val();
+        let jobTitle = $('.addcustomerpop #edtJob_Title').val();
+        let jobName = $('.addcustomerpop #edtJobName').val();
+        let jobNumber = $('.addcustomerpop #edtJobNumber').val();
+        let jobReg = $('.addcustomerpop #edtJobReg').val();
 
 
 
@@ -1124,7 +1125,7 @@ Template.addcustomerpop.events({
         let postalcodeJob = '';
         let countryJob = '';
 
-        if ($('#chkJobSameAsShipping2').is(':checked')) {
+        if ($('.addcustomerpop #chkJobSameAsShipping2').is(':checked')) {
 
 
             streetAddressJob = $('.tab-Job4 #edtJobCustomerShippingAddress').val();
@@ -1139,12 +1140,12 @@ Template.addcustomerpop.events({
             bzipcodeJob = postalcodeJob;
             bcountryJob = countryJob;
             addressValid = true;
-        } else if ($('#chkJobSameAsShipping2NoPOP').is(':checked')) {
-            streetAddressJob = $('#edtJobCustomerShippingAddress').val();
-            cityJob = $('#edtJobCustomerShippingCity').val();
-            stateJob = $('#edtJobCustomerShippingState').val();
-            postalcodeJob = $('#edtJobCustomerShippingZIP').val();
-            countryJob = $('#sedtJobCountry').val();
+        } else if ($('.addcustomerpop #chkJobSameAsShipping2NoPOP').is(':checked')) {
+            streetAddressJob = $('.addcustomerpop #edtJobCustomerShippingAddress').val();
+            cityJob = $('.addcustomerpop #edtJobCustomerShippingCity').val();
+            stateJob = $('.addcustomerpop #edtJobCustomerShippingState').val();
+            postalcodeJob = $('.addcustomerpop #edtJobCustomerShippingZIP').val();
+            countryJob = $('.addcustomerpop #sedtJobCountry').val();
 
             bstreetAddressJob = streetAddressJob;
             bcityJob = cityJob;
@@ -1152,25 +1153,25 @@ Template.addcustomerpop.events({
             bzipcodeJob = postalcodeJob;
             bcountryJob = countryJob;
         } else {
-            bstreetAddressJob = $('#edtCustomerBillingAddress').val();
-            bcityJob = $('#edtJobCustomerBillingCity').val();
-            bstateJob = $('#edtJobCustomerBillingState').val();
-            bzipcodeJob = $('#edtJobCustomerBillingZIP').val();
-            bcountryJob = $('#sJobedtCountry').val();
+            bstreetAddressJob = $('.addcustomerpop #edtCustomerBillingAddress').val();
+            bcityJob = $('.addcustomerpop #edtJobCustomerBillingCity').val();
+            bstateJob = $('.addcustomerpop #edtJobCustomerBillingState').val();
+            bzipcodeJob = $('.addcustomerpop #edtJobCustomerBillingZIP').val();
+            bcountryJob = $('.addcustomerpop #sJobedtCountry').val();
         }
 
 
 
-        let sltPaymentMethodNameJob = $('#sltJobPreferedPayment').val() || 'Cash';
-        let sltTermsNameJob = $('#sltJobTerms').val();
-        let sltShippingMethodNameJob = $('#sltJobDeliveryMethod').val();
-        let rewardPointsOpeningBalanceJob = $('#custJobOpeningBalance').val();
+        let sltPaymentMethodNameJob = $('.addcustomerpop #sltJobPreferedPayment').val() || 'Cash';
+        let sltTermsNameJob = $('.addcustomerpop #sltJobTerms').val();
+        let sltShippingMethodNameJob = $('.addcustomerpop #sltJobDeliveryMethod').val();
+        let rewardPointsOpeningBalanceJob = $('.addcustomerpop #custJobOpeningBalance').val();
 
-        var sltRewardPointsOpeningDateJob = new Date($("#dtJobAsOf").datepicker("getDate"));
+        var sltRewardPointsOpeningDateJob = new Date($(".addcustomerpop #dtJobAsOf").datepicker("getDate"));
 
         let openingDateJob = sltRewardPointsOpeningDateJob.getFullYear() + "-" + (sltRewardPointsOpeningDateJob.getMonth() + 1) + "-" + sltRewardPointsOpeningDateJob.getDate();
 
-        // let sltTaxCodeNameJob =  $('#sltJobTaxCode').val();
+        // let sltTaxCodeNameJob =  $('.addcustomerpop #sltJobTaxCode').val();
         let uploadedItemsJob = templateObject.uploadedFilesJob.get();
         let uploadedItemsJobNoPOP = templateObject.uploadedFilesJobNoPOP.get();
 
@@ -1181,11 +1182,11 @@ Template.addcustomerpop.events({
         if (isChecked) {
             sltTaxCodeNameJob = "NT";
         } else {
-            sltTaxCodeNameJob = $('#sltJobTaxCode').val();
+            sltTaxCodeNameJob = $('.addcustomerpop #sltJobTaxCode').val();
         }
 
 
-        let notesJob = $('#txaJobNotes').val();
+        let notesJob = $('.addcustomerpop #txaJobNotes').val();
 
         var objDetails = '';
         var url = FlowRouter.current().path;
@@ -1381,7 +1382,7 @@ Template.addcustomerpop.events({
         }
     },
     'click .chkDatatable': function (event) {
-        var columns = $('#tblTransactionlist th');
+        var columns = $('.addcustomerpop #tblTransactionlist th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
         $.each(columns, function (i, v) {
@@ -1422,7 +1423,7 @@ Template.addcustomerpop.events({
     },
     'click .saveTable': function (event) {
         let lineItems = [];
-        //let datatable =$('#tblTransactionlist').DataTable();
+        //let datatable =$('.addcustomerpop #tblTransactionlist').DataTable();
         $('.columnSettings').each(function (index) {
             var $tblrow = $(this);
             var colTitle = $tblrow.find(".divcolumn").text() || '';
@@ -1463,9 +1464,9 @@ Template.addcustomerpop.events({
                         }
                     }, function (err, idTag) {
                         if (err) {
-                            $('#myModal2').modal('toggle');
+                            $('.addcustomerpop #myModal2').modal('toggle');
                         } else {
-                            $('#myModal2').modal('toggle');
+                            $('.addcustomerpop #myModal2').modal('toggle');
                         }
                     });
 
@@ -1477,9 +1478,9 @@ Template.addcustomerpop.events({
                         createdAt: new Date()
                     }, function (err, idTag) {
                         if (err) {
-                            $('#myModal2').modal('toggle');
+                            $('.addcustomerpop #myModal2').modal('toggle');
                         } else {
-                            $('#myModal2').modal('toggle');
+                            $('.addcustomerpop #myModal2').modal('toggle');
 
                         }
                     });
@@ -1487,7 +1488,7 @@ Template.addcustomerpop.events({
                 }
             }
         }
-        $('#myModal2').modal('toggle');
+        $('.addcustomerpop #myModal2').modal('toggle');
         //Meteor._reload.reload();
     },
     'blur .divcolumn': function (event) {
@@ -1495,7 +1496,7 @@ Template.addcustomerpop.events({
 
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
 
-        var datable = $('#tblTransactionlist').DataTable();
+        var datable = $('.addcustomerpop #tblTransactionlist').DataTable();
         var title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
 
@@ -1506,7 +1507,7 @@ Template.addcustomerpop.events({
 
         // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblTransactionlist th');
+        var datable = $('.addcustomerpop #tblTransactionlist th');
         $.each(datable, function (i, v) {
             if (v.innerText == columnDataValue) {
                 let className = v.className;
@@ -1519,7 +1520,7 @@ Template.addcustomerpop.events({
     },
     'click .btnOpenSettingsCustomer': function (event) {
         let templateObject = Template.instance();
-        var columns = $('#tblTransactionlist th');
+        var columns = $('.addcustomerpop #tblTransactionlist th');
 
         const tableHeaderList = [];
         let sTible = "";
@@ -1550,24 +1551,24 @@ Template.addcustomerpop.events({
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
     'click #exportbtn': function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletocsv').click();
 
 
     },
     'click .printConfirm': function (event) {
 
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
 
     },
     'click #exportbtnJob': function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletocsv').click();
 
     },
     'click .printConfirmJob': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
 
     },
@@ -1576,7 +1577,7 @@ Template.addcustomerpop.events({
     },
     'click .btnRefreshTransaction': function () {
         let currentId = FlowRouter.current().queryParams;
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         sideBarService.getTTransactionListReport().then(function (data) {
             addVS1Data('TTransactionListReport', JSON.stringify(data)).then(function (datareturn) {
                 if (!isNaN(currentId.jobid)) {
@@ -1608,7 +1609,7 @@ Template.addcustomerpop.events({
     },
     'click .btnRefreshJobDetails': function () {
         let currentId = FlowRouter.current().queryParams;
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         sideBarService.getAllJobssDataVS1(initialBaseDataLoad,0).then(function (data) {
             addVS1Data('TJobVS1', JSON.stringify(data)).then(function (datareturn) {
                 if (!isNaN(currentId.jobid)) {
@@ -1640,25 +1641,25 @@ Template.addcustomerpop.events({
     },
     'click #formCheck-TaxCode': function () {
         if ($(event.target).is(':checked')) {
-            $('#autoUpdate').css('display', 'none');
+            $('.addcustomerpop #autoUpdate').css('display', 'none');
         } else {
-            $('#autoUpdate').css('display', 'block');
+            $('.addcustomerpop #autoUpdate').css('display', 'block');
         }
     },
 
     'click #formCheckJob-2': function () {
         if ($(event.target).is(':checked')) {
-            $('#autoUpdateJob').css('display', 'none');
+            $('.addcustomerpop #autoUpdateJob').css('display', 'none');
         } else {
-            $('#autoUpdateJob').css('display', 'block');
+            $('.addcustomerpop #autoUpdateJob').css('display', 'block');
         }
     },
 
     'click #activeChk': function () {
         if ($(event.target).is(':checked')) {
-            $('#customerInfo').css('color', '#00A3D3');
+            $('.addcustomerpop #customerInfo').css('color', '#00A3D3');
         } else {
-            $('#customerInfo').css('color', '#b7b9cc !important');
+            $('.addcustomerpop #customerInfo').css('color', '#b7b9cc !important');
         }
     },
 
@@ -1694,7 +1695,7 @@ Template.addcustomerpop.events({
         }
     },
     'click .new_attachment_btn': function (event) {
-        $('#attachment-upload').trigger('click');
+        $('.addcustomerpop #attachment-upload').trigger('click');
 
     },
     'click #formCheck-one': function (event) {
@@ -1759,19 +1760,19 @@ Template.addcustomerpop.events({
         let getcustomField2 = $('.customField2Text').html();
         let getcustomField3 = $('.customField3Text').html();
         let getcustomField4 = $('.customField4Text').html();
-        if ($('#formCheck-one').is(':checked')) {
+        if ($('.addcustomerpop #formCheck-one').is(':checked')) {
             getchkcustomField1 = false;
         }
-        if ($('#formCheck-two').is(':checked')) {
+        if ($('.addcustomerpop #formCheck-two').is(':checked')) {
             getchkcustomField2 = false;
         }
-        if ($('#formCheck-three').is(':checked')) {
+        if ($('.addcustomerpop #formCheck-three').is(':checked')) {
             getchkcustomField3 = false;
         }
-        if ($('#formCheck-four').is(':checked')) {
+        if ($('.addcustomerpop #formCheck-four').is(':checked')) {
             getchkcustomField4 = false;
         }
-        $('#customfieldModal').modal('toggle');
+        $('.addcustomerpop #customfieldModal').modal('toggle');
 
     },
     'click .btnResetSettings': function (event) {
@@ -1805,7 +1806,7 @@ Template.addcustomerpop.events({
         }
     },
     'click .new_attachment_btn': function (event) {
-        $('#attachment-upload').trigger('click');
+        $('.addcustomerpop #attachment-upload').trigger('click');
 
     },
     'change #attachment-upload': function (e) {
@@ -1814,13 +1815,13 @@ Template.addcustomerpop.events({
         let lineIDForAttachment = false;
         let uploadedFilesArray = templateObj.uploadedFiles.get();
 
-        let myFiles = $('#attachment-upload')[0].files;
+        let myFiles = $('.addcustomerpop #attachment-upload')[0].files;
         let uploadData = utilityService.attachmentUploadTabs(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCount.set(uploadData.totalAttachments);
     },
     'click .img_new_attachment_btn': function (event) {
-        $('#img-attachment-upload').trigger('click');
+        $('.addcustomerpop #img-attachment-upload').trigger('click');
 
     },
     'change #img-attachment-upload': function (e) {
@@ -1829,7 +1830,7 @@ Template.addcustomerpop.events({
         let lineIDForAttachment = false;
         let uploadedFilesArray = templateObj.uploadedFiles.get();
 
-        let myFiles = $('#img-attachment-upload')[0].files;
+        let myFiles = $('.addcustomerpop #img-attachment-upload')[0].files;
         let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCount.set(uploadData.totalAttachments);
@@ -1837,14 +1838,14 @@ Template.addcustomerpop.events({
     'click .remove-attachment': function (event, ui) {
         let tempObj = Template.instance();
         let attachmentID = parseInt(event.target.id.split('remove-attachment-')[1]);
-        if (tempObj.$("#confirm-action-" + attachmentID).length) {
-            tempObj.$("#confirm-action-" + attachmentID).remove();
+        if (tempObj.$(".addcustomerpop #confirm-action-" + attachmentID).length) {
+            tempObj.$(".addcustomerpop #confirm-action-" + attachmentID).remove();
         } else {
             let actionElement = '<div class="confirm-action" id="confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default" id="delete-attachment-' + attachmentID + '">'
             + 'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
-            tempObj.$('#attachment-name-' + attachmentID).append(actionElement);
+            tempObj.$('.addcustomerpop #attachment-name-' + attachmentID).append(actionElement);
         }
-        tempObj.$("#new-attachment2-tooltip").show();
+        tempObj.$(".addcustomerpop #new-attachment2-tooltip").show();
 
     },
     'click .file-name': function (event) {
@@ -1852,7 +1853,7 @@ Template.addcustomerpop.events({
         let templateObj = Template.instance();
         let uploadedFiles = templateObj.uploadedFiles.get();
 
-        $('#myModalAttachment').modal('hide');
+        $('.addcustomerpop #myModalAttachment').modal('hide');
         let previewFile = {};
         let input = uploadedFiles[attachmentID].fields.Description;
         previewFile.link = 'data:' + input + ';base64,' + uploadedFiles[attachmentID].fields.Attachment;
@@ -1886,23 +1887,23 @@ Template.addcustomerpop.events({
         }
         templateObj.uploadedFile.set(previewFile);
 
-        $('#files_view').modal('show');
+        $('.addcustomerpop #files_view').modal('show');
 
         return;
     },
     'click .confirm-delete-attachment': function (event, ui) {
         let tempObj = Template.instance();
-        tempObj.$("#new-attachment2-tooltip").show();
+        tempObj.$(".addcustomerpop #new-attachment2-tooltip").show();
         let attachmentID = parseInt(event.target.id.split('delete-attachment-')[1]);
         let uploadedArray = tempObj.uploadedFiles.get();
         let attachmentCount = tempObj.attachmentCount.get();
-        $('#attachment-upload').val('');
+        $('.addcustomerpop #attachment-upload').val('');
         uploadedArray.splice(attachmentID, 1);
         tempObj.uploadedFiles.set(uploadedArray);
         attachmentCount--;
         if (attachmentCount === 0) {
             let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-            $('#file-display').html(elementToAdd);
+            $('.addcustomerpop #file-display').html(elementToAdd);
         }
         tempObj.attachmentCount.set(attachmentCount);
         if (uploadedArray.length > 0) {
@@ -1923,7 +1924,7 @@ Template.addcustomerpop.events({
         }
     },
     'click .new_attachment_btnJobPOP': function (event) {
-        $('#attachment-uploadJobPOP').trigger('click');
+        $('.addcustomerpop #attachment-uploadJobPOP').trigger('click');
 
     },
     'change #attachment-uploadJobPOP': function (e) {
@@ -1933,7 +1934,7 @@ Template.addcustomerpop.events({
         let uploadedFilesArray = templateObj.uploadedFilesJob.get();
 
 
-        let myFiles = $('#attachment-uploadJobPOP')[0].files;
+        let myFiles = $('.addcustomerpop #attachment-uploadJobPOP')[0].files;
 
         let uploadData = utilityService.attachmentUploadJob(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
 
@@ -1943,14 +1944,14 @@ Template.addcustomerpop.events({
     'click .remove-attachmentJobPOP': function (event, ui) {
         let tempObj = Template.instance();
         let attachmentID = parseInt(event.target.id.split('remove-attachmentJobPOP-')[1]);
-        if (tempObj.$("#confirm-actionJobPOP-" + attachmentID).length) {
-            tempObj.$("#confirm-actionJobPOP-" + attachmentID).remove();
+        if (tempObj.$(".addcustomerpop #confirm-actionJobPOP-" + attachmentID).length) {
+            tempObj.$(".addcustomerpop #confirm-actionJobPOP-" + attachmentID).remove();
         } else {
             let actionElement = '<div class="confirm-actionJobPOP" id="confirm-actionJobPOP-' + attachmentID + '"><a class="confirm-delete-attachmentJobPOP btn btn-default" id="delete-attachmentJobPOP-' + attachmentID + '">'
             + 'Delete</a><button class="save-to-libraryJobPOP btn btn-default">Remove & save to File Library</button></div>';
-            tempObj.$('#attachment-nameJobPOP-' + attachmentID).append(actionElement);
+            tempObj.$('.addcustomerpop #attachment-nameJobPOP-' + attachmentID).append(actionElement);
         }
-        tempObj.$("#new-attachment2-tooltipJobPOP").show();
+        tempObj.$(".addcustomerpop #new-attachment2-tooltipJobPOP").show();
 
     },
     'click .file-nameJobPOP': function (event) {
@@ -1958,7 +1959,7 @@ Template.addcustomerpop.events({
         let templateObj = Template.instance();
         let uploadedFiles = templateObj.uploadedFilesJob.get();
 
-        $('#myModalAttachmentJobPOP').modal('hide');
+        $('.addcustomerpop #myModalAttachmentJobPOP').modal('hide');
         let previewFile = {};
         let input = uploadedFiles[attachmentID].fields.Description;
         previewFile.link = 'data:' + input + ';base64,' + uploadedFiles[attachmentID].fields.Attachment;
@@ -1992,23 +1993,23 @@ Template.addcustomerpop.events({
         }
         templateObj.uploadedFileJob.set(previewFile);
 
-        $('#files_viewJobPOP').modal('show');
+        $('.addcustomerpop #files_viewJobPOP').modal('show');
 
         return;
     },
     'click .confirm-delete-attachmentJobPOP': function (event, ui) {
         let tempObj = Template.instance();
-        tempObj.$("#new-attachment2-tooltipJobPOP").show();
+        tempObj.$(".addcustomerpop #new-attachment2-tooltipJobPOP").show();
         let attachmentID = parseInt(event.target.id.split('delete-attachmentJobPOP-')[1]);
         let uploadedArray = tempObj.uploadedFilesJob.get();
         let attachmentCount = tempObj.attachmentCountJob.get();
-        $('#attachment-uploadJobPOP').val('');
+        $('.addcustomerpop #attachment-uploadJobPOP').val('');
         uploadedArray.splice(attachmentID, 1);
         tempObj.uploadedFilesJob.set(uploadedArray);
         attachmentCount--;
         if (attachmentCount === 0) {
             let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-            $('#file-displayJobPOP').html(elementToAdd);
+            $('.addcustomerpop #file-displayJobPOP').html(elementToAdd);
         }
         tempObj.attachmentCountJob.set(attachmentCount);
         if (uploadedArray.length > 0) {
@@ -2029,7 +2030,7 @@ Template.addcustomerpop.events({
         }
     },
     'click .new_attachment_btnJobNoPOP': function (event) {
-        $('#attachment-uploadJobNoPOP').trigger('click');
+        $('.addcustomerpop #attachment-uploadJobNoPOP').trigger('click');
 
     },
     'change #attachment-uploadJobNoPOP': function (e) {
@@ -2039,7 +2040,7 @@ Template.addcustomerpop.events({
         let uploadedFilesArrayJob = templateObj.uploadedFilesJobNoPOP.get();
 
 
-        let myFiles = $('#attachment-uploadJobNoPOP')[0].files;
+        let myFiles = $('.addcustomerpop #attachment-uploadJobNoPOP')[0].files;
 
         let uploadData = utilityService.attachmentUploadJobNoPOP(uploadedFilesArrayJob, myFiles, saveToTAttachment, lineIDForAttachment);
 
@@ -2050,14 +2051,14 @@ Template.addcustomerpop.events({
     'click .remove-attachmentJobNoPOP': function (event, ui) {
         let tempObj = Template.instance();
         let attachmentID = parseInt(event.target.id.split('remove-attachmentJobNoPOP-')[1]);
-        if (tempObj.$("#confirm-actionJobNoPOP-" + attachmentID).length) {
-            tempObj.$("#confirm-actionJobNoPOP-" + attachmentID).remove();
+        if (tempObj.$(".addcustomerpop #confirm-actionJobNoPOP-" + attachmentID).length) {
+            tempObj.$(".addcustomerpop #confirm-actionJobNoPOP-" + attachmentID).remove();
         } else {
             let actionElement = '<div class="confirm-actionJobNoPOP" id="confirm-actionJobNoPOP-' + attachmentID + '"><a class="confirm-delete-attachmentJobNoPOP btn btn-default" id="delete-attachmentJobNoPOP-' + attachmentID + '">'
             + 'Delete</a><button class="save-to-libraryJobNoPOP btn btn-default">Remove & save to File Library</button></div>';
-            tempObj.$('#attachment-nameJobNoPOP-' + attachmentID).append(actionElement);
+            tempObj.$('.addcustomerpop #attachment-nameJobNoPOP-' + attachmentID).append(actionElement);
         }
-        tempObj.$("#new-attachment2-tooltipJobNoPOP").show();
+        tempObj.$(".addcustomerpop #new-attachment2-tooltipJobNoPOP").show();
 
     },
     'click .file-nameJobNoPOP': function (event) {
@@ -2065,7 +2066,7 @@ Template.addcustomerpop.events({
         let templateObj = Template.instance();
         let uploadedFiles = templateObj.uploadedFilesJobNoPOP.get();
 
-        //$('#myModalAttachmentJobNoPOP').modal('hide');
+        //$('.addcustomerpop #myModalAttachmentJobNoPOP').modal('hide');
         let previewFile = {};
         let input = uploadedFiles[attachmentID].fields.Description;
         previewFile.link = 'data:' + input + ';base64,' + uploadedFiles[attachmentID].fields.Attachment;
@@ -2099,23 +2100,23 @@ Template.addcustomerpop.events({
         }
         templateObj.uploadedFileJobNoPOP.set(previewFile);
 
-        $('#files_viewJobNoPOP').modal('show');
+        $('.addcustomerpop #files_viewJobNoPOP').modal('show');
 
         return;
     },
     'click .confirm-delete-attachmentJobNoPOP': function (event, ui) {
         let tempObj = Template.instance();
-        tempObj.$("#new-attachment2-tooltipJobNoPOP").show();
+        tempObj.$(".addcustomerpop #new-attachment2-tooltipJobNoPOP").show();
         let attachmentID = parseInt(event.target.id.split('delete-attachmentJobNoPOP-')[1]);
         let uploadedArray = tempObj.uploadedFilesJobNoPOP.get();
         let attachmentCount = tempObj.attachmentCountJobNoPOP.get();
-        $('#attachment-uploadJobNoPOP').val('');
+        $('.addcustomerpop #attachment-uploadJobNoPOP').val('');
         uploadedArray.splice(attachmentID, 1);
         tempObj.uploadedFilesJobNoPOP.set(uploadedArray);
         attachmentCount--;
         if (attachmentCount === 0) {
             let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-            $('#file-displayJobNoPOP').html(elementToAdd);
+            $('.addcustomerpop #file-displayJobNoPOP').html(elementToAdd);
         }
         tempObj.attachmentCountJobNoPOP.set(attachmentCount);
         if (uploadedArray.length > 0) {
@@ -2138,7 +2139,7 @@ Template.addcustomerpop.events({
     'change .customerTypeSelect': function (event) {
         var custName = $('.customerTypeSelect').children("option:selected").val();
         if (custName == "newCust") {
-            $('#myModalClientType').modal();
+            $('.addcustomerpop #myModalClientType').modal();
             $(this).prop("selected", false);
         }
     },
@@ -2156,20 +2157,20 @@ Template.addcustomerpop.events({
         var displayInfo = document.getElementById("displayInfo");
         if (displayList.style.display === "none") {
             displayList.style.display = "flex";
-            $("#displayInfo").removeClass("col-12");
-            $("#displayInfo").addClass("col-9");
+            $(".addcustomerpop #displayInfo").removeClass("col-12");
+            $(".addcustomerpop #displayInfo").addClass("col-9");
             btnView.style.display = "none";
             btnHide.style.display = "flex";
         } else {
             displayList.style.display = "none";
-            $("#displayInfo").removeClass("col-9");
-            $("#displayInfo").addClass("col-12");
+            $(".addcustomerpop #displayInfo").removeClass("col-9");
+            $(".addcustomerpop #displayInfo").addClass("col-12");
             btnView.style.display = "flex";
             btnHide.style.display = "none";
         }
     },
     'click .btnDeleteCustomer': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
 
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
@@ -2207,7 +2208,7 @@ Template.addcustomerpop.events({
         } else {
             FlowRouter.go('/customerlist?success=true');
         }
-        $('#deleteCustomerModal').modal('toggle');
+        $('.addcustomerpop #deleteCustomerModal').modal('toggle');
     }
 });
 
