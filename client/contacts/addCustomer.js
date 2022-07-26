@@ -1338,17 +1338,17 @@ Template.customerscard.onRendered(function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
                 contactService.getAllCustomerSideDataVS1().then(function (data) {
-                    setAllCustomerSideDataVS1(data);
+                    templateObject.setAllCustomerSideDataVS1(data);
                 }).catch(function (err) {
                     //Bert.alert('<strong>' + err + '</strong>!', 'danger');
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                setAllCustomerSideDataVS1(data);
+                templateObject.setAllCustomerSideDataVS1(data);
             }
         }).catch(function (err) {
             contactService.getAllCustomerSideDataVS1().then(function (data) {
-                setAllCustomerSideDataVS1(data);
+                templateObject.setAllCustomerSideDataVS1(data);
             }).catch(function (err) {
                 //Bert.alert('<strong>' + err + '</strong>!', 'danger');
             });
@@ -1356,7 +1356,9 @@ Template.customerscard.onRendered(function () {
 
     };
     templateObject.getCustomersList();
-    function setAllCustomerSideDataVS1(data) {
+    templateObject.setAllCustomerSideDataVS1 = async function (data) {
+      const self = this;
+      self.customerrecords = new ReactiveVar();
         let lineItems = [];
         let lineItemObj = {};
         for (let i = 0; i < data.tcustomervs1.length; i++) {
@@ -1379,7 +1381,7 @@ Template.customerscard.onRendered(function () {
             };
             lineItems.push(dataList);
         }
-        templateObject.customerrecords.set(lineItems);
+        self.customerrecords.set(lineItems);
         if (templateObject.customerrecords.get()) {
             setTimeout(function () {
                 $('.counter').text(lineItems.length + ' items');
@@ -1753,6 +1755,43 @@ Template.customerscard.onRendered(function () {
 });
 
 Template.customerscard.events({
+  'keyup .txtSearchCustomers': function (event) {
+        if($(event.target).val() != ''){
+          $(".btnRefreshCustomers").addClass('btnSearchAlert');
+        }else{
+          $(".btnRefreshCustomers").removeClass('btnSearchAlert');
+        }
+        if (event.keyCode == 13) {
+           $(".btnRefreshCustomers").trigger("click");
+        }
+    },
+    'click .btnRefreshCustomers':function(event){
+        let templateObject = Template.instance();
+        let utilityService = new UtilityService();
+        let tableProductList;
+        const dataTableList = [];
+        var splashArrayInvoiceList = new Array();
+        const lineExtaSellItems = [];
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let dataSearchName = $('.txtSearchCustomers').val()||'';
+        if (dataSearchName.replace(/\s/g, '') != '') {
+            sideBarService.getNewCustomerByNameOrID(dataSearchName).then(async function (data) {
+                $(".btnRefreshCustomers").removeClass('btnSearchAlert');
+                let lineItems = [];
+                let lineItemObj = {};
+                if (data.tcustomervs1.length > 0) {
+                    await templateObject.setAllCustomerSideDataVS1(data);
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+          $('.fullScreenSpin').css('display', 'none');
+        }
+    },
     'click .tblJoblist tbody tr': function (event) {
         var listData = $(event.target).closest('tr').attr('id');
         if (listData) {
@@ -3322,7 +3361,7 @@ Template.customerscard.helpers({
         return Template.instance().countryData.get();
     },
     customerrecords: () => {
-        return Template.instance().customerrecords.get().sort(function (a, b) {
+       return Template.instance().customerrecords.get().sort(function (a, b) {
             if (a.company == 'NA') {
                 return 1;
             }
