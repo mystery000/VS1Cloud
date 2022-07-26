@@ -3494,9 +3494,7 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      if (refresh == true) {
-        $("#tblCustomerlist").DataTable().destroy();
-      }
+      if (refresh) $("#tblCustomerlist").DataTable().destroy();
 
       setTimeout(() => {
         $("#tblCustomerlist")
@@ -3598,12 +3596,15 @@ Template.setup.onRendered(function () {
   templateObject.loadCustomerList = () => {};
   // Step 8 Render functionalities
 
-  templateObject.loadSuppliers = async () => {
+  templateObject.loadSuppliers = async (refresh = false) => {
+    LoadingOverlay.show();
     let dataObject = await getVS1Data("TSupplierVS1");
     let data =
-      dataObject.length == 0
+      dataObject.length == 0 || refresh == true
         ? await sideBarService.getAllSuppliersDataVS1("All")
         : JSON.parse(dataObject[0].data);
+
+    if (refresh) await addVS1Data("TSupplierVS1", JSON.stringify(data));
 
     let _supplierList = [];
     let _supplierListHeaers = [];
@@ -3692,7 +3693,8 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      LoadingOverlay.hide();
+      if (refresh) $("#tblSupplierlist").DataTable().destroy();
+      
       setTimeout(function () {
         $("#tblSupplierlist")
           .DataTable({
@@ -3734,7 +3736,7 @@ Template.setup.onRendered(function () {
             //   },
             // ],
             select: true,
-            destroy: true,
+            destroy: refresh,
             colReorder: true,
             // bStateSave: true,
             // rowId: 0,
@@ -3882,7 +3884,9 @@ Template.setup.onRendered(function () {
 
         // $('#tblSupplierlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
-      }, 10);
+      }, 300);
+
+      LoadingOverlay.hide();
     }
 
     // var columns = $("#tblSupplierlist th");
@@ -8870,6 +8874,11 @@ Template.setup.events({
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
   },
   "click #tblSupplierlist tbody tr": (e) => {},
+  "click .setup-step-8 .btnRefresh": (e) => {
+    const templateObject = Template.instance();
+    templateObject.loadSuppliers(true);
+    $(".modal.show").modal("hide");
+  },
   // TODO: Step 9
   "click .lblCostEx": function (event) {
     var $earch = $(event.currentTarget);
