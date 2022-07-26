@@ -36,7 +36,7 @@ function getCurrentStep() {
 }
 
 function setCurrentStep(stepId) {
-  if(isNaN(stepId)) return false;
+  if (isNaN(stepId)) return false;
   let templateObject = Template.instance();
   templateObject.currentStep.set(stepId);
   return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
@@ -56,9 +56,9 @@ function setConfirmedSteps(steps = []) {
 }
 
 function addConfirmedStep(step) {
-  if(isNaN(step)) return false;
+  if (isNaN(step)) return false;
   let steps = getConfirmedSteps();
-  if(!steps.includes(step)) {
+  if (!steps.includes(step)) {
     steps = JSON.parse(steps);
     steps.push(step);
     setConfirmedSteps(steps);
@@ -71,7 +71,7 @@ function addConfirmedStep(step) {
  * @returns {boolean}
  */
 function isConfirmedStep(stepId) {
-  if(isNaN(stepId)) return false;
+  if (isNaN(stepId)) return false;
   let steps = getConfirmedSteps();
   return steps.includes(stepId);
 }
@@ -83,9 +83,9 @@ function getSkippedSteps() {
 }
 
 function addSkippedStep(step) {
-  if(isNaN(step)) return false;
+  if (isNaN(step)) return false;
   let steps = getSkippedSteps();
-  if(!steps.includes(step)) {
+  if (!steps.includes(step)) {
     steps = JSON.parse(steps);
     steps.push(step);
     setSkippedSteps(steps);
@@ -117,7 +117,7 @@ function isStepSkipped(stepId) {
 function isClickableStep(stepId) {
   const confirmedSteps = getConfirmedSteps();
   const skippedSteps = getSkippedSteps();
-  if(confirmedSteps.includes(stepId) || skippedSteps.includes(stepId)) {
+  if (confirmedSteps.includes(stepId) || skippedSteps.includes(stepId)) {
     return true;
   }
   return false;
@@ -2046,69 +2046,67 @@ Template.setup.onRendered(function () {
     }
   );
 
-  templateObject.loadEmployees = async () => {
+  templateObject.loadEmployees = async (refresh = false) => {
+    const sideBarService = new SideBarService();
+    console.log("Loading employees");
     LoadingOverlay.show();
-    let dataObject = await getVS1Data("TEmployee");
-
+    let dataObject = await sideBarService.getAllEmployees("All");
     let employeeList = [];
 
-    /**
-     * if dataObject is empty so we will retrieve it from remote database
-     *
-     */
-    if (dataObject.length == 0) {
-      dataObject = await sideBarService.getAllEmployees("All");
-      await addVS1Data("TEmployee", JSON.stringify(dataObject));
-
-      if (dataObject.temployee) {
-        employeeList = Employee.fromList(dataObject.temployee);
-      }
-    } else {
-      dataObject = JSON.parse(dataObject[0].data);
+    if (dataObject.temployee) {
       employeeList = Employee.fromList(dataObject.temployee);
     }
 
-    //await templateObject.employeedatatablerecords.set(employeeList); // all employees
+    console.log(
+      "Before: ",
+      templateObject.currentEmployees.get().length,
+      " after: ",
+      employeeList.length
+    );
 
     await templateObject.currentEmployees.set(employeeList);
+
+    if (refresh == true) {
+      $("#employeeListTable").DataTable().destroy();
+    }
 
     if (await templateObject.currentEmployees.get()) {
       setTimeout(() => {
         $("#employeeListTable")
-        .DataTable({
-          columnDefs: [],
-          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          select: true,
-          destroy: true,
-          colReorder: true,
-          pageLength: 25,
-          paging: true,
-          info: true,
-          responsive: true,
-          order: [[0, "asc"]],
-          action: function () {
-            $("#employeeListTable").DataTable().ajax.reload();
-          },
-          fnInitComplete: function () {
-            $(
-              "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-            ).insertAfter("#employeeListTable_filter");
-          },
-        })
-        .on("page", function () {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-          let draftRecord = templateObject.currentEmployees.get();
-          templateObject.currentEmployees.set(draftRecord);
-        })
-        .on("column-reorder", function () {})
-        .on("length.dt", function (e, settings, len) {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        });
-      }, 1000);
+          .DataTable({
+            columnDefs: [],
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            select: true,
+            destroy: refresh,
+            colReorder: true,
+            pageLength: 25,
+            paging: true,
+            info: true,
+            responsive: true,
+            order: [[0, "asc"]],
+            action: function () {
+              $("#employeeListTable").DataTable().ajax.reload();
+            },
+            fnInitComplete: function () {
+              $(
+                "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+              ).insertAfter("#employeeListTable_filter");
+            },
+          })
+          .on("page", function () {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+            let draftRecord = templateObject.currentEmployees.get();
+            templateObject.currentEmployees.set(draftRecord);
+          })
+          .on("column-reorder", function () {})
+          .on("length.dt", function (e, settings, len) {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          });
+      }, 300);
     }
 
     LoadingOverlay.hide();
@@ -3537,7 +3535,6 @@ Template.setup.onRendered(function () {
 
     LoadingOverlay.hide();
 
-
     // var columns = $("#tblCustomerlist th");
     // let sTible = "";
     // let sWidth = "";
@@ -3977,7 +3974,6 @@ Template.setup.onRendered(function () {
           _inventoryList.push({ ...product.fields });
       });
 
-
       templateObject.inventoryList.set(_inventoryList);
 
       if (templateObject.inventoryList.get()) {
@@ -4282,8 +4278,8 @@ function goToNextStep(stepId, isConfirmed = false) {
   isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
   stepId = stepId + 1;
   setCurrentStep(stepId);
-  $('.setup-step').removeClass('show');
-  $(`.setup-step-${stepId}`).addClass('show');
+  $(".setup-step").removeClass("show");
+  $(`.setup-step-${stepId}`).addClass("show");
 }
 
 Template.setup.events({
@@ -4295,7 +4291,7 @@ Template.setup.events({
     setCurrentStep(1);
     templateObject.loadSteps();
   },
-  "click .confirmBtn":(event) => {
+  "click .confirmBtn": (event) => {
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
@@ -4306,12 +4302,12 @@ Template.setup.events({
     // $(".setup-step").css("display", "none");
     // $(`.setup-step-${stepId}`).css("display", "block");
 
-  // $(".setup-step").css("display", "none");
+    // $(".setup-step").css("display", "none");
     // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
     // $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
     // $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
-  // $(".setup-step-" + stepId).css("display", "block");
+    // $(".setup-step-" + stepId).css("display", "block");
     // if (stepId !== numberOfSteps) {
     //   $(".setup-step-" + stepId).css("display", "block");
     // } else {
@@ -4347,7 +4343,7 @@ Template.setup.events({
     // let _steps = templateObject.steps.get();
     // _steps.skippedSteps.push(stepId);
 
-    if(!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
+    if (!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
     templateObject.skippedSteps.set(skippedSteps);
 
     //setCurrentStep(stepId);
@@ -4355,12 +4351,12 @@ Template.setup.events({
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
   },
-  "click .gotToStepID":  (event) => {
+  "click .gotToStepID": (event) => {
     let templateObj = Template.instance();
     const stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
-    $('.setup-step').removeClass('show');
-    $(`.setup-step-${stepId}`).addClass('show');
+    $(".setup-step").removeClass("show");
+    $(`.setup-step-${stepId}`).addClass("show");
 
     // $(".setup-step").css("display", "none");
     $(`.setup-stepper li`).removeClass("current");
@@ -6388,14 +6384,16 @@ Template.setup.events({
   // TODO: Step 5
   "click .btnSaveEmpPop": (e) => {
     $("#addEmployeeModal").modal("toggle");
+
+    // const templateObject = Template.instance();
+    // templateObject.loadEmployees(true);
   },
-  "click .employees-js": (e) => {
-    let templateObject = Template.instance();
+  "click .edit-employees-js": (e) => {
     $("#addEmployeeModal").modal("toggle");
+    let templateObject = Template.instance();
     LoadingOverlay.show();
     const employeeID = $(e.currentTarget).attr("id");
     if (!isNaN(employeeID)) {
-
       let employeeList = templateObject.currentEmployees.get();
 
       let data = employeeList.filter(
@@ -6444,19 +6442,52 @@ Template.setup.events({
         notes: data.fields.Notes || "",
       };
 
-
       templateObject.editableEmployee.set(editableEmployee);
-
     }
     LoadingOverlay.hide();
   },
   "click #btnNewEmployee": (event) => {
+    $("#addEmployeeModal").modal("toggle");
+
+    let templateObject = Template.instance();
     // FlowRouter.go("/employeescard");
     LoadingOverlay.show();
-    Template.instance().editableEmployee.set(null);
+    templateObject.editableEmployee.set(null);
+    // templateObject.editableEmployee.set({
+    //   id: "",
+    //   lid: "",
+    //   title: "",
+    //   firstname: "",
+    //   middlename: "",
+    //   lastname: "",
+    //   company: "",
+    //   tfn: "",
+    //   priority: 0,
+    //   color: "#00a3d3",
+    //   email: "",
+    //   phone: "",
+    //   mobile: "",
+    //   fax: "",
+    //   skype: "",
+    //   gender: "",
+    //   dob: "",
+    //   startdate: "",
+    //   datefinished: "",
+    //   position: "",
+    //   streetaddress: "",
+    //   city: "",
+    //   state: "",
+    //   postalcode: "",
+    //   country: LoggedCountry,
+    //   custfield1: "",
+    //   custfield2: "",
+    //   custfield3: "",
+    //   custfield4: "",
+    //   custfield14: "",
+    //   website: "",
+    //   notes: "",
+    // });
     LoadingOverlay.hide();
-
-    $("#addEmployeeModal").modal("toggle");
   },
   "click .btnAddVS1User": function (event) {
     swal({
@@ -6511,7 +6542,7 @@ Template.setup.events({
   },
   "click .btnRefreshEmployee": (event) => {
     let templateObject = Template.instance();
-    templateObject.loadEmployees();
+    templateObject.loadEmployees(true);
     // let utilityService = new UtilityService();
     // let tableProductList;
     // const dataTableList = [];
@@ -8817,7 +8848,6 @@ Template.setup.events({
     var listData = tr.attr("id");
     var transactiontype = tr.attr("isjob");
     var url = FlowRouter.current().path;
-
   },
 
   // TODO: Step 8
@@ -9238,10 +9268,8 @@ Template.registerHelper("equals", function (a, b) {
 });
 
 Template.registerHelper("isActive", function (currentStep, step) {
-  return  currentStep == step;
+  return currentStep == step;
 });
-
-
 
 const TaxRatesEditListener = (e) => {
   if (!e) return false;
@@ -9251,7 +9279,7 @@ const TaxRatesEditListener = (e) => {
   const tr = $(e.currentTarget).parent();
 
   var listData = tr.attr("id");
-  
+
   // var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
   // var accountName = $(event.target).closest("tr").find(".colAccountName").text();
   // let columnBalClass = $(event.target).attr('class');
@@ -9264,7 +9292,9 @@ const TaxRatesEditListener = (e) => {
       //taxRateService.getOneTaxRate(listData).then(function (data) {
 
       var taxid = listData || "";
-      let tax = templateObject.taxRates.get().find((v) => String(v.id) === String(taxid));
+      let tax = templateObject.taxRates
+        .get()
+        .find((v) => String(v.id) === String(taxid));
 
       // var taxname = tr.find(".colName").text() || "";
       // var taxDesc = tr.find(".colDescription").text() || "";
@@ -9277,8 +9307,9 @@ const TaxRatesEditListener = (e) => {
       $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
       $("#edtTaxDesc").val(tax.description);
 
-
-      tr.attr('data-modal') ? $(tr.attr('data-modal')).modal("toggle") : $("#newTaxRateModal").modal("toggle");
+      tr.attr("data-modal")
+        ? $(tr.attr("data-modal")).modal("toggle")
+        : $("#newTaxRateModal").modal("toggle");
     }
   }
 };
