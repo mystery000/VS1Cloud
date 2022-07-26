@@ -23,11 +23,34 @@ Template.leaveTypeSettings.onRendered(function() {
     const templateObject = Template.instance();
     var splashArrayLeaveList = new Array();
 
+    $(document).ready(function(){
+        $('#edtTypeOfUnits').editableSelect('add','Hours');
+        $('#edtTypeOfUnits').editableSelect('add','Days');
+        $('#edtTypeOfUnits').editableSelect('add','Weeks');
+        $('#edtTypeOfUnits').editableSelect('add','Monthly');
+        $('#edtPayPeriod').editableSelect('add','Hourly');
+        $('#edtPayPeriod').editableSelect('add','Daily');
+        $('#edtPayPeriod').editableSelect('add','Weekly');
+        $('#edtPayPeriod').editableSelect('add','Monthly');
+        $("#edtFirstPayDate").datepicker({
+            showOn: 'button',
+            buttonText: 'Show Date',
+            buttonImageOnly: true,
+            buttonImage: '/img/imgCal2.png',
+            dateFormat: 'dd/mm/yy',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+        });
+    });
+
     templateObject.saveDataLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TLeave
+            employeePayrolApis.collectionNames.TPaidLeave
         );
 
         employeePayrolEndpoint.url.searchParams.append(
@@ -39,8 +62,9 @@ Template.leaveTypeSettings.onRendered(function() {
 
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-            if( employeePayrolEndpointJsonResponse.tleave.length ){
-                await addVS1Data('TLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+            console.log('employeePayrolEndpointJsonResponse', employeePayrolEndpointJsonResponse)
+            if( employeePayrolEndpointJsonResponse.tpaidleave.length ){
+                await addVS1Data('TPaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
         }  
@@ -51,22 +75,23 @@ Template.leaveTypeSettings.onRendered(function() {
         try {
             let data = {};
             let splashArrayLeaveList = new Array();
-            let dataObject = await getVS1Data('TLeave')  
+            let dataObject = await getVS1Data('TPaidLeave')  
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
-            for (let i = 0; i < data.tleave.length; i++) {
+            console.log('data', data)
+            for (let i = 0; i < data.tpaidleave.length; i++) {
 
                 var dataListAllowance = [
-                    data.tleave[i].fields.ID || '',
-                    data.tleave[i].fields.LeaveName || '',
-                    data.tleave[i].fields.Unit || '',
-                    data.tleave[i].fields.LeaveNormalEntitlement || '',
-                    data.tleave[i].fields.LeaveLeaveLoadingRate || '',
-                    data.tleave[i].fields.LeaveType || '',
-                    data.tleave[i].fields.LeaveShowBalanceOnPayslip == true ? 'show': 'hide',
+                    data.tpaidleave[i].fields.ID || '',
+                    data.tpaidleave[i].fields.LeavePaidName || '',
+                    data.tpaidleave[i].fields.LeavePaidUnits || '',
+                    data.tpaidleave[i].fields.LeavePaidNormalEntitlement || '',
+                    data.tpaidleave[i].fields.LeavePaidLeaveLoadingRate || '',
+                    'paid',
+                    data.tpaidleave[i].fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
                 ];
 
                 splashArrayLeaveList.push(dataListAllowance);
@@ -89,6 +114,7 @@ Template.leaveTypeSettings.onRendered(function() {
                     data: splashArrayLeaveList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     columnDefs: [
+
                         {
                             className: "colLeaveID hiddenColumn",
                             "targets": [0]
@@ -102,20 +128,20 @@ Template.leaveTypeSettings.onRendered(function() {
                             "targets": [2]
                         },
                         {
-                            className: "colLeaveNormalEntitlement",
-                            "targets": [3]
+                        className: "colLeaveNormalEntitlement",
+                        "targets": [3]
                         },
                         {
-                            className: "colLeaveLeaveLoadingRate",
-                            "targets": [4]
+                        className: "colLeaveLeaveLoadingRate",
+                        "targets": [4]
                         },
                         {
-                            className: "colLeaveType",
-                            "targets": [5]
+                        className: "colLeavePaidLeave",
+                        "targets": [5]
                         },
                         {
-                            className: "colLeaveShownOnPayslip",
-                            "targets": [6]
+                        className: "colLeaveShownOnPayslip",
+                        "targets": [6]
                         }
                     ],
                     select: true,
@@ -150,17 +176,17 @@ Template.leaveTypeSettings.onRendered(function() {
                                 let dataLenght = oSettings._iDisplayLength;
                                 let customerSearch = $('#tblLeaves_filter input').val();
     
-                                sideBarService.getLeave(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                sideBarService.getPaidLeave(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
-                                    for (let i = 0; i < data.tleave.length; i++) {
+                                    for (let i = 0; i < data.tpaidleave.length; i++) {
                                         var dataListAllowance = [
-                                            data.tleave[i].fields.ID || '',
-                                            data.tleave[i].fields.LeaveName || '',
-                                            data.tleave[i].fields.Unit || '',
-                                            data.tleave[i].fields.LeaveNormalEntitlement || '',
-                                            data.tleave[i].fields.LeaveLeaveLoadingRate || '',
-                                            data.tleave[i].fields.LeaveType || '',
-                                            data.tleave[i].fields.LeaveShowBalanceOnPayslip == true ? 'show': 'hide',
+                                            data.tpaidleave[i].fields.ID || '',
+                                            data.tpaidleave[i].fields.LeavePaidName || '',
+                                            data.tpaidleave[i].fields.LeavePaidUnits || '',
+                                            data.tpaidleave[i].fields.LeavePaidNormalEntitlement || '',
+                                            data.tpaidleave[i].fields.LeavePaidLeaveLoadingRate || '',
+                                            'paid',
+                                            data.tpaidleave[i].fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
                                         ];
                         
                                         splashArrayLeaveList.push(dataListAllowance);
@@ -291,7 +317,7 @@ Template.leaveTypeSettings.events({
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getLeave(dataSearchName).then(function (data) {
                 $(".btnRefreshLeave").removeClass('btnSearchAlert');
-                let lineItems = [];
+                let lineItems = [];                
                 if (data.tleave.length > 0) {
                     for (let i = 0; i < data.tleave.length; i++) {
                         var dataListAllowance = [
@@ -350,10 +376,6 @@ Template.leaveTypeSettings.events({
         
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const apiEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TLeave
-        );
-
         let leaveName=$("#edtLeaveName").val();
         let leaveType=$("#edtLeaveType").val();
         let typeOfUnit=$("#edtTypeOfUnits").val();
@@ -362,7 +384,28 @@ Template.leaveTypeSettings.events({
         let showBalance=$("#formCheck-ShowBalance").val();
 
         let leaveDetails="";
+        const apiEndpoint = {};
         if(leaveType == "Paid Leave"){
+            apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPaidLeave
+            );
+
+            // GlobalRef: "DEF3"
+            // ID: 3
+            // ISEmpty: false
+            // KeyStringFieldName: ""
+            // KeyValue: ""
+            // LeavePaidActive: false
+            // LeavePaidLeaveLoadingRate: "564"
+            // LeavePaidName: "njnjunubub"
+            // LeavePaidNormalEntitlement: ""
+            // LeavePaidShowBalanceOnPayslip: true
+            // LeavePaidUnits: ""
+
+            // MsTimeStamp: "2022-04-08 16:21:06"
+            // MsUpdateSiteCode: "DEF"
+            // Recno: 1
+
             leaveDetails= {
                 type : "TPaidLeave",
                 fields : {
@@ -376,6 +419,9 @@ Template.leaveTypeSettings.events({
             }
         }
         else if(leaveType == "Unpaid Leave"){
+            apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TUnpaidLeave
+            );
             leaveDetails= {
                 type : "TUnpaidLeave",
                 fields : {
@@ -401,8 +447,8 @@ Template.leaveTypeSettings.events({
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#leaveRateForm')[0].reset();
-            await templateObject.saveDataLocalDB();
-            await templateObject.getDeductions();
+            // await templateObject.saveDataLocalDB();
+            // await templateObject.getDeductions();
             $('#leaveModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
         }else{

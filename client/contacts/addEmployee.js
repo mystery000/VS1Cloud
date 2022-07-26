@@ -115,6 +115,7 @@ Template.employeescard.onRendered(function () {
     var erpGet = erpDb();
     $('.fullScreenSpin').css('display', 'inline-block');
     Session.setPersistent('cloudCurrentLogonName', '');
+
     //var splashArrayRepServiceList = new Array();
     let templateObject = Template.instance();
     const contactService = new ContactService();
@@ -366,7 +367,7 @@ Template.employeescard.onRendered(function () {
 
     setTimeout(function () {
         MakeNegative();
-        $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf,#edtLeaveStartDate,#edtLeaveEndDate,#edtPeriodPaymentDate").datepicker({
+        $("#edtFirstPayDate, #dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf,#edtLeaveStartDate,#edtLeaveEndDate,#edtPeriodPaymentDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
             buttonImageOnly: true,
@@ -3535,6 +3536,7 @@ Template.employeescard.onRendered(function () {
                     }
                     templateObject.employeePaySettings.set(objEmployeePaySettings);
                 }else{
+                    console.log('useData', useData)
                     employeePaySettings = useData[0]
                     objEmployeePaySettings = {
                         EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
@@ -6021,7 +6023,7 @@ Template.employeescard.events({
         if($('div#paytemplate').attr("class").indexOf("active") >= 0) activeTab = "paytemplate";
         if($('div#openingbalances').attr("class").indexOf("active") >= 0) activeTab = "openingbalances";
         if($('div#notes').attr("class").indexOf("active") >= 0) activeTab = "notes";
-
+        console.log('activeTab', activeTab)
         if(activeTab == "taxes") {
             $('.fullScreenSpin').css('display', 'inline-block');
             let currentId = FlowRouter.current().queryParams;
@@ -6038,7 +6040,7 @@ Template.employeescard.events({
 
             let useData = [];
             const listEmployeePaySettings = {}
-            // let employeePaySettings = templateObject.employeePayInfos.get();
+            let paySettings = templateObject.employeePaySettings.get();
             // let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             // if( TEmployeepaysettings.length ){
             //     listEmployeePaySettings = JSON.parse(TEmployeepaysettings[0].data);
@@ -6055,6 +6057,8 @@ Template.employeescard.events({
             let TFNExemption = $("#edtTfnExemption").val();
             let EmploymentBasis = $("#edtEmploymentBasis").val();
             let ResidencyStatus = $("#edtResidencyStatus").val();
+            let EdtPayPeriod = $("#edtPayPeriod").val();
+            let FirstPayDate = $("#edtFirstPayDate").val();
             let TaxFreeThreshold = $("#taxesTaxFreeThresholdClaimed").is(':checked') ? true : false;
             let StudyTrainingSupportLoan = $("#taxesStudyTrainingSupportLoans").is(':checked') ? true : false;
             let EligibleToReceiveLeaveLoading = $("#taxesEligibleReceiveLeaveLoading").is(':checked') ? true : false;
@@ -6062,20 +6066,22 @@ Template.employeescard.events({
             let UpwardvariationRequested = $("#taxesUpwardVariationRequested").is(':checked') ? true : false;
             let SeniorandPensionersTaxOffsetClaimed = $("#taxesSeniorPensionersTaxOffsetClaimed").is(':checked') ? true : false;
             let HasApprovedWithholdingVariation = $("#taxesHasApprovedWithholdingVariation").is(':checked') ? true : false;
-
             let employeePaySettings = {
                 type: 'TEmployeepaysettings',
                 fields: {
                     Employeeid: parseInt(employeeID),
+                    Payperiod: EdtPayPeriod,
+                    FirstPayDate: moment(FirstPayDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
                     Employee: {
                         type: 'TEmployeeDetails',
                         fields: {
+                            EmployeeName: paySettings.EmployeeName,
                             ID: parseInt(employeeID),
                             TFN: TaxFileNumber,
                             TaxFreeThreshold: TaxFreeThreshold,
-                            CgtExempt: TFNExemption,
+                            CgtExempt: parseInt(TFNExemption),
                             BasisOfPayment: EmploymentBasis,
-                            Resident: ResidencyStatus,
+                            Resident: ( ResidencyStatus == 'true' )? true: false,
                             StudentLoanIndicator: StudyTrainingSupportLoan,
                             PaySuperonLeaveLoading: EligibleToReceiveLeaveLoading,
                             // OtherTaxOffsetClaimed: OtherTaxOffsetClaimed,
@@ -6087,19 +6093,24 @@ Template.employeescard.events({
                 }
             };
 
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(employeePaySettings),
-            });
-            console.log("taxes-data", ApiResponse);
 
-
-            if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                $('.statusUnsaved').hide();
-                $('.statusSaved').show();
+            try {
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(employeePaySettings),
+                });
+    
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    $('.statusUnsaved').hide();
+                    $('.statusSaved').show();
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
             }
+            
 
             return false
 
@@ -6156,25 +6167,58 @@ Template.employeescard.events({
                 });
             }
 
+            /**
+             * Load EmployeePayrollApi API
+             */
+             const employeePayrollApi = new EmployeePayrollApi();
+
+             const apiEndpoint = employeePayrollApi.collection.findByName(
+                 employeePayrollApi.collectionNames.TEmployeepaysettings
+             );
+
             let bankAccountStatement = $("#bankAccountStatement").val();
             let bankAccountName = $("#bankAccountName").val();
             let bankAccountBSB = $("#bankAccountBSB").val();
             let bankAccountNo = $("#bankAccountNo").val();
 
-            employeePaySettings.fields.BankAccountName = bankAccountName;
-            employeePaySettings.fields.BankAccountBSB = bankAccountBSB;
-            employeePaySettings.fields.BankAccountNo = bankAccountNo;
-            employeePaySettings.fields.Statement = bankAccountStatement;
-            useData.push(employeePaySettings);
+            let employeeBankPaySettings = {
+                type: 'TEmployeepaysettings',
+                fields: {
+                    Employeeid: parseInt(employeeID),
+                    BankAccountBSB: bankAccountBSB,
+                    BankAccountName: bankAccountName,
+                    BankAccountNo: bankAccountNo,
+                    Statement: bankAccountStatement
+                }
+            }
 
-            /**
-             * Saving employeePaySettings Object in indexdb
-            */
+            try {
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(employeeBankPaySettings),
+                });
+    
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    console.log('jsonResponse', jsonResponse)
+                    employeePaySettings.fields.BankAccountName = bankAccountName;
+                    employeePaySettings.fields.BankAccountBSB = bankAccountBSB;
+                    employeePaySettings.fields.BankAccountNo = bankAccountNo;
+                    employeePaySettings.fields.Statement = bankAccountStatement;
+                    useData.push(employeePaySettings);                   
 
-            listEmployeePaySettings.temployeepaysettings = useData;
-            await addVS1Data('TEmployeepaysettings', JSON.stringify(listEmployeePaySettings));
-            $('.fullScreenSpin').css('display', 'none');
+                    /**
+                     * Saving employeePaySettings Object in indexdb
+                    */
 
+                    listEmployeePaySettings.temployeepaysettings = useData;
+                    await addVS1Data('TEmployeepaysettings', JSON.stringify(listEmployeePaySettings));
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
+            }
 
             return false;
             // Old Dev Code
