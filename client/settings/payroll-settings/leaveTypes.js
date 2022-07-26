@@ -81,7 +81,6 @@ Template.leaveTypeSettings.onRendered(function() {
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
-            console.log('data', data)
             for (let i = 0; i < data.tpaidleave.length; i++) {
 
                 var dataListAllowance = [
@@ -380,8 +379,8 @@ Template.leaveTypeSettings.events({
         let leaveType=$("#edtLeaveType").val();
         let typeOfUnit=$("#edtTypeOfUnits").val();
         let loadingRate=$("#edtLeaveLoadingRate").val();
-        let leaveNormalEntitlement=$("#edtNormalEntitlement").val();
-        let showBalance=$("#formCheck-ShowBalance").val();
+        let leaveNormalEntitlement = $("#edtNormalEntitlement").val();
+        let showBalance = $("#formCheck-ShowBalance").is(':checked')? true:false;
 
         let leaveDetails="";
         const apiEndpoint = {};
@@ -389,22 +388,6 @@ Template.leaveTypeSettings.events({
             apiEndpoint = employeePayrolApis.collection.findByName(
                 employeePayrolApis.collectionNames.TPaidLeave
             );
-
-            // GlobalRef: "DEF3"
-            // ID: 3
-            // ISEmpty: false
-            // KeyStringFieldName: ""
-            // KeyValue: ""
-            // LeavePaidActive: false
-            // LeavePaidLeaveLoadingRate: "564"
-            // LeavePaidName: "njnjunubub"
-            // LeavePaidNormalEntitlement: ""
-            // LeavePaidShowBalanceOnPayslip: true
-            // LeavePaidUnits: ""
-
-            // MsTimeStamp: "2022-04-08 16:21:06"
-            // MsUpdateSiteCode: "DEF"
-            // Recno: 1
 
             leaveDetails= {
                 type : "TPaidLeave",
@@ -440,23 +423,18 @@ Template.leaveTypeSettings.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(leaveDetails),
         });
-        
-        console.log("leave-data", ApiResponse);
-        console.log("leavedetails-data", leaveDetails);
 
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#leaveRateForm')[0].reset();
-            // await templateObject.saveDataLocalDB();
-            // await templateObject.getDeductions();
+            await templateObject.saveDataLocalDB();
+            await templateObject.getLeaves();
             $('#leaveModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
         }else{
             $('.fullScreenSpin').css('display', 'none');
         }
-
-
-
+        
         return false;
         // We need api's with fields to update this API
 
