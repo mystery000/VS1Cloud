@@ -36,7 +36,7 @@ function getCurrentStep() {
 }
 
 function setCurrentStep(stepId) {
-  if(isNaN(stepId)) return false;
+  if (isNaN(stepId)) return false;
   let templateObject = Template.instance();
   templateObject.currentStep.set(stepId);
   return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
@@ -56,9 +56,9 @@ function setConfirmedSteps(steps = []) {
 }
 
 function addConfirmedStep(step) {
-  if(isNaN(step)) return false;
+  if (isNaN(step)) return false;
   let steps = getConfirmedSteps();
-  if(!steps.includes(step)) {
+  if (!steps.includes(step)) {
     steps = JSON.parse(steps);
     steps.push(step);
     setConfirmedSteps(steps);
@@ -71,7 +71,7 @@ function addConfirmedStep(step) {
  * @returns {boolean}
  */
 function isConfirmedStep(stepId) {
-  if(isNaN(stepId)) return false;
+  if (isNaN(stepId)) return false;
   let steps = getConfirmedSteps();
   return steps.includes(stepId);
 }
@@ -83,9 +83,9 @@ function getSkippedSteps() {
 }
 
 function addSkippedStep(step) {
-  if(isNaN(step)) return false;
+  if (isNaN(step)) return false;
   let steps = getSkippedSteps();
-  if(!steps.includes(step)) {
+  if (!steps.includes(step)) {
     steps = JSON.parse(steps);
     steps.push(step);
     setSkippedSteps(steps);
@@ -117,7 +117,7 @@ function isStepSkipped(stepId) {
 function isClickableStep(stepId) {
   const confirmedSteps = getConfirmedSteps();
   const skippedSteps = getSkippedSteps();
-  if(confirmedSteps.includes(stepId) || skippedSteps.includes(stepId)) {
+  if (confirmedSteps.includes(stepId) || skippedSteps.includes(stepId)) {
     return true;
   }
   return false;
@@ -2046,69 +2046,67 @@ Template.setup.onRendered(function () {
     }
   );
 
-  templateObject.loadEmployees = async () => {
+  templateObject.loadEmployees = async (refresh = false) => {
+    const sideBarService = new SideBarService();
+    console.log("Loading employees");
     LoadingOverlay.show();
-    let dataObject = await getVS1Data("TEmployee");
-
+    let dataObject = await sideBarService.getAllEmployees("All");
     let employeeList = [];
 
-    /**
-     * if dataObject is empty so we will retrieve it from remote database
-     *
-     */
-    if (dataObject.length == 0) {
-      dataObject = await sideBarService.getAllEmployees("All");
-      await addVS1Data("TEmployee", JSON.stringify(dataObject));
-
-      if (dataObject.temployee) {
-        employeeList = Employee.fromList(dataObject.temployee);
-      }
-    } else {
-      dataObject = JSON.parse(dataObject[0].data);
+    if (dataObject.temployee) {
       employeeList = Employee.fromList(dataObject.temployee);
     }
 
-    //await templateObject.employeedatatablerecords.set(employeeList); // all employees
+    console.log(
+      "Before: ",
+      templateObject.currentEmployees.get().length,
+      " after: ",
+      employeeList.length
+    );
 
     await templateObject.currentEmployees.set(employeeList);
+
+    if (refresh == true) {
+      $("#employeeListTable").DataTable().destroy();
+    }
 
     if (await templateObject.currentEmployees.get()) {
       setTimeout(() => {
         $("#employeeListTable")
-        .DataTable({
-          columnDefs: [],
-          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          select: true,
-          destroy: true,
-          colReorder: true,
-          pageLength: 25,
-          paging: true,
-          info: true,
-          responsive: true,
-          order: [[0, "asc"]],
-          action: function () {
-            $("#employeeListTable").DataTable().ajax.reload();
-          },
-          fnInitComplete: function () {
-            $(
-              "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-            ).insertAfter("#employeeListTable_filter");
-          },
-        })
-        .on("page", function () {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-          let draftRecord = templateObject.currentEmployees.get();
-          templateObject.currentEmployees.set(draftRecord);
-        })
-        .on("column-reorder", function () {})
-        .on("length.dt", function (e, settings, len) {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        });
-      }, 1000);
+          .DataTable({
+            columnDefs: [],
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            select: true,
+            destroy: refresh,
+            colReorder: true,
+            pageLength: 25,
+            paging: true,
+            info: true,
+            responsive: true,
+            order: [[0, "asc"]],
+            action: function () {
+              $("#employeeListTable").DataTable().ajax.reload();
+            },
+            fnInitComplete: function () {
+              $(
+                "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+              ).insertAfter("#employeeListTable_filter");
+            },
+          })
+          .on("page", function () {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+            let draftRecord = templateObject.currentEmployees.get();
+            templateObject.currentEmployees.set(draftRecord);
+          })
+          .on("column-reorder", function () {})
+          .on("length.dt", function (e, settings, len) {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          });
+      }, 300);
     }
 
     LoadingOverlay.hide();
@@ -3377,12 +3375,18 @@ Template.setup.onRendered(function () {
 
   // Step 7 Render functionalities
 
-  templateObject.loadDefaultCustomer = async () => {
+  templateObject.loadDefaultCustomer = async (refresh = false) => {
+    LoadingOverlay.show();
     let dataObject = await getVS1Data("TCustomerVS1");
     let data =
-      dataObject.length == 0
+      dataObject.length == 0 || refresh == true
         ? await sideBarService.getAllCustomersDataVS1("All")
         : JSON.parse(dataObject[0].data);
+
+    if (refresh) {
+      ///dataObject[0].data = data;
+      await addVS1Data("TCustomerVS1", JSON.stringify(data));
+    }
 
     let _customerList = [];
     let _customerListHeaders = [];
@@ -3490,12 +3494,14 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      setTimeout(function () {
+      if (refresh) $("#tblCustomerlist").DataTable().destroy();
+
+      setTimeout(() => {
         $("#tblCustomerlist")
           .DataTable({
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             select: true,
-            destroy: true,
+            destroy: refresh,
             colReorder: true,
             pageLength: 25,
             paging: true,
@@ -3532,11 +3538,10 @@ Template.setup.onRendered(function () {
 
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
-      }, 1000);
+      }, 300);
     }
 
     LoadingOverlay.hide();
-
 
     // var columns = $("#tblCustomerlist th");
     // let sTible = "";
@@ -3591,12 +3596,15 @@ Template.setup.onRendered(function () {
   templateObject.loadCustomerList = () => {};
   // Step 8 Render functionalities
 
-  templateObject.loadSuppliers = async () => {
+  templateObject.loadSuppliers = async (refresh = false) => {
+    LoadingOverlay.show();
     let dataObject = await getVS1Data("TSupplierVS1");
     let data =
-      dataObject.length == 0
+      dataObject.length == 0 || refresh == true
         ? await sideBarService.getAllSuppliersDataVS1("All")
         : JSON.parse(dataObject[0].data);
+
+    if (refresh) await addVS1Data("TSupplierVS1", JSON.stringify(data));
 
     let _supplierList = [];
     let _supplierListHeaers = [];
@@ -3685,7 +3693,8 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      LoadingOverlay.hide();
+      if (refresh) $("#tblSupplierlist").DataTable().destroy();
+
       setTimeout(function () {
         $("#tblSupplierlist")
           .DataTable({
@@ -3727,7 +3736,7 @@ Template.setup.onRendered(function () {
             //   },
             // ],
             select: true,
-            destroy: true,
+            destroy: refresh,
             colReorder: true,
             // bStateSave: true,
             // rowId: 0,
@@ -3875,7 +3884,9 @@ Template.setup.onRendered(function () {
 
         // $('#tblSupplierlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
-      }, 10);
+      }, 300);
+
+      LoadingOverlay.hide();
     }
 
     // var columns = $("#tblSupplierlist th");
@@ -3915,20 +3926,19 @@ Template.setup.onRendered(function () {
   templateObject.loadSuppliers();
 
   // Step 9 Render functionalities
-
-  let splashArrayProductList = new Array();
-  templateObject.loadInventory = async () => {
+  templateObject.loadInventory = async (refresh = false) => {
+    LoadingOverlay.show();
     let _inventoryList = [];
     let dataObject = await getVS1Data("TProductVS1");
 
     let data =
-      dataObject.length == 0
+      dataObject.length == 0 || refresh == true
         ? await sideBarService.getNewProductListVS1("All")
         : JSON.parse(dataObject[0].data);
 
-    if (data.tproductvs1) {
-      await addVS1Data("TProductVS1", JSON.stringify(data));
+    if (refresh) await addVS1Data("TProductVS1", JSON.stringify(data));
 
+    if (data.tproductvs1) {
       //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
       let lineItems = [];
       let lineItemObj = {};
@@ -3976,290 +3986,291 @@ Template.setup.onRendered(function () {
             )),
           _inventoryList.push({ ...product.fields });
       });
+    }
 
+    await templateObject.inventoryList.set(_inventoryList);
 
-      templateObject.inventoryList.set(_inventoryList);
+    if (await templateObject.inventoryList.get()) {
+      if (refresh) $("#InventoryTable").DataTable().destroy();
 
-      if (templateObject.inventoryList.get()) {
-        setTimeout(function () {
-          $("#InventoryTable")
-            .dataTable({
-              // data: splashArrayProductList,
-              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      setTimeout(function () {
+        $("#InventoryTable")
+          .dataTable({
+            // data: splashArrayProductList,
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
-              // columnDefs: [
-              //   {
-              //     className: "colProductID hiddenColumn",
-              //     targets: [0],
-              //   },
-              //   {
-              //     className: "colProductName",
-              //     targets: [1],
-              //   },
-              //   {
-              //     className: "colSalesDescription",
-              //     targets: [2],
-              //   },
-              //   {
-              //     className: "colAvailable text-right",
-              //     targets: [3],
-              //   },
-              //   {
-              //     className: "colOnSO text-right",
-              //     targets: [4],
-              //   },
-              //   {
-              //     className: "colOnBO text-right",
-              //     targets: [5],
-              //   },
-              //   {
-              //     className: "colInStock text-right",
-              //     targets: [6],
-              //   },
-              //   {
-              //     className: "colOnOrder text-right",
-              //     targets: [7],
-              //   },
-              //   {
-              //     className: "colCostPrice hiddenColumn text-right",
-              //     targets: [8],
-              //   },
-              //   {
-              //     className: "colCostPriceInc  text-right",
-              //     targets: [9],
-              //   },
-              //   {
-              //     className: "colSalePrice hiddenColumn text-right",
-              //     targets: [10],
-              //   },
-              //   {
-              //     className: "colSalePriceInc  text-right",
-              //     targets: [11],
-              //   },
-              //   {
-              //     className: "colSerialNo  text-center hiddenColumn",
-              //     targets: [12],
-              //   },
-              //   {
-              //     className: "colBarcode hiddenColumn",
-              //     targets: [13],
-              //   },
-              //   {
-              //     className: "colDepartment hiddenColumn",
-              //     targets: [14],
-              //   },
-              //   {
-              //     className: "colPurchaseDescription hiddenColumn",
-              //     targets: [15],
-              //   },
-              //   {
-              //     className: "colProdCustField1 hiddenColumn",
-              //     targets: [16],
-              //   },
-              //   {
-              //     className: "colProdCustField2 hiddenColumn",
-              //     targets: [17],
-              //   },
-              // ],
-              select: true,
-              destroy: true,
-              colReorder: true,
-              // buttons: [
-              //   {
-              //     extend: "excelHtml5",
-              //     text: "",
-              //     download: "open",
-              //     className: "btntabletocsv hiddenColumn",
-              //     filename: "inventory_" + moment().format(),
-              //     orientation: "portrait",
-              //     exportOptions: {
-              //       columns: ":visible",
-              //     },
-              //   },
-              //   {
-              //     extend: "print",
-              //     download: "open",
-              //     className: "btntabletopdf hiddenColumn",
-              //     text: "",
-              //     title: "Inventory List",
-              //     filename: "inventory_" + moment().format(),
-              //     exportOptions: {
-              //       columns: ":visible",
-              //     },
-              //   },
-              // ],
-              // bStateSave: true,
-              // rowId: 0,
-              pageLength: 25,
-              paging: true,
-              // "scrollY": "800px",
-              // "scrollCollapse": true,
-              // pageLength: initialBaseDataLoad,
-              // lengthMenu: [],
-              info: true,
-              responsive: true,
-              order: [[0, "asc"]],
-              action: function () {
-                $("#InventoryTable").DataTable().ajax.reload();
-              },
-              // fnDrawCallback: function (oSettings) {
-              //   $(".paginate_button.page-item").removeClass("disabled");
-              //   $("#tblInventory_ellipsis").addClass("disabled");
-              //   if (oSettings._iDisplayLength == -1) {
-              //     if (oSettings.fnRecordsDisplay() > 150) {
-              //     }
-              //     $(".fullScreenSpin").css("display", "inline-block");
-              //     setTimeout(function () {
-              //       $(".fullScreenSpin").css("display", "none");
-              //     }, 100);
-              //   } else {
-              //   }
-              //   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-              //     $(".paginate_button.page-item.next").addClass("disabled");
-              //   }
+            // columnDefs: [
+            //   {
+            //     className: "colProductID hiddenColumn",
+            //     targets: [0],
+            //   },
+            //   {
+            //     className: "colProductName",
+            //     targets: [1],
+            //   },
+            //   {
+            //     className: "colSalesDescription",
+            //     targets: [2],
+            //   },
+            //   {
+            //     className: "colAvailable text-right",
+            //     targets: [3],
+            //   },
+            //   {
+            //     className: "colOnSO text-right",
+            //     targets: [4],
+            //   },
+            //   {
+            //     className: "colOnBO text-right",
+            //     targets: [5],
+            //   },
+            //   {
+            //     className: "colInStock text-right",
+            //     targets: [6],
+            //   },
+            //   {
+            //     className: "colOnOrder text-right",
+            //     targets: [7],
+            //   },
+            //   {
+            //     className: "colCostPrice hiddenColumn text-right",
+            //     targets: [8],
+            //   },
+            //   {
+            //     className: "colCostPriceInc  text-right",
+            //     targets: [9],
+            //   },
+            //   {
+            //     className: "colSalePrice hiddenColumn text-right",
+            //     targets: [10],
+            //   },
+            //   {
+            //     className: "colSalePriceInc  text-right",
+            //     targets: [11],
+            //   },
+            //   {
+            //     className: "colSerialNo  text-center hiddenColumn",
+            //     targets: [12],
+            //   },
+            //   {
+            //     className: "colBarcode hiddenColumn",
+            //     targets: [13],
+            //   },
+            //   {
+            //     className: "colDepartment hiddenColumn",
+            //     targets: [14],
+            //   },
+            //   {
+            //     className: "colPurchaseDescription hiddenColumn",
+            //     targets: [15],
+            //   },
+            //   {
+            //     className: "colProdCustField1 hiddenColumn",
+            //     targets: [16],
+            //   },
+            //   {
+            //     className: "colProdCustField2 hiddenColumn",
+            //     targets: [17],
+            //   },
+            // ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            // buttons: [
+            //   {
+            //     extend: "excelHtml5",
+            //     text: "",
+            //     download: "open",
+            //     className: "btntabletocsv hiddenColumn",
+            //     filename: "inventory_" + moment().format(),
+            //     orientation: "portrait",
+            //     exportOptions: {
+            //       columns: ":visible",
+            //     },
+            //   },
+            //   {
+            //     extend: "print",
+            //     download: "open",
+            //     className: "btntabletopdf hiddenColumn",
+            //     text: "",
+            //     title: "Inventory List",
+            //     filename: "inventory_" + moment().format(),
+            //     exportOptions: {
+            //       columns: ":visible",
+            //     },
+            //   },
+            // ],
+            // bStateSave: true,
+            // rowId: 0,
+            pageLength: 25,
+            paging: true,
+            // "scrollY": "800px",
+            // "scrollCollapse": true,
+            // pageLength: initialBaseDataLoad,
+            // lengthMenu: [],
+            info: true,
+            responsive: true,
+            order: [[0, "asc"]],
+            action: function () {
+              $("#InventoryTable").DataTable().ajax.reload();
+            },
+            // fnDrawCallback: function (oSettings) {
+            //   $(".paginate_button.page-item").removeClass("disabled");
+            //   $("#tblInventory_ellipsis").addClass("disabled");
+            //   if (oSettings._iDisplayLength == -1) {
+            //     if (oSettings.fnRecordsDisplay() > 150) {
+            //     }
+            //     $(".fullScreenSpin").css("display", "inline-block");
+            //     setTimeout(function () {
+            //       $(".fullScreenSpin").css("display", "none");
+            //     }, 100);
+            //   } else {
+            //   }
+            //   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+            //     $(".paginate_button.page-item.next").addClass("disabled");
+            //   }
 
-              //   $(
-              //     ".paginate_button.next:not(.disabled)",
-              //     this.api().table().container()
-              //   ).on("click", function () {
-              //     $(".fullScreenSpin").css("display", "inline-block");
-              //     let dataLenght = oSettings._iDisplayLength;
-              //     let customerSearch = $("#tblInventory_filter input").val();
-              //     sideBarService
-              //       .getNewProductListVS1(
-              //         initialDatatableLoad,
-              //         oSettings.fnRecordsDisplay()
-              //       )
-              //       .then(function (dataObjectnew) {
-              //         for (
-              //           let i = 0;
-              //           i < dataObjectnew.tproductvs1.length;
-              //           i++
-              //         ) {
-              //           let availableQty = 0;
-              //           let onBOOrder = 0;
-              //           if (
-              //             dataObjectnew.tproductvs1[i].fields.ProductClass !=
-              //             null
-              //           ) {
-              //             for (
-              //               let a = 0;
-              //               a <
-              //               dataObjectnew.tproductvs1[i].fields.ProductClass
-              //                 .length;
-              //               a++
-              //             ) {
-              //               availableQty +=
-              //                 dataObjectnew.tproductvs1[i].fields.ProductClass[
-              //                   a
-              //                 ].fields.AvailableQuantity || 0;
-              //             }
-              //           }
-              //           if (
-              //             dataObjectnew.tproductvs1[i].fields.SNTracking == true
-              //           ) {
-              //             checkIfSerialorLot =
-              //               '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-              //           } else if (
-              //             dataObjectnew.tproductvs1[i].fields.Batch == true
-              //           ) {
-              //             checkIfSerialorLot =
-              //               '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-              //           } else {
-              //             checkIfSerialorLot =
-              //               '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-              //           }
-              //           var dataListDupp = [
-              //             dataObjectnew.tproductvs1[i].fields.ID || "",
-              //             dataObjectnew.tproductvs1[i].fields.ProductName ||
-              //               "-",
-              //             dataObjectnew.tproductvs1[i].fields
-              //               .SalesDescription || "",
-              //             availableQty,
-              //             0,
-              //             onBOOrder,
-              //             dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-              //             dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
-              //             utilityService.modifynegativeCurrencyFormat(
-              //               Math.floor(
-              //                 dataObjectnew.tproductvs1[i].fields.BuyQty1Cost *
-              //                   100
-              //               ) / 100
-              //             ),
-              //             utilityService.modifynegativeCurrencyFormat(
-              //               Math.floor(
-              //                 dataObjectnew.tproductvs1[i].fields
-              //                   .BuyQty1CostInc * 100
-              //               ) / 100
-              //             ),
-              //             utilityService.modifynegativeCurrencyFormat(
-              //               Math.floor(
-              //                 dataObjectnew.tproductvs1[i].fields
-              //                   .SellQty1Price * 100
-              //               ) / 100
-              //             ),
-              //             utilityService.modifynegativeCurrencyFormat(
-              //               Math.floor(
-              //                 dataObjectnew.tproductvs1[i].fields
-              //                   .SellQty1PriceInc * 100
-              //               ) / 100
-              //             ),
-              //             checkIfSerialorLot || "",
-              //             dataObjectnew.tproductvs1[i].fields.BARCODE || "",
-              //             departmentData,
-              //             dataObjectnew.tproductvs1[i].fields
-              //               .PurchaseDescription || "",
-              //             dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
-              //             dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
-              //           ];
-              //           splashArrayProductList.push(dataListDupp);
-              //         }
-              //         let uniqueChars = [...new Set(splashArrayProductList)];
-              //         var datatable = $("#InventoryTable").DataTable();
-              //         datatable.clear();
-              //         datatable.rows.add(uniqueChars);
-              //         datatable.draw(false);
-              //         setTimeout(function () {
-              //           $("#InventoryTable").dataTable().fnPageChange("last");
-              //         }, 400);
+            //   $(
+            //     ".paginate_button.next:not(.disabled)",
+            //     this.api().table().container()
+            //   ).on("click", function () {
+            //     $(".fullScreenSpin").css("display", "inline-block");
+            //     let dataLenght = oSettings._iDisplayLength;
+            //     let customerSearch = $("#tblInventory_filter input").val();
+            //     sideBarService
+            //       .getNewProductListVS1(
+            //         initialDatatableLoad,
+            //         oSettings.fnRecordsDisplay()
+            //       )
+            //       .then(function (dataObjectnew) {
+            //         for (
+            //           let i = 0;
+            //           i < dataObjectnew.tproductvs1.length;
+            //           i++
+            //         ) {
+            //           let availableQty = 0;
+            //           let onBOOrder = 0;
+            //           if (
+            //             dataObjectnew.tproductvs1[i].fields.ProductClass !=
+            //             null
+            //           ) {
+            //             for (
+            //               let a = 0;
+            //               a <
+            //               dataObjectnew.tproductvs1[i].fields.ProductClass
+            //                 .length;
+            //               a++
+            //             ) {
+            //               availableQty +=
+            //                 dataObjectnew.tproductvs1[i].fields.ProductClass[
+            //                   a
+            //                 ].fields.AvailableQuantity || 0;
+            //             }
+            //           }
+            //           if (
+            //             dataObjectnew.tproductvs1[i].fields.SNTracking == true
+            //           ) {
+            //             checkIfSerialorLot =
+            //               '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+            //           } else if (
+            //             dataObjectnew.tproductvs1[i].fields.Batch == true
+            //           ) {
+            //             checkIfSerialorLot =
+            //               '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+            //           } else {
+            //             checkIfSerialorLot =
+            //               '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+            //           }
+            //           var dataListDupp = [
+            //             dataObjectnew.tproductvs1[i].fields.ID || "",
+            //             dataObjectnew.tproductvs1[i].fields.ProductName ||
+            //               "-",
+            //             dataObjectnew.tproductvs1[i].fields
+            //               .SalesDescription || "",
+            //             availableQty,
+            //             0,
+            //             onBOOrder,
+            //             dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
+            //             dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
+            //             utilityService.modifynegativeCurrencyFormat(
+            //               Math.floor(
+            //                 dataObjectnew.tproductvs1[i].fields.BuyQty1Cost *
+            //                   100
+            //               ) / 100
+            //             ),
+            //             utilityService.modifynegativeCurrencyFormat(
+            //               Math.floor(
+            //                 dataObjectnew.tproductvs1[i].fields
+            //                   .BuyQty1CostInc * 100
+            //               ) / 100
+            //             ),
+            //             utilityService.modifynegativeCurrencyFormat(
+            //               Math.floor(
+            //                 dataObjectnew.tproductvs1[i].fields
+            //                   .SellQty1Price * 100
+            //               ) / 100
+            //             ),
+            //             utilityService.modifynegativeCurrencyFormat(
+            //               Math.floor(
+            //                 dataObjectnew.tproductvs1[i].fields
+            //                   .SellQty1PriceInc * 100
+            //               ) / 100
+            //             ),
+            //             checkIfSerialorLot || "",
+            //             dataObjectnew.tproductvs1[i].fields.BARCODE || "",
+            //             departmentData,
+            //             dataObjectnew.tproductvs1[i].fields
+            //               .PurchaseDescription || "",
+            //             dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
+            //             dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
+            //           ];
+            //           splashArrayProductList.push(dataListDupp);
+            //         }
+            //         let uniqueChars = [...new Set(splashArrayProductList)];
+            //         var datatable = $("#InventoryTable").DataTable();
+            //         datatable.clear();
+            //         datatable.rows.add(uniqueChars);
+            //         datatable.draw(false);
+            //         setTimeout(function () {
+            //           $("#InventoryTable").dataTable().fnPageChange("last");
+            //         }, 400);
 
-              //         $(".fullScreenSpin").css("display", "none");
-              //       })
-              //       .catch(function (err) {
-              //         $(".fullScreenSpin").css("display", "none");
-              //       });
-              //   });
-              //   setTimeout(function () {
-              //     MakeNegative();
-              //   }, 100);
-              // },
-              fnInitComplete: function () {
-                $(
-                  "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                ).insertAfter("#tblInventory_filter");
-              },
-            })
-            .on("length.dt", function (e, settings, len) {
-              $(".fullScreenSpin").css("display", "inline-block");
-              let dataLenght = settings._iDisplayLength;
-              // splashArrayProductList = [];
-              if (dataLenght == -1) {
+            //         $(".fullScreenSpin").css("display", "none");
+            //       })
+            //       .catch(function (err) {
+            //         $(".fullScreenSpin").css("display", "none");
+            //       });
+            //   });
+            //   setTimeout(function () {
+            //     MakeNegative();
+            //   }, 100);
+            // },
+            fnInitComplete: function () {
+              $(
+                "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+              ).insertAfter("#tblInventory_filter");
+            },
+          })
+          .on("length.dt", function (e, settings, len) {
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            // splashArrayProductList = [];
+            if (dataLenght == -1) {
+              $(".fullScreenSpin").css("display", "none");
+            } else {
+              if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                 $(".fullScreenSpin").css("display", "none");
               } else {
-                if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                  $(".fullScreenSpin").css("display", "none");
-                } else {
-                  $(".fullScreenSpin").css("display", "none");
-                }
+                $(".fullScreenSpin").css("display", "none");
               }
-            });
+            }
+          });
 
-          $(".fullScreenSpin").css("display", "none");
-          $("div.dataTables_filter input").addClass(
-            "form-control form-control-sm"
-          );
-        }, 150);
-      }
+        $(".fullScreenSpin").css("display", "none");
+        $("div.dataTables_filter input").addClass(
+          "form-control form-control-sm"
+        );
+      }, 300);
     }
   };
 
@@ -4282,8 +4293,8 @@ function goToNextStep(stepId, isConfirmed = false) {
   isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
   stepId = stepId + 1;
   setCurrentStep(stepId);
-  $('.setup-step').removeClass('show');
-  $(`.setup-step-${stepId}`).addClass('show');
+  $(".setup-step").removeClass("show");
+  $(`.setup-step-${stepId}`).addClass("show");
 }
 
 Template.setup.events({
@@ -4295,7 +4306,7 @@ Template.setup.events({
     setCurrentStep(1);
     templateObject.loadSteps();
   },
-  "click .confirmBtn":(event) => {
+  "click .confirmBtn": (event) => {
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
@@ -4306,12 +4317,12 @@ Template.setup.events({
     // $(".setup-step").css("display", "none");
     // $(`.setup-step-${stepId}`).css("display", "block");
 
-  // $(".setup-step").css("display", "none");
+    // $(".setup-step").css("display", "none");
     // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
     // $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
     // $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
-  // $(".setup-step-" + stepId).css("display", "block");
+    // $(".setup-step-" + stepId).css("display", "block");
     // if (stepId !== numberOfSteps) {
     //   $(".setup-step-" + stepId).css("display", "block");
     // } else {
@@ -4347,7 +4358,7 @@ Template.setup.events({
     // let _steps = templateObject.steps.get();
     // _steps.skippedSteps.push(stepId);
 
-    if(!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
+    if (!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
     templateObject.skippedSteps.set(skippedSteps);
 
     //setCurrentStep(stepId);
@@ -4355,12 +4366,12 @@ Template.setup.events({
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
   },
-  "click .gotToStepID":  (event) => {
+  "click .gotToStepID": (event) => {
     let templateObj = Template.instance();
     const stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
-    $('.setup-step').removeClass('show');
-    $(`.setup-step-${stepId}`).addClass('show');
+    $(".setup-step").removeClass("show");
+    $(`.setup-step-${stepId}`).addClass("show");
 
     // $(".setup-step").css("display", "none");
     $(`.setup-stepper li`).removeClass("current");
@@ -6388,14 +6399,16 @@ Template.setup.events({
   // TODO: Step 5
   "click .btnSaveEmpPop": (e) => {
     $("#addEmployeeModal").modal("toggle");
+
+    // const templateObject = Template.instance();
+    // templateObject.loadEmployees(true);
   },
-  "click .employees-js": (e) => {
-    let templateObject = Template.instance();
+  "click .edit-employees-js": (e) => {
     $("#addEmployeeModal").modal("toggle");
+    let templateObject = Template.instance();
     LoadingOverlay.show();
     const employeeID = $(e.currentTarget).attr("id");
     if (!isNaN(employeeID)) {
-
       let employeeList = templateObject.currentEmployees.get();
 
       let data = employeeList.filter(
@@ -6444,19 +6457,52 @@ Template.setup.events({
         notes: data.fields.Notes || "",
       };
 
-
       templateObject.editableEmployee.set(editableEmployee);
-
     }
     LoadingOverlay.hide();
   },
   "click #btnNewEmployee": (event) => {
+    $("#addEmployeeModal").modal("toggle");
+
+    let templateObject = Template.instance();
     // FlowRouter.go("/employeescard");
     LoadingOverlay.show();
-    Template.instance().editableEmployee.set(null);
+    templateObject.editableEmployee.set(null);
+    // templateObject.editableEmployee.set({
+    //   id: "",
+    //   lid: "",
+    //   title: "",
+    //   firstname: "",
+    //   middlename: "",
+    //   lastname: "",
+    //   company: "",
+    //   tfn: "",
+    //   priority: 0,
+    //   color: "#00a3d3",
+    //   email: "",
+    //   phone: "",
+    //   mobile: "",
+    //   fax: "",
+    //   skype: "",
+    //   gender: "",
+    //   dob: "",
+    //   startdate: "",
+    //   datefinished: "",
+    //   position: "",
+    //   streetaddress: "",
+    //   city: "",
+    //   state: "",
+    //   postalcode: "",
+    //   country: LoggedCountry,
+    //   custfield1: "",
+    //   custfield2: "",
+    //   custfield3: "",
+    //   custfield4: "",
+    //   custfield14: "",
+    //   website: "",
+    //   notes: "",
+    // });
     LoadingOverlay.hide();
-
-    $("#addEmployeeModal").modal("toggle");
   },
   "click .btnAddVS1User": function (event) {
     swal({
@@ -6511,7 +6557,7 @@ Template.setup.events({
   },
   "click .btnRefreshEmployee": (event) => {
     let templateObject = Template.instance();
-    templateObject.loadEmployees();
+    templateObject.loadEmployees(true);
     // let utilityService = new UtilityService();
     // let tableProductList;
     // const dataTableList = [];
@@ -8817,7 +8863,11 @@ Template.setup.events({
     var listData = tr.attr("id");
     var transactiontype = tr.attr("isjob");
     var url = FlowRouter.current().path;
-
+  },
+  "click .setup-step-7 .btnRefresh": (e) => {
+    const templateObject = Template.instance();
+    templateObject.loadDefaultCustomer(true);
+    $(".modal.show").modal("hide");
   },
 
   // TODO: Step 8
@@ -8825,7 +8875,18 @@ Template.setup.events({
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
   },
   "click #tblSupplierlist tbody tr": (e) => {},
+  "click .setup-step-8 .btnRefresh": (e) => {
+    const templateObject = Template.instance();
+    templateObject.loadSuppliers(true);
+    $(".modal.show").modal("hide");
+  },
   // TODO: Step 9
+  "click .setup-step-9 .btnRefresh": (e) => {
+    console.log("refreshing step 9");
+    const templateObject = Template.instance();
+    templateObject.loadInventory(true);
+    $(".modal.show").modal("hide");
+  },
   "click .lblCostEx": function (event) {
     var $earch = $(event.currentTarget);
     var offset = $earch.offset();
@@ -8887,20 +8948,20 @@ Template.setup.events({
   "click #btnNewProduct": (e) => {
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
   },
-  "click .btnRefresh": () => {
-    Meteor._reload.reload();
-  },
-  "change #isProductAdded": (E) => {
-    //$(".btnRefresh").click();
-    $("#addProductModal").modal("toggle");
-    LoadingOverlay.show();
-    let templateObject = Template.instance();
+  // "click .btnRefresh": () => {
+  //   Meteor._reload.reload();
+  // },
+  // "change #isProductAdded": (E) => {
+  //   //$(".btnRefresh").click();
+  //   $("#addProductModal").modal("toggle");
+  //   LoadingOverlay.show();
+  //   let templateObject = Template.instance();
 
-    setTimeout(() => {
-      templateObject.loadInventory();
-      LoadingOverlay.hide();
-    }, 1500);
-  },
+  //   setTimeout(() => {
+  //     templateObject.loadInventory(true);
+  //     LoadingOverlay.hide();
+  //   }, 1500);
+  // },
 });
 
 Template.setup.helpers({
@@ -9238,10 +9299,8 @@ Template.registerHelper("equals", function (a, b) {
 });
 
 Template.registerHelper("isActive", function (currentStep, step) {
-  return  currentStep == step;
+  return currentStep == step;
 });
-
-
 
 const TaxRatesEditListener = (e) => {
   if (!e) return false;
@@ -9251,7 +9310,7 @@ const TaxRatesEditListener = (e) => {
   const tr = $(e.currentTarget).parent();
 
   var listData = tr.attr("id");
-  
+
   // var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
   // var accountName = $(event.target).closest("tr").find(".colAccountName").text();
   // let columnBalClass = $(event.target).attr('class');
@@ -9264,7 +9323,9 @@ const TaxRatesEditListener = (e) => {
       //taxRateService.getOneTaxRate(listData).then(function (data) {
 
       var taxid = listData || "";
-      let tax = templateObject.taxRates.get().find((v) => String(v.id) === String(taxid));
+      let tax = templateObject.taxRates
+        .get()
+        .find((v) => String(v.id) === String(taxid));
 
       // var taxname = tr.find(".colName").text() || "";
       // var taxDesc = tr.find(".colDescription").text() || "";
@@ -9277,8 +9338,9 @@ const TaxRatesEditListener = (e) => {
       $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
       $("#edtTaxDesc").val(tax.description);
 
-
-      tr.attr('data-modal') ? $(tr.attr('data-modal')).modal("toggle") : $("#newTaxRateModal").modal("toggle");
+      tr.attr("data-modal")
+        ? $(tr.attr("data-modal")).modal("toggle")
+        : $("#newTaxRateModal").modal("toggle");
     }
   }
 };

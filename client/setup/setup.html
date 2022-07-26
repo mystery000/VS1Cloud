@@ -1148,7 +1148,7 @@
                                                     <tbody>
                                                         {{#if currentEmployees}}
                                                         {{#each employee in currentEmployees}}
-                                                        <tr class="dnd-moved employees-js" id="{{employee.fields.ID}}" style="cursor: pointer;">
+                                                        <tr class="dnd-moved edit-employees-js" id="{{employee.fields.ID}}" style="cursor: pointer;">
                                                             <!-- <td contenteditable="false" class="colEmployeeNo" >{{item.id}}</td> -->
                                                             <td contenteditable="false" class="colEmployeeNo hiddenColumn" >{{employee.fields.ID}}</td>
                                                             <td contenteditable="false" class="colEmployeeName" >{{employee.fields.EmployeeName}}</td>
@@ -1582,7 +1582,7 @@
                                                             </style>
                                             
                                                             <div class="col float-left flex-grow-1 pl-0">
-                                                                <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                                                <button class="btn btn-primary btnRefresh refresh-customer-table" type="button" style="margin: 16px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                                                 <button id="btnNewCustomer" data-toggle="#addCustomerModal" name="btnNewCustomer" class="btn btn-primary alerts-border" type="button" style="margin: 16px 0; "><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
                                                             </div>
 
