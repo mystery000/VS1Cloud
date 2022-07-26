@@ -3375,12 +3375,18 @@ Template.setup.onRendered(function () {
 
   // Step 7 Render functionalities
 
-  templateObject.loadDefaultCustomer = async () => {
+  templateObject.loadDefaultCustomer = async (refresh = false) => {
+    LoadingOverlay.show();
     let dataObject = await getVS1Data("TCustomerVS1");
     let data =
-      dataObject.length == 0
+      dataObject.length == 0 || refresh == true
         ? await sideBarService.getAllCustomersDataVS1("All")
         : JSON.parse(dataObject[0].data);
+
+    if (refresh) {
+      ///dataObject[0].data = data;
+      await addVS1Data("TCustomerVS1", JSON.stringify(data));
+    }
 
     let _customerList = [];
     let _customerListHeaders = [];
@@ -3488,12 +3494,16 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      setTimeout(function () {
+      if (refresh == true) {
+        $("#tblCustomerlist").DataTable().destroy();
+      }
+
+      setTimeout(() => {
         $("#tblCustomerlist")
           .DataTable({
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             select: true,
-            destroy: true,
+            destroy: refresh,
             colReorder: true,
             pageLength: 25,
             paging: true,
@@ -3530,7 +3540,7 @@ Template.setup.onRendered(function () {
 
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
-      }, 1000);
+      }, 300);
     }
 
     LoadingOverlay.hide();
@@ -8849,6 +8859,11 @@ Template.setup.events({
     var transactiontype = tr.attr("isjob");
     var url = FlowRouter.current().path;
   },
+  "click .setup-step-7 .btnRefresh": (e) => {
+    const templateObject = Template.instance();
+    templateObject.loadDefaultCustomer(true);
+    $(".modal.show").modal("hide");
+  },
 
   // TODO: Step 8
   "click #btnNewSupplier": (e) => {
@@ -8917,9 +8932,9 @@ Template.setup.events({
   "click #btnNewProduct": (e) => {
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
   },
-  "click .btnRefresh": () => {
-    Meteor._reload.reload();
-  },
+  // "click .btnRefresh": () => {
+  //   Meteor._reload.reload();
+  // },
   "change #isProductAdded": (E) => {
     //$(".btnRefresh").click();
     $("#addProductModal").modal("toggle");
