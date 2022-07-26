@@ -1356,9 +1356,7 @@ Template.customerscard.onRendered(function () {
 
     };
     templateObject.getCustomersList();
-    templateObject.setAllCustomerSideDataVS1 = async function (data) {
-      const self = this;
-      self.customerrecords = new ReactiveVar();
+    templateObject.setAllCustomerSideDataVS1 = function (data) {
         let lineItems = [];
         let lineItemObj = {};
         for (let i = 0; i < data.tcustomervs1.length; i++) {
@@ -1381,7 +1379,7 @@ Template.customerscard.onRendered(function () {
             };
             lineItems.push(dataList);
         }
-        self.customerrecords.set(lineItems);
+        templateObject.customerrecords.set(lineItems);
         if (templateObject.customerrecords.get()) {
             setTimeout(function () {
                 $('.counter').text(lineItems.length + ' items');
@@ -1772,6 +1770,9 @@ Template.customerscard.events({
         const dataTableList = [];
         var splashArrayInvoiceList = new Array();
         const lineExtaSellItems = [];
+        const self = this;
+        let lineItems = [];
+        let lineItemObj = {};
         $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('.txtSearchCustomers').val()||'';
         if (dataSearchName.replace(/\s/g, '') != '') {
@@ -1780,7 +1781,32 @@ Template.customerscard.events({
                 let lineItems = [];
                 let lineItemObj = {};
                 if (data.tcustomervs1.length > 0) {
-                    await templateObject.setAllCustomerSideDataVS1(data);
+                  for (let i = 0; i < data.tcustomervs1.length; i++) {
+                      let classname = '';
+                      if (!isNaN(currentId.id)) {
+                          if (data.tcustomervs1[i].fields.ID == parseInt(currentId.id)) {
+                              classname = 'currentSelect';
+                          }
+                      }
+                      if (!isNaN(currentId.jobid)) {
+                          if (data.tcustomervs1[i].fields.ID == parseInt(currentId.jobid)) {
+                              classname = 'currentSelect';
+                          }
+                      }
+                      const dataList = {
+                          id: data.tcustomervs1[i].fields.ID || '',
+                          company: data.tcustomervs1[i].fields.ClientName || '',
+                          isslectJob: data.tcustomervs1[i].fields.IsJob || false,
+                          classname: classname
+                      };
+                      lineItems.push(dataList);
+                    }
+                   templateObject.customerrecords.set(lineItems);
+                    if (templateObject.customerrecords.get()) {
+                      setTimeout(function () {
+                          $('.counter').text(lineItems.length + ' items');
+                      }, 100);
+                    }
                     $('.fullScreenSpin').css('display', 'none');
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
