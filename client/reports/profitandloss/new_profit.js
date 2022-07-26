@@ -18,6 +18,7 @@ let taxRateService = new TaxRateService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 3;
+const employeeId = Session.get("mySessionEmployeeLoggedID");
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.newprofitandloss.onCreated(function () {
@@ -34,22 +35,7 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
-function formatFields(fields, searchkey) {
-  const groupBy = (array, key) => {
-    // Return the end result
-    return array.reduce((result, currentValue) => {
-      // If an array already present for key, push it to the array. Else create an array and push the object
-      (result[currentValue[key]] = result[currentValue[key]] || []).push(
-        currentValue
-      );
-      // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
-      return result;
-    }, {}); // empty object is the initial value for result object
-  };
 
-  // Group by color as key to the person array
-  return groupBy(fields, searchkey);
-}
 
 function buildPositions() {
   const sortfields = $(".pSortItems");
@@ -57,23 +43,35 @@ function buildPositions() {
   // Level 0 Sorting
   let counter = 1;
   for (let i = 0; i <= sortfields.length; i++) {
-    $(sortfields[i]).attr("position", counter * 10);
+    $(sortfields[i]).attr("position", counter );
     counter++;
   }
   // Level 1 Sorting
   const cSortItems = $(".cSortItems");
   counter = 1;
   for (let i = 0; i <= cSortItems.length; i++) {
-    $(cSortItems[i]).attr("position", counter * 10);
+    $(cSortItems[i]).attr("position", counter );
     counter++;
   }
   // Level 2 Sorting
   const scSortItems = $(".scSortItems");
   counter = 1;
   for (let i = 0; i <= scSortItems.length; i++) {
-    $(scSortItems[i]).attr("position", counter * 10);
+    $(scSortItems[i]).attr("position", counter );
     counter++;
   }
+}
+
+function buildSubAccountJson( $sortContainer ){
+  return Array.from($sortContainer.map(function(){ 
+    return {
+      "accountId": $(this).attr('plid'),
+      "position": $(this).attr('position'),
+      "accountType": $(this).data('group'),
+      "employeeId": employeeId,
+      "subAccounts": ( $(this).find('ol li').length > 0 )? buildSubAccountJson( $(this).find('ol li') ) : []
+    }
+  }))
 }
 
 Template.newprofitandloss.onRendered(function () {
@@ -688,13 +686,16 @@ Template.newprofitandloss.onRendered(function () {
       profitLossLayoutApi.collectionNames.TProfitLossLayout
     );
     
-    profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
+    // profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
 
+    // http://localhost:4419/erpapi/TProfitLossLayout/35?LayoutToUse="1"
+    console.log( await reportService.getProfitLossLayout() );
+
+      return false
     const profitLossLayoutEndResponse = await profitLossLayoutEndpoint.fetch();
     if (profitLossLayoutEndResponse.ok == true) {
       let profitLossLayouts = [];
       let jsonResponse = await profitLossLayoutEndResponse.json();
-      console.log('jsonResponse', jsonResponse)
       const profitLossLists = ProfitLossLayout.fromList(
         jsonResponse.tprofitlosslayout
       );
@@ -787,17 +788,19 @@ Template.newprofitandloss.onRendered(function () {
             } else {
               $item.find(".mainHeadingDiv").removeClass("collapsTogls");
             }
+            console.log('container', $item.parents('li').attr("class"))
             container.el.removeClass("active");
             _super($item, container);
             let siblingClass = $item.siblings().attr("class");
+            console.log( $item.attr("class") )
             $item.removeClass();
             $item.addClass(siblingClass);
             $item.addClass("selected");
 
             // for array
-            var data = group.sortable("serialize").get();
-            var jsonString = JSON.stringify(data, null, " ");
-
+            // var data = group.sortable("serialize").get();
+            // var jsonString = JSON.stringify(data, null, " ");
+            // console.log(jsonString)
           },
         });
 
@@ -2138,8 +2141,10 @@ Template.newprofitandloss.events({
     }
   },
   "click .saveProfitLossLayouts": async function () {
+
+    $('.fullScreenSpin').css('display', 'block');
     buildPositions();
-    // Under progress
+
     const profitLossLayoutApis = new ProfitLossLayoutApi();
 
     // make post request to save layout data
@@ -2147,85 +2152,64 @@ Template.newprofitandloss.events({
       profitLossLayoutApis.collectionNames.TProfitLossLayout
     );
 
-    let templateObject = Template.instance();
-
-    /** Set layout positions */
-    buildPositions();
-
-    let fieldsList = [];
-    // Fetch default lists of layout
-    let profitlosslayoutfields =
-      await templateObject.profitlosslayoutfields.get();
-    Array.prototype.forEach.call(profitlosslayoutfields, async (item) => {
-      let Position = $(`[key='layoutFields-${item.fields.ID}']`).attr(
-        "position"
-      );
-      if (Position != undefined) {
-        if (
-          $(`[key='layoutFields-${item.fields.ID}']`).hasClass("pSortItems")
-        ) {
-          item.fields.Level0Order = parseInt(Position);
-          item.fields.Level1Order = 0;
-          item.fields.Level2Order = 0;
-          item.fields.Level3Order = 0;
-        }
-
-        if (
-          $(`[key='layoutFields-${item.fields.ID}']`).hasClass("cSortItems")
-        ) {
-          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`)
-            .parents(".pSortItems")
-            .attr("position");
-          item.fields.Level0Order = parseInt(level0OrderPos);
-          item.fields.Level1Order = parseInt(Position);
-          item.fields.Level2Order = 0;
-          item.fields.Level3Order = 0;
-        }
-
-        if (
-          $(`[key='layoutFields-${item.fields.ID}']`).hasClass("scSortItems")
-        ) {
-          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`)
-            .parents(".pSortItems")
-            .attr("position");
-          let level1OrderPos = $(`[key='layoutFields-${item.fields.ID}']`)
-            .parents(".cSortItems")
-            .attr("position");
-          item.fields.Level0Order = parseInt(level0OrderPos);
-          item.fields.Level1Order = parseInt(level1OrderPos);
-          item.fields.Level2Order = parseInt(Position);
-          item.fields.Level3Order = 0;
-        }
-      }
-      const ApiResponse = await reportService.updateProfitandLossLayout(
-        item.fields.ID,
-        item.fields.Level0Order,
-        item.fields.Level1Order,
-        item.fields.Level2Order,
-        item.fields.Level3Order
-      );
-
-      return item;
+    const pSortfields = $(".pSortItems");
+    const employeeId = Session.get("mySessionEmployeeLoggedID");
+    let pSortList = [];
+    pSortfields.each(function(){
+      let Position = $(this).attr('position');
+      let accountType = $(this).data('group');
+      pSortList.push({
+        "position": Position,
+        "accountType": accountType,
+        "employeeId": employeeId,
+        "subAccounts": buildSubAccountJson( $(this).find('ol li') )
+      });
     });
-
-
 
     /**
      *
      * Update all layout fields index DB
      */
-    let employeeID = Session.get("mySessionEmployeeLoggedID");
     let name = $("#nplLayoutName").val();
     let description = $("#nplLayoutDescr").val();
     let isdefault = $("#npldefaultSettting").is(":checked") ? true : false;
-    let layoutLists = {
-      Name: name,
-      Description: description,
-      Isdefault: isdefault,
-      EmployeeID: employeeID,
-      LayoutLists: profitlosslayoutfields,
-    };
-    await addVS1Data("TProfitLossEditLayout", JSON.stringify(layoutLists));
+    let profitLossLayoutData = {
+      "type": "TProfitLossLayout",
+      "action": "save",
+      "layout": pSortList
+    }
+    console.log(profitLossLayoutData)
+
+    try {
+      const ApiResponse = await apiEndpoint.fetch(null, {
+          method: "POST",
+          headers: ApiService.getPostHeaders(),
+          body: JSON.stringify(profitLossLayoutData),
+      });
+
+      if (ApiResponse.ok == true) {
+          const jsonResponse = await ApiResponse.json();
+          console.log('jsonResponse', jsonResponse)
+          $('.fullScreenSpin').css('display', 'none');
+      }else{
+          $('.fullScreenSpin').css('display', 'none');
+      }
+  } catch (error) {
+      $('.fullScreenSpin').css('display', 'none');
+  }
+
+    // "type": "TProfitLossLayout",
+    // "action": "save",
+    // "layout": [
+
+    // let layoutLists = {
+    //   Name: name,
+    //   Description: description,
+    //   Isdefault: isdefault,
+    //   EmployeeID: employeeID,
+    //   LayoutLists: profitlosslayoutfields,
+    // };
+    // await addVS1Data("TProfitLossEditLayout", JSON.stringify(layoutLists));
   },
   "click .fx-rate-btn": async (e) => {
     await loadCurrency();

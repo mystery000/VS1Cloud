@@ -175,6 +175,13 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TDeptClass, options);
   }
 
+  getProfitLossLayout() {
+    let options = {
+      LayoutToUse: "'1'"
+    };
+    return this.getList('TProfitLossLayout/35', options);
+  }
+
   getAgedPayableDetailsData(dateFrom, dateTo, ignoreDate) {
     let options = "";
     if (ignoreDate == true) {
