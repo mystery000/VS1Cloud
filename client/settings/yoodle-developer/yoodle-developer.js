@@ -4,19 +4,18 @@ import '../../lib/global/indexdbstorage.js';
 
 let sideBarService = new SideBarService();
 
-Template.receiptclaims.onCreated(() => {
+Template.yoodledeveloper.onCreated(() => {
   const templateObject = Template.instance();
   
 });
 
-Template.receiptclaims.onRendered(function () {
+Template.yoodledeveloper.onRendered(function () {
 
 
 });
 
-Template.receiptclaims.events({
-  'click #receiptClaimsSignUp': function() {
-    window.open("https://hub.veryfi.com/");
-  },
-  
+Template.yoodledeveloper.events({
+  'click #yoodleDeveloperSignUp': function() {
+    window.open("https://developer.yodlee.com/user/login");
+  }  
 });

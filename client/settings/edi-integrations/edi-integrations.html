@@ -37,7 +37,7 @@
             <div class="col-md-3">
                 <ul class="nav nav-tabs customEdiIntigrationTab" id="ediIntigrtionTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link btn btn-primary" id="adpTab" data-toggle="tab" data-target="#adp" type="button" role="tab" aria-controls="adp" aria-selected="false"><i class="fa fa-cog"></i> ADP</button>
+                      <button class="nav-link btn btn-primary active" id="adpTab" data-toggle="tab" data-target="#adp" type="button" role="tab" aria-controls="adp" aria-selected="false"><i class="fa fa-cog"></i> ADP</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link btn btn-primary" id="mailChimpTab" data-toggle="tab" data-target="#mailChimp" type="button" role="tab" aria-controls="mailChimp" aria-selected="false"><i class="fa fa-cog"></i> Mail Chimp</button>
@@ -49,7 +49,7 @@
                       <button class="nav-link btn btn-primary" id="receiptClaimsTab" data-toggle="tab" data-target="#receiptClaims" type="button" role="tab" aria-controls="receiptClaims" aria-selected="false"><i class="fa fa-cog"></i> Receipt Claims</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link btn btn-primary active" id="smsSettingTab" data-toggle="tab" data-target="#smsSetting" type="button" role="tab" aria-controls="smsSetting" aria-selected="true"><i class="fa fa-cog"></i> SMS Settings</button>
+                      <button class="nav-link btn btn-primary" id="smsSettingTab" data-toggle="tab" data-target="#smsSetting" type="button" role="tab" aria-controls="smsSetting" aria-selected="true"><i class="fa fa-cog"></i> SMS Settings</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link btn btn-primary" id="trueERPTab" data-toggle="tab" data-target="#trueERP" type="button" role="tab" aria-controls="trueERP" aria-selected="false"><i class="fa fa-cog"></i> TrueERP</button>
@@ -57,30 +57,36 @@
                     <li class="nav-item" role="presentation">
                       <button class="nav-link btn btn-primary" id="xeCurrenciesTab" data-toggle="tab" data-target="#xeCurrencies" type="button" role="tab" aria-controls="xeCurrencies" aria-selected="false"><i class="fa fa-cog"></i> XE Currencies</button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link btn btn-primary" id="yoodledeveloperTab" data-toggle="tab" data-target="#yoodledeveloper" type="button" role="tab" aria-controls="yoodledeveloper" aria-selected="false"><i class="fa fa-cog"></i> Yoodle Developer</button>
+                    </li>
                   </ul>
             </div>
             <div class="col-md-9">
                 <div class="tab-content" id="ediIntigrtionTabContent">
-                    <div class="tab-pane fade show active" id="smsSetting" role="tabpanel" aria-labelledby="smsSettingTab">
-                        {{> smssettings}}
-                    </div>
-                    <div class="tab-pane fade" id="xeCurrencies" role="tabpanel" aria-labelledby="xeCurrenciesTab">
-                        {{> xecurrencies}}
-                    </div>
-                    <div class="tab-pane fade" id="receiptClaims" role="tabpanel" aria-labelledby="receiptClaimsTab">
-                      {{> receiptclaims}}
-                    </div>
-                    <div class="tab-pane fade" id="trueERP" role="tabpanel" aria-labelledby="trueERPTab">
-                      {{> trueerp}}
+                    <div class="tab-pane fade show active" id="adp" role="tabpanel" aria-labelledby="adpTab">
+                      {{> adp}}
                     </div>
                     <div class="tab-pane fade" id="mailChimp" role="tabpanel" aria-labelledby="mailChimpTab">
                       {{> mailchimp}}
                     </div>
-                    <div class="tab-pane fade" id="adp" role="tabpanel" aria-labelledby="adpTab">
-                      {{> adp}}
-                    </div>
                     <div class="tab-pane fade" id="paycheck" role="tabpanel" aria-labelledby="paycheckTab">
                       {{> paycheck}}
+                    </div>
+                    <div class="tab-pane fade" id="receiptClaims" role="tabpanel" aria-labelledby="receiptClaimsTab">
+                      {{> receiptclaims}}
+                    </div>
+                    <div class="tab-pane fade" id="smsSetting" role="tabpanel" aria-labelledby="smsSettingTab">
+                        {{> edismssettings}}
+                    </div>
+                    <div class="tab-pane fade" id="trueERP" role="tabpanel" aria-labelledby="trueERPTab">
+                      {{> trueerp}}
+                    </div>
+                    <div class="tab-pane fade" id="yoodledeveloper" role="tabpanel" aria-labelledby="yoodledeveloperTab">
+                      {{> yoodledeveloper}}
+                    </div>
+                    <div class="tab-pane fade" id="xeCurrencies" role="tabpanel" aria-labelledby="xeCurrenciesTab">
+                        {{> xecurrencies}}
                     </div>
                   </div>
             </div>

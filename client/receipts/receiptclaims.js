@@ -1480,6 +1480,7 @@ Template.receiptsoverview.onRendered(function() {
             }
         }, 100);
     }
+    tableResize();
 });
 
 Template.receiptsoverview.events({
