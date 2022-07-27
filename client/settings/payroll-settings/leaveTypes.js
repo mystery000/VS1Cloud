@@ -46,12 +46,21 @@ Template.leaveTypeSettings.onRendered(function() {
         });
     });
 
-    templateObject.saveDataLocalDB = async function(){
+    templateObject.saveDataLocalDB = async function(leaveType){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TPaidLeave
-        );
+        const employeePayrolEndpoint={};
+        if(leaveType == "Paid Leave"){
+            employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPaidLeave
+            );
+        }
+        else if(leaveType == "Unpaid Leave"){
+            employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TUnpaidLeave
+            );
+        }
+        
 
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
@@ -59,12 +68,17 @@ Template.leaveTypeSettings.onRendered(function() {
         );                
         
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-            console.log('employeePayrolEndpointJsonResponse', employeePayrolEndpointJsonResponse)
-            if( employeePayrolEndpointJsonResponse.tpaidleave.length ){
-                await addVS1Data('TPaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+            if(leaveType == "Paid Leave"){
+                if(employeePayrolEndpointJsonResponse.tpaidleave.length ){
+                    await addVS1Data('TPaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+                }
+            }
+            else if(leaveType == "Unpaid Leave"){
+                if(employeePayrolEndpointJsonResponse.tunpaidleave.length){
+                    await addVS1Data('TUnpaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+                }
             }
             return employeePayrolEndpointJsonResponse
         }  
@@ -75,9 +89,9 @@ Template.leaveTypeSettings.onRendered(function() {
         try {
             let data = {};
             let splashArrayLeaveList = new Array();
-            let dataObject = await getVS1Data('TPaidLeave')  
+            let dataObject = await getVS1Data('TPaidLeave');
             if ( dataObject.length == 0) {
-                data = await templateObject.saveDataLocalDB();
+                data = await templateObject.saveDataLocalDB('Paid Leave');
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
@@ -94,7 +108,30 @@ Template.leaveTypeSettings.onRendered(function() {
                 ];
 
                 splashArrayLeaveList.push(dataListAllowance);
-             }
+            }
+
+            let unPaidData = []
+            let dataUnObject = await getVS1Data('TUnpaidLeave');
+            if ( dataUnObject.length == 0) {
+                unPaidData = await templateObject.saveDataLocalDB('Unpaid Leave');
+            }else{
+                unPaidData = JSON.parse(dataUnObject[0].data);
+            }
+
+            for (let i = 0; i < unPaidData.tunpaidleave.length; i++) {
+
+                var dataListAllowance = [
+                    unPaidData.tunpaidleave[i].fields.ID || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidName || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidUnits || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidNormalEntitlement || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidLeaveLoadingRate || '',
+                    'unpaid',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidShowBalanceOnPayslip == true ? 'show': 'hide',
+                ];
+
+                splashArrayLeaveList.push(dataListAllowance);
+            }
 
               function MakeNegative() {
                   $('td').each(function () {
@@ -427,12 +464,24 @@ Template.leaveTypeSettings.events({
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#leaveRateForm')[0].reset();
-            await templateObject.saveDataLocalDB();
+            await templateObject.saveDataLocalDB(leaveType);
             await templateObject.getLeaves();
             $('#leaveModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Leave has been saved",
+                type: 'warning',
+                
+            })
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Leave failed to saved",
+                type: 'error',
+                
+            })
         }
         
         return false;

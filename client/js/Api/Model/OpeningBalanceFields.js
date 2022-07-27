@@ -1,16 +1,20 @@
 export default class OpeningBalanceFields {
     constructor({
         EmployeeID,
-        Type,
+        AType,
         Amount,
         ContributionType,
-        BalanceField
+        Balance,
+        KeyStringFieldName,
+        Active
     }){
         this.EmployeeID = EmployeeID;
-        this.Type = Type;
+        this.AType = AType;
         this.Amount = Amount;
         this.ContributionType = ContributionType;
-        this.BalanceField = BalanceField;
+        this.Balance = Balance;
+        this.KeyStringFieldName = KeyStringFieldName;
+        this.Active = Active;
     }
 }
   
