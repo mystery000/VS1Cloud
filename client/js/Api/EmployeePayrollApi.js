@@ -27,7 +27,8 @@ export default class EmployeePayrollApi {
         TAssignLeaveType: "TAssignLeaveType",
         TPaidLeave: "TPaidLeave",
         TUnpaidLeave: "TUnpaidLeave",
-        TOpeningBalances: "TOpeningBalances"
+        TOpeningBalances: "TOpeningBalances",
+        TLeavRequest: "TLeavRequest"
     };
 
     this.collection = new ApiCollection([
@@ -114,6 +115,11 @@ export default class EmployeePayrollApi {
         new ApiEndpoint({
           name: this.collectionNames.TOpeningBalances,
           url: ApiService.getBaseUrl({ endpoint: "TOpeningBalances" }),
+          headers: ApiService.getHeaders()
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TLeavRequest,
+          url: ApiService.getBaseUrl({ endpoint: "TLeavRequest" }),
           headers: ApiService.getHeaders()
         })
     ]);

@@ -32,6 +32,10 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#edtLeavePayPeriod').editableSelect('add','Four Weekly');
         $('#edtLeavePayPeriod').editableSelect('add','Monthly');
         $('#edtLeavePayPeriod').editableSelect('add','Quarterly');
+        $('#edtLeavePayStatus').editableSelect('add','Awaiting');
+        $('#edtLeavePayStatus').editableSelect('add','Approved');
+        $('#edtLeavePayStatus').editableSelect('add','Denied');
+        
         $('#edtLeaveTypeofRequest').editableSelect();
         $('#edtLeaveTypeofRequest').editableSelect()
             .on('click.editable-select', async function (e, li) {
@@ -118,4 +122,16 @@ Template.assignLeaveTypePop.onCreated(function () {
                 }
             });
     }, 1000);
+
+    $(document).on("click", "#tblAssignLeaveTypes tbody tr", function (e) {
+        var table = $(this);
+        let name = table.find(".colALTypeLeave").text()||'';
+        console.log(name)
+        let ID = table.find(".colALTypeID").text()||'';
+        let searchFilterID = templateObject.currentDrpDownID.get()
+        $('#' + searchFilterID).val(name);
+        $('#' + searchFilterID + 'ID').val(ID);
+        $('#assignLeaveTypeSettingsModal').modal('toggle');
+    });
+    
 });
