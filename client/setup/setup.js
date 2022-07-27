@@ -252,6 +252,22 @@ Template.setup.onCreated(() => {
 Template.setup.onRendered(function () {
   LoadingOverlay.show();
   const templateObject = Template.instance();
+
+  /**
+   * This function will autoredirect to dashboard if setup is finished
+   */
+  templateObject.isSetupFinished = async () => {
+    const isFinished =  localStorage.getItem('IS_SETUP_FINISHED') || false;
+
+    //console.log("isFinished", isFinished);
+    if(isFinished == true || isFinished == "true") {
+      // window.location.href = "/";
+      //console.log('going to redirect to homepage');
+      FlowRouter.go('dashboard');
+    }
+  }
+
+  templateObject.isSetupFinished();
   // Get step local storage variable and set step
   const currentStep = getCurrentStep();
 
@@ -297,6 +313,33 @@ Template.setup.onRendered(function () {
       // $(".setup-complete").css("display", "block");
     }
   }
+
+ 
+
+  
+
+  /**
+   * This function will finish the setup
+   */
+  templateObject.setSetupFinished = async () => {
+    LoadingOverlay.show();
+    let data = await organisationService.getOrganisationDetail();
+    let companyInfo = data.tcompanyinfo[0];
+
+    companyInfo.IsSetUpWizard = true;
+
+    await organisationService.saveOrganisationSetting({
+      type: "TCompanyInfo",
+      fields: companyInfo,
+    });
+
+    localStorage.setItem('IS_SETUP_FINISHED', true);
+
+    // window.location.href = "/";
+    FlowRouter.go('dashboard');
+  };
+
+  //templateObject.setSetupFinished();
 
   templateObject.getOrganisationDetails = async () => {
     LoadingOverlay.show();
@@ -390,6 +433,7 @@ Template.setup.onRendered(function () {
 
     LoadingOverlay.hide();
   };
+
   templateObject.getCountryData = function () {
     getVS1Data("TCountries")
       .then(function (dataObject) {
@@ -4388,7 +4432,10 @@ Template.setup.events({
     templateObj.loadSteps();
   },
   "click #launchBtn": function () {
-    window.location.href = "/";
+    const templateObject = Template.instance();
+    templateObject.setSetupFinished();
+
+    
   },
 
   // TODO: Step 1
