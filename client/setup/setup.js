@@ -31,15 +31,28 @@ function MakeNegative() {
 
 const numberOfSteps = 10;
 
-function getCurrentStep() {
-  return localStorage.getItem("VS1Cloud_SETUP_STEP");
+function setAlreadyLoaded(step, bool = false) {
+  return localStorage.setItem(`SETUP_STEP_ALREADY-${step}`, bool);
 }
 
-function setCurrentStep(stepId) {
+function isAlreadyLoaded(step) {
+  const string = localStorage.getItem(`SETUP_STEP_ALREADY-${step}`) || false;
+
+  console.log("step", step, string);
+
+  return string == "true" || string == true ? true : false;
+}
+
+function getCurrentStep() {
+  const step = localStorage.getItem("VS1Cloud_SETUP_STEP");
+  return parseInt(step);
+}
+
+function setCurrentStep(stepId = 1) {
   if (isNaN(stepId)) return false;
   let templateObject = Template.instance();
   templateObject.currentStep.set(stepId);
-  return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+  return localStorage.setItem("VS1Cloud_SETUP_STEP", parseInt(stepId));
 }
 
 function getConfirmedSteps() {
@@ -252,6 +265,22 @@ Template.setup.onCreated(() => {
 Template.setup.onRendered(function () {
   LoadingOverlay.show();
   const templateObject = Template.instance();
+
+  /**
+   * This function will autoredirect to dashboard if setup is finished
+   */
+  templateObject.isSetupFinished = async () => {
+    const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+
+    //console.log("isFinished", isFinished);
+    if (isFinished == true || isFinished == "true") {
+      // window.location.href = "/";
+      //console.log('going to redirect to homepage');
+      FlowRouter.go("dashboard");
+    }
+  };
+
+  templateObject.isSetupFinished();
   // Get step local storage variable and set step
   const currentStep = getCurrentStep();
 
@@ -266,6 +295,8 @@ Template.setup.onRendered(function () {
         isConfirmed: isConfirmedStep(i),
         skippedSteps: isStepSkipped(i),
       });
+
+      setAlreadyLoaded(i, false);
     }
     templateObject.steps.set(_steps);
   };
@@ -298,6 +329,32 @@ Template.setup.onRendered(function () {
     }
   }
 
+  /**
+   * This function will finish the setup
+   */
+  templateObject.setSetupFinished = async () => {
+    LoadingOverlay.show();
+    let data = await organisationService.getOrganisationDetail();
+    let companyInfo = data.tcompanyinfo[0];
+
+    companyInfo.IsSetUpWizard = true;
+
+    await organisationService.saveOrganisationSetting({
+      type: "TCompanyInfo",
+      fields: companyInfo,
+    });
+
+    localStorage.setItem("IS_SETUP_FINISHED", true);
+
+    // window.location.href = "/";
+    FlowRouter.go("dashboard");
+  };
+
+  //templateObject.setSetupFinished();
+
+  // Step 1 Render functionalities
+  let countries = [];
+  var countryService = new CountryService();
   templateObject.getOrganisationDetails = async () => {
     LoadingOverlay.show();
 
@@ -390,7 +447,8 @@ Template.setup.onRendered(function () {
 
     LoadingOverlay.hide();
   };
-  templateObject.getCountryData = function () {
+
+  templateObject.getCountryData = () => {
     getVS1Data("TCountries")
       .then(function (dataObject) {
         if (dataObject.length == 0) {
@@ -422,13 +480,8 @@ Template.setup.onRendered(function () {
       });
   };
 
-  // Step 1 Render functionalities
-  let countries = [];
-  var countryService = new CountryService();
-
-  templateObject.getOrganisationDetails();
-
-  templateObject.getCountryData();
+  // templateObject.getOrganisationDetails();
+  // templateObject.getCountryData();
 
   // Step 2 Render functionalities
   let taxRateService = new TaxRateService();
@@ -436,54 +489,48 @@ Template.setup.onRendered(function () {
 
   let purchasetaxcode = "";
   let salestaxcode = "";
-  templateObject.defaultpurchasetaxcode.set(loggedTaxCodePurchaseInc);
-  templateObject.defaultsaletaxcode.set(loggedTaxCodeSalesInc);
-  setTimeout(function () {
-    Meteor.call(
-      "readPrefMethod",
-      Session.get("mycloudLogonID"),
-      "defaulttax",
-      function (error, result) {
-        if (error) {
-          purchasetaxcode = loggedTaxCodePurchaseInc;
-          salestaxcode = loggedTaxCodeSalesInc;
-          templateObject.defaultpurchasetaxcode.set(loggedTaxCodePurchaseInc);
-          templateObject.defaultsaletaxcode.set(loggedTaxCodeSalesInc);
-        } else {
-          if (result) {
-            purchasetaxcode =
-              result.customFields[0].taxvalue || loggedTaxCodePurchaseInc;
-            salestaxcode =
-              result.customFields[1].taxvalue || loggedTaxCodeSalesInc;
-            templateObject.defaultpurchasetaxcode.set(purchasetaxcode);
-            templateObject.defaultsaletaxcode.set(salestaxcode);
+
+  templateObject.loadStep2Prefs = () => {
+    templateObject.defaultpurchasetaxcode.set(loggedTaxCodePurchaseInc);
+    templateObject.defaultsaletaxcode.set(loggedTaxCodeSalesInc);
+    setTimeout(() => {
+      Meteor.call(
+        "readPrefMethod",
+        Session.get("mycloudLogonID"),
+        "defaulttax",
+        function (error, result) {
+          if (error) {
+            purchasetaxcode = loggedTaxCodePurchaseInc;
+            salestaxcode = loggedTaxCodeSalesInc;
+            templateObject.defaultpurchasetaxcode.set(loggedTaxCodePurchaseInc);
+            templateObject.defaultsaletaxcode.set(loggedTaxCodeSalesInc);
+          } else {
+            if (result) {
+              purchasetaxcode =
+                result.customFields[0].taxvalue || loggedTaxCodePurchaseInc;
+              salestaxcode =
+                result.customFields[1].taxvalue || loggedTaxCodeSalesInc;
+              templateObject.defaultpurchasetaxcode.set(purchasetaxcode);
+              templateObject.defaultsaletaxcode.set(salestaxcode);
+            }
           }
         }
-      }
-    );
-  }, 500);
-  TaxRatesEditListener();
-
-  // $(document).on("click", ".table-remove-rax-rate", function () {
-  //   event.stopPropagation();
-  //   var targetID = $(event.target).closest("tr").attr("id"); // table row ID
-  //   $("#selectDeleteLineID").val(targetID);
-  //   $("#deleteTaxRateLineModal").modal("toggle");
-  // });
+      );
+    }, 300);
+    TaxRatesEditListener();
+  };
 
   templateObject.loadTaxRates = async () => {
     LoadingOverlay.show();
-    let data;
+
     let tableHeaderList = [];
     let _taxRatesHeaders = [];
     let dataObject = await getVS1Data("TTaxcodeVS1");
     let _taxRateList = [];
-
-    if (dataObject.length == 0) {
-      data = await taxRateService.getTaxRateVS1();
-    } else {
-      data = JSON.parse(dataObject[0].data);
-    }
+    let data =
+      dataObject.length == 0
+        ? await taxRateService.getTaxRateVS1()
+        : JSON.parse(dataObject[0].data);
 
     if (data.ttaxcodevs1) {
       data.ttaxcodevs1.forEach((rate) => {
@@ -599,32 +646,39 @@ Template.setup.onRendered(function () {
     LoadingOverlay.hide();
   };
 
-  templateObject.loadTaxRates();
+  //templateObject.loadTaxRates();
+
+  // STEP 3
   let dataTableListPaymentMethod = [];
   let tableHeaderListPaymentMethod = [];
-  Meteor.call(
-    "readPrefMethod",
-    Session.get("mycloudLogonID"),
-    "paymentmethodList",
-    function (error, result) {
-      if (error) {
-      } else {
-        if (result) {
-          for (let i = 0; i < result.customFields.length; i++) {
-            let customcolumn = result.customFields;
-            let columData = customcolumn[i].label;
-            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-            let hiddenColumn = customcolumn[i].hidden;
-            let columnClass = columHeaderUpdate.split(".")[1];
-            let columnWidth = customcolumn[i].width;
-            $("th." + columnClass + "").html(columData);
-            $("th." + columnClass + "").css("width", "" + columnWidth + "px");
+
+  templateObject.getPaymentMethods = function () {
+    Meteor.call(
+      "readPrefMethod",
+      Session.get("mycloudLogonID"),
+      "paymentmethodList",
+      function (error, result) {
+        if (error) {
+        } else {
+          if (result) {
+            for (let i = 0; i < result.customFields.length; i++) {
+              let customcolumn = result.customFields;
+              let columData = customcolumn[i].label;
+              let columHeaderUpdate = customcolumn[i].thclass.replace(
+                / /g,
+                "."
+              );
+              let hiddenColumn = customcolumn[i].hidden;
+              let columnClass = columHeaderUpdate.split(".")[1];
+              let columnWidth = customcolumn[i].width;
+              $("th." + columnClass + "").html(columData);
+              $("th." + columnClass + "").css("width", "" + columnWidth + "px");
+            }
           }
         }
       }
-    }
-  );
-  templateObject.getPaymentMethods = function () {
+    );
+
     getVS1Data("TPaymentMethod")
       .then(function (dataObject) {
         if (dataObject.length == 0) {
@@ -1191,60 +1245,8 @@ Template.setup.onRendered(function () {
           });
       });
   };
-  templateObject.getPaymentMethods();
-  // $("#paymentmethodList tbody td.clickable").on(
-  //   "click",
-  //   "tr .colName, tr .colIsCreditCard, tr .colStatus",
-  //   function () {
-  //     var listData = $(this).closest("tr").attr("id");
-  //     var isCreditcard = false;
-  //     if (listData) {
-  //       $("#add-paymentmethod-title").text("Edit Payment Method");
-  //       //$('#isformcreditcard').removeAttr('checked');
-  //       if (listData !== "") {
-  //         listData = Number(listData);
-  //         //taxRateService.getOnePaymentMethod(listData).then(function (data) {
 
-  //         var paymentMethodID = listData || "";
-  //         var paymentMethodName =
-  //           $(event.target).closest("tr").find(".colName").text() || "";
-  //         // isCreditcard = $(event.target).closest("tr").find(".colName").text() || '';
-
-  //         if (
-  //           $(event.target)
-  //             .closest("tr")
-  //             .find(".colIsCreditCard .chkBox")
-  //             .is(":checked")
-  //         ) {
-  //           isCreditcard = true;
-  //         }
-
-  //         $("#edtPaymentMethodID").val(paymentMethodID);
-  //         $("#edtPaymentMethodName").val(paymentMethodName);
-
-  //         if (isCreditcard == true) {
-  //           templateObject.includeCreditCard.set(true);
-  //           //$('#iscreditcard').prop('checked');
-  //         } else {
-  //           templateObject.includeCreditCard.set(false);
-  //         }
-
-  //         //});
-
-  //         // $(this).closest("tr").attr("data-target", "#btnAddPaymentMethod");
-  //         // $(this).closest("tr").attr("data-toggle", "modal");
-  //         $('#btnAddPaymentMethod').modal("toggle");
-  //       }
-  //     }
-  //   }
-  // );
-  // $(document).on("click", ".table-remove-payment-method", function () {
-  //   event.stopPropagation();
-  //   var targetID = $(event.target).closest("tr").attr("id"); // table row ID
-  //   $("#selectDeleteLineID").val(targetID);
-  //   $("#deletePaymentMethodLineModal").modal("toggle");
-  // });
-  $(document).ready(function () {
+  templateObject.loadStripe = () => {
     let url = window.location.href;
     if (url.indexOf("?code") > 0) {
       $(".fullScreenSpin").css("display", "inline-block");
@@ -1389,34 +1391,232 @@ Template.setup.onRendered(function () {
           });
         });
     });
-  });
+  };
+  // templateObject.loadStripe();
+  // templateObject.getPaymentMethods();
 
   // Step 4 Render functionalities
   let dataTableListTerm = [];
   let tableHeaderListTerm = [];
-  Meteor.call(
-    "readPrefMethod",
-    Session.get("mycloudLogonID"),
-    "termsList",
-    function (error, result) {
-      if (error) {
-      } else {
-        if (result) {
-          for (let i = 0; i < result.customFields.length; i++) {
-            let customcolumn = result.customFields;
-            let columData = customcolumn[i].label;
-            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-            let hiddenColumn = customcolumn[i].hidden;
-            let columnClass = columHeaderUpdate.split(".")[1];
-            let columnWidth = customcolumn[i].width;
+  templateObject.loadStep4Prefs = () => {
+    Meteor.call(
+      "readPrefMethod",
+      Session.get("mycloudLogonID"),
+      "termsList",
+      function (error, result) {
+        if (error) {
+        } else {
+          if (result) {
+            for (let i = 0; i < result.customFields.length; i++) {
+              let customcolumn = result.customFields;
+              let columData = customcolumn[i].label;
+              let columHeaderUpdate = customcolumn[i].thclass.replace(
+                / /g,
+                "."
+              );
+              let hiddenColumn = customcolumn[i].hidden;
+              let columnClass = columHeaderUpdate.split(".")[1];
+              let columnWidth = customcolumn[i].width;
 
-            $("th." + columnClass + "").html(columData);
-            $("th." + columnClass + "").css("width", "" + columnWidth + "px");
+              $("th." + columnClass + "").html(columData);
+              $("th." + columnClass + "").css("width", "" + columnWidth + "px");
+            }
           }
         }
       }
+    );
+  };
+
+  templateObject.loadTerms = async (refresh = false) => {
+    LoadingOverlay.show();
+    let dataObject = await getVS1Data("TTermsVS1");
+    let data =
+      dataObject.length == 0 || refresh == true
+        ? await taxRateService.getTermsVS1()
+        : JSON.parse(dataObject[0].data);
+
+    if (refresh) {
+      await addVS1Data("TTermsVS1", JSON.stringify(dataObject));
     }
-  );
+
+    for (let i = 0; i < data.ttermsvs1.length; i++) {
+      if (data.ttermsvs1[i].IsDays == true && data.ttermsvs1[i].Days == 0) {
+        setISCOD = true;
+      } else {
+        setISCOD = false;
+      }
+      // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        id: data.ttermsvs1[i].Id || "",
+        termname: data.ttermsvs1[i].TermsName || "",
+        termdays: data.ttermsvs1[i].Days || 0,
+        iscod: setISCOD || false,
+        description: data.ttermsvs1[i].Description || "",
+        iseom: data.ttermsvs1[i].IsEOM || "false",
+        iseomplus: data.ttermsvs1[i].IsEOMPlus || "false",
+        isPurchasedefault: data.ttermsvs1[i].isPurchasedefault || "false",
+        isSalesdefault: data.ttermsvs1[i].isSalesdefault || "false",
+      };
+
+      dataTableListTerm.push(dataList);
+      //}
+    }
+
+    await templateObject.termdatatablerecords.set(dataTableListTerm);
+
+    if (await templateObject.termdatatablerecords.get()) {
+      Meteor.call(
+        "readPrefMethod",
+        Session.get("mycloudLogonID"),
+        "termsList",
+        function (error, result) {
+          if (error) {
+          } else {
+            if (result) {
+              for (let i = 0; i < result.customFields.length; i++) {
+                let customcolumn = result.customFields;
+                let columData = customcolumn[i].label;
+                let columHeaderUpdate = customcolumn[i].thclass.replace(
+                  / /g,
+                  "."
+                );
+                let hiddenColumn = customcolumn[i].hidden;
+                let columnClass = columHeaderUpdate.split(".")[1];
+                let columnWidth = customcolumn[i].width;
+                let columnindex = customcolumn[i].index + 1;
+
+                if (hiddenColumn == true) {
+                  $("." + columnClass + "").addClass("hiddenColumn");
+                  $("." + columnClass + "").removeClass("showColumn");
+                } else if (hiddenColumn == false) {
+                  $("." + columnClass + "").removeClass("hiddenColumn");
+                  $("." + columnClass + "").addClass("showColumn");
+                }
+              }
+            }
+          }
+        }
+      );
+
+      setTimeout(function () {
+        MakeNegative();
+      }, 100);
+
+      if (refresh == true) $("#termsList").DataTable().destroy();
+
+      setTimeout(function () {
+        $("#termsList")
+          .DataTable({
+            columnDefs: [
+              {
+                orderable: false,
+                targets: -1,
+              },
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            buttons: [
+              {
+                extend: "csvHtml5",
+                text: "",
+                download: "open",
+                className: "btntabletocsv hiddenColumn",
+                filename: "termsList_" + moment().format(),
+                orientation: "portrait",
+                exportOptions: {
+                  columns: ":visible",
+                },
+              },
+              {
+                extend: "print",
+                download: "open",
+                className: "btntabletopdf hiddenColumn",
+                text: "",
+                title: "Term List",
+                filename: "termsList_" + moment().format(),
+                exportOptions: {
+                  columns: ":visible",
+                },
+              },
+              {
+                extend: "excelHtml5",
+                title: "",
+                download: "open",
+                className: "btntabletoexcel hiddenColumn",
+                filename: "termsList_" + moment().format(),
+                orientation: "portrait",
+                exportOptions: {
+                  columns: ":visible",
+                },
+              },
+            ],
+
+            pageLength: 25,
+            paging: true,
+
+            info: true,
+            responsive: true,
+            order: [[0, "asc"]],
+            // "aaSorting": [[1,'desc']],
+            action: function () {
+              $("#termsList").DataTable().ajax.reload();
+            },
+            fnDrawCallback: function (oSettings) {
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
+            },
+          })
+          .on("page", function () {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+            let draftRecord = templateObject.termdatatablerecords.get();
+            templateObject.termdatatablerecords.set(draftRecord);
+          })
+          .on("column-reorder", function () {})
+          .on("length.dt", function (e, settings, len) {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          });
+        // $(".fullScreenSpin").css("display", "none");
+      }, 300);
+    }
+
+    var columns = $("#termsList th");
+    let sTible = "";
+    let sWidth = "";
+    let sIndex = "";
+    let sVisible = "";
+    let columVisible = false;
+    let sClass = "";
+    $.each(columns, function (i, v) {
+      if (v.hidden == false) {
+        columVisible = true;
+      }
+      if (v.className.includes("hiddenColumn")) {
+        columVisible = false;
+      }
+      sWidth = v.style.width.replace("px", "");
+
+      let datatablerecordObj = {
+        sTitle: v.innerText || "",
+        sWidth: sWidth || "",
+        sIndex: v.cellIndex || "",
+        sVisible: columVisible || false,
+        sClass: v.className || "",
+      };
+      tableHeaderListTerm.push(datatablerecordObj);
+    });
+    templateObject.termtableheaderrecords.set(tableHeaderListTerm);
+    $("div.dataTables_filter input").addClass("form-control form-control-sm");
+
+    LoadingOverlay.hide();
+  };
+
   templateObject.getTerms = function () {
     getVS1Data("TTermsVS1")
       .then(function (dataObject) {
@@ -2007,7 +2207,9 @@ Template.setup.onRendered(function () {
           });
       });
   };
-  templateObject.getTerms();
+  // templateObject.loadStep4Prefs();
+  // templateObject.getTerms();
+
   $(document).on("click", ".table-remove-term", function () {
     event.stopPropagation();
     event.stopPropagation();
@@ -2019,33 +2221,38 @@ Template.setup.onRendered(function () {
   // Step 5 Render functionalities
   const dataTableListEmployee = [];
   const tableHeaderListEmployee = [];
-  if (FlowRouter.current().queryParams.success) {
-    $(".btnRefreshEmployee").addClass("btnRefreshAlert");
-  }
-  Meteor.call(
-    "readPrefMethod",
-    Session.get("mycloudLogonID"),
-    "tblEmployeelist",
-    function (error, result) {
-      if (error) {
-      } else {
-        if (result) {
-          for (let i = 0; i < result.customFields.length; i++) {
-            let customcolumn = result.customFields;
-            let columData = customcolumn[i].label;
-            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-            let hiddenColumn = customcolumn[i].hidden;
-            let columnClass = columHeaderUpdate.split(".")[1];
-            let columnWidth = customcolumn[i].width;
-            // let columnindex = customcolumn[i].index + 1;
-            $("th." + columnClass + "").html(columData);
-            $("th." + columnClass + "").css("width", "" + columnWidth + "px");
+
+  templateObject.loadStep5Prefs = () => {
+    if (FlowRouter.current().queryParams.success) {
+      $(".btnRefreshEmployee").addClass("btnRefreshAlert");
+    }
+    Meteor.call(
+      "readPrefMethod",
+      Session.get("mycloudLogonID"),
+      "tblEmployeelist",
+      function (error, result) {
+        if (error) {
+        } else {
+          if (result) {
+            for (let i = 0; i < result.customFields.length; i++) {
+              let customcolumn = result.customFields;
+              let columData = customcolumn[i].label;
+              let columHeaderUpdate = customcolumn[i].thclass.replace(
+                / /g,
+                "."
+              );
+              let hiddenColumn = customcolumn[i].hidden;
+              let columnClass = columHeaderUpdate.split(".")[1];
+              let columnWidth = customcolumn[i].width;
+              // let columnindex = customcolumn[i].index + 1;
+              $("th." + columnClass + "").html(columData);
+              $("th." + columnClass + "").css("width", "" + columnWidth + "px");
+            }
           }
         }
       }
-    }
-  );
-
+    );
+  };
   templateObject.loadEmployees = async (refresh = false) => {
     const sideBarService = new SideBarService();
     console.log("Loading employees");
@@ -2111,387 +2318,8 @@ Template.setup.onRendered(function () {
 
     LoadingOverlay.hide();
   };
-
-  templateObject.loadEmployees();
-
-  // templateObject.getEmployees = function () {
-  //   getVS1Data("TEmployee")
-  //     .then(function (dataObject) {
-  //       if (dataObject.length == 0) {
-  //         sideBarService
-  //           .getAllEmployees(initialBaseDataLoad, 0)
-  //           .then(function (data) {
-  //             addVS1Data("TEmployee", JSON.stringify(data));
-  //             let lineItems = [];
-  //             let lineItemObj = {};
-  //             for (let i = 0; i < data.temployee.length; i++) {
-  //               var dataList = {
-  //                 id: data.temployee[i].fields.ID || "",
-  //                 employeeno: data.temployee[i].fields.EmployeeNo || "",
-  //                 employeename: data.temployee[i].fields.EmployeeName || "",
-  //                 firstname: data.temployee[i].fields.FirstName || "",
-  //                 lastname: data.temployee[i].fields.LastName || "",
-  //                 phone: data.temployee[i].fields.Phone || "",
-  //                 mobile: data.temployee[i].fields.Mobile || "",
-  //                 email: data.temployee[i].fields.Email || "",
-  //                 address: data.temployee[i].fields.Street || "",
-  //                 country: data.temployee[i].fields.Country || "",
-  //                 department: data.temployee[i].fields.DefaultClassName || "",
-  //                 custFld1: data.temployee[i].fields.CustFld1 || "",
-  //                 custFld2: data.temployee[i].fields.CustFld2 || "",
-  //                 custFld3: data.temployee[i].fields.CustFld3 || "",
-  //                 custFld4: data.temployee[i].fields.CustFld4 || "",
-  //               };
-
-  //               if (
-  //                 data.temployee[i].fields.EmployeeName.replace(/\s/g, "") != ""
-  //               ) {
-  //                 dataTableListEmployee.push(dataList);
-  //               }
-  //               //}
-  //             }
-
-  //             templateObject.employeedatatablerecords.set(
-  //               dataTableListEmployee
-  //             );
-
-  //             if (templateObject.employeedatatablerecords.get()) {
-  //               Meteor.call(
-  //                 "readPrefMethod",
-  //                 Session.get("mycloudLogonID"),
-  //                 "tblEmployeelist",
-  //                 function (error, result) {
-  //                   if (error) {
-  //                   } else {
-  //                     if (result) {
-  //                       for (let i = 0; i < result.customFields.length; i++) {
-  //                         let customcolumn = result.customFields;
-  //                         let columData = customcolumn[i].label;
-  //                         let columHeaderUpdate = customcolumn[
-  //                           i
-  //                         ].thclass.replace(/ /g, ".");
-  //                         let hiddenColumn = customcolumn[i].hidden;
-  //                         let columnClass = columHeaderUpdate.split(".")[1];
-  //                         let columnWidth = customcolumn[i].width;
-  //                         let columnindex = customcolumn[i].index + 1;
-
-  //                         if (hiddenColumn == true) {
-  //                           $("." + columnClass + "").addClass("hiddenColumn");
-  //                           $("." + columnClass + "").removeClass("showColumn");
-  //                         } else if (hiddenColumn == false) {
-  //                           $("." + columnClass + "").removeClass(
-  //                             "hiddenColumn"
-  //                           );
-  //                           $("." + columnClass + "").addClass("showColumn");
-  //                         }
-  //                       }
-  //                     }
-  //                   }
-  //                 }
-  //               );
-  //             }
-
-  //             setTimeout(function () {
-  //               $("#tblEmployeelist")
-  //                 .DataTable({
-  //                   // columnDefs: [],
-  //                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-  //                   // buttons: [
-  //                   //   {
-  //                   //     extend: "csvHtml5",
-  //                   //     text: "",
-  //                   //     download: "open",
-  //                   //     className: "btntabletocsv hiddenColumn",
-  //                   //     filename: "Employee List - " + moment().format(),
-  //                   //     orientation: "portrait",
-  //                   //     exportOptions: {
-  //                   //       columns: ":visible",
-  //                   //     },
-  //                   //   },
-  //                   //   {
-  //                   //     extend: "print",
-  //                   //     download: "open",
-  //                   //     className: "btntabletopdf hiddenColumn",
-  //                   //     text: "",
-  //                   //     title: "Employee List",
-  //                   //     filename: "Employee List - " + moment().format(),
-  //                   //     exportOptions: {
-  //                   //       columns: ":visible",
-  //                   //       stripHtml: false,
-  //                   //     },
-  //                   //   },
-  //                   //   {
-  //                   //     extend: "excelHtml5",
-  //                   //     title: "",
-  //                   //     download: "open",
-  //                   //     className: "btntabletoexcel hiddenColumn",
-  //                   //     filename: "Employee List - " + moment().format(),
-  //                   //     orientation: "portrait",
-  //                   //     exportOptions: {
-  //                   //       columns: ":visible",
-  //                   //     },
-  //                   //   },
-  //                   // ],
-  //                   select: true,
-  //                   destroy: true,
-  //                   colReorder: true,
-  //                   // bStateSave: true,
-  //                   // rowId: 0,
-  //                   // pageLength: initialDatatableLoad,
-  //                   // lengthMenu: [
-  //                   //   [initialDatatableLoad, -1],
-  //                   //   [initialDatatableLoad, "All"],
-  //                   // ],
-  //                   paging: false,
-  //                   info: true,
-  //                   responsive: true,
-  //                   order: [[1, "asc"]],
-  //                   action: function () {
-  //                     $("#tblEmployeelist").DataTable().ajax.reload();
-  //                   },
-  //                   fnInitComplete: function () {
-  //                     $(
-  //                       "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-  //                     ).insertAfter("#tblEmployeelist_filter");
-  //                   },
-  //                 })
-  //                 .on("page", function () {
-  //                   let draftRecord =
-  //                     templateObject.employeedatatablerecords.get();
-  //                   templateObject.employeedatatablerecords.set(draftRecord);
-  //                 })
-  //                 .on("column-reorder", function () {});
-
-  //               // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-  //               $(".fullScreenSpin").css("display", "none");
-  //             }, 0);
-
-  //             // var columns = $("#tblEmployeelist th");
-  //             // let sTible = "";
-  //             // let sWidth = "";
-  //             // let sIndex = "";
-  //             // let sVisible = "";
-  //             // let columVisible = false;
-  //             // let sClass = "";
-  //             // $.each(columns, function (i, v) {
-  //             //   if (v.hidden == false) {
-  //             //     columVisible = true;
-  //             //   }
-  //             //   if (v.className.includes("hiddenColumn")) {
-  //             //     columVisible = false;
-  //             //   }
-  //             //   sWidth = v.style.width.replace("px", "");
-  //             //   let datatablerecordObj = {
-  //             //     sTitle: v.innerText || "",
-  //             //     sWidth: sWidth || "",
-  //             //     sIndex: v.cellIndex || "",
-  //             //     sVisible: columVisible || false,
-  //             //     sClass: v.className || "",
-  //             //   };
-  //             //   tableHeaderListTerm.push(datatablerecordObj);
-  //             // });
-  //             // templateObject.employeetableheaderrecords.set(
-  //             //   tableHeaderListTerm
-  //             // );
-  //             $("div.dataTables_filter input").addClass(
-  //               "form-control form-control-sm"
-  //             );
-  //             // $("#tblEmployeelist tbody").on("click", "tr", function () {
-  //             //   var listData = $(this).closest("tr").attr("id");
-  //             //   if (listData) {
-  //             //     FlowRouter.go("/employeescard?id=" + listData);
-  //             //   }
-  //             // });
-  //           })
-  //           .catch(function (err) {
-  //             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-  //             $(".fullScreenSpin").css("display", "none");
-  //             // Meteor._reload.reload();
-  //           });
-  //       } else {
-  //         let data = JSON.parse(dataObject[0].data);
-  //         let useData = data.temployee;
-
-  //         let lineItems = [];
-  //         let lineItemObj = {};
-  //         for (let i = 0; i < useData.length; i++) {
-  //           var dataList = {
-  //             id: useData[i].fields.ID || "",
-  //             employeeno: useData[i].fields.EmployeeNo || "",
-  //             employeename: useData[i].fields.EmployeeName || "",
-  //             firstname: useData[i].fields.FirstName || "",
-  //             lastname: useData[i].fields.LastName || "",
-  //             phone: useData[i].fields.Phone || "",
-  //             mobile: useData[i].fields.Mobile || "",
-  //             email: useData[i].fields.Email || "",
-  //             address: useData[i].fields.Street || "",
-  //             country: useData[i].fields.Country || "",
-  //             department: useData[i].fields.DefaultClassName || "",
-  //             custFld1: useData[i].fields.CustFld1 || "",
-  //             custFld2: useData[i].fields.CustFld2 || "",
-  //             custFld3: useData[i].fields.CustFld3 || "",
-  //             custFld4: useData[i].fields.CustFld4 || "",
-  //           };
-
-  //           if (useData[i].fields.EmployeeName.replace(/\s/g, "") != "") {
-  //             dataTableList.push(dataList);
-  //           }
-  //           //}
-  //         }
-
-  //         templateObject.employeedatatablerecords.set(dataTableList);
-
-  //         if (templateObject.employeedatatablerecords.get()) {
-  //           Meteor.call(
-  //             "readPrefMethod",
-  //             Session.get("mycloudLogonID"),
-  //             "tblEmployeelist",
-  //             function (error, result) {
-  //               if (error) {
-  //               } else {
-  //                 if (result) {
-  //                   for (let i = 0; i < result.customFields.length; i++) {
-  //                     let customcolumn = result.customFields;
-  //                     let columData = customcolumn[i].label;
-  //                     let columHeaderUpdate = customcolumn[i].thclass.replace(
-  //                       / /g,
-  //                       "."
-  //                     );
-  //                     let hiddenColumn = customcolumn[i].hidden;
-  //                     let columnClass = columHeaderUpdate.split(".")[1];
-  //                     let columnWidth = customcolumn[i].width;
-  //                     let columnindex = customcolumn[i].index + 1;
-
-  //                     if (hiddenColumn == true) {
-  //                       $("." + columnClass + "").addClass("hiddenColumn");
-  //                       $("." + columnClass + "").removeClass("showColumn");
-  //                     } else if (hiddenColumn == false) {
-  //                       $("." + columnClass + "").removeClass("hiddenColumn");
-  //                       $("." + columnClass + "").addClass("showColumn");
-  //                     }
-  //                   }
-  //                 }
-  //               }
-  //             }
-  //           );
-  //         }
-
-  //         setTimeout(function () {
-  //           $("#tblEmployeelist")
-  //             .DataTable({
-  //               sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-  //               select: true,
-  //               destroy: true,
-  //               colReorder: true,
-  //               paging: false,
-  //               info: true,
-  //               responsive: true,
-  //               order: [[1, "asc"]],
-  //               action: function () {
-  //                 $("#tblEmployeelist").DataTable().ajax.reload();
-  //               },
-  //               fnInitComplete: function () {
-  //                 $(
-  //                   "<button class='btn btn-primary btnRefreshEmployees' type='button' id='btnRefreshEmployees' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-  //                 ).insertAfter("#tblEmployeelist_filter");
-  //               },
-  //             })
-  //             .on("page", function () {
-  //               let draftRecord = templateObject.employeedatatablerecords.get();
-  //               templateObject.employeedatatablerecords.set(draftRecord);
-  //             })
-  //             .on("column-reorder", function () {});
-
-  //           // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-  //           $(".fullScreenSpin").css("display", "none");
-  //         }, 0);
-
-  //         $("div.dataTables_filter input").addClass(
-  //           "form-control form-control-sm"
-  //         );
-
-  //       }
-  //     })
-  //     .catch(function (err) {
-  //       sideBarService
-  //         .getAllEmployees(initialBaseDataLoad, 0)
-  //         .then(function (data) {
-  //           addVS1Data("TEmployee", JSON.stringify(data));
-  //           let lineItems = [];
-  //           let lineItemObj = {};
-  //           for (let i = 0; i < data.temployee.length; i++) {
-  //             var dataList = {
-  //               id: data.temployee[i].fields.ID || "",
-  //               employeeno: data.temployee[i].fields.EmployeeNo || "",
-  //               employeename: data.temployee[i].fields.EmployeeName || "",
-  //               firstname: data.temployee[i].fields.FirstName || "",
-  //               lastname: data.temployee[i].fields.LastName || "",
-  //               phone: data.temployee[i].fields.Phone || "",
-  //               mobile: data.temployee[i].fields.Mobile || "",
-  //               email: data.temployee[i].fields.Email || "",
-  //               address: data.temployee[i].fields.Street || "",
-  //               country: data.temployee[i].fields.Country || "",
-  //               department: data.temployee[i].fields.DefaultClassName || "",
-  //               custFld1: data.temployee[i].fields.CustFld1 || "",
-  //               custFld2: data.temployee[i].fields.CustFld2 || "",
-  //               custFld3: data.temployee[i].fields.CustFld3 || "",
-  //               custFld4: data.temployee[i].fields.CustFld4 || "",
-  //             };
-
-  //             if (
-  //               data.temployee[i].fields.EmployeeName.replace(/\s/g, "") != ""
-  //             ) {
-  //               dataTableListTerm.push(dataList);
-  //             }
-  //             //}
-  //           }
-
-  //           templateObject.employeedatatablerecords.set(dataTableListTerm);
-
-  //           if (templateObject.employeedatatablerecords.get()) {
-
-  //           }
-
-  //           setTimeout(function () {
-  //             $("#tblEmployeelist")
-  //               .DataTable({
-  //                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-  //                 select: true,
-  //                 destroy: true,
-  //                 colReorder: true,
-
-  //                 paging: false,
-  //                 info: true,
-  //                 responsive: true,
-  //                 order: [[1, "asc"]],
-  //                 action: function () {
-  //                   $("#tblEmployeelist").DataTable().ajax.reload();
-  //                 },
-  //               })
-  //               .on("page", function () {
-  //                 let draftRecord =
-  //                   templateObject.employeedatatablerecords.get();
-  //                 templateObject.employeedatatablerecords.set(draftRecord);
-  //               })
-  //               .on("column-reorder", function () {});
-
-  //             // $('#tblEmployeelist').DataTable().column( 0 ).visible( true );
-  //             $(".fullScreenSpin").css("display", "none");
-  //           }, 0);
-
-  //           $("div.dataTables_filter input").addClass(
-  //             "form-control form-control-sm"
-  //           );
-
-  //         })
-  //         .catch(function (err) {
-  //           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-  //           $(".fullScreenSpin").css("display", "none");
-  //           // Meteor._reload.reload();
-  //         });
-  //     });
-  // };
+  // templateObject.loadStep5Prefs();
+  // templateObject.loadEmployees();
 
   templateObject.getEmployeeProfileImageData = function (employeeName) {
     const contactService = new ContactService();
@@ -2569,19 +2397,19 @@ Template.setup.onRendered(function () {
         });
       });
   };
-  templateObject.loadAccountTypes();
 
   templateObject.loadAccountList = async () => {
     LoadingOverlay.show();
     let _accountList = [];
 
-    let dataObject = await getVS1Data("TAccountVS1");
-    if (dataObject.length === 0) {
-      dataObject = await sideBarService.getAccountListVS1();
-      await addVS1Data("TAccountVS1", JSON.stringify(dataObject));
-    } else {
-      dataObject = JSON.parse(dataObject[0].data);
-    }
+    let dataObject = await sideBarService.getAccountListVS1();
+    await addVS1Data("TAccountVS1", JSON.stringify(dataObject));
+    // if (dataObject.length === 0) {
+    //   dataObject = await sideBarService.getAccountListVS1();
+    //   await addVS1Data("TAccountVS1", JSON.stringify(dataObject));
+    // } else {
+    //   dataObject = JSON.parse(dataObject[0].data);
+    // }
     if (dataObject.taccountvs1) {
       data = dataObject;
 
@@ -2715,8 +2543,6 @@ Template.setup.onRendered(function () {
 
     LoadingOverlay.hide();
   };
-
-  templateObject.loadAccountList();
 
   templateObject.getAllAccountss = function () {
     getVS1Data("TAccountVS1")
@@ -3170,12 +2996,18 @@ Template.setup.onRendered(function () {
       });
   };
 
-  templateObject.loadAllTaxCodes = async () => {
+  templateObject.loadAllTaxCodes = async (refresh = false) => {
     let dataObject = await getVS1Data("TTaxcodeVS1");
     let data =
-      dataObject.length == 0
+      dataObject.length == 0 || refresh == true
         ? await productService.getTaxCodesVS1()
         : JSON.parse(dataObject[0].data);
+
+    if (refresh) {
+      ///dataObject[0].data = data;
+      await addVS1Data("TTaxcodeVS1", JSON.stringify(data));
+    }
+
     let splashArrayTaxRateList = [];
     let taxCodesList = [];
 
@@ -3246,9 +3078,11 @@ Template.setup.onRendered(function () {
     }
   };
 
-  setTimeout(() => {
-    templateObject.loadAllTaxCodes();
-  }, 100);
+  // setTimeout(() => {
+  //   templateObject.loadAccountTypes();
+  //   templateObject.loadAccountList();
+  //   templateObject.loadAllTaxCodes();
+  // }, 100);
 
   $("#tblAccountOverview tbody").on(
     "click",
@@ -3494,7 +3328,11 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      if (refresh) $("#tblCustomerlist").DataTable().destroy();
+      //if (refresh) $("#tblCustomerlist").DataTable().destroy();
+
+      if ($.fn.dataTable.isDataTable("#tblCustomerlist")) {
+        $("#tblCustomerlist").DataTable().destroy();
+      } 
 
       setTimeout(() => {
         $("#tblCustomerlist")
@@ -3539,6 +3377,8 @@ Template.setup.onRendered(function () {
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
       }, 300);
+
+      
     }
 
     LoadingOverlay.hide();
@@ -3591,9 +3431,8 @@ Template.setup.onRendered(function () {
     // });
   };
 
-  templateObject.loadDefaultCustomer();
+  //templateObject.loadDefaultCustomer();
 
-  templateObject.loadCustomerList = () => {};
   // Step 8 Render functionalities
 
   templateObject.loadSuppliers = async (refresh = false) => {
@@ -3693,7 +3532,11 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      if (refresh) $("#tblSupplierlist").DataTable().destroy();
+      //if (refresh) $("#tblSupplierlist").DataTable().destroy();
+
+      if ($.fn.dataTable.isDataTable("#tblSupplierlist")) {
+        $("#tblSupplierlist").DataTable().destroy();
+      } 
 
       setTimeout(function () {
         $("#tblSupplierlist")
@@ -3923,7 +3766,7 @@ Template.setup.onRendered(function () {
     // });
   };
 
-  templateObject.loadSuppliers();
+  // templateObject.loadSuppliers();
 
   // Step 9 Render functionalities
   templateObject.loadInventory = async (refresh = false) => {
@@ -3991,7 +3834,11 @@ Template.setup.onRendered(function () {
     await templateObject.inventoryList.set(_inventoryList);
 
     if (await templateObject.inventoryList.get()) {
-      if (refresh) $("#InventoryTable").DataTable().destroy();
+      //if (refresh) $("#InventoryTable").DataTable().destroy();
+
+      if ($.fn.dataTable.isDataTable("#InventoryTable")) {
+        $("#InventoryTable").DataTable().destroy();
+      } 
 
       setTimeout(function () {
         $("#InventoryTable")
@@ -4274,8 +4121,62 @@ Template.setup.onRendered(function () {
     }
   };
 
-  templateObject.loadInventory();
+  // templateObject.loadInventory();
   //   $("#displayname").val("hello test");
+
+  /**
+   * This function will lazy load the setup, in order to avoid any loading issues
+   * @param {number} stepId
+   * @returns
+   */
+  templateObject.lazyLoader = (stepId = 1) => {
+    console.log("Smart loading step", stepId);
+    if (isAlreadyLoaded(stepId) == false) {
+      //LoadingOverlay.show();
+      switch (stepId) {
+        case 1:
+          templateObject.getOrganisationDetails();
+          templateObject.getCountryData();
+          break;
+        case 2:
+          templateObject.loadStep2Prefs();
+          templateObject.loadTaxRates();
+          break;
+        case 3:
+          templateObject.getPaymentMethods();
+          templateObject.loadStripe();
+          break;
+        case 4:
+          templateObject.loadStep4Prefs();
+          templateObject.loadTerms();
+          break;
+        case 5:
+          templateObject.loadStep5Prefs();
+          templateObject.loadEmployees();
+          break;
+        case 6:
+          templateObject.loadAccountTypes();
+          templateObject.loadAccountList();
+          templateObject.loadAllTaxCodes();
+          break;
+        case 7:
+          templateObject.loadDefaultCustomer();
+          break;
+        case 8:
+          templateObject.loadSuppliers();
+          break;
+        case 9:
+          templateObject.loadInventory();
+          break;
+        default:
+        // code block
+      }
+      setAlreadyLoaded(stepId, true);
+      //LoadingOverlay.hide();
+    }
+  };
+
+  templateObject.lazyLoader(currentStep);
 });
 
 function isStepActive(stepId) {
@@ -4289,12 +4190,18 @@ function isStepActive(stepId) {
   }
 }
 
-function goToNextStep(stepId, isConfirmed = false) {
+function goToNextStep(
+  stepId,
+  isConfirmed = false,
+  onStepChange = (stepId) => {}
+) {
   isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
   stepId = stepId + 1;
   setCurrentStep(stepId);
   $(".setup-step").removeClass("show");
   $(`.setup-step-${stepId}`).addClass("show");
+
+  onStepChange(stepId);
 }
 
 Template.setup.events({
@@ -4310,7 +4217,9 @@ Template.setup.events({
     LoadingOverlay.show();
     let templateObject = Template.instance();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
-    goToNextStep(stepId, true);
+    goToNextStep(stepId, true, (step) => {
+      templateObject.lazyLoader(step);
+    });
     //addConfirmedStep(stepId);
 
     // stepId = parseInt(stepId) + 1;
@@ -4340,7 +4249,9 @@ Template.setup.events({
     let skippedSteps = templateObject.skippedSteps.get();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
-    goToNextStep(stepId, false);
+    goToNextStep(stepId, false, (step) => {
+      templateObject.lazyLoader(step);
+    });
     //addSkippedStep(stepId);
 
     // stepId = stepId + 1;
@@ -4386,9 +4297,11 @@ Template.setup.events({
     // }
     setCurrentStep(stepId);
     templateObj.loadSteps();
+    templateObj.lazyLoader(stepId);
   },
   "click #launchBtn": function () {
-    window.location.href = "/";
+    const templateObject = Template.instance();
+    templateObject.setSetupFinished();
   },
 
   // TODO: Step 1
@@ -8851,6 +8764,12 @@ Template.setup.events({
       jQuery(`${type} .dt-buttons .btntabletopdf`).click();
       LoadingOverlay.hide();
     }
+  },
+
+  // STEP 6
+  "click .setup-wizard .setup-step-6 .btnRefresh": (e) => {
+    const templateObject = Template.instance();
+    templateObject.loadAccountList();
   },
 
   // TODO: Step 7

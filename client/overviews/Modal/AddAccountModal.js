@@ -2,6 +2,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { AccountService } from "../../accounts/account-service";
 import { OrganisationService } from "../../js/organisation-service";
 import { SideBarService } from "../../js/sidebar-service";
+import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import { UtilityService } from "../../utility-service";
 
@@ -30,7 +31,7 @@ Template.addAccountModal.onCreated(function () {
 Template.addAccountModal.onRendered(function () {
   const generatedId = $(".generated-id").attr("id", generate());
   const currentElement = this;
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   let templateObject = Template.instance();
   const dataTableListTax = [];
   const tableHeaderListTax = [];
@@ -613,7 +614,9 @@ Template.addAccountModal.onRendered(function () {
   $(document).ready(function () {
     setTimeout(function () {
       this.$(".sltTaxCode").editableSelect();
-      this.$(".sltTaxCode").editableSelect().on("click.editable-select", function (e, li) {
+      this.$(".sltTaxCode")
+        .editableSelect()
+        .on("click.editable-select", function (e, li) {
           var $earch = $(this);
           var taxSelected = "sales";
           var offset = $earch.offset();
@@ -624,8 +627,6 @@ Template.addAccountModal.onRendered(function () {
           } else {
             if (taxRateDataName.replace(/\s/g, "") !== "") {
               $(".taxcodepopheader").text("Edit Tax Rate");
-
-
 
               getVS1Data("TTaxcodeVS1")
                 .then(function (dataObject) {
@@ -737,7 +738,7 @@ Template.addAccountModal.onRendered(function () {
 
 Template.addAccountModal.events({
   "click .btnSaveAccount": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let accountService = new AccountService();
     let organisationService = new OrganisationService();
@@ -1167,6 +1168,69 @@ Template.addAccountModal.events({
     // }else{
     //   $(".btnImport").Attr("disabled");
     // }
+  },
+  "click .btnDeleteAccount": function () {
+    swal({
+      title: "Delete Account",
+      text: "Are you sure you want to Delete Account?",
+      type: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.value) {
+        LoadingOverlay.show();
+        let templateObject = Template.instance();
+        let accountService = new AccountService();
+        let accountID = $("#edtAccountID").val();
+
+        if (accountID == "") {
+          $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
+        } else {
+          data = {
+            type: "TAccount",
+            fields: {
+              ID: accountID,
+              Active: false,
+            },
+          };
+
+          accountService
+            .saveAccount(data)
+            .then(function (data) {
+              sideBarService
+                .getAccountListVS1()
+                .then(function (dataReload) {
+                  addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                    .then(function (datareturn) {
+                      $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
+                    })
+                    .catch(function (err) {
+                      $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
+                    });
+                })
+                .catch(function (err) {
+                  $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
+                });
+            })
+            .catch(function (err) {
+              swal({
+                title: "Oooops...",
+                text: err,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {
+                if (result.value) {
+                  $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : Meteor._reload.reload();
+                } else if (result.dismiss === "cancel") {
+                }
+              });
+              LoadingOverlay.hide();
+            });
+        }
+      } else {
+      }
+    });
   },
 });
 
