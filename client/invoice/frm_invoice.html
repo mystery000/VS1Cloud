@@ -1285,7 +1285,7 @@
                                     display: block !important;
                                 }
                             </style>
-
+                            {{#if displayfields}}
                             <table id="tblInvoiceLine" style="width:100%" class="table table-striped table-bordered tblInvoiceLine">
                                 <thead>
                                   <tr class="dnd-moved">
@@ -1382,7 +1382,7 @@
                                     {{/each}}
                                 </tbody>
                             </table> 
-
+                            {{/if}}
                             <style>
                                 .highlightInput {
                                     border: 0px solid transparent !important;

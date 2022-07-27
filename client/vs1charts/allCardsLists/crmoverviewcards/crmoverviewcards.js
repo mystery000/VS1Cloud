@@ -99,13 +99,13 @@ Template.crmoverviewcards.onRendered(function () {
 
           var url = FlowRouter.current().path;
           var new_url = new URL(window.location.href);
-          let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
+          let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id").trim() : '';
           if (url.includes("/employeescard")) {
-            employeeID = $('#edtCustomerCompany').val() ? $('#edtCustomerCompany').val() : '';
+            employeeID = $('#edtCustomerCompany').val() ? $('#edtCustomerCompany').val().trim() : '';
           }
 
           if (employeeID) {
-            all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.EnteredBy == employeeID);
+            all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
           } else {
             all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
           }
