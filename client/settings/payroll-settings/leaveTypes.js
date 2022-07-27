@@ -447,8 +447,20 @@ Template.leaveTypeSettings.events({
             await templateObject.getLeaves();
             $('#leaveModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Leave has been saved",
+                type: 'warning',
+                
+            })
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Leave failed to saved",
+                type: 'error',
+                
+            })
         }
         
         return false;
