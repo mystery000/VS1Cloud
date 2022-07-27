@@ -1298,7 +1298,7 @@
                                     <th class="th colUnitPrice colUnitPriceEx {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}"
                                       style="width: 115px; text-align: left!important;">{{#if
                                       displayfields}}{{displayfields.[3].custfieldlabel}}{{else}}Unit Price (Ex){{/if}} <i class="fas fa-random"></i></th>
-                                    <th class="th colUnitPrice colUnitPriceInc  {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
+                                    <th class="th colUnitPriceInc  {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
                                       style="width: 115px; text-align: left!important;">{{#if
                                         displayfields}}{{displayfields.[10].custfieldlabel}}{{else}}Unit Price (Inc){{/if}} <i
                                         class="fas fa-random fa-trans"></i></th> 
@@ -1350,7 +1350,7 @@
                                           class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}">
                                       </td>
                                       <td class="colUnitPriceInc {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"><input
-                                          class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text"
+                                          class="lineUnitPrice highlightInput colUnitPriceIncChange" type="text"
                                           value="{{item.unitPriceInc}}"></td>
                                       <td contenteditable="false" class="lineDiscount colDiscount {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
                                             {{item.DiscountPercent}}</td>
