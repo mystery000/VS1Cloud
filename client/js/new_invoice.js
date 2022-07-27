@@ -21,14 +21,11 @@ let times = 0;
 let clickedInput = "";
 let isDropDown = false;
 
-let template_list = [
-  
+let template_list = [  
     "Invoices",
     "Invoice Back Orders",
     "Delivery Docket",
-  ];
-
-
+];
 
 Template.new_invoice.onCreated(() => {
     const templateObject = Template.instance();
@@ -4322,35 +4319,35 @@ Template.new_invoice.onRendered(() => {
 
             $('#tblInvoiceLine > tbody > tr').each(function () {
 
-            var lineID = this.id;
-            let tdproduct = $('#' + lineID + " .lineProductName").val();
-            let tddescription = $('#' + lineID + " .lineProductDesc").text();
-            let tdQty = $('#' + lineID + " .lineQty").val();
-            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-            let taxamount = $('#' + lineID + " .colTaxAmount").text();
-            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+                var lineID = this.id;
+                let tdproduct = $('#' + lineID + " .lineProductName").val();
+                let tddescription = $('#' + lineID + " .lineProductDesc").text();
+                let tdQty = $('#' + lineID + " .lineQty").val();
+                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let taxamount = $('#' + lineID + " .colTaxAmount").text();
+                let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-            array_data.push([
-                tdproduct,
-                tddescription,
-                tdQty,
-                tdunitprice,
-                taxamount,
-                tdlineamt,
-            ]);
+                array_data.push([
+                    tdproduct,
+                    tddescription,
+                    tdQty,
+                    tdunitprice,
+                    taxamount,
+                    tdlineamt,
+                ]);
 
-            lineItemObj = {
-                description: tddescription || '',
-                quantity: tdQty || 0,
-                unitPrice: tdunitprice.toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                }) || 0,
-                tax:tdtaxrate||0,
-                amount:tdlineamt || 0
-            }
-            lineItems.push(lineItemObj);
+                lineItemObj = {
+                    description: tddescription || '',
+                    quantity: tdQty || 0,
+                    unitPrice: tdunitprice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0,
+                    tax:tdtaxrate||0,
+                    amount:tdlineamt || 0
+                }
+                lineItems.push(lineItemObj);
 
             });
 
@@ -4366,8 +4363,6 @@ Template.new_invoice.onRendered(() => {
             }
             stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
-
 
             if(number == 1)
             {
@@ -4794,33 +4789,33 @@ Template.new_invoice.onRendered(() => {
 
             $('#tblInvoiceLine > tbody > tr').each(function () {
 
-            var lineID = this.id;
-            let tdproduct = $('#' + lineID + " .lineProductName").val();
-            let tddescription = $('#' + lineID + " .lineProductDesc").text();
-            let tdQty = $('#' + lineID + " .lineQty").val();
-            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-            let taxamount = $('#' + lineID + " .colTaxAmount").text();
-            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+                var lineID = this.id;
+                let tdproduct = $('#' + lineID + " .lineProductName").val();
+                let tddescription = $('#' + lineID + " .lineProductDesc").text();
+                let tdQty = $('#' + lineID + " .lineQty").val();
+                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let taxamount = $('#' + lineID + " .colTaxAmount").text();
+                let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-            array_data.push([
-                tdproduct,
-                tddescription,
-                tdQty,
-               
-            ]);
+                array_data.push([
+                    tdproduct,
+                    tddescription,
+                    tdQty,
+                
+                ]);
 
-            lineItemObj = {
-                description: tddescription || '',
-                quantity: tdQty || 0,
-                unitPrice: tdunitprice.toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                }) || 0,
-                tax:tdtaxrate||0,
-                amount:tdlineamt || 0
-            }
-            lineItems.push(lineItemObj);
+                lineItemObj = {
+                    description: tddescription || '',
+                    quantity: tdQty || 0,
+                    unitPrice: tdunitprice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0,
+                    tax:tdtaxrate||0,
+                    amount:tdlineamt || 0
+                }
+                lineItems.push(lineItemObj);
 
             });
 
@@ -7528,35 +7523,35 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
         $('#tblInvoiceLine > tbody > tr').each(function () {
 
-        var lineID = this.id;
-        let tdproduct = $('#' + lineID + " .lineProductName").val();
-        let tddescription = $('#' + lineID + " .lineProductDesc").text();
-        let tdQty = $('#' + lineID + " .lineQty").val();
-        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-        let taxamount = $('#' + lineID + " .colTaxAmount").text();
-        let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let taxamount = $('#' + lineID + " .colTaxAmount").text();
+            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-        array_data.push([
-            tdproduct,
-            tddescription,
-            tdQty,
-            tdunitprice,
-            taxamount,
-            tdlineamt,
-        ]);
+            array_data.push([
+                tdproduct,
+                tddescription,
+                tdQty,
+                tdunitprice,
+                taxamount,
+                tdlineamt,
+            ]);
 
-        lineItemObj = {
-            description: tddescription || '',
-            quantity: tdQty || 0,
-            unitPrice: tdunitprice.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || 0,
-            tax:tdtaxrate||0,
-            amount:tdlineamt || 0
-        }
-        lineItems.push(lineItemObj);
+            lineItemObj = {
+                description: tddescription || '',
+                quantity: tdQty || 0,
+                unitPrice: tdunitprice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0,
+                tax:tdtaxrate||0,
+                amount:tdlineamt || 0
+            }
+            lineItems.push(lineItemObj);
 
         });
 
@@ -7761,35 +7756,35 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
         $('#tblInvoiceLine > tbody > tr').each(function () {
 
-        var lineID = this.id;
-        let tdproduct = $('#' + lineID + " .lineProductName").val();
-        let tddescription = $('#' + lineID + " .lineProductDesc").text();
-        let tdQty = $('#' + lineID + " .lineQty").val();
-        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-        let taxamount = $('#' + lineID + " .colTaxAmount").text();
-        let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let taxamount = $('#' + lineID + " .colTaxAmount").text();
+            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-        array_data.push([
-            tdproduct,
-            tddescription,
-            tdQty,
-            tdunitprice,
-            taxamount,
-            tdlineamt,
-        ]);
+            array_data.push([
+                tdproduct,
+                tddescription,
+                tdQty,
+                tdunitprice,
+                taxamount,
+                tdlineamt,
+            ]);
 
-        lineItemObj = {
-            description: tddescription || '',
-            quantity: tdQty || 0,
-            unitPrice: tdunitprice.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || 0,
-            tax:tdtaxrate||0,
-            amount:tdlineamt || 0
-        }
-        lineItems.push(lineItemObj);
+            lineItemObj = {
+                description: tddescription || '',
+                quantity: tdQty || 0,
+                unitPrice: tdunitprice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0,
+                tax:tdtaxrate||0,
+                amount:tdlineamt || 0
+            }
+            lineItems.push(lineItemObj);
 
         });
 
@@ -7806,11 +7801,9 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
         stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-     
-    
         if(number == 1)
         {
-              item_invoices = {
+            item_invoices = {
 
                 o_url: Session.get('vs1companyURL'),
                 o_name: Session.get('vs1companyName'),
@@ -7850,8 +7843,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 applied : "",
                 showFX:"",
                 comment:comment,
-              };
-
+            };
         }
         else if(number == 2)
         {
@@ -7894,8 +7886,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 applied : "",
                 showFX:"",
                 comment:comment,
-              };
-
+            };
         }
         else
         {
@@ -7938,22 +7929,18 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 applied : "",
                 showFX:fx,
                 comment:comment,
-              };
+            };
+        }
 
-            }
+        object_invoce.push(item_invoices);
 
+        $("#html-2-pdfwrapper_new .field_payment").show();
+        $("#html-2-pdfwrapper_new .field_amount").show();
 
-       
-    
-            object_invoce.push(item_invoices);
+        await updateTemplate(object_invoce);
 
-            $("#html-2-pdfwrapper_new .field_payment").show();
-            $("#html-2-pdfwrapper_new .field_amount").show();
-
-            await updateTemplate(object_invoce);
-
-            await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-            return true;
+        await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        return true;
     }
 
     async function showDeliveryDocket(template_title,number)
@@ -7998,34 +7985,34 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
         $('#tblInvoiceLine > tbody > tr').each(function () {
 
-        var lineID = this.id;
-        let tdproduct = $('#' + lineID + " .lineProductName").val();
-        let tddescription = $('#' + lineID + " .lineProductDesc").text();
-        let tdQty = $('#' + lineID + " .lineQty").val();
-        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-        let taxamount = $('#' + lineID + " .colTaxAmount").text();
-        let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let taxamount = $('#' + lineID + " .colTaxAmount").text();
+            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-        array_data.push([
-            tdproduct,
-            tddescription,
-            tdQty,
-          
-        ]);
+            array_data.push([
+                tdproduct,
+                tddescription,
+                tdQty,
+            
+            ]);
 
-        lineItemObj = {
-            description: tddescription || '',
-            quantity: tdQty || 0,
-            unitPrice: tdunitprice.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || 0,
-            tax:tdtaxrate||0,
-            amount:tdlineamt || 0
-        }
-        
-        lineItems.push(lineItemObj);
+            lineItemObj = {
+                description: tddescription || '',
+                quantity: tdQty || 0,
+                unitPrice: tdunitprice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0,
+                tax:tdtaxrate||0,
+                amount:tdlineamt || 0
+            }
+            
+            lineItems.push(lineItemObj);
 
         });
 
@@ -9212,7 +9199,7 @@ Template.new_invoice.onRendered(function () {
     tempObj.getAllTaxCodes = function () {
         getVS1Data('TTaxcodeVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTaxCodesVS1().then(function (data) {
+                salesService.getTaxCodesDetailVS1().then(function (data) {
 
                     let records = [];
                     let inventoryData = [];
@@ -9334,7 +9321,7 @@ Template.new_invoice.onRendered(function () {
                 }
             }
         }).catch(function (err) {
-            salesService.getTaxCodesVS1().then(function (data) {
+            salesService.getTaxCodesDetailVS1().then(function (data) {
 
                 let records = [];
                 let inventoryData = [];

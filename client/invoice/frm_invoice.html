@@ -75,9 +75,6 @@
             }
         </style>
 
-
-
-
         {{#if invoicerecord}}
             <form>
                 <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
@@ -389,16 +386,12 @@
                                                                 </p>
                                                                 <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 </p>
-
                                                             </div>
-
-
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
 
                                     </div>
 
@@ -1142,7 +1135,6 @@
                                     background-color: #ededed;
                                 }
 
-
                                 .table-striped tbody tr:nth-of-type(odd) {
                                     background-color: white !important;
                                 }
@@ -1360,7 +1352,7 @@
                                         class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}">
                                         {{item.SalesLinesCustField1}}</td>
                                       <td contenteditable="false"
-                                        class="lineTaxRate colTaxRate pointer  {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"
+                                        class="lineTaxRate colTaxRate pointer {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"
                                         style="text-align: right!important;">{{item.taxRate}}</td>
                                       <td contenteditable="false" class="colTaxCode {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
@@ -1483,11 +1475,8 @@
 
                                     <div class="custom-control custom-switch">
 
-
                                         <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox" style="cursor: pointer;">
                                         <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose Template</label>
-
-
 
                                     </div>
                                     <!-- <div class="form-group" style="margin-right: 35px; Width:50%; font-size: 15px;">
@@ -1503,7 +1492,6 @@
                             </div>
                             <div class="col-12 col-md-8">
                                 <div class="row justify-content-center desktopButtons">
-
 
                                     <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
@@ -1524,10 +1512,7 @@
 
                             </div>
                         </div>
-
                     </div>
-
-
 
                     <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
                         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -1541,25 +1526,20 @@
 
                                 <div class="modal-body">
                                  
-                                        <div class="custom-control custom-checkbox" id="print_invoice_option">
-                                            <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_invoice_second" type="checkbox" id="print_invoice_second" autocomplete="off">
-                                            <label style="cursor: pointer;" class="custom-control-label"  for="print_invoice_second">Print Invoice</label>
-                                        </div>
-                                     
-                                  
-                                        <div class="custom-control custom-checkbox" id="Invoices_back_orders_option">
-                                            <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_Invoices_back_orders_second" type="checkbox" id="print_Invoices_back_orders_second" autocomplete="off">
-                                            <label style="cursor: pointer;" class="custom-control-label" for="print_Invoices_back_orders_second">Print Invoice Back Order</label>
-                                        </div>
+                                    <div class="custom-control custom-checkbox" id="print_invoice_option">
+                                        <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_invoice_second" type="checkbox" id="print_invoice_second" autocomplete="off">
+                                        <label style="cursor: pointer;" class="custom-control-label"  for="print_invoice_second">Print Invoice</label>
+                                    </div>
+                                    
+                                    <div class="custom-control custom-checkbox" id="Invoices_back_orders_option">
+                                        <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_Invoices_back_orders_second" type="checkbox" id="print_Invoices_back_orders_second" autocomplete="off">
+                                        <label style="cursor: pointer;" class="custom-control-label" for="print_Invoices_back_orders_second">Print Invoice Back Order</label>
+                                    </div>
 
-                                        <div class="custom-control custom-checkbox" id="print_delivery_option">
-                                            <input class="custom-control-input favCheckBox chkBankingReport"   name="print_delivery_docket_second" type="checkbox" id="print_delivery_docket_second" autocomplete="off">
-                                            <label style="cursor: pointer;" class="custom-control-label" for="print_delivery_docket_second">Print Delivery Docket</label>
-                                        </div>
-
-
-
-
+                                    <div class="custom-control custom-checkbox" id="print_delivery_option">
+                                        <input class="custom-control-input favCheckBox chkBankingReport"   name="print_delivery_docket_second" type="checkbox" id="print_delivery_docket_second" autocomplete="off">
+                                        <label style="cursor: pointer;" class="custom-control-label" for="print_delivery_docket_second">Print Delivery Docket</label>
+                                    </div>
                                 </div>
 
                                 <div class="modal-footer ">
@@ -2019,7 +1999,6 @@
                         </div>
                     </div>
 
-
                 </div>
                 <span style="font-size: 10px;margin-right: 8px; float: right;">Page 1 of 1</span>
             </div>
@@ -2068,9 +2047,7 @@
                             <h4 class="print-header-value" style="font-weight: bold; font-size: 17.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                             </h4>
                         </div>
-
                     </div>
-
 
                     <div style="display: flex; width: 100%;">
                         <div style="width: 60%; padding-right: 16px;font-weight: bold;">
@@ -2110,9 +2087,6 @@
                                 <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                             </div>
 
-
-
-
                         </div>
                     </div>
                 </div>
@@ -2148,7 +2122,7 @@
                                 </div>
                                 <!-- <div class="bankDetails" style="margin: 16px;">
 
-                        </div> -->
+                                </div> -->
                                 <div class="col-12">
                                     <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                 </div>
@@ -2167,7 +2141,6 @@
                                     <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                         Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                     </p>
-
 
                                 </div>
 
@@ -2217,19 +2190,16 @@
 
                                     </div>
 
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
             </div>
 
             <div>
                 <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-             
             </div>
             <p class="bottome-text-fix" style="font-size: 10px;
             margin-right: 18px;
@@ -2260,9 +2230,6 @@
         <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
             {{> newtermspop}}
         </div>
-
-
-
 
         <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
             {{> departmentpop}}
@@ -2497,7 +2464,6 @@
 
                                                                 <span class="price">A$1,549.60</span>
 
-
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -2550,7 +2516,6 @@
                                                     </tfoot>
                                                 </table>
 
-
                                                 <div style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; clear: both; color: #999; margin: 0; padding: 20px;">
                                                     <p>Thanks,</p>
                                                     <p>{{companyname}}</p>
@@ -2559,7 +2524,6 @@
                                                             <td class="aligncenter content-block"
                                                                 style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; vertical-align: top; color: #999; text-align: center; margin: 0; padding: 0 0 20px;"
                                                                 align="center" valign="top">
-
 
                                                                 <p>If you have questions about your order, please let us know.</p>
 
