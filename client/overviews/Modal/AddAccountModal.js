@@ -1199,4 +1199,11 @@ Template.addAccountModal.helpers({
           : -1;
       });
   },
+  bsbRegionName: () => {
+    let bsbname = "Branch Code";
+    if (Session.get("ERPLoggedCountry") === "Australia") {
+      bsbname = "BSB";
+    }
+    return bsbname;
+  }
 });
