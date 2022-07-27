@@ -5582,6 +5582,11 @@ Template.employeescard.events({
             break;
         }
 
+        if(!isNaN(HoursAccruedAnnually)){
+            
+        }
+        else if(!isNaN(HoursAccruedAnnuallyFullTimeEmp))
+
         let OpeningBalance = $('#openingBalance').val();
         let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
         let OnTerminationBalance = 0;
@@ -5609,7 +5614,7 @@ Template.employeescard.events({
                     LeaveCalcMethod: LeaveCalcMethod,
                     HoursAccruedAnnually: parseInt(HoursAccruedAnnually),
                     HoursAccruedAnnuallyFullTimeEmp: parseInt(HoursAccruedAnnuallyFullTimeEmp),
-                    HoursFullTimeEmpFortnightlyPay: parseInt(HoursFullTimeEmpFortnightlyPay),
+                    HoursFullTimeEmpFortnightlyPay: parseInt(HoursAccruedAnnuallyFullTimeEmp),
                     HoursLeave: parseInt(HoursLeave),
                     OpeningBalance: parseInt(OpeningBalance),
                     OnTerminationUnusedBalance: OnTerminationBalance,
