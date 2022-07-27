@@ -1376,7 +1376,6 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.deleted_projects.set(deleted_projects);
           templateObject.favorite_projects.set(favorite_projects);
 
-          console.log(employeeID, active_projects.length)
           $(".crm_project_count").html(active_projects.length);
 
           setTimeout(() => {
@@ -1424,8 +1423,6 @@ Template.alltaskdatatable.onRendered(function () {
         templateObject.active_projects.set(active_projects);
         templateObject.deleted_projects.set(deleted_projects);
         templateObject.favorite_projects.set(favorite_projects);
-
-        console.log(employeeID, active_projects.length)
 
         $(".crm_project_count").html(active_projects.length);
 
@@ -2897,7 +2894,6 @@ Template.alltaskdatatable.events({
           return;
         }
       }).catch(function (err) {
-        console.log(err)
         $(".fullScreenSpin").css("display", "none");
         swal(err, "", "error");
         return;
