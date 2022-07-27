@@ -1443,12 +1443,11 @@
                                                                             <label>Employment Basis</label>
                                                                             <!-- <input type="text" class="form-control" id="edtEmploymentBasis" name="edtEmploymentBasis"> -->
                                                                             <select class="form-control" id="edtEmploymentBasis" name="edtEmploymentBasis" style="cursor: pointer;">
-
-                                                                                <option value="Full-time employment">Full-time employment</option>
-                                                                                <option value="Part-time employment">Part-time employment</option>
-                                                                                <option value="Casual employment">Casual employment</option>
-                                                                                <option value="Labour hire">Labour hire</option>
-                                                                                <option value="Superannuation income stream">Superannuation income stream</option>
+                                                                                <option value="F">Full-time employment</option>
+                                                                                <option value="P">Part-time employment</option>
+                                                                                <option value="C">Casual employment</option>
+                                                                                <option value="L">Labour hire</option>
+                                                                                <option value="S">Superannuation income stream</option>
                                                                             </select>
 
                                                                         </div>
@@ -1462,6 +1461,18 @@
                                                                                 <!-- <option value="Working Holiday Maker">Working Holiday Maker</option> -->
                                                                             </select>
 
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-3">
+                                                                        <div class="form-group" style="margin: 4px;">
+                                                                            <label>Pay Period</label>
+                                                                            <input type="text" class="form-control" name="edtPayPeriod" id="edtPayPeriod" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-3">
+                                                                        <div class="form-group" style="margin: 4px;">
+                                                                            <label>First Pay Date</label>
+                                                                            <input type="text" class="form-control" name="edtFirstPayDate" id="edtFirstPayDate" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1491,7 +1502,7 @@
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesTaxFreeThresholdClaimed">Tax Free Threshold Claimed</label>
                                                                         </div>
-                                                                        <br />
+                                                                        <!-- <br />
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
                                                                             {{#if equals employeePaySetting.OtherTaxOffsetClaimed true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesOtherTaxOffsetClaimed" id="taxesOtherTaxOffsetClaimed" checked>
@@ -1499,7 +1510,7 @@
                                                                             <input class="custom-control-input" type="checkbox" name="taxesOtherTaxOffsetClaimed" id="taxesOtherTaxOffsetClaimed">
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesOtherTaxOffsetClaimed">Other Tax Offset Claimed</label>
-                                                                        </div>
+                                                                        </div> -->
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
@@ -1510,7 +1521,7 @@
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesStudyTrainingSupportLoans">Study and Training Support Loans</label>
                                                                         </div>
-                                                                        <br />
+                                                                        <!-- <br />
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
                                                                             {{#if equals employeePaySetting.UpwardvariationRequested true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesUpwardVariationRequested" id="taxesUpwardVariationRequested" checked>
@@ -1518,7 +1529,7 @@
                                                                             <input class="custom-control-input" type="checkbox" name="taxesUpwardVariationRequested" id="taxesUpwardVariationRequested">
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesUpwardVariationRequested">Upward Variation Requested</label>
-                                                                        </div>
+                                                                        </div> -->
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
@@ -1539,8 +1550,8 @@
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesSeniorPensionersTaxOffsetClaimed">Senior and Pensioners Tax Offset
                                                                                 Claimed</label>
                                                                         </div>
-                                                                        <br />
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
+                                                                        <!-- <br /> -->
+                                                                        <!-- <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
                                                                             {{#if equals employeePaySetting.HasApprovedWithholdingVariation true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesHasApprovedWithholdingVariation" id="taxesHasApprovedWithholdingVariation" checked>
                                                                             {{else}}
@@ -1548,7 +1559,7 @@
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesHasApprovedWithholdingVariation">Has Approved Withholding
                                                                                 Variation</label>
-                                                                        </div>
+                                                                        </div> -->
                                                                     </div>
                                                                 </div>
                                                                 <!-- <div class="row">
