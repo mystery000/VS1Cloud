@@ -448,7 +448,6 @@ Template.deductionSettings.events({
         /**
          * Saving Earning Object in localDB
         */
-        
         let deductionRateSettings = {
             type: "TDeduction",
             fields: {
@@ -459,19 +458,21 @@ Template.deductionSettings.events({
                 IsWorkPlacegiving:isIsWorkPlacegiving,
                 Taxexempt:isTaxexempt,
                 Unionfees:isUnionfees,
-                Description: deductionName,
-                DisplayIn: displayName,
+                // Description: deductionName,
+                // DisplayIn: displayName,
                 // Superinc: ExemptSuperannuation,
                 // Workcoverexempt: ExemptReportable,
                 // Payrolltaxexempt: ExemptPAYG
             }
         };
 
+
         const ApiResponse = await apiEndpoint.fetch(null, {
             method: "POST",
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(deductionRateSettings),
         });
+        
     
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();

@@ -86,6 +86,7 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    {{>FxRatesButton}}
                                 </div>
                             </div>
                             <div class="col-12 col-md-2">
@@ -108,16 +109,16 @@
                                         <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu" role="menu">
                                             <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                            <a class="dropdown-item lastMonth"  id="lastMonth" role="presentation" href="#">Last Month</a>
-                                            <a class="dropdown-item lastQuarter"  id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                            <a class="dropdown-item last12Months"  id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                            <a class="dropdown-item ignoreDate"  id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
+                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
+                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
+                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin: 8px;">
                                         <label>From</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
+                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -126,7 +127,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>To</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateTo" name="dateTo" >
+                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -246,4 +247,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Start Currency Modal -->
+    {{> FxRateModal currencies=currencyList}}
+     <!-- End Currency Modal -->
 </template>

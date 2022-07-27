@@ -24,7 +24,11 @@ export default class EmployeePayrollApi {
         TPayTemplateDeductionLine: "TPayTemplateDeductionLine",
         TPayTemplateSuperannuationLine: "TPayTemplateSuperannuationLine",
         TPayTemplateReiumbursementLine: "TPayTemplateReiumbursementLine",
-        TAssignLeaveType: "TAssignLeaveType"
+        TAssignLeaveType: "TAssignLeaveType",
+        TPaidLeave: "TPaidLeave",
+        TUnpaidLeave: "TUnpaidLeave",
+        TOpeningBalances: "TOpeningBalances",
+        TLeavRequest: "TLeavRequest"
     };
 
     this.collection = new ApiCollection([
@@ -97,7 +101,27 @@ export default class EmployeePayrollApi {
           name: this.collectionNames.TAssignLeaveType,
           url: ApiService.getBaseUrl({ endpoint: "TAssignLeaveType" }),
           headers: ApiService.getHeaders()
-        })        
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TPaidLeave,
+          url: ApiService.getBaseUrl({ endpoint: "TPaidLeave" }),
+          headers: ApiService.getHeaders()
+        }),       
+        new ApiEndpoint({
+          name: this.collectionNames.TUnpaidLeave,
+          url: ApiService.getBaseUrl({ endpoint: "TUnpaidLeave" }),
+          headers: ApiService.getHeaders()
+        }), 
+        new ApiEndpoint({
+          name: this.collectionNames.TOpeningBalances,
+          url: ApiService.getBaseUrl({ endpoint: "TOpeningBalances" }),
+          headers: ApiService.getHeaders()
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TLeavRequest,
+          url: ApiService.getBaseUrl({ endpoint: "TLeavRequest" }),
+          headers: ApiService.getHeaders()
+        })
     ]);
   }
 }

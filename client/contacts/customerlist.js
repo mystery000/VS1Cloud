@@ -83,6 +83,7 @@ Template.customerlist.onRendered(function() {
                             clientno: data.tcustomervs1[i].fields.ClientNo || '',
                             jobtitle: data.tcustomervs1[i].fields.JobTitle || '',
                             notes: data.tcustomervs1[i].fields.Notes || '',
+                            suburb: data.tcustomervs1[i].fields.Suburb || '',
                             country: data.tcustomervs1[i].fields.Country || ''
                         };
 
@@ -304,6 +305,7 @@ Template.customerlist.onRendered(function() {
                         clientno: useData[i].fields.ClientNo || '',
                         jobtitle: useData[i].fields.JobTitle || '',
                         notes: useData[i].fields.Notes || '',
+                        suburb: useData[i].fields.Suburb || '',
                         country: useData[i].fields.Country || ''
                     };
 
@@ -612,6 +614,7 @@ Template.customerlist.onRendered(function() {
                         clientno: data.tcustomervs1[i].fields.ClientNo || '',
                         jobtitle: data.tcustomervs1[i].fields.JobTitle || '',
                         notes: data.tcustomervs1[i].fields.Notes || '',
+                        suburb: data.tcustomervs1[i].fields.Suburb || '',
                         country: data.tcustomervs1[i].fields.Country || ''
                     };
 
@@ -886,6 +889,7 @@ Template.customerlist.events({
                             clientno: data.tcustomervs1[i].fields.ClientNo || '',
                             jobtitle: data.tcustomervs1[i].fields.JobTitle || '',
                             notes: data.tcustomervs1[i].fields.Notes || '',
+                            suburb: data.tcustomervs1[i].fields.Suburb || '',
                             country: data.tcustomervs1[i].fields.Country || ''
                         }
                          dataTableList.push(dataList);
@@ -909,6 +913,7 @@ Template.customerlist.events({
                                 '<td contenteditable="false" class="colBalance">' + item[x].balance + '</td>' +
                                 '<td contenteditable="false" class="colCreditLimit">' + item[x].creditlimit + '</td>' +
                                 '<td contenteditable="false" class="colSalesOrderBalance">' + item[x].salesorderbalance + '</td>' +
+                                '<td contenteditable="false" class="colSuburb">' + item[x].suburb + '</td>' +
                                 '<td contenteditable="false" class="colCountry">' + item[x].country + '</td>' +
                                 '<td contenteditable="false" class="colEmail">' + item[x].email + '</td>' +
                                 '<td contenteditable="false" class="colAccountNo hiddenColumn">' + item[x].accountno + '</td>' +

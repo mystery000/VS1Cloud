@@ -90,8 +90,7 @@ Template.accountsoverview.onRendered(function () {
   );
 
   templateObject.getAllTaxCodes = function () {
-    getVS1Data("TTaxcodeVS1")
-      .then(function (dataObject) {
+    getVS1Data("TTaxcodeVS1").then(function (dataObject) {
         if (dataObject.length === 0) {
           productService.getTaxCodesVS1().then(function (data) {
             let records = [];
@@ -231,8 +230,7 @@ Template.accountsoverview.onRendered(function () {
             });
           }
         }
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         productService.getTaxCodesVS1().then(function (data) {
           let records = [];
           let inventoryData = [];
@@ -544,13 +542,7 @@ Template.accountsoverview.onRendered(function () {
 
     $("#edtAccountID").val(accountid);
     $("#sltAccountType").val(accounttype);
-    $("#sltAccountType").append(
-        '<option value="' +
-        accounttype +
-        '" selected="selected">' +
-        accounttype +
-        "</option>"
-    );
+    $("#sltAccountType").append('<option value="' +accounttype +'" selected="selected">' +accounttype +"</option>");
     $("#edtAccountName").val(accountname);
     $("#edtAccountNo").val(accountno);
     $("#sltTaxCode").val(taxcode);
@@ -560,14 +552,10 @@ Template.accountsoverview.onRendered(function () {
     $("#edtBankAccountNo").val(bankacountno);
     $("#swiftCode").val(swiftCode);
     $("#routingNo").val(routingNo);
-    $("#edtBankName").val(
-        localStorage.getItem("vs1companyBankName") || ""
-    );
+    $("#edtBankName").val(localStorage.getItem("vs1companyBankName") || "");
 
     $("#edtCardNumber").val(cardnumber);
-    $("#edtExpiryDate").val(
-        cardexpiry ? moment(cardexpiry).format("DD/MM/YYYY") : ""
-    );
+    $("#edtExpiryDate").val(cardexpiry ? moment(cardexpiry).format("DD/MM/YYYY") : "");
     $("#edtCvc").val(cardcvc);
 
     if (showTrans == "true") {
@@ -581,13 +569,7 @@ Template.accountsoverview.onRendered(function () {
       $(".useReceiptClaim").prop("checked", false);
     }
     $("#expenseCategory").val(expenseCategory);
-    $("#expenseCategory").append(
-        '<option value="' +
-        expenseCategory +
-        '" selected="selected">' +
-        expenseCategory +
-        "</option>"
-    );
+    $("#expenseCategory").append('<option value="' +expenseCategory +'" selected="selected">' +expenseCategory +"</option>");
 
     setTimeout(function () {
       $("#addNewAccount").modal("show");
@@ -634,7 +616,6 @@ Template.accountsoverview.onRendered(function () {
     let fullAccountTypeName = "";
     let accBalance = "";
 
-
     for (let i = 0; i < data.taccountvs1.length; i++) {
       let lineData = data.taccountvs1[i];
       if (isField) {
@@ -642,23 +623,17 @@ Template.accountsoverview.onRendered(function () {
       }
       if (accountTypeList) {
         for (var j = 0; j < accountTypeList.length; j++) {
-          if (
-              lineData.AccountTypeName ===
-              accountTypeList[j].accounttypename
-          ) {
+          if (lineData.AccountTypeName === accountTypeList[j].accounttypename) {
             fullAccountTypeName = accountTypeList[j].description || "";
           }
         }
       }
-
-      if (!isNaN(data.taccountvs1[i].Balance)) {
-        accBalance =
-            utilityService.modifynegativeCurrencyFormat(
-                lineData.Balance
-            ) || 0.0;
+      if (!isNaN(lineData.Balance)) {
+        accBalance =utilityService.modifynegativeCurrencyFormat(lineData.Balance) || 0.0;
       } else {
         accBalance = Currency + "0.00";
       }
+
       var dataList = {
         id: lineData.ID || "",
         accountname: lineData.AccountName || "",
@@ -687,39 +662,6 @@ Template.accountsoverview.onRendered(function () {
     templateObject.datatablerecords.set(dataTableList);
 
     if (templateObject.datatablerecords.get()) {
-      Meteor.call(
-          "readPrefMethod",
-          Session.get("mycloudLogonID"),
-          "tblAccountOverview",
-          function (error, result) {
-            if (error) {
-            } else {
-              if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                  let customcolumn = result.customFields;
-                  let columData = customcolumn[i].label;
-                  let columHeaderUpdate = customcolumn[
-                      i
-                      ].thclass.replace(/ /g, ".");
-                  let hiddenColumn = customcolumn[i].hidden;
-                  let columnClass = columHeaderUpdate.split(".")[1];
-                  let columnWidth = customcolumn[i].width;
-                  let columnindex = customcolumn[i].index + 1;
-
-                  if (hiddenColumn == true) {
-                    $("." + columnClass + "").addClass("hiddenColumn");
-                    $("." + columnClass + "").removeClass("showColumn");
-                  } else if (hiddenColumn == false) {
-                    $("." + columnClass + "").removeClass(
-                        "hiddenColumn"
-                    );
-                    $("." + columnClass + "").addClass("showColumn");
-                  }
-                }
-              }
-            }
-          }
-      );
 
       setTimeout(function () {
         MakeNegative();

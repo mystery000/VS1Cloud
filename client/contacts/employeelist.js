@@ -1033,8 +1033,8 @@ Template.employeelist.events({
                                 type: "TEmployee",
                                 fields:
                                 {
-                                    FirstName: results.data[i+1][0],
-                                    LastName: results.data[i+1][1],
+                                    FirstName: results.data[i+1][0].trim(),
+                                    LastName: results.data[i+1][1].trim(),
                                     Phone: results.data[i+1][2],
                                     Mobile: results.data[i+1][3],
                                     DateStarted: empStartDate,

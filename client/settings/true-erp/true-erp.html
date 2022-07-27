@@ -1,4 +1,71 @@
 <template name="trueerp">
+    <style>
+        
+        .led-box {
+            height: 30px;
+            width: 25%;
+            margin: 10px 0;
+            float: left;
+        }
+
+        .led-box p {
+            font-size: 12px;
+            text-align: center;
+            margin: 1em;
+        }
+
+        .led-red {
+            float: right;
+            margin-top: -24px;
+            width: 24px;
+            height: 24px;
+            background-color: #F00;
+            border-radius: 50%;
+            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+            -webkit-animation: blinkRed 0.5s infinite;
+            -moz-animation: blinkRed 0.5s infinite;
+            -ms-animation: blinkRed 0.5s infinite;
+            -o-animation: blinkRed 0.5s infinite;
+            animation: blinkRed 0.5s infinite;
+        }
+
+        @-webkit-keyframes blinkRed {
+            from { background-color: #F00; }
+            50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+            to { background-color: #F00; }
+        }
+        @-moz-keyframes blinkRed {
+            from { background-color: #F00; }
+            50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+            to { background-color: #F00; }
+        }
+        @-ms-keyframes blinkRed {
+            from { background-color: #F00; }
+            50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+            to { background-color: #F00; }
+        }
+        @-o-keyframes blinkRed {
+            from { background-color: #F00; }
+            50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+            to { background-color: #F00; }
+        }
+        @keyframes blinkRed {
+            from { background-color: #F00; }
+            50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+            to { background-color: #F00; }
+        }
+
+        .led-green {
+            float: right;
+            margin-top: -24px;
+            width: 24px;
+            height: 24px;
+            background-color: #ABFF00;
+            border-radius: 50%;
+            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
+        }
+    
+    </style>
     <div class="card shadow">
         <div class="card-header py-3" style="background-color: rgb(248,249,252);">
             <div align="left">

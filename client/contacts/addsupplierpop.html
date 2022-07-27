@@ -1,5 +1,5 @@
 <template name="addsupplierpop">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable addsupplierpop" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4><div id="add-supplier-title" name="add-supplier-title" style="float: left;">Add New Supplier</div></h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -134,8 +134,8 @@
                                     }
                                 </style>
                                 <div class="custom-control custom-switch chkSameAsCustomer" style="margin: 4px; margin-top: 41px;">
-                                    <input class="custom-control-input" type="checkbox" id="isformcontractor" style=" cursor: pointer;" checked="{{#if record.iscustomer}}checked{{/if}}">
-                                    <label class="custom-control-label" for="isformcontractor" style=" cursor: pointer;">Is Also Customer</label>
+                                    <input class="custom-control-input" type="checkbox" id="isAlsoCustomer" style=" cursor: pointer;" checked="{{#if record.iscustomer}}checked{{/if}}">
+                                    <label class="custom-control-label" for="isAlsoCustomer" style=" cursor: pointer;">Is Also Customer</label>
                                 </div>
                             </div>
                         </div>

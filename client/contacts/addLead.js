@@ -374,7 +374,14 @@ Template.leadscard.onRendered(function () {
     }
 
     templateObject.getAllCrm = function (leadName) {
-        crmService.getAllTaskList().then(function (dataObject) {
+        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+        var url = FlowRouter.current().path;
+        if (url.includes("/employeescard")) {
+            url = new URL(window.location.href);
+            employeeID = url.searchParams.get("id");
+        }
+        
+        crmService.getAllTaskList(employeeID).then(function (dataObject) {
             if (dataObject.tprojecttasks.length === 0) {
                 sideBarService.getTProjectTasks().then(function (data) {
                     setCrmProjectTasks(data, leadName);

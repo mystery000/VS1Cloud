@@ -6,6 +6,29 @@ import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
+const numberInputValidate = (event) => {
+  if (
+    $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+    // Allow: Ctrl+A, Command+A
+    (event.keyCode === 65 &&
+      (event.ctrlKey === true || event.metaKey === true)) ||
+    // Allow: home, end, left, right, down, up
+    (event.keyCode >= 35 && event.keyCode <= 40)
+  ) {
+    // let it happen, don't do anything
+    return;
+  }
+
+  if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+    (event.keyCode >= 96 && event.keyCode <= 105) ||
+    event.keyCode == 8 || event.keyCode == 9 ||
+    event.keyCode == 37 || event.keyCode == 39 ||
+    event.keyCode == 46 || event.keyCode == 190) {
+  } else {
+    event.preventDefault();
+  }
+}
+
 Template.taxRatesSettings.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -692,7 +715,7 @@ Template.taxRatesSettings.onRendered(function () {
         $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
         $("#edtTaxDesc").val(tax.description);
 
-        templateObject.subTaxLines.set(tax.lines);
+        templateObject.subtaxlines.set(tax.lines);
 
         //});
 
@@ -1026,29 +1049,11 @@ Template.taxRatesSettings.events({
         });
       });
   },
-  "keydown #edtTaxRate": function (event) {
-    if (
-      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-      // Allow: Ctrl+A, Command+A
-      (event.keyCode === 65 &&
-        (event.ctrlKey === true || event.metaKey === true)) ||
-      // Allow: home, end, left, right, down, up
-      (event.keyCode >= 35 && event.keyCode <= 40)
-    ) {
-      // let it happen, don't do anything
-      return;
-    }
-
-    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-      (event.keyCode >= 96 && event.keyCode <= 105) ||
-      event.keyCode == 8 || event.keyCode == 9 ||
-      event.keyCode == 37 || event.keyCode == 39 ||
-      event.keyCode == 46 || event.keyCode == 190) {
-    } else {
-      event.preventDefault();
-    }
-  },
-  "click .btnNewSubTax": function() {
+  "keydown #edtTaxRate": numberInputValidate,
+  "keydown #subTaxPercent": numberInputValidate,
+  "keydown #subTaxCapAmt": numberInputValidate,
+  "keydown #subTaxThresholdAmt": numberInputValidate,
+  "click .btnNewSubTax": function () {
     $('#subTaxCode').val('');
     $('#subTaxPercent').val('');
     $('#subTaxPercentageOn').prop('readonly', false);
@@ -1068,7 +1073,7 @@ Template.taxRatesSettings.events({
 
     let newSubTaxLine = {
       Id: subTaxId,
-      Code: subTaxCode.codename,
+      SubTaxCode: subTaxCode.codename,
       Detail: subTaxCode,
       Percentage: subTaxPercent,
       PercentageOn: subTaxPercentageOn,
@@ -1103,11 +1108,14 @@ Template.taxRatesSettings.events({
 
     let lines = templateObject.subtaxlines.get().map((v) => {
       return {
-        SubTaxCode: v.Code,
-        Percentage: v.Percentage,
-        PercentageOn: v.PercentageOn,
-        CapAmount: v.CapAmount,
-        ThresholdAmount: v.ThresholdAmount
+        type: "TTaxCodeLines",
+        fields: {
+          SubTaxCode: v.SubTaxCode,
+          Percentage: v.Percentage,
+          PercentageOn: v.PercentageOn,
+          CapAmount: v.CapAmount,
+          ThresholdAmount: v.ThresholdAmount
+        }
       }
     });
     if (taxtID == "") {
@@ -1115,7 +1123,7 @@ Template.taxRatesSettings.events({
         .checkTaxRateByName(taxName)
         .then(function (data) {
           taxtID = data.ttaxcode[0].Id;
-          objDetails = {
+          let objDetails = {
             type: "TTaxcode",
             fields: {
               ID: parseInt(taxtID),
@@ -1124,9 +1132,11 @@ Template.taxRatesSettings.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
-              Lines: JSON.stringify(lines),
             },
           };
+          if (templateObject.isChkUSRegionTax.get()) {
+            objDetails.fields.Lines = lines;
+          }
           taxRateService
             .saveTaxRate(objDetails)
             .then(function (objDetails) {
@@ -1162,7 +1172,7 @@ Template.taxRatesSettings.events({
             });
         })
         .catch(function (err) {
-          objDetails = {
+          let objDetails = {
             type: "TTaxcode",
             fields: {
               // Id: taxCodeId,
@@ -1171,9 +1181,11 @@ Template.taxRatesSettings.events({
               Description: taxDesc,
               Rate: taxRate,
               PublishOnVS1: true,
-              Lines: JSON.stringify(lines),
             },
           };
+          if (templateObject.isChkUSRegionTax.get()) {
+            objDetails.fields.Lines = lines;
+          }
 
           taxRateService
             .saveTaxRate(objDetails)
@@ -1210,7 +1222,7 @@ Template.taxRatesSettings.events({
             });
         });
     } else {
-      objDetails = {
+      let objDetails = {
         type: "TTaxcode",
         fields: {
           ID: parseInt(taxtID),
@@ -1219,9 +1231,12 @@ Template.taxRatesSettings.events({
           Description: taxDesc,
           Rate: taxRate,
           PublishOnVS1: true,
-          Lines: JSON.stringify(lines),
         },
       };
+      if (templateObject.isChkUSRegionTax.get()) {
+        objDetails.fields.Lines = lines;
+      }
+
       taxRateService
         .saveTaxRate(objDetails)
         .then(function (objDetails) {
@@ -1411,7 +1426,8 @@ export const TaxRatesEditListener = (e) => {
       $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
       $("#edtTaxDesc").val(tax.description);
 
-      templateObject.subTaxLines.set(tax.lines);
+      templateObject.subtaxlines.set(tax.lines);
+
       $("#addNewTaxRate").modal("toggle");
     }
   }
