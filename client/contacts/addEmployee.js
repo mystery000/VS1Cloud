@@ -3686,7 +3686,7 @@ Template.employeescard.onRendered(function () {
             openingBalanceLines = OpeningBalance.fromList(
                 checkOpeningBalances
             ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.KeyStringFieldName == type ) {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Balance == type ) {
                     return item;
                 }
             });
@@ -3703,7 +3703,7 @@ Template.employeescard.onRendered(function () {
             data = JSON.parse(TOpeningBalances[0].data);
         }
         let openingBalances = OpeningBalance.fromList(
-            TOpeningBalancesData.topeningbalances
+            data.topeningbalances
         ).filter((item) => {
             if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
                 return item;
@@ -5241,7 +5241,8 @@ Template.employeescard.events({
                     EmployeeID: employeeID,
                     AType: EarningsRate,
                     Amount: 0,
-                    KeyStringFieldName: 'EarningLine',
+                    Balance: 0,
+                    Active: true
                 }),
             })
         // );
@@ -5253,8 +5254,8 @@ Template.employeescard.events({
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#obEarningsRate').val('');
-            let getLines1=await templateObject.saveOpeningBalanceLocalDB();
-            let getLines=await templateObject.getOpeningBalances();
+            await templateObject.saveOpeningBalanceLocalDB();
+            await templateObject.getOpeningBalances();
             $('#addEarningsLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
         }else{
@@ -5305,10 +5306,10 @@ Template.employeescard.events({
                 type: "TOpeningBalances",
                 fields: new OpeningBalanceFields({
                     EmployeeID: employeeID,
-                    AType: 'DeductionLine',
+                    AType: DeductionType,
                     Amount: 0,
-                    Balance: DeductionType,
-                    KeyStringFieldName: 'DeductionLine',
+                    Balance: 1,
+                    Active: true
                 }),
             })
         // );
@@ -5321,6 +5322,8 @@ Template.employeescard.events({
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#obDeductionType').val('');
+            await templateObject.saveOpeningBalanceLocalDB();
+            await templateObject.getOpeningBalances();
             $('#addDeductionLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
         }else{
@@ -5372,12 +5375,11 @@ Template.employeescard.events({
                 type: "TOpeningBalances",
                 fields: new OpeningBalanceFields({
                     EmployeeID: employeeID,
-                    AType: 'SuperannuationLine',
+                    AType: SuperannuationFund,
                     Amount: 0,
                     ContributionType: ContributionType,
-                    Balance: SuperannuationFund,
-                    KeyStringFieldName: 'SuperannuationLine',
-
+                    Balance: 2,
+                    Active: true
                 }),
             })
         // );
@@ -5390,6 +5392,8 @@ Template.employeescard.events({
             const jsonResponse = await ApiResponse.json();
             $('#obSuperannuationFund').val('');
             $('#obContributionType').val('');
+            await templateObject.saveOpeningBalanceLocalDB();
+            await templateObject.getOpeningBalances();
             $('#addSuperannuationLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
         }else{
@@ -5441,9 +5445,10 @@ Template.employeescard.events({
                 type: "TOpeningBalances",
                 fields: new OpeningBalanceFields({
                     EmployeeID: employeeID,
-                    AType: 'ReimbursementLine',
+                    AType: Reimbursement,
                     Amount: 0,
-                    Balance: Reimbursement,
+                    Balance: 3,
+                    Active: true
                 }),
             })
         // );
@@ -5455,6 +5460,8 @@ Template.employeescard.events({
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#obReimbursementType').val('');
+            await templateObject.saveOpeningBalanceLocalDB();
+            await templateObject.getOpeningBalances();
             $('#addReimbursementLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
         }else{
@@ -6187,7 +6194,7 @@ Template.employeescard.events({
     'click .removeObSuperannuation': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
-        let obLines = templateObject.filterOpeningBalance('SuperannuationLine');
+        let obLines = templateObject.filterOpeningBalance(2);
         let checkOpeningBalances = templateObject.openingBalanceInfo.get();
         checkOpeningBalances.push( obLines.filter((item, index) => {
             if ( parseInt( index ) != parseInt( deleteID ) ) {
@@ -6213,7 +6220,7 @@ Template.employeescard.events({
     'click .removeObReimbursement': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
-        let obLines = templateObject.filterOpeningBalance('ReimbursementLine');
+        let obLines = templateObject.filterOpeningBalance(3);
         let updatedLines = obLines.filter((item, index) => {
             if ( parseInt( index ) != parseInt( deleteID ) ) {
                 item.fields.BalanceField = $('#obReimbursementFund' + index).val();
@@ -8260,22 +8267,22 @@ Template.employeescard.helpers({
     },
     obEarningLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance('EarningLine');
+        let obEarningLines = templateObject.filterOpeningBalance(0);
         return obEarningLines;
     },
     obDeductionLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance('DeductionLine');
+        let obEarningLines = templateObject.filterOpeningBalance(1);
         return obEarningLines;
     },
     obSuperannuationLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance('SuperannuationLine');
+        let obEarningLines = templateObject.filterOpeningBalance(2);
         return obEarningLines;
     },
     obReimbursementLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance('ReimbursementLine');
+        let obEarningLines = templateObject.filterOpeningBalance(3);
         return obEarningLines;
     },
     payTemplateDeductionLines: () => {
