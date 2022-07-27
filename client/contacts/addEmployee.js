@@ -3695,19 +3695,21 @@ Template.employeescard.onRendered(function () {
     };
 
     templateObject.getOpeningBalances = async () => {
+        let data = [];
         let TOpeningBalances = await getVS1Data('TOpeningBalances');
-        if( TOpeningBalances.length ){
-            let TOpeningBalancesData = JSON.parse(TOpeningBalances[0].data);
-            let openingBalances = OpeningBalance.fromList(
-                TOpeningBalancesData.topeningbalances
-            ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                    return item;
-                }
-            });
-            templateObject.openingBalanceInfo.set(openingBalances);
-            console.log("BalanceList", openingBalances);
+        if( TOpeningBalances.length == 0 ){
+            data = templateObject.saveOpeningBalanceLocalDB();
+        }else{
+            data = JSON.parse(TOpeningBalances[0].data);
         }
+        let openingBalances = OpeningBalance.fromList(
+            TOpeningBalancesData.topeningbalances
+        ).filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                return item;
+            }
+        });
+        templateObject.openingBalanceInfo.set(openingBalances);
     };
 
     templateObject.getOpeningBalances();
