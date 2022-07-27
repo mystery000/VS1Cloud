@@ -32,7 +32,8 @@ Template.addAccountModal.onRendered(function () {
   const currentElement = this;
   $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
-
+  const dataTableListTax = [];
+  const tableHeaderListTax = [];
   templateObject.loadAccountTypes = () => {
     let accountTypeList = [];
     getVS1Data("TAccountType")
@@ -79,8 +80,8 @@ Template.addAccountModal.onRendered(function () {
   templateObject.loadAccountTypes();
 
   templateObject.getTaxRates = function () {
-    getVS1Data("TTaxcodeVS1")
-      .then(function (dataObject) {
+    console.log('Here');
+    getVS1Data("TTaxcodeVS1").then(function (dataObject) {
         if (dataObject.length == 0) {
           taxRateService
             .getTaxRateVS1()
@@ -97,11 +98,11 @@ Template.addAccountModal.onRendered(function () {
                   rate: taxRate || "-",
                 };
 
-                dataTableList.push(dataList);
+                dataTableListTax.push(dataList);
                 //}
               }
 
-              templateObject.taxRates.set(dataTableList);
+              templateObject.taxRates.set(dataTableListTax);
 
               if (templateObject.taxRates.get()) {
                 Meteor.call(
@@ -247,9 +248,8 @@ Template.addAccountModal.onRendered(function () {
                   sVisible: columVisible || false,
                   sClass: v.className || "",
                 };
-                tableHeaderList.push(datatablerecordObj);
+                tableHeaderListTax.push(datatablerecordObj);
               });
-              templateObject.tableheaderrecords.set(tableHeaderList);
               $("div.dataTables_filter input").addClass(
                 "form-control form-control-sm"
               );
@@ -274,11 +274,11 @@ Template.addAccountModal.onRendered(function () {
               rate: taxRate || "-",
             };
 
-            dataTableList.push(dataList);
+            dataTableListTax.push(dataList);
             //}
           }
 
-          templateObject.taxRates.set(dataTableList);
+          templateObject.taxRates.set(dataTableListTax);
 
           if (templateObject.taxRates.get()) {
             Meteor.call(
@@ -423,15 +423,14 @@ Template.addAccountModal.onRendered(function () {
               sVisible: columVisible || false,
               sClass: v.className || "",
             };
-            tableHeaderList.push(datatablerecordObj);
+            tableHeaderListTax.push(datatablerecordObj);
           });
-          templateObject.tableheaderrecords.set(tableHeaderList);
           $("div.dataTables_filter input").addClass(
             "form-control form-control-sm"
           );
         }
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
+        console.log(err);
         taxRateService
           .getTaxRateVS1()
           .then(function (data) {
@@ -447,11 +446,11 @@ Template.addAccountModal.onRendered(function () {
                 rate: taxRate || "-",
               };
 
-              dataTableList.push(dataList);
+              dataTableListTax.push(dataList);
               //}
             }
 
-            templateObject.taxRates.set(dataTableList);
+            templateObject.taxRates.set(dataTableListTax);
 
             if (templateObject.taxRates.get()) {
               Meteor.call(
@@ -596,9 +595,8 @@ Template.addAccountModal.onRendered(function () {
                 sVisible: columVisible || false,
                 sClass: v.className || "",
               };
-              tableHeaderList.push(datatablerecordObj);
+              tableHeaderListTax.push(datatablerecordObj);
             });
-            templateObject.tableheaderrecords.set(tableHeaderList);
             $("div.dataTables_filter input").addClass(
               "form-control form-control-sm"
             );
