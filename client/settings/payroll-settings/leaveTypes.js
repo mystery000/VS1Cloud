@@ -46,12 +46,21 @@ Template.leaveTypeSettings.onRendered(function() {
         });
     });
 
-    templateObject.saveDataLocalDB = async function(){
+    templateObject.saveDataLocalDB = async function(leaveType){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TPaidLeave
-        );
+        const employeePayrolEndpoint={};
+        if(leaveType == "Paid Leave"){
+            employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPaidLeave
+            );
+        }
+        else if(leaveType == "Unpaid Leave"){
+            employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TUnpaidLeave
+            );
+        }
+        
 
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
@@ -59,12 +68,17 @@ Template.leaveTypeSettings.onRendered(function() {
         );                
         
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-            console.log('employeePayrolEndpointJsonResponse', employeePayrolEndpointJsonResponse)
-            if( employeePayrolEndpointJsonResponse.tpaidleave.length ){
-                await addVS1Data('TPaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+            if(leaveType == "Paid Leave"){
+                if(employeePayrolEndpointJsonResponse.tpaidleave.length ){
+                    await addVS1Data('TPaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+                }
+            }
+            else if(leaveType == "Unpaid Leave"){
+                if(employeePayrolEndpointJsonResponse.tunpaidleave.length){
+                    await addVS1Data('TUnpaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+                }
             }
             return employeePayrolEndpointJsonResponse
         }  
@@ -423,11 +437,12 @@ Template.leaveTypeSettings.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(leaveDetails),
         });
+        console.log("ApiResponse", ApiResponse)
 
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#leaveRateForm')[0].reset();
-            await templateObject.saveDataLocalDB();
+            await templateObject.saveDataLocalDB(leaveType);
             await templateObject.getLeaves();
             $('#leaveModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
