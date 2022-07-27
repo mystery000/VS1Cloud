@@ -792,25 +792,22 @@ Template.alltaskdatatable.onRendered(function () {
         let data = JSON.parse(dataObject[0].data);
         let today = moment().format("YYYY-MM-DD");
         let all_records = data.tprojecttasks;
+
+        var url = FlowRouter.current().path;
+        url = new URL(window.location.href);
+        let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+        if (employeeID) {
+          all_records = all_records.filter(item => item.fields.EnteredBy == employeeID);
+        }
         templateObject.allWithCompletedRecords.set(all_records);
 
-        all_records = all_records.filter(
-          (item) => item.fields.Completed == false
-        );
+        all_records = all_records.filter((item) => item.fields.Completed == false);
 
-        let today_records = all_records.filter(
-          (item) => item.fields.due_date.substring(0, 10) == today
-        );
-        let upcoming_records = all_records.filter(
-          (item) => item.fields.due_date.substring(0, 10) > today
-        );
-        let overdue_records = all_records.filter(
-          (item) =>
-            !item.fields.due_date ||
-            item.fields.due_date.substring(0, 10) < today
-        );
+        let today_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+        let upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+        let overdue_records = all_records.filter((item) => !item.fields.due_date || item.fields.due_date.substring(0, 10) < today);
 
-        $(".").text(all_records.length);
+        $(".crm_all_count").text(all_records.length);
         $(".crm_today_count").text(today_records.length);
         $(".crm_upcoming_count").text(upcoming_records.length);
 
@@ -828,15 +825,15 @@ Template.alltaskdatatable.onRendered(function () {
         $(".fullScreenSpin").css("display", "none");
       }
     }).catch(function (err) {
+      console.log(err)
       templateObject.getAllTaskList();
     });
   };
 
   templateObject.getAllTaskList = function () {
-    let employeeID = Session.get("mySessionEmployeeLoggedID");
     var url = FlowRouter.current().path;
     url = new URL(window.location.href);
-    employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
+    let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
 
     crmService.getAllTaskList(employeeID).then(function (data) {
       if (data.tprojecttasks && data.tprojecttasks.length > 0) {
@@ -845,21 +842,11 @@ Template.alltaskdatatable.onRendered(function () {
         // all_records = all_records.filter(item => item.fields.ProjectID == 11);
         templateObject.allWithCompletedRecords.set(all_records);
 
-        all_records = all_records.filter(
-          (item) => item.fields.Completed == false
-        );
+        all_records = all_records.filter((item) => item.fields.Completed == false);
 
-        let today_records = all_records.filter(
-          (item) => item.fields.due_date.substring(0, 10) == today
-        );
-        let upcoming_records = all_records.filter(
-          (item) => item.fields.due_date.substring(0, 10) > today
-        );
-        let overdue_records = all_records.filter(
-          (item) =>
-            !item.fields.due_date ||
-            item.fields.due_date.substring(0, 10) < today
-        );
+        let today_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+        let upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+        let overdue_records = all_records.filter((item) => !item.fields.due_date || item.fields.due_date.substring(0, 10) < today);
 
         $(".crm_all_count").text(all_records.length);
         $(".crm_today_count").text(today_records.length);
@@ -876,7 +863,7 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.initAllTasksTable();
         }, 500);
 
-        addVS1Data("TCRMTaskList", JSON.stringify(data));
+        // addVS1Data("TCRMTaskList", JSON.stringify(data));
       } else {
         $(".crm_all_count").text(0);
         $(".crm_today_count").text(0);
@@ -1161,10 +1148,9 @@ Template.alltaskdatatable.onRendered(function () {
   };
 
   templateObject.getAllLabels = function () {
-    let employeeID = Session.get("mySessionEmployeeLoggedID");
     var url = FlowRouter.current().path;
     url = new URL(window.location.href);
-    employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
+    let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
 
     crmService.getAllLabels(employeeID).then(function (data) {
       if (
@@ -1351,11 +1337,15 @@ Template.alltaskdatatable.onRendered(function () {
 
           tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
 
-          let employeeID = Session.get("mySessionEmployeeLoggedID");
           var url = FlowRouter.current().path;
           url = new URL(window.location.href);
-          employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
-          all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredByID == employeeID);
+          let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+
+          if (employeeID) {
+            all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
+          } else {
+            all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+          }
           templateObject.all_projects.set(all_projects);
 
           let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
@@ -1392,10 +1382,9 @@ Template.alltaskdatatable.onRendered(function () {
   };
 
   templateObject.getTProjectList = function () {
-    let employeeID = Session.get("mySessionEmployeeLoggedID");
     var url = FlowRouter.current().path;
     url = new URL(window.location.href);
-    employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
+    employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
 
     crmService.getTProjectList(employeeID).then(function (data) {
       if (data.tprojectlist && data.tprojectlist.length > 0) {
@@ -1403,7 +1392,7 @@ Template.alltaskdatatable.onRendered(function () {
         let all_projects = data.tprojectlist;
 
         tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
-        all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredByID == employeeID);
+        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
         templateObject.all_projects.set(all_projects);
 
         let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
@@ -2563,7 +2552,10 @@ Template.alltaskdatatable.events({
 
     $(".fullScreenSpin").css("display", "inline-block");
 
-    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    var url = FlowRouter.current().path;
+    url = new URL(window.location.href);
+    let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+
     crmService.getTProjectList(employeeID).then(function (data) {
       if (data.tprojectlist && data.tprojectlist.length > 0) {
         let all_projects = data.tprojectlist;

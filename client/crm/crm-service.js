@@ -1,12 +1,17 @@
 import { BaseService } from "../js/base-service.js";
 export class CRMService extends BaseService {
-  getAllTaskList(EnteredByID = 0) {
+  getAllTaskList(EnteredByID = '') {
     let options = {
-      // orderby: '"ToDoByDate asc"',
       ListType: "Detail",
-      // select: "[Active]=true and [Completed]=false and [ProjectID]=0"
-      select: "[Active]=true and [EnteredByID]=" + EnteredByID
+      select: "[Active]=true"
     };
+    if (EnteredByID) {
+      options = {
+        ListType: "Detail",
+        // select: "[Active]=true and [EnteredByID]=" + EnteredByID
+        select: "[Active]=true and [EnteredBy]='" + EnteredByID + "'"
+      };
+    }
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
 
@@ -26,11 +31,18 @@ export class CRMService extends BaseService {
     return this.POST(this.ERPObjects.Tprojecttasks, data);
   }
 
-  getTProjectList(EnteredByID = 0) {
+  getTProjectList(EnteredByID = '') {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true and [EnteredByID]=" + EnteredByID
+      select: "[Active]=true"
     };
+    if (EnteredByID) {
+      options = {
+        ListType: "Detail",
+        // select: "[Active]=true and [EnteredByID]=" + EnteredByID
+        select: "[Active]=true and [EnteredBy]='" + EnteredByID + "'"
+      };
+    }
     return this.getList(this.ERPObjects.Tprojectlist, options);
   }
 
@@ -50,11 +62,18 @@ export class CRMService extends BaseService {
     return this.POST(this.ERPObjects.Tprojectlist, data);
   }
 
-  getAllLabels(EnteredByID = 0) {
+  getAllLabels(EnteredByID = '') {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true and [EnteredByID]=" + EnteredByID
+      select: "[Active]=true"
     };
+    if (EnteredByID) {
+      options = {
+        ListType: "Detail",
+        // select: "[Active]=true and [EnteredByID]=" + EnteredByID
+        select: "[Active]=true and [EnteredBy]='" + EnteredByID + "'"
+      };
+    }
     return this.getList(this.ERPObjects.Tprojecttask_TaskLabel, options);
   }
 
