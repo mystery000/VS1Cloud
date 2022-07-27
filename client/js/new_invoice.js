@@ -11377,6 +11377,10 @@ Template.new_invoice.events({
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectLineID').val(targetID);
     },
+    'click .lineTaxAmount': function (event) {
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+    },
     'click .lineSerialNo, keydown .lineSerialNo': function(event) {
         var $earch = $(event.currentTarget);
         var offset = $earch.offset();
