@@ -1335,16 +1335,15 @@ Template.alltaskdatatable.onRendered(function () {
           let tprojectlist = data.tprojectlist;
           let all_projects = data.tprojectlist;
 
-          tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
-
-          var url = FlowRouter.current().path;
-          url = new URL(window.location.href);
-          let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+          var url = new URL(window.location.href);
+          let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : ''; 
 
           if (employeeID) {
             all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
+            tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
           } else {
             all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+            tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
           }
           templateObject.all_projects.set(all_projects);
 
@@ -1377,6 +1376,7 @@ Template.alltaskdatatable.onRendered(function () {
         }
       }
     }).catch(function (err) {
+      console.log(err)
       templateObject.getTProjectList();
     });
   };

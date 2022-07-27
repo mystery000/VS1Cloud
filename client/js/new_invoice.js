@@ -13203,14 +13203,16 @@ Template.new_invoice.events({
         { label: 'Amount (Ex)', class: 'colAmount', active: true },
         { label: 'Amount (Inc)', class: 'colAmountInc', active: true }
       ];
-      var datable = $('#tblInvoiceLine').DataTable();
+      // var datable = $('#tblInvoiceLine');
+      // var datable = $('#tblInvoiceLine').DataTable();
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
-        var title = datable.column( index ).header();
+        // var title = datable.column( index ).header();
+        var title = $('#tblInvoiceLine').find('th').eq(index);
         $(title).html(reset_data[index].label);
 
         if (reset_data[index].active) {
