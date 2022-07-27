@@ -38,6 +38,8 @@ function setAlreadyLoaded(step, bool = false) {
 function isAlreadyLoaded(step) {
   const string = localStorage.getItem(`SETUP_STEP_ALREADY-${step}`) || false;
 
+  console.log("step", step, string);
+
   return string == "true" || string == true ? true : false;
 }
 
@@ -3326,7 +3328,11 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      if (refresh) $("#tblCustomerlist").DataTable().destroy();
+      //if (refresh) $("#tblCustomerlist").DataTable().destroy();
+
+      if ($.fn.dataTable.isDataTable("#tblCustomerlist")) {
+        $("#tblCustomerlist").DataTable().destroy();
+      } 
 
       setTimeout(() => {
         $("#tblCustomerlist")
@@ -3371,6 +3377,8 @@ Template.setup.onRendered(function () {
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
       }, 300);
+
+      
     }
 
     LoadingOverlay.hide();
@@ -3524,7 +3532,11 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      if (refresh) $("#tblSupplierlist").DataTable().destroy();
+      //if (refresh) $("#tblSupplierlist").DataTable().destroy();
+
+      if ($.fn.dataTable.isDataTable("#tblSupplierlist")) {
+        $("#tblSupplierlist").DataTable().destroy();
+      } 
 
       setTimeout(function () {
         $("#tblSupplierlist")
@@ -3822,7 +3834,11 @@ Template.setup.onRendered(function () {
     await templateObject.inventoryList.set(_inventoryList);
 
     if (await templateObject.inventoryList.get()) {
-      if (refresh) $("#InventoryTable").DataTable().destroy();
+      //if (refresh) $("#InventoryTable").DataTable().destroy();
+
+      if ($.fn.dataTable.isDataTable("#InventoryTable")) {
+        $("#InventoryTable").DataTable().destroy();
+      } 
 
       setTimeout(function () {
         $("#InventoryTable")
@@ -4115,48 +4131,49 @@ Template.setup.onRendered(function () {
    */
   templateObject.lazyLoader = (stepId = 1) => {
     console.log("Smart loading step", stepId);
-    if (isAlreadyLoaded(stepId)) return;
-    setAlreadyLoaded(stepId, true);
-    //LoadingOverlay.show();
-    switch (stepId) {
-      case 1:
-        templateObject.getOrganisationDetails();
-        templateObject.getCountryData();
-        break;
-      case 2:
-        templateObject.loadStep2Prefs();
-        templateObject.loadTaxRates();
-        break;
-      case 3:
-        templateObject.getPaymentMethods();
-        templateObject.loadStripe();
-        break;
-      case 4:
-        templateObject.loadStep4Prefs();
-        templateObject.loadTerms();
-        break;
-      case 5:
-        templateObject.loadStep5Prefs();
-        templateObject.loadEmployees();
-        break;
-      case 6:
-        templateObject.loadAccountTypes();
-        templateObject.loadAccountList();
-        templateObject.loadAllTaxCodes();
-        break;
-      case 7:
-        templateObject.loadDefaultCustomer(true);
-        break;
-      case 8:
-        templateObject.loadSuppliers(true);
-        break;
-      case 9:
-        templateObject.loadInventory(true);
-        break;
-      default:
-      // code block
+    if (isAlreadyLoaded(stepId) == false) {
+      //LoadingOverlay.show();
+      switch (stepId) {
+        case 1:
+          templateObject.getOrganisationDetails();
+          templateObject.getCountryData();
+          break;
+        case 2:
+          templateObject.loadStep2Prefs();
+          templateObject.loadTaxRates();
+          break;
+        case 3:
+          templateObject.getPaymentMethods();
+          templateObject.loadStripe();
+          break;
+        case 4:
+          templateObject.loadStep4Prefs();
+          templateObject.loadTerms();
+          break;
+        case 5:
+          templateObject.loadStep5Prefs();
+          templateObject.loadEmployees();
+          break;
+        case 6:
+          templateObject.loadAccountTypes();
+          templateObject.loadAccountList();
+          templateObject.loadAllTaxCodes();
+          break;
+        case 7:
+          templateObject.loadDefaultCustomer();
+          break;
+        case 8:
+          templateObject.loadSuppliers();
+          break;
+        case 9:
+          templateObject.loadInventory();
+          break;
+        default:
+        // code block
+      }
+      setAlreadyLoaded(stepId, true);
+      //LoadingOverlay.hide();
     }
-    //LoadingOverlay.hide();
   };
 
   templateObject.lazyLoader(currentStep);
