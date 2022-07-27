@@ -5024,16 +5024,26 @@ Template.employeescard.events({
                 }),
             })
         // );
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(openingSettings),
-            });
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(openingSettings),
+        });
+        console.log("balance", ApiResponse);
+        console.log("templateObject", templateObject);
 
-
-            if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-            }    
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            $('#obEarningsRate').val('');
+            // let getLines1=await templateObject.saveEarningLocalDB();
+            // let getLines=await templateObject.getPayEarningLines();
+            // console.log("getLines", getLines);
+            // console.log("getLines1", getLines1);
+            $('#addEarningsLineModal2').modal('hide');
+            $('.fullScreenSpin').css('display', 'none');
+        }else{
+            $('.fullScreenSpin').css('display', 'none');
+        }     
 
         return false
 
@@ -5065,22 +5075,44 @@ Template.employeescard.events({
         let DeductionType = $('#obDeductionType').val();
         const openingBalances = [];
 
-        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        if( Array.isArray( checkOpeningBalances ) ){
-            openingBalances = checkOpeningBalances
-        }
+        const employeePayrolApis = new EmployeePayrollApi();
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
+        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        // if( Array.isArray( checkOpeningBalances ) ){
+        //     openingBalances = checkOpeningBalances
+        // }
 
-        openingBalances.push(
-            new OpeningBalance({
+        // openingBalances.push(
+            let openingSettings = new OpeningBalance({
                 type: "TOpeningBalances",
                 fields: new OpeningBalanceFields({
                     EmployeeID: employeeID,
-                    Type: 'DeductionLine',
+                    AType: 'DeductionLine',
                     Amount: 0,
-                    BalanceField: DeductionType,
+                    Balance: DeductionType,
                 }),
             })
-        );
+        // );
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(openingSettings),
+        });
+        console.log("deduction", ApiResponse);
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            $('#obDeductionType').val('');
+            $('#addDeductionLineModal2').modal('hide');
+            $('.fullScreenSpin').css('display', 'none');
+        }else{
+            $('.fullScreenSpin').css('display', 'none');
+        }    
+
+        return false;
 
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obDeductionType').val('');
@@ -5111,23 +5143,45 @@ Template.employeescard.events({
         let ContributionType = $('#obContributionType').val();
         const openingBalances = [];
 
-        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        if( Array.isArray( checkOpeningBalances ) ){
-            openingBalances = checkOpeningBalances
-        }
+        const employeePayrolApis = new EmployeePayrollApi();
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
+        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        // if( Array.isArray( checkOpeningBalances ) ){
+        //     openingBalances = checkOpeningBalances
+        // }
 
-        openingBalances.push(
-            new OpeningBalance({
+        // openingBalances.push(
+            let openingSettings = new OpeningBalance({
                 type: "TOpeningBalances",
                 fields: new OpeningBalanceFields({
                     EmployeeID: employeeID,
-                    Type: 'SuperannuationLine',
+                    AType: 'SuperannuationLine',
                     Amount: 0,
                     ContributionType: ContributionType,
-                    BalanceField: SuperannuationFund,
+                    Balance: SuperannuationFund,
                 }),
             })
-        );
+        // );
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(openingSettings),
+        });
+        console.log("superannuation", ApiResponse);
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            $('#obSuperannuationFund').val('');
+            $('#obContributionType').val('');
+            $('#addSuperannuationLineModal2').modal('hide');
+            $('.fullScreenSpin').css('display', 'none');
+        }else{
+            $('.fullScreenSpin').css('display', 'none');
+        } 
+
+        return false;
 
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obSuperannuationFund').val('');
@@ -5158,23 +5212,43 @@ Template.employeescard.events({
         let Reimbursement = $('#obReimbursementType').val();
         const openingBalances = [];
 
-        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        if( Array.isArray( checkOpeningBalances ) ){
-            openingBalances = checkOpeningBalances
-        }
+        const employeePayrolApis = new EmployeePayrollApi();
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
+        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        // if( Array.isArray( checkOpeningBalances ) ){
+        //     openingBalances = checkOpeningBalances
+        // }
 
-        openingBalances.push(
-            new OpeningBalance({
+        // openingBalances.push(
+            let openingSettings = new OpeningBalance({
                 type: "TOpeningBalances",
                 fields: new OpeningBalanceFields({
                     EmployeeID: employeeID,
-                    Type: 'ReimbursementLine',
+                    AType: 'ReimbursementLine',
                     Amount: 0,
-                    BalanceField: Reimbursement,
+                    Balance: Reimbursement,
                 }),
             })
-        );
+        // );
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(openingSettings),
+        });
+        console.log("ReimbursementLine", ApiResponse);
 
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            $('#obReimbursementType').val('');
+            $('#addReimbursementLineModal2').modal('hide');
+            $('.fullScreenSpin').css('display', 'none');
+        }else{
+            $('.fullScreenSpin').css('display', 'none');
+        } 
+
+        return false;
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obReimbursementType').val('');
         $('#addReimbursementLineModal2').modal('hide');
