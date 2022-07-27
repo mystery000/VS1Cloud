@@ -2120,15 +2120,7 @@ export class SideBarService extends BaseService {
           let fields = v.fields;
           let lines = fields.Lines;
           if (lines !== null) {
-            if (typeof lines === 'object') {
-              lines = [
-                {
-                  ...{Id: lines.fields.ID},
-                  ...lines.fields
-                }
-              ];
-            }
-            else {
+            if (Array.isArray(lines)) {     // if lines is array
               lines = lines.map((line) => {
                 let f = line.fields;
                 return {
@@ -2136,6 +2128,14 @@ export class SideBarService extends BaseService {
                   ...f,
                 }
               })
+            }
+            else if (typeof lines === 'object') {     // else if it is object
+              lines = [
+                {
+                  ...{Id: lines.fields.ID},
+                  ...lines.fields
+                }
+              ];
             }
           }
           return {
