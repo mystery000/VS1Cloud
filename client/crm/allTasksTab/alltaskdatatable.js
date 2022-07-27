@@ -191,7 +191,7 @@ Template.alltaskdatatable.onRendered(function () {
         ],
         action: function () {
           $("#tblSubtaskDatatable").DataTable().ajax.reload();
-        }, 
+        },
       });
 
     } catch (error) {
@@ -833,7 +833,12 @@ Template.alltaskdatatable.onRendered(function () {
   };
 
   templateObject.getAllTaskList = function () {
-    crmService.getAllTaskList().then(function (data) {
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    var url = FlowRouter.current().path;
+    url = new URL(window.location.href);
+    employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
+
+    crmService.getAllTaskList(employeeID).then(function (data) {
       if (data.tprojecttasks && data.tprojecttasks.length > 0) {
         let today = moment().format("YYYY-MM-DD");
         let all_records = data.tprojecttasks;
@@ -1156,7 +1161,12 @@ Template.alltaskdatatable.onRendered(function () {
   };
 
   templateObject.getAllLabels = function () {
-    crmService.getAllLabels().then(function (data) {
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    var url = FlowRouter.current().path;
+    url = new URL(window.location.href);
+    employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
+
+    crmService.getAllLabels(employeeID).then(function (data) {
       if (
         data.tprojecttask_tasklabel &&
         data.tprojecttask_tasklabel.length > 0
@@ -1339,39 +1349,34 @@ Template.alltaskdatatable.onRendered(function () {
           let tprojectlist = data.tprojectlist;
           let all_projects = data.tprojectlist;
 
-          tprojectlist = tprojectlist.filter(
-            (proj) => proj.fields.Active == true && proj.fields.ID != 11
-          );
-          all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+          tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
+
+          let employeeID = Session.get("mySessionEmployeeLoggedID");
+          var url = FlowRouter.current().path;
+          url = new URL(window.location.href);
+          employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
+          all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredByID == employeeID);
           templateObject.all_projects.set(all_projects);
 
           let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
             style="margin-right: 8px;"></i>All Tasks</a>`;
           let ProjectName = "";
           tprojectlist.forEach((proj) => {
-            ProjectName =
-              proj.fields.ProjectName.length > 26
-                ? proj.fields.ProjectName.substring(0, 26) + "..."
-                : proj.fields.ProjectName;
+            ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
             add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
           });
           $("#goProjectWrapper").html(add_projectlist);
           $(".goProjectWrapper").html(add_projectlist);
 
-          let active_projects = all_projects.filter(
-            (project) => project.fields.Active == true
-          );
-          let deleted_projects = all_projects.filter(
-            (project) => project.fields.Active == false
-          );
-          let favorite_projects = active_projects.filter(
-            (project) => project.fields.AddToFavourite == true
-          );
+          let active_projects = all_projects.filter((project) => project.fields.Active == true);
+          let deleted_projects = all_projects.filter((project) => project.fields.Active == false);
+          let favorite_projects = active_projects.filter((project) => project.fields.AddToFavourite == true);
 
           templateObject.active_projects.set(active_projects);
           templateObject.deleted_projects.set(deleted_projects);
           templateObject.favorite_projects.set(favorite_projects);
 
+          console.log(employeeID, active_projects.length)
           $(".crm_project_count").html(active_projects.length);
 
           setTimeout(() => {
@@ -1388,43 +1393,39 @@ Template.alltaskdatatable.onRendered(function () {
   };
 
   templateObject.getTProjectList = function () {
-    crmService.getTProjectList().then(function (data) {
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    var url = FlowRouter.current().path;
+    url = new URL(window.location.href);
+    employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
+
+    crmService.getTProjectList(employeeID).then(function (data) {
       if (data.tprojectlist && data.tprojectlist.length > 0) {
         let tprojectlist = data.tprojectlist;
         let all_projects = data.tprojectlist;
 
-        tprojectlist = tprojectlist.filter(
-          (proj) => proj.fields.Active == true && proj.fields.ID != 11
-        );
-        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+        tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
+        all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredByID == employeeID);
         templateObject.all_projects.set(all_projects);
 
         let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
           style="margin-right: 8px;"></i>All Tasks</a>`;
         let ProjectName = "";
         tprojectlist.forEach((proj) => {
-          ProjectName =
-            proj.fields.ProjectName.length > 26
-              ? proj.fields.ProjectName.substring(0, 26) + "..."
-              : proj.fields.ProjectName;
+          ProjectName = proj.fields.ProjectName.length > 26 ? proj.fields.ProjectName.substring(0, 26) + "..." : proj.fields.ProjectName;
           add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
         });
         $("#goProjectWrapper").html(add_projectlist);
         $(".goProjectWrapper").html(add_projectlist);
 
-        let active_projects = all_projects.filter(
-          (project) => project.fields.Active == true
-        );
-        let deleted_projects = all_projects.filter(
-          (project) => project.fields.Active == false
-        );
-        let favorite_projects = active_projects.filter(
-          (project) => project.fields.AddToFavourite == true
-        );
+        let active_projects = all_projects.filter((project) => project.fields.Active == true);
+        let deleted_projects = all_projects.filter((project) => project.fields.Active == false);
+        let favorite_projects = active_projects.filter((project) => project.fields.AddToFavourite == true);
 
         templateObject.active_projects.set(active_projects);
         templateObject.deleted_projects.set(deleted_projects);
         templateObject.favorite_projects.set(favorite_projects);
+
+        console.log(employeeID, active_projects.length)
 
         $(".crm_project_count").html(active_projects.length);
 
@@ -1624,7 +1625,7 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 1,
-          className: "colPriority openEditTaskModal",
+          className: "colPriority openEditTaskModal hiddenColumn",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[8]);
           },
@@ -1632,7 +1633,7 @@ Template.alltaskdatatable.onRendered(function () {
         },
         {
           targets: 2,
-          className: "colDate openEditTaskModal",
+          className: "colTaskDate openEditTaskModal hiddenColumn",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[8]);
           },
@@ -1647,21 +1648,21 @@ Template.alltaskdatatable.onRendered(function () {
         },
         {
           targets: 4,
-          className: "colTaskDesc openEditTaskModal",
+          className: "colProjectTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[8]);
           },
         },
         {
           targets: 5,
-          className: "colTaskLabels openEditTaskModal",
+          className: "colProjectTaskLabels openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[8]);
           },
         },
         {
           targets: 6,
-          className: "colTaskProjects openEditTaskModal",
+          className: "colTaskProjects openEditTaskModal hiddenColumn",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[8]);
           },
@@ -1729,7 +1730,7 @@ Template.alltaskdatatable.onRendered(function () {
       info: true,
       responsive: true,
       order: [
-        [2, "desc"],
+        [3, "desc"],
       ],
       action: function () {
         $("#tblProjectTasks").DataTable().ajax.reload();
@@ -1889,6 +1890,8 @@ Template.alltaskdatatable.events({
         $(".fullScreenSpin").css("display", "none");
         if (data.fields.ID == id) {
           let selected_record = data.fields;
+          let employeeID = Session.get("mySessionEmployeeLoggedID");
+          let employeeName = Session.get("mySessionEmployee");
           // handle complete process via api
           var objDetails = {
             type: "Tprojecttasks",
@@ -1900,6 +1903,8 @@ Template.alltaskdatatable.events({
               ProjectID: projectID,
               // TaskLabel: selected_record.TaskLabel,
               Completed: false,
+              EnteredByID: parseInt(employeeID),
+              EnteredBy: employeeName,
             },
           };
 
@@ -2063,6 +2068,9 @@ Template.alltaskdatatable.events({
       selected_lbls.push($(this).attr("name"));
     });
 
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    let employeeName = Session.get("mySessionEmployee");
+
     // tempcode
     // subtask api is not completed
     // label api is not completed
@@ -2081,6 +2089,8 @@ Template.alltaskdatatable.events({
                 ProjectID: projectID,
                 due_date: due_date,
                 priority: priority,
+                EnteredByID: parseInt(employeeID),
+                EnteredBy: employeeName,
               },
             }
           ]
@@ -2096,6 +2106,8 @@ Template.alltaskdatatable.events({
           ProjectID: projectID,
           due_date: due_date,
           priority: priority,
+          EnteredByID: parseInt(employeeID),
+          EnteredBy: employeeName,
         },
       };
     }
@@ -2553,7 +2565,9 @@ Template.alltaskdatatable.events({
     templateObject.project_id.set(projectid);
 
     $(".fullScreenSpin").css("display", "inline-block");
-    crmService.getTProjectList().then(function (data) {
+
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    crmService.getTProjectList(employeeID).then(function (data) {
       if (data.tprojectlist && data.tprojectlist.length > 0) {
         let all_projects = data.tprojectlist;
         all_projects = all_projects.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
@@ -2883,6 +2897,7 @@ Template.alltaskdatatable.events({
           return;
         }
       }).catch(function (err) {
+        console.log(err)
         $(".fullScreenSpin").css("display", "none");
         swal(err, "", "error");
         return;
@@ -2994,13 +3009,17 @@ Template.alltaskdatatable.events({
       swal("Please put the Label Name", "", "warning");
       return;
     }
+    let employeeID = parseInt(Session.get("mySessionEmployeeLoggedID"));
+    let employeeName = Session.get("mySessionEmployee");
 
     var objDetails = {
       type: "Tprojecttask_TaskLabel",
       fields: {
         TaskLabelName: labelName,
         // TaskID: 1, // tempcode. it should be removed after api is updated
-        Color: labelColor
+        Color: labelColor,
+        EnteredByID: employeeID,
+        EnteredBy: employeeName,
       },
     };
 
