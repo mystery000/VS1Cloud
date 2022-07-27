@@ -19,9 +19,12 @@ Template.crmoverviewcards.onRendered(function () {
         let today = moment().format("YYYY-MM-DD");
         let all_records = data.tprojecttasks;
 
-        var url = FlowRouter.current().path;
-        url = new URL(window.location.href);
-        let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+        var url = new URL(window.location.href);
+        var new_url = new URL(window.location.href);
+        let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
+        if (url.includes("/employeescard")) {
+          employeeID = $('#edtCustomerCompany').val() ? $('#edtCustomerCompany').val() : '';
+        }
 
         if (employeeID) {
           all_records = all_records.filter((item) => item.fields.Completed == false && item.fields.EnteredBy == employeeID);
@@ -40,15 +43,19 @@ Template.crmoverviewcards.onRendered(function () {
         $(".fullScreenSpin").css("display", "none");
       }
     }).catch(function (err) {
+      console.log(err);
       templateObject.getAllTaskList();
     });
   };
 
   templateObject.getAllTaskList = function () {
 
-    var url = FlowRouter.current().path;
-    url = new URL(window.location.href);
-    let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+    var url = new URL(window.location.href);
+    var new_url = new URL(window.location.href);
+    let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
+    if (url.includes("/employeescard")) {
+      employeeID = $('#edtCustomerCompany').val() ? $('#edtCustomerCompany').val() : '';
+    }
 
     crmService.getAllTaskList(employeeID).then(function (data) {
       if (data.tprojecttasks && data.tprojecttasks.length > 0) {
@@ -71,6 +78,7 @@ Template.crmoverviewcards.onRendered(function () {
       }
       $(".fullScreenSpin").css("display", "none");
     }).catch(function (err) {
+      console.log(err);
       $(".fullScreenSpin").css("display", "none");
     });
   };
@@ -89,9 +97,12 @@ Template.crmoverviewcards.onRendered(function () {
         if (data.tprojectlist && data.tprojectlist.length > 0) {
           let all_projects = data.tprojectlist;
 
-          var url = FlowRouter.current().path;
-          url = new URL(window.location.href);
-          let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+          var url = new URL(window.location.href);
+          var new_url = new URL(window.location.href);
+          let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
+          if (url.includes("/employeescard")) {
+            employeeID = $('#edtCustomerCompany').val() ? $('#edtCustomerCompany').val() : '';
+          }
 
           if (employeeID) {
             all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.EnteredBy == employeeID);
@@ -106,14 +117,18 @@ Template.crmoverviewcards.onRendered(function () {
         }
       }
     }).catch(function (err) {
+      console.log(err);
       templateObject.getTProjectList();
     });
   };
 
   templateObject.getTProjectList = function () {
-    var url = FlowRouter.current().path;
-    url = new URL(window.location.href);
-    let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+    var url = new URL(window.location.href);
+    var new_url = new URL(window.location.href);
+    let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
+    if (url.includes("/employeescard")) {
+      employeeID = $('#edtCustomerCompany').val() ? $('#edtCustomerCompany').val() : '';
+    }
 
     crmService.getTProjectList(employeeID).then(function (data) {
       if (data.tprojectlist && data.tprojectlist.length > 0) {
@@ -127,7 +142,9 @@ Template.crmoverviewcards.onRendered(function () {
         $(".crm_project_count").html(0);
       }
       addVS1Data("TCRMProjectList", JSON.stringify(data));
-    }).catch(function (err) { });
+    }).catch(function (err) {
+      console.log(err);
+    });
   };
 
   templateObject.getInitTProjectList();
@@ -138,7 +155,7 @@ Template.crmoverviewcards.events({
 
   "click .menu_all_task": function (e) {
     var url = FlowRouter.current().path;
-    var new_url = new URL(window.location.href); 
+    var new_url = new URL(window.location.href);
 
     if (url.includes("/employeescard")) {
       let employeeID = $('#edtCustomerCompany').val() ? $('#edtCustomerCompany').val() : '';
