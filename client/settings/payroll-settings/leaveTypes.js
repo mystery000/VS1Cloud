@@ -89,7 +89,8 @@ Template.leaveTypeSettings.onRendered(function() {
         try {
             let data = {};
             let splashArrayLeaveList = new Array();
-            let dataObject = await getVS1Data('TPaidLeave')  
+            let dataObject = await getVS1Data('TPaidLeave');
+            console.log("obj", dataObject); 
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
             }else{

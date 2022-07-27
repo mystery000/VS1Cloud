@@ -3436,6 +3436,31 @@ Template.employeescard.onRendered(function () {
 
     templateObject.getPayReiumbursementLines();
 
+    templateObject.saveOpeningBalanceLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );
+
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.topeningbalances.length ){
+                await addVS1Data('TOpeningBalances', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            console.log("employeePayrolEndpointJsonResponse",employeePayrolEndpointJsonResponse);
+
+            return employeePayrolEndpointJsonResponse
+        }
+        return '';
+    };
+
     templateObject.saveAssignLeaveType = async () => {
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
@@ -3661,7 +3686,7 @@ Template.employeescard.onRendered(function () {
             openingBalanceLines = OpeningBalance.fromList(
                 checkOpeningBalances
             ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == type ) {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.KeyStringFieldName == type ) {
                     return item;
                 }
             });
@@ -3681,8 +3706,10 @@ Template.employeescard.onRendered(function () {
                 }
             });
             templateObject.openingBalanceInfo.set(openingBalances);
+            console.log("BalanceList", openingBalances);
         }
     };
+
     templateObject.getOpeningBalances();
 
     templateObject.getEmployeePaySettings = async () => {
@@ -5221,16 +5248,11 @@ Template.employeescard.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(openingSettings),
         });
-        console.log("balance", ApiResponse);
-        console.log("templateObject", templateObject);
-
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#obEarningsRate').val('');
-            // let getLines1=await templateObject.saveEarningLocalDB();
-            // let getLines=await templateObject.getPayEarningLines();
-            // console.log("getLines", getLines);
-            // console.log("getLines1", getLines1);
+            let getLines1=await templateObject.saveOpeningBalanceLocalDB();
+            let getLines=await templateObject.getOpeningBalances();
             $('#addEarningsLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
         }else{
@@ -5284,6 +5306,7 @@ Template.employeescard.events({
                     AType: 'DeductionLine',
                     Amount: 0,
                     Balance: DeductionType,
+                    KeyStringFieldName: 'DeductionLine',
                 }),
             })
         // );
@@ -5293,8 +5316,6 @@ Template.employeescard.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(openingSettings),
         });
-        console.log("deduction", ApiResponse);
-
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#obDeductionType').val('');
@@ -5353,6 +5374,8 @@ Template.employeescard.events({
                     Amount: 0,
                     ContributionType: ContributionType,
                     Balance: SuperannuationFund,
+                    KeyStringFieldName: 'SuperannuationLine',
+
                 }),
             })
         // );
@@ -5361,8 +5384,6 @@ Template.employeescard.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(openingSettings),
         });
-        console.log("superannuation", ApiResponse);
-
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#obSuperannuationFund').val('');
@@ -5429,8 +5450,6 @@ Template.employeescard.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(openingSettings),
         });
-        console.log("ReimbursementLine", ApiResponse);
-
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#obReimbursementType').val('');
