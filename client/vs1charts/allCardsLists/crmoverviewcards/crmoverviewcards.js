@@ -19,7 +19,7 @@ Template.crmoverviewcards.onRendered(function () {
         let today = moment().format("YYYY-MM-DD");
         let all_records = data.tprojecttasks;
 
-        var url = new URL(window.location.href);
+        var url = FlowRouter.current().path;
         var new_url = new URL(window.location.href);
         let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
         if (url.includes("/employeescard")) {
@@ -50,7 +50,7 @@ Template.crmoverviewcards.onRendered(function () {
 
   templateObject.getAllTaskList = function () {
 
-    var url = new URL(window.location.href);
+    var url = FlowRouter.current().path;
     var new_url = new URL(window.location.href);
     let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
     if (url.includes("/employeescard")) {
@@ -97,7 +97,7 @@ Template.crmoverviewcards.onRendered(function () {
         if (data.tprojectlist && data.tprojectlist.length > 0) {
           let all_projects = data.tprojectlist;
 
-          var url = new URL(window.location.href);
+          var url = FlowRouter.current().path;
           var new_url = new URL(window.location.href);
           let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
           if (url.includes("/employeescard")) {
@@ -123,7 +123,7 @@ Template.crmoverviewcards.onRendered(function () {
   };
 
   templateObject.getTProjectList = function () {
-    var url = new URL(window.location.href);
+    var url = FlowRouter.current().path;
     var new_url = new URL(window.location.href);
     let employeeID = new_url.searchParams.get("id") ? new_url.searchParams.get("id") : '';
     if (url.includes("/employeescard")) {
