@@ -21,6 +21,10 @@ function generate() {
   return id;
 }
 
+function MakeNegative() {
+
+};
+
 Template.addAccountModal.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.accountList = new ReactiveVar([]);
