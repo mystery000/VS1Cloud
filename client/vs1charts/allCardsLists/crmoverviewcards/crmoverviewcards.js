@@ -36,7 +36,7 @@ Template.crmoverviewcards.onRendered(function () {
         let upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
         // let overdue_records = all_records.filter((item) => !item.fields.due_date || item.fields.due_date.substring(0, 10) < today);
 
-        $(".").text(all_records.length);
+        $(".crm_all_count").text(all_records.length);
         $(".crm_today_count").text(today_records.length);
         $(".crm_upcoming_count").text(upcoming_records.length);
 
