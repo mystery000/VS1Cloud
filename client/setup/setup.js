@@ -1500,9 +1500,7 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      if (refresh == true) {
-        $("#employeeListTable").DataTable().destroy();
-      }
+      if (refresh == true) $("#termsList").DataTable().destroy();
 
       setTimeout(function () {
         $("#termsList")
@@ -4110,11 +4108,10 @@ Template.setup.onRendered(function () {
   // templateObject.loadInventory();
   //   $("#displayname").val("hello test");
 
-
   /**
    * This function will lazy load the setup, in order to avoid any loading issues
-   * @param {number} stepId 
-   * @returns 
+   * @param {number} stepId
+   * @returns
    */
   templateObject.lazyLoader = (stepId = 1) => {
     console.log("Smart loading step", stepId);
@@ -4148,13 +4145,13 @@ Template.setup.onRendered(function () {
         templateObject.loadAllTaxCodes();
         break;
       case 7:
-        templateObject.loadDefaultCustomer();
+        templateObject.loadDefaultCustomer(true);
         break;
       case 8:
-        templateObject.loadSuppliers();
+        templateObject.loadSuppliers(true);
         break;
       case 9:
-        templateObject.loadInventory();
+        templateObject.loadInventory(true);
         break;
       default:
       // code block
