@@ -1,11 +1,11 @@
 import { BaseService } from "../js/base-service.js";
 export class CRMService extends BaseService {
-  getAllTaskList(project_id = 11) {
+  getAllTaskList(EnteredByID = 0) {
     let options = {
       // orderby: '"ToDoByDate asc"',
       ListType: "Detail",
       // select: "[Active]=true and [Completed]=false and [ProjectID]=0"
-      select: "[Active]=true",
+      select: "[Active]=true and [EnteredByID]=" + EnteredByID
     };
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
@@ -26,10 +26,10 @@ export class CRMService extends BaseService {
     return this.POST(this.ERPObjects.Tprojecttasks, data);
   }
 
-  getTProjectList() {
+  getTProjectList(EnteredByID = 0) {
     let options = {
       ListType: "Detail",
-      // select: "[Active]=true"
+      select: "[Active]=true and [EnteredByID]=" + EnteredByID
     };
     return this.getList(this.ERPObjects.Tprojectlist, options);
   }
@@ -50,10 +50,10 @@ export class CRMService extends BaseService {
     return this.POST(this.ERPObjects.Tprojectlist, data);
   }
 
-  getAllLabels() {
+  getAllLabels(EnteredByID = 0) {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true",
+      select: "[Active]=true and [EnteredByID]=" + EnteredByID
     };
     return this.getList(this.ERPObjects.Tprojecttask_TaskLabel, options);
   }

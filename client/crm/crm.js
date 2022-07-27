@@ -256,11 +256,13 @@ Template.crmoverview.events({
 
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    crmService.getAllTaskList().then(function (data) {
+    let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+
+    crmService.getAllTaskList(employeeID).then(function (data) {
       addVS1Data("TCRMTaskList", JSON.stringify(data));
-      crmService.getTProjectList().then(function (data) {
+      crmService.getTProjectList(employeeID).then(function (data) {
         addVS1Data("TCRMProjectList", JSON.stringify(data));
-        crmService.getAllLabels().then(function (data) {
+        crmService.getAllLabels(employeeID).then(function (data) {
           addVS1Data("TCRMLabelList", JSON.stringify(data));
           Meteor._reload.reload();
         }).catch(function (err) {
