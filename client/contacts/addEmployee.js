@@ -141,73 +141,73 @@ Template.employeescard.onRendered(function () {
     let totAmount = 0;
     let totAmountOverDue = 0;
 
-    setTimeout(function() {
-        $('#tblLeaveRequests').DataTable({
-            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [{
-                extend: 'excelHtml5',
-                text: '',
-                download: 'open',
-                className: "btntabletocsv hiddenColumn",
-                filename: "taxratelist_" + moment().format(),
-                orientation: 'portrait',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }, {
-                extend: 'print',
-                download: 'open',
-                className: "btntabletopdf hiddenColumn",
-                text: '',
-                title: 'Tax Rate List',
-                filename: "taxratelist_" + moment().format(),
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }],
-            select: true,
-            destroy: true,
-            colReorder: {
-                fixedColumnsRight: 1
-            },
-            lengthMenu: [
-                [25, -1],
-                [25, "All"]
-            ],
-            // bStateSave: true,
-            // rowId: 0,
-            paging: true,
-            info: true,
-            responsive: true,
-            "order": [
-                [0, "asc"]
-            ],
-            action: function() {
-                $('#tblLeaveRequests').DataTable().ajax.reload();
-            },
-            "fnDrawCallback": function(oSettings) {
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-            },
+    // setTimeout(function() {
+    //     $('#tblLeaveRequests').DataTable({
+    //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //         buttons: [{
+    //             extend: 'excelHtml5',
+    //             text: '',
+    //             download: 'open',
+    //             className: "btntabletocsv hiddenColumn",
+    //             filename: "taxratelist_" + moment().format(),
+    //             orientation: 'portrait',
+    //             exportOptions: {
+    //                 columns: ':visible'
+    //             }
+    //         }, {
+    //             extend: 'print',
+    //             download: 'open',
+    //             className: "btntabletopdf hiddenColumn",
+    //             text: '',
+    //             title: 'Tax Rate List',
+    //             filename: "taxratelist_" + moment().format(),
+    //             exportOptions: {
+    //                 columns: ':visible'
+    //             }
+    //         }],
+    //         select: true,
+    //         destroy: true,
+    //         colReorder: {
+    //             fixedColumnsRight: 1
+    //         },
+    //         lengthMenu: [
+    //             [25, -1],
+    //             [25, "All"]
+    //         ],
+    //         // bStateSave: true,
+    //         // rowId: 0,
+    //         paging: true,
+    //         info: true,
+    //         responsive: true,
+    //         "order": [
+    //             [0, "asc"]
+    //         ],
+    //         action: function() {
+    //             $('#tblLeaveRequests').DataTable().ajax.reload();
+    //         },
+    //         "fnDrawCallback": function(oSettings) {
+    //             setTimeout(function() {
+    //                 MakeNegative();
+    //             }, 100);
+    //         },
 
-        }).on('page', function() {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-            let draftRecord = templateObject.datatablerecords.get();
-            templateObject.datatablerecords.set(draftRecord);
-        }).on('column-reorder', function() {
+    //     }).on('page', function() {
+    //         setTimeout(function() {
+    //             MakeNegative();
+    //         }, 100);
+    //         let draftRecord = templateObject.datatablerecords.get();
+    //         templateObject.datatablerecords.set(draftRecord);
+    //     }).on('column-reorder', function() {
 
-        }).on('length.dt', function(e, settings, len) {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        });
+    //     }).on('length.dt', function(e, settings, len) {
+    //         setTimeout(function() {
+    //             MakeNegative();
+    //         }, 100);
+    //     });
 
-        // $('#currencyLists').DataTable().column( 0 ).visible( true );
-        $('.fullScreenSpin').css('display', 'none');
-    }, 100);
+    //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
+    //     $('.fullScreenSpin').css('display', 'none');
+    // }, 100);
 
     // setTimeout(function() {
     //     $('#tblPayslipHistory').DataTable({
@@ -2806,21 +2806,216 @@ Template.employeescard.onRendered(function () {
         }, 1000);
     }
 
-    templateObject.getLeaveRequests = async () => {
-        let TLeaveRequests = await getVS1Data('TLeaveRequest');
-        console.log("TLeave", TLeaveRequests);
-        if( TLeaveRequests.length ){
-            let TLeaveRequestsData = JSON.parse(TLeaveRequests[0].data);
-            let useData = LeaveRequest.fromList(
-                TLeaveRequestsData.tleaverequest
-            ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                    return item;
-                }
-            });
-            templateObject.leaveRequestInfos.set(useData);
-        }
+    templateObject.saveLeaveRequestLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayNotes
+        );
 
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );
+
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tpaynotes.length ){
+                await addVS1Data('TPayNotes', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }
+        return '';
+    };
+
+    templateObject.saveLeaveRequestLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TLeavRequest
+        );
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );
+
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tleavrequest.length ){
+                await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }
+        return '';
+    };
+    
+    templateObject.getLeaveRequests = async () => {
+        let data = []
+        let dataObject = await getVS1Data('TLeavRequest')
+        if ( dataObject.length == 0) {
+            data = await templateObject.saveLeaveRequestLocalDB();
+        }else{
+            data = JSON.parse(dataObject[0].data);
+        }
+        let useData = LeaveRequest.fromList(
+            data.tleavrequest
+        ).filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                return item;
+            }
+        });
+
+        let splashArrayList = [];
+        for (let i = 0; i < useData.length; i++) {
+            let dataListAllowance = [
+                useData[i].fields.ID || '',
+                useData[i].fields.Description || '',
+                useData[i].fields.PayPeriod || '',
+                useData[i].fields.LeaveMethod || '',
+                useData[i].fields.Status || '',
+            ];
+            splashArrayList.push(dataListAllowance);
+        }
+        
+        setTimeout(function () {
+            $('#tblLeaveRequests').DataTable({
+                data: splashArrayList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+
+                    {
+                        className: "colLRID hiddenColumn",
+                        "targets": [0]
+                    },
+                    {
+                        className: "colLRDescription",
+                        "targets": [1]
+                    },
+                    {
+                        className: "colLRLeavePeriod",
+                        "targets": [2]
+                    },
+                    {
+                        className: "colLRLeaveType",
+                        "targets": [3]
+                    },
+                    {
+                        className: "colLRStatus",
+                        "targets": [4]
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[0, "asc"]],
+                action: function () {
+                    $('#tblLeaveRequests').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    // console.log('test')
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblLeaveRequests_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            var splashArrayList = new Array();
+                            let dataLenght = oSettings._iDisplayLength;
+                            let customerSearch = $('#tblLeaveRequests_filter input').val();
+
+                            sideBarService.getLeaveRequestList(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (useData) {
+                                for (let i = 0; i < useData.length; i++) {
+                                    let dataListAllowance = [
+                                        useData[i].fields.ID || '',
+                                        useData[i].fields.Description || '',
+                                        useData[i].fields.PayPeriod || '',
+                                        useData[i].fields.LeaveMethod || '',
+                                        useData[i].fields.Status || '',
+                                    ];
+                                    splashArrayList.push(dataListAllowance);
+                                }
+
+                                let uniqueChars = [...new Set(splashArrayList)];
+                                var datatable = $('#tblLeaveRequests').DataTable();
+                                datatable.clear();
+                                datatable.rows.add(uniqueChars);
+                                datatable.draw(false);
+                                setTimeout(function () {
+                                    $("#tblLeaveRequests").dataTable().fnPageChange('last');
+                                }, 400);
+
+                                $('.fullScreenSpin').css('display', 'none');
+
+
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+
+                        });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnLeaveRequestBtn' data-dismiss='modal' data-toggle='modal' data-target='#newLeaveRequestModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaveRequests_filter");
+                    $("<button class='btn btn-primary btnRefreshLeaveRequest' type='button' id='btnRefreshLeaveRequest' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaveRequests_filter");
+                }
+
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+
+            }).on('column-reorder', function () {
+
+            }).on('length.dt', function (e, settings, len) {
+                //$('.fullScreenSpin').css('display', 'inline-block');
+                let dataLenght = settings._iDisplayLength;
+                splashArrayPayNotesList = [];
+                if (dataLenght == -1) {
+                $('.fullScreenSpin').css('display', 'none');
+
+                } else {
+                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        sideBarService.getLeaveRequestList(dataLenght, 0).then(function (dataNonBo) {
+
+                            addVS1Data('TLeavRequest', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                // templateObject.resetData(dataNonBo);
+                                $('.fullScreenSpin').css('display', 'none');
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    }
+                }
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+        }, 100);
     };
     templateObject.getLeaveRequests();
 
@@ -3276,26 +3471,24 @@ Template.employeescard.onRendered(function () {
         let splashArrayAssignLeaveList = [];
         if( data.tassignleavetype.length > 0 ){
             let useData = AssignLeaveType.fromList(
-                data.tassignteavetype
+                data.tassignleavetype
             ).filter((item) => {
                 if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
                     return item;
                 }
             });
             templateObject.assignLeaveTypeInfos.set(useData);
-
-
-            for (let i = 0; i < useData.tassignteavetype.length; i++) {
+            for (let i = 0; i < useData.length; i++) {
                 let dataListAllowance = [
-                    useData.tassignteavetype[i].fields.ID || '',
-                    useData.tassignteavetype[i].fields.LeaveType || '',
-                    useData.tassignteavetype[i].fields.LeaveCalcMethod || '',
-                    useData.tassignteavetype[i].fields.HoursAccruedAnnually || '',
-                    useData.tassignteavetype[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
-                    useData.tassignteavetype[i].fields.HoursFullTimeEmpFortnightlyPay || '',
-                    useData.tassignteavetype[i].fields.HoursLeave || '',
-                    useData.tassignteavetype[i].fields.OpeningBalance || '',
-                    useData.tassignteavetype[i].fields.OnTerminationUnusedBalance || '',
+                    useData[i].fields.ID || '',
+                    useData[i].fields.LeaveType || '',
+                    useData[i].fields.LeaveCalcMethod || '',
+                    useData[i].fields.HoursAccruedAnnually || '',
+                    useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
+                    useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
+                    useData[i].fields.HoursLeave || '',
+                    useData[i].fields.OpeningBalance || '',
+                    ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
                 ];
                 splashArrayAssignLeaveList.push(dataListAllowance);
             }
@@ -3379,15 +3572,15 @@ Template.employeescard.onRendered(function () {
 
                                 for (let i = 0; i < useData.length; i++) {
                                     let dataListAllowance = [
-                                        useData.tassignteavetype[i].fields.ID || '',
-                                        useData.tassignteavetype[i].fields.LeaveType || '',
-                                        useData.tassignteavetype[i].fields.LeaveCalcMethod || '',
-                                        useData.tassignteavetype[i].fields.HoursAccruedAnnually || '',
-                                        useData.tassignteavetype[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
-                                        useData.tassignteavetype[i].fields.HoursFullTimeEmpFortnightlyPay || '',
-                                        useData.tassignteavetype[i].fields.HoursLeave || '',
-                                        useData.tassignteavetype[i].fields.OpeningBalance || '',
-                                        useData.tassignteavetype[i].fields.OnTerminationUnusedBalance || '',
+                                        useData[i].fields.ID || '',
+                                        useData[i].fields.LeaveType || '',
+                                        useData[i].fields.LeaveCalcMethod || '',
+                                        useData[i].fields.HoursAccruedAnnually || '',
+                                        useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
+                                        useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
+                                        useData[i].fields.HoursLeave || '',
+                                        useData[i].fields.OpeningBalance || '',
+                                        ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
                                     ];
                                     splashArrayAssignLeaveList.push(dataListAllowance);
                                 }
@@ -3536,7 +3729,6 @@ Template.employeescard.onRendered(function () {
                     }
                     templateObject.employeePaySettings.set(objEmployeePaySettings);
                 }else{
-                    console.log('useData', useData)
                     employeePaySettings = useData[0]
                     objEmployeePaySettings = {
                         EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
@@ -5201,42 +5393,65 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-        let TypeofRequest = $('#edtLeaveTypeofRequest').val();
+        let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
+        let Leave = $('#edtLeaveTypeofRequest').val();
         let Description = $('#edtLeaveDescription').val();
         let StartDate = $('#edtLeaveStartDate').val();
         let EndDate = $('#edtLeaveEndDate').val();
         let PayPeriod = $('#edtLeavePayPeriod').val();
         let Hours = $('#edtLeaveHours').val();
+        let Status = $('#edtLeavePayStatus').val();
         const leaveRequests = [];
-        let TLeaveRequest = await getVS1Data('TLeaveRequest');
-        if( TLeaveRequest.length ){
-            let TLeaveRequestData = JSON.parse(TLeaveRequest[0].data);
-            leaveRequests = AssignLeaveType.fromList(
-                TLeaveRequestData.tleaverequest
-            );
-        }
-
-        leaveRequests.push(
-            new LeaveRequest({
-                type: "TLeaveRequest",
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TLeavRequest
+        );
+        // let TLeaveRequest = await getVS1Data('TLeaveRequest');
+        // if( TLeaveRequest.length ){
+        //     let TLeaveRequestData = JSON.parse(TLeaveRequest[0].data);
+        //     leaveRequests = AssignLeaveType.fromList(
+        //         TLeaveRequestData.tleaverequest
+        //     );
+        // }
+        let dbStartDate = moment(StartDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
+        let dbEndDate = moment(EndDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
+        // leaveRequests.push(
+            let leaveRequestSettings =  new LeaveRequest({
+                type: "TLeavRequest",
                 fields: new LeaveRequestFields({
-                    EmployeeID: employeeID,
-                    TypeofRequest: TypeofRequest,
+                    EmployeeID: parseInt( employeeID ),
+                    TypeofRequest: parseInt(TypeofRequest),
+                    LeaveMethod: Leave,
                     Description: Description,
-                    StartDate: StartDate,
-                    EndDate: EndDate,
+                    StartDate: dbStartDate,
+                    EndDate: dbEndDate,
                     PayPeriod: PayPeriod,
-                    Hours: Hours
+                    Hours: parseInt(Hours),
+                    Status: Status
                 }),
             })
-        );
-        let updatedLeaveRequest = {
-            tleaverequest: leaveRequests,
+        // );
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(leaveRequestSettings),
+        });
+
+        try {            
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                await templateObject.saveLeaveRequestLocalDB();
+                await templateObject.getLeaveRequests();
+                $('#newLeaveRequestModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+            }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
         }
-        await addVS1Data('TLeaveRequest', JSON.stringify(updatedLeaveRequest));
-        templateObject.getLeaveRequests();
-        $('#newLeaveRequestModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
     },
 
     // Save AssignLeaveType Popup
@@ -5254,10 +5469,10 @@ Template.employeescard.events({
 
         let LeaveType = $('#leaveTypeSelect').val();
         let LeaveCalcMethod = $('#leaveCalcMethodSelect').val();
-        let HoursLeave = '';
-        let HoursAccruedAnnuallyFullTimeEmp = '';
-        let HoursFullTimeEmpFortnightlyPay = '';
-        let HoursAccruedAnnually = '';
+        let HoursLeave = 0;
+        let HoursAccruedAnnuallyFullTimeEmp = 0;
+        let HoursFullTimeEmpFortnightlyPay = 0;
+        let HoursAccruedAnnually = 0;
         switch(LeaveCalcMethod){
             case 'Manually Recorded Rate':
                 HoursLeave = $('#hoursLeave').val();
@@ -5276,6 +5491,10 @@ Template.employeescard.events({
 
         let OpeningBalance = $('#openingBalance').val();
         let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
+        let OnTerminationBalance = 0;
+        if( OnTerminationUnusedBalance == "Paid Out" ){
+            OnTerminationBalance = 1;
+        }
         let EFTLeaveType = $("#eftLeaveType").is(':checked') ? true : false;
         let SuperannuationGuarantee = ( EFTLeaveType )? $("#superannuationGuarantee").is(':checked') ? true : false : false;
 
@@ -5293,14 +5512,14 @@ Template.employeescard.events({
                 type: "TAssignLeaveType",
                 fields: new AssignLeaveTypeFields({
                     LeaveType: LeaveType,
-                    EmployeeID: employeeID,
+                    EmployeeID: parseInt(employeeID),
                     LeaveCalcMethod: LeaveCalcMethod,
-                    HoursAccruedAnnually: HoursAccruedAnnually,
-                    HoursAccruedAnnuallyFullTimeEmp: HoursAccruedAnnuallyFullTimeEmp,
-                    HoursFullTimeEmpFortnightlyPay: HoursFullTimeEmpFortnightlyPay,
-                    HoursLeave: HoursLeave,
-                    OpeningBalance: OpeningBalance,
-                    OnTerminationUnusedBalance: OnTerminationUnusedBalance,
+                    HoursAccruedAnnually: parseInt(HoursAccruedAnnually),
+                    HoursAccruedAnnuallyFullTimeEmp: parseInt(HoursAccruedAnnuallyFullTimeEmp),
+                    HoursFullTimeEmpFortnightlyPay: parseInt(HoursFullTimeEmpFortnightlyPay),
+                    HoursLeave: parseInt(HoursLeave),
+                    OpeningBalance: parseInt(OpeningBalance),
+                    OnTerminationUnusedBalance: OnTerminationBalance,
                     EFTLeaveType: EFTLeaveType,
                     SuperannuationGuarantee: SuperannuationGuarantee,
                     Active: true
@@ -5318,8 +5537,8 @@ Template.employeescard.events({
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 // $('#deductionRateForm')[0].reset();
-                // await templateObject.saveAssignLeaveLocalDB();
-                // await templateObject.getAssignLeaveTypes();
+                await templateObject.saveAssignLeaveLocalDB();
+                await templateObject.getAssignLeaveTypes();
                 $('#assignLeaveTypeModal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
             }else{
@@ -6041,7 +6260,6 @@ Template.employeescard.events({
         if($('div#paytemplate').attr("class").indexOf("active") >= 0) activeTab = "paytemplate";
         if($('div#openingbalances').attr("class").indexOf("active") >= 0) activeTab = "openingbalances";
         if($('div#notes').attr("class").indexOf("active") >= 0) activeTab = "notes";
-        console.log('activeTab', activeTab)
         if(activeTab == "taxes") {
             $('.fullScreenSpin').css('display', 'inline-block');
             let currentId = FlowRouter.current().queryParams;
@@ -6223,7 +6441,6 @@ Template.employeescard.events({
     
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
-                    console.log('jsonResponse', jsonResponse)
                     employeePaySettings.fields.BankAccountName = bankAccountName;
                     employeePaySettings.fields.BankAccountBSB = bankAccountBSB;
                     employeePaySettings.fields.BankAccountNo = bankAccountNo;
@@ -7329,14 +7546,14 @@ Template.employeescard.events({
         let columData = $(event.target).val();
 
         $('#cloudEmpLogonName').val(columData);
-        $('#edtEmailAddress').val(columData);
+        // $('#edtEmailAddress').val(columData);
 
     },
     'keyup #edtEmailAddress': function (event) {
         let columData = $(event.target).val();
 
-        $('#cloudEmpLogonName').val(columData);
-        $('#cloudEmpEmailAddress').val(columData);
+        // $('#cloudEmpLogonName').val(columData);
+        // $('#cloudEmpEmailAddress').val(columData);
 
     },
     'blur #cloudEmpEmailAddress, blur #edtEmailAddress': function (event) {

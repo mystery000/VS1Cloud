@@ -7,7 +7,9 @@ export default class LeaveRequestFields {
         EndDate,
         PayPeriod,
         Hours,
-        Status
+        Status,
+        Leave,
+        LeaveMethod
     }){
         this.EmployeeID = EmployeeID;
         this.TypeofRequest = TypeofRequest;
@@ -17,6 +19,8 @@ export default class LeaveRequestFields {
         this.PayPeriod = PayPeriod;
         this.Hours = Hours;
         this.Status = Status;
+        this.Leave = Leave;
+        this.LeaveMethod = LeaveMethod;
     }
 }
   
