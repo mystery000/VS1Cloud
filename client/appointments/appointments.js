@@ -10190,7 +10190,7 @@ Template.appointments.events({
         }
 
     },
-    'submit #frmAppointment': function (event) {
+    'submit #frmAppointment': async function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
         event.preventDefault();
         /*
@@ -10372,6 +10372,62 @@ Template.appointments.events({
                     //   UserEmail: userEmail
                   }
               };
+
+
+              let customerDataName=$("#customer").val();
+              let customerEmail='';
+              let employeeID=Session.get('mySessionEmployeeLoggedID');
+                let employeeEmail='';
+                await getVS1Data('TCustomerVS1').then(function (dataObject) {
+                    let data = JSON.parse(dataObject[0].data);
+                    for (let i = 0; i < data.tcustomervs1.length; i++) {
+                        if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
+                            customerEmail += data.tcustomervs1[i].fields.Email;    
+                            break;
+                        }
+                    }
+                })
+                await getVS1Data('TEmployee').then(function (dataObject) {
+                    if(dataObject.length > 0){
+                        dataObject.filter(function(arr){
+                            let data=JSON.parse(arr.data)['temployee'];
+                            for(let i=0; i < data.length; i++){
+                                if(employeeID == data[i].fields.ID){
+                                    employeeEmail += data[i].fields.Email;    
+                                    break;
+                                }
+                            }
+                        });
+                    }
+                });
+                let subject="test";
+                let text="this is just a test";
+                let mailFromName = Session.get('vs1companyName');
+                let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+                let details={
+                    from: "" + mailFromName + " <" + mailFrom + ">",
+                    to: '',
+                    subject: subject,
+                    text: '',
+                    html: text,
+                };
+                console.log("details-original", details);
+
+                if($("#userEmail").is(":checked")){
+                    details.to=customerEmail;
+                    Meteor.call("sendEmail", details, function(error, result){
+                        console.log("error", error);
+                        console.log("result", result);
+                    })
+                }
+                if($("#customerEmail").is(":checked")){
+                    details.to=employeeEmail;
+                    Meteor.call("sendEmail", details, function(error, result){
+                        console.log("error", error);
+                        console.log("result", result);
+                    })
+                }
+        
 
               appointmentService.saveAppointment(objectData).then(function (data) {
                   let id = data.fields.ID;
