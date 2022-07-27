@@ -5,7 +5,8 @@ export default class OpeningBalanceFields {
         Amount,
         ContributionType,
         Balance,
-        KeyStringFieldName
+        KeyStringFieldName,
+        Active
     }){
         this.EmployeeID = EmployeeID;
         this.AType = AType;
@@ -13,6 +14,7 @@ export default class OpeningBalanceFields {
         this.ContributionType = ContributionType;
         this.Balance = Balance;
         this.KeyStringFieldName = KeyStringFieldName;
+        this.Active = Active;
     }
 }
   
