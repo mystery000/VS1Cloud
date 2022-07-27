@@ -153,7 +153,7 @@ Template.crmoverviewcards.events({
     url = new URL(window.location.href);
     employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
 
-    FlowRouter.go("/crmoverview?tabview=today?id=" + employeeID);
+    FlowRouter.go("/crmoverview?tabview=today&id=" + employeeID);
   },
 
   "click .menu_upcoming": function (e) {
@@ -162,7 +162,7 @@ Template.crmoverviewcards.events({
     url = new URL(window.location.href);
     employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
 
-    FlowRouter.go("/crmoverview?tabview=upcoming?id=" + employeeID);
+    FlowRouter.go("/crmoverview?tabview=upcoming&id=" + employeeID);
   },
 
   "click .menu_project": function (e) {
@@ -171,7 +171,7 @@ Template.crmoverviewcards.events({
     url = new URL(window.location.href);
     employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : employeeID;
 
-    FlowRouter.go("/crmoverview?tabview=projects?id=" + employeeID);
+    FlowRouter.go("/crmoverview?tabview=projects&id=" + employeeID);
   },
 
 });
