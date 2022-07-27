@@ -256,13 +256,13 @@ Template.crmoverview.events({
 
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+    // let employeeID = Session.get("mySessionEmployeeLoggedID"); 
 
-    crmService.getAllTaskList(employeeID).then(function (data) {
+    crmService.getAllTaskList().then(function (data) {
       addVS1Data("TCRMTaskList", JSON.stringify(data));
-      crmService.getTProjectList(employeeID).then(function (data) {
+      crmService.getTProjectList().then(function (data) {
         addVS1Data("TCRMProjectList", JSON.stringify(data));
-        crmService.getAllLabels(employeeID).then(function (data) {
+        crmService.getAllLabels().then(function (data) {
           addVS1Data("TCRMLabelList", JSON.stringify(data));
           Meteor._reload.reload();
         }).catch(function (err) {
@@ -630,6 +630,11 @@ Template.crmoverview.events({
     $('#crm_header_title').html('Labels');
   },
 
+  "click #sidenavcrm": function (e) {
+    console.log('sidenavcrm');
+    FlowRouter.go("/crmoverview");
+    Meteor._reload.reload();
+  }
 
 });
 
