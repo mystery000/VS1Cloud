@@ -15,5 +15,7 @@ Template.adp.onRendered(function () {
 });
 
 Template.adp.events({
-  
+  'click #openLink': function() {
+    window.open("https://in.adp.com");
+  },
 });
