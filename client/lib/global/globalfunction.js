@@ -465,6 +465,11 @@ batchUpdateCall = async function (url) {
           }, 10000);
         }
     }
+
+
+    sideBarService.getCurrentLoggedUser().then(function (data) {
+      addVS1Data('TAppUser', JSON.stringify(data));
+    });
 };
 
 getHour24 = function (timeString) {
@@ -527,7 +532,7 @@ tableResize = function() {
       resize: function (event, ui) {
           var sizerID = "." + $(event.target).attr("class").split(" ")[1];
           $(sizerID).width(ui.size.width);
-      }                        
+      }
     });
   }, 2000);
 };
