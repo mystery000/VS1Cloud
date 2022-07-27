@@ -26,7 +26,8 @@ export default class EmployeePayrollApi {
         TPayTemplateReiumbursementLine: "TPayTemplateReiumbursementLine",
         TAssignLeaveType: "TAssignLeaveType",
         TPaidLeave: "TPaidLeave",
-        TUnpaidLeave: "TUnpaidLeave"
+        TUnpaidLeave: "TUnpaidLeave",
+        TOpeningBalances: "TOpeningBalances"
     };
 
     this.collection = new ApiCollection([
@@ -109,7 +110,12 @@ export default class EmployeePayrollApi {
           name: this.collectionNames.TUnpaidLeave,
           url: ApiService.getBaseUrl({ endpoint: "TUnpaidLeave" }),
           headers: ApiService.getHeaders()
-        }),   
+        }), 
+        new ApiEndpoint({
+          name: this.collectionNames.TOpeningBalances,
+          url: ApiService.getBaseUrl({ endpoint: "TOpeningBalances" }),
+          headers: ApiService.getHeaders()
+        })
     ]);
   }
 }

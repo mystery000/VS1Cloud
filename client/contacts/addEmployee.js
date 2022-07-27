@@ -5002,22 +5002,40 @@ Template.employeescard.events({
         let EarningsRate = $('#obEarningsRate').val();
         const openingBalances = [];
 
-        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        if( Array.isArray( checkOpeningBalances ) ){
-            openingBalances = checkOpeningBalances
-        }
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
 
-        openingBalances.push(
-            new OpeningBalance({
+        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        // if( Array.isArray( checkOpeningBalances ) ){
+        //     openingBalances = checkOpeningBalances
+        // }
+
+        // openingBalances.push(
+            let openingSettings = new OpeningBalance({
                 type: "TOpeningBalances",
                 fields: new OpeningBalanceFields({
                     EmployeeID: employeeID,
-                    Type: 'EarningLine',
+                    AType: EarningsRate,
                     Amount: 0,
-                    BalanceField: EarningsRate,
+                    KeyStringFieldName: 'EarningLine',
                 }),
             })
-        );
+        // );
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(openingSettings),
+            });
+
+
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+            }    
+
+        return false
 
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obEarningsRate').val('');
@@ -6180,6 +6198,8 @@ Template.employeescard.events({
             let bankAccountName = $("#bankAccountName").val();
             let bankAccountBSB = $("#bankAccountBSB").val();
             let bankAccountNo = $("#bankAccountNo").val();
+            let EdtPayPeriod = $("#edtPayPeriod").val();
+            let FirstPayDate = $("#edtFirstPayDate").val();
 
             let employeeBankPaySettings = {
                 type: 'TEmployeepaysettings',
@@ -6188,7 +6208,9 @@ Template.employeescard.events({
                     BankAccountBSB: bankAccountBSB,
                     BankAccountName: bankAccountName,
                     BankAccountNo: bankAccountNo,
-                    Statement: bankAccountStatement
+                    Statement: bankAccountStatement,
+                    Payperiod: EdtPayPeriod,
+                    FirstPayDate: moment(FirstPayDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
                 }
             }
 
