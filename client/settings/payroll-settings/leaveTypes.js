@@ -90,9 +90,8 @@ Template.leaveTypeSettings.onRendered(function() {
             let data = {};
             let splashArrayLeaveList = new Array();
             let dataObject = await getVS1Data('TPaidLeave');
-            console.log("obj", dataObject); 
             if ( dataObject.length == 0) {
-                data = await templateObject.saveDataLocalDB();
+                data = await templateObject.saveDataLocalDB('Paid Leave');
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
@@ -109,7 +108,30 @@ Template.leaveTypeSettings.onRendered(function() {
                 ];
 
                 splashArrayLeaveList.push(dataListAllowance);
-             }
+            }
+
+            let unPaidData = []
+            let dataUnObject = await getVS1Data('TUnpaidLeave');
+            if ( dataUnObject.length == 0) {
+                unPaidData = await templateObject.saveDataLocalDB('Unpaid Leave');
+            }else{
+                unPaidData = JSON.parse(dataUnObject[0].data);
+            }
+
+            for (let i = 0; i < unPaidData.tunpaidleave.length; i++) {
+
+                var dataListAllowance = [
+                    unPaidData.tunpaidleave[i].fields.ID || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidName || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidUnits || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidNormalEntitlement || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidLeaveLoadingRate || '',
+                    'unpaid',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidShowBalanceOnPayslip == true ? 'show': 'hide',
+                ];
+
+                splashArrayLeaveList.push(dataListAllowance);
+            }
 
               function MakeNegative() {
                   $('td').each(function () {
@@ -438,7 +460,6 @@ Template.leaveTypeSettings.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(leaveDetails),
         });
-        console.log("ApiResponse", ApiResponse)
 
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
