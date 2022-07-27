@@ -159,14 +159,14 @@ export class SideBarService extends BaseService {
   }
 
   getNewHolidayGroup(datasearch)
-  { 
+  {
       let options = "";
-  
+
       options = {
           ListType: "Detail",
           select:  "[PayrollHolidaysGroupName]='" + datasearch + "'",
         };
-    
+
       return this.getList(this.ERPObjects.TPayrollHolidays, options);
 
   }
@@ -3077,4 +3077,33 @@ export class SideBarService extends BaseService {
 
     return this.getList(this.ERPObjects.TCustomFieldList, options);
   }
+
+  getAllLabels(){
+    let options = "";
+
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojecttask_TaskLabel, options);
+  }
+
+  getAllTaskList() {
+    let options = "";
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojecttasks, options);
+  }
+
+  getTProjectList() {
+    let options = "";
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojectlist, options);
+  }
+
 }
