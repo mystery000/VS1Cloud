@@ -260,7 +260,6 @@ openDb = function (dbName) {
       db.createObjectStore('TPayrollOrganization', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TXeCurrencySettings',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
-
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
   });

@@ -1069,6 +1069,15 @@ authenticatedRoutes.route('/departmentSettings', {
     }
 });
 
+authenticatedRoutes.route('/reportsAccountantSettings', {
+    name: 'reportsAccountantSettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'reportsAccountantSettings'
+        });
+    }
+});
+
 authenticatedRoutes.route('/clienttypesettings', {
     name: 'clienttypesettings',
     action() {
