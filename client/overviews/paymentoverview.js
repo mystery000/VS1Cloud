@@ -1464,15 +1464,8 @@ Template.paymentoverview.onRendered(function() {
             $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
         }
     }
-    setTimeout(function() {
-        $("th").resizable({
-            handles: "e",
-            resize: function (event, ui) {
-                var sizerID = "." + $(event.target).attr("class").split(" ")[1];
-                $(sizerID).width(ui.size.width);
-            }                        
-        });
-    }, 200);
+    tableResize();
+
 });
 
 Template.paymentoverview.events({

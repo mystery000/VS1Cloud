@@ -519,6 +519,18 @@ vs1GlobalBackButton = async function () {
  });
 };
 
+tableResize = function() {
+  setTimeout(function() {
+    console.log('asdasd');
+    $(".dataTable th").resizable({
+      handles: "e",
+      resize: function (event, ui) {
+          var sizerID = "." + $(event.target).attr("class").split(" ")[1];
+          $(sizerID).width(ui.size.width);
+      }                        
+    });
+  }, 2000);
+};
 // $(window).load(function() {
 //
 // });
