@@ -1291,6 +1291,8 @@ Template.employeescard.onRendered(function () {
             country: LoggedCountry || '',
             custFld1: '',
             custFld2: '',
+            dashboardOptions: '',
+            salesQuota: '',
             website: ''
         }
 
@@ -1428,7 +1430,8 @@ Template.employeescard.onRendered(function () {
                                 custfield14: data.fields.CustFld14 || '',
                                 website: '',
                                 notes: data.fields.Notes || '',
-
+                                dashboardOptions: data.fields.CustFld11 || '',
+                                salesQuota: data.fields.CustFld12 || ''
                             };
                             templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
 
@@ -1631,7 +1634,8 @@ Template.employeescard.onRendered(function () {
                                     custfield14: useData[i].fields.CustFld14 || '',
                                     website: '',
                                     notes: useData[i].fields.Notes || '',
-
+                                    dashboardOptions: useData[i].fields.CustFld11 || '',
+                                    salesQuota: useData[i].fields.CustFld12 || ''
                                 };
                                 templateObject.getEmployeeProfileImageData(useData[i].fields.EmployeeName);
 
@@ -1834,6 +1838,8 @@ Template.employeescard.onRendered(function () {
                                     custfield14: data.fields.CustFld14 || '',
                                     website: '',
                                     notes: data.fields.Notes || '',
+                                    dashboardOptions: data.fields.CustFld11 || '',
+                                    salesQuota: data.fields.CustFld12 || ''
 
                                 };
                                 templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
@@ -2006,6 +2012,8 @@ Template.employeescard.onRendered(function () {
                             custfield4: data.fields.CustFld4 || '',
                             website: '',
                             notes: data.fields.Notes || '',
+                            dashboardOptions: data.fields.CustFld11 || '',
+                            salesQuota: data.fields.CustFld12 || ''
 
                         };
                         templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
@@ -2136,7 +2144,9 @@ Template.employeescard.onRendered(function () {
                 country: LoggedCountry || '',
                 custFld1: '',
                 custFld2: '',
-                website: ''
+                website: '',
+                dashboardOptions: '',
+                salesQuota: ''
             }
 
             templateObject.records.set(lineItemObj);
@@ -4706,6 +4716,9 @@ Template.employeescard.events({
             imageData = templateObject.imageFileData.get().split(',')[1] || '';
         }
 
+        let edtDashboardOptions = $('#edtDashboardOptions').val()||'';
+        let edtSalesQuota = $('#edtSalesQuota').val()||'';
+
         if (!isNaN(currentId.id)) {
 
             currentEmployee = parseInt(currentId.id);
@@ -4742,7 +4755,9 @@ Template.employeescard.events({
                     CustFld6: $('#favcolor').val(),
                     CustFld14: overrideGlobalCalendarSet,
                     CustFld7: useProductCostaspayRate,
-                    CustFld8: includeAllProducts
+                    CustFld8: includeAllProducts,
+                    CustFld11: edtDashboardOptions, // tempcode until the fields are added in backend
+                    CustFld12: edtSalesQuota // tempcode
                 }
             };
         } else {
@@ -4778,7 +4793,9 @@ Template.employeescard.events({
                     CustFld6: $('#favcolor').val(),
                     CustFld14: overrideGlobalCalendarSet,
                     CustFld7: useProductCostaspayRate,
-                    CustFld8: includeAllProducts
+                    CustFld8: includeAllProducts,
+                    CustFld11: edtDashboardOptions, // tempcode until the fields are added in backend
+                    CustFld12: edtSalesQuota // tempcode
 
                 }
             };
@@ -8471,6 +8488,9 @@ Template.employeescard.helpers({
     },
     deliveryMethodList: () => {
         return Template.instance().deliveryMethodList.get();
+    },
+    dashboardOptionsList: () => {
+        return ['All', 'Accounts', 'Executive', 'Marketing', 'Sales', 'Sales Manager'];
     },
     taxCodeList: () => {
         return Template.instance().taxCodeList.get();

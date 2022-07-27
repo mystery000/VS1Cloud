@@ -8463,16 +8463,7 @@ Template.new_quote.events({
         } else {
             $('.colQty').css('display', 'none');
         }
-    },
-    'click .chkUnitPrice': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colUnitPrice').css('display', 'table-cell');
-            $('.colUnitPrice').css('padding', '.75rem');
-            $('.colUnitPrice').css('vertical-align', 'top');
-        } else {
-            $('.colUnitPrice').css('display', 'none');
-        }
-    },
+    }, 
     'click .chkCostPrice': function(event) {
         if ($(event.target).is(':checked')) {
             $('.colCostPrice').css('display', 'table-cell');
@@ -8499,16 +8490,7 @@ Template.new_quote.events({
         } else {
             $('.colTaxRate').css('display', 'none');
         }
-    },
-    'click .chkAmount': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colAmount').css('display', 'table-cell');
-            $('.colAmount').css('padding', '.75rem');
-            $('.colAmount').css('vertical-align', 'top');
-        } else {
-            $('.colAmount').css('display', 'none');
-        }
-    },
+    }, 
     // displaysettings
     'click .chkTaxCode': function(event) {
       if ($(event.target).is(':checked')) {
@@ -8531,13 +8513,56 @@ Template.new_quote.events({
         }
     },
 
+    'click .chkAmount': function (event) {
+      if ($(event.target).is(':checked')) {
+          $('.colAmount').css('display', 'table-cell');
+          $('.colAmount').css('padding', '.75rem');
+          $('.colAmount').css('vertical-align', 'top');
+
+          $('.chkAmountInc').prop("checked", false);
+          $('.colAmountInc').css('display', 'none');
+        } else {
+          $('.colAmount').css('display', 'none');
+
+          $('.chkAmountInc').prop("checked", true);
+          $('.colAmountInc').css('display', 'table-cell');
+          $('.colAmountInc').css('padding', '.75rem');
+          $('.colAmountInc').css('vertical-align', 'top');
+      }
+    },
     'click .chkAmountInc': function(event) {
       if ($(event.target).is(':checked')) {
           $('.colAmountInc').css('display', 'table-cell');
           $('.colAmountInc').css('padding', '.75rem');
           $('.colAmountInc').css('vertical-align', 'top');
+
+          $('.chkAmount').prop("checked", false);
+          $('.colAmount').css('display', 'none');
       } else {
           $('.colAmountInc').css('display', 'none');
+
+          $('.chkAmount').prop("checked", true);
+          $('.colAmount').css('display', 'table-cell');
+          $('.colAmount').css('padding', '.75rem');
+          $('.colAmount').css('vertical-align', 'top');
+      }
+    },
+
+    'click .chkUnitPrice': function (event) {
+      if ($(event.target).is(':checked')) {
+          $('.colUnitPrice').css('display', 'table-cell');
+          $('.colUnitPrice').css('padding', '.75rem');
+          $('.colUnitPrice').css('vertical-align', 'top');
+
+          $('.chkUnitPriceInc').prop("checked", false);
+          $('.colUnitPriceInc').css('display', 'none');
+      } else {
+          $('.colUnitPrice').css('display', 'none');
+
+          $('.chkUnitPriceInc').prop("checked", true);
+          $('.colUnitPriceInc').css('display', 'table-cell');
+          $('.colUnitPriceInc').css('padding', '.75rem');
+          $('.colUnitPriceInc').css('vertical-align', 'top');
       }
     },
     'click .chkUnitPriceInc': function(event) {
@@ -8545,8 +8570,16 @@ Template.new_quote.events({
             $('.colUnitPriceInc').css('display', 'table-cell');
             $('.colUnitPriceInc').css('padding', '.75rem');
             $('.colUnitPriceInc').css('vertical-align', 'top');
+
+          $('.chkUnitPrice').prop("checked", false);
+          $('.colUnitPrice').css('display', 'none');
         } else {
             $('.colUnitPriceInc').css('display', 'none');
+
+          $('.chkUnitPrice').prop("checked", true);
+          $('.colUnitPrice').css('display', 'table-cell');
+          $('.colUnitPrice').css('padding', '.75rem');
+          $('.colUnitPrice').css('vertical-align', 'top');
         }
     },
 
@@ -8722,7 +8755,7 @@ Template.new_quote.events({
         { label: 'Description', class: 'colDescription', active: true },
         { label: 'Qty', class: 'colQty', active: true },
         { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: true },
+        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Cost Price', class: 'colCostPrice', active: false },
         { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
@@ -8731,16 +8764,17 @@ Template.new_quote.events({
         { label: 'Tax Amount', class: 'colTaxAmount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
         { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: true }
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: false }
       ];
-      var datable = $('#tblQuoteLine').DataTable();
+      // var datable = $('#tblQuoteLine').DataTable();
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
-        var title = datable.column( index ).header();
+        // var title = datable.column( index ).header();
+        var title = $('#tblQuoteLine').find('th').eq(index);
         $(title).html(reset_data[index].label);
 
         if (reset_data[index].active) {
