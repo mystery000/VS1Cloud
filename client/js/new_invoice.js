@@ -52,6 +52,7 @@ Template.new_invoice.onCreated(() => {
     templateObject.termrecords = new ReactiveVar();
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.taxcodes = new ReactiveVar([]);
     templateObject.custfields = new ReactiveVar([]);
     templateObject.record = new ReactiveVar({});
     templateObject.accountID = new ReactiveVar();
@@ -8888,8 +8889,9 @@ Template.new_invoice.onRendered(function () {
     let productService = new ProductService();
     let salesService = new SalesBoardService();
     let tableProductList;
-    var splashArrayProductList = new Array();
-    var splashArrayTaxRateList = new Array();
+    let taxCodes = new Array();
+    let splashArrayProductList = new Array();
+    let splashArrayTaxRateList = new Array();
     const taxCodesList = [];
     const lineExtaSellItems = [];
 
@@ -9203,9 +9205,11 @@ Template.new_invoice.onRendered(function () {
 
                     let records = [];
                     let inventoryData = [];
+                    taxCodes = data.ttaxcodevs1;
+                    tempObj.taxcodes.set(taxCodes);
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                        var dataList = [
+                        let dataList = [
                             data.ttaxcodevs1[i].Id || '',
                             data.ttaxcodevs1[i].CodeName || '',
                             data.ttaxcodevs1[i].Description || '-',
@@ -9264,6 +9268,8 @@ Template.new_invoice.onRendered(function () {
                 let useData = data.ttaxcodevs1;
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < useData.length; i++) {
                     let taxRate = (useData[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -9325,6 +9331,8 @@ Template.new_invoice.onRendered(function () {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -11378,6 +11386,96 @@ Template.new_invoice.events({
         $('#selectLineID').val(targetID);
     },
     'click .lineTaxAmount': function (event) {
+        let targetRow = $(event.target).closest('tr');
+        let targetID = targetRow.attr('id');
+        let targetTaxCode = targetRow.find('.lineTaxCode').val();
+        let qty = targetRow.find(".lineQty").val() || 0
+        let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+        const tmpObj = Template.instance();
+        const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+        console.log(targetID, targetTaxCode, qty, price, taxDetail);
+
+        if (!taxDetail) {
+            return;
+        }
+
+        let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+        let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+
+        let taxRateDetailList = [];
+        taxRateDetailList.push([
+            taxDetail.Description,
+            taxDetail.CodeName,
+            `${taxDetail.Rate * 100}%`,
+            "Selling Price",
+            `$${priceTotal}`,
+            `$${taxTotal}`,
+            `$${priceTotal + taxTotal}`,
+        ]);
+        if (taxDetail.Lines) {
+            taxDetail.Lines.map((line) => {
+                taxRateDetailList.push([
+                    "",
+                    line.SubTaxCode,
+                    `${line.Percentage}%`,
+                    line.PercentageOn,
+                    "",
+                    `$${priceTotal * line.Percentage / 100}`,
+                    ""
+                ]);
+            });
+        }
+
+        if (taxRateDetailList) {
+
+            if (! $.fn.DataTable.isDataTable('#tblTaxRateDetail')) {
+                $('#tblTaxRateDetail').DataTable({
+                    data: [],
+                    order: [[0, 'desc']],
+                    // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [{
+                            orderable: true,
+                            targets: [0]
+                        }, {
+                            className: "taxCode",
+                            "targets": [1]
+                        }, {
+                            className: "taxRate text-right",
+                            "targets": [2]
+                        }, {
+                            className: "taxRateOn",
+                            "targets": [3]
+                        }, {
+                            className: "amountEx text-right",
+                            "targets": [4]
+                        }, {
+                            className: "tax text-right",
+                            "targets": [5]
+                        }, {
+                            className: "amountInc text-right",
+                            "targets": [6]
+                        }
+                    ],
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "fnDrawCallback": function (oSettings) {
+                        
+                    },
+                    "fnInitComplete": function () {
+                      
+                    }
+                });
+            }
+
+            let datatable = $('#tblTaxRateDetail').DataTable();
+            datatable.clear();
+            datatable.rows.add(taxRateDetailList);
+            datatable.draw(false);
+        }
+
         $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
         $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
     },
@@ -11525,133 +11623,133 @@ Template.new_invoice.events({
            }
 
        }
-},
-'click .lineUOM, keydown .lineUOM': function(event) {
-   var $earch = $(event.currentTarget);
-   var offset = $earch.offset();
-   $('#edtUOMID').val('');
-   $('.UOMpopheader').text('New Units Of Measure');
-   $('#edtUOMID').val('');
-   $('#edtUOMNamePop').val('');
-   $('#edtUOMLinkToPop').val('');
-   $('#edtUOMDescPop').val('');
-   $('#edtUOMUnitMultiplierPop').val('');
-   $('#edtUOMNamePop').attr('readonly', false);
-   let purchaseService = new PurchaseBoardService();
-   var UOMDataName = $(event.target).val() || '';
-   if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-       $('#UOMListModal').modal('toggle');
-       var targetID = $(event.target).closest('tr').attr('id');
-       $('#selectLineID').val(targetID);
-       setTimeout(function() {
-           $('#tblUOM_filter .form-control-sm').focus();
-           $('#tblUOM_filter .form-control-sm').val('');
-           $('#tblUOM_filter .form-control-sm').trigger("input");
+    },
+    'click .lineUOM, keydown .lineUOM': function(event) {
+        var $earch = $(event.currentTarget);
+        var offset = $earch.offset();
+        $('#edtUOMID').val('');
+        $('.UOMpopheader').text('New Units Of Measure');
+        $('#edtUOMID').val('');
+        $('#edtUOMNamePop').val('');
+        $('#edtUOMLinkToPop').val('');
+        $('#edtUOMDescPop').val('');
+        $('#edtUOMUnitMultiplierPop').val('');
+        $('#edtUOMNamePop').attr('readonly', false);
+        let purchaseService = new PurchaseBoardService();
+        var UOMDataName = $(event.target).val() || '';
+        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+            $('#UOMListModal').modal('toggle');
+            var targetID = $(event.target).closest('tr').attr('id');
+            $('#selectLineID').val(targetID);
+            setTimeout(function() {
+                $('#tblUOM_filter .form-control-sm').focus();
+                $('#tblUOM_filter .form-control-sm').val('');
+                $('#tblUOM_filter .form-control-sm').trigger("input");
 
-           var datatable = $('#tblUOM').DataTable();
-           datatable.draw();
-           $('#tblUOM_filter .form-control-sm').trigger("input");
+                var datatable = $('#tblUOM').DataTable();
+                datatable.draw();
+                $('#tblUOM_filter .form-control-sm').trigger("input");
 
-       }, 500);
-   } else {
-       if (UOMDataName.replace(/\s/g, '') != '') {
+            }, 500);
+        } else {
+            if (UOMDataName.replace(/\s/g, '') != '') {
 
-           getVS1Data('TUnitOfMeasure').then(function (dataObject) {
-             if(dataObject.length == 0){
-               sideBarService.getUOMVS1().then(function (data) {
-                 let lineItems = [];
-                 let lineItemObj = {};
-                 for(let i=0; i<data.tunitofmeasure.length; i++){
-                   if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
-                     $('#edtUOMNamePop').attr('readonly', true);
-                   let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
-                   var taxRateID = data.tunitofmeasure[i].fields.ID || '';
-                    var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
-                    var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
-                    $('#edtUOMID').val(taxRateID);
-                    $('#edtUOMNamePop').val(taxRateName);
-                    $('#edtTaxRatePop').val(taxRate);
-                    $('#edtTaxDescPop').val(taxRateDesc);
-                    setTimeout(function() {
-                    $('#newUOMModal').modal('toggle');
-                    }, 100);
-                  }
-                 }
+                getVS1Data('TUnitOfMeasure').then(function (dataObject) {
+                    if(dataObject.length == 0){
+                    sideBarService.getUOMVS1().then(function (data) {
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        for(let i=0; i<data.tunitofmeasure.length; i++){
+                        if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
+                            $('#edtUOMNamePop').attr('readonly', true);
+                        let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
+                        var taxRateID = data.tunitofmeasure[i].fields.ID || '';
+                            var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
+                            var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
+                            $('#edtUOMID').val(taxRateID);
+                            $('#edtUOMNamePop').val(taxRateName);
+                            $('#edtTaxRatePop').val(taxRate);
+                            $('#edtTaxDescPop').val(taxRateDesc);
+                            setTimeout(function() {
+                            $('#newUOMModal').modal('toggle');
+                            }, 100);
+                        }
+                        }
 
-               }).catch(function (err) {
-                   // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                   $('.fullScreenSpin').css('display','none');
-                   // Meteor._reload.reload();
-               });
-             }else{
-               let data = JSON.parse(dataObject[0].data);
-               let useData = data.tunitofmeasure;
-               let lineItems = [];
-               let lineItemObj = {};
-               $('.uompopheader').text('Edit Units Of Measure');
-               for(let i=0; i<data.tunitofmeasure.length; i++){
-                 if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
-                   $('#edtTaxNamePop').attr('readonly', true);
-                 let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
-                 var taxRateID = data.tunitofmeasure[i].fields.ID || '';
-                  var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
-                  var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
-                  $('#edtTaxID').val(taxRateID);
-                  $('#edtTaxNamePop').val(taxRateName);
-                  $('#edtTaxRatePop').val(taxRate);
-                  $('#edtUOMDescPop').val(taxRateDesc);
-                  setTimeout(function() {
-                  $('#newUOMModal').modal('toggle');
-                  }, 100);
-                }
-               }
-             }
-           }).catch(function (err) {
-             sideBarService.getUOMVS1().then(function (data) {
-               let lineItems = [];
-               let lineItemObj = {};
-               for(let i=0; i<data.tunitofmeasure.length; i++){
-                 if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
-                   $('#edtTaxNamePop').attr('readonly', true);
-                 let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
-                 var taxRateID = data.tunitofmeasure[i].fields.ID || '';
-                  var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
-                  var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
-                  $('#edtTaxID').val(taxRateID);
-                  $('#edtTaxNamePop').val(taxRateName);
-                  $('#edtTaxRatePop').val(taxRate);
-                  $('#edtTaxDescPop').val(taxRateDesc);
-                  setTimeout(function() {
-                  $('#newUOMModal').modal('toggle');
-                  }, 100);
-                }
-               }
+                    }).catch(function (err) {
+                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                        $('.fullScreenSpin').css('display','none');
+                        // Meteor._reload.reload();
+                    });
+                    }else{
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tunitofmeasure;
+                    let lineItems = [];
+                    let lineItemObj = {};
+                    $('.uompopheader').text('Edit Units Of Measure');
+                    for(let i=0; i<data.tunitofmeasure.length; i++){
+                        if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
+                        $('#edtTaxNamePop').attr('readonly', true);
+                        let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
+                        var taxRateID = data.tunitofmeasure[i].fields.ID || '';
+                        var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
+                        var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
+                        $('#edtTaxID').val(taxRateID);
+                        $('#edtTaxNamePop').val(taxRateName);
+                        $('#edtTaxRatePop').val(taxRate);
+                        $('#edtUOMDescPop').val(taxRateDesc);
+                        setTimeout(function() {
+                        $('#newUOMModal').modal('toggle');
+                        }, 100);
+                        }
+                    }
+                    }
+                }).catch(function (err) {
+                    sideBarService.getUOMVS1().then(function (data) {
+                    let lineItems = [];
+                    let lineItemObj = {};
+                    for(let i=0; i<data.tunitofmeasure.length; i++){
+                        if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
+                        $('#edtTaxNamePop').attr('readonly', true);
+                        let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
+                        var taxRateID = data.tunitofmeasure[i].fields.ID || '';
+                        var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
+                        var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
+                        $('#edtTaxID').val(taxRateID);
+                        $('#edtTaxNamePop').val(taxRateName);
+                        $('#edtTaxRatePop').val(taxRate);
+                        $('#edtTaxDescPop').val(taxRateDesc);
+                        setTimeout(function() {
+                        $('#newUOMModal').modal('toggle');
+                        }, 100);
+                        }
+                    }
 
-             }).catch(function (err) {
-                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                 $('.fullScreenSpin').css('display','none');
-                 // Meteor._reload.reload();
-             });
-           });
+                    }).catch(function (err) {
+                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                        $('.fullScreenSpin').css('display','none');
+                        // Meteor._reload.reload();
+                    });
+                });
 
-       } else {
-           $('#UOMListModal').modal('toggle');
-           var targetID = $(event.target).closest('tr').attr('id');
-           $('#selectLineID').val(targetID);
-           setTimeout(function() {
-               $('#tblUOM_filter .form-control-sm').focus();
-               $('#tblUOM_filter .form-control-sm').val('');
-               $('#tblUOM_filter .form-control-sm').trigger("input");
+            } else {
+                $('#UOMListModal').modal('toggle');
+                var targetID = $(event.target).closest('tr').attr('id');
+                $('#selectLineID').val(targetID);
+                setTimeout(function() {
+                    $('#tblUOM_filter .form-control-sm').focus();
+                    $('#tblUOM_filter .form-control-sm').val('');
+                    $('#tblUOM_filter .form-control-sm').trigger("input");
 
-               var datatable = $('#tblUOM').DataTable();
-               datatable.draw();
-               $('#tblUOM_filter .form-control-sm').trigger("input");
+                    var datatable = $('#tblUOM').DataTable();
+                    datatable.draw();
+                    $('#tblUOM_filter .form-control-sm').trigger("input");
 
-           }, 500);
-       }
+                }, 500);
+            }
 
-   }
-},
+        }
+    },
     'click .printConfirm':async function (event) {
 
             var printTemplate = [];
