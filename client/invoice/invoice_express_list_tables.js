@@ -1104,20 +1104,20 @@ Template.invoicelist.onRendered(function () {
         getVS1Data('TCustomFieldList').then(function (dataObject) {
             if(dataObject.length == 0){
                   sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-                    templateObject.getCustomFieldDataCheckIndexDB(data);
+                    templateObject.setCustomFieldDataCheckIndexDB(data);
                   });
               }else{
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.getCustomFieldDataCheckIndexDB(data);
+                templateObject.setCustomFieldDataCheckIndexDB(data);
               }
         }).catch(function (err) {
               sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-                templateObject.getCustomFieldDataCheckIndexDB(data);
+                templateObject.setCustomFieldDataCheckIndexDB(data);
               });
         });
     }
 // custom field displaysettings
-    templateObject.getCustomFieldDataCheckIndexDB = function(data) {
+    templateObject.setCustomFieldDataCheckIndexDB = function(data) {
 
       let custFields = [];
       let dispFields = [];
