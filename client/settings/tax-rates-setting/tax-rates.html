@@ -134,6 +134,7 @@
                                                                                 style="width:150px">Cap Amt</th>
                                                                             <th class="th colThresholdAmt"
                                                                                 style="width:150px">Threshold Amt</th>
+                                                                            <th class="th colDelete" style="width:20px"></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -155,11 +156,15 @@
                                                                             <td clickable contenteditable="false"
                                                                                 class="colThresholdAmt">
                                                                                 {{item.ThresholdAmount}}</td>
+                                                                            <td contenteditable="false" class="colDelete"><span
+                                                                                    class="table-remove"><button type="button"
+                                                                                        class="btn btn-danger btn-rounded btn-sm my-0"><i
+                                                                                            class="fa fa-remove"></i></button></span></td>
                                                                         </tr>
                                                                         {{/each}}
                                                                         {{else}}
                                                                         <tr class="dnd-moved" style="cursor: pointer;">
-                                                                            <td contenteditable="false" colspan="5"
+                                                                            <td contenteditable="false" colspan="6"
                                                                                 style="text-align: center;">
                                                                                 <span>
                                                                                     Table data doesn't exist
