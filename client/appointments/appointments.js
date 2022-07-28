@@ -487,7 +487,7 @@ Template.appointments.onRendered(function () {
                 templateObject.fetchAppointments();
             }
         }
-    } 
+    }
 
     templateObject.renderCalendar = function (slotMin, slotMax, hideDays) {
         let calendarSet = templateObject.globalSettings.get();
@@ -10261,7 +10261,7 @@ Template.appointments.events({
         let hourlyRate = '';
         let status = "Not Converted";
         let uploadedItems = templateObject.uploadedFiles.get();
-        
+
         let customerEmail=$('.customerEmail').is(':checked') ? true : false;
         let userEmail=$('.userEmail').is(':checked') ? true : false;
         if (aStartTime != '') {
@@ -10395,7 +10395,7 @@ Template.appointments.events({
                     let data = JSON.parse(dataObject[0].data);
                     for (let i = 0; i < data.tcustomervs1.length; i++) {
                         if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
-                            customerEmail += data.tcustomervs1[i].fields.Email;    
+                            customerEmail += data.tcustomervs1[i].fields.Email;
                             break;
                         }
                     }
@@ -10406,7 +10406,7 @@ Template.appointments.events({
                             let data=JSON.parse(arr.data)['temployee'];
                             for(let i=0; i < data.length; i++){
                                 if(employeeID == data[i].fields.ID){
-                                    employeeEmail += data[i].fields.Email;    
+                                    employeeEmail += data[i].fields.Email;
                                     break;
                                 }
                             }
@@ -10424,23 +10424,19 @@ Template.appointments.events({
                     text: '',
                     html: text,
                 };
-                console.log("details-original", details);
 
                 if($("#userEmail").is(":checked")){
                     details.to=customerEmail;
                     Meteor.call("sendEmail", details, function(error, result){
-                        console.log("error", error);
-                        console.log("result", result);
+
                     })
                 }
                 if($("#customerEmail").is(":checked")){
                     details.to=employeeEmail;
                     Meteor.call("sendEmail", details, function(error, result){
-                        console.log("error", error);
-                        console.log("result", result);
                     })
                 }
-        
+
 
               appointmentService.saveAppointment(objectData).then(function (data) {
                   let id = data.fields.ID;

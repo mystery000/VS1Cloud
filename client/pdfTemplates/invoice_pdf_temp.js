@@ -17,17 +17,14 @@ Template.invoicePrintTemp.onCreated(function () {
 })
 
 Template.invoicePrintTemp.onRendered(function () {
-    console.log('template rendered');
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
     let sideBarService = new SideBarService();
     templateObject.getAllInvoiceData = function () {
             getVS1Data('TInvoiceEx').then(function (dataObject) {
                 let invoicesTemp = [];
-                console.log("js api call result", dataObject);
                 if (dataObject.length != 0) {
                     let data = JSON.parse(dataObject[0].data);
-                    console.log('js data', data)
                     let useData = data.tinvoiceex;
                     for (let d = 0; d < useData.length; d++) {
                         let lineItems = [];
@@ -37,40 +34,31 @@ Template.invoicePrintTemp.onRendered(function () {
                         let totalInc = currencySymbol + '' + useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
-                        console.log("js total inc", totalInc);
                         let totalDiscount = currencySymbol + '' + useData[d].fields.TotalDiscount.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
 
-                        console.log("js total discount", totalDiscount);
                         let subTotal = currencySymbol + '' + useData[d].fields.TotalAmount.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
 
-                        console.log("js sub total", subTotal);
                         let totalTax = currencySymbol + '' + useData[d].fields.TotalTax.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
-                        console.log("js totalTax", totalTax);
                         let totalBalance = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalBalance).toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
 
-                        console.log("js total balance", totalBalance);
                         let totalPaidAmount = currencySymbol + '' + useData[d].fields.TotalPaid.toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
 
-                        console.log("js total pay amount", totalPaidAmount);
-                        console.log("js field lines", useData[d].fields.Lines);
                         if (useData[d].fields.Lines.length) {
                             for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                                 let AmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
                                     minimumFractionDigits: 2
                                 });
-                                console.log("js amount gbp", AmountGbp);
                                 let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.LineTaxTotal);
-                                console.log("js tax total gbp", TaxTotalGbp);
                                 lineItemObj = {
                                     item: useData[d].fields.Lines[i].fields.ProductName || '',
                                     description: useData[d].fields.Lines[i].fields.ProductDescription || '',
@@ -80,7 +68,6 @@ Template.invoicePrintTemp.onRendered(function () {
                                     taxCode: useData[d].fields.Lines[i].fields.LineTaxCode || '',
                                     TaxTotal: TaxTotalGbp || 0,
                                 };
-                                console.log("js line item object", lineItemObj);
                                 var dataListTable = [
                                     useData[d].fields.Lines[i].fields.ProductName || '',
                                     useData[d].fields.Lines[i].fields.ProductDescription || '',
@@ -90,13 +77,11 @@ Template.invoicePrintTemp.onRendered(function () {
                                     AmountGbp || currencySymbol + '' + 0.00,
                                     '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
                                 ];
-                                console.log("js data list table", dataListTable);
                                 lineItemsTable.push(dataListTable);
                                 lineItems.push(lineItemObj);
-                                console.log("line items", lineItems)
                             }
                         }
-                    
+
                         let isPartialPaid = false;
                         if (useData[d].fields.TotalPaid > 0) {
                             isPartialPaid = true;
@@ -115,11 +100,9 @@ Template.invoicePrintTemp.onRendered(function () {
                             balanceDue: totalBalance,
                             totalPaid: totalPaidAmount,
                         };
-                        console.log("js invoice record", invoicerecord);
                         if (invoicerecord) {
                             invoicesTemp.push(invoicerecord);
                             templateObject.invoicerecords.set(invoicesTemp);
-                            console.log("js invoice records", templateObject.invoicerecords.get())
                             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
                                 if (error) { }
                                 else {
@@ -147,7 +130,7 @@ Template.invoicePrintTemp.onRendered(function () {
                                             }
 
                                         }
-                                     
+
                                     }
 
                                 }

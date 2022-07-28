@@ -705,7 +705,6 @@ Template.emailsettings.onRendered(function () {
 
 
     templateObject.saveSchedules = async (settings, isEssential) => {
-        console.log('method called', settings, isEssential);
         let utilityService = new UtilityService();
         return new Promise(async (resolve, reject) => {
 
@@ -715,11 +714,9 @@ Template.emailsettings.onRendered(function () {
             basedOnTypeStorages.forEach(storage => localStorage.removeItem(storage));
 
             const oldSettings = templateObject.originScheduleData.get();
-            console.log("first step");
             // Filter old settings according to the types of email setting(Essential one or Automated one)
             if (!isEssential) {
                 oldSettings = oldSettings.filter(oldSetting => oldSetting.fields.FormID != 54 && oldSetting.fields.FormID != 177 && oldSetting.fields.FormID != 129);
-                console.log('second step');
             }
 
             try {
@@ -732,7 +729,6 @@ Template.emailsettings.onRendered(function () {
                     let recipients = $(setting).find('input.edtRecipients').val();
                     // Check if this setting has got recipients
                     let basedOnType = frequencyEl.attr('data-basedontype');
-                    console.log('third step');
                     if (!!recipients) {
                         let attachments = [];
                         let e = jQuery.Event('click');
@@ -800,7 +796,7 @@ Template.emailsettings.onRendered(function () {
                         if (formID == 74) {
                             parentElement = document.getElementById('refundPDFTemp')
                         }
-                        
+
                         if (formID == 77) {
                             parentElement = document.getElementById('salesorderPDFTemp')
                         }
@@ -831,7 +827,6 @@ Template.emailsettings.onRendered(function () {
                             })
 
                         }
-                        console.log('4th step', targetElement);
 
                         function getAttachments() {
                             return new Promise((resolve, reject)=>{
@@ -848,9 +843,7 @@ Template.emailsettings.onRendered(function () {
                                             targetElement[i].style.color = "#000000";
                                             targetElement[i].style.overflowX = "visible";
                                         }
-        
-        
-                                        console.log('param target', targetElement[i], 'param file name', docTitle);
+
                                         var opt = {
                                             margin: 0,
                                             filename: docTitle,
@@ -878,41 +871,36 @@ Template.emailsettings.onRendered(function () {
                                                     encoding: 'base64'
                                                 };
                                                 attachments.push(pdfObject)
-                                                console.log('attachments inside function', attachments);
                                                 if(i == targetElement.length -1) {
                                                     resolve();
-                                                } 
+                                                }
                                             });
                                         }, 100);
                                     }
-        
+
                                 }
                             })
                         }
                         getAttachments().then(async () => {
-                            console.log("before recipient ids", recipientIds);
-                            console.log("type of recipient ids", typeof recipientIds)
+
                             if(typeof recipientIds == 'string') {
                                 recipientIds = recipientIds.split('; ');
                             }
-                            console.log("after recipient ids", recipientIds);
-                            console.log("recipients", recipients);
+
                             if(typeof recipients == 'string') {
                                 recipients = recipients.split('; ');
                             }
                             let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
-                                console.log('recipient id', recipientId, 'index', index);
                                 const starttime = frequencyEl.attr('data-starttime');
-                                console.log('start time', starttime);
+
                                 const startdate = frequencyEl.attr('data-startdate');
-                                console.log('start date', startdate);
+
                                 const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
-                                console.log('converted start date', convertedStartDate)
+
                                 const sDate = startdate ? moment(convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-                                console.log('sdate', sDate);
+
                                 const frequencyName = frequencyEl.text() != '' ? frequencyEl.text().split(',')[0] : '';
-                                console.log('frequency name', frequencyName);
-                                console.log("final attachment data", attachments);
+
                                 let objDetail = {
                                     type: "TReportSchedules",
                                     fields: {
@@ -932,7 +920,6 @@ Template.emailsettings.onRendered(function () {
                                     }
                                 };
 
-                                console.log("object detail", objDetail);
 
                                 if (frequencyName === "Monthly") {
                                     const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
@@ -1002,18 +989,15 @@ Template.emailsettings.onRendered(function () {
                                     Meteor.call('addTask', objDetail.fields);
                                 } else {
                                     const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
-                                    console.log("old setting", oldSetting);
                                     oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
-                                    console.log("old settings", oldSettings);
                                     if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
-                                    console.log("&&&&&&&&&&&&&&&&&&&&& before api called")
                                     try {
                                         // Save email settings
                                         await taxRateService.saveScheduleSettings(objDetail);
                                     } catch (e) {
 
                                     }
-                                    console.log("&&&&&&&&&&&&&&&& if failed")
+
                                     objDetail.fields.Offset = new Date().getTimezoneOffset();
 
                                     const nextDueDate = await new Promise((resolve, reject) => {
@@ -1034,7 +1018,6 @@ Template.emailsettings.onRendered(function () {
                                     objDetail.fields.FormName = formName;
                                     objDetail.fields.EmployeeEmail = recipients[index];
                                     objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                    console.log("final data object", objDetail)
                                     Meteor.call('addTask', objDetail.fields);
                                 }
                             });
@@ -1098,7 +1081,6 @@ Template.emailsettings.onRendered(function () {
                         getAttachments =()=> {
                             return new Promise((resolve, reject) => {
                                 if (targetElement && targetElement != null && targetElement != '') {
-                                    console.log('param target', targetElement, 'param file name', docTitle);
                                     var opt = {
                                         margin: 0,
                                         filename: docTitle,
@@ -1117,7 +1099,6 @@ Template.emailsettings.onRendered(function () {
                                     };
                                     setTimeout(function () {
                                         html2pdf().set(opt).from(targetElement).toPdf().output('datauristring').then((dataObject) => {
-                                            console.log("&&&&&&&&&&", dataObject)
                                             let pdfObject = "";
                                             let base64data = dataObject.split(',')[1];
                                             pdfObject = {
@@ -1434,14 +1415,11 @@ Template.emailsettings.events({
     'click #emailsetting-essential': async function () {
         const templateObject = Template.instance();
         const essentialSettings = $('#tblEssentialAutomatedEmails tbody tr').map(function () { return $(this) }).get();
-        console.log("essential-settings", essentialSettings);
         $('.fullScreenSpin').css('display', 'inline-block');
 
         const saveResult = await templateObject.saveSchedules(essentialSettings, true);
         const saveGroupResult = await templateObject.saveGroupedReports();
 
-
-        console.log("save result", saveResult, "save group result", saveGroupResult)
 
         if (saveResult.success && saveGroupResult.success)
             swal({
@@ -1469,8 +1447,6 @@ Template.emailsettings.events({
         const templateObject = Template.instance();
         const normalSettings = $('#tblAutomatedEmails tbody tr').map(function () { return $(this) }).get();
         $('.fullScreenSpin').css('display', 'inline-block');
-
-        console.log("normal settings", normalSettings);
 
         const saveResult = await templateObject.saveSchedules(normalSettings, false);
 
@@ -1652,7 +1628,6 @@ Template.emailsettings.events({
         var _id = _rowElement.attr('data-id');
         var _transType = _rowElement.find('>td:first-child').html();
         var taxRateService = new TaxRateService();
-        console.log("__________", _transType, _id);
 
         taxRateService.getScheduleSettings().then(function (data) {
             items = data.treportschedules.filter((item) => {

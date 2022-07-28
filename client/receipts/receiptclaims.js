@@ -1914,7 +1914,6 @@ Template.receiptsoverview.events({
                     ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate)
                 }
             };
-            // console.log(JSON.stringify(expenseClaim));
 
             $('.fullScreenSpin').css('display', 'inline-block');
             accountService.saveReceipt(expenseClaim).then(function(data) {
@@ -2601,7 +2600,6 @@ Template.receiptsoverview.events({
                     };
 
                     purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
-                        console.log("!success");
                     }).catch(function (err) {
                         swal({
                             title: 'Oooops...',

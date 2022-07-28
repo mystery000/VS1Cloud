@@ -256,7 +256,7 @@ Template.crmoverview.events({
 
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    // let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+    // let employeeID = Session.get("mySessionEmployeeLoggedID");
 
     crmService.getAllTaskList().then(function (data) {
       addVS1Data("TCRMTaskList", JSON.stringify(data));
@@ -631,7 +631,6 @@ Template.crmoverview.events({
   },
 
   "click #sidenavcrm": function (e) {
-    console.log('sidenavcrm');
     FlowRouter.go("/crmoverview");
     Meteor._reload.reload();
   }
@@ -812,7 +811,7 @@ function openEditTaskModal(id, type) {
                         style="margin-right: 5px;"></i>${sub_due_date}</span>
                     <span class="taskTag"><a class="taganchor" href=""></a></span>
                   </div>
-                  <div style="display: inline-flex;"> 
+                  <div style="display: inline-flex;">
                   </div>
                 </div>
                 <hr />
@@ -852,7 +851,7 @@ function openEditTaskModal(id, type) {
                           style="margin-right: 5px;"></i>${sub_due_date}</span>
                       <span class="taskTag"><a class="taganchor" href=""></a></span>
                     </div>
-                    <div style="display: inline-flex;"> 
+                    <div style="display: inline-flex;">
                     </div>
                   </div>
                   <hr />
@@ -949,7 +948,7 @@ function openEditTaskModal(id, type) {
                     <div class="row">
                       <span class="activityName">${activity.EnteredBy
             } </span> <span class="activityAction">${activity.ActivityName
-            } </span>  
+            } </span>
                     </div>
                     <div class="row">
                       <span class="activityComment">${activity.ActivityDescription
@@ -989,7 +988,7 @@ function openEditTaskModal(id, type) {
                       <div class="row">
                         <span class="activityName">${activity.EnteredBy
               } </span> <span class="activityAction">${activity.ActivityName
-              } </span>  
+              } </span>
                       </div>
                       <div class="row">
                         <span class="activityComment">${activity.ActivityDescription

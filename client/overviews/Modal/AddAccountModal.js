@@ -433,7 +433,6 @@ Template.addAccountModal.onRendered(function () {
           );
         }
       }).catch(function (err) {
-        console.log(err);
         taxRateService
           .getTaxRateVS1()
           .then(function (data) {

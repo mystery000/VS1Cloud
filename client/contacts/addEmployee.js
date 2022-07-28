@@ -2935,7 +2935,6 @@ Template.employeescard.onRendered(function () {
                     $('#tblLeaveRequests').DataTable().ajax.reload();
                 },
                 "fnDrawCallback": function (oSettings) {
-                    // console.log('test')
                     $('.paginate_button.page-item').removeClass('disabled');
                     $('#tblLeaveRequests_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
@@ -3468,7 +3467,6 @@ Template.employeescard.onRendered(function () {
             if( employeePayrolEndpointJsonResponse.topeningbalances.length ){
                 await addVS1Data('TOpeningBalances', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
-            console.log("employeePayrolEndpointJsonResponse",employeePayrolEndpointJsonResponse);
 
             return employeePayrolEndpointJsonResponse
         }
@@ -3769,8 +3767,6 @@ Template.employeescard.onRendered(function () {
                     return item;
                 }
             });
-
-            console.log('useData', useData)
 
             let employeePaySettings = {}
             let objEmployeePaySettings = {}
