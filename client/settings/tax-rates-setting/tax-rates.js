@@ -1306,6 +1306,17 @@ Template.taxRatesSettings.events({
     templateObject.subtaxlines.set([]);
   },
   "click #subTaxList td.clickable": (e) => SubTaxEditListener(e),
+  "click #subTaxList .table-remove": (e) => {
+    e.stopPropagation();
+    const targetID = $(e.target).closest("tr").attr("id"); // table row ID
+    let templateObject = Template.instance();
+    let subTaxLines = templateObject.subtaxlines.get();
+    subTaxLines = subTaxLines.filter((v) => v.RowId !== targetID);
+    templateObject.subtaxlines.set(subTaxLines);
+    let taxPercent = 0;
+    subTaxLines.map((v) => taxPercent += v.Percentage);
+    $('#edtTaxRate').val(Math.min(taxPercent, 100));
+  },
   'click .btnSubTaxes': function () {
     FlowRouter.go('/subtaxsettings');
   },
@@ -1360,7 +1371,7 @@ Template.taxRatesSettings.events({
     history.back(1);
   },
   "click #taxRatesList td.clickable": (e) => TaxRatesEditListener(e),
-  "click .table-remove": (e) => {
+  "click #taxRatesList .table-remove": (e) => {
     e.stopPropagation();
     const targetID = $(e.target).closest("tr").attr("id"); // table row ID
     $("#selectDeleteLineID").val(targetID);
