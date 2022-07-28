@@ -139,20 +139,20 @@
                                                                     <tbody>
                                                                         {{#if subtaxlines}}
                                                                         {{#each item in subtaxlines}}
-                                                                        <tr class="dnd-moved" id="{{item.Id}}"
+                                                                        <tr class="dnd-moved" id="{{item.RowId}}"
                                                                             style="cursor: pointer;">
-                                                                            <td contenteditable="false" class="colName">
+                                                                            <td clickable contenteditable="false" class="colName">
                                                                                 {{item.SubTaxCode}}</td>
-                                                                            <td contenteditable="false"
+                                                                            <td clickable contenteditable="false"
                                                                                 class="colPercent">{{item.Percentage}}
                                                                             </td>
-                                                                            <td contenteditable="false"
+                                                                            <td clickable contenteditable="false"
                                                                                 class="colPercentageOn">
                                                                                 {{item.PercentageOn}}</td>
-                                                                            <td contenteditable="false"
+                                                                            <td clickable contenteditable="false"
                                                                                 class="colCapAmt">{{item.CapAmount}}
                                                                             </td>
-                                                                            <td contenteditable="false"
+                                                                            <td clickable contenteditable="false"
                                                                                 class="colThresholdAmt">
                                                                                 {{item.ThresholdAmount}}</td>
                                                                         </tr>
@@ -195,7 +195,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4>
-                                                                <div id="add-tax-title" name="add-tax-title"
+                                                                <div id="add-subtax-title" name="add-tax-title"
                                                                     style="float: left;">Add Sub Tax</div>
                                                             </h4>
                                                             <button type="button" class="close" data-dismiss="modal"
@@ -203,8 +203,8 @@
                                                                     aria-hidden="true">×</span></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <input type="hidden" class="form-control" id="edtTaxID"
-                                                                name="edtTaxID" style="display:none;">
+                                                            <input type="hidden" class="form-control" id="edtSubTaxLineId"
+                                                                name="edtSubTaxLineId" style="display:none;">
                                                             <div class="row no-gutters">
                                                                 <div class="col-6 d-xl-flex align-items-xl-end">
                                                                     <div class="form-group flex-grow-1"
@@ -272,7 +272,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button class="btn btn-success btnAddSubTax"
+                                                            <button class="btn btn-success btnSaveSubTax"
                                                                 type="button"><i class="fa fa-save"
                                                                     style="padding-right: 8px;"></i>Save</button>
                                                             <button class="btn btn-secondary" data-dismiss="modal"

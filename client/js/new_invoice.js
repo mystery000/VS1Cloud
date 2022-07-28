@@ -11393,7 +11393,7 @@ Template.new_invoice.events({
         let price = targetRow.find('.colUnitPriceExChange').val() || 0;
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
-        console.log(targetID, targetTaxCode, qty, price, taxDetail);
+        // console.log(targetID, targetTaxCode, qty, price, taxDetail);
 
         if (!taxDetail) {
             return;
