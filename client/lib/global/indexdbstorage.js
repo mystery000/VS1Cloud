@@ -191,7 +191,7 @@ openDb = function (dbName) {
       db.createObjectStore("TSuperannuation", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTerminationSimple", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TDeduction", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TLeavRequest", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TLeaveRequest", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TPayHistory", { keyPath: "EmployeeEmail" });
       db.createObjectStore("Tvs1dashboardpreferences", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TVs1TabGroups", { keyPath: "EmployeeEmail" });
@@ -222,7 +222,6 @@ openDb = function (dbName) {
       db.createObjectStore("TPayNotes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
-      
 
       db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });
@@ -257,40 +256,9 @@ openDb = function (dbName) {
       db.createObjectStore('TPayTemplateDeductionLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateSuperannuationLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateReiumbursementLine',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TPayrollOrganization', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TXeCurrencySettings',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
 
-      db.createObjectStore('TltSalesOverview',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltSalesOrderList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltSaleslines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltInvoiceList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltInvoiceLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltQuoteList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltQuoteLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltRefundList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltRefundLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltPurchaseOverview',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltPurchaseOrderList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltPurchaseLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltBillList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltBillLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltCreditList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltCreditLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltChequeList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltChequeLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltDepositList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltDepositLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltContactOverview',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltCustomerList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltCustomerLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltSupplierList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltSupplierLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltEmployeeList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltEmployeeLines',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltInventoryOverview',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltProductList',{ keyPath: "EmployeeEmail"});
-      db.createObjectStore('TltProductLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
 
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
@@ -355,14 +323,10 @@ addLoginData = async function (loginData) {
 
 };
 
-
 addVS1Data = async function (objectName, vs1Data) {
-
-  
   const db = await openDb(localStorage.getItem("vs1Db"));
   //const db1 = await openDb2();
   //let transaction1 = await db1.transaction(["TDatabases"], "readwrite")
-
   let transaction = await db.transaction([objectName], "readwrite");
 
   transaction.oncomplete = function (event) {

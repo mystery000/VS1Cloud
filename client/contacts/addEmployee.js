@@ -71,6 +71,7 @@ Template.employeescard.onCreated(function () {
     templateObject.leaveRequestInfos = new ReactiveVar();
     templateObject.bankAccList = new ReactiveVar();
     templateObject.countryData = new ReactiveVar();
+    templateObject.phoneCodeData = new ReactiveVar();
     templateObject.productsdatatable = new ReactiveVar();
     templateObject.notesrecords = new ReactiveVar();
     templateObject.empuserrecord = new ReactiveVar();
@@ -118,7 +119,7 @@ Template.employeescard.onRendered(function () {
 
     //var splashArrayRepServiceList = new Array();
     let templateObject = Template.instance();
-    const contactService = new ContactService();
+    let contactService = new ContactService();
     var countryService = new CountryService();
     let paymentService = new PaymentsService();
     let productService = new ProductService();
@@ -1215,34 +1216,46 @@ Template.employeescard.onRendered(function () {
     }
 
     templateObject.getCountryData = function () {
-        getVS1Data('TCountries').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                countryService.getCountry().then((data) => {
-                    for (let i = 0; i < data.tcountries.length; i++) {
-                        countries.push(data.tcountries[i].Country)
-                    }
-                    countries = _.sortBy(countries);
-                    templateObject.countryData.set(countries);
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tcountries;
-                for (let i = 0; i < useData.length; i++) {
-                    countries.push(useData[i].Country)
-                }
-                countries = _.sortBy(countries);
-                templateObject.countryData.set(countries);
+        // getVS1Data('TCountries').then(function (dataObject) {
+        //     if (dataObject.length == 0) {
+        //         countryService.getCountry().then((data) => {
+        //             for (let i = 0; i < data.tcountries.length; i++) {
+        //                 countries.push(data.tcountries[i].Country)
+        //             }
+        //             countries = _.sortBy(countries);
+        //             templateObject.countryData.set(countries);
+        //         });
+        //     } else {
+        //         // let data = JSON.parse(dataObject[0].data);
+        //         countryService.getCountry().ge
+        //         let useData = data.tcountries;
+        //         for (let i = 0; i < useData.length; i++) {
+        //             countries.push(useData[i].Country)
+        //         }
+        //         countries = _.sortBy(countries);
+        //         templateObject.countryData.set(countries);
 
+        //     }
+        // }).catch(function (err) {
+        //     countryService.getCountry().then((data) => {
+        //         for (let i = 0; i < data.tcountries.length; i++) {
+        //             countries.push(data.tcountries[i].Country)
+        //         }
+        //         countries = _.sortBy(countries);
+        //         templateObject.countryData.set(countries);
+        //     });
+        // });
+            let countries = [];
+            let data = countryService.getCountry();
+            console.log("service data countries", data)
+            for (let i = 0; i < data.length; i++) {
+                countries.push(data[i].name)
             }
-        }).catch(function (err) {
-            countryService.getCountry().then((data) => {
-                for (let i = 0; i < data.tcountries.length; i++) {
-                    countries.push(data.tcountries[i].Country)
-                }
-                countries = _.sortBy(countries);
-                templateObject.countryData.set(countries);
-            });
-        });
+            console.log("countries______", countries)
+            countries = _.sortBy(countries);
+            console.log("countries", countries)
+            templateObject.phoneCodeData.set(data);
+            templateObject.countryData.set(countries);
     };
     templateObject.getCountryData();
 
@@ -4635,9 +4648,7 @@ Template.employeescard.events({
         let email = $('#edtEmailAddress').val() || '';
         let phone = $('#edtPhone').val() || '';
         let mobile = $('#edtMobile').val() || '';
-        if(mobile != '') {
-            mobile = contactService.changeMobileFormat(mobile)
-        }
+        
         let fax = $('#edtFax').val() || '';
         let skype = $('#edtSkype').val() || '';
         let gender = $('#edtGender').val() || '';
@@ -4658,6 +4669,9 @@ Template.employeescard.events({
         let state = $('#edtState').val();
         let postalcode = $('#edtPostalCode').val();
         let country = $('#edtCountry').val();
+        if(mobile != '') {
+            mobile = contactService.changeDialFormat(mobile, country);
+        }
 
         let custField4 = $('#edtCustomeField4').val();
         // add to custom field
@@ -8324,8 +8338,13 @@ Template.employeescard.helpers({
     },
     record: () => {
         let temp =  Template.instance().records.get();
-        if(temp && temp.mobile) {
-            temp.mobile = temp.mobile.replace('+61', '0')
+        console.log("temp data", temp);
+        let phoneCodes = Template.instance().phoneCodeData.get();
+        if(temp && temp.mobile && temp.country) {
+            let thisCountry = phoneCodes.find(item=>{
+                return item.name == temp.country
+            })
+            temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
         }
         return temp;
     },
@@ -8413,6 +8432,10 @@ Template.employeescard.helpers({
     },
     countryList: () => {
         return Template.instance().countryData.get();
+    },
+
+    phoneCodeList: ()=> {
+        return Template.instance().phoneCodeData.get();
     },
     employeerecords: () => {
         return Template.instance().employeerecords.get().sort(function (a, b) {

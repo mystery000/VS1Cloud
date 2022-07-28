@@ -43,6 +43,9 @@ Template.settings.events({
     'click .btnCompanyAppSettings': function (event) {
         FlowRouter.go('/companyappsettings');
     },
+    'click .btnReportsAccountant': function (event) {
+        FlowRouter.go('/reportsAccountantSettings');
+    },
     'click .btnCustomerType': function (event) {
         FlowRouter.go('/clienttypesettings');
     },

@@ -36,7 +36,7 @@
         </h3>
 
         <div class="row mb-3">
-            <div class="col">
+            <div class="col-12 col-md-10 col-xl-8 col-xxl-6 mx-auto emailsetting-card-wrapper">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3">
                         <p class="text-primary m-0 font-weight-bold">Automated Email Settings (Essentials)</p>
@@ -85,12 +85,20 @@
                                     } */
 
                                     th.colRecipients {
-                                        width: 35% !important;
+                                        width: 40% !important;
                                     }
 
                                     th.colHistory {
-                                        width: 20% !important;
+                                        width: 15% !important;
                                     }
+
+                                    @media screen and (min-width: 1600px) {
+                                        .emailsetting-card-wrapper {
+                                            flex: 0 0 50%;
+                                            max-width: 50%;
+                                        }
+                                    }
+
                                 </style>
                                 <table id="tblEssentialAutomatedEmails" style="width:100%"
                                     class="dataTable table table-hover table-striped table-bordered tblEssentialAutomatedEmails">
@@ -132,15 +140,31 @@
                                                         {{/if}}
                                                     {{/if}}
                                                     <!-- <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-inout="{{item.isEmpty}}">{{item.basedOnType}}</td> -->
-                                                    <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
-                                                            class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}"></td>
-                                                            <td contenteditable="false"
-                                                            class="d-flex justify-content-center align-items-center colHistory">
-                                                            <button
-                                                                class="btn btn-primary btn-show-history d-flex align-items-center justify-content-around col-xl-6 col-md-8 col-md-9 col-10 mx-auto ">
-                                                                <span class="fa fa-history"></span>
-                                                            </button>
-                                                        </td>
+                                                    <td contenteditable="false">
+                                                        <input id="edtRecipients-{{item.formID}}"
+                                                            class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}">
+                                                    </td>
+                                                    {{#if equals item.formID 129}}
+                                                        <div class="d-none print-wrapper print-wrapper-129" id="profitTemp">
+                                                            {{> newprofitandloss}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 54}}
+                                                        <div class="d-none print-wrapper print-wrapper-54" id="invoicePDFTemp">
+                                                            {{> invoicePrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 177}}
+                                                        <div class="d-none print-wrapper print-wrapper-177" id="statementPDFTemp">
+                                                            {{> statementPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    <td contenteditable="false" class="d-flex justify-content-center align-items-center colHistory">
+                                                        <button
+                                                            class="btn btn-primary btn-show-history d-flex align-items-center justify-content-around col-xl-4 col-6   mx-auto ">
+                                                            <span class="fa fa-history"></span>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             {{/if}}
                                         {{/each}}
@@ -224,7 +248,7 @@
             </div>
         </div>
         <div class="row mb-3">
-            <div class="col">
+            <div class="col-12 col-md-10 col-xl-8 col-xxl-6 mx-auto emailsetting-card-wrapper">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3">
                         <p class="text-primary m-0 font-weight-bold">Automated Email Settings</p>
@@ -273,15 +297,16 @@
                                     } */
 
                                     #tblAutomatedEmails .colRecipients {
-                                        width: 35% !important;
+                                        width: 40% !important;
                                     }
 
                                     #tblAutomatedEmails th.colHistory {
-                                        width: 20% !important;
+                                        width: 15% !important;
                                     }
                                 </style>
                                 <table id="tblAutomatedEmails" style="width:100%"
                                     class="dataTable table table-hover table-striped table-bordered tblPayRollRulesList">
+                                  
                                     <thead>
                                         <tr class="dnd-moved">
                                             <th class="th colTransType" >Transaction Type
@@ -326,15 +351,106 @@
                                                     <!-- <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.basedOnType}}</td> -->
                                                     <!-- {{/if}} -->
                                                     <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
-                                                    <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
-                                                            class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}"></td>
-                                                            <td contenteditable="false"
-                                                            class="d-flex justify-content-center align-items-center colHistory">
-                                                            <button
-                                                                class="btn btn-primary btn-show-history d-flex align-items-center justify-content-around col-xl-6 col-md-8 col-md-9 col-10 mx-auto ">
-                                                                <span class="fa fa-history"></span>
-                                                            </button>
-                                                        </td>
+                                                    <td contenteditable="false">
+                                                        <input id="edtRecipients-{{item.formID}}" class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}">
+                                                    </td>
+                                                    {{#if equals item.formID 6}}
+                                                        <div class="d-none print-wrapper print-wrapper-6" id="agedPayablesTemp">
+                                                            {{> agedpayables}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 134}}
+                                                        <div class="d-none print-wrapper print-wrapper-134" id="agedReceivableTemp">
+                                                            {{> agedreceivables}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 12}}
+                                                        <div class="d-none print-wrapper print-wrapper-12" id="billPDFTemp">
+                                                            {{> billPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 18}}
+                                                        <div class="d-none print-wrapper print-wrapper-18" id="chequePDFTemp">
+                                                            {{> chequePrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 21}}
+                                                        <div class="d-none print-wrapper print-wrapper-21" id="creditPDFTemp">
+                                                            {{> creditPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 61}}
+                                                        <div class="d-none print-wrapper print-wrapper-61" id="paymentsPDFTemp">
+                                                            {{> paymentsPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 69}}
+                                                        <div class="d-none print-wrapper print-wrapper-69" id="purchaseOrderPDFTemp">
+                                                            {{> purchaseOrderPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 225}}
+                                                        <div class="d-none print-wrapper print-wrapper-225" id="generalLedgerTemp">
+                                                            {{> generalledger}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 1464}}
+                                                        <div class="d-none print-wrapper print-wrapper-1464" id="productSalesReportTemp">
+                                                            {{> productsalesreport}}
+                                                        </div>
+                                                    {{/if}}
+                                                    
+                                                    {{#if equals item.formID 70}}
+                                                        <div class="d-none print-wrapper print-wrapper-70" id="purchaseReportTemp">
+                                                            {{> purchasesreport}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 1364}}
+                                                        <div class="d-none print-wrapper print-wrapper-1364" id="purchaseSummaryTemp">
+                                                            {{> purchasesummaryreport}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 71}}
+                                                        <div class="d-none print-wrapper print-wrapper-71" id="quotePDFTemp">
+                                                            {{> quotesPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 74}}
+                                                        <div class="d-none print-wrapper print-wrapper-74" id="refundPDFTemp">
+                                                            {{> refundPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 77}}
+                                                        <div class="d-none print-wrapper print-wrapper-77" id="salesorderPDFTemp">
+                                                            {{> salesorderPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 68}}
+                                                        <div class="d-none print-wrapper print-wrapper-68" id="salesReportTemp">
+                                                            {{> salesreport}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 94}}
+                                                        <div class="d-none print-wrapper print-wrapper-94" id="supplierpaymentPDFTemp">
+                                                            {{> supplierpaymentPrintTemp}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 278}}
+                                                        <div class="d-none print-wrapper print-wrapper-278" id="taxSummaryReportTemp">
+                                                            {{> taxsummaryreport}}
+                                                        </div>
+                                                    {{/if}}
+                                                    {{#if equals item.formID 140}}
+                                                        <div class="d-none print-wrapper print-wrapper-140" id="trialBalanceTemp">
+                                                            {{> trialbalance}}
+                                                        </div>
+                                                    {{/if}}
+                                                    <td contenteditable="false" class="d-flex justify-content-center align-items-center colHistory">
+                                                        <button
+                                                            class="btn btn-primary btn-show-history d-flex align-items-center justify-content-around col-xl-4 col-6 mx-auto ">
+                                                            <span class="fa fa-history"></span>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             {{/if}}
                                         {{/each}}
