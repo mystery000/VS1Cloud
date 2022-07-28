@@ -825,7 +825,6 @@ Template.alltaskdatatable.onRendered(function () {
         $(".fullScreenSpin").css("display", "none");
       }
     }).catch(function (err) {
-      console.log(err)
       templateObject.getAllTaskList();
     });
   };
@@ -1336,7 +1335,7 @@ Template.alltaskdatatable.onRendered(function () {
           let all_projects = data.tprojectlist;
 
           var url = new URL(window.location.href);
-          let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : ''; 
+          let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
 
           if (employeeID) {
             all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
@@ -1376,7 +1375,6 @@ Template.alltaskdatatable.onRendered(function () {
         }
       }
     }).catch(function (err) {
-      console.log(err)
       templateObject.getTProjectList();
     });
   };

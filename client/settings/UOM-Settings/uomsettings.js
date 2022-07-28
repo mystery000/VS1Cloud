@@ -250,7 +250,7 @@ Template.uomSettings.onRendered(function() {
         });
 
     };
-    tempObj.getAllUOMs();
+    // tempObj.getAllUOMs();
 
 });
 

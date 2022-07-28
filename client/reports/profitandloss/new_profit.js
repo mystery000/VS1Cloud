@@ -63,7 +63,7 @@ function buildPositions() {
 }
 
 function buildSubAccountJson( $sortContainer ){
-  return Array.from($sortContainer.map(function(){ 
+  return Array.from($sortContainer.map(function(){
     return {
       "accountId": $(this).attr('plid'),
       "position": $(this).attr('position'),
@@ -685,11 +685,6 @@ Template.newprofitandloss.onRendered(function () {
     const profitLossLayoutEndpoint = profitLossLayoutApi.collection.findByName(
       profitLossLayoutApi.collectionNames.TProfitLossLayout
     );
-    
-    // profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
-
-    // http://localhost:4419/erpapi/TProfitLossLayout/35?LayoutToUse="1"
-    console.log( await reportService.getProfitLossLayout() );
 
       return false
     const profitLossLayoutEndResponse = await profitLossLayoutEndpoint.fetch();
@@ -788,19 +783,13 @@ Template.newprofitandloss.onRendered(function () {
             } else {
               $item.find(".mainHeadingDiv").removeClass("collapsTogls");
             }
-            console.log('container', $item.parents('li').attr("class"))
             container.el.removeClass("active");
             _super($item, container);
             let siblingClass = $item.siblings().attr("class");
-            console.log( $item.attr("class") )
             $item.removeClass();
             $item.addClass(siblingClass);
             $item.addClass("selected");
 
-            // for array
-            // var data = group.sortable("serialize").get();
-            // var jsonString = JSON.stringify(data, null, " ");
-            // console.log(jsonString)
           },
         });
 
@@ -2178,7 +2167,6 @@ Template.newprofitandloss.events({
       "action": "save",
       "layout": pSortList
     }
-    console.log(profitLossLayoutData)
 
     try {
       const ApiResponse = await apiEndpoint.fetch(null, {
@@ -2189,7 +2177,6 @@ Template.newprofitandloss.events({
 
       if (ApiResponse.ok == true) {
           const jsonResponse = await ApiResponse.json();
-          console.log('jsonResponse', jsonResponse)
           $('.fullScreenSpin').css('display', 'none');
       }else{
           $('.fullScreenSpin').css('display', 'none');

@@ -67,8 +67,7 @@ Template.addAccountModal.onRendered(function () {
           }
           templateObject.accountTypes.set(accountTypeList);
         }
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         accountService.getAccountTypeCheck().then(function (data) {
           for (let i = 0; i < data.taccounttype.length; i++) {
             let accounttyperecordObj = {
@@ -85,7 +84,6 @@ Template.addAccountModal.onRendered(function () {
   templateObject.loadAccountTypes();
 
   templateObject.getTaxRates = function () {
-    console.log('Here');
     getVS1Data("TTaxcodeVS1").then(function (dataObject) {
         if (dataObject.length == 0) {
           taxRateService
@@ -435,7 +433,6 @@ Template.addAccountModal.onRendered(function () {
           );
         }
       }).catch(function (err) {
-        console.log(err);
         taxRateService
           .getTaxRateVS1()
           .then(function (data) {

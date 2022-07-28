@@ -439,7 +439,7 @@ Template.invoicelist.onRendered(function () {
                           isCustomField = false;
                         }
 
-                        sWidth = v.style.width.replace('px', ""); 
+                        sWidth = v.style.width.replace('px', "");
 
                         let datatablerecordObj = {
                             custid: $(this).attr("custid") || 0,
@@ -760,7 +760,7 @@ Template.invoicelist.onRendered(function () {
                     if ((v.className.includes("hiddenColumn"))) {
                         columVisible = false;
                     }
-                    sWidth = v.style.width.replace('px', ""); 
+                    sWidth = v.style.width.replace('px', "");
 
                     if ((v.className.includes("customFieldColumn"))) {
                       isCustomField = true;
@@ -1056,7 +1056,7 @@ Template.invoicelist.onRendered(function () {
                   if ((v.className.includes("hiddenColumn"))) {
                       columVisible = false;
                   }
-                  sWidth = v.style.width.replace('px', ""); 
+                  sWidth = v.style.width.replace('px', "");
 
                   if ((v.className.includes("customFieldColumn"))) {
                     isCustomField = true;
@@ -1099,80 +1099,25 @@ Template.invoicelist.onRendered(function () {
         });
     }
 
-    // templateObject.getCustomFieldData = function() {
-
-    //   let custFields = [];
-    //   let customData = {};
-
-    //   sideBarService
-    //   .getAllCustomFields()
-    //   .then(function (data) {
-    //     for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-    //       if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-    //         customData = {
-    //           active: data.tcustomfieldlist[x].fields.Active || false,
-    //           id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-    //           custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-    //           datatype: data.tcustomfieldlist[x].fields.DataType || "",
-    //           isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-    //           iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-    //           dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-    //         };
-    //         custFields.push(customData);
-    //       }
-    //     }
-
-    //     if (custFields.length < 3) {
-    //       let remainder = 3 - custFields.length;
-    //       let getRemCustomFields = parseInt(custFields.length);
-    //       for (let r = 0; r < remainder; r++) {
-    //         getRemCustomFields++;
-    //         customData = {
-    //           active: false,
-    //           id: "",
-    //           custfieldlabel: "Custom Field " + getRemCustomFields,
-    //           datatype: "",
-    //           isempty: true,
-    //           iscombo: false,
-    //         };
-    //         // count++;
-    //         custFields.push(customData);
-    //       }
-    //     }
-    //     if (custFields) {
-    //       $(".colCustFieldHeader1").html(custFields[0].custfieldlabel);
-    //       $(".colCustFieldHeader2").html(custFields[1].custfieldlabel);
-    //       $(".colCustFieldHeader3").html(custFields[2].custfieldlabel);
-
-    //       if (custFields[0].active) {
-    //         $(".colSaleCustField1").removeClass('hiddenColumn');
-    //         $(".colSaleCustField1").addClass('showColumn');
-    //       } else {
-    //         $(".colSaleCustField1").addClass('hiddenColumn');
-    //         $(".colSaleCustField1").removeClass('showColumn');
-    //       }
-
-    //       if (custFields[1].active) {
-    //         $(".colSaleCustField2").removeClass('hiddenColumn');
-    //         $(".colSaleCustField2").addClass('showColumn');
-    //       } else {
-    //         $(".colSaleCustField2").addClass('hiddenColumn');
-    //         $(".colSaleCustField2").removeClass('showColumn');
-    //       }
-
-    //       if (custFields[2].active) {
-    //         $(".colSaleCustField3").removeClass('hiddenColumn');
-    //         $(".colSaleCustField3").addClass('showColumn');
-    //       } else {
-    //         $(".colSaleCustField3").addClass('hiddenColumn');
-    //         $(".colSaleCustField3").removeClass('showColumn');
-    //       }
-    //     }
-    //   })
-
-    // }
+    templateObject.getCustomFieldData= function() {
+      let listType = "ltInvoiceList";
+        getVS1Data('TCustomFieldList').then(function (dataObject) {
+            if(dataObject.length == 0){
+                  sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                    templateObject.setCustomFieldDataCheckIndexDB(data);
+                  });
+              }else{
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.setCustomFieldDataCheckIndexDB(data);
+              }
+        }).catch(function (err) {
+              sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                templateObject.setCustomFieldDataCheckIndexDB(data);
+              });
+        });
+    }
 // custom field displaysettings
-    templateObject.getCustomFieldData = function() {
+    templateObject.setCustomFieldDataCheckIndexDB = function(data) {
 
       let custFields = [];
       let dispFields = [];
@@ -1194,8 +1139,6 @@ Template.invoicelist.onRendered(function () {
         { label: 'Employee', class: 'colEmployee', active: true },
         { label: 'Comments', class: 'colComments', active: false }
       ];
-
-      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
             customData = {
@@ -1267,7 +1210,6 @@ Template.invoicelist.onRendered(function () {
         templateObject.custfields.set(custFields);
         templateObject.displayfields.set(dispFields);
 
-      })
     }
 
     templateObject.getAllInvoiceData();
@@ -1555,9 +1497,12 @@ Template.invoicelist.events({
 
         organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
+          //Reload Custom Field on Save
+          sideBarService.getAllCustomFields().then(function(data) {
+              addVS1Data('TCustomFieldList', JSON.stringify(data));
+          });
           $('#myModal2').modal('hide');
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
           swal({
             title: "Oooops...",
             text: err,
@@ -1623,7 +1568,7 @@ Template.invoicelist.events({
             if ((v.className.includes("hiddenColumn"))) {
                 columVisible = false;
             }
-            sWidth = v.style.width.replace('px', ""); 
+            sWidth = v.style.width.replace('px', "");
 
             if ((v.className.includes("customFieldColumn"))) {
               isCustomField = true;
@@ -1674,6 +1619,12 @@ Template.invoicelist.events({
         }
         var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+        //Reload Custom Field on Page Refresh
+        sideBarService.getAllCustomFields().then(function(data) {
+            addVS1Data('TCustomFieldList', JSON.stringify(data));
+        });
+
 
         sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
             addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
