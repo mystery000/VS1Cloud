@@ -142,19 +142,19 @@
                                                                         {{#each item in subtaxlines}}
                                                                         <tr class="dnd-moved" id="{{item.RowId}}"
                                                                             style="cursor: pointer;">
-                                                                            <td clickable contenteditable="false" class="colName">
+                                                                            <td contenteditable="false" class="colName clickable">
                                                                                 {{item.SubTaxCode}}</td>
-                                                                            <td clickable contenteditable="false"
-                                                                                class="colPercent">{{item.Percentage}}
+                                                                            <td contenteditable="false"
+                                                                                class="colPercent clickable">{{item.Percentage}}
                                                                             </td>
-                                                                            <td clickable contenteditable="false"
-                                                                                class="colPercentageOn">
+                                                                            <td contenteditable="false"
+                                                                                class="colPercentageOn clickable">
                                                                                 {{item.PercentageOn}}</td>
-                                                                            <td clickable contenteditable="false"
-                                                                                class="colCapAmt">{{item.CapAmount}}
+                                                                            <td contenteditable="false"
+                                                                                class="colCapAmt clickable">{{item.CapAmount}}
                                                                             </td>
-                                                                            <td clickable contenteditable="false"
-                                                                                class="colThresholdAmt">
+                                                                            <td contenteditable="false"
+                                                                                class="colThresholdAmt clickable">
                                                                                 {{item.ThresholdAmount}}</td>
                                                                             <td contenteditable="false" class="colDelete"><span
                                                                                     class="table-remove"><button type="button"
@@ -220,7 +220,7 @@
                                                                             name="subTaxCode">
                                                                             <option value="" disabled>Select</option>
                                                                             {{#each item in subtaxcodes}}
-                                                                            <option value="{{item.id}}">
+                                                                            <option value="{{item.codename}}">
                                                                                 {{item.codename}}</option>
                                                                             {{/each}}
                                                                         </select>
