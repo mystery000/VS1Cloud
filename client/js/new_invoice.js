@@ -11426,11 +11426,11 @@ Template.new_invoice.events({
 
         if (taxRateDetailList) {
 
-            if (! $.fn.DataTable.isDataTable('#tblTaxRate')) {
-                $('#tblTaxRate').DataTable({
+            if (! $.fn.DataTable.isDataTable('#tblTaxRateDetail')) {
+                $('#tblTaxRateDetail').DataTable({
                     data: [],
                     order: [[0, 'desc']],
-                    // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     columnDefs: [{
                             orderable: true,
                             targets: [0]
@@ -11463,19 +11463,20 @@ Template.new_invoice.events({
 
                     },
                     "fnInitComplete": function () {
-
+                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRateDetail_filter");
+                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRateDetail_filter");
                     }
                 });
             }
 
-            let datatable = $('#tblTaxRate').DataTable();
+            let datatable = $('#tblTaxRateDetail').DataTable();
             datatable.clear();
             datatable.rows.add(taxRateDetailList);
             datatable.draw(false);
         }
 
         $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
-        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateListModal");
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
     },
     'click .lineSerialNo, keydown .lineSerialNo': function(event) {
         var $earch = $(event.currentTarget);
@@ -13321,7 +13322,8 @@ Template.new_invoice.events({
         { label: 'Tax Amount', class: 'colTaxAmount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
         { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: false }
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+        { label: 'Units', class: 'colUOM', active: false }
       ];
       // var datable = $('#tblInvoiceLine');
       // var datable = $('#tblInvoiceLine').DataTable();
