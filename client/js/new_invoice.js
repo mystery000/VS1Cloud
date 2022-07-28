@@ -13321,7 +13321,8 @@ Template.new_invoice.events({
         { label: 'Tax Amount', class: 'colTaxAmount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
         { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: false }
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+        { label: 'Units', class: 'colUOM', active: false }
       ];
       // var datable = $('#tblInvoiceLine');
       // var datable = $('#tblInvoiceLine').DataTable();
