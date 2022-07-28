@@ -1093,7 +1093,7 @@ Template.taxRatesSettings.events({
     }
     else {
       subTaxLines = subTaxLines.map((v) => v.RowId === edtSubTaxLineId ? ({
-        RowId: v.RosId,
+        RowId: v.RowId,
         Id: subTaxId,
         SubTaxCode: subTaxCode.codename,
         Detail: subTaxCode,
