@@ -2568,9 +2568,7 @@ Template.receiptsoverview.events({
                         type: "TChequeLine",
                         fields: {
                             // ID: parseInt(erpLineID) || 0,
-                            AccountID: accountID || 0,
                             AccountName: accountName || "",
-                            ClientName: employeeName || "",
                             ProductDescription: description || "",
                             LineCost: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
                             // LineTaxCode: tdtaxCode || "",
@@ -2583,6 +2581,7 @@ Template.receiptsoverview.events({
                             // ID: 0,
                             SupplierID: supplierID || 0,
                             SupplierName: supplierName,
+                            ClientName: employeeName || "",
                             // ForeignExchangeCode: currencyCode,
                             Lines: lineItemsForm,
                             // OrderTo: billingAddress,
@@ -2604,7 +2603,20 @@ Template.receiptsoverview.events({
                     purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
                         console.log("!success");
                     }).catch(function (err) {
-                        console.log("!error");
+                        swal({
+                            title: 'Oooops...',
+                            text: err,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {
+
+                            } else if (result.dismiss == 'cancel') {
+
+                            }
+                        });
+                        $('.fullScreenSpin').css('display', 'none');
                     })
                 } else {
                     if (supplierName == "") {
