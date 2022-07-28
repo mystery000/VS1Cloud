@@ -208,6 +208,15 @@ authenticatedRoutes.route('/dashboard', {
     }
 });
 
+authenticatedRoutes.route('/dashboardexe', {
+    name: 'dashboardexe',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'dashboardexe'
+        });
+    }
+});
+
 authenticatedRoutes.route('/appointments', {
     name: 'appointments',
     action() {
