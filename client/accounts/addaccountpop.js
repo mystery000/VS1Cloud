@@ -356,7 +356,7 @@ Template.addaccountpop.onRendered(function () {
 });
 
 Template.addaccountpop.events({
-    
+
     'click .btnSaveAccountPOP': function () {
         var url = FlowRouter.current().path;
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -409,7 +409,7 @@ Template.addaccountpop.events({
                         PublishOnVS1: true,
                         Extra: swiftCode,
                         BankNumber: routingNo,
-                        IsHeader: forTransaction,
+                        Required: forTransaction,
                         CarNumber:cardnumber||'',
                         CVC:cardcvc||'',
                         ExpiryDate:expiryDate||''
@@ -619,7 +619,7 @@ Template.addaccountpop.events({
                         Extra: swiftCode,
                         BankNumber: routingNo,
                         PublishOnVS1: true,
-                        IsHeader: forTransaction,
+                        Required: forTransaction,
                         CarNumber:cardnumber||'',
                         CVC:cardcvc||'',
                         ExpiryDate:expiryDate||''

@@ -1216,46 +1216,44 @@ Template.employeescard.onRendered(function () {
     }
 
     templateObject.getCountryData = function () {
-        // getVS1Data('TCountries').then(function (dataObject) {
-        //     if (dataObject.length == 0) {
-        //         countryService.getCountry().then((data) => {
-        //             for (let i = 0; i < data.tcountries.length; i++) {
-        //                 countries.push(data.tcountries[i].Country)
-        //             }
-        //             countries = _.sortBy(countries);
-        //             templateObject.countryData.set(countries);
-        //         });
-        //     } else {
-        //         // let data = JSON.parse(dataObject[0].data);
-        //         countryService.getCountry().ge
-        //         let useData = data.tcountries;
-        //         for (let i = 0; i < useData.length; i++) {
-        //             countries.push(useData[i].Country)
-        //         }
-        //         countries = _.sortBy(countries);
-        //         templateObject.countryData.set(countries);
+      getVS1Data('TCountries').then(function (dataObject) {
+          if (dataObject.length == 0) {
+              sideBarService.getCountry().then((data) => {
+                  for (let i = 0; i < data.tcountries.length; i++) {
+                      countries.push(data.tcountries[i].Country)
+                  }
+                  countries = _.sortBy(countries);
+                  templateObject.countryData.set(countries);
+              });
+          } else {
+               let data = JSON.parse(dataObject[0].data);
+              let useData = data.tcountries;
+              for (let i = 0; i < useData.length; i++) {
+                  countries.push(useData[i].Country)
+              }
+              countries = _.sortBy(countries);
+              templateObject.countryData.set(countries);
 
-        //     }
-        // }).catch(function (err) {
-        //     countryService.getCountry().then((data) => {
-        //         for (let i = 0; i < data.tcountries.length; i++) {
-        //             countries.push(data.tcountries[i].Country)
-        //         }
-        //         countries = _.sortBy(countries);
-        //         templateObject.countryData.set(countries);
-        //     });
-        // });
-            let countries = [];
-            let data = countryService.getCountry();
-            console.log("service data countries", data)
-            for (let i = 0; i < data.length; i++) {
-                countries.push(data[i].name)
-            }
-            console.log("countries______", countries)
-            countries = _.sortBy(countries);
-            console.log("countries", countries)
-            templateObject.phoneCodeData.set(data);
-            templateObject.countryData.set(countries);
+          }
+      }).catch(function (err) {
+          sideBarService.getCountry().then((data) => {
+              for (let i = 0; i < data.tcountries.length; i++) {
+                  countries.push(data.tcountries[i].Country)
+              }
+              countries = _.sortBy(countries);
+              templateObject.countryData.set(countries);
+          });
+      });
+            let countriesPhone = [];
+            let dataPhone = countryService.getCountryJeyhun();
+            console.log("service data countries", dataPhone);
+            // for (let i = 0; i < dataPhone.length; i++) {
+            //     countriesPhone.push(dataPhone[i].name)
+            // }
+            // console.log("countries______", countriesPhone)
+            // countriesPhone = _.sortBy(countriesPhone);
+            // console.log("countries", countriesPhone)
+            templateObject.phoneCodeData.set(dataPhone);
     };
     templateObject.getCountryData();
 
@@ -2876,7 +2874,7 @@ Template.employeescard.onRendered(function () {
         }
         return '';
     };
-    
+
     templateObject.getLeaveRequests = async () => {
         let data = []
         let dataObject = await getVS1Data('TLeavRequest')
@@ -2904,7 +2902,7 @@ Template.employeescard.onRendered(function () {
             ];
             splashArrayList.push(dataListAllowance);
         }
-        
+
         setTimeout(function () {
             $('#tblLeaveRequests').DataTable({
                 data: splashArrayList,
@@ -4648,7 +4646,7 @@ Template.employeescard.events({
         let email = $('#edtEmailAddress').val() || '';
         let phone = $('#edtPhone').val() || '';
         let mobile = $('#edtMobile').val() || '';
-        
+
         let fax = $('#edtFax').val() || '';
         let skype = $('#edtSkype').val() || '';
         let gender = $('#edtGender').val() || '';
@@ -4671,6 +4669,10 @@ Template.employeescard.events({
         let country = $('#edtCountry').val();
         if(mobile != '') {
             mobile = contactService.changeDialFormat(mobile, country);
+        }
+
+        if(phone != '') {
+            phone = contactService.changeDialFormat(phone, country);
         }
 
         let custField4 = $('#edtCustomeField4').val();
@@ -5321,7 +5323,7 @@ Template.employeescard.events({
             $('.fullScreenSpin').css('display', 'none');
         }else{
             $('.fullScreenSpin').css('display', 'none');
-        }     
+        }
 
         return false
 
@@ -5389,7 +5391,7 @@ Template.employeescard.events({
             $('.fullScreenSpin').css('display', 'none');
         }else{
             $('.fullScreenSpin').css('display', 'none');
-        }    
+        }
 
         return false;
 
@@ -5459,7 +5461,7 @@ Template.employeescard.events({
             $('.fullScreenSpin').css('display', 'none');
         }else{
             $('.fullScreenSpin').css('display', 'none');
-        } 
+        }
 
         return false;
 
@@ -5527,7 +5529,7 @@ Template.employeescard.events({
             $('.fullScreenSpin').css('display', 'none');
         }else{
             $('.fullScreenSpin').css('display', 'none');
-        } 
+        }
 
         return false;
         templateObject.openingBalanceInfo.set(openingBalances);
@@ -5602,7 +5604,7 @@ Template.employeescard.events({
             body: JSON.stringify(leaveRequestSettings),
         });
 
-        try {            
+        try {
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 await templateObject.saveLeaveRequestLocalDB();
@@ -5746,7 +5748,7 @@ Template.employeescard.events({
                         title: "Success",
                         text: "Leave type has been assigned",
                         type: 'warning',
-                        
+
                     })
                 }else{
                     $('.fullScreenSpin').css('display', 'none');
@@ -5754,7 +5756,7 @@ Template.employeescard.events({
                         title: "Error",
                         text: "Failed to assigned leave type",
                         type: 'error',
-                        
+
                     })
                 }
             } catch (error) {
@@ -5886,7 +5888,7 @@ Template.employeescard.events({
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                 }
-            } 
+            }
         });
     },
 
@@ -6488,7 +6490,7 @@ Template.employeescard.events({
             );
 
             let useData = [];
-            const listEmployeePaySettings = {}       
+            const listEmployeePaySettings = {}
 
             let TaxFileNumber = $("#edtTaxFileNumber").val();
             let TFNExemption = $("#edtTfnExemption").val();
@@ -6545,7 +6547,7 @@ Template.employeescard.events({
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(employeePaySettings),
                 });
-    
+
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
@@ -6557,7 +6559,7 @@ Template.employeescard.events({
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
             }
-            
+
 
             return false
 
@@ -6652,7 +6654,7 @@ Template.employeescard.events({
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(employeeBankPaySettings),
                 });
-    
+
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
@@ -8338,7 +8340,6 @@ Template.employeescard.helpers({
     },
     record: () => {
         let temp =  Template.instance().records.get();
-        console.log("temp data", temp);
         let phoneCodes = Template.instance().phoneCodeData.get();
         if(temp && temp.mobile && temp.country) {
             let thisCountry = phoneCodes.find(item=>{
