@@ -6253,12 +6253,35 @@ Template.employeescard.events({
         let payLines = templateObject.payTemplateEarningLineInfo.get();
         let updatedLines = PayTemplateEarningLine.fromList(
             payLines
-        ).filter((item, index) => {
+        ).filter(async (item, index) => {
             if ( parseInt( index ) != parseInt( deleteID ) ) {
                 item.fields.EarningRate = $('#ptEarningRate' + index).val();
                 item.fields.Amount = $('#ptEarningAmount' + index).val();
-                return item;
             }
+            else{
+                const employeePayrolApis = new EmployeePayrollApi();
+                // now we have to make the post request to save the data in database
+                const apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TPayTemplateEarningLine
+                );
+
+                let leaveRequestSettings =  new LeaveRequest({
+                    type: "TPayTemplateEarningLine",
+                    fields: new LeaveRequestFields({
+                        ID: deleteID,
+                        Active: false,
+                    }),
+                })
+
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(leaveRequestSettings),
+                });
+                console.log("TPayTemplateEarningLine", ApiResponse);
+            }
+            return item;
+
         });
         await templateObject.payTemplateEarningLineInfo.set(updatedLines);
         await templateObject.displayPayTempEarningLines();
