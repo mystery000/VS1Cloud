@@ -261,6 +261,37 @@ openDb = function (dbName) {
       db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TLeaveData',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TEarningData',{ keyPath: "EmployeeEmail"});
+
+      db.createObjectStore('TltSalesOverview',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltSalesOrderList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltSaleslines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltInvoiceList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltInvoiceLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltQuoteList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltQuoteLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltRefundList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltRefundLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltPurchaseOverview',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltPurchaseOrderList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltPurchaseLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltBillList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltBillLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltCreditList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltCreditLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltChequeList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltChequeLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltDepositList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltDepositLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltContactOverview',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltCustomerList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltCustomerLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltSupplierList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltSupplierLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltEmployeeList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltEmployeeLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltInventoryOverview',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltProductList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltProductLines',{ keyPath: "EmployeeEmail"});
    
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
