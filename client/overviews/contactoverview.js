@@ -1793,24 +1793,31 @@ Template.contactoverview.events({
     if (currentBeginDate.getDate() < 10) {
       fromDateDay = "0" + currentBeginDate.getDate();
     }
-    var toDate =
-      currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-    let prevMonth11Date = moment()
-      .subtract(reportsloadMonths, "months")
-      .format("YYYY-MM-DD");
-    sideBarService
-      .getAllContactCombineVS1(initialDataLoad, 0)
-      .then(function (data) {
-        addVS1Data("TERPCombinedContactsVS1", JSON.stringify(data))
-          .then(function (datareturn) {
-            window.open("/contactoverview", "_self");
-          })
-          .catch(function (err) {
+    var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
+    let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
+
+
+
+    sideBarService.getAllContactCombineVS1(initialDataLoad, 0).then(function (data) {
+        addVS1Data("TERPCombinedContactsVS1", JSON.stringify(data)).then(function (datareturn) {
+          sideBarService.getCurrentLoggedUser().then(function (dataUsers) {
+            addVS1Data('TAppUser', JSON.stringify(dataUsers)).then(function (datareturn) {
+                window.open("/contactoverview", "_self");
+              }).catch(function (err) {
+                window.open("/contactoverview", "_self");
+              });
+          });
+          }).catch(function (err) {
             window.open("/contactoverview", "_self");
           });
-      })
-      .catch(function (err) {
-        window.open("/contactoverview", "_self");
+      }).catch(function (err) {
+        sideBarService.getCurrentLoggedUser().then(function (dataUsers) {
+          addVS1Data('TAppUser', JSON.stringify(dataUsers)).then(function (datareturn) {
+              window.open("/contactoverview", "_self");
+            }).catch(function (err) {
+              window.open("/contactoverview", "_self");
+            });
+        });
       });
   },
   "click .allList": function (event) {

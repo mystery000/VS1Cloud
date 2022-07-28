@@ -140,7 +140,7 @@ Template.newsidenav.onCreated(function() {
 Template.newsidenav.onRendered(function() {
 
     var countObjectTimes = 0;
-    let allDataToLoad = 71;
+    let allDataToLoad = 74;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
@@ -220,7 +220,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -239,7 +239,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake ').removeClass('active');
@@ -259,8 +259,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -281,8 +280,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -305,8 +303,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports ').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake ').removeClass('active');
@@ -325,8 +322,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -348,8 +344,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').addClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -372,8 +367,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').addClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -393,8 +387,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -416,8 +409,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').addClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -436,7 +428,7 @@ Template.newsidenav.onRendered(function() {
                 (currentLoc == "/statementlist") || (currentLoc == "/purchasesreport") ||
                 (currentLoc == "/productsalesreport") || (currentLoc == "/salessummaryreport") ||
                 (currentLoc == "/taxsummaryreport") || (currentLoc == "/purchasesummaryreport") ||
-                (currentLoc == "/agedpayablessummary")) {
+                (currentLoc == "/agedpayablessummary") || (currentLoc == "/accountant")) {
                 $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');
                 $('#sidenavdashbaord').removeClass('active');
@@ -446,7 +438,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports ').addClass('active');
+                $('#sidenavreports, #sidenavreports2').addClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -469,8 +461,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').addClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -493,8 +484,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').addClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -514,8 +504,7 @@ Template.newsidenav.onRendered(function() {
                   $('#sidenavinventory').removeClass('active');
                   $('#sidenavpayments').removeClass('active');
                   $('#sidenavpurchases').removeClass('active');
-                  $('#sidenavreports').removeClass('active');
-                  $('#sidenavreports').removeClass('active');
+                  $('#sidenavreports, #sidenavreports2').removeClass('active');
                   $('#sidenavsales').removeClass('active');
                   $('#sidenavsettings').removeClass('active');
                   $('#sidenavstocktake').removeClass('active');
@@ -538,8 +527,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake ').removeClass('active');
@@ -559,8 +547,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');
-                $('#sidenavreports').removeClass('active');
-                $('#sidenavreports').removeClass('active');
+                $('#sidenavreports, #sidenavreports2').removeClass('active');
                 $('#sidenavsales').removeClass('active');
                 $('#sidenavsettings').removeClass('active');
                 $('#sidenavstocktake').removeClass('active');
@@ -774,6 +761,16 @@ Template.newsidenav.onRendered(function() {
     });
 
 
+    getVS1Data('TCustomFieldList').then(function(dataObject) {
+      if (dataObject.length == 0) {
+        sideBarService.getAllCustomFields().then(function(data) {
+            addVS1Data('TCustomFieldList', JSON.stringify(data));
+        }).catch(function(err) {
+
+        });
+      }
+    });
+
     getVS1Data('TAppUser').then(function(dataObject) {
         if (dataObject.length == 0) {
           $('#headerprogressLabelFirst').css('display','block');
@@ -923,8 +920,6 @@ Template.newsidenav.onRendered(function() {
       $('.headerprogressbar').addClass('headerprogressbarHidden');
     }, 800);
   }
-
-
 
     if (isGreenTrack) {
         $(".navbar").css("background-color", "#00a969");
@@ -1232,6 +1227,109 @@ Template.newsidenav.onRendered(function() {
         });
     }
 
+
+    templateObject.getAllCRMData = function() {
+        sideBarService.getAllTaskList().then(function(data) {
+          countObjectTimes++;
+          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
+          $(".progressName").text("Task List ");
+          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
+            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }else{
+              $('.headerprogressbar').addClass('headerprogressbarShow');
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }
+
+          }else if(Math.round(progressPercentage) >= 100){
+              $('.checkmarkwrapper').removeClass("hide");
+            setTimeout(function() {
+              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }else{
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }
+
+            }, 1000);
+          }
+            addVS1Data('TCRMTaskList', JSON.stringify(data));
+            $("<span class='process'>Task List <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+
+
+        sideBarService.getTProjectList().then(function(data) {
+          countObjectTimes++;
+          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
+          $(".progressName").text("Project List ");
+          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
+            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }else{
+              $('.headerprogressbar').addClass('headerprogressbarShow');
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }
+
+          }else if(Math.round(progressPercentage) >= 100){
+              $('.checkmarkwrapper').removeClass("hide");
+            setTimeout(function() {
+              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }else{
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }
+
+            }, 1000);
+          }
+            addVS1Data('TCRMProjectList', JSON.stringify(data));
+            $("<span class='process'>Project List <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+
+        sideBarService.getAllLabels().then(function(data) {
+          countObjectTimes++;
+          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
+          $(".progressName").text("Task Label List ");
+          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
+            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }else{
+              $('.headerprogressbar').addClass('headerprogressbarShow');
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }
+
+          }else if(Math.round(progressPercentage) >= 100){
+              $('.checkmarkwrapper').removeClass("hide");
+            setTimeout(function() {
+              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }else{
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }
+
+            }, 1000);
+          }
+            addVS1Data('TCRMLabelList', JSON.stringify(data));
+            $("<span class='process'>Task Label List <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+
+    }
 
     templateObject.getAllTermsData = function() {
         sideBarService.getTermsVS1().then(function(data) {
@@ -5122,6 +5220,16 @@ Template.newsidenav.onRendered(function() {
     //Followed By Sales Details
     templateObject.getFollowedSalesDetailsPull = function() {
         setTimeout(function() {
+              if (isCRM) {
+                  getVS1Data('TCRMTaskList').then(function(dataObject) {
+                      if (dataObject.length == 0) {
+                          templateObject.getAllCRMData();
+                      } else {}
+                  }).catch(function(err) {
+                      templateObject.getAllCRMData();
+                  });
+              }
+
             if (isSales) {
                 getVS1Data('TSalesList').then(function(dataObject) {
                     if (dataObject.length == 0) {
@@ -6808,7 +6916,7 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
-    'click #sidenavreports': function(event) {
+    'click #sidenavreports, #sidenavreports2': function(event) {
         $('.accountsLi').addClass('opacityNotActive');
         $('.appointmentsLi').addClass('opacityNotActive');
         $('.bankingLi').addClass('opacityNotActive');
@@ -7572,6 +7680,12 @@ Template.newsidenav.events({
         FlowRouter.go('/allreports');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavAccountant': function(event) {
+      event.preventDefault();
+      FlowRouter.go('/accountant');
+      let templateObject = Template.instance();
+      templateObject.getSetSideNavFocus();
     },
     'click .salesLiHeader': function(event) {
         event.preventDefault();

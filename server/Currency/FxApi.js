@@ -1,10 +1,10 @@
 import { Meteor } from "meteor/meteor";
 
 class FxApi {
-  static ApiID = "xecurrency321962766";
-  static ApiKey = "igl1bnnnutj04e4jcdh1kuumsb";
+  static ApiID = "zuusoft950777471";
+  static ApiKey = "vishcmvmobuofpf6ikl7si1jrs";
   static encodedApiKey =
-    "c2Rmc2RmMTY3NDgyOTU4OnRlZ242NXVmbmc1MWp1OWhqZWt2ZnZubWlr";
+    "enV1c29mdDk1MDc3NzQ3MTp2aXNoY212bW9idW9mcGY2aWtsN3NpMWpycw==";
 
   constructor() {}
 

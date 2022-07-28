@@ -58,7 +58,7 @@ Template.employeelist.onRendered(function() {
                     let lineItems = [];
                     let lineItemObj = {};
                     for(let i=0; i<data.temployee.length; i++){
-                        let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile)
+                        let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country)
                         var dataList = {
                             id: data.temployee[i].fields.ID || '',
                             employeeno: data.temployee[i].fields.EmployeeNo || '',
@@ -232,7 +232,7 @@ Template.employeelist.onRendered(function() {
                 let lineItemObj = {};
                 for(let i=0; i<useData.length; i++){
 
-                    let mobile = contactService.changeMobileFormat(useData[i].fields.Mobile);
+                    let mobile = contactService.changeDialFormat(useData[i].fields.Mobile, useData[i].fields.Country);
                     var dataList = {
                         id: useData[i].fields.ID || '',
                         employeeno: useData[i].fields.EmployeeNo || '',
@@ -399,7 +399,7 @@ Template.employeelist.onRendered(function() {
                 let lineItems = [];
                 let lineItemObj = {};
                 for(let i=0; i<data.temployee.length; i++){
-                    let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
+                    let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country);
                     var dataList = {
                         id: data.temployee[i].fields.ID || '',
                         employeeno: data.temployee[i].fields.EmployeeNo || '',
@@ -648,7 +648,7 @@ Template.employeelist.events({
                 let lineItemObj = {};
                 if (data.temployee.length > 0) {
                     for(let i=0; i<data.temployee.length; i++){
-                        let mobile = contactService.changeMobileFormat();
+                        let mobile = contactService.changeDialFormat(data.temployee[i].fields.Mobile, data.temployee[i].fields.Country);
                         var dataList = {
                             id: data.temployee[i].fields.ID || '',
                             employeeno: data.temployee[i].fields.EmployeeNo || '',
@@ -1033,8 +1033,8 @@ Template.employeelist.events({
                                 type: "TEmployee",
                                 fields:
                                 {
-                                    FirstName: results.data[i+1][0],
-                                    LastName: results.data[i+1][1],
+                                    FirstName: results.data[i+1][0].trim(),
+                                    LastName: results.data[i+1][1].trim(),
                                     Phone: results.data[i+1][2],
                                     Mobile: results.data[i+1][3],
                                     DateStarted: empStartDate,

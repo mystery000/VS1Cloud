@@ -583,6 +583,7 @@ Template.balancesheetreport.onRendered(() => {
       templateObject.$(".update_search").click();
     }, 0);
   }
+  
   $("#search_list").click(function () {
     let balanceDate = $("#balanceDate").val();
     var SegsBalDate = balanceDate.split(" ");

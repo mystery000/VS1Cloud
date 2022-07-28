@@ -21,14 +21,11 @@ let times = 0;
 let clickedInput = "";
 let isDropDown = false;
 
-let template_list = [
-  
+let template_list = [  
     "Invoices",
     "Invoice Back Orders",
     "Delivery Docket",
-  ];
-
-
+];
 
 Template.new_invoice.onCreated(() => {
     const templateObject = Template.instance();
@@ -55,6 +52,7 @@ Template.new_invoice.onCreated(() => {
     templateObject.termrecords = new ReactiveVar();
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.taxcodes = new ReactiveVar([]);
     templateObject.custfields = new ReactiveVar([]);
     templateObject.record = new ReactiveVar({});
     templateObject.accountID = new ReactiveVar();
@@ -118,48 +116,46 @@ Template.new_invoice.onRendered(() => {
 
         templateObject.getTemplateInfo = function() {
 
-        getVS1Data('TemplateSettings').then(function(dataObject) {
+            getVS1Data('TemplateSettings').then(function(dataObject) {
 
-             let data = JSON.parse(dataObject[0].data);
-             let useData = data;
-             let lineItems = [];
-             let lineItemObj = {};
+                if (dataObject.length === 0) {
+                    return;
+                }
 
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data;
+                let lineItems = [];
+                let lineItemObj = {};
 
-             if(data.fields)
-             {
- 
-               var invoices = data.fields.invoices;
-               var invoices_back_order = data.fields.invoices_back_order;
-               var delivery_docket = data.fields.delivery_docket;
+                if(data.fields)
+                {
 
-           
-               $('#Invoices_'+invoices).attr("checked", "checked");
-               $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
-               $("[id='Invoice Back Orders_"+invoices_back_order+"']").attr("checked", "checked");
+                var invoices = data.fields.invoices;
+                var invoices_back_order = data.fields.invoices_back_order;
+                var delivery_docket = data.fields.delivery_docket;
 
-               $('#choosetemplate').attr("checked", "checked");
+                $('#Invoices_'+invoices).attr("checked", "checked");
+                $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
+                $("[id='Invoice Back Orders_"+invoices_back_order+"']").attr("checked", "checked");
 
-               if($('#choosetemplate').is(':checked'))
-               {        
-                   //$('#templateselection').modal('show');
-               }
-               else
-               {   
-               $('#templateselection').modal('hide');
-               }
-           
+                $('#choosetemplate').attr("checked", "checked");
 
-             }
-     
+                if($('#choosetemplate').is(':checked'))
+                {        
+                    //$('#templateselection').modal('show');
+                }
+                else
+                {   
+                $('#templateselection').modal('hide');
+                }
+            
+                }
+        
+            });
 
-        });
+        };
 
-
-     };
-
-
-     templateObject.getTemplateInfo();
+        templateObject.getTemplateInfo();
 
         $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
         
@@ -4324,35 +4320,35 @@ Template.new_invoice.onRendered(() => {
 
             $('#tblInvoiceLine > tbody > tr').each(function () {
 
-            var lineID = this.id;
-            let tdproduct = $('#' + lineID + " .lineProductName").val();
-            let tddescription = $('#' + lineID + " .lineProductDesc").text();
-            let tdQty = $('#' + lineID + " .lineQty").val();
-            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-            let taxamount = $('#' + lineID + " .colTaxAmount").text();
-            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+                var lineID = this.id;
+                let tdproduct = $('#' + lineID + " .lineProductName").val();
+                let tddescription = $('#' + lineID + " .lineProductDesc").text();
+                let tdQty = $('#' + lineID + " .lineQty").val();
+                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let taxamount = $('#' + lineID + " .colTaxAmount").text();
+                let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-            array_data.push([
-                tdproduct,
-                tddescription,
-                tdQty,
-                tdunitprice,
-                taxamount,
-                tdlineamt,
-            ]);
+                array_data.push([
+                    tdproduct,
+                    tddescription,
+                    tdQty,
+                    tdunitprice,
+                    taxamount,
+                    tdlineamt,
+                ]);
 
-            lineItemObj = {
-                description: tddescription || '',
-                quantity: tdQty || 0,
-                unitPrice: tdunitprice.toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                }) || 0,
-                tax:tdtaxrate||0,
-                amount:tdlineamt || 0
-            }
-            lineItems.push(lineItemObj);
+                lineItemObj = {
+                    description: tddescription || '',
+                    quantity: tdQty || 0,
+                    unitPrice: tdunitprice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0,
+                    tax:tdtaxrate||0,
+                    amount:tdlineamt || 0
+                }
+                lineItems.push(lineItemObj);
 
             });
 
@@ -4368,8 +4364,6 @@ Template.new_invoice.onRendered(() => {
             }
             stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
-
 
             if(number == 1)
             {
@@ -4796,33 +4790,33 @@ Template.new_invoice.onRendered(() => {
 
             $('#tblInvoiceLine > tbody > tr').each(function () {
 
-            var lineID = this.id;
-            let tdproduct = $('#' + lineID + " .lineProductName").val();
-            let tddescription = $('#' + lineID + " .lineProductDesc").text();
-            let tdQty = $('#' + lineID + " .lineQty").val();
-            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-            let taxamount = $('#' + lineID + " .colTaxAmount").text();
-            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+                var lineID = this.id;
+                let tdproduct = $('#' + lineID + " .lineProductName").val();
+                let tddescription = $('#' + lineID + " .lineProductDesc").text();
+                let tdQty = $('#' + lineID + " .lineQty").val();
+                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let taxamount = $('#' + lineID + " .colTaxAmount").text();
+                let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-            array_data.push([
-                tdproduct,
-                tddescription,
-                tdQty,
-               
-            ]);
+                array_data.push([
+                    tdproduct,
+                    tddescription,
+                    tdQty,
+                
+                ]);
 
-            lineItemObj = {
-                description: tddescription || '',
-                quantity: tdQty || 0,
-                unitPrice: tdunitprice.toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                }) || 0,
-                tax:tdtaxrate||0,
-                amount:tdlineamt || 0
-            }
-            lineItems.push(lineItemObj);
+                lineItemObj = {
+                    description: tddescription || '',
+                    quantity: tdQty || 0,
+                    unitPrice: tdunitprice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0,
+                    tax:tdtaxrate||0,
+                    amount:tdlineamt || 0
+                }
+                lineItems.push(lineItemObj);
 
             });
 
@@ -7530,35 +7524,35 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
         $('#tblInvoiceLine > tbody > tr').each(function () {
 
-        var lineID = this.id;
-        let tdproduct = $('#' + lineID + " .lineProductName").val();
-        let tddescription = $('#' + lineID + " .lineProductDesc").text();
-        let tdQty = $('#' + lineID + " .lineQty").val();
-        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-        let taxamount = $('#' + lineID + " .colTaxAmount").text();
-        let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let taxamount = $('#' + lineID + " .colTaxAmount").text();
+            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-        array_data.push([
-            tdproduct,
-            tddescription,
-            tdQty,
-            tdunitprice,
-            taxamount,
-            tdlineamt,
-        ]);
+            array_data.push([
+                tdproduct,
+                tddescription,
+                tdQty,
+                tdunitprice,
+                taxamount,
+                tdlineamt,
+            ]);
 
-        lineItemObj = {
-            description: tddescription || '',
-            quantity: tdQty || 0,
-            unitPrice: tdunitprice.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || 0,
-            tax:tdtaxrate||0,
-            amount:tdlineamt || 0
-        }
-        lineItems.push(lineItemObj);
+            lineItemObj = {
+                description: tddescription || '',
+                quantity: tdQty || 0,
+                unitPrice: tdunitprice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0,
+                tax:tdtaxrate||0,
+                amount:tdlineamt || 0
+            }
+            lineItems.push(lineItemObj);
 
         });
 
@@ -7763,35 +7757,35 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
         $('#tblInvoiceLine > tbody > tr').each(function () {
 
-        var lineID = this.id;
-        let tdproduct = $('#' + lineID + " .lineProductName").val();
-        let tddescription = $('#' + lineID + " .lineProductDesc").text();
-        let tdQty = $('#' + lineID + " .lineQty").val();
-        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-        let taxamount = $('#' + lineID + " .colTaxAmount").text();
-        let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let taxamount = $('#' + lineID + " .colTaxAmount").text();
+            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-        array_data.push([
-            tdproduct,
-            tddescription,
-            tdQty,
-            tdunitprice,
-            taxamount,
-            tdlineamt,
-        ]);
+            array_data.push([
+                tdproduct,
+                tddescription,
+                tdQty,
+                tdunitprice,
+                taxamount,
+                tdlineamt,
+            ]);
 
-        lineItemObj = {
-            description: tddescription || '',
-            quantity: tdQty || 0,
-            unitPrice: tdunitprice.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || 0,
-            tax:tdtaxrate||0,
-            amount:tdlineamt || 0
-        }
-        lineItems.push(lineItemObj);
+            lineItemObj = {
+                description: tddescription || '',
+                quantity: tdQty || 0,
+                unitPrice: tdunitprice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0,
+                tax:tdtaxrate||0,
+                amount:tdlineamt || 0
+            }
+            lineItems.push(lineItemObj);
 
         });
 
@@ -7808,11 +7802,9 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
         stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-     
-    
         if(number == 1)
         {
-              item_invoices = {
+            item_invoices = {
 
                 o_url: Session.get('vs1companyURL'),
                 o_name: Session.get('vs1companyName'),
@@ -7852,8 +7844,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 applied : "",
                 showFX:"",
                 comment:comment,
-              };
-
+            };
         }
         else if(number == 2)
         {
@@ -7896,8 +7887,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 applied : "",
                 showFX:"",
                 comment:comment,
-              };
-
+            };
         }
         else
         {
@@ -7940,22 +7930,18 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 applied : "",
                 showFX:fx,
                 comment:comment,
-              };
+            };
+        }
 
-            }
+        object_invoce.push(item_invoices);
 
+        $("#html-2-pdfwrapper_new .field_payment").show();
+        $("#html-2-pdfwrapper_new .field_amount").show();
 
-       
-    
-            object_invoce.push(item_invoices);
+        await updateTemplate(object_invoce);
 
-            $("#html-2-pdfwrapper_new .field_payment").show();
-            $("#html-2-pdfwrapper_new .field_amount").show();
-
-            await updateTemplate(object_invoce);
-
-            await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-            return true;
+        await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+        return true;
     }
 
     async function showDeliveryDocket(template_title,number)
@@ -8000,34 +7986,34 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
         $('#tblInvoiceLine > tbody > tr').each(function () {
 
-        var lineID = this.id;
-        let tdproduct = $('#' + lineID + " .lineProductName").val();
-        let tddescription = $('#' + lineID + " .lineProductDesc").text();
-        let tdQty = $('#' + lineID + " .lineQty").val();
-        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-        let taxamount = $('#' + lineID + " .colTaxAmount").text();
-        let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let taxamount = $('#' + lineID + " .colTaxAmount").text();
+            let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-        array_data.push([
-            tdproduct,
-            tddescription,
-            tdQty,
-          
-        ]);
+            array_data.push([
+                tdproduct,
+                tddescription,
+                tdQty,
+            
+            ]);
 
-        lineItemObj = {
-            description: tddescription || '',
-            quantity: tdQty || 0,
-            unitPrice: tdunitprice.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) || 0,
-            tax:tdtaxrate||0,
-            amount:tdlineamt || 0
-        }
-        
-        lineItems.push(lineItemObj);
+            lineItemObj = {
+                description: tddescription || '',
+                quantity: tdQty || 0,
+                unitPrice: tdunitprice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0,
+                tax:tdtaxrate||0,
+                amount:tdlineamt || 0
+            }
+            
+            lineItems.push(lineItemObj);
 
         });
 
@@ -8903,8 +8889,9 @@ Template.new_invoice.onRendered(function () {
     let productService = new ProductService();
     let salesService = new SalesBoardService();
     let tableProductList;
-    var splashArrayProductList = new Array();
-    var splashArrayTaxRateList = new Array();
+    let taxCodes = new Array();
+    let splashArrayProductList = new Array();
+    let splashArrayTaxRateList = new Array();
     const taxCodesList = [];
     const lineExtaSellItems = [];
 
@@ -9214,13 +9201,15 @@ Template.new_invoice.onRendered(function () {
     tempObj.getAllTaxCodes = function () {
         getVS1Data('TTaxcodeVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTaxCodesVS1().then(function (data) {
+                salesService.getTaxCodesDetailVS1().then(function (data) {
 
                     let records = [];
                     let inventoryData = [];
+                    taxCodes = data.ttaxcodevs1;
+                    tempObj.taxcodes.set(taxCodes);
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                        var dataList = [
+                        let dataList = [
                             data.ttaxcodevs1[i].Id || '',
                             data.ttaxcodevs1[i].CodeName || '',
                             data.ttaxcodevs1[i].Description || '-',
@@ -9279,6 +9268,8 @@ Template.new_invoice.onRendered(function () {
                 let useData = data.ttaxcodevs1;
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < useData.length; i++) {
                     let taxRate = (useData[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -9336,10 +9327,12 @@ Template.new_invoice.onRendered(function () {
                 }
             }
         }).catch(function (err) {
-            salesService.getTaxCodesVS1().then(function (data) {
+            salesService.getTaxCodesDetailVS1().then(function (data) {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -9403,51 +9396,115 @@ Template.new_invoice.onRendered(function () {
     tempObj.getAllTaxCodes();
 
 
+    // // custom field displaysettings
+    // tempObj.getAllCustomFieldDisplaySettings = function () {
+    //   let custFields = [];
+    //   let customData = {};
+    //   let customFieldCount = 12;
+    //   let ListType = 'ltSaleslines';  // tempcode until InvoiceLines is added on backend
+
+    //   sideBarService.getAllCustomFieldsWithQuery(ListType).then(function (data) {
+    //       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+    //         if (data.tcustomfieldlist[x].fields.ListType == ListType) {
+    //           customData = {
+    //             active: data.tcustomfieldlist[x].fields.Active || false,
+    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
+    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+    //           };
+    //           custFields.push(customData);
+    //         }
+    //       }
+
+    //       if (custFields.length < customFieldCount) {
+    //         let remainder = customFieldCount - custFields.length;
+    //         let getRemCustomFields = parseInt(custFields.length);
+    //         // count = count + remainder;
+    //         for (let r = 0; r < remainder; r++) {
+    //           getRemCustomFields++;
+    //           customData = {
+    //             active: false,
+    //             id: "",
+    //             custfieldlabel: "",
+    //             datatype: "",
+    //             isempty: true,
+    //             iscombo: false,
+    //           };
+    //           // count++;
+    //           custFields.push(customData);
+    //         }
+    //       }
+    //       tempObj.displayfields.set(custFields);
+          
+    //     })
+    // } 
     // custom field displaysettings
-    tempObj.getAllCustomFieldDisplaySettings = function () {
+    function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
       let customData = {};
-      let customFieldCount = 10;
-      let ListType = 'ltSaleslines';  // tempcode until InvoiceLines is added on backend
+      let customFieldCount = 14;
+  
+      for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+        if (data.tcustomfieldlist[x].fields.ListType == listType) {
+          customData = {
+            active: data.tcustomfieldlist[x].fields.Active || false,
+            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+            datatype: data.tcustomfieldlist[x].fields.DataType || "",
+            isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+            iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+            dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+          };
+          custFields.push(customData);
+        }
+      }
 
-      sideBarService.getAllCustomFieldsWithQuery(ListType).then(function (data) {
-          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-            if (data.tcustomfieldlist[x].fields.ListType == ListType) {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              custFields.push(customData);
-            }
-          }
-
-          if (custFields.length < customFieldCount) {
-            let remainder = customFieldCount - custFields.length;
-            let getRemCustomFields = parseInt(custFields.length);
-            // count = count + remainder;
-            for (let r = 0; r < remainder; r++) {
-              getRemCustomFields++;
-              customData = {
-                active: false,
-                id: "",
-                custfieldlabel: "",
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              // count++;
-              custFields.push(customData);
-            }
-          }
-          tempObj.displayfields.set(custFields);
-          
-        })
+      if (custFields.length < customFieldCount) {
+        let remainder = customFieldCount - custFields.length;
+        let getRemCustomFields = parseInt(custFields.length);
+        for (let r = 0; r < remainder; r++) {
+          getRemCustomFields++;
+          customData = {
+            active: false,
+            id: "",
+            custfieldlabel: "",
+            datatype: "",
+            isempty: true,
+            iscombo: false,
+          };
+          custFields.push(customData);
+        }
+      }
+      tempObj.displayfields.set(custFields);
     }
+
+    tempObj.getAllCustomFieldDisplaySettings = function () {
+      
+      let listType = 'ltSaleslines';   // tempcode until InvoiceLines is added on backend
+      try {
+        getVS1Data("TltSaleslines").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              initCustomFieldDisplaySettings(data, listType);
+              addVS1Data("TltSaleslines", JSON.stringify(data));
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            initCustomFieldDisplaySettings(data, listType);
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              addVS1Data("TltSaleslines", JSON.stringify(data));
+            });
+          }
+        })
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     tempObj.getAllCustomFieldDisplaySettings();
 });
 
@@ -11328,6 +11385,100 @@ Template.new_invoice.events({
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectLineID').val(targetID);
     },
+    'click .lineTaxAmount': function (event) {
+        let targetRow = $(event.target).closest('tr');
+        let targetID = targetRow.attr('id');
+        let targetTaxCode = targetRow.find('.lineTaxCode').val();
+        let qty = targetRow.find(".lineQty").val() || 0
+        let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+        const tmpObj = Template.instance();
+        const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+        // console.log(targetID, targetTaxCode, qty, price, taxDetail);
+
+        if (!taxDetail) {
+            return;
+        }
+
+        let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+        let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+
+        let taxRateDetailList = [];
+        taxRateDetailList.push([
+            taxDetail.Description,
+            taxDetail.CodeName,
+            `${taxDetail.Rate * 100}%`,
+            "Selling Price",
+            `$${priceTotal}`,
+            `$${taxTotal}`,
+            `$${priceTotal + taxTotal}`,
+        ]);
+        if (taxDetail.Lines) {
+            taxDetail.Lines.map((line) => {
+                taxRateDetailList.push([
+                    "",
+                    line.SubTaxCode,
+                    `${line.Percentage}%`,
+                    line.PercentageOn,
+                    "",
+                    `$${priceTotal * line.Percentage / 100}`,
+                    ""
+                ]);
+            });
+        }
+
+        if (taxRateDetailList) {
+
+            if (! $.fn.DataTable.isDataTable('#tblTaxRateDetail')) {
+                $('#tblTaxRateDetail').DataTable({
+                    data: [],
+                    order: [[0, 'desc']],
+                    // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [{
+                            orderable: true,
+                            targets: [0]
+                        }, {
+                            className: "taxCode",
+                            "targets": [1]
+                        }, {
+                            className: "taxRate text-right",
+                            "targets": [2]
+                        }, {
+                            className: "taxRateOn",
+                            "targets": [3]
+                        }, {
+                            className: "amountEx text-right",
+                            "targets": [4]
+                        }, {
+                            className: "tax text-right",
+                            "targets": [5]
+                        }, {
+                            className: "amountInc text-right",
+                            "targets": [6]
+                        }
+                    ],
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "fnDrawCallback": function (oSettings) {
+                        
+                    },
+                    "fnInitComplete": function () {
+                      
+                    }
+                });
+            }
+
+            let datatable = $('#tblTaxRateDetail').DataTable();
+            datatable.clear();
+            datatable.rows.add(taxRateDetailList);
+            datatable.draw(false);
+        }
+
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+    },
     'click .lineSerialNo, keydown .lineSerialNo': function(event) {
         var $earch = $(event.currentTarget);
         var offset = $earch.offset();
@@ -11472,133 +11623,133 @@ Template.new_invoice.events({
            }
 
        }
-},
-'click .lineUOM, keydown .lineUOM': function(event) {
-   var $earch = $(event.currentTarget);
-   var offset = $earch.offset();
-   $('#edtUOMID').val('');
-   $('.UOMpopheader').text('New Units Of Measure');
-   $('#edtUOMID').val('');
-   $('#edtUOMNamePop').val('');
-   $('#edtUOMLinkToPop').val('');
-   $('#edtUOMDescPop').val('');
-   $('#edtUOMUnitMultiplierPop').val('');
-   $('#edtUOMNamePop').attr('readonly', false);
-   let purchaseService = new PurchaseBoardService();
-   var UOMDataName = $(event.target).val() || '';
-   if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-       $('#UOMListModal').modal('toggle');
-       var targetID = $(event.target).closest('tr').attr('id');
-       $('#selectLineID').val(targetID);
-       setTimeout(function() {
-           $('#tblUOM_filter .form-control-sm').focus();
-           $('#tblUOM_filter .form-control-sm').val('');
-           $('#tblUOM_filter .form-control-sm').trigger("input");
+    },
+    'click .lineUOM, keydown .lineUOM': function(event) {
+        var $earch = $(event.currentTarget);
+        var offset = $earch.offset();
+        $('#edtUOMID').val('');
+        $('.UOMpopheader').text('New Units Of Measure');
+        $('#edtUOMID').val('');
+        $('#edtUOMNamePop').val('');
+        $('#edtUOMLinkToPop').val('');
+        $('#edtUOMDescPop').val('');
+        $('#edtUOMUnitMultiplierPop').val('');
+        $('#edtUOMNamePop').attr('readonly', false);
+        let purchaseService = new PurchaseBoardService();
+        var UOMDataName = $(event.target).val() || '';
+        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+            $('#UOMListModal').modal('toggle');
+            var targetID = $(event.target).closest('tr').attr('id');
+            $('#selectLineID').val(targetID);
+            setTimeout(function() {
+                $('#tblUOM_filter .form-control-sm').focus();
+                $('#tblUOM_filter .form-control-sm').val('');
+                $('#tblUOM_filter .form-control-sm').trigger("input");
 
-           var datatable = $('#tblUOM').DataTable();
-           datatable.draw();
-           $('#tblUOM_filter .form-control-sm').trigger("input");
+                var datatable = $('#tblUOM').DataTable();
+                datatable.draw();
+                $('#tblUOM_filter .form-control-sm').trigger("input");
 
-       }, 500);
-   } else {
-       if (UOMDataName.replace(/\s/g, '') != '') {
+            }, 500);
+        } else {
+            if (UOMDataName.replace(/\s/g, '') != '') {
 
-           getVS1Data('TUnitOfMeasure').then(function (dataObject) {
-             if(dataObject.length == 0){
-               sideBarService.getUOMVS1().then(function (data) {
-                 let lineItems = [];
-                 let lineItemObj = {};
-                 for(let i=0; i<data.tunitofmeasure.length; i++){
-                   if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
-                     $('#edtUOMNamePop').attr('readonly', true);
-                   let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
-                   var taxRateID = data.tunitofmeasure[i].fields.ID || '';
-                    var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
-                    var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
-                    $('#edtUOMID').val(taxRateID);
-                    $('#edtUOMNamePop').val(taxRateName);
-                    $('#edtTaxRatePop').val(taxRate);
-                    $('#edtTaxDescPop').val(taxRateDesc);
-                    setTimeout(function() {
-                    $('#newUOMModal').modal('toggle');
-                    }, 100);
-                  }
-                 }
+                getVS1Data('TUnitOfMeasure').then(function (dataObject) {
+                    if(dataObject.length == 0){
+                    sideBarService.getUOMVS1().then(function (data) {
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        for(let i=0; i<data.tunitofmeasure.length; i++){
+                        if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
+                            $('#edtUOMNamePop').attr('readonly', true);
+                        let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
+                        var taxRateID = data.tunitofmeasure[i].fields.ID || '';
+                            var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
+                            var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
+                            $('#edtUOMID').val(taxRateID);
+                            $('#edtUOMNamePop').val(taxRateName);
+                            $('#edtTaxRatePop').val(taxRate);
+                            $('#edtTaxDescPop').val(taxRateDesc);
+                            setTimeout(function() {
+                            $('#newUOMModal').modal('toggle');
+                            }, 100);
+                        }
+                        }
 
-               }).catch(function (err) {
-                   // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                   $('.fullScreenSpin').css('display','none');
-                   // Meteor._reload.reload();
-               });
-             }else{
-               let data = JSON.parse(dataObject[0].data);
-               let useData = data.tunitofmeasure;
-               let lineItems = [];
-               let lineItemObj = {};
-               $('.uompopheader').text('Edit Units Of Measure');
-               for(let i=0; i<data.tunitofmeasure.length; i++){
-                 if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
-                   $('#edtTaxNamePop').attr('readonly', true);
-                 let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
-                 var taxRateID = data.tunitofmeasure[i].fields.ID || '';
-                  var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
-                  var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
-                  $('#edtTaxID').val(taxRateID);
-                  $('#edtTaxNamePop').val(taxRateName);
-                  $('#edtTaxRatePop').val(taxRate);
-                  $('#edtUOMDescPop').val(taxRateDesc);
-                  setTimeout(function() {
-                  $('#newUOMModal').modal('toggle');
-                  }, 100);
-                }
-               }
-             }
-           }).catch(function (err) {
-             sideBarService.getUOMVS1().then(function (data) {
-               let lineItems = [];
-               let lineItemObj = {};
-               for(let i=0; i<data.tunitofmeasure.length; i++){
-                 if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
-                   $('#edtTaxNamePop').attr('readonly', true);
-                 let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
-                 var taxRateID = data.tunitofmeasure[i].fields.ID || '';
-                  var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
-                  var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
-                  $('#edtTaxID').val(taxRateID);
-                  $('#edtTaxNamePop').val(taxRateName);
-                  $('#edtTaxRatePop').val(taxRate);
-                  $('#edtTaxDescPop').val(taxRateDesc);
-                  setTimeout(function() {
-                  $('#newUOMModal').modal('toggle');
-                  }, 100);
-                }
-               }
+                    }).catch(function (err) {
+                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                        $('.fullScreenSpin').css('display','none');
+                        // Meteor._reload.reload();
+                    });
+                    }else{
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tunitofmeasure;
+                    let lineItems = [];
+                    let lineItemObj = {};
+                    $('.uompopheader').text('Edit Units Of Measure');
+                    for(let i=0; i<data.tunitofmeasure.length; i++){
+                        if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
+                        $('#edtTaxNamePop').attr('readonly', true);
+                        let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
+                        var taxRateID = data.tunitofmeasure[i].fields.ID || '';
+                        var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
+                        var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
+                        $('#edtTaxID').val(taxRateID);
+                        $('#edtTaxNamePop').val(taxRateName);
+                        $('#edtTaxRatePop').val(taxRate);
+                        $('#edtUOMDescPop').val(taxRateDesc);
+                        setTimeout(function() {
+                        $('#newUOMModal').modal('toggle');
+                        }, 100);
+                        }
+                    }
+                    }
+                }).catch(function (err) {
+                    sideBarService.getUOMVS1().then(function (data) {
+                    let lineItems = [];
+                    let lineItemObj = {};
+                    for(let i=0; i<data.tunitofmeasure.length; i++){
+                        if ((data.tunitofmeasure[i].fields.UOMName) === UOMDataName) {
+                        $('#edtTaxNamePop').attr('readonly', true);
+                        let taxRate = (data.tunitofmeasure[i].fields.Rate * 100).toFixed(2);
+                        var taxRateID = data.tunitofmeasure[i].fields.ID || '';
+                        var taxRateName = data.tunitofmeasure[i].fields.UOMName ||'';
+                        var taxRateDesc = data.tunitofmeasure[i].fields.Description || '';
+                        $('#edtTaxID').val(taxRateID);
+                        $('#edtTaxNamePop').val(taxRateName);
+                        $('#edtTaxRatePop').val(taxRate);
+                        $('#edtTaxDescPop').val(taxRateDesc);
+                        setTimeout(function() {
+                        $('#newUOMModal').modal('toggle');
+                        }, 100);
+                        }
+                    }
 
-             }).catch(function (err) {
-                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                 $('.fullScreenSpin').css('display','none');
-                 // Meteor._reload.reload();
-             });
-           });
+                    }).catch(function (err) {
+                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                        $('.fullScreenSpin').css('display','none');
+                        // Meteor._reload.reload();
+                    });
+                });
 
-       } else {
-           $('#UOMListModal').modal('toggle');
-           var targetID = $(event.target).closest('tr').attr('id');
-           $('#selectLineID').val(targetID);
-           setTimeout(function() {
-               $('#tblUOM_filter .form-control-sm').focus();
-               $('#tblUOM_filter .form-control-sm').val('');
-               $('#tblUOM_filter .form-control-sm').trigger("input");
+            } else {
+                $('#UOMListModal').modal('toggle');
+                var targetID = $(event.target).closest('tr').attr('id');
+                $('#selectLineID').val(targetID);
+                setTimeout(function() {
+                    $('#tblUOM_filter .form-control-sm').focus();
+                    $('#tblUOM_filter .form-control-sm').val('');
+                    $('#tblUOM_filter .form-control-sm').trigger("input");
 
-               var datatable = $('#tblUOM').DataTable();
-               datatable.draw();
-               $('#tblUOM_filter .form-control-sm').trigger("input");
+                    var datatable = $('#tblUOM').DataTable();
+                    datatable.draw();
+                    $('#tblUOM_filter .form-control-sm').trigger("input");
 
-           }, 500);
-       }
+                }, 500);
+            }
 
-   }
-},
+        }
+    },
     'click .printConfirm':async function (event) {
 
             var printTemplate = [];
@@ -12864,15 +13015,6 @@ Template.new_invoice.events({
             $('.colQty').css('display', 'none');
         }
     },
-    'click .chkUnitPrice': function (event) {
-        if ($(event.target).is(':checked')) {
-            $('.colUnitPrice').css('display', 'table-cell');
-            $('.colUnitPrice').css('padding', '.75rem');
-            $('.colUnitPrice').css('vertical-align', 'top');
-        } else {
-            $('.colUnitPrice').css('display', 'none');
-        }
-    },
     'click .chkCostPrice': function (event) {
         if ($(event.target).is(':checked')) {
             $('.colCostPrice').css('display', 'table-cell');
@@ -12898,15 +13040,6 @@ Template.new_invoice.events({
             $('.colTaxRate').css('vertical-align', 'top');
         } else {
             $('.colTaxRate').css('display', 'none');
-        }
-    },
-    'click .chkAmount': function (event) {
-        if ($(event.target).is(':checked')) {
-            $('.colAmount').css('display', 'table-cell');
-            $('.colAmount').css('padding', '.75rem');
-            $('.colAmount').css('vertical-align', 'top');
-        } else {
-            $('.colAmount').css('display', 'none');
         }
     },
     'click .chkUnits': function (event) {
@@ -12935,6 +13068,95 @@ Template.new_invoice.events({
             $('.colTaxAmount').css('vertical-align', 'top');
         } else {
             $('.colTaxAmount').css('display', 'none');
+        }
+    },
+
+    'click .chkAmount': function (event) {
+      if ($(event.target).is(':checked')) {
+          $('.colAmount').css('display', 'table-cell');
+          $('.colAmount').css('padding', '.75rem');
+          $('.colAmount').css('vertical-align', 'top');
+
+          $('.chkAmountInc').prop("checked", false);
+          $('.colAmountInc').css('display', 'none');
+        } else {
+          $('.colAmount').css('display', 'none');
+
+          $('.chkAmountInc').prop("checked", true);
+          $('.colAmountInc').css('display', 'table-cell');
+          $('.colAmountInc').css('padding', '.75rem');
+          $('.colAmountInc').css('vertical-align', 'top');
+      }
+    },
+    'click .chkAmountInc': function(event) {
+      if ($(event.target).is(':checked')) {
+          $('.colAmountInc').css('display', 'table-cell');
+          $('.colAmountInc').css('padding', '.75rem');
+          $('.colAmountInc').css('vertical-align', 'top');
+
+          $('.chkAmount').prop("checked", false);
+          $('.colAmount').css('display', 'none');
+      } else {
+          $('.colAmountInc').css('display', 'none');
+
+          $('.chkAmount').prop("checked", true);
+          $('.colAmount').css('display', 'table-cell');
+          $('.colAmount').css('padding', '.75rem');
+          $('.colAmount').css('vertical-align', 'top');
+      }
+    },
+
+    'click .chkUnitPrice': function (event) {
+      if ($(event.target).is(':checked')) {
+          $('.colUnitPrice').css('display', 'table-cell');
+          $('.colUnitPrice').css('padding', '.75rem');
+          $('.colUnitPrice').css('vertical-align', 'top');
+
+          $('.chkUnitPriceInc').prop("checked", false);
+          $('.colUnitPriceInc').css('display', 'none');
+      } else {
+          $('.colUnitPrice').css('display', 'none');
+
+          $('.chkUnitPriceInc').prop("checked", true);
+          $('.colUnitPriceInc').css('display', 'table-cell');
+          $('.colUnitPriceInc').css('padding', '.75rem');
+          $('.colUnitPriceInc').css('vertical-align', 'top');
+      }
+    },
+    'click .chkUnitPriceInc': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colUnitPriceInc').css('display', 'table-cell');
+            $('.colUnitPriceInc').css('padding', '.75rem');
+            $('.colUnitPriceInc').css('vertical-align', 'top');
+
+          $('.chkUnitPrice').prop("checked", false);
+          $('.colUnitPrice').css('display', 'none');
+        } else {
+            $('.colUnitPriceInc').css('display', 'none');
+
+          $('.chkUnitPrice').prop("checked", true);
+          $('.colUnitPrice').css('display', 'table-cell');
+          $('.colUnitPrice').css('padding', '.75rem');
+          $('.colUnitPrice').css('vertical-align', 'top');
+        }
+    },
+
+    'click .chkDiscount': function(event) {
+      if ($(event.target).is(':checked')) {
+          $('.colDiscount').css('display', 'table-cell');
+          $('.colDiscount').css('padding', '.75rem');
+          $('.colDiscount').css('vertical-align', 'top');
+      } else {
+          $('.colDiscount').css('display', 'none');
+      }
+    },
+    'click .chkSerialNo': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colSerialNo').css('display', 'table-cell');
+            $('.colSerialNo').css('padding', '.75rem');
+            $('.colSerialNo').css('vertical-align', 'top');
+        } else {
+            $('.colSerialNo').css('display', 'none');
         }
     },
     // display settings
@@ -13073,107 +13295,46 @@ Template.new_invoice.events({
           $(".fullScreenSpin").css("display", "none");
           $('#myModal2').modal('hide');
         });
+
       });
+
+      setTimeout(() => {
+        // tempcode until InvoiceLines is added on backend
+        sideBarService.getAllCustomFieldsWithQuery("ltSalesLines").then(function (data) {
+          addVS1Data("TltSaleslines", JSON.stringify(data));
+        });
+      }, 8000);
 
     },
-
-    // custom field displaysettings
-    'click .btnSaveGridSettings': function(event) {
-      let lineItems = [];
-      let organisationService = new OrganisationService();
-
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      $('.displaySettings').each(function(index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || '';
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(':checked')) {
-            colHidden = true;
-        } else {
-            colHidden = false;
-        }
-        let lineItemObj = {
-            index: index,
-            label: colTitle,
-            hidden: colHidden,
-            width: colWidth,
-            thclass: colthClass
-        }
-
-        lineItems.push(lineItemObj);
-
-        if(fieldID){
-          objDetails1 = {
-            type: "TCustomFieldList",
-            fields: {
-              Active: colHidden,
-              ID: parseInt(fieldID),
-              Description: colTitle
-            },
-          };
-        } else {
-          objDetails1 = {
-            type: "TCustomFieldList",
-            fields: {
-              Active: colHidden,
-              DataType: "ftString",
-              Description: colTitle,
-              ListType: 'ltSalesLines'
-            },
-          };
-        }
-
-        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
-          $(".fullScreenSpin").css("display", "none");
-          $('#myModal2').modal('hide');
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              $(".fullScreenSpin").css("display", "none");
-            } else if (result.dismiss === "cancel") {
-            }
-            $('#myModal2').modal('hide');
-          });
-          $(".fullScreenSpin").css("display", "none");
-          $('#myModal2').modal('hide');
-        });
-      });
-
-  },
-
+ 
     // custom field displaysettings
     'click .btnResetGridSettings': function(event) {
       let reset_data = [
         { label: 'Product Name', class: 'colProductName', active: true },
         { label: 'Description', class: 'colDescription', active: true },
         { label: 'Qty', class: 'colQty', active: true },
-        { label: 'Unit Price', class: 'colUnitPrice', active: true },
+        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+        { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Cost Price', class: 'colCostPrice', active: false },
         { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
         { label: 'Tax Rate', class: 'colTaxRate', active: false },
         { label: 'Tax Code', class: 'colTaxCode', active: true },
-        { label: 'Amount', class: 'colAmount', active: true },
-        { label: 'Tax Amount', class: 'colTaxAmount', active: true }
+        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+        { label: 'Amount (Ex)', class: 'colAmount', active: true },
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: false }
       ];
-      var datable = $('#tblSalesOrderLine').DataTable();
+      // var datable = $('#tblInvoiceLine');
+      // var datable = $('#tblInvoiceLine').DataTable();
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
-        var title = datable.column( index ).header();
+        // var title = datable.column( index ).header();
+        var title = $('#tblInvoiceLine').find('th').eq(index);
         $(title).html(reset_data[index].label);
 
         if (reset_data[index].active) {

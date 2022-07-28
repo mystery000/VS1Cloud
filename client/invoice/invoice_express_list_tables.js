@@ -439,12 +439,12 @@ Template.invoicelist.onRendered(function () {
                           isCustomField = false;
                         }
 
-                        sWidth = v.style.width.replace('px', "");
+                        sWidth = v.style.width.replace('px', ""); 
 
                         let datatablerecordObj = {
                             custid: $(this).attr("custid") || 0,
                             sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
+                            sWidth: sWidth || '9',
                             sIndex: v.cellIndex || '',
                             sVisible: columVisible || false,
                             sCustomField: isCustomField || false,
@@ -760,7 +760,7 @@ Template.invoicelist.onRendered(function () {
                     if ((v.className.includes("hiddenColumn"))) {
                         columVisible = false;
                     }
-                    sWidth = v.style.width.replace('px', "");
+                    sWidth = v.style.width.replace('px', ""); 
 
                     if ((v.className.includes("customFieldColumn"))) {
                       isCustomField = true;
@@ -1056,7 +1056,7 @@ Template.invoicelist.onRendered(function () {
                   if ((v.className.includes("hiddenColumn"))) {
                       columVisible = false;
                   }
-                  sWidth = v.style.width.replace('px', "");
+                  sWidth = v.style.width.replace('px', ""); 
 
                   if ((v.className.includes("customFieldColumn"))) {
                     isCustomField = true;
@@ -1459,7 +1459,7 @@ Template.invoicelist.events({
 
       let templateObject = Template.instance();
       let custFields = templateObject.custfields.get();
-      var datable = $('#tblInvoicelist').DataTable();
+      // var datable = $('#tblInvoicelist').DataTable();
 
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -1484,7 +1484,8 @@ Template.invoicelist.events({
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
-        var title = datable.column( index+1 ).header();
+        // var title = datable.column( index+1 ).header();
+        var title = $('#tblInvoicelist').find('th').eq(index + 1);
         $(title).html(reset_data[index].label);
 
         if (reset_data[index].active) {
@@ -1622,7 +1623,7 @@ Template.invoicelist.events({
             if ((v.className.includes("hiddenColumn"))) {
                 columVisible = false;
             }
-            sWidth = v.style.width.replace('px', "");
+            sWidth = v.style.width.replace('px', ""); 
 
             if ((v.className.includes("customFieldColumn"))) {
               isCustomField = true;

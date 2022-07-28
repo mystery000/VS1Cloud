@@ -159,14 +159,14 @@ export class SideBarService extends BaseService {
   }
 
   getNewHolidayGroup(datasearch)
-  { 
+  {
       let options = "";
-  
+
       options = {
           ListType: "Detail",
           select:  "[PayrollHolidaysGroupName]='" + datasearch + "'",
         };
-    
+
       return this.getList(this.ERPObjects.TPayrollHolidays, options);
 
   }
@@ -2109,10 +2109,47 @@ export class SideBarService extends BaseService {
 
   getTaxRateVS1() {
     let options = {
-      PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
+      // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
+      ListType: "Detail",
       select: "[Active]=true",
     };
-    return this.getList(this.ERPObjects.TTaxcodeVS1, options);
+    let that = this;
+    let promise = new Promise(function(resolve, reject) {
+      that.getList(that.ERPObjects.TTaxcodeVS1, options).then(function (data) {
+        let ttaxcodevs1 = data.ttaxcodevs1.map((v) => {
+          let fields = v.fields;
+          let lines = fields.Lines;
+          if (lines !== null) {
+            if (Array.isArray(lines)) {     // if lines is array
+              lines = lines.map((line) => {
+                let f = line.fields;
+                return {
+                  ...{Id: f.ID},
+                  ...f,
+                }
+              })
+            }
+            else if (typeof lines === 'object') {     // else if it is object
+              lines = [
+                {
+                  ...{Id: lines.fields.ID},
+                  ...lines.fields
+                }
+              ];
+            }
+          }
+          return {
+            ...{ Id: fields.ID },
+            ...fields,
+            ...{ Lines: lines }
+          }
+        });
+        resolve({ ttaxcodevs1 });
+      }).catch(function (err) {
+        reject(err);
+      })
+    });
+    return promise;
   }
 
   getTaxRateVS1ByName(dataSearchName) {
@@ -3036,8 +3073,42 @@ export class SideBarService extends BaseService {
         ListType: "Detail",
         select: "[ListType]='ltSales' OR [ListType]='ltRefundList'",
       };
-    }
+    } else if(query == 'ltPurchaseOverview') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltOrder' OR [ListType]='ltPurchaseOverview'",
+      };
+    } 
 
     return this.getList(this.ERPObjects.TCustomFieldList, options);
   }
+
+  getAllLabels(){
+    let options = "";
+
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojecttask_TaskLabel, options);
+  }
+
+  getAllTaskList() {
+    let options = "";
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojecttasks, options);
+  }
+
+  getTProjectList() {
+    let options = "";
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojectlist, options);
+  }
+
 }

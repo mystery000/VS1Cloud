@@ -7,6 +7,7 @@ import { AccountService } from "../accounts/account-service";
 import { UtilityService } from "../utility-service";
 import { PaymentsService } from "../payments/payments-service";
 import { SideBarService } from "../js/sidebar-service";
+import {OrganisationService} from '../js/organisation-service';
 import "../lib/global/indexdbstorage.js";
 
 let sideBarService = new SideBarService();
@@ -24,6 +25,9 @@ Template.purchasesoverview.onCreated(function () {
   templateObject.billpercTotal = new ReactiveVar();
   templateObject.creditpercTotal = new ReactiveVar();
   templateObject.popercTotal = new ReactiveVar();
+
+  templateObject.custfields = new ReactiveVar([]);
+  templateObject.displayfields = new ReactiveVar([]);
 });
 
 Template.purchasesoverview.onRendered(function () {
@@ -200,8 +204,11 @@ Template.purchasesoverview.onRendered(function () {
                   totaloustanding: totalOutstanding || 0.0,
                   type: orderType || "",
                   orderstatus: orderstatus || "",
-                  custfield1: data.tbilllist[i].Phone || "",
-                  custfield2: data.tbilllist[i].InvoiceNumber || "",
+                  Phone: data.tbilllist[i].Phone || "",
+                  InvoiceNumber: data.tbilllist[i].InvoiceNumber || "",
+                  custfield1: data.tbilllist[i].SaleCustField1 || '',
+                  custfield2: data.tbilllist[i].SaleCustField2 || '',
+                  custfield3: data.tbilllist[i].SaleCustField3 || '',
                   comments: data.tbilllist[i].Comments || "",
                 };
                 //if (data.tbilllist[i].Deleted == false) {
@@ -586,8 +593,11 @@ Template.purchasesoverview.onRendered(function () {
               totaloustanding: totalOutstanding || 0.0,
               type: orderType || "",
               orderstatus: orderstatus || "",
-              custfield1: data.tbilllist[i].Phone || "",
-              custfield2: data.tbilllist[i].InvoiceNumber || "",
+              Phone: data.tbilllist[i].Phone || "",
+              InvoiceNumber: data.tbilllist[i].InvoiceNumber || "",
+              custfield1: data.tbilllist[i].SaleCustField1 || '',
+              custfield2: data.tbilllist[i].SaleCustField2 || '',
+              custfield3: data.tbilllist[i].SaleCustField3 || '',
               comments: data.tbilllist[i].Comments || "",
             };
             //if (data.tbilllist[i].Deleted == false) {
@@ -967,8 +977,11 @@ Template.purchasesoverview.onRendered(function () {
                 totaloustanding: totalOutstanding || 0.0,
                 type: orderType || "",
                 orderstatus: orderstatus || "",
-                custfield1: data.tbilllist[i].Phone || "",
-                custfield2: data.tbilllist[i].InvoiceNumber || "",
+                Phone: data.tbilllist[i].Phone || "",
+                InvoiceNumber: data.tbilllist[i].InvoiceNumber || "",
+                custfield1: data.tbilllist[i].SaleCustField1 || '',
+                custfield2: data.tbilllist[i].SaleCustField2 || '',
+                custfield3: data.tbilllist[i].SaleCustField3 || '',
                 comments: data.tbilllist[i].Comments || "",
               };
               //if (data.tbilllist[i].Deleted == false) {
@@ -1403,6 +1416,129 @@ Template.purchasesoverview.onRendered(function () {
   // });
 
   //$(".portlet").resizable();
+
+  // custom field displaysettings
+
+  function initCustomFieldDisplaySettings(data, listType) {
+    let custFields = [];
+    let dispFields = [];
+    let customData = {};
+    let customFieldCount = 13;
+
+    let reset_data = [
+      { label: 'Order Date', class: 'colOrderDate', active: true, width: 0 },
+      { label: 'Order No.', class: 'colPurchaseNo', active: true, width: 0 },
+      { label: 'Type', class: 'colType', active: true, width: 0 },
+      { label: 'Supplier', class: 'colSupplier', active: true, width: 0 },
+      { label: 'Amount(Ex)', class: 'colAmountEx', active: true, width: 0 },
+      { label: 'Tax', class: 'colTax', active: true, width: 0 },
+      { label: 'Amount', class: 'colAmount', active: true, width: 0 },
+      { label: 'Outstanding', class: 'colBalanceOutstanding', active: true, width: 0 },
+      { label: 'Status', class: 'colStatus', active: true, width: 0 },
+      { label: 'Phone', class: 'colPurchaseCustField1', active: false, width: 0 },
+      { label: 'Invoice No.', class: 'colPurchaseCustField2', active: false, width: 0 },
+      { label: 'Contact', class: 'colEmployee', active: false, width: 0 },
+      { label: 'Comments', class: 'colComments', active: true, width: 0 } 
+    ];
+
+    for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+      if (data.tcustomfieldlist[x].fields.ListType == 'ltOrder') {
+        customData = {
+          active: data.tcustomfieldlist[x].fields.Active || false,
+          id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+          datatype: data.tcustomfieldlist[x].fields.DataType || "",
+          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+        };
+        custFields.push(customData);
+      } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
+        customData = {
+          active: data.tcustomfieldlist[x].fields.Active || false,
+          id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+          datatype: data.tcustomfieldlist[x].fields.DataType || "",
+          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+          // width: data.tcustomfieldlist[x].fields.Width || 0,
+        };
+        dispFields.push(customData);
+      }
+    }
+
+    if (custFields.length < 3) {
+      let remainder = 3 - custFields.length;
+      let getRemCustomFields = parseInt(custFields.length);
+      for (let r = 0; r < remainder; r++) {
+        getRemCustomFields++;
+        customData = {
+          active: false,
+          id: "",
+          custfieldlabel: "Custom Field " + getRemCustomFields,
+          datatype: "",
+          isempty: true,
+          iscombo: false,
+        };
+        // count++;
+        custFields.push(customData);
+      }
+    }
+
+    if (dispFields.length < customFieldCount) {
+      let remainder = customFieldCount - dispFields.length;
+      let getRemCustomFields = parseInt(dispFields.length);
+      for (let r = 0; r < remainder; r++) {
+        customData = {
+          active: reset_data[getRemCustomFields].active,
+          id: "",
+          custfieldlabel: reset_data[getRemCustomFields].label,
+          datatype: "",
+          isempty: true,
+          iscombo: false,
+          // width: reset_data[getRemCustomFields].width,
+        };
+        getRemCustomFields++;
+        // count++;
+        dispFields.push(customData);
+      }
+    }
+
+    for (let index = 0; index < custFields.length; index++) {
+      const element = custFields[index];
+      dispFields.push(element);
+
+    }
+
+    templateObject.custfields.set(custFields);
+    templateObject.displayfields.set(dispFields);
+  }
+
+  templateObject.getAllCustomFieldDisplaySettings = function () {
+      
+      let listType = "ltPurchaseOverview";
+      try { 
+        getVS1Data("TltPurchaseOverview").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              initCustomFieldDisplaySettings(data, listType);
+              addVS1Data("TltPurchaseOverview", JSON.stringify(data));
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            initCustomFieldDisplaySettings(data, listType);
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              addVS1Data("TltPurchaseOverview", JSON.stringify(data));
+            });
+          }
+        })
+
+      } catch (error) {
+      }
+  }
+
+  templateObject.getAllCustomFieldDisplaySettings();
 
 });
 
@@ -1853,125 +1989,254 @@ Template.purchasesoverview.events({
       }
     });
   },
+
   "click .resetTable": function (event) {
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var clientUsername = getcurrentCloudDetails.cloudUsername;
-        var clientEmail = getcurrentCloudDetails.cloudEmail;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: "tblPurchaseOverview",
-        });
-        if (checkPrefDetails) {
-          CloudPreference.remove(
-            {
-              _id: checkPrefDetails._id,
-            },
-            function (err, idTag) {
-              if (err) {
-              } else {
-                Meteor._reload.reload();
-              }
-            }
-          );
-        }
+    let templateObject = Template.instance();
+    let custFields = templateObject.custfields.get();
+    // var datable = $('#tblSalesOverview').DataTable();
+
+    let reset_data = [
+      { label: 'Order Date', class: 'colOrderDate', active: true, width: 0 },
+      { label: 'Order No.', class: 'colPurchaseNo', active: true, width: 0 },
+      { label: 'Type', class: 'colType', active: true, width: 0 },
+      { label: 'Supplier', class: 'colSupplier', active: true, width: 0 },
+      { label: 'Amount(Ex)', class: 'colAmountEx', active: true, width: 0 },
+      { label: 'Tax', class: 'colTax', active: true, width: 0 },
+      { label: 'Amount', class: 'colAmount', active: true, width: 0 },
+      // { label: 'Paid', class: 'colPaid', active: true, width: 0 },
+      { label: 'Outstanding', class: 'colBalanceOutstanding', active: true, width: 0 },
+      { label: 'Status', class: 'colStatus', active: true, width: 0 },
+      { label: 'Phone', class: 'colPurchaseCustField1', active: false, width: 0 },
+      { label: 'Invoice No.', class: 'colPurchaseCustField2', active: false, width: 0 },
+      { label: 'Contact', class: 'colEmployee', active: false, width: 0 },
+      { label: 'Comments', class: 'colComments', active: true, width: 0 },
+      { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active, width: 0},
+      { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active, width: 0},
+      { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active, width: 0}
+    ];
+
+
+    $('.displaySettings').each(function(index) {
+      var $tblrow = $(this);
+      $tblrow.find(".divcolumn").text(reset_data[index].label);
+      $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
+
+      // var title = datable.column( index+1 ).header();
+      var title = $('#tblPurchaseOverview').find('th').eq(index + 1);
+      $(title).html(reset_data[index].label);
+
+      if (reset_data[index].active) {
+        $('.' + reset_data[index].class).css('display', 'table-cell');
+        $('.' + reset_data[index].class).css('padding', '.75rem');
+        $('.' + reset_data[index].class).css('vertical-align', 'top');
+      } else {
+        $('.' + reset_data[index].class).css('display', 'none');
       }
-    }
+    });
+
+    // var getcurrentCloudDetails = CloudUser.findOne({
+    //   _id: Session.get("mycloudLogonID"),
+    //   clouddatabaseID: Session.get("mycloudLogonDBID"),
+    // });
+    // if (getcurrentCloudDetails) {
+    //   if (getcurrentCloudDetails._id.length > 0) {
+    //     var clientID = getcurrentCloudDetails._id;
+    //     var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //     var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //     var checkPrefDetails = CloudPreference.findOne({
+    //       userid: clientID,
+    //       PrefName: "tblPurchaseOverview",
+    //     });
+    //     if (checkPrefDetails) {
+    //       CloudPreference.remove(
+    //         {
+    //           _id: checkPrefDetails._id,
+    //         },
+    //         function (err, idTag) {
+    //           if (err) {
+    //           } else {
+    //             Meteor._reload.reload();
+    //           }
+    //         }
+    //       );
+    //     }
+    //   }
+    // }
   },
+
+
   "click .saveTable": function (event) {
     let lineItems = [];
-    //let datatable =$('#tblPurchaseOverview').DataTable();
-    $(".columnSettings").each(function (index) {
+    let organisationService = new OrganisationService();
+    let listType = "ltPurchaseOverview";
+
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    $('.displaySettings').each(function(index) {
       var $tblrow = $(this);
-      var colTitle = $tblrow.find(".divcolumn").text() || "";
+      var fieldID = $tblrow.attr("custid") || 0;
+      var colTitle = $tblrow.find(".divcolumn").text() || '';
       var colWidth = $tblrow.find(".custom-range").val() || 0;
-      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
       var colHidden = false;
-      if ($tblrow.find(".custom-control-input").is(":checked")) {
-        colHidden = false;
+      if ($tblrow.find(".custom-control-input").is(':checked')) {
+          colHidden = true;
       } else {
-        colHidden = true;
+          colHidden = false;
       }
       let lineItemObj = {
-        index: index,
-        label: colTitle,
-        hidden: colHidden,
-        width: colWidth,
-        thclass: colthClass,
-      };
+          index: index,
+          label: colTitle,
+          hidden: colHidden,
+          width: colWidth,
+          thclass: colthClass
+      }
 
       lineItems.push(lineItemObj);
-    });
-    //datatable.state.save();
 
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: Session.get("mycloudLogonID"),
-      clouddatabaseID: Session.get("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var clientUsername = getcurrentCloudDetails.cloudUsername;
-        var clientEmail = getcurrentCloudDetails.cloudEmail;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: "tblPurchaseOverview",
-        });
-        if (checkPrefDetails) {
-          CloudPreference.update(
-            {
-              _id: checkPrefDetails._id,
-            },
-            {
-              $set: {
-                userid: clientID,
-                username: clientUsername,
-                useremail: clientEmail,
-                PrefGroup: "salesform",
-                PrefName: "tblPurchaseOverview",
-                published: true,
-                customFields: lineItems,
-                updatedAt: new Date(),
-              },
-            },
-            function (err, idTag) {
-              if (err) {
-                $("#myModal2").modal("toggle");
-              } else {
-                $("#myModal2").modal("toggle");
-              }
-            }
-          );
-        } else {
-          CloudPreference.insert(
-            {
-              userid: clientID,
-              username: clientUsername,
-              useremail: clientEmail,
-              PrefGroup: "salesform",
-              PrefName: "tblPurchaseOverview",
-              published: true,
-              customFields: lineItems,
-              createdAt: new Date(),
-            },
-            function (err, idTag) {
-              if (err) {
-                $("#myModal2").modal("toggle");
-              } else {
-                $("#myModal2").modal("toggle");
-              }
-            }
-          );
-        }
+      if(fieldID && parseInt(fieldID) != 0){
+        objDetails1 = {
+          type: "TCustomFieldList",
+          fields: {
+            Active: colHidden,
+            ID: parseInt(fieldID),
+            Description: colTitle,
+            Width: colWidth
+          },
+        };
+      } else {
+        objDetails1 = {
+          type: "TCustomFieldList",
+          fields: {
+            Active: colHidden,
+            DataType: "ftString",
+            Description: colTitle,
+            ListType: listType,
+            Width: colWidth
+          },
+        };
       }
-    }
-    $("#myModal2").modal("toggle");
+
+      organisationService.saveCustomField(objDetails1).then(function (objDetails) {
+        $(".fullScreenSpin").css("display", "none");
+        $('#myModal2').modal('hide');
+      })
+      .catch(function (err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => {
+          if (result.value) {
+            $(".fullScreenSpin").css("display", "none");
+          } else if (result.dismiss === "cancel") {
+          }
+          $('#myModal2').modal('hide');
+        });
+        $(".fullScreenSpin").css("display", "none");
+        $('#myModal2').modal('hide');
+      });
+    });
+
+    setTimeout(() => {
+      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+        addVS1Data("TltPurchaseOverview", JSON.stringify(data));
+      });
+    }, 8000);
+
   },
+
+  // "click .saveTable": function (event) {
+  //   let lineItems = [];
+  //   //let datatable =$('#tblPurchaseOverview').DataTable();
+  //   $(".columnSettings").each(function (index) {
+  //     var $tblrow = $(this);
+  //     var colTitle = $tblrow.find(".divcolumn").text() || "";
+  //     var colWidth = $tblrow.find(".custom-range").val() || 0;
+  //     var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+  //     var colHidden = false;
+  //     if ($tblrow.find(".custom-control-input").is(":checked")) {
+  //       colHidden = false;
+  //     } else {
+  //       colHidden = true;
+  //     }
+  //     let lineItemObj = {
+  //       index: index,
+  //       label: colTitle,
+  //       hidden: colHidden,
+  //       width: colWidth,
+  //       thclass: colthClass,
+  //     };
+
+  //     lineItems.push(lineItemObj);
+  //   });
+  //   //datatable.state.save();
+
+  //   var getcurrentCloudDetails = CloudUser.findOne({
+  //     _id: Session.get("mycloudLogonID"),
+  //     clouddatabaseID: Session.get("mycloudLogonDBID"),
+  //   });
+  //   if (getcurrentCloudDetails) {
+  //     if (getcurrentCloudDetails._id.length > 0) {
+  //       var clientID = getcurrentCloudDetails._id;
+  //       var clientUsername = getcurrentCloudDetails.cloudUsername;
+  //       var clientEmail = getcurrentCloudDetails.cloudEmail;
+  //       var checkPrefDetails = CloudPreference.findOne({
+  //         userid: clientID,
+  //         PrefName: "tblPurchaseOverview",
+  //       });
+  //       if (checkPrefDetails) {
+  //         CloudPreference.update(
+  //           {
+  //             _id: checkPrefDetails._id,
+  //           },
+  //           {
+  //             $set: {
+  //               userid: clientID,
+  //               username: clientUsername,
+  //               useremail: clientEmail,
+  //               PrefGroup: "salesform",
+  //               PrefName: "tblPurchaseOverview",
+  //               published: true,
+  //               customFields: lineItems,
+  //               updatedAt: new Date(),
+  //             },
+  //           },
+  //           function (err, idTag) {
+  //             if (err) {
+  //               $("#myModal2").modal("toggle");
+  //             } else {
+  //               $("#myModal2").modal("toggle");
+  //             }
+  //           }
+  //         );
+  //       } else {
+  //         CloudPreference.insert(
+  //           {
+  //             userid: clientID,
+  //             username: clientUsername,
+  //             useremail: clientEmail,
+  //             PrefGroup: "salesform",
+  //             PrefName: "tblPurchaseOverview",
+  //             published: true,
+  //             customFields: lineItems,
+  //             createdAt: new Date(),
+  //           },
+  //           function (err, idTag) {
+  //             if (err) {
+  //               $("#myModal2").modal("toggle");
+  //             } else {
+  //               $("#myModal2").modal("toggle");
+  //             }
+  //           }
+  //         );
+  //       }
+  //     }
+  //   }
+  //   $("#myModal2").modal("toggle");
+  // },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).text();
 
@@ -2023,6 +2288,7 @@ Template.purchasesoverview.events({
       sWidth = v.style.width.replace("px", "");
 
       let datatablerecordObj = {
+        custid: $(this).attr("custid") || 0,
         sTitle: v.innerText || "",
         sWidth: sWidth || "",
         sIndex: v.cellIndex || "",
@@ -2078,5 +2344,15 @@ Template.purchasesoverview.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+
+  // custom fields displaysettings
+  custfields: () => {
+    return Template.instance().custfields.get();
+  },
+
+  // custom fields displaysettings
+  displayfields: () => {
+    return Template.instance().displayfields.get();
   },
 });

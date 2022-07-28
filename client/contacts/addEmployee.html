@@ -158,22 +158,14 @@
 
                     <div class="col-12 col-md-8 col-lg-10 displayInfo" id="displayInfo">
                         <div class="row">
-                            <div class="col-12 col-md-12 col-lg-6 absentInfo" id="absentInfo">
-                                <div class="card shadow border-left-danger py-2" style="margin: 8px;">
-                                    <div class="card-body">
-                                        <div class="row align-items-center no-gutters">
-                                            <div class="col-auto"><i class="fas fa-user-clock fa-2x text-gray-300"></i></div>
-                                            <div class="col mr-2">
-                                                <div class="text-dark font-weight-bold h5 mb-0"><span style="font-size: 25px;margin-left: 32px;">7.7 Days</span></div>
-                                                <div class="text-dark font-weight-bold h5 mb-0"><span style="font-size: 14px;margin-left: 32px;color: rgb(147,149,166);">Avg Yearly Absenteeism</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                          <div class="container-fluid">
+                            <div style="margin-top: 1.5rem;">
+                              {{> allCardsLists tabGroupID="3" chartGroup="CRMOverview"}}
                             </div>
+                          </div>
                         </div>
                         <!-- All charts list -->
-                        {{> allChartLists  tabGroupID="4" chartGroup="Employees" }}
+                        <!-- {{> allChartLists  tabGroupID="4" chartGroup="Employees" }} -->
 
                         <div class="card shadow mb-4 cardSizing" style="margin: 8px;">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -366,19 +358,20 @@
                                                             <div class="form-group" style="margin: 4px;">
                                                                 <label>Dashboard Options</label>
                                                                 <select class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" style="cursor: pointer;">
-                                                                  <option value="All">All</option>
-                                                                  <option value="Accounts">Accounts</option>
-                                                                  <option value="Executive">Executive</option>
-                                                                  <option value="Marketing">Marketing</option>
-                                                                  <option value="Sales">Sales</option>
-                                                                  <option value="Sales Manager">Sales Manager</option>
+                                                                  {{#each item in dashboardOptionsList}}
+                                                                      {{#if equals item record.dashboardOptions }}
+                                                                          <option value="{{record.dashboardOptions}}" selected="">{{record.dashboardOptions}}</option>
+                                                                      {{else}}
+                                                                          <option value="{{item}}">{{item}}</option>
+                                                                      {{/if}}
+                                                                  {{/each}} 
                                                               </select>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-md-2" style="padding: 0px;">
                                                             <div class="form-group" style="margin: 4px;">
                                                                 <label>Sales Quota</label>
-                                                                <input type="number" class="form-control" id="edtSalesQuota" name="edtSalesQuota" value="">
+                                                                <input type="number" class="form-control" id="edtSalesQuota" name="edtSalesQuota" value="{{record.salesQuota}}">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1426,10 +1419,10 @@
                                                                                         <!-- <input type="text" class="form-control" id="edtTfnExemption" name="edtTfnExemption"> -->
                                                                                         <select class="form-control" id="edtTfnExemption" name="edtTfnExemption" style="cursor: pointer;">
                                                                                             <option value=""></option>
-                                                                                            <option value="No TFN Quoted">No TFN Quoted</option>
-                                                                                            <option value="TFN Pending">TFN Pending</option>
-                                                                                            <option value="TFN Exempt - Under 18">TFN Exempt - Under 18</option>
-                                                                                            <option value="TFN Exempt - Pensioner">TFN Exempt - Pensioner</option>
+                                                                                            <option value="0">No TFN Quoted</option>
+                                                                                            <option value="1">TFN Pending</option>
+                                                                                            <option value="2">TFN Exempt - Under 18</option>
+                                                                                            <option value="3">TFN Exempt - Pensioner</option>
                                                                                         </select>
                                                                                     </div>
                                                                                 </div>
@@ -1443,12 +1436,11 @@
                                                                             <label>Employment Basis</label>
                                                                             <!-- <input type="text" class="form-control" id="edtEmploymentBasis" name="edtEmploymentBasis"> -->
                                                                             <select class="form-control" id="edtEmploymentBasis" name="edtEmploymentBasis" style="cursor: pointer;">
-
-                                                                                <option value="Full-time employment">Full-time employment</option>
-                                                                                <option value="Part-time employment">Part-time employment</option>
-                                                                                <option value="Casual employment">Casual employment</option>
-                                                                                <option value="Labour hire">Labour hire</option>
-                                                                                <option value="Superannuation income stream">Superannuation income stream</option>
+                                                                                <option value="F">Full-time employment</option>
+                                                                                <option value="P">Part-time employment</option>
+                                                                                <option value="C">Casual employment</option>
+                                                                                <option value="L">Labour hire</option>
+                                                                                <option value="S">Superannuation income stream</option>
                                                                             </select>
 
                                                                         </div>
@@ -1457,11 +1449,23 @@
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Residency Status</label>
                                                                             <select class="form-control" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
-                                                                                <option value="Australian Resident">Australian Resident</option>
-                                                                                <option value="Foreign Resident">Foreign Resident</option>
-                                                                                <option value="Working Holiday Maker">Working Holiday Maker</option>
+                                                                                <option value="true">Australian Resident</option>
+                                                                                <option value="false">Foreign Resident</option>
+                                                                                <!-- <option value="Working Holiday Maker">Working Holiday Maker</option> -->
                                                                             </select>
 
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-3">
+                                                                        <div class="form-group" style="margin: 4px;">
+                                                                            <label>Pay Period</label>
+                                                                            <input type="text" class="form-control" name="edtPayPeriod" id="edtPayPeriod" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12 col-md-3">
+                                                                        <div class="form-group" style="margin: 4px;">
+                                                                            <label>First Pay Date</label>
+                                                                            <input type="text" class="form-control" name="edtFirstPayDate" id="edtFirstPayDate" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1491,7 +1495,7 @@
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesTaxFreeThresholdClaimed">Tax Free Threshold Claimed</label>
                                                                         </div>
-                                                                        <br />
+                                                                        <!-- <br />
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
                                                                             {{#if equals employeePaySetting.OtherTaxOffsetClaimed true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesOtherTaxOffsetClaimed" id="taxesOtherTaxOffsetClaimed" checked>
@@ -1499,7 +1503,7 @@
                                                                             <input class="custom-control-input" type="checkbox" name="taxesOtherTaxOffsetClaimed" id="taxesOtherTaxOffsetClaimed">
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesOtherTaxOffsetClaimed">Other Tax Offset Claimed</label>
-                                                                        </div>
+                                                                        </div> -->
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
@@ -1510,7 +1514,7 @@
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesStudyTrainingSupportLoans">Study and Training Support Loans</label>
                                                                         </div>
-                                                                        <br />
+                                                                        <!-- <br />
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
                                                                             {{#if equals employeePaySetting.UpwardvariationRequested true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesUpwardVariationRequested" id="taxesUpwardVariationRequested" checked>
@@ -1518,7 +1522,7 @@
                                                                             <input class="custom-control-input" type="checkbox" name="taxesUpwardVariationRequested" id="taxesUpwardVariationRequested">
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesUpwardVariationRequested">Upward Variation Requested</label>
-                                                                        </div>
+                                                                        </div> -->
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
@@ -1539,8 +1543,8 @@
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesSeniorPensionersTaxOffsetClaimed">Senior and Pensioners Tax Offset
                                                                                 Claimed</label>
                                                                         </div>
-                                                                        <br />
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
+                                                                        <!-- <br /> -->
+                                                                        <!-- <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
                                                                             {{#if equals employeePaySetting.HasApprovedWithholdingVariation true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesHasApprovedWithholdingVariation" id="taxesHasApprovedWithholdingVariation" checked>
                                                                             {{else}}
@@ -1548,7 +1552,7 @@
                                                                             {{/if}}
                                                                             <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="taxesHasApprovedWithholdingVariation">Has Approved Withholding
                                                                                 Variation</label>
-                                                                        </div>
+                                                                        </div> -->
                                                                     </div>
                                                                 </div>
                                                                 <!-- <div class="row">
@@ -1832,7 +1836,7 @@
                                                                                     <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
                                                                                         <div class="form-group">
                                                                                             <label>Hours accrued annually</label>
-                                                                                            <input type="text" class="form-control" id="hoursAccruedAnnually" name="hoursAccruedAnnually">
+                                                                                            <input type="number" class="form-control" id="hoursAccruedAnnually" name="hoursAccruedAnnually">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12 handleLeaveTypeOption basedonOrdinaryEarnings hideelement">
@@ -1940,6 +1944,7 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Type of Request</label>
+                                                                                            <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
                                                                                             <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
                                                                                             </select>
                                                                                         </div>
@@ -1989,14 +1994,18 @@
                                                                             <div class="modal-footer" style="justify-content: space-between;">
                                                                                 <div class="col-6 pl-0">
                                                                                     <div class="dropdown float-left">
-                                                                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                        <div class="form-group">
+                                                                                            <label>Status</label>
+                                                                                            <input type="search" class="form-control"  style="cursor: pointer;" id="edtLeavePayStatus" name="edtLeavePayStatus" />
+                                                                                        </div>
+                                                                                        <!-- <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                                             Status
                                                                                         </button>
                                                                                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                                                                             <a class="dropdown-item pointer noneModal" data-toggle="modal" >Awaiting</a>
                                                                                             <a class="dropdown-item pointer workplaceGivingModal" data-toggle="modal" >Approved</a>
                                                                                             <a class="dropdown-item pointer unionAssociationFeesModal" data-toggle="modal" >Denied</a>
-                                                                                        </div>
+                                                                                        </div> -->
                                                                                     </div>
                                                                                 </div>
                                                                                 <button type="button" id="btnSaveLeaveRequest" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
@@ -2019,27 +2028,18 @@
                                                                                     vertical-align: top;
                                                                                 }
                                                                             </style>
-                                                                            <table id="tblLeaveRequests" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblLeaveRequests">
+                                                                            <table id="tblLeaveRequests" style="width:100%" class="table table-striped table-bordered">
                                                                                 <thead>
                                                                                     <tr class="dnd-moved">
-                                                                                        <th class="th colDescription" style="">Description</th>
-                                                                                        <th class="th colLeavePeriod" style="">Leave Period</th>
-                                                                                        <th class="th colLeaveType" style="">Leave Type</th>
-                                                                                        <th class="th colStatus" style="">Status</th>
+                                                                                        <th class="th colLRID hiddenColumn">ID</th>
+                                                                                        <th class="th colLRDescription">Description</th>
+                                                                                        <th class="th colLRLeavePeriod">Leave Period</th>
+                                                                                        <th class="th colLRLeaveType">Leave Type</th>
+                                                                                        <th class="th colLRStatus">Status</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    {{#if leaveRequestInfo}}
-                                                                                        {{#each item in leaveRequestInfo}}
-                                                                                            <option value="{{item.fields.LeaveType}}">{{ item.fields.LeaveType }}</option>
-                                                                                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                                                <td contenteditable="false" class="colDescription">{{item.fields.Description}}</td>
-                                                                                                <td contenteditable="false" class="colLeavePeriod">{{item.fields.PayPeriod}}</td>
-                                                                                                <td contenteditable="false" class="colLeaveType">{{item.fields.TypeofRequest}}</td>
-                                                                                                <td contenteditable="false" class="colStatus">{{item.fields.Status}}</td>
-                                                                                            </tr>
-                                                                                        {{/each}}
-                                                                                    {{/if}}
+
                                                                                 </tbody>
 
                                                                             </table>
@@ -2511,7 +2511,7 @@
                                                                                                 <div class="modal-header">
                                                                                                     <h5 class="modal-title" id="newPayCalendarLabel">Add an Earnings Line</h5>
                                                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                                        <span aria-hidden="false">&times;</span>
                                                                                                     </button>
                                                                                                 </div>
                                                                                                 <div class="modal-body">
@@ -2933,7 +2933,7 @@
                                                                                         <div class="col-7">
                                                                                             <div class="form-group">
                                                                                                 <label>Earnings Rate</label>
-                                                                                                <input type="text" class="form-control earningLineDropDown" value="{{ item.fields.BalanceField }}" id="obEarningRate{{ @index }}">
+                                                                                                <input type="text" class="form-control earningLineDropDown" value="{{ item.fields.AType }}" id="obEarningRate{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-2">
@@ -3000,7 +3000,7 @@
                                                                                         <div class="col-7">
                                                                                             <div class="form-group">
                                                                                                 <label>Deduction Type</label>
-                                                                                                <input type="text" class="form-control deductionLineDropDown" value="{{ item.fields.BalanceField }}" id="obDeductionLine{{ @index }}">
+                                                                                                <input type="text" class="form-control deductionLineDropDown" value="{{ item.fields.AType }}" id="obDeductionLine{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-2">
@@ -3089,7 +3089,7 @@
                                                                                         <div class="col-7">
                                                                                             <div class="form-group">
                                                                                                 <label>Superannuation Fund</label>
-                                                                                                <input type="text" class="form-control superannuationDropDown" value="{{ item.fields.BalanceField }}" id="obSuperannuationFund{{ @index }}">
+                                                                                                <input type="text" class="form-control superannuationDropDown" value="{{ item.fields.AType }}" id="obSuperannuationFund{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-2">
@@ -3162,7 +3162,7 @@
                                                                                         <div class="col-7">
                                                                                             <div class="form-group">
                                                                                                 <label>Reimbursement Fund</label>
-                                                                                                <input type="text" class="form-control reimbursementDropDown" value="{{ item.fields.BalanceField }}" id="obReimbursementFund{{ @index }}">
+                                                                                                <input type="text" class="form-control reimbursementDropDown" value="{{ item.fields.AType }}" id="obReimbursementFund{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-2">

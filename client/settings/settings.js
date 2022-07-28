@@ -43,6 +43,9 @@ Template.settings.events({
     'click .btnCompanyAppSettings': function (event) {
         FlowRouter.go('/companyappsettings');
     },
+    'click .btnReportsAccountant': function (event) {
+        FlowRouter.go('/reportsAccountantSettings');
+    },
     'click .btnCustomerType': function (event) {
         FlowRouter.go('/clienttypesettings');
     },
@@ -50,19 +53,20 @@ Template.settings.events({
         FlowRouter.go('/currenciessettings');
     },
     'click .btntaxRatesSettings': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        organisationService.getChkUSRegionTaxSetting().then(function (dataListRet) {
-            let mainData = dataListRet.tcompanyinfo[0];
-            $('.fullScreenSpin').css('display', 'none');
-            if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
-                FlowRouter.go('/subtaxsettings');
-            } else {
-                FlowRouter.go('/taxratesettings');
-            }
-        }).catch(function(err) {
-            $('.fullScreenSpin').css('display', 'none');
-            FlowRouter.go('/taxratesettings');
-        });
+        FlowRouter.go('/taxratesettings');
+        // $('.fullScreenSpin').css('display', 'inline-block');
+        // organisationService.getChkUSRegionTaxSetting().then(function (dataListRet) {
+        //     let mainData = dataListRet.tcompanyinfo[0];
+        //     $('.fullScreenSpin').css('display', 'none');
+        //     if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
+        //         FlowRouter.go('/subtaxsettings');
+        //     } else {
+        //         FlowRouter.go('/taxratesettings');
+        //     }
+        // }).catch(function(err) {
+        //     $('.fullScreenSpin').css('display', 'none');
+        //     FlowRouter.go('/taxratesettings');
+        // });
     },
     'click .btnDepartmentSettings': function (event) {
         FlowRouter.go('/departmentSettings');
@@ -75,6 +79,9 @@ Template.settings.events({
     },
     'click .btnSubcription': function (event) {
         FlowRouter.go('/subscriptionSettings');
+    },
+    'click .btnSetupWizard': function (event) {
+        FlowRouter.go('/setup');
     },
     'click .btnBackupRestore': function (event) {
         FlowRouter.go('/backuprestore');
