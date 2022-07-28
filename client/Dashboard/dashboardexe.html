@@ -1,0 +1,35 @@
+<template name="dashboardexe">
+    <div class="container-fluid">
+        {{#if includeDashboard}}
+            <div class="row mb-2">
+                <div class="col-12 col-md-12">
+                    <header class="pt-2 pb-3 d-flex justify-content-center">
+                        <h2>For the Month of July 2022</h2>
+                    </header>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> cashchart}}
+                </div>
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> profitabilitychart}}
+                </div>
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> incomechart}}
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> performancechart}}
+                </div>
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> balancesheetchart}}
+                </div>
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> positionchart}}
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</template>

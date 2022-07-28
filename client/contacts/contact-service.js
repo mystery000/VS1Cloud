@@ -581,18 +581,15 @@ export class ContactService extends BaseService {
 
     changeDialFormat (mobile, country) {
 
-        
+
         let countries = require('./Model/phoneCodes.json');
-        console.log("countries", countries)
         let user_country = countries.find (item=>{
             return item.name == country;
         })
-        console.log("user_country", user_country)
         let code = '';
         if(user_country && user_country != null) {
             code = user_country.dial_code;
         }
-        console.log("mobile", mobile, "country", country, "code", code);
         var mobileResult = '';
         if(mobile && mobile !== '') {
           if(mobile.charAt(0) == '0') {
@@ -602,7 +599,7 @@ export class ContactService extends BaseService {
           } else  {
             mobileResult = code.concat(mobile);
           }
-        } 
+        }
         return mobileResult;
     }
   }
