@@ -2626,38 +2626,40 @@
                                                                         <div class="card shadow" style="padding: 8px 16px;">
                                                                             {{#if payTemplateDeductionLines}}
                                                                                 {{#each item in payTemplateDeductionLines}}
-                                                                                <div class="earningLinesContainer earningRateNewDiv">
-                                                                                    <div class="row align-items-end ">
-                                                                                        <div class="col-6 col-md-7">
-                                                                                            <div class="form-group">
-                                                                                                <label class="borderBottom1">Deduction Type</label>
-                                                                                                <input type="search" class="form-control deductionLineDropDown" id="ptDeductionType{{ item.fields.ID }}" value="{{ item.fields.DeductionType }}">
-                                                                                                <!-- <div class="ordanryHoursDiv">
-                                                                                                    <a href="javascript:void(0)">{{ item.fields.DeductionType }}</a>
-                                                                                                </div> -->
-                                                                                            </div>
-                                                                                        </div>
+                                                                                    {{#if item.fields.Active }}
+                                                                                        <div class="earningLinesContainer earningRateNewDiv">
+                                                                                            <div class="row align-items-end ">
+                                                                                                <div class="col-6 col-md-7">
+                                                                                                    <div class="form-group">
+                                                                                                        <label class="borderBottom1">Deduction Type</label>
+                                                                                                        <input type="search" class="form-control deductionLineDropDown" id="ptDeductionType{{ item.fields.ID }}" value="{{ item.fields.DeductionType }}">
+                                                                                                        <!-- <div class="ordanryHoursDiv">
+                                                                                                            <a href="javascript:void(0)">{{ item.fields.DeductionType }}</a>
+                                                                                                        </div> -->
+                                                                                                    </div>
+                                                                                                </div>
 
-                                                                                        {{#if equals item.fields.CalculationType "fixedamount"}}
-                                                                                            <div class="col-5 col-md-2">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                {{#if equals item.fields.CalculationType "fixedamount"}}
+                                                                                                    <div class="col-5 col-md-2">
+                                                                                                        <div class="form-group">
+                                                                                                            <label>Amount</label>
+                                                                                                            <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                {{else}}
+                                                                                                    <div class="col-5 col-md-2">
+                                                                                                        <div class="form-group">
+                                                                                                            <label>Percentage</label>
+                                                                                                            <input type="text" class="form-control edtPercentFormatting" id="ptDeductionPercentage{{ item.fields.ID }}" value="{{ formatPercent item.fields.Percentage }}">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                {{/if}}
+                                                                                                <div class="col-1 col-md-1" style="padding-left: 0px;">
+                                                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempDeduction" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        {{else}}
-                                                                                            <div class="col-5 col-md-2">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control edtPercentFormatting" id="ptDeductionPercentage{{ item.fields.ID }}" value="{{ formatPercent item.fields.Percentage }}">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        {{/if}}
-                                                                                        <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempDeduction" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </div>
+                                                                                    {{/if}}
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                             <div class="row">
@@ -2733,37 +2735,38 @@
                                                                         <div class="card shadow" style="padding: 8px 16px;">
                                                                             {{#if payTemplateSuperannuationLines}}
                                                                                 {{#each item in payTemplateSuperannuationLines}}
-                                                                                <div class="earningLinesContainer earningRateNewDiv">
-                                                                                    <div class="row align-items-end ">
-                                                                                        <div class="col-6 col-md-7">
-                                                                                            <div class="form-group">
-                                                                                                <label class="borderBottom1">Superannuation Fund</label>
-                                                                                                <input type="text" class="form-control superannuationDropDown" id="ptSuperannuationFund{{ @index }}" value="{{ item.fields.Fund }}">
-                                                                                                <!-- <div class="ordanryHoursDiv">
-                                                                                                    <a href="javascript:void(0)">{{ item.fields.Fund }}</a>
-                                                                                                </div> -->
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        {{#if equals item.fields.CalculationType "fixedamount"}}
-                                                                                            <div class="col-5 col-md-2">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptSuperannuationAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                    {{#if item.fields.Active }}                                                                                        <div class="earningLinesContainer earningRateNewDiv">
+                                                                                            <div class="row align-items-end ">
+                                                                                                <div class="col-6 col-md-7">
+                                                                                                    <div class="form-group">
+                                                                                                        <label class="borderBottom1">Superannuation Fund</label>
+                                                                                                        <input type="text" class="form-control superannuationDropDown" id="ptSuperannuationFund{{ @index }}" value="{{ item.fields.Fund }}">
+                                                                                                        <!-- <div class="ordanryHoursDiv">
+                                                                                                            <a href="javascript:void(0)">{{ item.fields.Fund }}</a>
+                                                                                                        </div> -->
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                {{#if equals item.fields.CalculationType "fixedamount"}}
+                                                                                                    <div class="col-5 col-md-2">
+                                                                                                        <div class="form-group">
+                                                                                                            <label>Amount</label>
+                                                                                                            <input type="text" class="form-control edtPriceFormatting" id="ptSuperannuationAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                {{else}}
+                                                                                                    <div class="col-5 col-md-2">
+                                                                                                        <div class="form-group">
+                                                                                                            <label>Percentage</label>
+                                                                                                            <input type="text" class="form-control edtPercentFormatting" id="ptSuperannuationPercentage{{ @index }}" value="{{ formatPercent item.fields.Percentage }}">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                {{/if}}
+                                                                                                <div class="col-1 col-md-1" style="padding-left: 0px;">
+                                                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempSuperannuation" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        {{else}}
-                                                                                            <div class="col-5 col-md-2">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control edtPercentFormatting" id="ptSuperannuationPercentage{{ @index }}" value="{{ formatPercent item.fields.Percentage }}">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        {{/if}}
-                                                                                        <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempSuperannuation" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </div>
+                                                                                    {{/if}}
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                             <div class="row">
@@ -2882,28 +2885,31 @@
                                                                         <div class="card shadow" style="padding: 8px 16px;">
                                                                             {{#if payTemplateReiumbursementLines}}
                                                                                 {{#each item in payTemplateReiumbursementLines}}
-                                                                                <div class="earningLinesContainer earningRateNewDiv">
-                                                                                    <div class="row align-items-end ">
-                                                                                        <div class="col-6 col-md-7">
-                                                                                            <div class="form-group">
-                                                                                                <label class="borderBottom1">Reimbursement Type</label>
-                                                                                                <input type="text" class="form-control reimbursementDropDown" id="ptReimbursementType{{ @index }}" value="{{ item.fields.ReiumbursementType }}">
-                                                                                                <!-- <div class="ordanryHoursDiv">
-                                                                                                    <a href="javascript:void(0)">{{ item.fields.ReiumbursementType }}</a>
-                                                                                                </div> -->
+                                                                                    {{#if item.fields.Active }}
+
+                                                                                        <div class="earningLinesContainer earningRateNewDiv">
+                                                                                            <div class="row align-items-end ">
+                                                                                                <div class="col-6 col-md-7">
+                                                                                                    <div class="form-group">
+                                                                                                        <label class="borderBottom1">Reimbursement Type</label>
+                                                                                                        <input type="text" class="form-control reimbursementDropDown" id="ptReimbursementType{{ @index }}" value="{{ item.fields.ReiumbursementType }}">
+                                                                                                        <!-- <div class="ordanryHoursDiv">
+                                                                                                            <a href="javascript:void(0)">{{ item.fields.ReiumbursementType }}</a>
+                                                                                                        </div> -->
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Amount</label>
+                                                                                                        <input type="text" class="form-control edtPriceFormatting" id="ptReimbursementAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-1 col-md-1" style="padding-left: 0px;">
+                                                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempReimbursement" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="col-5 col-md-2">
-                                                                                            <div class="form-group">
-                                                                                                <label>Amount</label>
-                                                                                                <input type="text" class="form-control edtPriceFormatting" id="ptReimbursementAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempReimbursement" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
+                                                                                    {{/if}}
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                             <div class="row">

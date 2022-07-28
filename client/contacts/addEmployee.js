@@ -5962,11 +5962,26 @@ Template.employeescard.events({
                         $('#expenseAccount').val('');
                         $('#addEarningsLineModal').modal('hide');
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Success",
+                            text: "Earning line has been added",
+                            type: 'success',
+                        })
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Error",
+                            text: "Failed to add earning line",
+                            type: 'error',
+                        })
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add earning line",
+                        type: 'error',
+                    })
                 }
             }
         });
@@ -6016,7 +6031,7 @@ Template.employeescard.events({
                         headers: ApiService.getPostHeaders(),
                         body: JSON.stringify(payDeductionLines),
                     });
-
+                    console.log("deduction", ApiResponse);
                     if (ApiResponse.ok == true) {
                         const jsonResponse = await ApiResponse.json();
                         // Load all the earnings Line from Database
@@ -6027,11 +6042,26 @@ Template.employeescard.events({
                         $('#controlAccountDeduction').val('');
                         $('#addDeductionLineModal').modal('hide');
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Success",
+                            text: "Deduction line has been added",
+                            type: 'success',
+                        })
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Error",
+                            text: "Failed to add deduction line",
+                            type: 'error',
+                        })
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add deduction line",
+                        type: 'error',
+                    })
                 }
             }
         });
@@ -6109,11 +6139,26 @@ Template.employeescard.events({
                         $('#edtPeriodPaymentDate').val('');
                         $('#addSuperannuationLineModal').modal('hide');
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Success",
+                            text: "Superannuation line has been added",
+                            type: 'success',
+                        })
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Error",
+                            text: "Failed to add superannuation line",
+                            type: 'error',
+                        })
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add superannuation line",
+                        type: 'error',
+                    })
                 }
             }
         });
@@ -6172,11 +6217,26 @@ Template.employeescard.events({
                         $('#controlExpenseAccount').val('');
                         $('#addReimbursementLineModal').modal('hide');
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Success",
+                            text: "Reiumbursement line has been added",
+                            type: 'success',
+                        })
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Error",
+                            text: "Failed to add Reiumbursement line",
+                            type: 'error',
+                        })
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add Reiumbursement line",
+                        type: 'error',
+                    })
                 }
             }
         });
@@ -6274,47 +6334,146 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         let payLines = templateObject.payTemplateDeductionLineInfo.get();
-        let updatedLines = payLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.DeductionType = $('#ptDeductionType' + index).val();
-                item.fields.Amount = $('#ptDeductionAmount' + index).val();
-                item.fields.Percentage = $('#ptDeductionPercentage' + index).val();
-                return item;
+        let updatedLines = PayTemplateDeductionLine.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
+                item.fields.Active = false;
             }
+            return item;
         });
-        await templateObject.payTemplateDeductionLineInfo.set(updatedLines);
-        await templateObject.displayPayTempDeductionLines()
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateDeductionLine
+        );
+
+        let deductionSettings =  new PayTemplateDeductionLine({
+            type: "TPayTemplateDeductionLine",
+            fields: new PayTemplateDeductionLineFields({
+                ID: deleteID,
+                Active: false,
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(deductionSettings),
+        });
+
+        let deductionObj = {
+            tpaytemplatedeductionline: updatedLines
+        }
+        console.log("data", ApiResponse);
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            let data=await addVS1Data('TPayTemplateDeductionLine', JSON.stringify(deductionObj));
+            console.log("datadd", data);
+
+            // Bind with html content
+            let data2=await templateObject.payTemplateDeductionLineInfo.set(updatedLines);
+            console.log("data2", data2);
+
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click .removePayTempSuperannuation': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         let payLines = templateObject.payTemplateSuperannuationLineInfo.get();
-        let updatedLines = payLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.Fund = $('#ptSuperannuationFund' + index).val();
-                item.fields.Amount = $('#ptSuperannuationAmount' + index).val();
-                item.fields.Percentage = $('#ptSuperannuationPercentage' + index).val();
-                return item;
+        let updatedLines = PayTemplateSuperannuationLine.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
+                item.fields.Active = false;
             }
+            return item;
         });
-        await templateObject.payTemplateSuperannuationLineInfo.set(updatedLines);
-        await templateObject.displayPayTempSuperannuationLines();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
+        );
+
+        let superannuationSettings =  new PayTemplateSuperannuationLine({
+            type: "TPayTemplateSuperannuationLine",
+            fields: new PayTemplateSuperannuationLineFields({
+                ID: deleteID,
+                Active: false,
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(superannuationSettings),
+        });
+
+        let superannuationObj = {
+            tPaytemplatesuperannuationline: updatedLines
+        }
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TPayTemplateSuperannuationLine', JSON.stringify(superannuationObj))
+            // Bind with html content
+            await templateObject.payTemplateSuperannuationLineInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click .removePayTempReimbursement': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         let payLines = templateObject.payTemplateReiumbursementLineInfo.get();
-        let updatedLines = payLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.ReiumbursementType = $('#ptReimbursementType' + index).val();
-                item.fields.Amount = $('#ptReimbursementAmount' + index).val();
-                return item;
+        let updatedLines = PayTemplateReiumbursementLine.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
+                item.fields.Active = false;
             }
+            return item;
         });
-        await templateObject.payTemplateReiumbursementLineInfo.set(updatedLines);
-        await templateObject.displayPayTempReimbursementLines();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
+        );
+
+        let reiumbursementSettings =  new PayTemplateReiumbursementLine({
+            type: "TPayTemplateReiumbursementLine",
+            fields: new PayTemplateReiumbursementLineFields({
+                ID: deleteID,
+                Active: false,
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(reiumbursementSettings),
+        });
+
+        let reiumbursementObj = {
+            tpaytemplatereiumbursementline: updatedLines
+        }
+        console.log("data2", ApiResponse);
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TPayTemplateReiumbursementLine', JSON.stringify(reiumbursementObj))
+            // Bind with html content
+            await templateObject.payTemplateReiumbursementLineInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click .removeObEarning': async function(e){
