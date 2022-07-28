@@ -86,6 +86,7 @@
                         <a class="dropdown-item" href="" data-toggle="modal" data-target="#newReceiptModal" id="showTime">Time</a>
                     </div>
                 </div>
+                <button id="btnCheque" class="btn btn-primary btnCheque m-1 m-md-3 btnNav" type="button"><i class="icon ion-plus" style="margin-right: 5px;"></i>Make Cheque</button>
             </div>
             <div class="col-6">
                 <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right m-1 m-md-3" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
@@ -296,7 +297,9 @@
                                 <th class="th colReceiptMerchant">Merchant</th>
                                 <th class="th colReceiptAmount" style="width: 80px;">Amount</th>
                                 <th class="th colReceiptAccount">Account</th>
+                                <th class="th colReceiptTripGroup">Trip-Group</th>
                                 <th class="th colReceiptDesc" style="width: 30%;">Description</th>
+                                <th class="th colReimbursement hiddenColumn">Reimbursement</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -313,7 +316,9 @@
                                         <td contenteditable="false" class="colReceiptMerchant">{{item.SupplierName}}</td>
                                         <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
                                         <td contenteditable="false" class="colReceiptAccount">{{item.AccountName}}</td>
+                                        <td contenteditable="false" class="colReceiptTripGroup">{{item.Comments}}</td>
                                         <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colReimbursement" flag="{{item.Reimbursement}}">{{item.Reimbursement}}</td>
                                     </tr>
                                 {{/each}}
                             {{/if}}
@@ -392,17 +397,30 @@
                                 </div>
 
                                 <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Trip - Group</label>
+                                        <select class="form-control trip-groups" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;">
+                                            <option>G Adventures</option>
+                                            <option>Intrepid Travel</option>
+                                            <option>TravelPerk</option>
+                                            <option>Exodus Travels</option>
+                                            <option>MT Sobek</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
                                     <div class="custom-control custom-switch" style="margin-top: 40px;">
                                         <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursable" style="cursor: pointer;" checked="{{#if editExpenseClaim.Reimbursement}}checked{{/if}}">
                                         <label class="custom-control-label" for="swtReiumbursable" style="cursor: pointer;">Reimbursable</label>
                                     </div>
                                 </div>
-<!--                                <div class="col-6">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Chart of Accounts</label>-->
-<!--                                        <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Chart of Accounts</label>
+                                        <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                    </div>
+                                </div>
                                 <!-- <div class="col-6">
                                     <div class="form-group">
                                         <label>Grouped Report</label>
@@ -414,18 +432,6 @@
                                         </select>
                                     </div>
                                 </div> -->
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label>Category</label>
-                                        <select class="form-control" id="expenseCategory">
-                                            <option>Materials</option>
-                                            <option>Meals & Entertainment</option>
-                                            <option>Office Supplies</option>
-                                            <option>Travel</option>
-                                            <option>Vehicle</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>Description</label>
@@ -706,6 +712,7 @@
                                         <th class="th colReceiptMerchant">Merchant</th>
                                         <th class="th colReceiptAmount" style="width: 80px;">Amount</th>
                                         <th class="th colReceiptAccount">Account</th>
+                                        <th class="th colReceiptTripGroup">Trip-Group</th>
                                         <th class="th colReceiptDesc" style="width: 30%;">Description</th>
                                     </tr>
                                 </thead>
@@ -723,6 +730,7 @@
                                                 <td contenteditable="false" class="colReceiptMerchant">{{item.SupplierName}}</td>
                                                 <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
                                                 <td contenteditable="false" class="colReceiptAccount">{{item.AccountName}}</td>
+                                                <td contenteditable="false" class="colReceiptTripGroup">{{item.Comments}}</td>
                                                 <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
                                             </tr>
                                         {{/each}}
@@ -979,7 +987,13 @@
                                         <div class="col-6">
                                             <div class="form-group">
                                                 <label>Trip - Group</label>
-                                                <select class="form-control trip-groups" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                                <select class="form-control trip-groups" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;">
+                                                    <option>G Adventures</option>
+                                                    <option>Intrepid Travel</option>
+                                                    <option>TravelPerk</option>
+                                                    <option>Exodus Travels</option>
+                                                    <option>MT Sobek</option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -1057,7 +1071,6 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-distance" role="tabpanel" aria-labelledby="nav-distance-tab">
-
                         </div>
                         <div class="tab-pane fade" id="nav-time" role="tabpanel" aria-labelledby="nav-time-tab">
                             <div class="row" style="padding: 16px;">
@@ -1101,22 +1114,17 @@
                                                 <input class="form-control edtTotal" type="text" name="edtTotal" value="" readonly>
                                             </div>
                                         </div>
-
-                                            <div class="col-6 col-md-6">
-                                              <div class="form-group">
+                                        <div class="col-6 col-md-6">
+                                            <div class="form-group">
                                                 <label>Currency</label>
                                                 <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
-                                              </div>
-                                            
                                             </div>
-
-                                            <div class="col-6 col-md-6">
-                                           
-                                                <div class="form-group">
-                                                    {{> CurrencyRate }}
-                                                </div>
+                                        </div>
+                                        <div class="col-6 col-md-6">
+                                            <div class="form-group">
+                                                {{> CurrencyRate }}
                                             </div>
-
+                                        </div>
                                         <div class="col-6">
                                             <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableTime" style="cursor: pointer;">

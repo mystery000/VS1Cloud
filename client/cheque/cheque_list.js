@@ -21,16 +21,16 @@ Template.chequelist.onRendered(function() {
     let purchaseService = new PurchaseBoardService();
     const supplierList = [];
     let billTable;
-    var splashArray = new Array();
+    const splashArray = [];
     const dataTableList = [];
     const tableHeaderList = [];
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
 
-    var today = moment().format('DD/MM/YYYY');
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    const today = moment().format('DD/MM/YYYY');
+    const currentDate = new Date();
+    const begunDate = moment(currentDate).format("DD/MM/YYYY");
     let fromDateMonth = (currentDate.getMonth() + 1);
     let fromDateDay = currentDate.getDate();
     if ((currentDate.getMonth()+1) < 10) {
@@ -40,7 +40,7 @@ Template.chequelist.onRendered(function() {
     if (currentDate.getDate() < 10) {
         fromDateDay = "0" + currentDate.getDate();
     }
-    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
+    const fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
@@ -78,13 +78,10 @@ Template.chequelist.onRendered(function() {
                     let hiddenColumn = customcolumn[i].hidden;
                     let columnClass = columHeaderUpdate.split('.')[1];
                     let columnWidth = customcolumn[i].width;
-
                     $("th." + columnClass + "").html(columData);
                     $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
                 }
             }
-
         }
     });
 
@@ -98,35 +95,32 @@ Template.chequelist.onRendered(function() {
             if ($(this).text() == "Part") $(this).addClass('text-partialPaid');
             if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
         });
-    };
+    }
 
     templateObject.resetData = function (dataVal) {
         window.open('/chequelist?page=last','_self');
-    }
+    };
 
     templateObject.getAllChequeData = function() {
-      var currentBeginDate = new Date();
-      var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-      let fromDateMonth = (currentBeginDate.getMonth() + 1);
-      let fromDateDay = currentBeginDate.getDate();
-      if((currentBeginDate.getMonth()+1) < 10){
-          fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-      }else{
-        fromDateMonth = (currentBeginDate.getMonth()+1);
-      }
-
-      if(currentBeginDate.getDate() < 10){
-          fromDateDay = "0" + currentBeginDate.getDate();
-      }
-      var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-      let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+        const currentBeginDate = new Date();
+        const begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        const toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         getVS1Data('TChequeList').then(function(dataObject) {
             if (dataObject.length == 0) {
-              sideBarService.getAllChequeListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
-                addVS1Data('TChequeList',JSON.stringify(data));
-                  let lineItems = [];
-                  let lineItemObj = {};
+                sideBarService.getAllChequeListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+                    addVS1Data('TChequeList',JSON.stringify(data));
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
                       $('#dateTo').attr('readonly', true);
@@ -147,9 +141,8 @@ Template.chequelist.onRendered(function() {
                         orderstatus = "Deleted";
                       }else if(data.tchequelist[i].SupplierName == ''){
                         orderstatus = "Deleted";
-                      };
-
-                      var dataList = {
+                      }
+                      const dataList = {
                           id: data.tchequelist[i].PurchaseOrderID || '',
                           employee: data.tchequelist[i].EmployeeName || '',
                           accountname: data.tchequelist[i].Account || '',
@@ -187,23 +180,17 @@ Template.chequelist.onRendered(function() {
                                       let columnClass = columHeaderUpdate.split('.')[1];
                                       let columnWidth = customcolumn[i].width;
                                       let columnindex = customcolumn[i].index + 1;
-
                                       if (hiddenColumn == true) {
-
                                           $("." + columnClass + "").addClass('hiddenColumn');
                                           $("." + columnClass + "").removeClass('showColumn');
                                       } else if (hiddenColumn == false) {
                                           $("." + columnClass + "").removeClass('hiddenColumn');
                                           $("." + columnClass + "").addClass('showColumn');
                                       }
-
                                   }
                               }
-
                           }
                       });
-
-
                       setTimeout(function() {
                           MakeNegative();
                       }, 100);
@@ -280,10 +267,10 @@ Template.chequelist.onRendered(function() {
                              .on('click', function(){
                                $('.fullScreenSpin').css('display','inline-block');
                                let dataLenght = oSettings._iDisplayLength;
-                               var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                               var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                                 const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                 const dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                               let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                if(checkurlIgnoreDate == 'true'){
                                  sideBarService.getAllChequeListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
@@ -293,11 +280,11 @@ Template.chequelist.onRendered(function() {
                                      }else{
                                        let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                       var thirdaryData = $.merge($.merge([], dataObjectnew.tchequelist), dataOld.tchequelist);
-                                       let objCombineData = {
-                                         Params: dataOld.Params,
-                                         tchequelist:thirdaryData
-                                       }
+                                         const thirdaryData = $.merge($.merge([], dataObjectnew.tchequelist), dataOld.tchequelist);
+                                             let objCombineData = {
+                                             Params: dataOld.Params,
+                                             tchequelist:thirdaryData
+                                           };
 
 
                                          addVS1Data('TChequeList',JSON.stringify(objCombineData)).then(function (datareturn) {
@@ -382,8 +369,8 @@ Template.chequelist.onRendered(function() {
 
                   }, 0);
 
-                  var columns = $('#tblchequelist th');
-                  let sTible = "";
+                    const columns = $('#tblchequelist th');
+                    let sTible = "";
                   let sWidth = "";
                   let sIndex = "";
                   let sVisible = "";
@@ -1033,10 +1020,9 @@ Template.chequelist.onRendered(function() {
                 // Meteor._reload.reload();
             });
         });
-    }
+    };
 
     templateObject.getAllChequeData();
-
 
     templateObject.getAllFilterChequeData = function (fromDate,toDate, ignoreDate) {
       sideBarService.getAllChequeListData(fromDate,toDate, ignoreDate,initialReportLoad,0).then(function(data) {
@@ -1053,7 +1039,7 @@ Template.chequelist.onRendered(function() {
                 $('.fullScreenSpin').css('display','none');
                 // Meteor._reload.reload();
             });
-    }
+    };
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
@@ -1185,13 +1171,11 @@ Template.chequelist.events({
         }
     },
     'click .chkDatatable': function(event) {
-        var columns = $('#tblchequelist th');
+        const columns = $('#tblchequelist th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
         $.each(columns, function(i, v) {
             let className = v.classList;
             let replaceClass = className[1];
-
             if (v.innerText == columnDataValue) {
                 if ($(event.target).is(':checked')) {
                     $("." + replaceClass + "").css('display', 'table-cell');
@@ -1214,7 +1198,10 @@ Template.chequelist.events({
           }
         },
     'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        const getcurrentCloudDetails = CloudUser.findOne({
+            _id: Session.get('mycloudLogonID'),
+            clouddatabaseID: Session.get('mycloudLogonDBID')
+        });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
                 var clientID = getcurrentCloudDetails._id;
@@ -1237,33 +1224,31 @@ Template.chequelist.events({
     'click .saveTable': function(event) {
         let lineItems = [];
         $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
+            const $tblrow = $(this);
+            const colTitle = $tblrow.find(".divcolumn").text() || '';
+            const colWidth = $tblrow.find(".custom-range").val() || 0;
+            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+            let colHidden = false;
+            colHidden = !$tblrow.find(".custom-control-input").is(':checked');
             let lineItemObj = {
                 index: index,
                 label: colTitle,
                 hidden: colHidden,
                 width: colWidth,
                 thclass: colthClass
-            }
-
+            };
             lineItems.push(lineItemObj);
         });
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
+        const getcurrentCloudDetails = CloudUser.findOne({
+            _id: Session.get('mycloudLogonID'),
+            clouddatabaseID: Session.get('mycloudLogonDBID')
+        });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblchequelist' });
+                const clientID = getcurrentCloudDetails._id;
+                const clientUsername = getcurrentCloudDetails.cloudUsername;
+                const clientEmail = getcurrentCloudDetails.cloudEmail;
+                const checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'tblchequelist'});
                 if (checkPrefDetails) {
                     CloudPreference.update({ _id: checkPrefDetails._id }, {
                         $set: {
@@ -1319,7 +1304,7 @@ Template.chequelist.events({
     'change .rngRange': function(event) {
         let range = $(event.target).val();
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblchequelist th');
+        const datable = $('#tblchequelist th');
         $.each(datable, function(i, v) {
             if (v.innerText == columnDataValue) {
                 let className = v.className;
@@ -1328,11 +1313,10 @@ Template.chequelist.events({
 
             }
         });
-
     },
     'click .btnOpenSettings': function(event) {
         let templateObject = Template.instance();
-        var columns = $('#tblchequelist th');
+        const columns = $('#tblchequelist th');
         const tableHeaderList = [];
         let sTible = "";
         let sWidth = "";
@@ -1348,7 +1332,6 @@ Template.chequelist.events({
                 columVisible = false;
             }
             sWidth = v.style.width.replace('px', "");
-
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
@@ -1358,7 +1341,6 @@ Template.chequelist.events({
             };
             tableHeaderList.push(datatablerecordObj);
         });
-
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
     'click #exportbtn': function() {
@@ -1369,25 +1351,20 @@ Template.chequelist.events({
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
-
-
-
-
-        var currentBeginDate = new Date();
-    var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-    let fromDateMonth = (currentBeginDate.getMonth() + 1);
-    let fromDateDay = currentBeginDate.getDate();
-    if((currentBeginDate.getMonth()+1) < 10){
-        fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-    }else{
-      fromDateMonth = (currentBeginDate.getMonth()+1);
-    }
-
-    if(currentBeginDate.getDate() < 10){
-        fromDateDay = "0" + currentBeginDate.getDate();
-    }
-    var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-    let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+        const currentBeginDate = new Date();
+        const begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        } else {
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        const toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         sideBarService.getAllPurchasesList(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
             addVS1Data('TPurchasesList',JSON.stringify(data)).then(function (datareturn) {
@@ -1398,7 +1375,6 @@ Template.chequelist.events({
         }).catch(function(err) {
 
         });
-
         sideBarService.getAllChequeListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataCheque) {
             addVS1Data('TChequeList', JSON.stringify(dataCheque)).then(function(datareturn) {
               sideBarService.getAllChequeList(initialDataLoad,0).then(function(data) {
@@ -1431,20 +1407,19 @@ Template.chequelist.events({
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         setTimeout(function(){
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+            const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+            const dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+            const formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+            //templateObject.dateAsAt.set(formatDate);
+            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
-        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-        //templateObject.dateAsAt.set(formatDate);
-        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
-
-        } else {
-          templateObject.getAllFilterChequeData(formatDateFrom,formatDateTo, false);
-        }
+            } else {
+              templateObject.getAllFilterChequeData(formatDateFrom,formatDateTo, false);
+            }
         },500);
     },
     'change #dateFrom': function () {
@@ -1453,20 +1428,18 @@ Template.chequelist.events({
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         setTimeout(function(){
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+            const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+            const dateTo = new Date($("#dateTo").datepicker("getDate"));
+            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+            const formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+            //templateObject.dateAsAt.set(formatDate);
+            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-
-        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-        //templateObject.dateAsAt.set(formatDate);
-        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
-
-        } else {
-            templateObject.getAllFilterChequeData(formatDateFrom,formatDateTo, false);
-        }
+            } else {
+                templateObject.getAllFilterChequeData(formatDateFrom,formatDateTo, false);
+            }
         },500);
     },
     'click #today': function () {
@@ -1474,25 +1447,22 @@ Template.chequelist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        var currentBeginDate = new Date();
-        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        const currentBeginDate = new Date();
+        const begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
         let fromDateMonth = (currentBeginDate.getMonth() + 1);
         let fromDateDay = currentBeginDate.getDate();
         if((currentBeginDate.getMonth()+1) < 10){
             fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-        }else{
+        } else {
           fromDateMonth = (currentBeginDate.getMonth()+1);
         }
-
         if(currentBeginDate.getDate() < 10){
             fromDateDay = "0" + currentBeginDate.getDate();
         }
-        var toDateERPFrom = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-        var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-
-        var toDateDisplayFrom = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
-        var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
-
+        const toDateERPFrom = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        const toDateERPTo = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        const toDateDisplayFrom = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
+        const toDateDisplayTo = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
         $("#dateFrom").val(toDateDisplayFrom);
         $("#dateTo").val(toDateDisplayTo);
         templateObject.getAllFilterChequeData(toDateERPFrom,toDateERPTo, false);
@@ -1502,25 +1472,22 @@ Template.chequelist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        var currentBeginDate = new Date();
-        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        const currentBeginDate = new Date();
+        const begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
         let fromDateMonth = (currentBeginDate.getMonth() + 1);
         let fromDateDay = currentBeginDate.getDate();
         if((currentBeginDate.getMonth()+1) < 10){
             fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-        }else{
+        } else {
           fromDateMonth = (currentBeginDate.getMonth()+1);
         }
-
         if(currentBeginDate.getDate() < 10){
             fromDateDay = "0" + currentBeginDate.getDate();
         }
-        var toDateERPFrom = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay - 7);
-        var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-
-        var toDateDisplayFrom = (fromDateDay -7)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
-        var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
-
+        const toDateERPFrom = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay - 7);
+        const toDateERPTo = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        const toDateDisplayFrom = (fromDateDay - 7) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
+        const toDateDisplayTo = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
         $("#dateFrom").val(toDateDisplayFrom);
         $("#dateTo").val(toDateDisplayTo);
         templateObject.getAllFilterChequeData(toDateERPFrom,toDateERPTo, false);
@@ -1530,31 +1497,23 @@ Template.chequelist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        var currentDate = new Date();
-
-        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
-
-        var formatDateComponent = function(dateComponent) {
-          return (dateComponent < 10 ? '0' : '') + dateComponent;
+        const currentDate = new Date();
+        const prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        const prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+        const formatDateComponent = function (dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
         };
-
-        var formatDate = function(date) {
-          return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        const formatDate = function (date) {
+            return formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
         };
-
-        var formatDateERP = function(date) {
-          return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        const formatDateERP = function (date) {
+            return date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
         };
-
-
-        var fromDate = formatDate(prevMonthFirstDate);
-        var toDate = formatDate(prevMonthLastDate);
-
+        const fromDate = formatDate(prevMonthFirstDate);
+        const toDate = formatDate(prevMonthLastDate);
         $("#dateFrom").val(fromDate);
         $("#dateTo").val(toDate);
-
-        var getLoadDate = formatDateERP(prevMonthLastDate);
+        const getLoadDate = formatDateERP(prevMonthLastDate);
         let getDateFrom = formatDateERP(prevMonthFirstDate);
         templateObject.getAllFilterChequeData(getDateFrom,getLoadDate, false);
     },
@@ -1563,36 +1522,28 @@ Template.chequelist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+        const currentDate = new Date();
+        const begunDate = moment(currentDate).format("DD/MM/YYYY");
         function getQuarter(d) {
             d = d || new Date();
-            var m = Math.floor(d.getMonth() / 3) + 2;
+            const m = Math.floor(d.getMonth() / 3) + 2;
             return m > 4 ? m - 4 : m;
         }
-
-        var quarterAdjustment = (moment().month() % 3) + 1;
-        var lastQuarterEndDate = moment().subtract({
+        const quarterAdjustment = (moment().month() % 3) + 1;
+        const lastQuarterEndDate = moment().subtract({
             months: quarterAdjustment
         }).endOf('month');
-        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+        const lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
             months: 2
         }).startOf('month');
-
-        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
-        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
-
+        const lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+        const lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
         $("#dateFrom").val(lastQuarterStartDateFormat);
         $("#dateTo").val(lastQuarterEndDateFormat);
-
         let fromDateMonth = getQuarter(currentDate);
-        var quarterMonth = getQuarter(currentDate);
+        const quarterMonth = getQuarter(currentDate);
         let fromDateDay = currentDate.getDate();
-
-        var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
+        const getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
         let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
         templateObject.getAllFilterChequeData(getDateFrom,getLoadDate, false);
     },
@@ -1601,9 +1552,8 @@ Template.chequelist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
+        const currentDate = new Date();
+        const begunDate = moment(currentDate).format("DD/MM/YYYY");
         let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
         let fromDateDay = currentDate.getDate();
         if ((currentDate.getMonth()+1) < 10) {
@@ -1613,21 +1563,22 @@ Template.chequelist.events({
             fromDateDay = "0" + currentDate.getDate();
         }
 
-        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+        const fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
         $("#dateFrom").val(fromDate);
         $("#dateTo").val(begunDate);
 
-        var currentDate2 = new Date();
+        const currentDate2 = new Date();
+        let fromDateMonth2;
         if ((currentDate2.getMonth()+1) < 10) {
             fromDateMonth2 = "0" + Math.floor(currentDate2.getMonth() + 1);
         }
+        let fromDateDay2;
         if (currentDate2.getDate() < 10) {
             fromDateDay2 = "0" + currentDate2.getDate();
         }
-        var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+        const getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
         let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + fromDateMonth2 + "-" + currentDate2.getDate();
         templateObject.getAllFilterChequeData(getDateFrom,getLoadDate, false);
-
     },
     'click #ignoreDate': function () {
         let templateObject = Template.instance();
