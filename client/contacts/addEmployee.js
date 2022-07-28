@@ -1246,13 +1246,6 @@ Template.employeescard.onRendered(function () {
       });
             let countriesPhone = [];
             let dataPhone = countryService.getCountryJeyhun();
-            console.log("service data countries", dataPhone);
-            // for (let i = 0; i < dataPhone.length; i++) {
-            //     countriesPhone.push(dataPhone[i].name)
-            // }
-            // console.log("countries______", countriesPhone)
-            // countriesPhone = _.sortBy(countriesPhone);
-            // console.log("countries", countriesPhone)
             templateObject.phoneCodeData.set(dataPhone);
     };
     templateObject.getCountryData();
@@ -8434,7 +8427,6 @@ Template.employeescard.helpers({
     countryList: () => {
         return Template.instance().countryData.get();
     },
-
     phoneCodeList: ()=> {
         return Template.instance().phoneCodeData.get();
     },
