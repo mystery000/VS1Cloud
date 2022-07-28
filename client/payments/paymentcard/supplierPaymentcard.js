@@ -20,6 +20,8 @@ let defaultCurrencyCode = CountryAbbr;
 
 Template.supplierpaymentcard.onCreated(() => {
   const templateObject = Template.instance();
+  templateObject.isForeignEnabled = new ReactiveVar(false);
+
   templateObject.records = new ReactiveVar();
   templateObject.record = new ReactiveVar({});
   templateObject.CleintName = new ReactiveVar();
@@ -8343,6 +8345,9 @@ Template.supplierpaymentcard.onRendered(() => {
 });
 
 Template.supplierpaymentcard.helpers({
+  isForeignEnabled: () => {
+    return Template.instance().isForeignEnabled.get();
+  },
   getTemplateList: function () {
     return template_list;
   },
@@ -8639,11 +8644,15 @@ Template.supplierpaymentcard.events({
       $("#templateselection").modal("hide");
     }
   },
-  "change #sltCurrency": (e) => {
+  "change #sltCurrency": (en, ui) => {
     if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
       $(".foreign-currency-js").css("display", "block");
+
+      ui.isForeignEnabled.set(true);
     } else {
       $(".foreign-currency-js").css("display", "none");
+      ui.isForeignEnabled.set(false);
+
     }
   },
   "change #exchange_rate": (e) => {

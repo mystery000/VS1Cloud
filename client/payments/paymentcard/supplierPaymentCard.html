@@ -1365,19 +1365,21 @@
                                         <th class="th colComments">Comments on Transaction form</th>
                                         <th class="th" style="width: 25px;"></th>
                                     </tr>
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th>AUD</th>
-                                        <th>Foreign</th>
-                                        <th>AUD</th>
-                                        <th>Foreign</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
+                                    {{#if isForeignEnabled}}
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>AUD</th>
+                                            <th>Foreign</th>
+                                            <th>AUD</th>
+                                            <th>Foreign</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    {{/if}}
                                 </thead>
                                 <tbody>
                                     <!-- {{currentTransDate}} -->
@@ -1399,7 +1401,14 @@
                                             <td contenteditable="false" class="lineAmountdue">{{item.amountdue}}</td>
                                             <!--                                    <td contenteditable="true" class="linePaymentamount">{{item.paymentamount}}</td>-->
                                             <td><input class="linePaymentamount highlightInput" type="text" value="{{item.paymentamount}}"></td>
+                                            {{#if isForeignEnabled}}
+                                                <td><input class="linePaymentamount highlightInput 2" type="text" value="{{item.paymentamount}}"></td>
+                                            {{/if}}
                                             <td contenteditable="false" class="lineOutstandingAmount">{{item.ouststandingamount}}</td>
+                                            {{#if isForeignEnabled}}
+                                                <td contenteditable="false" class="lineOutstandingAmount2">{{item.ouststandingamount}}</td>
+                                            {{/if}}
+
                                             <td></td>
                                             <td contenteditable="true" class="colComments">{{item.comments}}</td>
                                             <td></td>
