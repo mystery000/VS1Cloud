@@ -5681,6 +5681,13 @@ Template.employeescard.events({
                 type: 'warning',
             })
         }
+        else if(OpeningBalance == ''){
+            swal({
+                title: "Warning",
+                text: "Opening balance must not be empty",
+                type: 'warning',
+            })
+        }
         else if(isNaN(OpeningBalance)){
             swal({
                 title: "Warning",
@@ -5733,7 +5740,7 @@ Template.employeescard.events({
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(assignLeaveTypes),
                 });
-
+                console.log("ApiResponse", ApiResponse);
 
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
