@@ -2437,7 +2437,7 @@ Template.setup.onRendered(function () {
           expirydate: account.fields.ExpiryDate || "",
           cvc: account.fields.CVC || "",
         };
-        if(account.fields.Active != false) {
+        if (account.fields.Active != false) {
           _accountList.push(dataList);
         }
       });
@@ -3161,16 +3161,16 @@ Template.setup.onRendered(function () {
 
   templateObject.loadDefaultCustomer = async (refresh = false) => {
     LoadingOverlay.show();
-    let dataObject = await getVS1Data("TCustomerVS1");
-    let data =
-      dataObject.length == 0 || refresh == true
-        ? await sideBarService.getAllCustomersDataVS1("All")
-        : JSON.parse(dataObject[0].data);
+    //let dataObject = await getVS1Data("TCustomerVS1");
+    // let data =
+    //   dataObject.length == 0 || refresh == true
+    //     ? await sideBarService.getAllCustomersDataVS1("All")
+    //     : JSON.parse(dataObject[0].data);
 
-    if (refresh) {
-      ///dataObject[0].data = data;
-      await addVS1Data("TCustomerVS1", JSON.stringify(data));
-    }
+    let data = await sideBarService.getAllCustomersDataVS1("All");
+
+    // if (refresh) await addVS1Data("TCustomerVS1", JSON.stringify(data));
+    await addVS1Data("TCustomerVS1", JSON.stringify(data));
 
     let _customerList = [];
     let _customerListHeaders = [];
@@ -3327,8 +3327,6 @@ Template.setup.onRendered(function () {
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
       }, 300);
-
-
     }
 
     LoadingOverlay.hide();
