@@ -3332,7 +3332,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#tblCustomerlist")) {
         $("#tblCustomerlist").DataTable().destroy();
-      } 
+      }
 
       setTimeout(() => {
         $("#tblCustomerlist")
@@ -3377,8 +3377,6 @@ Template.setup.onRendered(function () {
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
       }, 300);
-
-      
     }
 
     LoadingOverlay.hide();
@@ -3437,13 +3435,16 @@ Template.setup.onRendered(function () {
 
   templateObject.loadSuppliers = async (refresh = false) => {
     LoadingOverlay.show();
-    let dataObject = await getVS1Data("TSupplierVS1");
-    let data =
-      dataObject.length == 0 || refresh == true
-        ? await sideBarService.getAllSuppliersDataVS1("All")
-        : JSON.parse(dataObject[0].data);
+    // let dataObject = await getVS1Data("TSupplierVS1");
+    // let data =
+    //   dataObject.length == 0 || refresh == true
+    //     ? await sideBarService.getAllSuppliersDataVS1("All")
+    //     : JSON.parse(dataObject[0].data);
 
-    if (refresh) await addVS1Data("TSupplierVS1", JSON.stringify(data));
+    let data = await sideBarService.getAllSuppliersDataVS1("All"); // always load from database fresh data
+
+    // if (refresh) await addVS1Data("TSupplierVS1", JSON.stringify(data));
+    await addVS1Data("TSupplierVS1", JSON.stringify(data));
 
     let _supplierList = [];
     let _supplierListHeaers = [];
@@ -3536,7 +3537,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#tblSupplierlist")) {
         $("#tblSupplierlist").DataTable().destroy();
-      } 
+      }
 
       setTimeout(function () {
         $("#tblSupplierlist")
@@ -3838,7 +3839,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#InventoryTable")) {
         $("#InventoryTable").DataTable().destroy();
-      } 
+      }
 
       setTimeout(function () {
         $("#InventoryTable")
@@ -8865,7 +8866,8 @@ Template.setup.events({
     }
   },
   "click #btnNewProduct": (e) => {
-    $($(e.currentTarget).attr("data-toggle")).modal("toggle");
+    const modal = $(e.currentTarget).attr("data-toggle");
+    $(modal).modal("show");
   },
   // "click .btnRefresh": () => {
   //   Meteor._reload.reload();
