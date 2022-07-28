@@ -7,8 +7,10 @@ import { PaymentsService } from '../payments/payments-service';
 import { SideBarService } from '../js/sidebar-service';
 import { AppointmentService } from '../appointments/appointment-service';
 import '../lib/global/indexdbstorage.js';
+import LoadingOverlay from "../LoadingOverlay";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+
 Template.addemployeepop.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
@@ -48,7 +50,7 @@ Template.addemployeepop.onCreated(function () {
 Template.addemployeepop.onRendered(function () {
     var erpGet = erpDb();
 
-    $('.fullScreenSpin').css('display', 'inline-block');
+    LoadingOverlay.show();
     Session.setPersistent('cloudCurrentLogonName', '');
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -91,7 +93,7 @@ Template.addemployeepop.onRendered(function () {
 
     setTimeout(function () {
         MakeNegative();
-        $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
+        $(".addemployeepop #dtStartingDate,.addemployeepop #dtDOB,.addemployeepop #dtTermninationDate,.addemployeepop #dtAsOf").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
             buttonImageOnly: true,
@@ -280,10 +282,10 @@ Template.addemployeepop.onRendered(function () {
                         }, 100);
                     }
 
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     setTimeout(function () {
                         //$.fn.dataTable.moment('DD/MM/YY');
-                        $('#tblTransactionlist').DataTable({
+                        $('.addemployeepop #tblTransactionlist').DataTable({
                             // dom: 'lBfrtip',
                             columnDefs: [{
                                     type: 'date',
@@ -338,10 +340,10 @@ Template.addemployeepop.onRendered(function () {
                             let draftRecord = templateObject.datatablerecords.get();
                             templateObject.datatablerecords.set(draftRecord);
                         }).on('column-reorder', function () {});
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                     }, 0);
 
-                    var columns = $('#tblTransactionlist th');
+                    var columns = $('.addemployeepop #tblTransactionlist th');
                     let sTible = "";
                     let sWidth = "";
                     let sIndex = "";
@@ -368,7 +370,7 @@ Template.addemployeepop.onRendered(function () {
                     });
                     templateObject.tableheaderrecords.set(tableHeaderList);
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    $('#tblTransactionlist tbody').on('click', 'tr', function () {
+                    $('.addemployeepop #tblTransactionlist tbody').on('click', 'tr', function () {
                         var listData = $(this).closest('tr').attr('id');
                         if (listData) {
                             window.open('/invoicecard?id=' + listData, '_self');
@@ -377,7 +379,7 @@ Template.addemployeepop.onRendered(function () {
 
                 }).catch(function (err) {
                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
 
                     // Meteor._reload.reload();
                 });
@@ -448,10 +450,10 @@ Template.addemployeepop.onRendered(function () {
                     }, 100);
                 }
 
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 setTimeout(function () {
                     //$.fn.dataTable.moment('DD/MM/YY');
-                    $('#tblTransactionlist').DataTable({
+                    $('.addemployeepop #tblTransactionlist').DataTable({
                         // dom: 'lBfrtip',
                         columnDefs: [{
                                 type: 'date',
@@ -506,10 +508,10 @@ Template.addemployeepop.onRendered(function () {
                         let draftRecord = templateObject.datatablerecords.get();
                         templateObject.datatablerecords.set(draftRecord);
                     }).on('column-reorder', function () {});
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 }, 0);
 
-                var columns = $('#tblTransactionlist th');
+                var columns = $('.addemployeepop #tblTransactionlist th');
                 let sTible = "";
                 let sWidth = "";
                 let sIndex = "";
@@ -536,7 +538,7 @@ Template.addemployeepop.onRendered(function () {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblTransactionlist tbody').on('click', 'tr', function () {
+                $('.addemployeepop #tblTransactionlist tbody').on('click', 'tr', function () {
                     var listData = $(this).closest('tr').attr('id');
                     if (listData) {
                         window.open('/invoicecard?id=' + listData, '_self');
@@ -610,10 +612,10 @@ Template.addemployeepop.onRendered(function () {
                     }, 100);
                 }
 
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 setTimeout(function () {
                     //$.fn.dataTable.moment('DD/MM/YY');
-                    $('#tblTransactionlist').DataTable({
+                    $('.addemployeepop #tblTransactionlist').DataTable({
                         // dom: 'lBfrtip',
                         columnDefs: [{
                                 type: 'date',
@@ -668,10 +670,10 @@ Template.addemployeepop.onRendered(function () {
                         let draftRecord = templateObject.datatablerecords.get();
                         templateObject.datatablerecords.set(draftRecord);
                     }).on('column-reorder', function () {});
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                 }, 0);
 
-                var columns = $('#tblTransactionlist th');
+                var columns = $('.addemployeepop #tblTransactionlist th');
                 let sTible = "";
                 let sWidth = "";
                 let sIndex = "";
@@ -698,7 +700,7 @@ Template.addemployeepop.onRendered(function () {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblTransactionlist tbody').on('click', 'tr', function () {
+                $('.addemployeepop #tblTransactionlist tbody').on('click', 'tr', function () {
                     var listData = $(this).closest('tr').attr('id');
                     if (listData) {
                         window.open('/invoicecard?id=' + listData, '_self');
@@ -707,7 +709,7 @@ Template.addemployeepop.onRendered(function () {
 
             }).catch(function (err) {
                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 // Meteor._reload.reload();
             });
         });
@@ -753,15 +755,15 @@ Template.addemployeepop.onRendered(function () {
 
                 if (data.temployeepicture[i].EmployeeName === employeeName) {
                     employeeProfile = data.temployeepicture[i].EncodedPic;
-                    $('.imageUpload').attr('src', 'data:image/jpeg;base64,' + employeeProfile);
-                    $('.cloudEmpImgID').val(data.temployeepicture[i].Id);
+                    $('.addemployeepop .imageUpload').attr('src', 'data:image/jpeg;base64,' + employeeProfile);
+                    $('.addemployeepop .cloudEmpImgID').val(data.temployeepicture[i].Id);
                 }
             }
         });
     }
     if (currentId.id == "undefined") {
         var currentDate = new Date();
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
         var begunDate = moment(currentDate).format("DD/MM/YYYY");
         let lineItemObj = {
             id: '',
@@ -797,13 +799,13 @@ Template.addemployeepop.onRendered(function () {
         templateObject.records.set(lineItemObj);
         setTimeout(function () {
 
-            $('#tblTransactionlist').DataTable();
-            $('.employeeTab').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
+            $('.addemployeepop #tblTransactionlist').DataTable();
+            $('.addemployeepop .employeeTab').trigger('click');
+            LoadingOverlay.hide();
         }, 100);
 
         setTimeout(function () {
-            $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
+            $(".addemployeepop #dtStartingDate,.addemployeepop #dtDOB,.addemployeepop #dtTermninationDate,.addemployeepop #dtAsOf").datepicker({
                 showOn: 'button',
                 buttonText: 'Show Date',
                 buttonImageOnly: true,
@@ -815,7 +817,7 @@ Template.addemployeepop.onRendered(function () {
                 changeYear: true,
                 yearRange: "-90:+10",
             });
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         }, 100);
     } else {
         if (!isNaN(currentId.id)) {
@@ -825,7 +827,7 @@ Template.addemployeepop.onRendered(function () {
 
                     if (dataObject.length == 0) {
                         contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             let lineItems = [];
                             let empEmail = '';
                             let overideset = data.fields.User.fields.CustFld14;
@@ -835,9 +837,9 @@ Template.addemployeepop.onRendered(function () {
                                 } else {
                                     overideset = false;
                                 }
-                                $("#overridesettings").prop('checked', overideset);
+                                $(".addemployeepop #overridesettings").prop('checked', overideset);
                             } else {
-                                $("#overridesettings").prop('checked', false);
+                                $(".addemployeepop #overridesettings").prop('checked', false);
                             }
 
                             if (data.fields.Email.replace(/\s/g, '') == '') {
@@ -933,9 +935,9 @@ Template.addemployeepop.onRendered(function () {
                             templateObject.records.set(lineItemObj);
                             if (currentId.addvs1user == "true") {
                                 setTimeout(function () {
-                                    $('.employeeTab').trigger('click');
-                                    $('.addvs1usertab').trigger('click');
-                                    $('#cloudEmpEmailAddress').focus();
+                                    $('.addemployeepop .employeeTab').trigger('click');
+                                    $('.addemployeepop .addvs1usertab').trigger('click');
+                                    $('.addemployeepop #cloudEmpEmailAddress').focus();
                                 }, 100);
                             }
 
@@ -950,10 +952,10 @@ Template.addemployeepop.onRendered(function () {
                                         confirmButtonText: 'OK'
                                     }).then((result) => {
                                         if (result.value) {
-                                            $('#cloudEmpEmailAddress').focus();
-                                            $('.modal-backdrop').css('display', 'none');
+                                            $('.addemployeepop #cloudEmpEmailAddress').focus();
+                                            $('.addemployeepop .modal-backdrop').css('display', 'none');
                                         } else if (result.dismiss === 'cancel') {
-                                            $('.modal-backdrop').css('display', 'none');
+                                            $('.addemployeepop .modal-backdrop').css('display', 'none');
                                         }
                                     });
                                 } else {
@@ -965,10 +967,10 @@ Template.addemployeepop.onRendered(function () {
                                         confirmButtonText: 'OK'
                                     }).then((result) => {
                                         if (result.value) {
-                                            $('#cloudEmpEmailAddress').focus();
-                                            $('.modal-backdrop').css('display', 'none');
+                                            $('.addemployeepop #cloudEmpEmailAddress').focus();
+                                            $('.addemployeepop .modal-backdrop').css('display', 'none');
                                         } else if (result.dismiss === 'cancel') {
-                                            $('.modal-backdrop').css('display', 'none');
+                                            $('.addemployeepop .modal-backdrop').css('display', 'none');
                                         }
                                     });
                                 }
@@ -988,10 +990,10 @@ Template.addemployeepop.onRendered(function () {
                             //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
                             // $('.fullScreenSpin').css('display','none');
                             setTimeout(function () {
-                                var rowCount = $('.results tbody tr').length;
-                                $('.counter').text(rowCount + ' items');
-                                $('#cloudEmpName').val(data.fields.EmployeeName);
-                                $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
+                                var rowCount = $('.addemployeepop .results tbody tr').length;
+                                $('.addemployeepop .counter').text(rowCount + ' items');
+                                $('.addemployeepop #cloudEmpName').val(data.fields.EmployeeName);
+                                $(".addemployeepop #dtStartingDate,.addemployeepop #dtDOB,.addemployeepop #dtTermninationDate,.addemployeepop #dtAsOf").datepicker({
                                     showOn: 'button',
                                     buttonText: 'Show Date',
                                     buttonImageOnly: true,
@@ -1013,7 +1015,7 @@ Template.addemployeepop.onRendered(function () {
                         for (let i = 0; i < useData.length; i++) {
                             if (parseInt(useData[i].fields.ID) === parseInt(employeeID)) {
                                 added = true;
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let empEmail = '';
                                 let overideset = useData[i].fields.CustFld14;
@@ -1111,20 +1113,20 @@ Template.addemployeepop.onRendered(function () {
                                 templateObject.records.set(lineItemObj);
                                 if (currentId.addvs1user == "true") {
                                     setTimeout(function () {
-                                        $('.employeeTab').trigger('click');
-                                        $('.addvs1usertab').trigger('click');
-                                        $('#cloudEmpEmailAddress').focus();
+                                        $('.addemployeepop .employeeTab').trigger('click');
+                                        $('.addemployeepop .addvs1usertab').trigger('click');
+                                        $('.addemployeepop #cloudEmpEmailAddress').focus();
                                     }, 100);
                                 }
                                 setTimeout(function () {
                                     if (overideset != "") {
                                         if (overideset == "true") {
-                                            $("#overridesettings").prop('checked', true);
+                                            $(".addemployeepop #overridesettings").prop('checked', true);
                                         } else {
-                                            $("#overridesettings").prop('checked', false);
+                                            $(".addemployeepop #overridesettings").prop('checked', false);
                                         }
                                     } else {
-                                        $("#overridesettings").prop('checked', false);
+                                        $(".addemployeepop #overridesettings").prop('checked', false);
                                     }
                                 }, 1000);
                                 if ((currentId.addvs1user == "true") && (currentId.id)) {
@@ -1139,10 +1141,10 @@ Template.addemployeepop.onRendered(function () {
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                                $('#cloudEmpEmailAddress').focus();
-                                                $('.modal-backdrop').css('display', 'none');
+                                                $('.addemployeepop #cloudEmpEmailAddress').focus();
+                                                $('.addemployeepop .modal-backdrop').css('display', 'none');
                                             } else if (result.dismiss === 'cancel') {
-                                                $('.modal-backdrop').css('display', 'none');
+                                                $('.addemployeepop .modal-backdrop').css('display', 'none');
                                             }
                                         });
                                     } else {
@@ -1154,10 +1156,10 @@ Template.addemployeepop.onRendered(function () {
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                                $('#cloudEmpEmailAddress').focus();
-                                                $('.modal-backdrop').css('display', 'none');
+                                                $('.addemployeepop #cloudEmpEmailAddress').focus();
+                                                $('.addemployeepop .modal-backdrop').css('display', 'none');
                                             } else if (result.dismiss === 'cancel') {
-                                                $('.modal-backdrop').css('display', 'none');
+                                                $('.addemployeepop .modal-backdrop').css('display', 'none');
                                             }
                                         });
                                     }
@@ -1178,9 +1180,9 @@ Template.addemployeepop.onRendered(function () {
                                 // $('.fullScreenSpin').css('display','none');
                                 setTimeout(function () {
                                     var rowCount = $('.results tbody tr').length;
-                                    $('.counter').text(rowCount + ' items');
-                                    $('#cloudEmpName').val(useData[i].fields.EmployeeName);
-                                    $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
+                                    $('.addemployeepop .counter').text(rowCount + ' items');
+                                    $('.addemployeepop #cloudEmpName').val(useData[i].fields.EmployeeName);
+                                    $(".addemployeepop #dtStartingDate,.addemployeepop #dtDOB,.addemployeepop #dtTermninationDate,.addemployeepop #dtAsOf").datepicker({
                                         showOn: 'button',
                                         buttonText: 'Show Date',
                                         buttonImageOnly: true,
@@ -1200,7 +1202,7 @@ Template.addemployeepop.onRendered(function () {
 
                         if (!added) {
                             contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 let lineItems = [];
                                 let empEmail = '';
 
@@ -1297,9 +1299,9 @@ Template.addemployeepop.onRendered(function () {
                                 templateObject.records.set(lineItemObj);
                                 if (currentId.addvs1user == "true") {
                                     setTimeout(function () {
-                                        $('.employeeTab').trigger('click');
-                                        $('.addvs1usertab').trigger('click');
-                                        $('#cloudEmpEmailAddress').focus();
+                                        $('.addemployeepop .employeeTab').trigger('click');
+                                        $('.addemployeepop .addvs1usertab').trigger('click');
+                                        $('.addemployeepop #cloudEmpEmailAddress').focus();
                                     }, 100);
                                 }
 
@@ -1314,10 +1316,10 @@ Template.addemployeepop.onRendered(function () {
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                                $('#cloudEmpEmailAddress').focus();
-                                                $('.modal-backdrop').css('display', 'none');
+                                                $('.addemployeepop #cloudEmpEmailAddress').focus();
+                                                $('.addemployeepop .modal-backdrop').css('display', 'none');
                                             } else if (result.dismiss === 'cancel') {
-                                                $('.modal-backdrop').css('display', 'none');
+                                                $('.addemployeepop .modal-backdrop').css('display', 'none');
                                             }
                                         });
                                     } else {
@@ -1329,10 +1331,10 @@ Template.addemployeepop.onRendered(function () {
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                                $('#cloudEmpEmailAddress').focus();
-                                                $('.modal-backdrop').css('display', 'none');
+                                                $('.addemployeepop #cloudEmpEmailAddress').focus();
+                                                $('.addemployeepop .modal-backdrop').css('display', 'none');
                                             } else if (result.dismiss === 'cancel') {
-                                                $('.modal-backdrop').css('display', 'none');
+                                                $('.addemployeepop .modal-backdrop').css('display', 'none');
                                             }
                                         });
                                     }
@@ -1351,10 +1353,10 @@ Template.addemployeepop.onRendered(function () {
                                 //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
                                 // $('.fullScreenSpin').css('display','none');
                                 setTimeout(function () {
-                                    var rowCount = $('.results tbody tr').length;
-                                    $('.counter').text(rowCount + ' items');
-                                    $('#cloudEmpName').val(data.fields.EmployeeName);
-                                    $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
+                                    var rowCount = $('.addemployeepop .results tbody tr').length;
+                                    $('.addemployeepop .counter').text(rowCount + ' items');
+                                    $('.addemployeepop #cloudEmpName').val(data.fields.EmployeeName);
+                                    $(".addemployeepop #dtStartingDate,.addemployeepop #dtDOB,.addemployeepop #dtTermninationDate,.addemployeepop #dtAsOf").datepicker({
                                         showOn: 'button',
                                         buttonText: 'Show Date',
                                         buttonImageOnly: true,
@@ -1374,7 +1376,7 @@ Template.addemployeepop.onRendered(function () {
                 }).catch(function (err) {
 
                     contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        LoadingOverlay.hide();
                         let lineItems = [];
                         let empEmail = '';
 
@@ -1470,9 +1472,9 @@ Template.addemployeepop.onRendered(function () {
                         templateObject.records.set(lineItemObj);
                         if (currentId.addvs1user == "true") {
                             setTimeout(function () {
-                                $('.employeeTab').trigger('click');
-                                $('.addvs1usertab').trigger('click');
-                                $('#cloudEmpEmailAddress').focus();
+                                $('.addemployeepop .employeeTab').trigger('click');
+                                $('.addemployeepop .addvs1usertab').trigger('click');
+                                $('.addemployeepop #cloudEmpEmailAddress').focus();
                             }, 100);
                         }
 
@@ -1487,10 +1489,10 @@ Template.addemployeepop.onRendered(function () {
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
-                                        $('#cloudEmpEmailAddress').focus();
-                                        $('.modal-backdrop').css('display', 'none');
+                                        $('.addemployeepop #cloudEmpEmailAddress').focus();
+                                        $('.addemployeepop .modal-backdrop').css('display', 'none');
                                     } else if (result.dismiss === 'cancel') {
-                                        $('.modal-backdrop').css('display', 'none');
+                                        $('.addemployeepop .modal-backdrop').css('display', 'none');
                                     }
                                 });
                             } else {
@@ -1502,10 +1504,10 @@ Template.addemployeepop.onRendered(function () {
                                     confirmButtonText: 'OK'
                                 }).then((result) => {
                                     if (result.value) {
-                                        $('#cloudEmpEmailAddress').focus();
-                                        $('.modal-backdrop').css('display', 'none');
+                                        $('.addemployeepop #cloudEmpEmailAddress').focus();
+                                        $('.addemployeepop .modal-backdrop').css('display', 'none');
                                     } else if (result.dismiss === 'cancel') {
-                                        $('.modal-backdrop').css('display', 'none');
+                                        $('.addemployeepop .modal-backdrop').css('display', 'none');
                                     }
                                 });
                             }
@@ -1524,10 +1526,10 @@ Template.addemployeepop.onRendered(function () {
                         //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
                         // $('.fullScreenSpin').css('display','none');
                         setTimeout(function () {
-                            var rowCount = $('.results tbody tr').length;
+                            var rowCount = $('.addemployeepop .results tbody tr').length;
                             $('.counter').text(rowCount + ' items');
                             $('#cloudEmpName').val(data.fields.EmployeeName);
-                            $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
+                            $(".addemployeepop #dtStartingDate, .addemployeepop #dtDOB, .addemployeepop #dtTermninationDate, .addemployeepop #dtAsOf").datepicker({
                                 showOn: 'button',
                                 buttonText: 'Show Date',
                                 buttonImageOnly: true,
@@ -1549,7 +1551,7 @@ Template.addemployeepop.onRendered(function () {
             templateObject.getEmployeeData();
 
         } else {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
             var currentDate = new Date();
             var begunDate = moment(currentDate).format("DD/MM/YYYY");
             let lineItemObj = {
@@ -1607,9 +1609,9 @@ Template.addemployeepop.onRendered(function () {
                     } else if (result.dismiss === 'cancel') {}
                 });
                 setTimeout(function () {
-                    $('.employeeTab').trigger('click');
-                    $('.addvs1usertab').trigger('click');
-                    $('#cloudEmpEmailAddress').focus();
+                    $('.addemployeepop .employeeTab').trigger('click');
+                    $('.addemployeepop .addvs1usertab').trigger('click');
+                    $('.addemployeepop #cloudEmpEmailAddress').focus();
                     // var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
                     // window.scrollTo(scrollBottom);
                 }, 100);
@@ -1619,15 +1621,15 @@ Template.addemployeepop.onRendered(function () {
                 // }
             } else {
                 setTimeout(function () {
-                    $('#tblTransactionlist').DataTable();
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('.employeeTab').trigger('click');
+                    $('.addemployeepop #tblTransactionlist').DataTable();
+                    LoadingOverlay.show();
+                    $('.addemployeepop .employeeTab').trigger('click');
                 }, 100);
             }
 
             setTimeout(function () {
-                $('#cloudEmpName').val('');
-                $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
+                $('.addemployeepop #cloudEmpName').val('');
+                $(".addemployeepop #dtStartingDate, .addemployeepop #dtDOB, .addemployeepop #dtTermninationDate, .addemployeepop #dtAsOf").datepicker({
                     showOn: 'button',
                     buttonText: 'Show Date',
                     buttonImageOnly: true,
@@ -1639,7 +1641,7 @@ Template.addemployeepop.onRendered(function () {
                     changeYear: true,
                     yearRange: "-90:+10",
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             }, 100);
         }
     }
@@ -1871,18 +1873,18 @@ Template.addemployeepop.onRendered(function () {
                         defaultApptDuration: data.tappointmentpreferences[data.tappointmentpreferences.length - 1].DefaultApptDuration || '',
                     }
 
-                    $("#showSaturday").prop('checked', prefObject.showSat);
-                    $("#showSunday").prop('checked', prefObject.showSun);
+                    $(".addemployeepop #showSaturday").prop('checked', prefObject.showSat);
+                    $(".addemployeepop #showSunday").prop('checked', prefObject.showSun);
 
                     if (prefObject.defaultProduct) {
-                        $('#product-list').prepend('<option selected value=' + prefObject.id + '>' + prefObject.defaultProduct + '</option>');
+                        $('.addemployeepop #product-list').prepend('<option selected value=' + prefObject.id + '>' + prefObject.defaultProduct + '</option>');
                     }
 
                     if (prefObject.defaultApptDuration) {
                         if (prefObject.defaultApptDuration == "120") {
-                            $('#defaultTime').prepend('<option selected>' + 2 + ' Hour</option>');
+                            $('.addemployeepop #defaultTime').prepend('<option selected>' + 2 + ' Hour</option>');
                         } else {
-                            $('#defaultTime').prepend('<option selected>' + prefObject.defaultApptDuration + ' Hour</option>');
+                            $('.addemployeepop #defaultTime').prepend('<option selected>' + prefObject.defaultApptDuration + ' Hour</option>');
                         }
 
                     }
@@ -1900,17 +1902,17 @@ Template.addemployeepop.onRendered(function () {
         function mediaQuery(x) {
             if (x.matches) {
 
-                $("#displayList").removeClass("col-2");
-                $("#displayList").addClass("col-3");
+                $(".addemployeepop #displayList").removeClass("col-2");
+                $(".addemployeepop #displayList").addClass("col-3");
 
-                $("#displayInfo").removeClass("col-10");
-                $("#displayInfo").addClass("col-9");
+                $(".addemployeepop #displayInfo").removeClass("col-10");
+                $(".addemployeepop #displayInfo").addClass("col-9");
 
-                $("#absentInfo").removeClass("col-3");
-                $("#absentInfo").addClass("col-12");
+                $(".addemployeepop #absentInfo").removeClass("col-3");
+                $(".addemployeepop #absentInfo").addClass("col-12");
 
-                $("#absentChart").removeClass("col-3");
-                $("#absentChart").addClass("col-12");
+                $(".addemployeepop #absentChart").removeClass("col-3");
+                $(".addemployeepop #absentChart").addClass("col-12");
             }
         }
         mediaQuery(x)
@@ -1925,20 +1927,20 @@ Template.addemployeepop.onRendered(function () {
         function mediaQuery(x) {
             if (x.matches) {
 
-                $("#displayList").removeClass("col-2");
-                $("#displayList").addClass("col-12");
+                $(".addemployeepop #displayList").removeClass("col-2");
+                $(".addemployeepop #displayList").addClass("col-12");
 
-                $("#cardB").addClass("cardB420");
+                $(".addemployeepop #cardB").addClass("cardB420");
 
-                $("#displayInfo").removeClass("col-10");
-                $("#displayInfo").addClass("col-12");
+                $(".addemployeepop #displayInfo").removeClass("col-10");
+                $(".addemployeepop #displayInfo").addClass("col-12");
 
-                $("#absentInfo").removeClass("col-3");
-                $("#absentInfo").addClass("col-12");
+                $(".addemployeepop #absentInfo").removeClass("col-3");
+                $(".addemployeepop #absentInfo").addClass("col-12");
                 btnsViewHide.style.display = "none";
 
-                $("#absentChart").removeClass("col-9");
-                $("#absentChart").addClass("col-12");
+                $(".addemployeepop #absentChart").removeClass("col-9");
+                $(".addemployeepop #absentChart").addClass("col-12");
             }
         }
         mediaQuery(x)
@@ -1948,7 +1950,7 @@ Template.addemployeepop.onRendered(function () {
 });
 
 Template.addemployeepop.events({
-    'click #customerShipping-1': function (event) {
+    'click .addemployeepop #customerShipping-1': function (event) {
         if ($(event.target).is(':checked')) {
             $('.customerShipping-2').css('display', 'none');
 
@@ -1956,67 +1958,67 @@ Template.addemployeepop.events({
             $('.customerShipping-2').css('display', 'block');
         }
     },
-    'click .btnSaveEmpPop': async function (event) {
+    'click .addemployeepop .btnSaveEmpPop': async function (event) {
         let templateObject = Template.instance();
         let contactService = new ContactService();
         let appointmentService = new AppointmentService();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let title = $('#edtTitle').val();
-        let firstname = $('#edtFirstName').val();
+        LoadingOverlay.show();
+        let title = $('.addemployeepop #edtTitle').val();
+        let firstname = $('.addemployeepop #edtFirstName').val();
         if (firstname === '') {
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
             // Bert.alert('<strong>WARNING:</strong> First Name cannot be blank!', 'warning');
             swal('First Name cannot be blank!', '', 'info');
             e.preventDefault();
-            $('#edtFirstName').focus();
+            $('.addemployeepop #edtFirstName').focus();
         }
-        let middlename = $('#edtMiddleName').val() || '';
-        let lastname = $('#edtLastName').val() || '';
-        let suffix = $('#edtSuffix').val() || '';
-        let email = $('#edtEmailAddress').val() || '';
-        let phone = $('#edtPhone').val() || '';
-        let mobile = $('#edtMobile').val() || '';
+        let middlename = $('.addemployeepop #edtMiddleName').val() || '';
+        let lastname = $('.addemployeepop #edtLastName').val() || '';
+        let suffix = $('.addemployeepop #edtSuffix').val() || '';
+        let email = $('.addemployeepop #edtEmailAddress').val() || '';
+        let phone = $('.addemployeepop #edtPhone').val() || '';
+        let mobile = $('.addemployeepop #edtMobile').val() || '';
         if(mobile != '') {
             mobile = contactService.changeMobileFormat(mobile)
         }
-        let fax = $('#edtFax').val() || '';
-        let skype = $('#edtSkype').val() || '';
-        let gender = $('#edtGender').val() || '';
-        let employeeName = $('#edtCustomerCompany').val() || '';
+        let fax = $('.addemployeepop #edtFax').val() || '';
+        let skype = $('.addemployeepop #edtSkype').val() || '';
+        let gender = $('.addemployeepop #edtGender').val() || '';
+        let employeeName = $('.addemployeepop #edtCustomerCompany').val() || '';
 
-        var dateofbirthTime = new Date($("#dtDOB").datepicker("getDate"));
-        var startdateTime = new Date($("#dtStartingDate").datepicker("getDate"));
+        var dateofbirthTime = new Date($(".addemployeepop #dtDOB").datepicker("getDate"));
+        var startdateTime = new Date($(".addemployeepop #dtStartingDate").datepicker("getDate"));
 
         let dateofbirth = dateofbirthTime.getFullYear() + "-" + (dateofbirthTime.getMonth() + 1) + "-" + dateofbirthTime.getDate();
         let startdate = startdateTime.getFullYear() + "-" + (startdateTime.getMonth() + 1) + "-" + startdateTime.getDate();
 
-        let employeeID = $('#edtEmployeeID').val();
-        let position = $('#edtPosition').val();
-        let webiste = $('#edtWebsite').val();
+        let employeeID = $('.addemployeepop #edtEmployeeID').val();
+        let position = $('.addemployeepop #edtPosition').val();
+        let webiste = $('.addemployeepop #edtWebsite').val();
 
-        let streetaddress = $('#edtStreetAddress').val();
-        let city = $('#edtCity').val();
-        let state = $('#edtState').val();
-        let postalcode = $('#edtPostalCode').val();
-        let country = $('#edtCountry').val();
+        let streetaddress = $('.addemployeepop #edtStreetAddress').val();
+        let city = $('.addemployeepop #edtCity').val();
+        let state = $('.addemployeepop #edtState').val();
+        let postalcode = $('.addemployeepop #edtPostalCode').val();
+        let country = $('.addemployeepop #edtCountry').val();
 
-        let custField1 = $('#edtCustomeField1').val();
-        let custField2 = $('#edtCustomeField2').val();
-        let custField3 = $('#edtCustomeField3').val();
-        let custField4 = $('#edtCustomeField4').val();
+        let custField1 = $('.addemployeepop #edtCustomeField1').val();
+        let custField2 = $('.addemployeepop #edtCustomeField2').val();
+        let custField3 = $('.addemployeepop #edtCustomeField3').val();
+        let custField4 = $('.addemployeepop #edtCustomeField4').val();
 
-        let priorityData = $('#edtPriority').val() || '';
+        let priorityData = $('.addemployeepop #edtPriority').val() || '';
 
         let uploadedItems = templateObject.uploadedFiles.get();
 
-        let notes = $('#txaNotes').val();
+        let notes = $('.addemployeepop #txaNotes').val();
         var url = FlowRouter.current().path;
         var getemp_id = url.split('?id=');
         //var currentEmployee = getemp_id[getemp_id.length-1];
         var currentEmployee = 0;
         let overrideGlobalCalendarSet = "false";
 
-        if ($('#overridesettings').is(':checked')) {
+        if ($('.addemployeepop #overridesettings').is(':checked')) {
             overrideGlobalCalendarSet = "true";
         }
 
@@ -2027,7 +2029,7 @@ Template.addemployeepop.events({
             if (checkEmpPriorityData.temployee.length) {
                 if (checkEmpPriorityData.temployee[0].Id === parseInt(currentId.id)) {}
                 else {
-                    $('.fullScreenSpin').css('display', 'none');
+                    LoadingOverlay.hide();
                     swal({
                         title: 'Sort Order already in use',
                         text: 'Please enter another.',
@@ -2046,7 +2048,7 @@ Template.addemployeepop.events({
             imageData = templateObject.imageFileData.get().split(',')[1] || '';
         }
 
-        currentEmployee = currentId.id ? currentId.id : $('#edtEmployeeId').val();
+        currentEmployee = currentId.id ? currentId.id : $('.addemployeepop #edtEmployeeId').val();
 
         if (currentEmployee) {
             currentEmployee = parseInt(currentEmployee);
@@ -2079,8 +2081,8 @@ Template.addemployeepop.events({
                     CustFld2: custField2,
                     CustFld3: custField3,
                     CustFld4: custField4,
-                    CustFld5: $('#edtPriority').val(),
-                    CustFld6: $('#favcolor').val(),
+                    CustFld5: $('.addemployeepop #edtPriority').val(),
+                    CustFld6: $('.addemployeepop #favcolor').val(),
                     CustFld14: overrideGlobalCalendarSet
                 }
             };
@@ -2113,8 +2115,8 @@ Template.addemployeepop.events({
                     CustFld2: custField2,
                     CustFld3: custField3,
                     CustFld4: custField4,
-                    CustFld5: $('#edtPriority').val(),
-                    CustFld6: $('#favcolor').val(),
+                    CustFld5: $('.addemployeepop #edtPriority').val(),
+                    CustFld6: $('.addemployeepop #favcolor').val(),
                     CustFld14: overrideGlobalCalendarSet
 
                 }
@@ -2122,10 +2124,10 @@ Template.addemployeepop.events({
         }
         contactService.saveEmployeeEx(objDetails).then(function (objDetails) {
             let employeeSaveID = objDetails.fields.ID;
-            $('#selectEmployeeID').val(employeeSaveID);
+            $('.addemployeepop #selectEmployeeID').val(employeeSaveID);
             // var erpUserID = $("#erpEmpID").val();
             let employeePicObj = "";
-            if ($('.cloudEmpImgID').val() == "") {
+            if ($('.addemployeepop .cloudEmpImgID').val() == "") {
                 employeePicObj = {
                     type: "TEmployeePicture",
                     fields: {
@@ -2137,7 +2139,7 @@ Template.addemployeepop.events({
                 employeePicObj = {
                     type: "TEmployeePicture",
                     fields: {
-                        ID: parseInt($('.cloudEmpImgID').val()),
+                        ID: parseInt($('.addemployeepop .cloudEmpImgID').val()),
                         EmployeeName: employeeName,
                         EncodedPic: imageData
                     }
@@ -2149,15 +2151,15 @@ Template.addemployeepop.events({
             let showSat = false;
             let showSun = false;
             let overrideGlobalCalendarSet = "false";
-            if ($('#showSaturday').is(':checked')) {
+            if ($('.addemployeepop #showSaturday').is(':checked')) {
                 showSat = true;
             }
 
-            if ($('#showSunday').is(':checked')) {
+            if ($('.addemployeepop #showSunday').is(':checked')) {
                 showSun = true;
             }
 
-            if ($('#overridesettings').is(':checked')) {
+            if ($('.addemployeepop #overridesettings').is(':checked')) {
                 overrideGlobalCalendarSet = overrideGlobalCalendarSet;
             }
 
@@ -2167,9 +2169,9 @@ Template.addemployeepop.events({
                 settingID = calOptions.id;
             }
 
-            let defaultTime = parseInt($('#defaultTime').val().split(' ')[0]) || 2;
-            let defaultProduct = $('#product-list').children("option:selected").text().trim() || '';
-            let defaultProductID = $('#product-list').children("option:selected").val() || 0;
+            let defaultTime = parseInt($('.addemployeepop #defaultTime').val().split(' ')[0]) || 2;
+            let defaultProduct = $('.addemployeepop #product-list').children("option:selected").text().trim() || '';
+            let defaultProductID = $('.addemployeepop #product-list').children("option:selected").val() || 0;
 
             let objectData = "";
             if (settingID == "") {
@@ -2201,11 +2203,11 @@ Template.addemployeepop.events({
             appointmentService.saveAppointmentPreferences(objectData).then(function (data) {
                 var cloudDBID = Session.get('mycloudLogonDBID');
                 // var logonName = $("#cloudEmpLogonName").val();
-                var enteredEmail = $("#cloudEmpEmailAddress").val();
-                var checkifupdate = $("#cloudCheckEmpEmailAddress").val();
-                var enteredPassword = $("#cloudEmpUserPassword").val();
-                let cloudpassword = $("#cloudEmpUserPassword").val().replace(/;/g, ",");
-                let cloudcheckpassword = $("#cloudCheckEmpUserPassword").val();
+                var enteredEmail = $(".addemployeepop #cloudEmpEmailAddress").val();
+                var checkifupdate = $(".addemployeepop #cloudCheckEmpEmailAddress").val();
+                var enteredPassword = $(".addemployeepop #cloudEmpUserPassword").val();
+                let cloudpassword = $(".addemployeepop #cloudEmpUserPassword").val().replace(/;/g, ",");
+                let cloudcheckpassword = $(".addemployeepop #cloudCheckEmpUserPassword").val();
                 if (($.trim(enteredEmail).length != 0) && ($.trim(enteredPassword).length != 0)) {
                     if (cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase()) {
                         var cloudHashPassword = CryptoJS.MD5(enteredPassword).toString().toUpperCase();
@@ -2214,10 +2216,10 @@ Template.addemployeepop.events({
                             if (cloudpassword.length < 8) {
 
                                     swal('Invalid VS1 Password', 'Password must be at least eight characters including one capital letter and one number!', 'error');
-                                    $('#cloudEmpUserPassword').css('border-color', 'red');
-                                    $('#cloudEmpUserPassword').focus();
+                                    $('.addemployeepop #cloudEmpUserPassword').css('border-color', 'red');
+                                    $('.addemployeepop #cloudEmpUserPassword').focus();
 
-                                $('.fullScreenSpin').css('display', 'none');
+                                LoadingOverlay.hide();
                                 return false;
                             } else {
                                 var erpGet = erpDb();
@@ -2230,7 +2232,7 @@ Template.addemployeepop.events({
                                         // LastName: lastname,
                                         // EmployeeName: $('#edtCustomerCompany').val(),
                                         ERPLoginDetails: {
-                                            erpusername: $('#cloudCheckEmpEmailAddress').val(),
+                                            erpusername: $('.addemployeepop #cloudCheckEmpEmailAddress').val(),
                                             // VS1Password: $('#cloudCheckEmpUserPassword').val(),
                                             NewPassword: cloudpassword
                                         }
@@ -2365,7 +2367,7 @@ Template.addemployeepop.events({
                                             }
 
                                         } else if (oPost.readyState == 4 && oPost.status == 403) {
-                                            $('.fullScreenSpin').css('display', 'none');
+                                            LoadingOverlay.hide();
                                             swal({
                                                 title: 'Oooops...',
                                                 text: oPost.getResponseHeader('errormessage'),
@@ -2380,7 +2382,7 @@ Template.addemployeepop.events({
                                                 }
                                             });
                                         } else if (oPost.readyState == 4 && oPost.status == 406) {
-                                            $('.fullScreenSpin').css('display', 'none');
+                                            LoadingOverlay.hide();
                                             var ErrorResponse = oPost.getResponseHeader('errormessage');
                                             var segError = ErrorResponse.split(':');
 
@@ -2431,7 +2433,7 @@ Template.addemployeepop.events({
                                                 }
                                             });
                                         } else {
-                                            $('.fullScreenSpin').css('display', 'none');
+                                            LoadingOverlay.hide();
                                         }
                                     }
 
@@ -2461,7 +2463,7 @@ Template.addemployeepop.events({
 
                             }
                         } else {
-                            $('.fullScreenSpin').css('display', 'none');
+                            LoadingOverlay.hide();
                             $('#addvs1userModal').modal('toggle');
 
                         }
@@ -2506,11 +2508,11 @@ Template.addemployeepop.events({
                 if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
                  else if (result.dismiss === 'cancel') {}
             });
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
 
     },
-    'click .btnClosePayment': function (event) {
+    'click .addemployeepop .btnClosePayment': function (event) {
         if (FlowRouter.current().queryParams.id) {
             window.open('/employeescard?id=' + FlowRouter.current().queryParams.id, '_self');
         } else {
@@ -2518,11 +2520,11 @@ Template.addemployeepop.events({
         }
 
     },
-    'click .btnChargeAccount': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        var enteredEmail = $("#cloudEmpEmailAddress").val();
-        let cloudpassword = $("#cloudEmpUserPassword").val();
-        let employeeSaveID = $('#selectEmployeeID').val();
+    'click .addemployeepop .btnChargeAccount': function (event) {
+        LoadingOverlay.show();
+        var enteredEmail = $(".addemployeepop #cloudEmpEmailAddress").val();
+        let cloudpassword = $(".addemployeepop #cloudEmpUserPassword").val();
+        let employeeSaveID = $('.addemployeepop #selectEmployeeID').val();
         // if(cloudpassword.length < 8) {
         //   swal('Invalid VS1 Password', 'Password must be at least eight characters including one capital letterand one number!', 'error');
         //   $('#cloudEmpUserPassword').css('border-color','red');
@@ -2533,17 +2535,17 @@ Template.addemployeepop.events({
         //   if((cloudpassword.match(/[A-z]/)) && (cloudpassword.match(/[A-Z]/)) && (cloudpassword.match(/\d/))){
         //     $('#cloudEmpUserPassword').css('border-color','#b5b8bb #e2e4e7 #e8eaec #bdbfc3');
 
-        var empFirstName = $("#edtFirstName").val();
-        var empLastName = $("#edtLastName").val();
-        var empPhone = $("#edtPhone").val();
+        var empFirstName = $(".addemployeepop #edtFirstName").val();
+        var empLastName = $(".addemployeepop #edtLastName").val();
+        var empPhone = $(".addemployeepop #edtPhone").val();
 
-        var dateofbirthTime = new Date($("#dtDOB").datepicker("getDate"));
-        var startdateTime = new Date($("#dtStartingDate").datepicker("getDate"));
+        var dateofbirthTime = new Date($(".addemployeepop #dtDOB").datepicker("getDate"));
+        var startdateTime = new Date($(".addemployeepop #dtStartingDate").datepicker("getDate"));
 
         let empDOB = dateofbirthTime.getFullYear() + "-" + (dateofbirthTime.getMonth() + 1) + "-" + dateofbirthTime.getDate();
         let empStartDate = startdateTime.getFullYear() + "-" + (startdateTime.getMonth() + 1) + "-" + startdateTime.getDate();
 
-        var empGender = $("#edtGender").val() || 'M';
+        var empGender = $(".addemployeepop #edtGender").val() || 'M';
         let addgender = '';
         if (empGender === "Male") {
             addgender = "M";
@@ -2552,8 +2554,8 @@ Template.addemployeepop.events({
         } else {
             addgender = empGender;
         };
-        var enteredEmail = $("#cloudEmpEmailAddress").val();
-        var enteredPassword = $("#cloudEmpUserPassword").val();
+        var enteredEmail = $(".addemployeepop #cloudEmpEmailAddress").val();
+        var enteredPassword = $(".addemployeepop #cloudEmpUserPassword").val();
         var cloudHashPassword = CryptoJS.MD5(enteredPassword).toString().toUpperCase();
         var erpGet = erpDb();
 
@@ -2576,7 +2578,7 @@ Template.addemployeepop.events({
                     ID: parseInt(employeeSaveID) || 0,
                     FirstName: empFirstName,
                     LastName: empLastName,
-                    MiddleName: $('#edtMiddleName').val() || '',
+                    MiddleName: $('.addemployeepop #edtMiddleName').val() || '',
                     Phone: empPhone,
                     DateStarted: empStartDate,
                     DOB: empDOB,
@@ -2609,7 +2611,7 @@ Template.addemployeepop.events({
         oPost.onreadystatechange = function () {
             if (oPost.readyState == 4 && oPost.status == 200) {
 
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 var myArrResponse = JSON.parse(oPost.responseText);
 
                 if (myArrResponse.ProcessLog.ResponseStatus != "OK") {
@@ -2670,7 +2672,7 @@ Template.addemployeepop.events({
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                                let employeeName = $('#edtCustomerCompany').val() || '';
+                                                let employeeName = $('.addemployeepop #edtCustomerCompany').val() || '';
                                                 window.open('/accesslevel?empuser=' + employeeName, '_self');
 
                                             } else {
@@ -2697,7 +2699,7 @@ Template.addemployeepop.events({
                 // Bert.alert('<strong>SUCCESS:</strong> Employee successfully updated!', 'success');
 
             } else if (oPost.readyState == 4 && oPost.status == 403) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Oooops...',
                     text: oPost.getResponseHeader('errormessage'),
@@ -2712,7 +2714,7 @@ Template.addemployeepop.events({
                     }
                 });
             } else if (oPost.readyState == 4 && oPost.status == 406) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 var ErrorResponse = oPost.getResponseHeader('errormessage');
                 var segError = ErrorResponse.split(':');
 
@@ -2748,7 +2750,7 @@ Template.addemployeepop.events({
                 }
 
             }  else if (oPost.readyState == 4 && oPost.status == 401) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 var ErrorResponse = oPost.getResponseHeader('errormessage');
                 if (ErrorResponse.indexOf("Could not connect to ERP") >= 0){
                   swal({
@@ -2778,7 +2780,7 @@ Template.addemployeepop.events({
                 });
               }
             } else if (oPost.readyState == '') {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 //Bert.alert('<strong>'+ oPost.getResponseHeader('errormessage')+'</strong>!', 'danger');
                 swal({
                     title: 'Oooops...',
@@ -2794,7 +2796,7 @@ Template.addemployeepop.events({
                     }
                 });
             } else {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             }
         }
         //   }else {
@@ -2806,22 +2808,22 @@ Template.addemployeepop.events({
         //
         // }
     },
-    'click .btnChargeFreeAccount': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        var enteredEmail = $("#cloudEmpEmailAddress").val();
-        let cloudpassword = $("#cloudEmpUserPassword").val();
-        let employeeSaveID = $('#selectEmployeeID').val();
-        var empFirstName = $("#edtFirstName").val();
-        var empLastName = $("#edtLastName").val();
-        var empPhone = $("#edtPhone").val();
+    'click .addemployeepop .btnChargeFreeAccount': function (event) {
+        LoadingOverlay.show();
+        var enteredEmail = $(".addemployeepop #cloudEmpEmailAddress").val();
+        let cloudpassword = $(".addemployeepop #cloudEmpUserPassword").val();
+        let employeeSaveID = $('.addemployeepop #selectEmployeeID').val();
+        var empFirstName = $(".addemployeepop #edtFirstName").val();
+        var empLastName = $(".addemployeepop #edtLastName").val();
+        var empPhone = $(".addemployeepop #edtPhone").val();
 
-        var dateofbirthTime = new Date($("#dtDOB").datepicker("getDate"));
-        var startdateTime = new Date($("#dtStartingDate").datepicker("getDate"));
+        var dateofbirthTime = new Date($(".addemployeepop #dtDOB").datepicker("getDate"));
+        var startdateTime = new Date($(".addemployeepop #dtStartingDate").datepicker("getDate"));
 
         let empDOB = dateofbirthTime.getFullYear() + "-" + (dateofbirthTime.getMonth() + 1) + "-" + dateofbirthTime.getDate();
         let empStartDate = startdateTime.getFullYear() + "-" + (startdateTime.getMonth() + 1) + "-" + startdateTime.getDate();
 
-        var empGender = $("#edtGender").val() || 'M';
+        var empGender = $(".addemployeepop #edtGender").val() || 'M';
         let addgender = '';
         if (empGender === "Male") {
             addgender = "M";
@@ -2830,8 +2832,8 @@ Template.addemployeepop.events({
         } else {
             addgender = empGender;
         };
-        var enteredEmail = $("#cloudEmpEmailAddress").val();
-        var enteredPassword = $("#cloudEmpUserPassword").val();
+        var enteredEmail = $(".addemployeepop #cloudEmpEmailAddress").val();
+        var enteredPassword = $(".addemployeepop #cloudEmpUserPassword").val();
         var cloudHashPassword = CryptoJS.MD5(enteredPassword).toString().toUpperCase();
         var erpGet = erpDb();
 
@@ -2855,7 +2857,7 @@ Template.addemployeepop.events({
                     ID: parseInt(employeeSaveID) || 0,
                     FirstName: empFirstName,
                     LastName: empLastName,
-                    MiddleName: $('#edtMiddleName').val() || '',
+                    MiddleName: $('.addemployeepop #edtMiddleName').val() || '',
                     Phone: empPhone,
                     DateStarted: empStartDate,
                     DOB: empDOB,
@@ -2885,7 +2887,7 @@ Template.addemployeepop.events({
         oPost.onreadystatechange = function () {
             if (oPost.readyState == 4 && oPost.status == 200) {
 
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 var myArrResponse = JSON.parse(oPost.responseText);
                 if (myArrResponse.ProcessLog.ResponseStatus != "OK") {
                     // swal('Ooops...', myArrResponse.ProcessLog.Error, 'error');
@@ -2919,7 +2921,7 @@ Template.addemployeepop.events({
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.value) {
-                            let employeeName = $('#edtCustomerCompany').val() || '';
+                            let employeeName = $('.addemployeepop #edtCustomerCompany').val() || '';
                             window.open('/accesslevel?empuser=' + employeeName, '_self');
 
                         } else {
@@ -2936,7 +2938,7 @@ Template.addemployeepop.events({
                     });
                 }
             } else if (oPost.readyState == 4 && oPost.status == 403) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 swal({
                     title: 'Oooops...',
                     text: oPost.getResponseHeader('errormessage'),
@@ -2951,7 +2953,7 @@ Template.addemployeepop.events({
                     }
                 });
             } else if (oPost.readyState == 4 && oPost.status == 406) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 var ErrorResponse = oPost.getResponseHeader('errormessage');
                 var segError = ErrorResponse.split(':');
 
@@ -2987,7 +2989,7 @@ Template.addemployeepop.events({
                 }
 
             }  else if (oPost.readyState == 4 && oPost.status == 401) {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 var ErrorResponse = oPost.getResponseHeader('errormessage');
                 if (ErrorResponse.indexOf("Could not connect to ERP") >= 0){
                   swal({
@@ -3017,7 +3019,7 @@ Template.addemployeepop.events({
                 });
               }
             } else if (oPost.readyState == '') {
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
                 //Bert.alert('<strong>'+ oPost.getResponseHeader('errormessage')+'</strong>!', 'danger');
                 swal({
                     title: 'Oooops...',
@@ -3035,50 +3037,54 @@ Template.addemployeepop.events({
             }
         }
     },
-    'click .btnBack': function (event) {
+    'click .addemployeepop .btnBack': function (event) {
         event.preventDefault();
         history.back(1);
     },
-    'click #chkSameAsShipping': function (event) {
-        // if($(event.target).is(':checked')){
-        //   let streetAddress = $('#edtStreetAddress').val();
-        //   let city = $('#edtCity').val();
-        //   let state =  $('#edtState').val();
-        //   let zipcode =  $('#edtPostalCode').val();
-        //
-        //   let country =  $('#edtCountry').val();
-        //    $('#bedtStreetAddress').val(streetAddress);
-        //    $('#bedtCity').val(city);
-        //    $('#bedtState').val(state);
-        //    $('#bedtPostalCode').val(zipcode);
-        //    $('#bedtCountry').val(country);
-        // }else{
-        //   $('#bedtStreetAddress').val('');
-        //   $('#bedtCity').val('');
-        //   $('#bedtState').val('');
-        //   $('#bedtPostalCode').val('');
-        //   $('#bedtCountry').val('');
-        // }
+    'click .addemployeepop #chkSameAsShipping':  (event) => {
+        if($(event.target).is(':checked')){
+          $('.addemployeepop .billingaddress').removeClass('show');
+
+          let streetAddress = $('.addemployeepop #edtStreetAddress').val();
+          let city = $('.addemployeepop #edtCity').val();
+          let state =  $('.addemployeepop #edtState').val();
+          let zipcode =  $('.addemployeepop #edtPostalCode').val();
+        
+          let country =  $('.addemployeepop #edtCountry').val();
+           $('.addemployeepop #bedtStreetAddress').val(streetAddress);
+           $('.addemployeepop #bedtCity').val(city);
+           $('.addemployeepop #bedtState').val(state);
+           $('.addemployeepop #bedtPostalCode').val(zipcode);
+           $('.addemployeepop #bedtCountry').val(country);
+        }else{
+          $('.addemployeepop .billingaddress').addClass('show');
+
+          $('.addemployeepop #bedtStreetAddress').val('');
+          $('.addemployeepop #bedtCity').val('');
+          $('.addemployeepop #bedtState').val('');
+          $('.addemployeepop #bedtPostalCode').val('');
+          $('.addemployeepop #bedtCountry').val('');
+        }
     },
-    'blur #edtFirstName': function (event) {
-        let firstname = $('#edtFirstName').val();
-        let lastname = $('#edtLastName').val();
+    'blur .addemployeepop #edtFirstName': function (event) {
+        let firstname = $('.addemployeepop #edtFirstName').val();
+        let lastname = $('.addemployeepop #edtLastName').val();
         let employeename = firstname + ' ' + lastname;
-        $('#cloudEmpName').val(employeename);
-        $('#edtCustomerCompany').val(employeename);
+        $('.addemployeepop #cloudEmpName').val(employeename);
+        $('.addemployeepop #edtCustomerCompany').val(employeename);
 
     },
-    'blur #edtLastName': function (event) {
-        let firstname = $('#edtFirstName').val();
-        let lastname = $('#edtLastName').val();
+    'blur .addemployeepop #edtLastName': function (event) {
+        let firstname = $('.addemployeepop #edtFirstName').val();
+        let lastname = $('.addemployeepop #edtLastName').val();
         let employeename = firstname + ' ' + lastname;
-        $('#cloudEmpName').val(employeename);
-        $('#edtCustomerCompany').val(employeename);
+        $('.addemployeepop #cloudEmpName').val(employeename);
+        $('.addemployeepop #edtCustomerCompany').val(employeename);
 
     },
-    'keyup .search': function (event) {
-        var searchTerm = $(".search").val();
-        var listItem = $('.results tbody').children('tr');
+    'keyup .addemployeepop .search': function (event) {
+        var searchTerm = $(".addemployeepop .search").val();
+        var listItem = $('.addemployeepop .results tbody').children('tr');
         var searchSplit = searchTerm.replace(/ /g, "'):containsi('");
 
         $.extend($.expr[':'], {
@@ -3087,44 +3093,44 @@ Template.addemployeepop.events({
             }
         });
 
-        $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+        $(".addemployeepop .results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
             $(this).attr('visible', 'false');
         });
 
-        $(".results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+        $(".addemployeepop .results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
             $(this).attr('visible', 'true');
         });
 
-        var jobCount = $('.results tbody tr[visible="true"]').length;
-        $('.counter').text(jobCount + ' items');
+        var jobCount = $('.addemployeepop .results tbody tr[visible="true"]').length;
+        $('.addemployeepop .counter').text(jobCount + ' items');
 
         if (jobCount == '0') {
-            $('.no-result').show();
+            $('.addemployeepop .no-result').show();
         } else {
-            $('.no-result').hide();
+            $('.addemployeepop .no-result').hide();
         }
         if (searchTerm === "") {
-            $(".results tbody tr").each(function (e) {
+            $(".addemployeepop .results tbody tr").each(function (e) {
                 $(this).attr('visible', 'true');
-                $('.no-result').hide();
+                $('.addemployeepop .no-result').hide();
             });
 
             //setTimeout(function () {
-            var rowCount = $('.results tbody tr').length;
-            $('.counter').text(rowCount + ' items');
+            var rowCount = $('.addemployeepop .results tbody tr').length;
+            $('.addemployeepop .counter').text(rowCount + ' items');
             //}, 500);
         }
 
     },
-    'click .tblEmployeeSideList tbody tr': function (event) {
+    'click .addemployeepop .tblEmployeeSideList tbody tr': function (event) {
 
         var empLineID = $(event.target).attr('id');
         if (empLineID) {
             window.open('/employeescard?id=' + empLineID, '_self');
         }
     },
-    'click .chkDatatable': function (event) {
-        var columns = $('#tblTransactionlist th');
+    'click .addemployeepop .chkDatatable': function (event) {
+        var columns = $('.addemployeepop #tblTransactionlist th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
         $.each(columns, function (i, v) {
@@ -3133,16 +3139,16 @@ Template.addemployeepop.events({
 
             if (v.innerText == columnDataValue) {
                 if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
+                    $(".addemployeepop ." + replaceClass + "").css('display', 'table-cell');
+                    $(".addemployeepop ." + replaceClass + "").css('padding', '.75rem');
+                    $(".addemployeepop ." + replaceClass + "").css('vertical-align', 'top');
                 } else {
-                    $("." + replaceClass + "").css('display', 'none');
+                    $(".addemployeepop ." + replaceClass + "").css('display', 'none');
                 }
             }
         });
     },
-    'click .resetTable': function (event) {
+    'click .addemployeepop .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get('mycloudLogonID'),
             clouddatabaseID: Session.get('mycloudLogonDBID')
@@ -3170,7 +3176,7 @@ Template.addemployeepop.events({
             }
         }
     },
-    'click .saveTable': function (event) {
+    'click .addemployeepop .saveTable': function (event) {
         let lineItems = [];
         //let datatable =$('#tblTransactionlist').DataTable();
         $('.columnSettings').each(function (index) {
@@ -3256,21 +3262,21 @@ Template.addemployeepop.events({
         $('#myModal2').modal('toggle');
         //Meteor._reload.reload();
     },
-    'keyup #cloudEmpEmailAddress': function (event) {
+    'keyup .addemployeepop #cloudEmpEmailAddress': function (event) {
         let columData = $(event.target).val();
 
-        $('#cloudEmpLogonName').val(columData);
-        $('#edtEmailAddress').val(columData);
+        $('.addemployeepop #cloudEmpLogonName').val(columData);
+        $('.addemployeepop #edtEmailAddress').val(columData);
 
     },
-    'keyup #edtEmailAddress': function (event) {
+    'keyup .addemployeepop #edtEmailAddress': function (event) {
         let columData = $(event.target).val();
 
-        $('#cloudEmpLogonName').val(columData);
-        $('#cloudEmpEmailAddress').val(columData);
+        $('.addemployeepop #cloudEmpLogonName').val(columData);
+        $('.addemployeepop #cloudEmpEmailAddress').val(columData);
 
     },
-    'blur #cloudEmpEmailAddress, blur #edtEmailAddress': function (event) {
+    'blur .addemployeepop #cloudEmpEmailAddress, blur #edtEmailAddress': function (event) {
         let emailData = $(event.target).val().replace(/;/g, ",");
 
         //$('#cloudEmpLogonName').val(emailData);
@@ -3288,7 +3294,7 @@ Template.addemployeepop.events({
             }
         }
     },
-    'blur #cloudEmpUserPassword': function (event) {
+    'blur .addemployeepop #cloudEmpUserPassword': function (event) {
         let cloudpassword = $(event.target).val().replace(/;/g, ",");
         if (cloudpassword != '') {
             if (cloudpassword.length < 8) {
@@ -3299,17 +3305,17 @@ Template.addemployeepop.events({
             }
         }
     },
-    'blur .divcolumn': function (event) {
+    'blur .addemployeepop .divcolumn': function (event) {
         let columData = $(event.target).text();
 
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
 
-        var datable = $('#tblTransactionlist').DataTable();
+        var datable = $('.addemployeepop #tblTransactionlist').DataTable();
         var title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
 
     },
-    'change .rngRange': function (event) {
+    'change .addemployeepop .rngRange': function (event) {
         let range = $(event.target).val();
         // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
 
@@ -3327,14 +3333,14 @@ Template.addemployeepop.events({
         });
 
     },
-    'click .transTab': function (event) {
+    'click .addemployeepop .transTab': function (event) {
         let templateObject = Template.instance();
-        let employeeName = $('#edtCustomerCompany').val();
+        let employeeName = $('.addemployeepop #edtCustomerCompany').val();
         templateObject.getAllProductRecentTransactions(employeeName);
     },
-    'click .btnOpenSettings': function (event) {
+    'click .addemployeepop .btnOpenSettings': function (event) {
         let templateObject = Template.instance();
-        var columns = $('#tblTransactionlist th');
+        var columns = $('.addemployeepop #tblTransactionlist th');
 
         const tableHeaderList = [];
         let sTible = "";
@@ -3364,115 +3370,115 @@ Template.addemployeepop.events({
 
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
-    'click #exportbtn': function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
+    'click .addemployeepop #exportbtn': function () {
+        LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletocsv').click();
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
 
     },
-    'click .printConfirm': function (event) {
+    'click .addemployeepop .printConfirm': function (event) {
 
-        $('.fullScreenSpin').css('display', 'inline-block');
+        LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
-        $('.fullScreenSpin').css('display', 'none');
+        LoadingOverlay.hide();
     },
-    'click .btnRefresh': function () {
+    'click .addemployeepop .btnRefresh': function () {
         Meteor._reload.reload();
     },
-    'click #formCheck-2': function () {
+    'click .addemployeepop #formCheck-2': function () {
         if ($(event.target).is(':checked')) {
-            $('#autoUpdate').css('display', 'none');
+            $('.addemployeepop #autoUpdate').css('display', 'none');
         } else {
-            $('#autoUpdate').css('display', 'block');
+            $('.addemployeepop #autoUpdate').css('display', 'block');
         }
     },
-    'click #formCheck-one': function (event) {
+    'click .addemployeepop #formCheck-one': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.checkbox1div').css('display', 'block');
+            $('.addemployeepop .checkbox1div').css('display', 'block');
 
         } else {
-            $('.checkbox1div').css('display', 'none');
+            $('.addemployeepop .checkbox1div').css('display', 'none');
         }
     },
-    'click #formCheck-two': function (event) {
+    'click .addemployeepop #formCheck-two': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.checkbox2div').css('display', 'block');
+            $('.addemployeepop .checkbox2div').css('display', 'block');
 
         } else {
-            $('.checkbox2div').css('display', 'none');
+            $('.addemployeepop .checkbox2div').css('display', 'none');
         }
     },
-    'click #formCheck-three': function (event) {
+    'click .addemployeepop #formCheck-three': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.checkbox3div').css('display', 'block');
+            $('.addemployeepop .checkbox3div').css('display', 'block');
 
         } else {
-            $('.checkbox3div').css('display', 'none');
+            $('.addemployeepop .checkbox3div').css('display', 'none');
         }
     },
-    'click #formCheck-four': function (event) {
+    'click .addemployeepop #formCheck-four': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.checkbox4div').css('display', 'block');
+            $('.addemployeepop .checkbox4div').css('display', 'block');
 
         } else {
-            $('.checkbox4div').css('display', 'none');
+            $('.addemployeepop .checkbox4div').css('display', 'none');
         }
     },
-    'blur .customField1Text': function (event) {
-        var inputValue1 = $('.customField1Text').text();
-        $('.lblCustomField1').text(inputValue1);
+    'blur .addemployeepop .customField1Text': function (event) {
+        var inputValue1 = $('.addemployeepop .customField1Text').text();
+        $('.addemployeepop .lblCustomField1').text(inputValue1);
     },
-    'blur .customField2Text': function (event) {
-        var inputValue2 = $('.customField2Text').text();
-        $('.lblCustomField2').text(inputValue2);
+    'blur .addemployeepop .customField2Text': function (event) {
+        var inputValue2 = $('.addemployeepop .customField2Text').text();
+        $('.addemployeepop .lblCustomField2').text(inputValue2);
     },
-    'blur .customField3Text': function (event) {
-        var inputValue3 = $('.customField3Text').text();
-        $('.lblCustomField3').text(inputValue3);
+    'blur .addemployeepop .customField3Text': function (event) {
+        var inputValue3 = $('.addemployeepop .customField3Text').text();
+        $('.addemployeepop .lblCustomField3').text(inputValue3);
     },
-    'blur .customField4Text': function (event) {
-        var inputValue4 = $('.customField4Text').text();
-        $('.lblCustomField4').text(inputValue4);
+    'blur .addemployeepop .customField4Text': function (event) {
+        var inputValue4 = $('.addemployeepop .customField4Text').text();
+        $('.addemployeepop .lblCustomField4').text(inputValue4);
     },
-    'click .btnSaveSettings': function (event) {
+    'click .addemployeepop .btnSaveSettings': function (event) {
         let templateObject = Template.instance();
 
-        $('.lblCustomField1').html('');
-        $('.lblCustomField2').html('');
-        $('.lblCustomField3').html('');
-        $('.lblCustomField4').html('');
+        $('.addemployeepop .lblCustomField1').html('');
+        $('.addemployeepop .lblCustomField2').html('');
+        $('.addemployeepop .lblCustomField3').html('');
+        $('.addemployeepop .lblCustomField4').html('');
         let getchkcustomField1 = true;
         let getchkcustomField2 = true;
         let getchkcustomField3 = true;
         let getchkcustomField4 = true;
-        let getcustomField1 = $('.customField1Text').html();
-        let getcustomField2 = $('.customField2Text').html();
-        let getcustomField3 = $('.customField3Text').html();
-        let getcustomField4 = $('.customField4Text').html();
-        if ($('#formCheck-one').is(':checked')) {
+        let getcustomField1 = $('.addemployeepop .customField1Text').html();
+        let getcustomField2 = $('.addemployeepop .customField2Text').html();
+        let getcustomField3 = $('.addemployeepop .customField3Text').html();
+        let getcustomField4 = $('.addemployeepop .customField4Text').html();
+        if ($('.addemployeepop #formCheck-one').is(':checked')) {
             getchkcustomField1 = false;
         }
-        if ($('#formCheck-two').is(':checked')) {
+        if ($('.addemployeepop #formCheck-two').is(':checked')) {
             getchkcustomField2 = false;
         }
-        if ($('#formCheck-three').is(':checked')) {
+        if ($('.addemployeepop #formCheck-three').is(':checked')) {
             getchkcustomField3 = false;
         }
-        if ($('#formCheck-four').is(':checked')) {
+        if ($('.addemployeepop #formCheck-four').is(':checked')) {
             getchkcustomField4 = false;
         }
 
-        $('#customfieldModal').modal('toggle');
+        $('.addemployeepop #customfieldModal').modal('toggle');
 
     },
-    'click .btnResetSettings': function (event) {
-        $('#customfieldModal').modal('toggle');
+    'click .addemployeepop .btnResetSettings': function (event) {
+        $('.addemployeepop #customfieldModal').modal('toggle');
     },
-    'click .new_attachment_btn': function (event) {
-        $('#attachment-upload').trigger('click');
+    'click .addemployeepop .new_attachment_btn': function (event) {
+        $('.addemployeepop #attachment-upload').trigger('click');
 
     },
-    'click #edtPriority': function (event) {
+    'click .addemployeepop #edtPriority': function (event) {
         let templateObject = Template.instance();
         let priorities = templateObject.empPriorities.get().sort((a, b) => a - b);
         let allpriorities = priorities.join(',');
@@ -3483,8 +3489,8 @@ Template.addemployeepop.events({
             text: 'Sort Order in use are: ' + allpriorities
         }).then((result) => {
             if (result.value) {
-                $('#edtPriority').focus();
-                $('#edtPriority').val(result.value);
+                $('.addemployeepop #edtPriority').focus();
+                $('.addemployeepop #edtPriority').val(result.value);
             } else if (result.dismiss === 'cancel') {}
         })
 
@@ -3503,33 +3509,33 @@ Template.addemployeepop.events({
         // });
 
     },
-    'change #attachment-upload': function (e) {
+    'change .addemployeepop #attachment-upload': function (e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
         let uploadedFilesArray = templateObj.uploadedFiles.get();
 
-        let myFiles = $('#attachment-upload')[0].files;
+        let myFiles = $('.addemployeepop #attachment-upload')[0].files;
         let uploadData = utilityService.attachmentUploadTabs(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCount.set(uploadData.totalAttachments);
     },
-    'click .img_new_attachment_btn': function (event) {
-        $('#img-attachment-upload').trigger('click');
+    'click .addemployeepop .img_new_attachment_btn': function (event) {
+        $('.addemployeepop #img-attachment-upload').trigger('click');
 
     },
-    'change #img-attachment-upload': function (e) {
+    'change .addemployeepop #img-attachment-upload': function (e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
         let uploadedFilesArray = templateObj.uploadedFiles.get();
 
-        let myFiles = $('#img-attachment-upload')[0].files;
+        let myFiles = $('.addemployeepop #img-attachment-upload')[0].files;
         let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCount.set(uploadData.totalAttachments);
     },
-    'click .remove-attachment': function (event, ui) {
+    'click .addemployeepop .remove-attachment': function (event, ui) {
         let tempObj = Template.instance();
         let attachmentID = parseInt(event.target.id.split('remove-attachment-')[1]);
         if (tempObj.$("#confirm-action-" + attachmentID).length) {
@@ -3542,7 +3548,7 @@ Template.addemployeepop.events({
         tempObj.$("#new-attachment2-tooltip").show();
 
     },
-    'click .file-name': function (event) {
+    'click .addemployeepop .file-name': function (event) {
         let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-name-')[1]);
         let templateObj = Template.instance();
         let uploadedFiles = templateObj.uploadedFiles.get();
@@ -3580,7 +3586,7 @@ Template.addemployeepop.events({
 
         return;
     },
-    'click .confirm-delete-attachment': function (event, ui) {
+    'click .addemployeepop .confirm-delete-attachment': function (event, ui) {
         let tempObj = Template.instance();
         tempObj.$("#new-attachment2-tooltip").show();
         let attachmentID = parseInt(event.target.id.split('delete-attachment-')[1]);
@@ -3602,7 +3608,7 @@ Template.addemployeepop.events({
             $(".attchment-tooltip").show();
         }
     },
-    'click .attachmentTab': function () {
+    'click .addemployeepop .attachmentTab': function () {
         let templateInstance = Template.instance();
         let uploadedFileArray = templateInstance.uploadedFiles.get();
         if (uploadedFileArray.length > 0) {
@@ -3612,10 +3618,10 @@ Template.addemployeepop.events({
             $(".attchment-tooltip").show();
         }
     },
-    'click .btnUploadFilePicture': function (event) {
+    'click .addemployeepop .btnUploadFilePicture': function (event) {
         $('#fileInput').trigger('click');
     },
-    'change #fileInput': function (event) {
+    'change .addemployeepop #fileInput': function (event) {
         let templateObject = Template.instance();
         let selectedFile = event.target.files[0];
         let reader = new FileReader();
@@ -3629,7 +3635,7 @@ Template.addemployeepop.events({
         };
         reader.readAsDataURL(selectedFile);
     },
-    'click #uploadImg': function (event) {
+    'click .addemployeepop #uploadImg': function (event) {
         //let imageData= (localStorage.getItem("Image"));
         let templateObject = Template.instance();
         let imageData = templateObject.imageFileData.get();
@@ -3642,18 +3648,18 @@ Template.addemployeepop.events({
         }
 
     },
-    'click #removeLogo': function (event) {
+    'click .addemployeepop #removeLogo': function (event) {
         let templateObject = Template.instance();
         templateObject.imageFileData.set(null);
         let imageData = templateObject.imageFileData.get();
         $('#uploadedImage').attr('src', imageData);
         $('#uploadedImage').attr('width', '50%');
     },
-    'click .btnNewEmployee': function (event) {
+    'click .addemployeepop .btnNewEmployee': function (event) {
         // FlowRouter.go('/employeescard');
         window.open('/employeescard', '_self');
     },
-    'click .btnView': function (e) {
+    'click .addemployeepop .btnView': function (e) {
         var btnView = document.getElementById("btnView");
         var btnHide = document.getElementById("btnHide");
 
@@ -3673,8 +3679,8 @@ Template.addemployeepop.events({
             btnHide.style.display = "none";
         }
     },
-    'click .btnDeleteEmployee': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+    'click .addemployeepop .btnDeleteEmployee': function (event) {
+        LoadingOverlay.show();
 
         let templateObject = Template.instance();
         let contactService2 = new ContactService();
@@ -3708,7 +3714,7 @@ Template.addemployeepop.events({
                     if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
                     else if (result.dismiss === 'cancel') {}
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                LoadingOverlay.hide();
             });
         } else {
             $('.setup-wizard') ? $('.btnRefreshEmployee').click() : FlowRouter.go('/employeelist?success=true');
