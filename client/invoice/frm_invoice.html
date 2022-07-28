@@ -1070,7 +1070,7 @@
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkTaxAmount" type="checkbox" id="formCheck-09" checked="{{displayfields.[9].active}}">
                                                                     <label class="custom-control-label" for="formCheck-09"></label>
-                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Amount{{/if}}" valueupdate="th.colTaxAmount">{{#if displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Tax Amount{{/if}}</div>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Tax Amount{{/if}}" valueupdate="th.colTaxAmount">{{#if displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Tax Amount{{/if}}</div>
                                                                 </div>
                                                                 <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                     <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
@@ -1111,6 +1111,18 @@
                                                                 <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                     <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                     <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[11].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                </div>
+                                                            </div>
+  
+                                                            <div class="columnSettings displaySettings" custid="{{displayfields.[14].id}}">
+                                                                <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                    <input class="custom-control-input chkUnits" type="checkbox" id="formCheck-14" checked="{{displayfields.[14].active}}">
+                                                                    <label class="custom-control-label" for="formCheck-14"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Units{{/if}}" valueupdate="th.colUOM">{{#if displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Units{{/if}}</div>
+                                                                </div>
+                                                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                                    <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="" min="0" max="1000">
                                                                 </div>
                                                             </div>
 
@@ -1319,6 +1331,7 @@
                                     <th class="th colTaxAmount  {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"
                                       style="width: 95px; text-align: left!important;">{{#if displayfields}}{{displayfields.[9].custfieldlabel}}{{else}}Tax
                                       Amt{{/if}}</th>
+
                                     {{#if isBatchSerialNoTracking 'true'}}
                                     <th class="th colSerialNo {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}" style="width: 124px;">{{#if
                                       displayfields}}{{displayfields.[13].custfieldlabel}}{{else}}Serial/Lot No{{/if}}</th>
@@ -1330,6 +1343,9 @@
                                       style="width: 140px; text-align: left!important;">{{#if
                                         displayfields}}{{displayfields.[11].custfieldlabel}}{{else}}Amount (Inc){{/if}} <i class="fas fa-random fa-trans"></i>
                                     </th>
+
+                                    <th class="th colUOM {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
+                                    style="width: 95px; text-align: left!important;">{{#if displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Units{{/if}}</th> 
                                     <th class="th" style="width: 25px;"></th>
                                   </tr>
                                 </thead>
@@ -1372,8 +1388,9 @@
                                       <td contenteditable="false" class="colTaxCode {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
                                           class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                       <td contenteditable="false"
-                                        class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"
-                                        style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
+                                            class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"
+                                            style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
+
                                       {{#if isBatchSerialNoTracking 'true'}}
                                       <td class="th colSerialNo {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"><i class="fas fa-plus-square text-success btnSnLotmodal"
                                         style="margin-left: 40px; font-size: 22px;"></i></td>
@@ -1383,6 +1400,10 @@
                                         style="text-align: right!important;">{{item.TotalAmt}}</td>
                                       <td contenteditable="false" class="lineAmt colAmountInc {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}"
                                         style="text-align: right!important;">{{item.TotalAmtInc}}</td>
+
+                                      <td contenteditable="false"
+                                        class="lineUOM colUOM pointer {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
+                                        style="text-align: right!important;cursor: pointer;"><input class="es-input highlightSelect colUOM lineUOM" type="search" value="{{item.uom}}"></td>
                                       <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
                                               class="fa fa-remove"></i></button></span></td>
                                     </tr>
