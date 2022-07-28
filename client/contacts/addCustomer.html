@@ -21,7 +21,7 @@
                     }
 
                     .sideSearch {
-                        width: 200px;
+                        /*width: 200px;*/
                         overflow-x: hidden;
                         overflow-y: hidden;
                     }
@@ -130,29 +130,38 @@
                             </div>
                             <div class="card-body text-nowrap cardB customerListCard" id="customerListCard">
                                 <div class="sideSearch">
-                                    <div class="form-group pull-right">
-                                        <input type="text" class="search form-control" placeholder="Search...">
-                                    </div>
-                                    <span class="counter pull-right"></span>
-                                    <table id="tblCustomerSideList" name="tblCustomerSideList" class="table table-hover table-bordered results tblCustomerSideList">
-                                        <thead>
-                                            <tr>
-                                                <th>Customer</th>
-                                            </tr>
-                                            <tr class="warning no-result">
-                                                <td colspan="4"><i class="fa fa-warning"></i> No result</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {{#if customerrecords}}
-                                                {{#each item in customerrecords}}
-                                                    <tr id="{{item.id}}" class="{{item.isslectJob}}" style="cursor: pointer;">
-                                                        <td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="{{item.company}}" id="{{item.id}}" class="{{item.isslectJob}} {{item.classname}}">{{item.company}}</td>
+                                    <div class="row">
+                                        <div class="col-12" style="display: inline-flex;">
+                                            <input type="text" class="search form-control txtSearchCustomers" placeholder="Search..." style="width: 80%;">
+                                            <button class="btn btn-primary btnRefreshCustomers" type="button" id="btnRefreshCustomers" style="padding: 4px 10px; font-size: 14px; margin-left: 8px !important;" autocomplete="off"><i class="fas fa-search-plus"></i></button>
+                                        </div>
+                                        <div class="col-12">
+                                            <span class="counter pull-right"></span>
+                                        </div>
+                                        <div class="col-12">
+                                            <table id="tblCustomerSideList" name="tblCustomerSideList" class="table table-hover table-bordered results tblCustomerSideList">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Customer</th>
                                                     </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                        </tbody>
-                                    </table>
+                                                    <tr class="warning no-result">
+                                                        <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{#if customerrecords}}
+                                                        {{#each item in customerrecords}}
+                                                            <tr id="{{item.id}}" class="{{item.isslectJob}}" style="cursor: pointer;">
+                                                                <td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="{{item.company}}" id="{{item.id}}" class="{{item.isslectJob}} {{item.classname}}">{{item.company}}</td>
+                                                            </tr>
+                                                        {{/each}}
+                                                    {{/if}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>

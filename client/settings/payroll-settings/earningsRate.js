@@ -33,6 +33,11 @@ Template.earningRateSettings.onRendered(function() {
     $('td').each(function() {
         if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
     });
+    $(function() {
+        $('.modal-dialog').draggable({
+            "handle":".modal-header, .modal-footer"
+        });
+    });
 };
 
 templateObject.saveDataLocalDB = async () => {

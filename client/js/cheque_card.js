@@ -20,7 +20,7 @@ import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-var times = 0;
+let times = 0;
 Template.chequecard.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar();
@@ -46,17 +46,13 @@ Template.chequecard.onCreated(() => {
   templateObject.termrecords = new ReactiveVar();
   templateObject.clientrecords = new ReactiveVar([]);
   templateObject.taxraterecords = new ReactiveVar([]);
-
   templateObject.uploadedFile = new ReactiveVar();
   templateObject.uploadedFiles = new ReactiveVar([]);
   templateObject.attachmentCount = new ReactiveVar();
-
   templateObject.address = new ReactiveVar();
   templateObject.abn = new ReactiveVar();
   templateObject.referenceNumber = new ReactiveVar();
-
   templateObject.statusrecords = new ReactiveVar([]);
-
   templateObject.accountnamerecords = new ReactiveVar();
   templateObject.viarecords = new ReactiveVar([]);
   // templateObject.custfields = new ReactiveVar([]);
@@ -103,7 +99,7 @@ Template.chequecard.onRendered(() => {
         let newChequeID = 1;
 
         if (data.tcheque.length > 0) {
-          lastCheque = data.tcheque[data.tcheque.length - 1];
+          let lastCheque = data.tcheque[data.tcheque.length - 1];
           newChequeID = parseInt(lastCheque.Id) + 1;
           lastBankAccount = lastCheque.GLAccountName;
         } else {
@@ -175,8 +171,8 @@ Template.chequecard.onRendered(() => {
     yearRange: "-90:+10",
   });
 
-
   $(".fullScreenSpin").css("display", "inline-block");
+
   templateObject.getAllClients = function () {
     getVS1Data("TSupplierVS1")
       .then(function (dataObject) {
@@ -368,7 +364,8 @@ Template.chequecard.onRendered(() => {
 
   templateObject.getAllClients();
   templateObject.getAllLeadStatuss();
-  var url = FlowRouter.current().path;
+
+  const url = FlowRouter.current().path;
   if (url.indexOf("?id=") > 0) {
     var getso_id = url.split("?id=");
     var currentCheque = getso_id[getso_id.length - 1];
@@ -2503,8 +2500,7 @@ Template.chequecard.onRendered(() => {
     }
   });
 
-  $("#sltCurrency")
-    .editableSelect()
+  $("#sltCurrency").editableSelect()
     .on("click.editable-select", function (e, li) {
       var $earch = $(this);
       var offset = $earch.offset();
@@ -3240,11 +3236,11 @@ Template.chequecard.onRendered(() => {
 
   $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
     let selectLineID = $("#supplierSelectLineID").val();
-    var table = $(this);
+    const table = $(this);
     let utilityService = new UtilityService();
     let taxcodeList = templateObject.taxraterecords.get();
     let $tblrows = $("#tblChequeLine tbody tr");
-    var tableSupplier = $(this);
+    const tableSupplier = $(this);
     $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
     $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
 
@@ -3809,7 +3805,7 @@ Template.chequecard.onRendered(() => {
       }
     });
 
-  exportSalesToPdf = function () {
+  const exportSalesToPdf = function () {
     let margins = {
       top: 0,
       bottom: 0,
@@ -3822,8 +3818,8 @@ Template.chequecard.onRendered(() => {
 
     let file = "Cheque.pdf";
     if (
-      $(".printID").attr("id") != undefined ||
-      $(".printID").attr("id") != ""
+        $(".printID").attr("id") != undefined ||
+        $(".printID").attr("id") != ""
     ) {
       file = "Cheque-" + id + ".pdf";
     }
@@ -3845,26 +3841,27 @@ Template.chequecard.onRendered(() => {
       },
     };
     html2pdf()
-      .set(opt)
-      .from(source)
-      .save()
-      .then(function (dataObject) {
-        if (
-          $(".printID").attr("id") == undefined ||
-          $(".printID").attr("id") == ""
-        ) {
-          $(".btnSave").trigger("click");
-        } else {
-          $("#html-2-pdfwrapper").css("display", "none");
-          $(".fullScreenSpin").css("display", "none");
-        }
-      });
+        .set(opt)
+        .from(source)
+        .save()
+        .then(function (dataObject) {
+          if (
+              $(".printID").attr("id") == undefined ||
+              $(".printID").attr("id") == ""
+          ) {
+            $(".btnSave").trigger("click");
+          } else {
+            $("#html-2-pdfwrapper").css("display", "none");
+            $(".fullScreenSpin").css("display", "none");
+          }
+        });
     // pdf.addHTML(source, function() {
     //     pdf.save('Cheque '+id+'.pdf');
     //     $('#html-2-pdfwrapper').css('display', 'none');
     // });
   };
 });
+
 Template.chequecard.onRendered(function () {
   let tempObj = Template.instance();
   let utilityService = new UtilityService();
@@ -3872,8 +3869,8 @@ Template.chequecard.onRendered(function () {
   let accountService = new AccountService();
   let purchaseService = new PurchaseBoardService();
   let tableProductList;
-  var splashArrayProductList = new Array();
-  var splashArrayTaxRateList = new Array();
+  const splashArrayProductList = [];
+  const splashArrayTaxRateList = [];
   const taxCodesList = [];
   const accountnamerecords = [];
   let account = [];
@@ -4095,6 +4092,7 @@ Template.chequecard.onRendered(function () {
   };
   tempObj.getAllTaxCodes();
 });
+
 Template.chequecard.helpers({
   chequerecord: () => {
     return Template.instance().chequerecord.get();
@@ -5702,7 +5700,7 @@ Template.chequecard.events({
         .saveChequeEx(objDetails)
         .then(function (objDetails) {
 
-          var supplierID = $("#edtSupplierEmail").attr("supplierid");
+          const supplierID = $("#edtSupplierEmail").attr("supplierid");
           localStorage.setItem("check_acc", bankAccount);
           $("#html-2-pdfwrapper").css("display", "block");
           $(".pdfCustomerName").html($("#edtSupplierEmail").val());
@@ -5986,7 +5984,7 @@ Template.chequecard.events({
                   FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                 }else{
                   FlowRouter.go("/chequelist?success=true");
-                };
+                }
               }
             };
           }
@@ -5999,7 +5997,7 @@ Template.chequecard.events({
               let completeTabRecord;
               let doc = new jsPDF("p", "pt", "a4");
               doc.setFontSize(18);
-              var source = document.getElementById("html-2-pdfwrapper");
+              const source = document.getElementById("html-2-pdfwrapper");
               doc.addHTML(source, function () {
                 resolve(doc.output("blob"));
               });
@@ -6014,7 +6012,7 @@ Template.chequecard.events({
               },
             };
           }
-          var getcurrentCloudDetails = CloudUser.findOne({
+          const getcurrentCloudDetails = CloudUser.findOne({
             _id: Session.get("mycloudLogonID"),
             clouddatabaseID: Session.get("mycloudLogonDBID"),
           });
@@ -6549,7 +6547,7 @@ Template.chequecard.events({
       FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
     }else{
       history.back(1);
-    };
+    }
 
   },
   "click #btnViewPayment": function () {
@@ -6563,17 +6561,14 @@ Template.chequecard.events({
       "_self"
     );
   },
-
   // add to custom field
   "click #edtSaleCustField1": function (e) {
     $("#clickedControl").val("one");
   },
-
   // add to custom field
   "click #edtSaleCustField2": function (e) {
     $("#clickedControl").val("two");
   },
-
   // add to custom field
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");

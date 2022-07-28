@@ -17,96 +17,81 @@ Template.activeEmployees.onRendered(() => {
 
 
   templateObject.getLoggedUserData = function () {
-    contactService.getCurrentLoggedUser().then(function (data) {
-      let dataListloggedUser = {};
-      let vs1EmployeeImage = Session.get("vs1EmployeeImages");
-
-      let encoded = "";
-      for (let i = 0; i < data.tappuser.length; i++) {
-        let employeeUser =
-          data.tappuser[i].FirstName + " " + data.tappuser[i].LastName;
-        if (
-          parseInt(data.tappuser[i].EmployeeID) ==
-          parseInt(Session.get("mySessionEmployeeLoggedID"))
-        ) {
-          employeeUser = Session.get("mySessionEmployee");
-        }
-        // dataListloggedUser = {
-        //   id: data.tappuser[i].EmployeeID || "",
-        //   employeename: employeeUser || "- -",
-        //   ladtloging: data.tappuser[i].LastTime || "",
-        //   // employeepicture: encoded|| ''
-        // };
-        loggedUserList.push(
-          new User({
-            id: data.tappuser[i].EmployeeID || "",
-            employeeName: employeeUser || "- -",
-            avatar: "img/avatar.png", // Here we should get the avatar dynamically
-            lastLogin: data.tappuser[i].LastTime || "",
-          })
-        );
-      }
-      templateObject.loggeduserdata.set(loggedUserList);
-    });
-    /*
         getVS1Data('TAppUser').then(function (dataObject) {
             if(dataObject.length == 0){
                 contactService.getCurrentLoggedUser().then(function (data) {
+                  addVS1Data('TAppUser', JSON.stringify(data));
+                  let dataListloggedUser = {};
+                  let vs1EmployeeImage = Session.get("vs1EmployeeImages");
 
-                    let dataListloggedUser = {};
-                    let vs1EmployeeImage = Session.get('vs1EmployeeImages');
-
-                    let encoded = '';
-                    for(let i=0; i<data.tappuser.length; i++){
-                        dataListloggedUser = {
-                            id: data.tappuser[i].EmployeeID || '',
-                            employeename: data.tappuser[i].UserName || '',
-                            ladtloging: data.tappuser[i].LastTime|| '',
-                            // employeepicture: encoded|| ''
-                        };
-                        loggedUserList.push(dataListloggedUser);
+                  let encoded = "";
+                  for (let i = 0; i < data.tappuser.length; i++) {
+                    let employeeUser =
+                      data.tappuser[i].FirstName + " " + data.tappuser[i].LastName;
+                    if (parseInt(data.tappuser[i].EmployeeID) == parseInt(Session.get("mySessionEmployeeLoggedID"))) {
+                      employeeUser = Session.get("mySessionEmployee");
                     }
-                    templateObject.loggeduserdata.set(loggedUserList);
+                    loggedUserList.push(
+                      new User({
+                        id: data.tappuser[i].EmployeeID || "",
+                        employeeName: employeeUser || "- -",
+                        avatar: "img/avatar.png", // Here we should get the avatar dynamically
+                        lastLogin: data.tappuser[i].LastTime || "",
+                      })
+                    );
+                  }
+                  templateObject.loggeduserdata.set(loggedUserList);
                 });
             }else{
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tappuser;
                 let dataListloggedUser = {};
-                let vs1EmployeeImage = Session.get('vs1EmployeeImages');
+                let vs1EmployeeImage = Session.get("vs1EmployeeImages");
 
-                let encoded = '';
-                for(let i=0; i<useData.length; i++){
-                    dataListloggedUser = {
-                        id: useData[i].EmployeeID || '',
-                        employeename: useData[i].UserName || '',
-                        ladtloging: useData[i].LastTime|| '',
-                        // employeepicture: encoded|| ''
-                    };
-                    loggedUserList.push(dataListloggedUser);
+                let encoded = "";
+                for (let i = 0; i < data.tappuser.length; i++) {
+                  let employeeUser =
+                    data.tappuser[i].FirstName + " " + data.tappuser[i].LastName;
+                  if (parseInt(data.tappuser[i].EmployeeID) == parseInt(Session.get("mySessionEmployeeLoggedID"))) {
+                    employeeUser = Session.get("mySessionEmployee");
+                  }
+                  loggedUserList.push(
+                    new User({
+                      id: data.tappuser[i].EmployeeID || "",
+                      employeeName: employeeUser || "- -",
+                      avatar: "img/avatar.png", // Here we should get the avatar dynamically
+                      lastLogin: data.tappuser[i].LastTime || "",
+                    })
+                  );
                 }
                 templateObject.loggeduserdata.set(loggedUserList);
 
             }
         }).catch(function (err) {
             contactService.getCurrentLoggedUser().then(function (data) {
+              addVS1Data('TAppUser', JSON.stringify(data));
+              let dataListloggedUser = {};
+              let vs1EmployeeImage = Session.get("vs1EmployeeImages");
 
-                let dataListloggedUser = {};
-                let vs1EmployeeImage = Session.get('vs1EmployeeImages');
-
-                let encoded = '';
-                for(let i=0; i<data.tappuser.length; i++){
-                    dataListloggedUser = {
-                        id: data.tappuser[i].EmployeeID || '',
-                        employeename: data.tappuser[i].UserName || '',
-                        ladtloging: data.tappuser[i].LastTime|| '',
-                        // employeepicture: encoded|| ''
-                    };
-                    loggedUserList.push(dataListloggedUser);
+              let encoded = "";
+              for (let i = 0; i < data.tappuser.length; i++) {
+                let employeeUser =
+                  data.tappuser[i].FirstName + " " + data.tappuser[i].LastName;
+                if (parseInt(data.tappuser[i].EmployeeID) == parseInt(Session.get("mySessionEmployeeLoggedID"))) {
+                  employeeUser = Session.get("mySessionEmployee");
                 }
-                templateObject.loggeduserdata.set(loggedUserList);
+                loggedUserList.push(
+                  new User({
+                    id: data.tappuser[i].EmployeeID || "",
+                    employeeName: employeeUser || "- -",
+                    avatar: "img/avatar.png", // Here we should get the avatar dynamically
+                    lastLogin: data.tappuser[i].LastTime || "",
+                  })
+                );
+              }
+              templateObject.loggeduserdata.set(loggedUserList);
             });
         });
-        */
+
   };
   templateObject.getLoggedUserData();
 });

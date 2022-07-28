@@ -3283,6 +3283,7 @@ Template.payrolloverview.onRendered(function () {
     }
   );
   html5QrcodeScannerClockOff.render(onScanSuccessClockOff);
+  tableResize();
 });
 
 Template.payrolloverview.events({

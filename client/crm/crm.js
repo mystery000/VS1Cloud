@@ -256,6 +256,8 @@ Template.crmoverview.events({
 
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
+    // let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+
     crmService.getAllTaskList().then(function (data) {
       addVS1Data("TCRMTaskList", JSON.stringify(data));
       crmService.getTProjectList().then(function (data) {
@@ -628,6 +630,11 @@ Template.crmoverview.events({
     $('#crm_header_title').html('Labels');
   },
 
+  "click #sidenavcrm": function (e) {
+    console.log('sidenavcrm');
+    FlowRouter.go("/crmoverview");
+    Meteor._reload.reload();
+  }
 
 });
 

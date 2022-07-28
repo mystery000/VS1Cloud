@@ -22,6 +22,7 @@ Template.accountant.onCreated(() => {
     templateObject.countryData = new ReactiveVar();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.accountantPanList = new ReactiveVar([]);
+    templateObject.dateAsAt = new ReactiveVar();
 });
 
 Template.accountant.onRendered(() => {
@@ -373,23 +374,616 @@ Template.accountant.onRendered(() => {
     }
 
     templateObject.getAccountLists();
+
+    $(document).ready(function () {
+      $("#date-input,#dtSODate,#balancedate").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        dateFormat: "dd/mm/yy",
+        // dateFormat: 'yy-mm-dd',
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+        onChangeMonthYear: function (year, month, inst) {
+          // Set date to picker
+          $(this).datepicker(
+            "setDate",
+            new Date(year, inst.selectedMonth, inst.selectedDay)
+          );
+          // Hide (close) the picker
+          // $(this).datepicker('hide');
+          // // Change ttrigger the on change function
+          // $(this).trigger('change');
+        },
+      });
+  
+      let imageData = localStorage.getItem("Image");
+      if (imageData) {
+        $("#uploadedImage").attr("src", imageData);
+        $("#uploadedImage").attr("width", "50%");
+      }
+  
+      var today = moment().format("DD/MM/YYYY");
+      var currentDate = new Date();
+      var begunDate = moment(currentDate).format("DD/MM/YYYY");
+      templateObject.dateAsAt.set(begunDate);
+
+      let headerHtml = "<span>First Name Last Name, CPA</span><br>";
+      // headerHtml += "<h4>OnPoint Advisory</h4>";
+      headerHtml += "<span>Address, Town / City, Postal / Zip Code, State / Region, Country</span>";
+      headerHtml += "<h3>Document Name</h3>";
+      headerHtml += "<span>Company Name<br>For the year ended "+(new Date())+"</span>";
+      
+      $("#reportsAccountantHeader").html(headerHtml);
+    });
+
+    templateObject.getBalanceSheetReports = async (dateAsOf) => {
+      LoadingOverlay.show();
+  
+      let data = !localStorage.getItem("VS1BalanceSheet_Report1")
+        ? await reportService.getBalanceSheetReport(dateAsOf)
+        : JSON.parse(localStorage.getItem("VS1BalanceSheet_Report"));
+  
+      let records = [];
+      if (data.balancesheetreport) {
+        let date = new Date(dateAsOf);
+        let previousYear = date.getFullYear() - 1;
+        let Balancedatedisplay = moment(dateAsOf).format("DD/MM/YYYY");
+        let lastdatemonthdisplay =
+          moment(dateAsOf).format("DD MMM") + " " + previousYear;
+        templateObject.dateAsAtAYear.set(lastdatemonthdisplay);
+        templateObject.dateAsAt.set(Balancedatedisplay);
+        setTimeout(function () {
+          $("#balanceData tbody tr:first td .SubHeading").html(
+            "As at " + moment(dateAsOf).format("DD/MM/YYYY")
+          );
+        }, 0);
+  
+        let sort = templateObject.$("#sort").val();
+        let flag = false;
+        if (sort == "Account Code") {
+          flag = true;
+        }
+  
+        let totalNetAssets = 0;
+        let GrandTotalLiability = 0;
+        let GrandTotalAsset = 0;
+        for (let i = 0, len = data.balancesheetreport.length; i < len; i++) {
+          let recordObj = {};
+          recordObj.id = data.balancesheetreport[i].ID;
+          recordObj.name = $.trim(data.balancesheetreport[i]["Account Tree"])
+            .split(" ")
+            .join("_");
+  
+          let SubAccountTotal = data.balancesheetreport[i]["Sub Account Total"];
+          if (SubAccountTotal !== 0) {
+            SubAccountTotal = utilityService.modifynegativeCurrencyFormat(SubAccountTotal);
+          } else {
+            SubAccountTotal = " ";
+          }
+  
+          let HeaderAccountTotal = data.balancesheetreport[i]["Header Account Total"];
+          if (HeaderAccountTotal !== 0) {
+              HeaderAccountTotal = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal);
+            } else {
+                HeaderAccountTotal = " ";
+            }
+  
+          let TotalCurrentAsset_Liability = data.balancesheetreport[i]["Total Current Asset & Liability"];
+          if (TotalCurrentAsset_Liability !== 0) {
+            TotalCurrentAsset_Liability = utilityService.modifynegativeCurrencyFormat(TotalCurrentAsset_Liability);
+          } else {
+            TotalCurrentAsset_Liability = " ";
+          }
+  
+          let TotalAsset_Liability = data.balancesheetreport[i]["Total Asset & Liability"];
+          if (TotalAsset_Liability !== 0) {
+            TotalAsset_Liability = utilityService.modifynegativeCurrencyFormat(TotalAsset_Liability);
+          } else {
+            TotalAsset_Liability = " ";
+          }
+  
+          let AccountTree = data.balancesheetreport[i]["Account Tree"];
+          // if (AccountTree !== 0) {
+          //   AccountTree = utilityService.modifynegativeCurrencyFormat(AccountTree);
+          // } else {
+          //   AccountTree = " ";
+          // }
+          recordObj.selected = false;
+  
+          /**
+           * Add a title by default
+           */
+          // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
+          // recordObj.subTotal = SubAccountTotal || "";
+  
+          if (
+            (i == 0 && AccountTree == "ASSETS") ||
+            AccountTree.replace(/\s/g, "") == "LIABILITIES&EQUITY"
+          ) {
+            recordObj.dataArrHeader = [
+              data.balancesheetreport[i]["Account Tree"] || " ",
+            ];
+  
+            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
+          } else if (i == 1 || i == 2 || AccountTree == "") {
+            recordObj.dataArrAsset = [
+              data.balancesheetreport[i]["Account Tree"] || " ",
+            ];
+            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
+          } else if (AccountTree.replace(/\s/g, "") == "TotalChequeorSaving") {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: HeaderAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
+              },
+            ];
+  
+            // recordObj.type = "total";
+            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
+            // recordObj.subTotal = SubAccountTotal || "";
+            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
+          } else if (
+            AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable"
+          ) {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: HeaderAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
+              },
+              ,
+            ];
+  
+            // recordObj.type = "total";
+            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
+            // recordObj.subTotal = SubAccountTotal || "";
+            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
+          } else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: HeaderAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
+              },
+            ];
+  
+            // recordObj.type = "total";
+            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
+            // recordObj.subTotal = SubAccountTotal || "";
+            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
+          } else if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: TotalCurrentAsset_Liability || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
+              },
+            ];
+          } else if (AccountTree.replace(/\s/g, "") == "FixedAsset") {
+            recordObj.dataArrAsset = [
+              data.balancesheetreport[i]["Account Tree"] || " ",
+            ];
+  
+            // recordObj.type = "asset";
+            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
+          } else if (AccountTree.replace(/\s/g, "") == "TotalFixedAsset") {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: TotalCurrentAsset_Liability || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
+              },
+            ];
+          } else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: TotalAsset_Liability || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(TotalAsset_Liability) || "",
+              },
+            ];
+  
+            GrandTotalAsset = TotalAsset_Liability;
+          } else if (
+            AccountTree.replace(/\s/g, "") == "Liabilities" ||
+            AccountTree.replace(/\s/g, "") == "CurrentLiabilities"
+          ) {
+            recordObj.dataArrAsset = [
+              data.balancesheetreport[i]["Account Tree"] || " ",
+            ];
+          } else if (AccountTree.replace(/\s/g, "") == "TotalCreditCardAccount") {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: HeaderAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
+              },
+            ];
+          } else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: HeaderAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
+              },
+            ];
+          } else if (
+            AccountTree.replace(/\s/g, "") == "TotalOtherCurrentLiability"
+          ) {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: HeaderAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
+              },
+            ];
+          } else if (
+            AccountTree.replace(/\s/g, "") == "TotalCurrentLiabilities"
+          ) {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: TotalCurrentAsset_Liability || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
+              },
+            ];
+          } else if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value: TotalCurrentAsset_Liability || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
+              },
+            ];
+          } else if (
+            AccountTree.replace(/\s/g, "") == "TOTALLIABILITIES&EQUITY"
+          ) {
+            recordObj.dataArrTotal = [
+              data.balancesheetreport[i]["Account Tree"] || "-",
+              {
+                type: "amount",
+                value: SubAccountTotal || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                  "",
+              },
+              {
+                type: "amount",
+                value:TotalAsset_Liability || "",
+                amount:
+                  utilityService.convertSubstringParseFloat(TotalAsset_Liability) || "",
+              },
+            ];
+  
+            GrandTotalLiability = TotalAsset_Liability;
+          } else if (
+            AccountTree.replace(/\s/g, "") == "Capital/Equity" ||
+            AccountTree.replace(/\s/g, "") == "OtherCurrentLiability" ||
+            AccountTree.replace(/\s/g, "") == "OtherCurrentAsset" ||
+            AccountTree.replace(/\s/g, "") == "CreditCardAccount"
+          ) {
+            recordObj.dataArrAsset = [
+              data.balancesheetreport[i]["Account Tree"] || " ",
+            ];
+            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
+          } else {
+            if (flag) {
+              let accountCode = "";
+              if (data.balancesheetreport[i].AccountNumber) {
+                accountCode = data.balancesheetreport[i].AccountNumber + "-";
+              }
+              recordObj.dataArr2 = [
+                accountCode + data.balancesheetreport[i]["Account Tree"] || "-",
+                {
+                  type: "amount",
+                  value: SubAccountTotal || "",
+                  amount:
+                    utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                    "",
+                },
+                {
+                  type: "amount",
+                  value: HeaderAccountTotal || "",
+                  amount:
+                    utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
+                },
+              ];
+            } else {
+              recordObj.dataArr2 = [
+                data.balancesheetreport[i]["Account Tree"] || "-",
+                {
+                  type: "amount",
+                  value: SubAccountTotal || "",
+                  amount:
+                    utilityService.convertSubstringParseFloat(SubAccountTotal) ||
+                    "",
+                },
+                {
+                  type: "amount",
+                  value: HeaderAccountTotal || "",
+                  amount:
+                    utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
+                },
+              ];
+            }
+          }
+          if( recordObj.dataArr2 ){
+            if ( HeaderAccountTotal.replace(/\s/g, "") || SubAccountTotal.replace(/\s/g, "") ) {
+              records.push(recordObj);
+            }
+          }else{
+            records.push(recordObj);
+          }
+        }
+  
+        totalNetAssets = GrandTotalAsset - GrandTotalLiability;
+        let netAssets = {
+          id: "",
+          selected: false,
+          //   title: "Net Assets",
+          //   subTotal: Currency + "0.00",
+          //   total: utilityService.modifynegativeCurrencyFormat(totalNetAssets),
+          dataTotal: [
+            "Net Assets",
+            {
+              type: "amount",
+              value: Currency + "0.00",
+              amount: 0.0,
+            },
+            {
+              type: "amount",
+              value: utilityService.modifynegativeCurrencyFormat(totalNetAssets),
+              amount: utilityService.convertSubstringParseFloat(
+                utilityService.modifynegativeCurrencyFormat(totalNetAssets)
+              ),
+            },
+          ],
+        };
+        records.push(netAssets);
+        templateObject.netAssetTotal.set(
+          utilityService.modifynegativeCurrencyFormat(totalNetAssets)
+        );
+      }
+  
+  
+      templateObject.records.set(records);
+      if (templateObject.records.get()) {
+        setTimeout(function () {
+          function MakeNegative() {
+            $("td").each(function () {
+              if (
+                $(this)
+                  .text()
+                  .indexOf("-" + Currency) >= 0
+              )
+                $(this).addClass("text-danger");
+            });
+          }
+          MakeNegative();
+          $("td a").each(function () {
+            if (
+              $(this)
+                .text()
+                .indexOf("-" + Currency) >= 0
+            )
+              $(this).addClass("text-danger");
+          });
+        }, 500);
+      }
+  
+      LoadingOverlay.hide();
+    };
+  
+    var currentDate2 = new Date();
+    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+    templateObject.getBalanceSheetReports(getLoadDate);
+    $("#balancedate").val(moment(currentDate2).format("DD/MM/YYYY"));
+
+    if (Object.keys(FlowRouter.current().queryParams).length) {
+      templateObject
+        .$("#balanceDate")
+        .val(
+          moment(FlowRouter.current().queryParams.balanceDate).format("MMMM YYYY")
+        );
+      templateObject
+        .$("#compareTo")
+        .val(FlowRouter.current().queryParams.compareTo);
+      templateObject
+        .$("#comparePeriod")
+        .val(FlowRouter.current().queryParams.comparePeriod);
+      templateObject.$("#sort").val(FlowRouter.current().queryParams.sort);
+      templateObject.currentMonth.set(
+        moment(FlowRouter.current().queryParams.balanceDate).format("MMMM")
+      );
+      templateObject.$(".update_search").click();
+    } else {
+      let currentMonth = moment(new Date()).format("MMMM");
+      templateObject.currentMonth.set(currentMonth);
+      templateObject.currentYear.set(new Date().getFullYear());
+      setTimeout(function () {
+        templateObject.$(".update_search").click();
+      }, 0);
+    }
+
+    $("#search_list").click(function () {
+      let balanceDate = $("#balanceDate").val();
+      var SegsBalDate = balanceDate.split(" ");
+      var months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      var date = new Date();
+      var monthCase;
+  
+      switch (SegsBalDate[0]) {
+        case "January":
+          monthCase = 1;
+          break;
+        case "February":
+          monthCase = 2;
+          break;
+        case "March":
+          monthCase = 3;
+          break;
+        case "April":
+          monthCase = 4;
+          break;
+        case "May":
+          monthCase = 5;
+          break;
+  
+        case "June":
+          monthCase = 6;
+          break;
+        case "July":
+          monthCase = 7;
+          break;
+        case "August":
+          monthCase = 8;
+          break;
+        case "September":
+          monthCase = 9;
+          break;
+        case "October":
+          monthCase = 10;
+          break;
+        case "November":
+          monthCase = 11;
+          break;
+        case "December":
+          monthCase = 12;
+          break;
+      }
+      var lastDay = new Date(SegsBalDate[1], monthCase, 0);
+      var dropmonth = monthCase - 1;
+      let YearBefore = SegsBalDate[1] - 1;
+      let disbalanceDate =
+        lastDay.getDate() + " " + months[dropmonth] + " " + SegsBalDate[1];
+      let disbalanceAYearDate =
+        lastDay.getDate() + " " + months[dropmonth] + " " + YearBefore;
+  
+      let searchDateAsOf =
+        SegsBalDate[1] + "-" + monthCase + "-" + lastDay.getDate();
+      templateObject.dateAsAtAYear.set(disbalanceAYearDate);
+      templateObject.dateAsAt.set(disbalanceDate);
+    });
 });
 
 Template.accountant.events({
-  'click #btndispAccountant': function() {
-    
-    if($("#edtFirstName").val() != "" && $("#edtLastName").val() != "" && $("#edtAddress").val() != "" && $("#edtDocName").val() != "" && $("#edtCompanyName").val() != ""){
-      let headerHtml = "<span>"+$("#edtFirstName").val()+" "+$("#edtLastName").val()+", CPA</span><br>";
-      // headerHtml += "<h4>OnPoint Advisory</h4>";
-      headerHtml += "<span>"+$("#edtAddress").val()+", "+$("#edtTownCity").val()+", "+$("#edtPostalZip").val()+", "+$("#edtStateRegion").val()+", "+$("#edtCountry").val()+"</span>";
-      headerHtml += "<h3>"+$("#edtDocName").val()+"</h3>";
-      headerHtml += "<span>"+$("#edtCompanyName").val()+"<br>For the year ended "+(new Date())+"</span>";
-      
-      $("#reportsAccountantHeader").html(headerHtml);
-      $("#editReportsAccountant").show();
-    }
-  },
-
   'click .custom-control-input': function(event) {
     const templateObject = Template.instance();
     let accountantList = templateObject.datatablerecords.curValue;
@@ -414,132 +1008,299 @@ Template.accountant.events({
       }
     }
   },
+  
+  "click td.Indent1": async function (event) {
+    let id = event.target.className.split("item-value-");
+    let accountName = id[1].split("_").join(" ");
+    let toDate = moment($("#balanceDate").val()).clone().endOf("month").format("YYYY-MM-DD");
+    let fromDate = "1899-01-01";
+    Session.setPersistent("showHeader", true);
+    await clearData('TAccountRunningBalanceReport');
+    window.open("/balancetransactionlist?accountName=" +accountName +"&toDate=" +toDate +"&fromDate=" +fromDate +"&isTabItem=" +false,"_self");
+  },
 
-  // 'click #btnSummary': function() {
-  //     FlowRouter.go('/customersummaryreport');
-  // },
-  // 'click .btnRefresh': function() {
-  //     $('.fullScreenSpin').css('display', 'inline-block');
-  //     localStorage.setItem('VS1CustomerDetails_Report', '');
-  //     Meteor._reload.reload();
-  // },
-  // 'click .btnExportReport': function() {
-  //     $('.fullScreenSpin').css('display', 'inline-block');
-  //     let utilityService = new UtilityService();
-  //     let templateObject = Template.instance();
-  //     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-  //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  "click .balanceDateDropdown": function (event) {
+    $("#balanceDate").val(event.target.innerHTML);
+  },
 
-  //     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-  //     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+  "click .update_search": function () {
+    let templateObject = Template.instance();
+    let balanceDate = templateObject.$("#balanceDate").val();
+    let compareTo = templateObject.$("#compareTo").val();
+    let comparePeriod = templateObject.$("#comparePeriod").val();
+    let sort = templateObject.$("#sort").val();
+    let Date = moment(balanceDate).clone().endOf("month").format("YYYY-MM-DD");
+    templateObject.getBalanceSheetReports(Date);
+    let url =
+      "/reports/balance-sheet?balanceDate=" +
+      moment(balanceDate).clone().endOf("month").format("YYYY-MM-DD") +
+      "&compareTo=" +
+      compareTo +
+      "&comparePeriod=" +
+      comparePeriod +
+      "&sort=" +
+      sort;
+    if (!Session.get("AgedReceivablesTemplate")) {
+      FlowRouter.go(url);
+    }
+  },
+  "change .balancedate": function () {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    let balanceDate = templateObject.$("#balancedate").val();
+    let formatBalDate = moment(balanceDate).format("YYYY-MM-DD");
+    localStorage.setItem("VS1BalanceSheet_Report", "");
+    templateObject.getBalanceSheetReports(formatBalDate);
+    var formatDate = moment(balanceDate).format("DD MMM YYYY");
+    templateObject.dateAsAt.set(formatDate);
+  },
+  "click .lastMonth": function () {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    var dateTo = new Date($("#balancedate").datepicker("getDate"));
+    //if(dateTo.getMonth()+1)
+    localStorage.setItem("VS1BalanceSheet_Report", "");
+    let formatDateTo =
+      dateTo.getFullYear() + "-" + dateTo.getMonth() + "-" + dateTo.getDate();
+    templateObject.getBalanceSheetReports(formatDateTo);
 
-  //     const filename = loggedCompany + '- Customer Details Report' + '.csv';
-  //     utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
-  //     let rows = [];
-  // },
-  // 'click .btnPrintReport': function(event) {
+    let fromDateMonth = dateTo.getMonth();
+    let fromDateDay = dateTo.getDate();
 
-  //     let values = [];
-  //     let basedOnTypeStorages = Object.keys(localStorage);
-  //     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-  //         let employeeId = storage.split('_')[2];
-  //         return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-  //     });
-  //     let i = basedOnTypeStorages.length;
-  //     if (i > 0) {
-  //         while (i--) {
-  //             values.push(localStorage.getItem(basedOnTypeStorages[i]));
-  //         }
-  //     }
-  //     values.forEach(value => {
-  //         let reportData = JSON.parse(value);
-  //         reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-  //         if (reportData.BasedOnType.includes("P")) {
-  //             if (reportData.FormID == 1) {
-  //                 let formIds = reportData.FormIDs.split(',');
-  //                 if (formIds.includes("225")) {
-  //                     reportData.FormID = 225;
-  //                     Meteor.call('sendNormalEmail', reportData);
-  //                 }
-  //             } else {
-  //                 if (reportData.FormID == 225)
-  //                     Meteor.call('sendNormalEmail', reportData);
-  //             }
-  //         }
-  //     });
+    if (dateTo.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + dateTo.getMonth();
+    }
 
-  //     document.title = 'Customer Details Report';
-  //     $(".printReport").print({
-  //         title: "Customer Details Report | " + loggedCompany,
-  //         noPrintSelector: ".addSummaryEditor"
-  //     })
-  // },
-  // 'keyup #myInputSearch': function(event) {
-  //     $('.table tbody tr').show();
-  //     let searchItem = $(event.target).val();
-  //     if (searchItem != '') {
-  //         var value = searchItem.toLowerCase();
-  //         $('.table tbody tr').each(function() {
-  //             var found = 'false';
-  //             $(this).each(function() {
-  //                 if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-  //                     found = 'true';
-  //                 }
-  //             });
-  //             if (found == 'true') {
-  //                 $(this).show();
-  //             } else {
-  //                 $(this).hide();
-  //             }
-  //         });
-  //     } else {
-  //         $('.table tbody tr').show();
-  //     }
-  // },
-  // 'blur #myInputSearch': function(event) {
-  //     $('.table tbody tr').show();
-  //     let searchItem = $(event.target).val();
-  //     if (searchItem != '') {
-  //         var value = searchItem.toLowerCase();
-  //         $('.table tbody tr').each(function() {
-  //             var found = 'false';
-  //             $(this).each(function() {
-  //                 if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-  //                     found = 'true';
-  //                 }
-  //             });
-  //             if (found == 'true') {
-  //                 $(this).show();
-  //             } else {
-  //                 $(this).hide();
-  //             }
-  //         });
-  //     } else {
-  //         $('.table tbody tr').show();
-  //     }
-  // }
+    if (dateTo.getDate() < 10) {
+      fromDateDay = "0" + dateTo.getDate();
+    }
+    var formatDate =
+      fromDateDay + "/" + fromDateMonth + "/" + dateTo.getFullYear();
+    templateObject.dateAsAt.set(formatDate);
+    $("#balancedate").val(formatDate);
+  },
+  "click #lastQuarter": function () {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem("VS1BalanceSheet_Report", "");
+    $("#balancedate").attr("readonly", false);
+    var currentDate = new Date();
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    function getQuarter(d) {
+      d = d || new Date();
+      var m = Math.floor(d.getMonth() / 3) + 2;
+      return m > 4 ? m - 4 : m;
+    }
+
+    var quarterAdjustment = (moment().month() % 3) + 1;
+    var lastQuarterEndDate = moment()
+      .subtract({ months: quarterAdjustment })
+      .endOf("month");
+    var lastQuarterStartDate = lastQuarterEndDate
+      .clone()
+      .subtract({ months: 2 })
+      .startOf("month");
+
+    var lastQuarterStartDateFormat =
+      moment(lastQuarterStartDate).format("DD/MM/YYYY");
+    var lastQuarterEndDateFormat =
+      moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+    templateObject.dateAsAt.set(lastQuarterStartDateFormat);
+    $("#balancedate").val(lastQuarterStartDateFormat);
+
+    let fromDateMonth = getQuarter(currentDate);
+    var quarterMonth = getQuarter(currentDate);
+    let fromDateDay = currentDate.getDate();
+
+    var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
+    let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
+    templateObject.getBalanceSheetReports(getDateFrom);
+  },
+  "click #last12Months": function () {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem("VS1BalanceSheet_Report", "");
+    $("#balancedate").attr("readonly", false);
+    var currentDate = new Date();
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+    let fromDateDay = currentDate.getDate();
+    if (currentDate.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+    if (currentDate.getDate() < 10) {
+      fromDateDay = "0" + currentDate.getDate();
+    }
+
+    var fromDate =
+      fromDateDay +
+      "/" +
+      fromDateMonth +
+      "/" +
+      Math.floor(currentDate.getFullYear() - 1);
+    templateObject.dateAsAt.set(begunDate);
+    $("#balancedate").val(lastQuarterStartDateFormat);
+
+    var currentDate2 = new Date();
+    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+    let getDateFrom =
+      Math.floor(currentDate2.getFullYear() - 1) +
+      "-" +
+      Math.floor(currentDate2.getMonth() + 1) +
+      "-" +
+      currentDate2.getDate();
+    templateObject.getBalanceSheetReports(getDateFrom);
+  },
+  "click #ignoreDate": function () {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem("VS1BalanceSheet_Report", "");
+    $("#balancedate").attr("readonly", true);
+    templateObject.dateAsAt.set("Current Date");
+    templateObject.getBalanceSheetReports("", "", true);
+  },
 });
 
 Template.accountant.helpers({
-    countryList: () => {
-        return Template.instance().countryData.get();
-    },
-    datatablerecords: () => {
-      return Template.instance()
-        .datatablerecords.get()
-        .sort(function (a, b) {
-          if (a.accountname === "NA") {
-            return 1;
-          } else if (b.accountname === "NA") {
-            return -1;
-          }
-          return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-            ? 1
-            : -1;
-        });
-    },
-    accountantPanList: () => {
-      return Template.instance().accountantPanList.get();
+  countryList: () => {
+      return Template.instance().countryData.get();
+  },
+  datatablerecords: () => {
+    return Template.instance()
+      .datatablerecords.get()
+      .sort(function (a, b) {
+        if (a.accountname === "NA") {
+          return 1;
+        } else if (b.accountname === "NA") {
+          return -1;
+        }
+        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
+          ? 1
+          : -1;
+      });
+  },
+  
+  accountantPanList: () => {
+    return Template.instance().accountantPanList.get();
+  },
+
+  companyname: () => {
+    return loggedCompany;
+  },
+
+  dateAsAt: () => {
+    //var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];;
+    //var date = new Date();
+    //var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+    return Template.instance().dateAsAt.get() || "-";
+  },
+
+  convertAmount: (amount, currencyData) => {
+    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
+
+
+    if (!amount || amount.trim() == "") {
+      return "";
+    }
+    if (currencyData.code == defaultCurrencyCode) {
+      // default currency
+      return amount;
+    }
+
+
+    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+
+
+    // Lets remove the minus character
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1; // Make it positive
+
+    // get default currency symbol
+    // let _defaultCurrency = currencyList.filter(
+    //   (a) => a.Code == defaultCurrencyCode
+    // )[0];
+
+    //amount = amount.replace(_defaultCurrency.symbol, "");
+
+    // amount =
+    //   isNaN(amount) == true
+    //     ? parseFloat(amount.substring(1))
+    //     : parseFloat(amount);
+
+
+
+    // Get the selected date
+    let dateTo = $("#balancedate").val();
+    const day = dateTo.split("/")[0];
+    const m = dateTo.split("/")[1];
+    const y = dateTo.split("/")[2];
+    dateTo = new Date(y, m, day);
+    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+
+
+    // Filter by currency code
+    currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+
+
+    // if(currencyList.length == 0) {
+    //   currencyList = Template.instance().currencyList.get();
+    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+    // }
+
+
+    // Sort by the closest date
+    currencyList = currencyList.sort((a, b) => {
+      a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
+      a.setHours(0);
+      a.setMinutes(0);
+      a.setSeconds(0);
+
+      b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
+      b.setHours(0);
+      b.setMinutes(0);
+      b.setSeconds(0);
+
+      var distancea = Math.abs(dateTo - a);
+      var distanceb = Math.abs(dateTo - b);
+      return distancea - distanceb; // sort a before b when the distance is smaller
+
+      // const adate= new Date(a.MsTimeStamp);
+      // const bdate = new Date(b.MsTimeStamp);
+
+      // if(adate < bdate) {
+      //   return 1;
+      // }
+      // return -1;
+    });
+
+    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
+
+
+
+    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+    //amount = amount + 0.36;
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }); // Add commas
+
+
+    // amount = amount.toLocaleString();
+
+    let convertedAmount =
+      isMinus == true
+        ? `- ${currencyData.symbol} ${amount}`
+        : `${currencyData.symbol} ${amount}`;
+
+
+    return convertedAmount;
   },
 });
 

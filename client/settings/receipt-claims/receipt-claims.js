@@ -15,5 +15,8 @@ Template.receiptclaims.onRendered(function () {
 });
 
 Template.receiptclaims.events({
+  'click #receiptClaimsSignUp': function() {
+    window.open("https://hub.veryfi.com/");
+  },
   
 });

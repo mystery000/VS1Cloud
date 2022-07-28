@@ -2425,7 +2425,7 @@ Template.salesorderslist.events({
 
       let templateObject = Template.instance();
       let custFields = templateObject.custfields.get();
-      var datable = $('#tblSalesOrderlist').DataTable();
+      // var datable = $('#tblSalesOrderlist').DataTable();
 
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -2449,7 +2449,8 @@ Template.salesorderslist.events({
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
-        var title = datable.column( index+1 ).header();
+        // var title = datable.column( index+1 ).header();
+        var title = $('#tblSalesOrderlist').find('th').eq(index + 1);
         $(title).html(reset_data[index].label);
 
         if (reset_data[index].active) {

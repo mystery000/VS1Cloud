@@ -43,6 +43,9 @@ Template.settings.events({
     'click .btnCompanyAppSettings': function (event) {
         FlowRouter.go('/companyappsettings');
     },
+    'click .btnReportsAccountant': function (event) {
+        FlowRouter.go('/reportsAccountantSettings');
+    },
     'click .btnCustomerType': function (event) {
         FlowRouter.go('/clienttypesettings');
     },
@@ -76,6 +79,9 @@ Template.settings.events({
     },
     'click .btnSubcription': function (event) {
         FlowRouter.go('/subscriptionSettings');
+    },
+    'click .btnSetupWizard': function (event) {
+        FlowRouter.go('/setup');
     },
     'click .btnBackupRestore': function (event) {
         FlowRouter.go('/backuprestore');
