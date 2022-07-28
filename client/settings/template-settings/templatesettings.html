@@ -48,6 +48,9 @@
             </div>
             <div class="col-6" style="padding: 0px;">
                 <button class="btn btn-secondary btnBack float-right" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 8px;"></i>Cancel</button>
+                <button class="btn btn-warning float-right resetcards" id="resetcards" type="button" style="margin:8px 3px 44px;" autocomplete="off">
+                    <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset
+                </button>
                 <button class="btn btn-success btnTopGlobalSave float-right" type="button" style="margin: 8px;margin-left: 8px;"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
             </div>
         </div>
@@ -74,7 +77,8 @@
                                                         <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" style="cursor: pointer;">
                                                     {{/if}}
                                                     <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
-                                                    <label style="margin-right: 50px;" for="{{title}}_{{index}}"> Template {{index}}</label>
+                                                    <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
+                                                    <!-- <label style="margin-right: 50px;" for="{{title}}_{{index}}"> </label> -->
 
                                                 </div>
 
@@ -93,8 +97,6 @@
         </div>
     </div>
 
-
-
     <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -109,41 +111,41 @@
                         id="html-2-pdfwrapper" name="html-2-pdfwrapper">
                         <div class="d-flex flex-row d-sm-flex d-md-flex ">
                             <div class="col-7 col-md-7 col-sm-12" style="margin: 0px; padding: 16px;">
-                                <div style="display: flex;" class="col-6 col-md-6 col-sm-12">
-                                    <div class="col-4 col-md-4 col-sm-10" style="max-width: 60mm; max-height: 30mm;">
-                                        <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 200px;margin-bottom: 8px;">
+                                    <div style="display: flex;" class="col-6 col-md-6 col-sm-12">
+                                            <div class="col-4 col-md-4 col-sm-10" style="max-width: 60mm; max-height: 30mm;">
+                                                <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 200px;margin-bottom: 8px;">
+                                            </div>
+                                            <div class="col-lg-12 col-md-8 col-sm-6">
+                                                <div style="padding-left: 16px;font-weight: bold;">
+                                                        <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                        <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                        <p class="o_address1" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                        <p class="o_address2" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                        <p class="o_city" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                        <p class="o_state" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                        <p class="o_reg" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                        <p class="o_abn" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                        <p class="o_phone" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
+                                                </div>
+                                            </div>
                                     </div>
-                                    <div class="col-lg-12 col-md-8 col-sm-6">
-                                        <div style="padding-left: 16px;font-weight: bold;">
-                                            <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                            <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                            <p class="o_address1" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                            <p class="o_address2" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                            <p class="o_city" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                            <p class="o_state" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                            <p class="o_reg" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                            <p class="o_abn" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                            <p class="o_phone" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div style="font-size: 14px;">
-                                    <div class="customer" style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: 600;">
-                                    </div>
-                                    <div style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName"></div>
-                                    <div style="min-height: 50px; width: 50%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress"></div>
+                                            <div class="customer" style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: 600;">
+                                            </div>
+                                            <div style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName"></div>
+                                            <div style="min-height: 50px; width: 50%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress"></div>
                                 </div>
                             </div>
                             <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
                                 <div style="display: flex; width: 100%;">
-                                    <div style="width: 50%; padding-right: 16px;font-weight: bold;">
-                                         <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                         </h4>
-                                    </div>
-                                    <div style="width: 50%; padding-left: 16px;font-weight: bold;">
-                                        <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                        </h4>
-                                    </div>
+                                            <div style="width: 50%; padding-right: 16px;font-weight: bold;">
+                                                <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                                </h4>
+                                            </div>
+                                            <div style="width: 50%; padding-left: 16px;font-weight: bold;">
+                                                <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                                </h4>
+                                            </div>
 
                                 </div>
 
@@ -317,8 +319,6 @@
 
         </div>
     </div>
-
-
 
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
