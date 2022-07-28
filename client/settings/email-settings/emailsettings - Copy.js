@@ -14,10 +14,7 @@ import '../../lib/global/indexdbstorage.js';
 import { startOfDay } from "@fullcalendar/core";
 import { AccountService } from "../../accounts/account-service";
 import { UtilityService } from "../../utility-service";
-import 'jquery-ui-dist/external/jquery/jquery';
-import 'jquery-ui-dist/jquery-ui';
 import { jsPDF } from "jspdf";
-import 'jQuery.print/jQuery.print.js';
 let sideBarService = new SideBarService();
 
 Template.emailsettings.onCreated(function () {
@@ -704,8 +701,8 @@ Template.emailsettings.onRendered(function () {
 
 
 
-    templateObject.saveSchedules = async (settings, isEssential) => {
-        console.log('method called', settings, isEssential);
+    templateObject.saveSchedules = async function (settings, isEssential) {
+        console.log('method called');
         let utilityService = new UtilityService();
         return new Promise(async (resolve, reject) => {
 
@@ -738,180 +735,233 @@ Template.emailsettings.onRendered(function () {
                         let e = jQuery.Event('click');
                         let targetElement = [];
                         let docTitle = 'VS1 Report.pdf';
-                        let parentElement = "";
 
                         if (formID == 129) {
-                            parentElement = document.getElementById('profitTemp');
+                            let parentElement = document.getElementById('profitTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
+
                         if (formID == 6) {
-                            parentElement = document.getElementById('agedPayablesTemp');
+                            let parentElement = document.getElementById('agedPayablesTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
                         if (formID == 134) {
-                            parentElement = document.getElementById('agedReceivableTemp');
+                            let parentElement = document.getElementById('agedReceivableTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
                         if (formID == 225) {
-                            parentElement = document.getElementById('generalLedgerTemp');
+                            let parentElement = document.getElementById('generalLedgerTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
                         if (formID == 1464) {
-                            parentElement = document.getElementById('productSalesReportTemp');
+                            let parentElement = document.getElementById('productSalesReportTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
                         if (formID == 70) {
-                            parentElement = document.getElementById('purchaseReportTemp');
+                            let parentElement = document.getElementById('purchaseReportTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
                         if (formID == 1364) {
-                            parentElement = document.getElementById('purchaseSummaryTemp');
+                            let parentElement = document.getElementById('purchaseSummaryTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
                         if (formID == 68) {
-                            parentElement = document.getElementById('salesReportTemp');
+                            let parentElement = document.getElementById('salesReportTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
                         if (formID == 278) {
-                            parentElement = document.getElementById('taxSummaryReportTemp');
+                            let parentElement = document.getElementById('taxSummaryReportTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
                         if (formID == 140) {
-                            parentElement = document.getElementById('trialBalanceTemp');
-                        }
-                        if (formID == 54) {
-                            parentElement = document.getElementById('invoicePDFTemp');
-                        }
-                        if (formID == 177 || formID == 17544) {
-                            parentElement = document.getElementById('statementPDFTemp');
-                        }
-                        if (formID == 12) {
-                            parentElement = document.getElementById('billPDFTemp');
-                        }
-                        if (formID == 18) {
-                            parentElement = document.getElementById('chequePDFTemp');
-                        }
-                        if (formID == 21) {
-                            parentElement = document.getElementById('creditPDFTemp');
+                            let parentElement = document.getElementById('trialBalanceTemp');
+                            targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
 
-                        if (formID == 61) {
-                            parentElement = document.getElementById('paymentsPDFTemp');
-                        }
-                        if (formID == 69) {
-                            parentElement = document.getElementById('purchaseOrderPDFTemp');
-                        }
+                        // if (formID == 54) {
+                        //     let invoicesTemp = [];
+                        //     function getInvoicesData() {
+                        //         return new Promise ((resolve, reject)=>{
+                        //             getVS1Data('TInvoiceEx').then(function (dataObject) {
+                        //                 if (dataObject.length != 0) {
+                        //                     let data = JSON.parse(dataObject[0].data);
+                        //                     let useData = data.tinvoiceex;
+                        //                     for (let d = 0; d < useData.length; d++) {
+                        //                             let lineItems = [];
+                        //                             let lineItemObj = {};
+                        //                             let lineItemsTable = [];
+                        //                             let currencySymbol = Currency;
+                        //                             let totalInc = currencySymbol + '' + useData[d].fields.TotalAmountInc.toLocaleString(undefined, {
+                        //                                 minimumFractionDigits: 2
+                        //                             });
+                        //                             let totalDiscount = currencySymbol + '' + useData[d].fields.TotalDiscount.toLocaleString(undefined, {
+                        //                                 minimumFractionDigits: 2
+                        //                             });
+                        //                             let subTotal = currencySymbol + '' + useData[d].fields.TotalAmount.toLocaleString(undefined, {
+                        //                                 minimumFractionDigits: 2
+                        //                             });
+                        //                             let totalTax = currencySymbol + '' + useData[d].fields.TotalTax.toLocaleString(undefined, {
+                        //                                 minimumFractionDigits: 2
+                        //                             });
+                        //                             let totalBalance = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalBalance).toLocaleString(undefined, {
+                        //                                 minimumFractionDigits: 2
+                        //                             });
+                        //                             let totalPaidAmount = currencySymbol + '' + useData[d].fields.TotalPaid.toLocaleString(undefined, {
+                        //                                 minimumFractionDigits: 2
+                        //                             });
+                        //                             if (useData[d].fields.Lines.length) {
+                        //                                 for (let i = 0; i < useData[d].fields.Lines.length; i++) {
+                        //                                     let AmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
+                        //                                         minimumFractionDigits: 2
+                        //                                     });
+                        //                                     let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.LineTaxTotal);
+                        //                                     lineItemObj = {
+                        //                                         item: useData[d].fields.Lines[i].fields.ProductName || '',
+                        //                                         description: useData[d].fields.Lines[i].fields.ProductDescription || '',
+                        //                                         quantity: useData[d].fields.Lines[i].fields.UOMOrderQty || 0,
+                        //                                         unitPrice: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.OriginalLinePrice).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                        //                                         TotalAmt: utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmount).toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
+                        //                                         taxCode: useData[d].fields.Lines[i].fields.LineTaxCode || '',
+                        //                                         TaxTotal: TaxTotalGbp || 0,
+                        //                                     };
+                        //                                     var dataListTable = [
+                        //                                         useData[d].fields.Lines[i].fields.ProductName || '',
+                        //                                         useData[d].fields.Lines[i].fields.ProductDescription || '',
+                        //                                         "<div contenteditable='true' class='qty'>" + '' + useData[d].fields.Lines[i].fields.UOMOrderQty + '' + "</div>" || "<div>" + '' + 0 + '' + "</div>",
+                        //                                         "<div>" + '' + currencySymbol + '' + useData[d].fields.Lines[i].fields.LinePrice.toFixed(2) + '' + "</div>" || currencySymbol + '' + 0.00,
+                        //                                         useData[d].fields.Lines[i].fields.LineTaxCode || '',
+                        //                                         AmountGbp || currencySymbol + '' + 0.00,
+                        //                                         '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
+                        //                                     ];
+                        //                                     lineItemsTable.push(dataListTable);
+                        //                                     lineItems.push(lineItemObj);
+                        //                                 }
+                        //                             } 
+                        //                             // let lidData = 'Edit Invoice' + ' ' + useData[d].fields.ID||'';
+                        //                             // if(useData[d].fields.IsBackOrder){
+                        //                             //     lidData = 'Edit Invoice' + ' (BO) ' + useData[d].fields.ID||'';
+                        //                             // }
+                        //                             let isPartialPaid = false;
+                        //                             if(useData[d].fields.TotalPaid > 0){
+                        //                                 isPartialPaid = true;
+                        //                             }
+                        //                             let invoicerecord = {
+                        //                                 id: useData[d].fields.ID,
+                        //                                 custPONumber: useData[d].fields.CustPONumber,
+                        //                                 saledate: useData[d].fields.SaleDate ? moment(useData[d].fields.SaleDate).format('DD/MM/YYYY') : "",
+                        //                                 comments: useData[d].fields.Comments,
+                        //                                 termsName: useData[d].fields.TermsName,
+                        //                                 Total: totalInc,
+                        //                                 TotalDiscount: totalDiscount,
+                        //                                 LineItems: lineItems,
+                        //                                 TotalTax: totalTax,
+                        //                                 SubTotal: subTotal,
+                        //                                 balanceDue: totalBalance,
+                        //                                 totalPaid: totalPaidAmount,
+                        //                             };
 
-                        if (formID == 71) {
-                            parentElement = document.getElementById('quotePDFTemp');
-                        }
+                        //                             if (invoicerecord) {
+                        //                                 invoicesTemp.push(invoicerecord);
+                        //                                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblInvoiceLine', function (error, result) {
+                        //                                     if (error) {}
+                        //                                     else {
+                        //                                         if (result) {
+                        //                                             for (let i = 0; i < result.customFields.length; i++) {
+                        //                                                 let customcolumn = result.customFields;
+                        //                                                 let columData = customcolumn[i].label;
+                        //                                                 let columHeaderUpdate = customcolumn[i].thclass;
+                        //                                                 let hiddenColumn = customcolumn[i].hidden;
+                        //                                                 let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
+                        //                                                 let columnWidth = customcolumn[i].width;
 
-                        if (formID == 74) {
-                            parentElement = document.getElementById('refundPDFTemp')
-                        }
-                        
-                        if (formID == 77) {
-                            parentElement = document.getElementById('salesorderPDFTemp')
-                        }
+                        //                                                 $("" + columHeaderUpdate + "").html(columData);
+                        //                                                 if (columnWidth != 0) {
+                        //                                                     $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
+                        //                                                 }
 
-                        if (formID == 94) {
-                            parentElement = document.getElementById('supplierpaymentPDFTemp')
-                        }
+                        //                                                 if (hiddenColumn == true) {
+                        //                                                     $("." + columnClass + "").addClass('hiddenColumn');
+                        //                                                     $("." + columnClass + "").removeClass('showColumn');
+                        //                                                 } else if (hiddenColumn == false) {
+                        //                                                     $("." + columnClass + "").removeClass('hiddenColumn');
+                        //                                                     $("." + columnClass + "").addClass('showColumn');
 
-                        if(formID != 1) {
-                            targetElement = parentElement.getElementsByClassName('printReport');
-                        } else {
-                            targetElement = [];
-                            const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
-                            let formIDs = [];
-                            groupedReports.map(async (groupedReport) => {
-                                formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
-                            });
-                            let printwrappers = document.getElementsByClassName('print-wrapper');
-                            let parenetElements = [];
-                            formIDs.map(id=>{
-                                parenetElements.push(printwrappers.getElementsByClassName('print-wrapper-' + id)[0]);
-                            })
-                            parenetElements.map(parentelement=>{
-                                let children = parentelement.getElementsByClassName('printReport');
-                                children.map(childelement => {
-                                    targetElement.push(childelement);
-                                })
-                            })
+                        //                                                 }
 
-                        }
+                        //                                             }
+                        //                                             if(d == useData.length - 1) {
+                        //                                                 resolve();
+                        //                                             }
+                        //                                         }
+
+                        //                                     }
+                        //                                 });
+                        //                             }
+                        //                     }
+
+                        //                 }
+                        //             });
+                        //         })
+                        //     }
+
+                        //     getInvoicesData().then(()=>{
+                        //         templateObject.invoicerecords.set(invoicesTemp);
+                        //         let paraentElement = document.getElementById("invoicePDFTemp");
+                        //         targetElement = paraentElement.getElementsByClassName('invoicerecordprint');
+
+                        //     })
+                        // }
+
+
                         console.log('4th step', targetElement);
-
                         function getAttachments() {
-                            return new Promise((resolve, reject)=>{
-                                if (targetElement && targetElement != null && targetElement != "" && targetElement != []) {
-                                    let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94']
-                                    for (let i = 0; i < targetElement.length; i++) {
-                                        if(transIDs.includes(formID.toString()) == false) {
-                                            targetElement[i].style.display = "block";
-                                            targetElement[i].style.width = "210mm";
-                                            targetElement[i].style.backgroundColor = "#ffffff";
-                                            targetElement[i].style.padding = "8px";
-                                            targetElement[i].style.height = "297mm";
-                                            targetElement[i].style.fontSize = "13.33px";
-                                            targetElement[i].style.color = "#000000";
-                                            targetElement[i].style.overflowX = "visible";
+                            return new Promise((resolve, reject) => {
+                                if (targetElement && targetElement != null && targetElement != "") {
+                                    console.log('param target', targetElement, 'param file name', docTitle);
+                                    var opt = {
+                                        margin: 0,
+                                        filename: docTitle,
+                                        image: {
+                                            type: 'jpeg',
+                                            quality: 0.98
+                                        },
+                                        html2canvas: {
+                                            scale: 2
+                                        },
+                                        jsPDF: {
+                                            unit: 'in',
+                                            format: 'a4',
+                                            orientation: 'portrait'
                                         }
-        
-        
-                                        console.log('param target', targetElement[i], 'param file name', docTitle);
-                                        var opt = {
-                                            margin: 0,
-                                            filename: docTitle,
-                                            image: {
-                                                type: 'jpeg',
-                                                quality: 0.98
-                                            },
-                                            html2canvas: {
-                                                scale: 2
-                                            },
-                                            jsPDF: {
-                                                unit: 'in',
-                                                format: 'a4',
-                                                orientation: 'portrait'
-                                            }
-                                        };
-                                        let source = targetElement[i];
-                                        setTimeout(() => {
-                                            html2pdf().set(opt).from(source).toPdf().output('datauristring').then((dataObject) => {
-                                                let pdfObject = "";
-                                                let base64data = dataObject.split(',')[1];
-                                                pdfObject = {
-                                                    filename: 'vs1cloud report.pdf',
-                                                    content: base64data,
-                                                    encoding: 'base64'
-                                                };
-                                                attachments.push(pdfObject)
-                                                console.log('attachments inside function', attachments);
-                                                if(i == targetElement.length -1) {
-                                                    resolve();
-                                                } 
-                                            });
-                                        }, 100);
-                                    }
-        
+                                    };
+                                    setTimeout(function () {
+                                        html2pdf().set(opt).from(targetElement).toPdf().output('datauristring').then(function (dataObject) {
+                                            let pdfObject = "";
+                                            let base64data = dataObject.split(',')[1];
+                                            pdfObject = {
+                                                filename: 'vs1cloud report.pdf',
+                                                content: base64data,
+                                                encoding: 'base64'
+                                            };
+                                            attachments.push(pdfObject)
+                                            console.log('attachments inside function', attachments);
+                                            resolve()
+                                        });
+
+                                    }, 100);
                                 }
                             })
                         }
                         getAttachments().then(async () => {
-                            console.log("before recipient ids", recipientIds);
-                            console.log("type of recipient ids", typeof recipientIds)
-                            if(typeof recipientIds == 'string') {
-                                recipientIds = recipientIds.split('; ');
-                            }
-                            console.log("after recipient ids", recipientIds);
-                            console.log("recipients", recipients);
-                            if(typeof recipients == 'string') {
-                                recipients = recipients.split('; ');
-                            }
+                            recipientIds = recipientIds.split('; ');
+                            recipients = recipients.split('; ');
                             let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
-                                console.log('recipient id', recipientId, 'index', index);
                                 const starttime = frequencyEl.attr('data-starttime');
-                                console.log('start time', starttime);
                                 const startdate = frequencyEl.attr('data-startdate');
-                                console.log('start date', startdate);
                                 const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
-                                console.log('converted start date', convertedStartDate)
                                 const sDate = startdate ? moment(convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-                                console.log('sdate', sDate);
+
                                 const frequencyName = frequencyEl.text() != '' ? frequencyEl.text().split(',')[0] : '';
-                                console.log('frequency name', frequencyName);
                                 console.log("final attachment data", attachments);
                                 let objDetail = {
                                     type: "TReportSchedules",
@@ -931,8 +981,6 @@ Template.emailsettings.onRendered(function () {
                                         attachments: attachments,
                                     }
                                 };
-
-                                console.log("object detail", objDetail);
 
                                 if (frequencyName === "Monthly") {
                                     const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
@@ -968,7 +1016,7 @@ Template.emailsettings.onRendered(function () {
 
                                 if (formID == '1') {
                                     // if report type is Grouped Reports....
-                                    const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
+                                    const groupedReports = $('#groupedReportsModal .star:checked').map(function () { return $(this) }).get();
                                     let formIDs = [];
                                     groupedReports.map(async (groupedReport) => {
                                         formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
@@ -1002,18 +1050,15 @@ Template.emailsettings.onRendered(function () {
                                     Meteor.call('addTask', objDetail.fields);
                                 } else {
                                     const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
-                                    console.log("old setting", oldSetting);
                                     oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
-                                    console.log("old settings", oldSettings);
                                     if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
-                                    console.log("&&&&&&&&&&&&&&&&&&&&& before api called")
+
                                     try {
                                         // Save email settings
                                         await taxRateService.saveScheduleSettings(objDetail);
                                     } catch (e) {
 
                                     }
-                                    console.log("&&&&&&&&&&&&&&&& if failed")
                                     objDetail.fields.Offset = new Date().getTimezoneOffset();
 
                                     const nextDueDate = await new Promise((resolve, reject) => {
@@ -1034,12 +1079,11 @@ Template.emailsettings.onRendered(function () {
                                     objDetail.fields.FormName = formName;
                                     objDetail.fields.EmployeeEmail = recipients[index];
                                     objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                    console.log("final data object", objDetail)
                                     Meteor.call('addTask', objDetail.fields);
                                 }
                             });
                             await Promise.all(saveSettingPromises);
-                        });
+                        })
                     }
                 });
                 savedSchedules = await Promise.all(promise);
@@ -1095,7 +1139,7 @@ Template.emailsettings.onRendered(function () {
                             targetElement = parentElement.getElementsByClassName('printReport')[0];
                         }
 
-                        getAttachments =()=> {
+                        function getAttachments() {
                             return new Promise((resolve, reject) => {
                                 if (targetElement && targetElement != null && targetElement != '') {
                                     console.log('param target', targetElement, 'param file name', docTitle);
@@ -1116,8 +1160,7 @@ Template.emailsettings.onRendered(function () {
                                         }
                                     };
                                     setTimeout(function () {
-                                        html2pdf().set(opt).from(targetElement).toPdf().output('datauristring').then((dataObject) => {
-                                            console.log("&&&&&&&&&&", dataObject)
+                                        html2pdf().set(opt).from(targetElement).toPdf().output('datauristring').then(function (dataObject) {
                                             let pdfObject = "";
                                             let base64data = dataObject.split(',')[1];
                                             pdfObject = {
@@ -1439,9 +1482,6 @@ Template.emailsettings.events({
 
         const saveResult = await templateObject.saveSchedules(essentialSettings, true);
         const saveGroupResult = await templateObject.saveGroupedReports();
-
-
-        console.log("save result", saveResult, "save group result", saveGroupResult)
 
         if (saveResult.success && saveGroupResult.success)
             swal({
