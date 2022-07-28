@@ -530,6 +530,14 @@ export class SideBarService extends BaseService {
     return this.GET(this.erpGet.ERPTExpenseEx);
   }
 
+  getAllExpenseClaimExData() {
+    let options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TExpenseClaimEx, options);
+  }
+
   getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
     let options = "";
     if (ignoreDate == true) {
