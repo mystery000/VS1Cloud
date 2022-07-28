@@ -15,8 +15,8 @@ Template.superannuationSettings.onCreated(function() {
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
-  templateObject.currentDrpDownID = new ReactiveVar(); 
-  // templateObject.Accounts = new ReactiveVar([]);   
+  templateObject.currentDrpDownID = new ReactiveVar();
+  // templateObject.Accounts = new ReactiveVar([]);
 });
 
 Template.superannuationSettings.onRendered(function() {
@@ -40,8 +40,8 @@ Template.superannuationSettings.onRendered(function() {
     employeePayrolEndpoint.url.searchParams.append(
         "ListType",
         "'Detail'"
-    );                
-    
+    );
+
     const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
     if (employeePayrolEndpointResponse.ok == true) {
@@ -50,7 +50,7 @@ Template.superannuationSettings.onRendered(function() {
             await addVS1Data('TSuperannuation', JSON.stringify(employeePayrolEndpointJsonResponse))
         }
         return employeePayrolEndpointJsonResponse
-    }  
+    }
     return '';
 };
 
@@ -58,14 +58,14 @@ templateObject.getSuperannuationData = async function(){
     try {
         let data = {};
         let splashArraySuperannuationList = new Array();
-        let dataObject = await getVS1Data('TSuperannuation')  
+        let dataObject = await getVS1Data('TSuperannuation')
         if ( dataObject.length == 0) {
             data = await templateObject.saveDataLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
         for (let i = 0; i < data.tsuperannuation.length; i++) {
-                
+
             var dataListAllowance = [
                 data.tsuperannuation[i].fields.ID || '',
                 data.tsuperannuation[i].fields.Superfund || '',
@@ -94,7 +94,7 @@ templateObject.getSuperannuationData = async function(){
         templateObject.datatablerecords.set(splashArraySuperannuationList);
         $('.fullScreenSpin').css('display', 'none');
         setTimeout(function () {
-            $('#tblSuperannuation').DataTable({  
+            $('#tblSuperannuation').DataTable({
                 data: splashArraySuperannuationList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
@@ -105,35 +105,35 @@ templateObject.getSuperannuationData = async function(){
                     {
                        className: "colSuperannuationName",
                        "targets": [1]
-                    },  
+                    },
                     {
                        className: "colSuperannuationType",
                        "targets": [2]
-                    },  
+                    },
                     {
                         className: "colEmployerNum",
                         "targets": [3]
-                    },  
+                    },
                     {
                         className: "colabn",
                         "targets": [4]
-                    },  
+                    },
                     {
                         className: "colservicealias",
                         "targets": [5]
-                    },  
+                    },
                     {
                         className: "colbsb",
                         "targets": [6]
-                    },  
+                    },
                     {
                         className: "colaccountnumber",
                         "targets": [7]
-                    },  
+                    },
                     {
                         className: "colaccountname",
                         "targets": [8]
-                    },  
+                    },
                 ],
                 select: true,
                 destroy: true,
@@ -170,7 +170,7 @@ templateObject.getSuperannuationData = async function(){
                             sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
                                 for (let i = 0; i < data.tsuperannuation.length; i++) {
-                
+
                                     var dataListAllowance = [
                                         data.tsuperannuation[i].fields.ID || '',
                                         data.tsuperannuation[i].fields.Superfund || '',
@@ -182,7 +182,7 @@ templateObject.getSuperannuationData = async function(){
                                         data.tsuperannuation[i].fields.Accountno || '',
                                         'Key Missing',
                                     ];
-                  
+
                                     splashArraySuperannuationList.push(dataListAllowance);
                                 }
 
@@ -250,7 +250,7 @@ templateObject.getSuperannuationData = async function(){
         }, 0);
     } catch (error) {
         $('.fullScreenSpin').css('display', 'none');
-    }   
+    }
 };
 
 templateObject.getSuperannuationData();
@@ -266,11 +266,11 @@ $('.superannuationDropDown').editableSelect()
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#superannuationSettingsModal').modal('show');
         } else {
-            if (searchName.replace(/\s/g, '') == '') {               
+            if (searchName.replace(/\s/g, '') == '') {
                 $('#superannuationSettingsModal').modal('show');
                 return false
             }
-            let dataObject = await getVS1Data('TSuperannuation');   
+            let dataObject = await getVS1Data('TSuperannuation');
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
             }else{
@@ -282,7 +282,7 @@ $('.superannuationDropDown').editableSelect()
                         return item;
                     }
                 });
-                
+
                 if( tSuperannuation.length > 0 ){
                     if( tsuperannuation[0].fields.Supertypeid == 'Self-Managed Superannuation Fund')
                     {
@@ -294,7 +294,7 @@ $('.superannuationDropDown').editableSelect()
                         $('#accountbsb').css('display','none');
                         $('#account_name').css('display','none');
                     }
-                    
+
                     $('#newSuperannuationFundId').val(tSuperannuation[0].fields.ID);
                     $('#edtFundType').val(tSuperannuation[0].fields.area);
                     $('#edtFundName').val(tSuperannuation[0].fields.Superfund);
@@ -314,7 +314,7 @@ $('.superannuationDropDown').editableSelect()
     $(document).on("click", "#tblSuperannuation tbody tr", function (e) {
         var table = $(this);
         let name = table.find(".colSuperannuationName").text()||'';
-        let ID = table.find(".colSuperannuationID").text()||'';            
+        let ID = table.find(".colSuperannuationID").text()||'';
         let account = table.find(".colaccountname").text()||'';
         let searchFilterID = templateObject.currentDrpDownID.get()
         $('#' + searchFilterID).val(name);
@@ -342,7 +342,7 @@ Template.superannuationSettings.events({
         $('#superannuationRateForm')[0].reset();
         $('#newSuperannuationFundModal').modal('hide');
     },
-    'click .btnSearchAlert':function(event){      
+    'click .btnSearchAlert':function(event){
         let templateObject = Template.instance();
         var splashArraySuperannuationList = new Array();
         const lineExtaSellItems = [];
@@ -353,7 +353,7 @@ Template.superannuationSettings.events({
                 $(".btnRefreshSuperannuation").removeClass('btnSearchAlert');
                 let lineItems = [];
                 if (data.tsuperannuation.length > 0) {
-                    for (let i = 0; i < data.tsuperannuation.length; i++) {                
+                    for (let i = 0; i < data.tsuperannuation.length; i++) {
                         var dataListAllowance = [
                             data.tsuperannuation[i].fields.ID || '',
                             data.tsuperannuation[i].fields.Superfund || '',
@@ -364,7 +364,7 @@ Template.superannuationSettings.events({
                             'Key Missing',
                             data.tsuperannuation[i].fields.Accountno || '',
                             'Key Missing',
-                        ];      
+                        ];
                         splashArraySuperannuationList.push(dataListAllowance);
                     }
                     let uniqueChars = [...new Set(splashArraySuperannuationList)];
@@ -377,10 +377,10 @@ Template.superannuationSettings.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     swal({
                         title: 'Question',
                         text: "Superannuation Rate does not exist, would you like to create it?",
@@ -401,7 +401,7 @@ Template.superannuationSettings.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
-    
+
           $(".btnRefresh").trigger("click");
         }
 
@@ -409,7 +409,7 @@ Template.superannuationSettings.events({
     'click .saveSuperannuation': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -429,7 +429,7 @@ Template.superannuationSettings.events({
         /**
          * Saving Earning Object in localDB
         */
-        
+
         let superannuationRateSettings = {
             type: "TSuperannuation",
             fields: {
@@ -455,9 +455,8 @@ Template.superannuationSettings.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(superannuationRateSettings),
         });
-        console.log("super-data", ApiResponse);
 
-    
+
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#superannuationRateForm')[0].reset();
@@ -476,4 +475,3 @@ Template.superannuationSettings.helpers({
         return Template.instance().datatablerecords.get();
     }
 });
-

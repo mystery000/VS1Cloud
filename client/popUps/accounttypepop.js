@@ -1981,7 +1981,7 @@ Template.accounttypepop.events({
                         PublishOnVS1: true,
                         Extra: swiftCode,
                         BankNumber: routingNo,
-                        IsHeader: forTransaction,
+                        Required: forTransaction,
                         CarNumber:cardnumber||'',
                         CVC:cardcvc||'',
                         ExpiryDate:expiryDate||''
@@ -2083,7 +2083,7 @@ Template.accounttypepop.events({
                         Extra: swiftCode,
                         BankNumber: routingNo,
                         PublishOnVS1: true,
-                        IsHeader: forTransaction,
+                        Required: forTransaction,
                         CarNumber:cardnumber||'',
                         CVC:cardcvc||'',
                         ExpiryDate:expiryDate||''
@@ -2185,7 +2185,7 @@ Template.accounttypepop.events({
                     BankNumber: routingNo,
                     //Level4: bankname,
                     PublishOnVS1: true,
-                    IsHeader: forTransaction,
+                    Required: forTransaction,
                     CarNumber:cardnumber||'',
                     CVC:cardcvc||'',
                     ExpiryDate:expiryDate||''

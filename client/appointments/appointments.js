@@ -23,15 +23,6 @@ let smsService = new SMSService();
 let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
 let startAndStopAppointmentOnly = Session.get('CloudAppointmentStartStopAccessLevel') || false;
 
-const refreshButton = {
-    refresh: {
-        text: 'Refresh',
-        click: function(){
-            window.open('/appointments', '_self');
-        }
-    }
-}
-
 Template.appointments.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.employeerecords = new ReactiveVar([]);
@@ -475,6 +466,28 @@ Template.appointments.onRendered(function () {
         }).catch(function (err) {});
     });
     $('.fullScreenSpin').css('display', 'inline-block');
+
+    const refreshPage = () => window.open('/appointments', '_self')
+
+    templateObject.fetchAppointments = function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
+            addVS1Data('TAppointment', JSON.stringify(dataUpdate)).then(function (datareturn) {
+                refreshPage();
+            }).catch(function (err) {});
+        }).catch(function (err) {
+            refreshPage();
+        });
+    }
+
+    const refreshButton = {
+        refresh: {
+            text: 'Refresh',
+            click: function(){
+                templateObject.fetchAppointments();
+            }
+        }
+    }
 
     templateObject.renderCalendar = function (slotMin, slotMax, hideDays) {
         let calendarSet = templateObject.globalSettings.get();
@@ -10248,7 +10261,7 @@ Template.appointments.events({
         let hourlyRate = '';
         let status = "Not Converted";
         let uploadedItems = templateObject.uploadedFiles.get();
-        
+
         let customerEmail=$('.customerEmail').is(':checked') ? true : false;
         let userEmail=$('.userEmail').is(':checked') ? true : false;
         if (aStartTime != '') {
@@ -10382,7 +10395,7 @@ Template.appointments.events({
                     let data = JSON.parse(dataObject[0].data);
                     for (let i = 0; i < data.tcustomervs1.length; i++) {
                         if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
-                            customerEmail += data.tcustomervs1[i].fields.Email;    
+                            customerEmail += data.tcustomervs1[i].fields.Email;
                             break;
                         }
                     }
@@ -10393,7 +10406,7 @@ Template.appointments.events({
                             let data=JSON.parse(arr.data)['temployee'];
                             for(let i=0; i < data.length; i++){
                                 if(employeeID == data[i].fields.ID){
-                                    employeeEmail += data[i].fields.Email;    
+                                    employeeEmail += data[i].fields.Email;
                                     break;
                                 }
                             }
@@ -10411,23 +10424,19 @@ Template.appointments.events({
                     text: '',
                     html: text,
                 };
-                console.log("details-original", details);
 
                 if($("#userEmail").is(":checked")){
                     details.to=customerEmail;
                     Meteor.call("sendEmail", details, function(error, result){
-                        console.log("error", error);
-                        console.log("result", result);
+
                     })
                 }
                 if($("#customerEmail").is(":checked")){
                     details.to=employeeEmail;
                     Meteor.call("sendEmail", details, function(error, result){
-                        console.log("error", error);
-                        console.log("result", result);
                     })
                 }
-        
+
 
               appointmentService.saveAppointment(objectData).then(function (data) {
                   let id = data.fields.ID;

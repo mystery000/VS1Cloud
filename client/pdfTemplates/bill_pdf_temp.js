@@ -23,7 +23,6 @@ Template.billPrintTemp.onRendered(()=>{
 
     templateObject.getAllBillData = () =>{
         getVS1Data('TBillEx').then(function(dataObject) {
-            console.log("bill data object", dataObject)
             if (dataObject.length != 0) {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tbillex;
@@ -174,7 +173,7 @@ Template.billPrintTemp.onRendered(()=>{
                                 }
 
                         }, 100);
-                        
+
                         // templateObject.selectedCurrency.set(billrecord.currency);
                         // templateObject.inputSelectedCurrency.set(billrecord.currency);
                         if (billrecord) {

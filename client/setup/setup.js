@@ -38,8 +38,6 @@ function setAlreadyLoaded(step, bool = false) {
 function isAlreadyLoaded(step) {
   const string = localStorage.getItem(`SETUP_STEP_ALREADY-${step}`) || false;
 
-  console.log("step", step, string);
-
   return string == "true" || string == true ? true : false;
 }
 
@@ -272,10 +270,7 @@ Template.setup.onRendered(function () {
   templateObject.isSetupFinished = async () => {
     const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
 
-    //console.log("isFinished", isFinished);
     if (isFinished == true || isFinished == "true") {
-      // window.location.href = "/";
-      //console.log('going to redirect to homepage');
       FlowRouter.go("dashboard");
     }
   };
@@ -2255,7 +2250,7 @@ Template.setup.onRendered(function () {
   };
   templateObject.loadEmployees = async (refresh = false) => {
     const sideBarService = new SideBarService();
-    console.log("Loading employees");
+
     LoadingOverlay.show();
     let dataObject = await sideBarService.getAllEmployees("All");
     let employeeList = [];
@@ -2263,13 +2258,6 @@ Template.setup.onRendered(function () {
     if (dataObject.temployee) {
       employeeList = Employee.fromList(dataObject.temployee);
     }
-
-    console.log(
-      "Before: ",
-      templateObject.currentEmployees.get().length,
-      " after: ",
-      employeeList.length
-    );
 
     await templateObject.currentEmployees.set(employeeList);
 
@@ -3332,7 +3320,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#tblCustomerlist")) {
         $("#tblCustomerlist").DataTable().destroy();
-      } 
+      }
 
       setTimeout(() => {
         $("#tblCustomerlist")
@@ -3378,7 +3366,7 @@ Template.setup.onRendered(function () {
         $(".fullScreenSpin").css("display", "none");
       }, 300);
 
-      
+
     }
 
     LoadingOverlay.hide();
@@ -3536,7 +3524,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#tblSupplierlist")) {
         $("#tblSupplierlist").DataTable().destroy();
-      } 
+      }
 
       setTimeout(function () {
         $("#tblSupplierlist")
@@ -3838,7 +3826,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#InventoryTable")) {
         $("#InventoryTable").DataTable().destroy();
-      } 
+      }
 
       setTimeout(function () {
         $("#InventoryTable")
@@ -4130,7 +4118,6 @@ Template.setup.onRendered(function () {
    * @returns
    */
   templateObject.lazyLoader = (stepId = 1) => {
-    console.log("Smart loading step", stepId);
     if (isAlreadyLoaded(stepId) == false) {
       //LoadingOverlay.show();
       switch (stepId) {
@@ -8801,7 +8788,6 @@ Template.setup.events({
   },
   // TODO: Step 9
   "click .setup-step-9 .btnRefresh": (e) => {
-    console.log("refreshing step 9");
     const templateObject = Template.instance();
     templateObject.loadInventory(true);
     $(".modal.show").modal("hide");

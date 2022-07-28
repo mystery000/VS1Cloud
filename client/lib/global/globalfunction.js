@@ -526,7 +526,6 @@ vs1GlobalBackButton = async function () {
 
 tableResize = function() {
   setTimeout(function() {
-    console.log('asdasd');
     $(".dataTable th").resizable({
       handles: "e",
       resize: function (event, ui) {

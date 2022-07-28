@@ -9,6 +9,8 @@ import { OCRService } from '../js/ocr-service';
 import '../lib/global/indexdbstorage.js';
 import moment from 'moment';
 import CurrencyConverter from '../packages/currency/CurrencyConverter';
+import {PurchaseBoardService} from "../js/purchase-service";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new AccountService();
@@ -941,6 +943,8 @@ Template.receiptsoverview.onRendered(function() {
                     let lineItem = {
                         supplierid: data.tsuppliervs1[i].Id || ' ',
                         suppliername: data.tsuppliervs1[i].ClientName || ' ',
+                        billingAddress: data.tsuppliervs[i].ClientName + "\n" + data.tsuppliervs[i].BillStreet + "\n" + data.tsuppliervs[i].BillStreet2 + "\n" + data.tsuppliervs[i].BillState + "\n" +
+                            data.tsuppliervs[i].BillPostcode + "\n" + data.tsuppliervs[i].Billcountry
                     };
                     lineItems.push(lineItem);
                 }
@@ -1284,7 +1288,7 @@ Template.receiptsoverview.onRendered(function() {
                 $('#splitAccount-' + i).val(rows[i].AccountName);
             }
         }, 100);
-    }
+    };
     tableResize();
 });
 
@@ -1304,7 +1308,6 @@ Template.receiptsoverview.events({
         $('#newReceiptModal .tab-pane.show.active').removeClass('show active');
         $('#newReceiptModal .tab-pane#nav-expense').addClass('show active');
         $('#employeeListModal').attr('data-from', 'NavExpense');
-
         let loggedUserName = Session.get('mySessionEmployee');
         let loggedUserId = Session.get('mySessionEmployeeLoggedID');
         let currency = Session.get('ERPCountryAbbr');
@@ -1346,7 +1349,6 @@ Template.receiptsoverview.events({
         $('#newReceiptModal .tab-pane.show.active').removeClass('show active');
         $('#newReceiptModal .tab-pane#nav-time').addClass('show active');
         $('#employeeListModal').attr('data-from', 'NavTime');
-
         let loggedUserName = Session.get('mySessionEmployee');
         let loggedUserId = Session.get('mySessionEmployeeLoggedID');
         let currency = Session.get('ERPCountryAbbr');
@@ -1429,7 +1431,6 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         if ($(event.target).is(':checked')) {
             $(".chkBoxMerge").prop("checked", true);
-
             let mergeTable = $('#tblMerge').DataTable();
             const lineItems = mergeTable.rows().data();
             template.mergeReceiptRecords.set(lineItems);
@@ -1472,7 +1473,6 @@ Template.receiptsoverview.events({
         const selectedId = $(event.target).closest('tr').attr('id');
         let selectedClaim = template.expenseClaimList.get().filter(claim => claim.ID == selectedId)[0];
         template.editExpenseClaim.set(selectedClaim);
-
         $('#employeeListModal').attr('data-from', 'ViewReceipt');
         $('#viewReceiptModal').modal('toggle');
         $('#viewReceiptModal .receiptID').html(selectedId);
@@ -1495,13 +1495,11 @@ Template.receiptsoverview.events({
             $('#viewReceiptModal .receiptPhoto').attr('data-name', "");
             $('#viewReceiptModal .img-placeholder').css('opacity', 1);
         }
-
     },
     'click #tblEmployeelist tbody tr': function(e) {
         let employeeName = $(e.target).closest('tr').find(".colEmployeeName").text() || '';
         let employeeID = $(e.target).closest('tr').find(".colID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
-
         if (from == 'ViewReceipt') {
             $('#viewReceiptModal .employees').val(employeeName);
             $('#viewReceiptModal .employees').attr('data-id', employeeID);
@@ -1518,7 +1516,6 @@ Template.receiptsoverview.events({
         let supplierName = $(e.target).closest('tr').find(".colCompany").text() || '';
         let supplierID = $(e.target).closest('tr').find(".colID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
-
         if (from == 'ViewReceipt') {
             $('#viewReceiptModal .merchants').val(supplierName);
             $('#viewReceiptModal .merchants').attr('data-id', supplierID);
@@ -1549,13 +1546,11 @@ Template.receiptsoverview.events({
             $('#viewReceiptModal .currencies').attr('data-id', currencyID);
             $('#viewReceiptModal .currencies').attr('buy-rate', buyRate);
             $('#viewReceiptModal .currencies').trigger("change");
-
         } else if (from == 'NavExpense') {
             $('#nav-expense .currencies').val(currencyName);
             $('#nav-expense .currencies').attr('data-id', currencyID);
             $('#nav-expense .currencies').attr('buy-rate', buyRate);
             $('#nav-expense .currencies').trigger("change");
-
         } else if (from == 'NavTime') {
             $('#nav-time .currencies').val(currencyName);
             $('#nav-time .currencies').attr('data-id', currencyID);
@@ -1600,7 +1595,6 @@ Template.receiptsoverview.events({
         let typeName = $(e.target).closest('tr').find(".colName").text() || '';
         let typeID = $(e.target).closest('tr').find("input.chkBox").attr('id') || '';
         let from = $('#employeeListModal').attr('data-from');
-
         if (from == 'ViewReceipt') {
             $('#viewReceiptModal .transactionTypes').val(typeName);
             $('#viewReceiptModal .transactionTypes').attr('data-id', typeID);
@@ -1635,7 +1629,6 @@ Template.receiptsoverview.events({
         const val = e.target.value;
         let numVal = parseFloat(val.replace('$', '')) || 0;
         e.target.value = '$' + numVal;
-
         let hours = parseFloat($('#claimHours').val()) || 0;
         $('#nav-time .edtTotal').val('$' + (numVal * hours));
     },
@@ -1781,12 +1774,10 @@ Template.receiptsoverview.events({
                     let merchantId = $('#multipleMerchant-' + i).attr('data-id');
                     let description = $('#multipleDescription-' + i).val();
                     let date = $('#multipleDate-' + i).val();
-
                     if (!accountName || !merchantName) {
                         swal("Select merchant and account for saving receipt", '', 'warning');
                         return;
                     }
-
                     let expenseClaimLine = {
                         type: "TExpenseClaimLineEx",
                         fields: {
@@ -1923,7 +1914,6 @@ Template.receiptsoverview.events({
                     ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate)
                 }
             };
-            // console.log(JSON.stringify(expenseClaim));
 
             $('.fullScreenSpin').css('display', 'inline-block');
             accountService.saveReceipt(expenseClaim).then(function(data) {
@@ -2283,12 +2273,13 @@ Template.receiptsoverview.events({
                 DateTime: lineItem.DateTime,
                 Description: lineItem.Description ? lineItem.Description : "Receipt Claim",
                 Paymethod: lineItem.Paymethod,
-                Attachments: lineItem.Attachments
+                Attachments: lineItem.Attachments,
                 // GroupReport: groupReport,
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
                 // CurrencyID: currencyId ? parseInt(currencyId) : 0,
                 // CurrencyName: currencyName,
+                Comments: lineItem.Comments
             }
         };
         let expenseClaim = {
@@ -2328,7 +2319,8 @@ Template.receiptsoverview.events({
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
-        sideBarService.getAllExpenseCliamExDataVS1().then(function(expenseData) {
+        // sideBarService.getAllExpenseCliamExDataVS1().then(function(expenseData) {
+        sideBarService.getAllExpenseClaimExData().then(function(expenseData) {
             addVS1Data('TExpenseClaim', JSON.stringify(expenseData)).then(function(datareturn) {
                 //window.open('/receiptsoverview', '_self');
                 setTimeout(() => {
@@ -2545,10 +2537,122 @@ Template.receiptsoverview.events({
         }
     },
     'click .btnCheque': function(e) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let purchaseService = new PurchaseBoardService();
         let template = Template.instance();
+        let supplierList = template.suppliers.get();
+        let hasSelected = false;
         $('#tblReceiptList tbody tr').each( function() {
+            let checked = $(this).find("input:checked").val();
+            if (checked == "on") {
+                hasSelected = true;
+            }
+        });
+        if (hasSelected) {
+            $('#tblReceiptList tbody tr').each( function() {
+                let checked = $(this).find("input:checked").val();
+                let supplierName = $(this).find(".colReceiptMerchant").text();
+                if (checked == "on" && supplierName != "") {
+                    let amount = $(this).find(".colReceiptAmount").text();
+                    let accountName = $(this).find(".colReceiptAccount").text();
+                    let description = $(this).find(".colReceiptDesc").text();
+                    let date = moment($(this).find(".colReceiptDate").text(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                    let supplierID = $(this).find(".colSupplierID").text();
+                    let accountID = $(this).find(".colAccountID").text();
+                    let employeeID = $(this).find(".colEmployeeID").text();
+                    let employeeName = $(this).find(".colEmployeeName").text();
+                    let lineItemsForm = [];
+                    let lineItemObjForm = {};
+                    lineItemObjForm = {
+                        type: "TChequeLine",
+                        fields: {
+                            // ID: parseInt(erpLineID) || 0,
+                            AccountName: accountName || "",
+                            ProductDescription: description || "",
+                            LineCost: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
+                            // LineTaxCode: tdtaxCode || "",
+                        },
+                    };
+                    lineItemsForm.push(lineItemObjForm);
+                    let objDetails = {
+                        type: "TChequeEx",
+                        fields: {
+                            // ID: 0,
+                            SupplierID: supplierID || 0,
+                            SupplierName: supplierName,
+                            ClientName: employeeName || "",
+                            // ForeignExchangeCode: currencyCode,
+                            Lines: lineItemsForm,
+                            // OrderTo: billingAddress,
+                            // GLAccountName: bankAccount,
+                            OrderDate: date,
+                            // SupplierInvoiceNumber: poNumber,
+                            // ConNote: reference,
+                            // Shipping: shipviaData,
+                            // ShipTo: shippingAddress,
+                            // Comments: comments,
+                            // RefNo: reference,
+                            // SalesComments: pickingInfrmation,
+                            // Attachments: uploadedItems,
+                            // OrderStatus: $("#sltStatus").val(),
+                            Chequetotal: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
+                        },
+                    };
 
-        })
+                    purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
+                    }).catch(function (err) {
+                        swal({
+                            title: 'Oooops...',
+                            text: err,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {
+
+                            } else if (result.dismiss == 'cancel') {
+
+                            }
+                        });
+                        $('.fullScreenSpin').css('display', 'none');
+                    })
+                } else {
+                    if (supplierName == "") {
+                        let errText = "Merchant is empty.";
+                        swal({
+                            title: 'Oooops...',
+                            text: errText,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {
+
+                            } else if (result.dismiss == 'cancel') {
+
+                            }
+                        });
+                    }
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            })
+        } else {
+            let errText = "Please select receipt claim line.";
+            swal({
+                title: 'Oooops...',
+                text: errText,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {
+
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 });
 

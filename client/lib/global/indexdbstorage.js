@@ -222,6 +222,7 @@ openDb = function (dbName) {
       db.createObjectStore("TPayNotes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
+      
 
       db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });
@@ -239,13 +240,12 @@ openDb = function (dbName) {
       db.createObjectStore('TLumpSumW', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TDirectorsFees', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TEarnings', { keyPath: "EmployeeEmail" });
-
       db.createObjectStore('TCRMProjectList', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMTaskList', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMLabelList', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMLeadBarChart', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMLeadPieChart', { keyPath: "EmployeeEmail" });
-
+      db.createObjectStore('TTemplateSettings', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TProfitLossEditLayout', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TemplateSettings', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TVS1Superannuation',{ keyPath: "EmployeeEmail"});
@@ -256,10 +256,43 @@ openDb = function (dbName) {
       db.createObjectStore('TPayTemplateDeductionLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateSuperannuationLine',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TPayTemplateReiumbursementLine',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TPayrollOrganization', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TXeCurrencySettings',{ keyPath: "EmployeeEmail"});
-
       db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TLeaveData',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TEarningData',{ keyPath: "EmployeeEmail"});
 
+      db.createObjectStore('TltSalesOverview',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltSalesOrderList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltSaleslines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltInvoiceList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltInvoiceLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltQuoteList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltQuoteLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltRefundList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltRefundLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltPurchaseOverview',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltPurchaseOrderList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltPurchaseLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltBillList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltBillLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltCreditList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltCreditLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltChequeList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltChequeLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltDepositList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltDepositLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltContactOverview',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltCustomerList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltCustomerLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltSupplierList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltSupplierLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltEmployeeList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltEmployeeLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltInventoryOverview',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltProductList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TltProductLines',{ keyPath: "EmployeeEmail"});
+   
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
   });
@@ -275,7 +308,6 @@ storeExists = function (objectStore,Email) {
       if(objectStoreRequest.result){
       if (Email == objectStoreRequest.result.EmployeeEmail) {
         localStorage.setItem("vs1Db",objectStoreRequest.result.data);
-        // localStorage.getItem("vs1EmployeeName")
         exists = true;
         resolve(exists);
 
@@ -322,6 +354,7 @@ addLoginData = async function (loginData) {
 
 
 };
+
 
 addVS1Data = async function (objectName, vs1Data) {
   const db = await openDb(localStorage.getItem("vs1Db"));

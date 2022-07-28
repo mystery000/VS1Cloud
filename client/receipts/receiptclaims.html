@@ -300,6 +300,10 @@
                                 <th class="th colReceiptTripGroup">Trip-Group</th>
                                 <th class="th colReceiptDesc" style="width: 30%;">Description</th>
                                 <th class="th colReimbursement hiddenColumn">Reimbursement</th>
+                                <th class="th colSupplierID hiddenColumn"></th>
+                                <th class="th colAccountID hiddenColumn"></th>
+                                <th class="th colEmployeeID hiddenColumn"></th>
+                                <th class="th colEmployeeName hiddenColumn"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -319,6 +323,10 @@
                                         <td contenteditable="false" class="colReceiptTripGroup">{{item.Comments}}</td>
                                         <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
                                         <td contenteditable="false" class="hiddenColumn colReimbursement" flag="{{item.Reimbursement}}">{{item.Reimbursement}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colSupplierID">{{item.SupplierID}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colAccountID">{{item.AccountId}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colEmployeeID">{{item.EmployeeID}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colEmployeeName">{{item.EmployeeName}}</td>
                                     </tr>
                                 {{/each}}
                             {{/if}}

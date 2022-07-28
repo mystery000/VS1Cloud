@@ -23,7 +23,6 @@ Template.paymentsPrintTemp.onRendered(()=>{
                     if (dataObject.length > 0)  {
                         let data = JSON.parse(dataObject[0].data);
                         let useData = data.tcustomerpayment;
-                        console.log("payment api data", useData)
                         for (let d = 0; d < useData.length; d++) {
                                 let lineItems = [];
                                 let lineItemObj = {};
@@ -47,7 +46,7 @@ Template.paymentsPrintTemp.onRendered(()=>{
                                         let originalAmt = Currency + '' + useData[d].fields.Lines[i].fields.OriginalAmount.toLocaleString(undefined, {
                                             minimumFractionDigits: 2
                                         });
-    
+
                                         lineItemObj = {
                                             //lid:useData[d].fields.Lines[i].fields.ID || '',
                                             id: useData[d].fields.Lines[i].fields.ID || '',
@@ -91,7 +90,7 @@ Template.paymentsPrintTemp.onRendered(()=>{
                                 //     };
                                 //     lineItems.push(lineItemObj);
                                 // }
-    
+
                                 let record = {
                                     lid: useData[d].fields.ID || '',
                                     customerName: useData[d].fields.CompanyName || '',
@@ -107,12 +106,12 @@ Template.paymentsPrintTemp.onRendered(()=>{
                                     applied: appliedAmt.toLocaleString(undefined, {
                                         minimumFractionDigits: 2
                                     })
-    
+
                                 };
 
                                 paymentsRecords.push(record);
                                 templateObject.paymentsrecords.set(paymentsRecords);
-                            
+
                                 //setTimeout(function () {
                                 Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
                                     if (error) {
@@ -141,17 +140,17 @@ Template.paymentsPrintTemp.onRendered(()=>{
                                                 }
                                             }
                                         }
-    
+
                                     }
                                 });
                                 //}, 500);
                         }
-                       
+
                     }
                 })
-    
-            
-    
+
+
+
     }
 
     templateObject.getPaymentsRecords();

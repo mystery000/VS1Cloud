@@ -16,12 +16,10 @@ Template.creditPrintTemp.onCreated(() => {
 
 
 Template.creditPrintTemp.onRendered(function() {
-    console.log("credit template rendered");
     const utilityService = new UtilityService();
     const templateObject = Template.instance();
     templateObject.getCreditRecords = () => {
         getVS1Data('TCredit').then((dataObject)=> {
-            console.log("credit data", dataObject);
             if (dataObject.length > 0) {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tcredit;
@@ -155,7 +153,6 @@ Template.creditPrintTemp.onRendered(function() {
                         };
                         let getDepartmentVal = useData[d].fields.Lines[0].fields.LineClassName || defaultDept;
                         creditTemp.push(creditrecord);
-                        console.log("&&&&&&&&&&&&&&&&&&", creditTemp)
                         templateObject.creditrecords.set(creditTemp);
                         if (creditrecord) {
                             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblCreditLine', function(error, result) {
