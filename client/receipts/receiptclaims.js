@@ -9,6 +9,8 @@ import { OCRService } from '../js/ocr-service';
 import '../lib/global/indexdbstorage.js';
 import moment from 'moment';
 import CurrencyConverter from '../packages/currency/CurrencyConverter';
+import {PurchaseBoardService} from "../js/purchase-service";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new AccountService();
@@ -941,6 +943,8 @@ Template.receiptsoverview.onRendered(function() {
                     let lineItem = {
                         supplierid: data.tsuppliervs1[i].Id || ' ',
                         suppliername: data.tsuppliervs1[i].ClientName || ' ',
+                        billingAddress: data.tsuppliervs[i].ClientName + "\n" + data.tsuppliervs[i].BillStreet + "\n" + data.tsuppliervs[i].BillStreet2 + "\n" + data.tsuppliervs[i].BillState + "\n" +
+                            data.tsuppliervs[i].BillPostcode + "\n" + data.tsuppliervs[i].Billcountry
                     };
                     lineItems.push(lineItem);
                 }
@@ -1284,7 +1288,7 @@ Template.receiptsoverview.onRendered(function() {
                 $('#splitAccount-' + i).val(rows[i].AccountName);
             }
         }, 100);
-    }
+    };
     tableResize();
 });
 
@@ -2545,9 +2549,87 @@ Template.receiptsoverview.events({
         }
     },
     'click .btnCheque': function(e) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let purchaseService = new PurchaseBoardService();
         let template = Template.instance();
+        let supplierList = template.suppliers.get();
         $('#tblReceiptList tbody tr').each( function() {
+            let checked = $(this).find("input:checked").val();
+            let supplierName = $(this).find(".colReceiptMerchant").text();
+            if (checked == "on" && supplierName != "") {
+                let amount = $(this).find(".colReceiptAmount").text();
+                let accountName = $(this).find(".colReceiptAccount").text();
+                let description = $(this).find(".colReceiptDesc").text();
+                let date = moment($(this).find(".colReceiptDate").text(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                let supplierID = $(this).find(".colSupplierID").text();
+                let accountID = $(this).find(".colAccountID").text();
+                let employeeID = $(this).find(".colEmployeeID").text();
+                let employeeName = $(this).find(".colEmployeeName").text();
+                let lineItemsForm = [];
+                let lineItemObjForm = {};
+                lineItemObjForm = {
+                    type: "TChequeLine",
+                    fields: {
+                        // ID: parseInt(erpLineID) || 0,
+                        AccountID: accountID || 0,
+                        AccountName: accountName || "",
+                        ProductDescription: description || "",
+                        LineCost: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
+                        // LineTaxCode: tdtaxCode || "",
+                    },
+                };
+                lineItemsForm.push(lineItemObjForm);
+                let objDetails = {
+                    type: "TChequeEx",
+                    fields: {
+                        // ID: 0,
+                        SupplierID: supplierID || 0,
+                        SupplierName: supplierName,
+                        // ForeignExchangeCode: currencyCode,
+                        Lines: lineItemsForm,
+                        // OrderTo: billingAddress,
+                        // GLAccountName: bankAccount,
+                        OrderDate: date,
+                        // SupplierInvoiceNumber: poNumber,
+                        // ConNote: reference,
+                        // Shipping: shipviaData,
+                        // ShipTo: shippingAddress,
+                        // Comments: comments,
+                        // RefNo: reference,
+                        // SalesComments: pickingInfrmation,
+                        // Attachments: uploadedItems,
+                        // OrderStatus: $("#sltStatus").val(),
+                        Chequetotal: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
+                    },
+                };
 
+                purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
+                    console.log("!success");
+                }).catch(function (err) {
+                    console.log("!error");
+                })
+            } else {
+                let errText = "";
+                if (supplierName != "") {
+                    errText = "Merchant is empty.";
+                } else {
+                    errText = "Please select receipt claim line.";
+                }
+                swal({
+                    title: 'Oooops...',
+                    text: errText,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            }
         })
     },
 });
