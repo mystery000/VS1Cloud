@@ -18,6 +18,8 @@ let sideBarService = new SideBarService();
 const contactService = new ContactService();
 // let purchaseService = new PurchaseBoardService();
 
+const refreshTableTimout = 300;
+
 function MakeNegative() {
   $("td").each(function () {
     if (
@@ -2435,13 +2437,19 @@ Template.setup.onRendered(function () {
           expirydate: account.fields.ExpiryDate || "",
           cvc: account.fields.CVC || "",
         };
-        _accountList.push(dataList);
+        if(account.fields.Active != false) {
+          _accountList.push(dataList);
+        }
       });
 
       templateObject.accountList.set(_accountList);
     }
 
-    setTimeout(function () {
+    if ($.fn.dataTable.isDataTable("#tblAccountOverview")) {
+      $("#tblAccountOverview").DataTable().destroy();
+    }
+
+    setTimeout(() => {
       // //$.fn.dataTable.moment('DD/MM/YY');
       $("#tblAccountOverview")
         .DataTable({
@@ -2452,52 +2460,6 @@ Template.setup.onRendered(function () {
           destroy: true,
           colReorder: true,
           sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          // buttons: [
-          //   {
-          //     extend: "csvHtml5",
-          //     text: "",
-          //     download: "open",
-          //     className: "btntabletocsv hiddenColumn",
-          //     filename: "accountoverview_" + moment().format(),
-          //     orientation: "portrait",
-          //     exportOptions: {
-          //       columns: ":visible",
-          //     },
-          //   },
-          //   {
-          //     extend: "print",
-          //     download: "open",
-          //     className: "btntabletopdf hiddenColumn",
-          //     text: "",
-          //     title: "Accounts Overview",
-          //     filename: "Accounts Overview_" + moment().format(),
-          //     exportOptions: {
-          //       columns: ":visible",
-          //     },
-          //   },
-          //   {
-          //     extend: "excelHtml5",
-          //     title: "",
-          //     download: "open",
-          //     className: "btntabletoexcel hiddenColumn",
-          //     filename: "accountoverview_" + moment().format(),
-          //     orientation: "portrait",
-          //     exportOptions: {
-          //       columns: ":visible",
-          //     },
-          //     // ,
-          //     // customize: function ( win ) {
-          //     //   $(win.document.body).children("h1:first").remove();
-          //     // }
-          //   },
-          // ],
-          // bStateSave: true,
-          // rowId: 0,
-          // pageLength: initialDatatableLoad,
-          // lengthMenu: [
-          //   [initialDatatableLoad, -1],
-          //   [initialDatatableLoad, "All"],
-          // ],
           pageLength: 25,
           paging: true,
           info: true,
@@ -2527,7 +2489,7 @@ Template.setup.onRendered(function () {
           }, 100);
         });
       // $('.fullScreenSpin').css('display','none');
-    }, 10);
+    }, refreshTableTimout);
 
     LoadingOverlay.hide();
   };
@@ -4108,7 +4070,7 @@ Template.setup.onRendered(function () {
         $("div.dataTables_filter input").addClass(
           "form-control form-control-sm"
         );
-      }, 300);
+      }, refreshTableTimout);
     }
   };
 
@@ -8757,9 +8719,8 @@ Template.setup.events({
   },
 
   // STEP 6
-  "click .setup-wizard .setup-step-6 .btnRefresh": (e) => {
-    const templateObject = Template.instance();
-    templateObject.loadAccountList();
+  "click .setup-wizard .setup-step-6 .btnRefresh": (e, template) => {
+    template.loadAccountList();
   },
 
   // TODO: Step 7
