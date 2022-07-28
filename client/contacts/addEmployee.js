@@ -2827,30 +2827,6 @@ Template.employeescard.onRendered(function () {
         }, 1000);
     }
 
-    // templateObject.saveLeaveRequestLocalDB = async function(){
-    //     const employeePayrolApis = new EmployeePayrollApi();
-    //     // now we have to make the post request to save the data in database
-    //     const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-    //         employeePayrolApis.collectionNames.TPayNotes
-    //     );
-
-    //     employeePayrolEndpoint.url.searchParams.append(
-    //         "ListType",
-    //         "'Detail'"
-    //     );
-
-    //     const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-
-    //     if (employeePayrolEndpointResponse.ok == true) {
-    //         employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-    //         if( employeePayrolEndpointJsonResponse.tpaynotes.length ){
-    //             await addVS1Data('TPayNotes', JSON.stringify(employeePayrolEndpointJsonResponse))
-    //         }
-    //         return employeePayrolEndpointJsonResponse
-    //     }
-    //     return '';
-    // };
-
     templateObject.saveLeaveRequestLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
@@ -2862,16 +2838,11 @@ Template.employeescard.onRendered(function () {
             "ListType",
             "'Detail'"
         );
-        console.log("employeePayrolEndpoint", employeePayrolEndpoint);
-
-
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-        console.log("employeePayrolEndpointResponse", employeePayrolEndpointResponse);
-
+        
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tleavrequest.length ){
-                console.log("Data", addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse)));
                 await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
@@ -2913,24 +2884,25 @@ Template.employeescard.onRendered(function () {
         }else{
             data = JSON.parse(dataObject[0].data);
         }
-        let useData = LeaveRequest.fromList(
-            data.tleavrequest
-        ).filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                return item;
-            }
-        });
-
         let splashArrayList = [];
-        for (let i = 0; i < useData.length; i++) {
-            let dataListAllowance = [
-                useData[i].fields.ID || '',
-                useData[i].fields.Description || '',
-                useData[i].fields.PayPeriod || '',
-                useData[i].fields.LeaveMethod || '',
-                useData[i].fields.Status || '',
-            ];
-            splashArrayList.push(dataListAllowance);
+        if( data.tleavrequest.length > 0 ){
+            let useData = LeaveRequest.fromList(
+                data.tleavrequest
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    return item;
+                }
+            });
+            for (let i = 0; i < useData.length; i++) {
+                let dataListAllowance = [
+                    useData[i].fields.ID || '',
+                    useData[i].fields.Description || '',
+                    useData[i].fields.PayPeriod || '',
+                    useData[i].fields.LeaveMethod || '',
+                    useData[i].fields.Status || '',
+                ];
+                splashArrayList.push(dataListAllowance);
+            }
         }
 
         setTimeout(function () {
@@ -3749,7 +3721,7 @@ Template.employeescard.onRendered(function () {
         let data = [];
         let TOpeningBalances = await getVS1Data('TOpeningBalances');
         if( TOpeningBalances.length == 0 ){
-            data = templateObject.saveOpeningBalanceLocalDB();
+            data = await templateObject.saveOpeningBalanceLocalDB();
         }else{
             data = JSON.parse(TOpeningBalances[0].data);
         }
@@ -5970,7 +5942,8 @@ Template.employeescard.events({
                             EarningRate: EarningRate,
                             CalculationType: CalculationType,
                             ExpenseAccount: ExpenseAccount,
-                            Amount: 0
+                            Amount: 0,
+                            Active: true
                         })
                     });
                 try {
@@ -6032,7 +6005,8 @@ Template.employeescard.events({
                         CalculationType: CalculationType,
                         ExpenseAccount: ControlAccount,
                         Amount: 0,
-                        Percentage: 0
+                        Percentage: 0,
+                        Active: true
                     })
                 })
 
@@ -6107,7 +6081,8 @@ Template.employeescard.events({
                         PaymentFrequency: PaymentFrequency,
                         PeriodPaymentDate: PeriodPaymentDate,
                         Percentage: 0,
-                        Amount: 0
+                        Amount: 0,
+                        Active: true
                     })
                 });
 
@@ -6175,7 +6150,8 @@ Template.employeescard.events({
                         ReiumbursementType: ReiumbursementType,
                         Description: Description,
                         ExpenseAccount: ControlExpenseAccount,
-                        Amount: 0
+                        Amount: 0,
+                        Active: true
                     })
                 })
 
@@ -6253,38 +6229,45 @@ Template.employeescard.events({
         let payLines = templateObject.payTemplateEarningLineInfo.get();
         let updatedLines = PayTemplateEarningLine.fromList(
             payLines
-        ).filter(async (item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.EarningRate = $('#ptEarningRate' + index).val();
-                item.fields.Amount = $('#ptEarningAmount' + index).val();
-            }
-            else{
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateEarningLine
-                );
-
-                let leaveRequestSettings =  new LeaveRequest({
-                    type: "TPayTemplateEarningLine",
-                    fields: new LeaveRequestFields({
-                        ID: deleteID,
-                        Active: false,
-                    }),
-                })
-
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(leaveRequestSettings),
-                });
-                console.log("TPayTemplateEarningLine", ApiResponse);
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
+                item.fields.Active = false;
             }
             return item;
-
         });
-        await templateObject.payTemplateEarningLineInfo.set(updatedLines);
-        await templateObject.displayPayTempEarningLines();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        );
+
+        let earningSettings =  new PayTemplateEarningLine({
+            type: "TPayTemplateEarningLine",
+            fields: new PayTemplateEarningLineFields({
+                ID: deleteID,
+                Active: false,
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(earningSettings),
+        });
+
+        let earningObj = {
+            tpaytemplateearningline: updatedLines
+        }
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TPayTemplateEarningLine', JSON.stringify(earningObj))
+            // Bind with html content
+            await templateObject.payTemplateEarningLineInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click .removePayTempDeduction': async function(e){

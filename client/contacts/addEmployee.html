@@ -2525,25 +2525,27 @@
                                                                         <div class="card shadow" style="padding: 8px 16px;">
                                                                             {{#if payTemplateEarningLines}}
                                                                                 {{#each item in payTemplateEarningLines}}
-                                                                                    <div class="earningLinesContainer earningRateNewDiv">
-                                                                                        <div class="row align-items-end ">
-                                                                                            <div class="col-6 col-md-7">
-                                                                                                <div class="form-group">
-                                                                                                    <label class="borderBottom1">Earnings Rate</label>
-                                                                                                    <input type="text" class="form-control earningLineDropDown" id="ptEarningRate{{ item.fields.ID }}" value="{{ item.fields.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;" />
+                                                                                    {{#if item.fields.Active }}
+                                                                                        <div class="earningLinesContainer earningRateNewDiv">
+                                                                                            <div class="row align-items-end ">
+                                                                                                <div class="col-6 col-md-7">
+                                                                                                    <div class="form-group">
+                                                                                                        <label class="borderBottom1">Earnings Rate</label>
+                                                                                                        <input type="text" class="form-control earningLineDropDown" id="ptEarningRate{{ item.fields.ID }}" value="{{ item.fields.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;" />
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <div class="col-5 col-md-2">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Amount</label>
+                                                                                                        <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ item.fields.ID }}" value="{{ formatPrice item.fields.Amount }}">
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempEarning" data-id="{{ item.fields.ID }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                                <div class="col-1 col-md-1" style="padding-left: 0px;">
+                                                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempEarning" data-id="{{ item.fields.ID }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
+                                                                                    {{/if}}
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                             <div class="row">
