@@ -20,6 +20,8 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  
+
   getNewGroupListVS1(limitcount, limitfrom) {
     let options = "";
 
@@ -65,11 +67,40 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TPayrollOrganization, options);
   }
 
+
+  getTemplateInformation() {
+   
+    let options = {
+      ListType:"Detail",
+      select: "[EmployeeID]=" + Session.get('mySessionEmployeeLoggedID'),
+    };
+    
+    return this.getList(this.ERPObjects.TTemplateSettings, options);
+  }
+
   saveGroupType(data)
   {
 
     return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
 
+  }
+
+  removeTempateData(data)
+  {
+    return this.POST(this.ERPObjects.TTemplateSettings,data);
+  }
+
+  getTemplateNameandEmployeId(name,employeeID,template)
+  {
+    let options = {
+      ListType:"Detail",
+      select: "[GlobalRef] = '" +name + "' and [EmployeeID]=" + employeeID + " and Template="+template+"",
+    };
+    return this.getList(this.ERPObjects.TTemplateSettings, options);
+  }
+  saveTemplateSetting(data)
+  {
+      return this.POST(this.ERPObjects.TTemplateSettings,data);
   }
   getOneGroupTypeByName(dataSearchName){
     let options = {
@@ -159,14 +190,14 @@ export class SideBarService extends BaseService {
   }
 
   getNewHolidayGroup(datasearch)
-  {
+  { 
       let options = "";
-
+  
       options = {
           ListType: "Detail",
           select:  "[PayrollHolidaysGroupName]='" + datasearch + "'",
         };
-
+    
       return this.getList(this.ERPObjects.TPayrollHolidays, options);
 
   }

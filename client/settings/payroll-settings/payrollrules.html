@@ -4,11 +4,10 @@
             <div class="spinner"></div>
         </div>
         <h3 class="text-dark mb-4">Payroll Settings
-            <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-            <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
-
-            <!-- Start Help View Modal -->
-            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+        <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
+        <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+        <!-- Start Help View Modal -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                 <div class="modal-dialog modal-sm" role="document">
                     <div class="modal-content">
                         <div class="modal-header" style="padding-bottom: 8px;">
@@ -23,8 +22,8 @@
                         <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                     </div>
                 </div>
-            </div>
-            <!-- End Help View Modal -->
+        </div>
+        <!-- End Help View Modal -->
         </h3>
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
@@ -65,6 +64,7 @@
                                                 <div class="col-12 col-md-4">
                                                     <div class="form-group mb-0">
                                                         <label for="edtAllowanceType">Bank Account</label>
+                                                        <input type="hidden" class="form-control" style="cursor: pointer;" id="payorgnization_id" value="0">
                                                         <input type="search" class="form-control" style="cursor: pointer;" id="editbankaccount" name="editbankaccount">
                                         
                                                    </div>
@@ -367,31 +367,30 @@
                                         <div class="col-12">
                                             <div class="table-responsive">
                                                 <style>
-                                                  th {
+                                                    th {
                                                       background-color: #ededed;
-                                                  }
-                                                  .table-striped tbody tr:nth-of-type(odd) {
+                                                    }
+                                                    .table-striped tbody tr:nth-of-type(odd) {
                                                       background-color: white !important;
-                                                  }
+                                                    }
 
-                                                  .table-striped tbody tr:nth-of-type(even) {
+                                                    .table-striped tbody tr:nth-of-type(even) {
                                                       background-color: #0000000d !important;
-                                                  }
+                                                    }
 
-                                                  .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
+                                                   .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
                                                       padding: .75rem!important;
-                                                  }
+                                                    }
 
-                                                    .hiddenColumn {
+                                                   .hiddenColumn {
                                                         display: none;
                                                     }
 
-                                                    .showColumn {
+                                                   .showColumn {
                                                         display: table-cell;
                                                         padding: .75rem;
                                                         vertical-align: top;
                                                     }
-
                                                     .colNextPayPeriod{
                                                         width: 80px;
                                                     }
@@ -404,16 +403,13 @@
                                                     }
                                                     .colHolidayDelete{
                                                         width: 3% !important;
-                                                    }     
-                                                    
+                                                    }                                                         
                                                     .colDeletesup{
                                                         width: 3% !important;
                                                     }
-
                                                     .colDeletepaidrem{
                                                         width: 3% !important;
                                                     }
-
                                                     .colDeleterei{
                                                         width: 3% !important;
                                                     }
@@ -553,7 +549,7 @@
                                                         <div class="card-body text-nowrap cardB customerListCard" id="customerListCard">
                                                             <div class="sideSearch">
                                                                 <div class="form-group">
-                                                                    <input type="text" class="search form-control" placeholder="Filter by group">
+                                                                    <input type="search"  id="holidaygroup2" class="search form-control" placeholder="Filter by group">
                                                                 </div>
                                                                 <span class="counter pull-right"></span>
                                                                 <table id="tblHolidayCategories" name="tblCustomerSideList" class="table table-hover table-bordered results tblHolidayCategories">
@@ -575,6 +571,7 @@
                                                                     </tbody>
                                                                 </table>
                                                             </div>
+                                                            <button class="btn btn-primary filterholiday float-left" >Filter</button>
                                                             <button class="btn btn-primary btnNewGroup float-right" data-toggle="modal" data-target="#newGroupModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Group</button>
 
                                                             <div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupLabel" aria-hidden="true">
@@ -1845,10 +1842,10 @@
                                                                 <th class="th colLeaveID hiddenColumn" >Leave ID</th>
                                                                 <th class="th colLeaveName" >Leave Name</th>
                                                                 <th class="th colLeaveUnits" >Units</th>
-                                                                <th class="th colLeaveNormalEntitlement" style="">Normal Entitlement</th>
-                                                                <th class="th colLeaveLeaveLoadingRate" style="">Leave Loading Rate</th>
-                                                                <th class="th colLeavePaidLeave" style="">Paid Leave</th>
-                                                                <th class="th colLeaveShownOnPayslip" style="">Shown On Payslip</th>
+                                                                <th class="th colLeaveNormalEntitlement" >Normal Entitlement</th>
+                                                                <th class="th colLeaveLeaveLoadingRate" >Leave Loading Rate</th>
+                                                                <th class="th colLeavePaidLeave" >Leave Type</th>
+                                                                <th class="th colLeaveShownOnPayslip" >Shown On Payslip</th>
                                                                 <th class="th colDeletepaidrem" style="width: 3% !important;"></th>
                                                             </tr>
                                                         </thead>
@@ -1880,7 +1877,7 @@
                                         <div class="col-12 col-md-6 mb-3">
                                             <button type="button" class="btn btn-primary btnAddNewSuperannuation float-right" data-toggle="modal" data-target="#newSuperannuationFundModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Superannuation Fund</button>
 
-                                            <div class="modal fade" id="newSuperannuationFundModal" tabindex="-1" role="dialog" aria-labelledby="newSuperannuationFundLabel" aria-hidden="true" style="z-index:999999999999999999999999">
+                                            <div class="modal fade" id="newSuperannuationFundModal" tabindex="-1" role="dialog" aria-labelledby="newSuperannuationFundLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -2506,8 +2503,6 @@
             </div>
         </div>
     </div>
-
-
 
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModalAdd">
