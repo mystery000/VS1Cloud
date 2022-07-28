@@ -23,15 +23,6 @@ let smsService = new SMSService();
 let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
 let startAndStopAppointmentOnly = Session.get('CloudAppointmentStartStopAccessLevel') || false;
 
-const refreshButton = {
-    refresh: {
-        text: 'Refresh',
-        click: function(){
-            window.open('/appointments', '_self');
-        }
-    }
-}
-
 Template.appointments.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.employeerecords = new ReactiveVar([]);
@@ -475,6 +466,28 @@ Template.appointments.onRendered(function () {
         }).catch(function (err) {});
     });
     $('.fullScreenSpin').css('display', 'inline-block');
+
+    const refreshPage = () => window.open('/appointments', '_self')
+
+    templateObject.fetchAppointments = function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
+            addVS1Data('TAppointment', JSON.stringify(dataUpdate)).then(function (datareturn) {
+                refreshPage();
+            }).catch(function (err) {});
+        }).catch(function (err) {
+            refreshPage();
+        });
+    }
+
+    const refreshButton = {
+        refresh: {
+            text: 'Refresh',
+            click: function(){
+                templateObject.fetchAppointments();
+            }
+        }
+    } 
 
     templateObject.renderCalendar = function (slotMin, slotMax, hideDays) {
         let calendarSet = templateObject.globalSettings.get();
