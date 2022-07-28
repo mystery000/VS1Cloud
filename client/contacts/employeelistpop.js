@@ -928,7 +928,7 @@ Template.employeelistpop.onRendered(function () {
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
-          
+
             sideBarService.getAllEmployeesDataVS1(initialBaseDataLoad, 0).then(function (data) {
                 addVS1Data('TEmployee', JSON.stringify(data));
                 let lineItems = [];
@@ -1930,8 +1930,8 @@ Template.employeelistpop.events({
                             objDetails = {
                                 type: "TEmployee",
                                 fields: {
-                                    ClientName: results.data[i + 1][0],
-                                    FirstName: results.data[i + 1][1],
+                                    ClientName: results.data[i + 1][0].trim(),
+                                    FirstName: results.data[i + 1][1].trim(),
                                     LastName: results.data[i + 1][2],
                                     Phone: results.data[i + 1][3],
                                     Mobile: results.data[i + 1][4],

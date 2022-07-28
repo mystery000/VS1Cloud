@@ -4,16 +4,21 @@ import '../../lib/global/indexdbstorage.js';
 
 let sideBarService = new SideBarService();
 
-Template.paycheck.onCreated(() => {
+Template.paychex.onCreated(() => {
   const templateObject = Template.instance();
   
 });
 
-Template.paycheck.onRendered(function () {
+Template.paychex.onRendered(function () {
 
 
 });
 
-Template.paycheck.events({
+Template.paychex.events({
+
+  'click #openLink': function() {
+
+    window.open("https://www.paychex.com/contact/sales");
+  },
   
 });

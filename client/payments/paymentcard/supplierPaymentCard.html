@@ -1347,20 +1347,36 @@
                                 .highlightInput[type=number] {
                                     -moz-appearance: textfield !important;
                                 }
+                                .table th {
+                                    padding: 5px 0.75rem;
+                                }
                             </style>
 
-                            <table id="tblSupplierPaymentcard" style="width:100%" class="table table-striped table-bordered tblSupplierPaymentcard">
+                            <table id="tblSupplierPaymentcard" style="width:100%" class="text-center table table-striped table-bordered tblSupplierPaymentcard">
                                 <thead>
                                     <tr class="dnd-moved">
                                         <th class="th colTransDate" style="width: 120px;">Date</th>
                                         <th class="th colType" style="width: 130px;">Type</th>
                                         <th class="th colTransNo" style="width: 100px;">Trans No.</th>
-                                        <th class="th lineOrginalamount" style="width: 80px; text-align: left!important;">Original</th>
-                                        <th class="th lineAmountdue" style="width: 80px; text-align: left!important;">Due</th>
-                                        <th class="th linePaymentamount pointer" style="width: 120px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
-                                        <th class="th lineOutstandingAmount" style="width: 80px; text-align: left!important;">Outstanding</th>
+                                        <th class="th lineOrginalamount" style="width: 80px;">Original</th>
+                                        <th class="th lineAmountdue" style="width: 80px;">Due</th>
+                                        <th colspan="2" class="th linePaymentamount pointer" style="width: 120px;">Payment <i class="fa fa-pencil-square-o"></i></th>
+                                        <th colspan="2" class="th lineOutstandingAmount" style="width: 80px;">Outstanding</th>
                                         <th class="th colComments">Comments on Transaction form</th>
                                         <th class="th" style="width: 25px;"></th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>AUD</th>
+                                        <th>Foreign</th>
+                                        <th>AUD</th>
+                                        <th>Foreign</th>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1379,12 +1395,14 @@
                                             <td contenteditable="false" class="colTransDate">{{item.invoicedate}}</td>
                                             <td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">{{item.transtype}}</td>
                                             <td contenteditable="false" class="colTransNo" style="color:#00a3d3">{{item.poid}}</td>
-                                            <td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">{{item.orginalamount}}</td>
-                                            <td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">{{item.amountdue}}</td>
-                                            <!--                                    <td contenteditable="true" class="linePaymentamount" style="text-align: right!important;">{{item.paymentamount}}</td>-->
+                                            <td contenteditable="false" class="lineOrginalamount">{{item.orginalamount}}</td>
+                                            <td contenteditable="false" class="lineAmountdue">{{item.amountdue}}</td>
+                                            <!--                                    <td contenteditable="true" class="linePaymentamount">{{item.paymentamount}}</td>-->
                                             <td><input class="linePaymentamount highlightInput" type="text" value="{{item.paymentamount}}"></td>
-                                            <td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">{{item.ouststandingamount}}</td>
+                                            <td contenteditable="false" class="lineOutstandingAmount">{{item.ouststandingamount}}</td>
+                                            <td></td>
                                             <td contenteditable="true" class="colComments">{{item.comments}}</td>
+                                            <td></td>
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
                                         </tr>
                                     {{/each}}

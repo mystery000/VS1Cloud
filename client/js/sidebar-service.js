@@ -159,14 +159,14 @@ export class SideBarService extends BaseService {
   }
 
   getNewHolidayGroup(datasearch)
-  { 
+  {
       let options = "";
-  
+
       options = {
           ListType: "Detail",
           select:  "[PayrollHolidaysGroupName]='" + datasearch + "'",
         };
-    
+
       return this.getList(this.ERPObjects.TPayrollHolidays, options);
 
   }
@@ -2120,15 +2120,7 @@ export class SideBarService extends BaseService {
           let fields = v.fields;
           let lines = fields.Lines;
           if (lines !== null) {
-            if (typeof lines === 'object') {
-              lines = [
-                {
-                  ...{Id: lines.fields.ID},
-                  ...lines.fields
-                }
-              ];
-            }
-            else {
+            if (Array.isArray(lines)) {     // if lines is array
               lines = lines.map((line) => {
                 let f = line.fields;
                 return {
@@ -2136,6 +2128,14 @@ export class SideBarService extends BaseService {
                   ...f,
                 }
               })
+            }
+            else if (typeof lines === 'object') {     // else if it is object
+              lines = [
+                {
+                  ...{Id: lines.fields.ID},
+                  ...lines.fields
+                }
+              ];
             }
           }
           return {
@@ -3077,4 +3077,33 @@ export class SideBarService extends BaseService {
 
     return this.getList(this.ERPObjects.TCustomFieldList, options);
   }
+
+  getAllLabels(){
+    let options = "";
+
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojecttask_TaskLabel, options);
+  }
+
+  getAllTaskList() {
+    let options = "";
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojecttasks, options);
+  }
+
+  getTProjectList() {
+    let options = "";
+      options = {
+       ListType: "Detail",
+       select: "[Active]=true"
+     };
+    return this.getList(this.ERPObjects.Tprojectlist, options);
+  }
+
 }

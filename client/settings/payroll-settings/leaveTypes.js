@@ -23,12 +23,44 @@ Template.leaveTypeSettings.onRendered(function() {
     const templateObject = Template.instance();
     var splashArrayLeaveList = new Array();
 
-    templateObject.saveDataLocalDB = async function(){
+    $(document).ready(function(){
+        $('#edtTypeOfUnits').editableSelect('add','Hours');
+        $('#edtTypeOfUnits').editableSelect('add','Days');
+        $('#edtTypeOfUnits').editableSelect('add','Weeks');
+        $('#edtTypeOfUnits').editableSelect('add','Monthly');
+        $('#edtPayPeriod').editableSelect('add','Hourly');
+        $('#edtPayPeriod').editableSelect('add','Daily');
+        $('#edtPayPeriod').editableSelect('add','Weekly');
+        $('#edtPayPeriod').editableSelect('add','Monthly');
+        $("#edtFirstPayDate").datepicker({
+            showOn: 'button',
+            buttonText: 'Show Date',
+            buttonImageOnly: true,
+            buttonImage: '/img/imgCal2.png',
+            dateFormat: 'dd/mm/yy',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+        });
+    });
+
+    templateObject.saveDataLocalDB = async function(leaveType){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TLeave
-        );
+        const employeePayrolEndpoint={};
+        if(leaveType == "Paid Leave"){
+            employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPaidLeave
+            );
+        }
+        else if(leaveType == "Unpaid Leave"){
+            employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TUnpaidLeave
+            );
+        }
+        
 
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
@@ -36,11 +68,17 @@ Template.leaveTypeSettings.onRendered(function() {
         );                
         
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-            if( employeePayrolEndpointJsonResponse.tleave.length ){
-                await addVS1Data('TLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+            if(leaveType == "Paid Leave"){
+                if(employeePayrolEndpointJsonResponse.tpaidleave.length ){
+                    await addVS1Data('TPaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+                }
+            }
+            else if(leaveType == "Unpaid Leave"){
+                if(employeePayrolEndpointJsonResponse.tunpaidleave.length){
+                    await addVS1Data('TUnpaidLeave', JSON.stringify(employeePayrolEndpointJsonResponse))
+                }
             }
             return employeePayrolEndpointJsonResponse
         }  
@@ -51,26 +89,49 @@ Template.leaveTypeSettings.onRendered(function() {
         try {
             let data = {};
             let splashArrayLeaveList = new Array();
-            let dataObject = await getVS1Data('TLeave')  
+            let dataObject = await getVS1Data('TPaidLeave');
             if ( dataObject.length == 0) {
-                data = await templateObject.saveDataLocalDB();
+                data = await templateObject.saveDataLocalDB('Paid Leave');
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
-            for (let i = 0; i < data.tleave.length; i++) {
+            for (let i = 0; i < data.tpaidleave.length; i++) {
 
                 var dataListAllowance = [
-                    data.tleave[i].fields.ID || '',
-                    data.tleave[i].fields.LeaveName || '',
-                    data.tleave[i].fields.Unit || '',
-                    data.tleave[i].fields.LeaveNormalEntitlement || '',
-                    data.tleave[i].fields.LeaveLeaveLoadingRate || '',
-                    data.tleave[i].fields.LeaveType || '',
-                    data.tleave[i].fields.LeaveShowBalanceOnPayslip == true ? 'show': 'hide',
+                    data.tpaidleave[i].fields.ID || '',
+                    data.tpaidleave[i].fields.LeavePaidName || '',
+                    data.tpaidleave[i].fields.LeavePaidUnits || '',
+                    data.tpaidleave[i].fields.LeavePaidNormalEntitlement || '',
+                    data.tpaidleave[i].fields.LeavePaidLeaveLoadingRate || '',
+                    'paid',
+                    data.tpaidleave[i].fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
                 ];
 
                 splashArrayLeaveList.push(dataListAllowance);
-             }
+            }
+
+            let unPaidData = []
+            let dataUnObject = await getVS1Data('TUnpaidLeave');
+            if ( dataUnObject.length == 0) {
+                unPaidData = await templateObject.saveDataLocalDB('Unpaid Leave');
+            }else{
+                unPaidData = JSON.parse(dataUnObject[0].data);
+            }
+
+            for (let i = 0; i < unPaidData.tunpaidleave.length; i++) {
+
+                var dataListAllowance = [
+                    unPaidData.tunpaidleave[i].fields.ID || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidName || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidUnits || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidNormalEntitlement || '',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidLeaveLoadingRate || '',
+                    'unpaid',
+                    unPaidData.tunpaidleave[i].fields.LeaveUnpaidShowBalanceOnPayslip == true ? 'show': 'hide',
+                ];
+
+                splashArrayLeaveList.push(dataListAllowance);
+            }
 
               function MakeNegative() {
                   $('td').each(function () {
@@ -89,6 +150,7 @@ Template.leaveTypeSettings.onRendered(function() {
                     data: splashArrayLeaveList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     columnDefs: [
+
                         {
                             className: "colLeaveID hiddenColumn",
                             "targets": [0]
@@ -102,20 +164,20 @@ Template.leaveTypeSettings.onRendered(function() {
                             "targets": [2]
                         },
                         {
-                            className: "colLeaveNormalEntitlement",
-                            "targets": [3]
+                        className: "colLeaveNormalEntitlement",
+                        "targets": [3]
                         },
                         {
-                            className: "colLeaveLeaveLoadingRate",
-                            "targets": [4]
+                        className: "colLeaveLeaveLoadingRate",
+                        "targets": [4]
                         },
                         {
-                            className: "colLeaveType",
-                            "targets": [5]
+                        className: "colLeavePaidLeave",
+                        "targets": [5]
                         },
                         {
-                            className: "colLeaveShownOnPayslip",
-                            "targets": [6]
+                        className: "colLeaveShownOnPayslip",
+                        "targets": [6]
                         }
                     ],
                     select: true,
@@ -150,17 +212,17 @@ Template.leaveTypeSettings.onRendered(function() {
                                 let dataLenght = oSettings._iDisplayLength;
                                 let customerSearch = $('#tblLeaves_filter input').val();
     
-                                sideBarService.getLeave(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                sideBarService.getPaidLeave(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
-                                    for (let i = 0; i < data.tleave.length; i++) {
+                                    for (let i = 0; i < data.tpaidleave.length; i++) {
                                         var dataListAllowance = [
-                                            data.tleave[i].fields.ID || '',
-                                            data.tleave[i].fields.LeaveName || '',
-                                            data.tleave[i].fields.Unit || '',
-                                            data.tleave[i].fields.LeaveNormalEntitlement || '',
-                                            data.tleave[i].fields.LeaveLeaveLoadingRate || '',
-                                            data.tleave[i].fields.LeaveType || '',
-                                            data.tleave[i].fields.LeaveShowBalanceOnPayslip == true ? 'show': 'hide',
+                                            data.tpaidleave[i].fields.ID || '',
+                                            data.tpaidleave[i].fields.LeavePaidName || '',
+                                            data.tpaidleave[i].fields.LeavePaidUnits || '',
+                                            data.tpaidleave[i].fields.LeavePaidNormalEntitlement || '',
+                                            data.tpaidleave[i].fields.LeavePaidLeaveLoadingRate || '',
+                                            'paid',
+                                            data.tpaidleave[i].fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
                                         ];
                         
                                         splashArrayLeaveList.push(dataListAllowance);
@@ -291,7 +353,7 @@ Template.leaveTypeSettings.events({
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getLeave(dataSearchName).then(function (data) {
                 $(".btnRefreshLeave").removeClass('btnSearchAlert');
-                let lineItems = [];
+                let lineItems = [];                
                 if (data.tleave.length > 0) {
                     for (let i = 0; i < data.tleave.length; i++) {
                         var dataListAllowance = [
@@ -350,68 +412,136 @@ Template.leaveTypeSettings.events({
         
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const apiEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TLeave
-        );
+        let leaveName=$("#edtLeaveName").val();
+        let leaveType=$("#edtLeaveType").val();
+        let typeOfUnit=$("#edtTypeOfUnits").val();
+        let loadingRate=$("#edtLeaveLoadingRate").val();
+        let leaveNormalEntitlement = $("#edtNormalEntitlement").val();
+        let showBalance = $("#formCheck-ShowBalance").is(':checked')? true:false;
 
-        return false;
-        // We need api's with fields to update this API
+        let leaveDetails="";
+        const apiEndpoint = {};
+        if(leaveType == "Paid Leave"){
+            apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPaidLeave
+            );
 
-        let isTaxexempt = false;
-        let isIsWorkPlacegiving = false;
-        let isUnionfees = false;
-        let deductionType = $('#edtDeductionType').val();
-        if(deductionType == 'None'){
-          isTaxexempt = true;
-        }else if(deductionType == 'WorkplaceGiving'){
-          isIsWorkPlacegiving = true;
-        }else if(deductionType == 'UnionAssociationFees'){
-          isUnionfees = true;
-        }
-        let deductionID = $('#edtDeductionID').val();
-        let deductionAccount = $('#edtDeductionAccount').val();
-        let deductionAccountID = $('#edtDeductionAccountID').val();
-        let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
-        let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
-        let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
-        /**
-         * Saving Earning Object in localDB
-        */
-        
-        let deductionRateSettings = {
-            type: "TLeave",
-            fields: {
-                ID: parseInt(deductionID),
-                Active: true,
-                Accountid: deductionAccountID,
-                Accountname: deductionAccount,
-                IsWorkPlacegiving:isIsWorkPlacegiving,
-                Taxexempt:isTaxexempt,
-                Unionfees:isUnionfees,
-                Description: deductionName,
-                DisplayIn: displayName,
-                // Superinc: ExemptSuperannuation,
-                // Workcoverexempt: ExemptReportable,
-                // Payrolltaxexempt: ExemptPAYG
+            leaveDetails= {
+                type : "TPaidLeave",
+                fields : {
+                    LeavePaidName:leaveName,
+                    LeavePaidUnits:typeOfUnit,
+                    LeavePaidLeaveLoadingRate:loadingRate,
+                    LeavePaidNormalEntitlement:leaveNormalEntitlement,
+                    LeavePaidShowBalanceOnPayslip:showBalance,
+                    LeavePaidActive:true
+                }
             }
-        };
+        }
+        else if(leaveType == "Unpaid Leave"){
+            apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TUnpaidLeave
+            );
+            leaveDetails= {
+                type : "TUnpaidLeave",
+                fields : {
+                    LeaveUnPaidName:leaveName,
+                    LeaveUnPaidUnits:typeOfUnit,
+                    LeaveUnPaidLeaveLoadingRate:loadingRate,
+                    LeaveUnPaidNormalEntitlement:leaveNormalEntitlement,
+                    LeaveUnPaidShowBalanceOnPayslip:showBalance,
+                    LeaveUnPaidActive:true
+                }
+            }
+        }
 
         const ApiResponse = await apiEndpoint.fetch(null, {
             method: "POST",
             headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(deductionRateSettings),
+            body: JSON.stringify(leaveDetails),
         });
-    
+
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
             $('#leaveRateForm')[0].reset();
-            await templateObject.saveDataLocalDB();
-            await templateObject.getDeductions();
+            await templateObject.saveDataLocalDB(leaveType);
+            await templateObject.getLeaves();
             $('#leaveModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Leave has been saved",
+                type: 'warning',
+                
+            })
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Leave failed to saved",
+                type: 'error',
+                
+            })
         }
+        
+        return false;
+        // We need api's with fields to update this API
+
+        // let isTaxexempt = false;
+        // let isIsWorkPlacegiving = false;
+        // let isUnionfees = false;
+        // let deductionType = $('#edtDeductionType').val();
+        // if(deductionType == 'None'){
+        //   isTaxexempt = true;
+        // }else if(deductionType == 'WorkplaceGiving'){
+        //   isIsWorkPlacegiving = true;
+        // }else if(deductionType == 'UnionAssociationFees'){
+        //   isUnionfees = true;
+        // }
+        // let deductionID = $('#edtDeductionID').val();
+        // let deductionAccount = $('#edtDeductionAccount').val();
+        // let deductionAccountID = $('#edtDeductionAccountID').val();
+        // let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
+        // let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
+        // let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
+        // /**
+        //  * Saving Earning Object in localDB
+        // */
+        
+        // let deductionRateSettings = {
+        //     type: "TLeave",
+        //     fields: {
+        //         ID: parseInt(deductionID),
+        //         Active: true,
+        //         Accountid: deductionAccountID,
+        //         Accountname: deductionAccount,
+        //         IsWorkPlacegiving:isIsWorkPlacegiving,
+        //         Taxexempt:isTaxexempt,
+        //         Unionfees:isUnionfees,
+        //         Description: deductionName,
+        //         DisplayIn: displayName,
+        //         // Superinc: ExemptSuperannuation,
+        //         // Workcoverexempt: ExemptReportable,
+        //         // Payrolltaxexempt: ExemptPAYG
+        //     }
+        // };
+
+        // const ApiResponse = await apiEndpoint.fetch(null, {
+        //     method: "POST",
+        //     headers: ApiService.getPostHeaders(),
+        //     body: JSON.stringify(deductionRateSettings),
+        // });
+    
+        // if (ApiResponse.ok == true) {
+        //     const jsonResponse = await ApiResponse.json();
+        //     $('#leaveRateForm')[0].reset();
+        //     await templateObject.saveDataLocalDB();
+        //     await templateObject.getDeductions();
+        //     $('#leaveModal').modal('hide');
+        //     $('.fullScreenSpin').css('display', 'none');
+        // }else{
+        //     $('.fullScreenSpin').css('display', 'none');
+        // }
         
         
     },

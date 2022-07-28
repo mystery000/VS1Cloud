@@ -377,6 +377,7 @@ Template.reimbursementSettings.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(reimbursementRateSettings),
         });
+
     
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();

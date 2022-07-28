@@ -15,5 +15,8 @@ Template.mailchimp.onRendered(function () {
 });
 
 Template.mailchimp.events({
+  'click #openLink': function() {
+    window.open("https://login.mailchimp.com/signup/");
+  },
   
 });
