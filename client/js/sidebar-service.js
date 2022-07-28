@@ -3073,7 +3073,12 @@ export class SideBarService extends BaseService {
         ListType: "Detail",
         select: "[ListType]='ltSales' OR [ListType]='ltRefundList'",
       };
-    }
+    } else if(query == 'ltPurchaseOverview') {
+      options = {
+        ListType: "Detail",
+        select: "[ListType]='ltOrder' OR [ListType]='ltPurchaseOverview'",
+      };
+    } 
 
     return this.getList(this.ERPObjects.TCustomFieldList, options);
   }
