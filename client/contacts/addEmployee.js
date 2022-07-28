@@ -3725,15 +3725,14 @@ Template.employeescard.onRendered(function () {
         }else{
             data = JSON.parse(TOpeningBalances[0].data);
         }
-        console.log('OpeningBalance', data)
-        // let openingBalances = OpeningBalance.fromList(
-        //     data.topeningbalances
-        // ).filter((item) => {
-        //     if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-        //         return item;
-        //     }
-        // });
-        // templateObject.openingBalanceInfo.set(openingBalances);
+        let openingBalances = OpeningBalance.fromList(
+            data.topeningbalances
+        ).filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                return item;
+            }
+        });
+        templateObject.openingBalanceInfo.set(openingBalances);
     };
 
     templateObject.getOpeningBalances();
