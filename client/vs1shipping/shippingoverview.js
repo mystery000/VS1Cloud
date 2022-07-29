@@ -868,6 +868,7 @@ Template.vs1shipping.onRendered(function() {
             }
         }
     });
+    tableResize();
 });
 
 Template.vs1shipping.events({

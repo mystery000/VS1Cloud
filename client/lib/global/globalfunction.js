@@ -526,7 +526,7 @@ vs1GlobalBackButton = async function () {
 
 tableResize = function() {
   setTimeout(function() {
-    $(".dataTable th").resizable({
+    $(".dataTable th, .draggingTable th").resizable({
       handles: "e",
       resize: function (event, ui) {
           var sizerID = "." + $(event.target).attr("class").split(" ")[1];

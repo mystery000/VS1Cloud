@@ -736,7 +736,7 @@ Template.stockadjustmentoverview.onRendered(function() {
     }
 
     templateObject.getAllStockAdjustEntryData();
-
+    tableResize();
 });
 
 Template.stockadjustmentoverview.events({

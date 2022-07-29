@@ -522,7 +522,7 @@ Template.serialnumberlist.onRendered(function() {
     }
 
     templateObject.getAllSerialNumberData();
-
+    tableResize();
 });
 
 Template.serialnumberlist.events({

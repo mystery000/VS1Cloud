@@ -170,8 +170,8 @@
                     <button class="btn btn-primary btnAll" type="button">All</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" role="presentation" href="/customerawaitingpayments">Outstanding Invoices</a>
-                        <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">Outstanding Expenses</a>
+                        <a class="dropdown-item" role="presentation" href="/customerawaitingpayments">All Outstanding Invoices</a>
+                        <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">All Outstanding Payments</a>
                         <a class="dropdown-item" role="presentation" href="/customerpayment">Payment List (Customer)</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpayment">Payment List (Supplier)</a>
                         <a class="dropdown-item" role="presentation" href="/paymentcard" id="newCustomerPayment" name="newCustomerPayment">+ New Customer Payment</a>
@@ -184,7 +184,7 @@
                     <button class="btn btn-primary btnCustomerlist" type="button">Customers</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" role="presentation" href="/customerawaitingpayments">Outstanding Invoices</a>
+                        <a class="dropdown-item" role="presentation" href="/customerawaitingpayments">All Outstanding Invoices</a>
                         <a class="dropdown-item" role="presentation" href="/customerpayment">Payment List</a>
                         <a class="dropdown-item" role="presentation" href="/paymentcard" id="newCustomerPayment" name="newCustomerPayment">+ New Customer Payment</a>
 
@@ -194,7 +194,7 @@
                     <button class="btn btn-primary btnSupplierPaymentList" type="button">Suppliers</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">Outstanding Expenses</a>
+                        <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">All Outstanding Payments</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpayment">Payment List</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpaymentcard" id="newSupplierPayment" name="newSupplierPayment">+ New Supplier Payment</a>
 
@@ -417,7 +417,7 @@
                             </div>
                         </div>
                     </div>
-                    <table id="tblPaymentOverview" style="width:100%" class="dataTable table table-striped table-bordered tblPaymentOverview">
+                    <table id="tblPaymentOverview" style="width:99.7%" class="dataTable table table-striped table-bordered tblPaymentOverview">
                         <thead>
                             <tr class="dnd-moved">
                                 <th class="th colSortDate hiddenColumn">id</th>

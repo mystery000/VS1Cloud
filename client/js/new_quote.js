@@ -23,7 +23,7 @@ let isDropDown = false;
 
 var template_list = [
     "Quotes",
-  ];
+];
 
 Template.new_quote.onCreated(() => {
     const templateObject = Template.instance();
@@ -52,6 +52,7 @@ Template.new_quote.onCreated(() => {
     templateObject.termrecords = new ReactiveVar();
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.taxcodes = new ReactiveVar([]);
     templateObject.record = new ReactiveVar({});
     templateObject.custfields = new ReactiveVar([]);
     templateObject.accountID = new ReactiveVar();
@@ -117,7 +118,7 @@ Template.new_quote.onRendered(() => {
             break;
          }
 
-      };
+    };
 
     templateObject.getTemplateInfo = function() {
 
@@ -149,244 +150,240 @@ Template.new_quote.onRendered(() => {
 
         });
 
-   };
+    };
+
+    templateObject.getTemplateInfo();
+
+    function showQuotes1(template_title, number) {
+        var array_data = [];
+        let lineItems = [];
+        object_invoce = [];
 
 
-   templateObject.getTemplateInfo();
+        let quoteData = templateObject.quoterecord.get();
+        let stripe_id = templateObject.accountID.get() || '';
+        let stripe_fee_method = templateObject.stripe_fee_method.get();
+        var erpGet = erpDb();
 
-    function showQuotes1(template_title,number)
-    {
-                var array_data = [];
-                let lineItems = [];
-                object_invoce = [];
+        var customfield1 = $('#edtSaleCustField1').val() || '-';
+        var customfield2 = $('#edtSaleCustField2').val() || '-';
+        var customfield3 = $('#edtSaleCustField3').val() || '-';
 
+        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
 
-                let quoteData = templateObject.quoterecord.get();
-                let stripe_id = templateObject.accountID.get() || '';
-                let stripe_fee_method = templateObject.stripe_fee_method.get();
-                var erpGet = erpDb();
-
-                var customfield1 = $('#edtSaleCustField1').val() || '-';
-                var customfield2 = $('#edtSaleCustField2').val() || '-';
-                var customfield3 = $('#edtSaleCustField3').val() || '-';
-
-                var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
-                var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
-                var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-
-                let balancedue = $('#totalBalanceDue').html() || 0;
-                let tax = $('#subtotal_tax').html() || 0;
-                let customer = $('#edtCustomerName').val();
-                let name = $('#firstname').val();
-                let surname = $('#lastname').val();
-                let dept = $('#sltDept').val();
-                let fx = $('#sltCurrency').val();
-                var comment = $('#txaComment').val();
-                var parking_instruction = $('#txapickmemo').val();
-                var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
-                var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
-                var ref = $('#edtRef').val() || '-';
-                var txabillingAddress = $('#txabillingAddress').val() || '';
-                var dtSODate = $('#dtSODate').val();
-                var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
-                var grandTotal = $('#grandTotal').text() || '$'+ 0;
-                var duedate = $('#dtDueDate').val();
-                var po = $('#ponumber').val() || '.';
+        let balancedue = $('#totalBalanceDue').html() || 0;
+        let tax = $('#subtotal_tax').html() || 0;
+        let customer = $('#edtCustomerName').val();
+        let name = $('#firstname').val();
+        let surname = $('#lastname').val();
+        let dept = $('#sltDept').val();
+        let fx = $('#sltCurrency').val();
+        var comment = $('#txaComment').val();
+        var parking_instruction = $('#txapickmemo').val();
+        var subtotal_tax = $('#subtotal_tax').html() || '$' + 0;
+        var total_paid = $('#totalPaidAmt').html() || '$' + 0;
+        var ref = $('#edtRef').val() || '-';
+        var txabillingAddress = $('#txabillingAddress').val() || '';
+        var dtSODate = $('#dtSODate').val();
+        var subtotal_total = $('#subtotal_total').text() || '$' + 0;
+        var grandTotal = $('#grandTotal').text() || '$' + 0;
+        var duedate = $('#dtDueDate').val();
+        var po = $('#ponumber').val() || '.';
 
 
-                $('#tblQuoteLine > tbody > tr').each(function () {
-                    var lineID = this.id;
+        $('#tblQuoteLine > tbody > tr').each(function () {
+            var lineID = this.id;
 
 
-                    let tdproduct = $('#' + lineID + " .lineProductName").val();
-                    let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                    let tdQty = $('#' + lineID + " .lineQty").val();
-                    let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                    let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                    let tdlineamt = $('#' + lineID + " .colAmountEx").text();
-                    let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdlineamt = $('#' + lineID + " .colAmountEx").text();
+            let taxAmount = $('#' + lineID + " .colTaxAmount").text();
 
 
-                    array_data.push([
-                        tdproduct,
-                        tddescription,
-                        tdQty,
-                        tdunitprice,
-                        taxAmount,
-                        tdlineamt,
-                    ]);
+            array_data.push([
+                tdproduct,
+                tddescription,
+                tdQty,
+                tdunitprice,
+                taxAmount,
+                tdlineamt,
+            ]);
 
-                    lineItemObj = {
-                        description: tddescription || '',
-                        quantity: tdQty || 0,
-                        unitPrice: tdunitprice.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        }) || 0
-                    }
-
-                    lineItems.push(lineItemObj);
-                });
-
-                let company = Session.get('vs1companyName');
-                let vs1User = localStorage.getItem('mySession');
-                let customerEmail = $('#edtCustomerEmail').val();
-                let id = $('.printID').attr("id") || "new";
-                let currencyname = (CountryAbbr).toLowerCase();
-                stringQuery = "?";
-                var customerID = $('#edtCustomerEmail').attr('customerid');
-                for (let l = 0; l < lineItems.length; l++) {
-                    stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
-                }
-                stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
-                $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
-
-                let item_quote = '';
-
-                if(number == 1)
-                {
-                    item_quote = {
-                        o_url: Session.get('vs1companyURL'),
-                        o_name:  Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState'),
-                        o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                        o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                        o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                        title: 'Quote',
-                        value: quoteData.id,
-                        date:dtSODate,
-                        invoicenumber: quoteData.id,
-                        refnumber: ref,
-                        pqnumber: po,
-                        duedate: duedate,
-                        paylink: "Pay Now",
-                        supplier_type: "Customer",
-                        supplier_name : customer,
-                        supplier_addr : txabillingAddress,
-                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal :subtotal_total,
-                        gst : subtotal_tax,
-                        total : grandTotal,
-                        paid_amount : total_paid,
-                        bal_due : balancedue,
-                        bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                        account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
-                        data: array_data,
-                        applied : "",
-                        customfield1:'NA',
-                        customfield2:'NA',
-                        customfield3:'NA',
-                        customfieldlabel1:'NA',
-                        customfieldlabel2:'NA',
-                        customfieldlabel3:'NA',
-                        showFX:"",
-                        comment:comment,
-
-                    };
-
-            }
-            else if(number == 2)
-            {
-                item_quote = {
-                       o_url: Session.get('vs1companyURL'),
-                        o_name:  Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState'),
-                        o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                        o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                        o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                        title: 'Quote',
-                        value: quoteData.id,
-                        date:dtSODate,
-                        invoicenumber: quoteData.id,
-                        refnumber: ref,
-                        pqnumber: po,
-                        duedate: duedate,
-                        paylink: "Pay Now",
-                        supplier_type: "Customer",
-                        supplier_name : customer,
-                        supplier_addr : txabillingAddress,
-                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal :subtotal_total,
-                        gst : subtotal_tax,
-                        total : grandTotal,
-                        paid_amount : total_paid,
-                        bal_due : balancedue,
-                        bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                        account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
-                        data: array_data,
-                        applied : "",
-                        customfield1:customfield1,
-                        customfield2:customfield2,
-                        customfield3:customfield3,
-                        customfieldlabel1:customfieldlabel1,
-                        customfieldlabel2:customfieldlabel2,
-                        customfieldlabel3:customfieldlabel3,
-                        showFX:"",
-                        comment:comment,
-
-                };
-
-            }
-            else{
-
-                item_quote = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                    o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                    o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                    title: 'Quote',
-                    value: quoteData.id,
-                    date:dtSODate,
-                    invoicenumber: quoteData.id,
-                    refnumber: ref,
-                    pqnumber: po,
-                    duedate: duedate,
-                    paylink: "Pay Now",
-                    supplier_type: "Customer",
-                    supplier_name : customer,
-                    supplier_addr : txabillingAddress,
-                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                    subtotal :subtotal_total,
-                    gst : subtotal_tax,
-                    total : grandTotal,
-                    paid_amount : total_paid,
-                    bal_due : balancedue,
-                    bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
-                    data: array_data,
-                    applied : "",
-                    customfield1:customfield1,
-                    customfield2:customfield2,
-                    customfield3:customfield3,
-                    customfieldlabel1:customfieldlabel1,
-                    customfieldlabel2:customfieldlabel2,
-                    customfieldlabel3:customfieldlabel3,
-                    showFX:fx,
-                    comment:comment,
-                };
-
-
+            lineItemObj = {
+                description: tddescription || '',
+                quantity: tdQty || 0,
+                unitPrice: tdunitprice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0
             }
 
+            lineItems.push(lineItemObj);
+        });
 
-            object_invoce.push(item_quote);
-            $("#templatePreviewModal .field_payment").show();
-            $("#templatePreviewModal .field_amount").show();
-            updateTemplate1(object_invoce);
+        let company = Session.get('vs1companyName');
+        let vs1User = localStorage.getItem('mySession');
+        let customerEmail = $('#edtCustomerEmail').val();
+        let id = $('.printID').attr("id") || "new";
+        let currencyname = (CountryAbbr).toLowerCase();
+        stringQuery = "?";
+        var customerID = $('#edtCustomerEmail').attr('customerid');
+        for (let l = 0; l < lineItems.length; l++) {
+            stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+        }
+        stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+        $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-            saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+
+        let item_quote = '';
+
+        if (number == 1) {
+            item_quote = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_quote.__helpers.get('companyReg').call(),
+                o_abn: Template.new_quote.__helpers.get('companyabn').call(),
+                o_phone: Template.new_quote.__helpers.get('companyphone').call(),
+                title: 'Quote',
+                value: quoteData.id,
+                date: dtSODate,
+                invoicenumber: quoteData.id,
+                refnumber: ref,
+                pqnumber: po,
+                duedate: duedate,
+                paylink: "Pay Now",
+                supplier_type: "Customer",
+                supplier_name: customer,
+                supplier_addr: txabillingAddress,
+                fields: { "Product Name": "20", "Description": "20", "Qty": "10", "Unit Price": "10", "Tax": "20", "Amount": "20" },
+                subtotal: subtotal_total,
+                gst: subtotal_tax,
+                total: grandTotal,
+                paid_amount: total_paid,
+                bal_due: balancedue,
+                bsb: Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
+                account: Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
+                swift: Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                data: array_data,
+                applied: "",
+                customfield1: 'NA',
+                customfield2: 'NA',
+                customfield3: 'NA',
+                customfieldlabel1: 'NA',
+                customfieldlabel2: 'NA',
+                customfieldlabel3: 'NA',
+                showFX: "",
+                comment: comment,
+
+            };
+
+        }
+        else if (number == 2) {
+            item_quote = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_quote.__helpers.get('companyReg').call(),
+                o_abn: Template.new_quote.__helpers.get('companyabn').call(),
+                o_phone: Template.new_quote.__helpers.get('companyphone').call(),
+                title: 'Quote',
+                value: quoteData.id,
+                date: dtSODate,
+                invoicenumber: quoteData.id,
+                refnumber: ref,
+                pqnumber: po,
+                duedate: duedate,
+                paylink: "Pay Now",
+                supplier_type: "Customer",
+                supplier_name: customer,
+                supplier_addr: txabillingAddress,
+                fields: { "Product Name": "20", "Description": "20", "Qty": "10", "Unit Price": "10", "Tax": "20", "Amount": "20" },
+                subtotal: subtotal_total,
+                gst: subtotal_tax,
+                total: grandTotal,
+                paid_amount: total_paid,
+                bal_due: balancedue,
+                bsb: Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
+                account: Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
+                swift: Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                data: array_data,
+                applied: "",
+                customfield1: customfield1,
+                customfield2: customfield2,
+                customfield3: customfield3,
+                customfieldlabel1: customfieldlabel1,
+                customfieldlabel2: customfieldlabel2,
+                customfieldlabel3: customfieldlabel3,
+                showFX: "",
+                comment: comment,
+
+            };
+
+        }
+        else {
+
+            item_quote = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_quote.__helpers.get('companyReg').call(),
+                o_abn: Template.new_quote.__helpers.get('companyabn').call(),
+                o_phone: Template.new_quote.__helpers.get('companyphone').call(),
+                title: 'Quote',
+                value: quoteData.id,
+                date: dtSODate,
+                invoicenumber: quoteData.id,
+                refnumber: ref,
+                pqnumber: po,
+                duedate: duedate,
+                paylink: "Pay Now",
+                supplier_type: "Customer",
+                supplier_name: customer,
+                supplier_addr: txabillingAddress,
+                fields: { "Product Name": "20", "Description": "20", "Qty": "10", "Unit Price": "10", "Tax": "20", "Amount": "20" },
+                subtotal: subtotal_total,
+                gst: subtotal_tax,
+                total: grandTotal,
+                paid_amount: total_paid,
+                bal_due: balancedue,
+                bsb: Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
+                account: Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
+                swift: Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                data: array_data,
+                applied: "",
+                customfield1: customfield1,
+                customfield2: customfield2,
+                customfield3: customfield3,
+                customfieldlabel1: customfieldlabel1,
+                customfieldlabel2: customfieldlabel2,
+                customfieldlabel3: customfieldlabel3,
+                showFX: fx,
+                comment: comment,
+            };
+
+
+        }
+
+
+        object_invoce.push(item_quote);
+        $("#templatePreviewModal .field_payment").show();
+        $("#templatePreviewModal .field_amount").show();
+        updateTemplate1(object_invoce);
+
+        saveTemplateFields("fields" + template_title, object_invoce[0]["fields"])
 
 
     }
@@ -885,7 +882,7 @@ Template.new_quote.onRendered(() => {
         }
 
 
-      }
+    }
 
     function updateTemplate(object_invoce) {
 
@@ -1151,7 +1148,6 @@ Template.new_quote.onRendered(() => {
         }
 
     }
-
 
     function saveTemplateFields(key, value){
         localStorage.setItem(key, value)
@@ -5403,6 +5399,8 @@ Template.new_quote.onRendered(function() {
     const splashArrayTaxRateList = [];
     const taxCodesList = [];
     const lineExtaSellItems = [];
+    let taxCodes = [];
+
     tempObj.getAllProducts = function() {
         getVS1Data('TProductVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -5670,11 +5668,6 @@ Template.new_quote.onRendered(function() {
 
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-
-
-
-
-
                 }
             })
         });
@@ -5685,10 +5678,12 @@ Template.new_quote.onRendered(function() {
     tempObj.getAllTaxCodes = function() {
         getVS1Data('TTaxcodeVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTaxCodesVS1().then(function(data) {
+                salesService.getTaxCodesDetailVS1().then(function(data) {
 
                     let records = [];
                     let inventoryData = [];
+                    taxCodes = data.ttaxcodevs1;
+                    tempObj.taxcodes.set(taxCodes);
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                         var dataList = [
@@ -5736,12 +5731,7 @@ Template.new_quote.onRendered(function() {
                                 }
                             ],
                             colReorder: true,
-
-
-
                             bStateSave: true,
-
-
                             pageLength: initialDatatableLoad,
                             lengthMenu: [
                                 [initialDatatableLoad, -1],
@@ -5753,13 +5743,7 @@ Template.new_quote.onRendered(function() {
                               $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
                               $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
                             }
-
                         });
-
-
-
-
-
 
                     }
                 })
@@ -5769,6 +5753,8 @@ Template.new_quote.onRendered(function() {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < useData.length; i++) {
                     let taxRate = (useData[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -5845,10 +5831,12 @@ Template.new_quote.onRendered(function() {
             }
         }).catch(function(err) {
 
-            salesService.getTaxCodesVS1().then(function(data) {
+            salesService.getTaxCodesDetailVS1().then(function(data) {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -7016,6 +7004,105 @@ Template.new_quote.events({
         $('#tblQuoteLine tbody tr .lineTaxRate').attr("data-target", "#taxRateListModal");
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectLineID').val(targetID);
+    },
+    'click .lineTaxAmount': function (event) {
+        let targetRow = $(event.target).closest('tr');
+        let targetID = targetRow.attr('id');
+        let targetTaxCode = targetRow.find('.lineTaxCode').val();
+        let qty = targetRow.find(".lineQty").val() || 0
+        let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+        const tmpObj = Template.instance();
+        const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+        if (!taxDetail) {
+            return;
+        }
+
+        let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+        let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+
+        let taxRateDetailList = [];
+        taxRateDetailList.push([
+            taxDetail.Description,
+            taxDetail.Id,
+            taxDetail.CodeName,
+            `${taxDetail.Rate * 100}%`,
+            "Selling Price",
+            `$${priceTotal}`,
+            `$${taxTotal}`,
+            `$${priceTotal + taxTotal}`,
+        ]);
+        if (taxDetail.Lines) {
+            taxDetail.Lines.map((line) => {
+                taxRateDetailList.push([
+                    "",
+                    line.Id,
+                    line.SubTaxCode,
+                    `${line.Percentage}%`,
+                    line.PercentageOn,
+                    "",
+                    `$${priceTotal * line.Percentage / 100}`,
+                    ""
+                ]);
+            });
+        }
+
+        if (taxRateDetailList) {
+
+            if (! $.fn.DataTable.isDataTable('#tblTaxDetail')) {
+                $('#tblTaxDetail').DataTable({
+                    data: [],
+                    order: [[0, 'desc']],
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [{
+                            orderable: true,
+                            targets: [0]
+                        }, {
+                            className: "taxId",
+                            "targets": [1]
+                        }, {
+                            className: "taxCode",
+                            "targets": [2]
+                        }, {
+                            className: "taxRate text-right",
+                            "targets": [3]
+                        }, {
+                            className: "taxRateOn",
+                            "targets": [4]
+                        }, {
+                            className: "amountEx text-right",
+                            "targets": [5]
+                        }, {
+                            className: "tax text-right",
+                            "targets": [6]
+                        }, {
+                            className: "amountInc text-right",
+                            "targets": [7]
+                        }
+                    ],
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "fnDrawCallback": function (oSettings) {
+
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRateDetail_filter");
+                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRateDetail_filter");
+                    }
+                });
+            }
+
+            let datatable = $('#tblTaxDetail').DataTable();
+            datatable.clear();
+            datatable.rows.add(taxRateDetailList);
+            datatable.draw(false);
+        }
+
+        $('#tblQuoteLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
+        $('#tblQuoteLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);

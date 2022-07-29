@@ -1238,7 +1238,7 @@ Template.invoicelist.onRendered(function () {
             $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
         }
     }
-
+    tableResize();
 });
 
 Template.invoicelist.events({
