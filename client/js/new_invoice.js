@@ -11403,6 +11403,7 @@ Template.new_invoice.events({
         let taxRateDetailList = [];
         taxRateDetailList.push([
             taxDetail.Description,
+            taxDetail.Id,
             taxDetail.CodeName,
             `${taxDetail.Rate * 100}%`,
             "Selling Price",
@@ -11414,6 +11415,7 @@ Template.new_invoice.events({
             taxDetail.Lines.map((line) => {
                 taxRateDetailList.push([
                     "",
+                    line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
                     line.PercentageOn,
@@ -11435,23 +11437,26 @@ Template.new_invoice.events({
                             orderable: true,
                             targets: [0]
                         }, {
-                            className: "taxCode",
+                            className: "taxId",
                             "targets": [1]
                         }, {
-                            className: "taxRate text-right",
+                            className: "taxCode",
                             "targets": [2]
                         }, {
-                            className: "taxRateOn",
+                            className: "taxRate text-right",
                             "targets": [3]
                         }, {
-                            className: "amountEx text-right",
+                            className: "taxRateOn",
                             "targets": [4]
                         }, {
-                            className: "tax text-right",
+                            className: "amountEx text-right",
                             "targets": [5]
                         }, {
-                            className: "amountInc text-right",
+                            className: "tax text-right",
                             "targets": [6]
+                        }, {
+                            className: "amountInc text-right",
+                            "targets": [7]
                         }
                     ],
                     colReorder: true,
