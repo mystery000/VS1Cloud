@@ -744,7 +744,7 @@ Template.stocktransferlist.onRendered(function() {
     }
 
     templateObject.getAllStockTransferEntryData();
-
+    tableResize();
 });
 
 Template.stocktransferlist.events({

@@ -652,6 +652,7 @@ Template.payrollproductlistpop.onRendered(function () {
             rememberLastUsedCamera: true
         });
     html5QrcodeScannerProdModal.render(onScanSuccessProdModal);
+    tableResize();
 });
 
 Template.payrollproductlistpop.events({

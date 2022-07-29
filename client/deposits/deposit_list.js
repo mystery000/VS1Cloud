@@ -1033,6 +1033,7 @@ Template.depositlist.onRendered(function() {
         $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
       }
     }
+    tableResize();
 });
 
 Template.depositlist.events({

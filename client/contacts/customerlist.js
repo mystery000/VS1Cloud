@@ -815,6 +815,7 @@ Template.customerlist.onRendered(function() {
 
     });
 
+    tableResize();
 
 });
 

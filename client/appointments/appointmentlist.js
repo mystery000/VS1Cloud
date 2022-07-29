@@ -1925,7 +1925,7 @@ Template.appointmentlist.onRendered(async function () {
             )
         });
     }
-
+  tableResize();
 });
 
 Template.appointmentlist.events({

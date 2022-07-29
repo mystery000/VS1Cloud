@@ -240,7 +240,7 @@ Template.stssettings.onRendered(function() {
 
 
     });
-
+    tableResize();
 });
 
 

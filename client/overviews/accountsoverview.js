@@ -1039,6 +1039,7 @@ Template.accountsoverview.onRendered(function () {
   //     $("#taxRateListModal").modal("toggle");
   //   });
   // });
+  tableResize();
 });
 
 Template.accountsoverview.events({

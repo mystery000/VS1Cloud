@@ -659,7 +659,7 @@ Template.employeeproductlistpop.onRendered(function () {
             rememberLastUsedCamera: true
         });
     html5QrcodeScannerProdModal.render(onScanSuccessProdModal);
-
+    tableResize();
 });
 
 Template.employeeproductlistpop.events({

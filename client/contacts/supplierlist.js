@@ -734,7 +734,7 @@ Template.supplierlist.onRendered(function() {
 
     });
 
-
+    tableResize();
 });
 
 
