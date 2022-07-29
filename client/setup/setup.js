@@ -6778,11 +6778,13 @@ Template.setup.events({
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .templateDownload-employee": function () {
+  "click .templateDownload-employee": (e, templateObject) => {
     let utilityService = new UtilityService();
     let rows = [];
     const filename = "SampleEmployee" + ".csv";
-    rows[0] = [
+
+    const employees = templateObject.currentEmployees.get();
+    rows.push([
       "First Name",
       "Last Name",
       "Phone",
@@ -6795,40 +6797,113 @@ Template.setup.events({
       "Post Code",
       "Country",
       "Gender",
-    ];
-    rows[1] = [
-      "John",
-      "Smith",
-      "9995551213",
-      "9995551213",
-      "johnsmith@email.com",
-      "johnsmith",
-      "123 Main Street",
-      "Brooklyn",
-      "New York",
-      "1234",
-      "United States",
-      "M",
-    ];
-    rows[1] = [
-      "Jane",
-      "Smith",
-      "9995551213",
-      "9995551213",
-      "janesmith@email.com",
-      "janesmith",
-      "123 Main Street",
-      "Brooklyn",
-      "New York",
-      "1234",
-      "United States",
-      "F",
-    ];
+    ]);
+
+    employees.forEach((employee) => {
+      rows.push([
+        employee.fields.FirstName,
+        employee.fields.LastName,
+        employee.fields.Phone,
+        employee.fields.Mobile,
+        employee.fields.Email,
+        employee.fields.SkypeName,
+        employee.fields.Street,
+        employee.fields.Suburb,
+        employee.fields.State,
+        employee.fields.PostCode,
+        employee.fields.Country,
+        employee.fields.Sex
+      ]);
+    });
+
+    // rows[0] = [
+    //   "First Name",
+    //   "Last Name",
+    //   "Phone",
+    //   "Mobile",
+    //   "Email",
+    //   "Skype",
+    //   "Street",
+    //   "City/Suburb",
+    //   "State",
+    //   "Post Code",
+    //   "Country",
+    //   "Gender",
+    // ];
+    // rows[1] = [
+    //   "John",
+    //   "Smith",
+    //   "9995551213",
+    //   "9995551213",
+    //   "johnsmith@email.com",
+    //   "johnsmith",
+    //   "123 Main Street",
+    //   "Brooklyn",
+    //   "New York",
+    //   "1234",
+    //   "United States",
+    //   "M",
+    // ];
+    // rows[1] = [
+    //   "Jane",
+    //   "Smith",
+    //   "9995551213",
+    //   "9995551213",
+    //   "janesmith@email.com",
+    //   "janesmith",
+    //   "123 Main Street",
+    //   "Brooklyn",
+    //   "New York",
+    //   "1234",
+    //   "United States",
+    //   "F",
+    // ];
     utilityService.exportToCsv(rows, filename, "csv");
   },
-  "click .templateDownloadXLSX-employee": function (e) {
-    e.preventDefault(); //stop the browser from following
-    window.location.href = "sample_imports/SampleEmployee.xlsx";
+  "click .templateDownloadXLSX-employee": (e, templateObject) => {
+    //console.log(e);
+    //e.preventDefault(); //stop the browser from following
+    //window.location.href = "sample_imports/SampleEmployee.xlsx";
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleEmployee" + ".xlsx";
+
+    const employees = templateObject.currentEmployees.get();
+    rows.push([
+      "First Name",
+      "Last Name",
+      "Phone",
+      "Mobile",
+      "Email",
+      "Skype",
+      "Street",
+      "City/Suburb",
+      "State",
+      "Post Code",
+      "Country",
+      "Gender",
+    ]);
+
+    employees.forEach((employee) => {
+      rows.push([
+        employee.fields.FirstName,
+        employee.fields.LastName,
+        employee.fields.Phone,
+        employee.fields.Mobile,
+        employee.fields.Email,
+        employee.fields.SkypeName,
+        employee.fields.Street,
+        employee.fields.Suburb,
+        employee.fields.State,
+        employee.fields.PostCode,
+        employee.fields.Country,
+        employee.fields.Sex
+      ]);
+    });
+
+
+    utilityService.exportToCsv(rows, filename, "xls"); 
   },
   "click .btnUploadFile-employee": function (event) {
     $("#attachment-upload-employee").val("");
@@ -8743,6 +8818,79 @@ Template.setup.events({
     const templateObject = Template.instance();
     templateObject.loadDefaultCustomer(true);
     $(".modal.show").modal("hide");
+  },
+
+  "click .setup-step-7 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleCustomers" + ".csv";
+
+    const customers = templateObject.customerList.get();
+
+    console.log("customers", customers);
+    rows.push([
+      "Company",
+      "Job",
+      "AR Balance",
+      "Credit balance",
+      "Balance",
+      "Credit limit",
+      "Order balance",
+      "Country",
+      "Notes",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.company,
+        customer.job,
+        customer.arbalance,
+        customer.creditbalance,
+        customer.balance,
+        customer.creditlimit,
+        customer.salesorderbalance,
+        customer.country, 
+        customer.notes
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-7 .templateDownloadXLSX": (e, templateObject) => {
+    //console.log(e);
+    //e.preventDefault(); //stop the browser from following
+    //window.location.href = "sample_imports/SampleEmployee.xlsx";
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleCustomers" + ".xlsx";
+
+    const customers = templateObject.customerList.get();
+    rows.push([
+      "Company",
+      "Job",
+      "AR Balance",
+      "Credit balance",
+      "Balance",
+      "Credit limit",
+      "Order balance",
+      "Country",
+      "Notes",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.company,
+        customer.job,
+        customer.arbalance,
+        customer.creditbalance,
+        customer.balance,
+        customer.creditlimit,
+        customer.salesorderbalance,
+        customer.country, 
+        customer.notes
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
   },
 
   // TODO: Step 8
