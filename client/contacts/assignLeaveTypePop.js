@@ -32,6 +32,10 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#edtLeavePayPeriod').editableSelect('add','Four Weekly');
         $('#edtLeavePayPeriod').editableSelect('add','Monthly');
         $('#edtLeavePayPeriod').editableSelect('add','Quarterly');
+        $('#edtLeavePayStatus').editableSelect('add','Awaiting');
+        $('#edtLeavePayStatus').editableSelect('add','Approved');
+        $('#edtLeavePayStatus').editableSelect('add','Denied');
+
         $('#edtLeaveTypeofRequest').editableSelect();
         $('#edtLeaveTypeofRequest').editableSelect()
             .on('click.editable-select', async function (e, li) {
@@ -42,12 +46,12 @@ Template.assignLeaveTypePop.onCreated(function () {
                 let searchName = e.target.value || '';
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                     $('#assignLeaveTypeSettingsModal').modal('show');
-                } else {    
-                    if (searchName.replace(/\s/g, '') == '') {               
+                } else {
+                    if (searchName.replace(/\s/g, '') == '') {
                         $('#assignLeaveTypeSettingsModal').modal('show');
                         return false
                     }
-                    let dataObject = await getVS1Data('TAssignLeaveType');   
+                    let dataObject = await getVS1Data('TAssignLeaveType');
                     if ( dataObject.length > 0) {
                         data = JSON.parse(dataObject[0].data);
                         let tAssignteavetype = data.tassignleavetype.filter((item) => {
@@ -57,9 +61,9 @@ Template.assignLeaveTypePop.onCreated(function () {
                         });
 
 
-                        
+
                         if( tAssignteavetype.length > 0 ){
-                            
+
                             let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
                             $('#leaveCalcMethodSelect').val(leaveCalcMethod)
                             switch(leaveCalcMethod){
@@ -110,7 +114,7 @@ Template.assignLeaveTypePop.onCreated(function () {
                             $('#onTerminationUnusedBalance').val(tAssignteavetype[0].fields.OnTerminationUnusedBalance);
                             $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
                             $("#superannuationGuarantee").prop('checked', tAssignteavetype[0].fields.SuperannuationGuarantee)
-                            
+
                             $('#assignteavetypeID').val(tAssignteavetype[0].fields.ID) || 0 ;
                         }
                         $('#assignLeaveTypeModal').modal('show');
@@ -118,4 +122,15 @@ Template.assignLeaveTypePop.onCreated(function () {
                 }
             });
     }, 1000);
+
+    $(document).on("click", "#tblAssignLeaveTypes tbody tr", function (e) {
+        var table = $(this);
+        let name = table.find(".colALTypeLeave").text()||'';
+        let ID = table.find(".colALTypeID").text()||'';
+        let searchFilterID = templateObject.currentDrpDownID.get()
+        $('#' + searchFilterID).val(name);
+        $('#' + searchFilterID + 'ID').val(ID);
+        $('#assignLeaveTypeSettingsModal').modal('toggle');
+    });
+
 });

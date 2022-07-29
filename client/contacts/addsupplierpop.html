@@ -194,28 +194,24 @@
                                                 display: none;
                                             }
 
+                                            .billingaddress.show {
+                                                display: flex;
+                                            }
+
+                        
+
                                             .chkaddress {
                                                 width: 130px !important;
                                                 display: inline-grid !important;
                                             }
                                         </style>
-                                        <script>
-                                            function myFunction() {
-                                                var checkBox = document.getElementById("chkSameAsShipping");
-                                                var billingAddress = document.getElementById("billingaddress");
-                                                if (checkBox.checked == true) {
-                                                    billingAddress.style.display = "none";
-                                                } else {
-                                                    billingAddress.style.display = "flex";
-                                                }
-                                            }
-                                        </script>
+                                       
                                         <div class="col">
                                             <div class="row no-gutters" style="margin-top: 12spx;">
                                                 <div class="col d-xl-flex align-items-start" style="padding: 0px;">
                                                     <h4 class="flex-grow" style="margin: 4px;">Billing Address</h4>
-                                                    <div class="custom-control custom-switch chkaddress" style="margin: 8px; margin-left: 40px;"><input class="custom-control-input" type="checkbox" id="chkSameAsShipping" onclick="myFunction()" style=" cursor: pointer;"
-                                                            checked><label class="custom-control-label" for="chkSameAsShipping" style=" cursor: pointer;">Same as Shipping</label></div>
+                                                    <div class="custom-control custom-switch chkaddress" style="margin: 8px; margin-left: 40px;"><input class="custom-control-input" type="checkbox" id="chkSupplierSameAsShipping" onclick="myFunction()" style=" cursor: pointer;"
+                                                            checked><label class="custom-control-label" for="chkSupplierSameAsShipping" style=" cursor: pointer;">Same as Shipping</label></div>
                                                 </div>
 
 

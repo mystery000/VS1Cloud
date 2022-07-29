@@ -134,32 +134,37 @@
                                                                                 style="width:150px">Cap Amt</th>
                                                                             <th class="th colThresholdAmt"
                                                                                 style="width:150px">Threshold Amt</th>
+                                                                            <th class="th colDelete" style="width:20px"></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
                                                                         {{#if subtaxlines}}
                                                                         {{#each item in subtaxlines}}
-                                                                        <tr class="dnd-moved" id="{{item.Id}}"
+                                                                        <tr class="dnd-moved" id="{{item.RowId}}"
                                                                             style="cursor: pointer;">
-                                                                            <td contenteditable="false" class="colName">
+                                                                            <td contenteditable="false" class="colName clickable">
                                                                                 {{item.SubTaxCode}}</td>
                                                                             <td contenteditable="false"
-                                                                                class="colPercent">{{item.Percentage}}
+                                                                                class="colPercent clickable">{{item.Percentage}}
                                                                             </td>
                                                                             <td contenteditable="false"
-                                                                                class="colPercentageOn">
+                                                                                class="colPercentageOn clickable">
                                                                                 {{item.PercentageOn}}</td>
                                                                             <td contenteditable="false"
-                                                                                class="colCapAmt">{{item.CapAmount}}
+                                                                                class="colCapAmt clickable">{{item.CapAmount}}
                                                                             </td>
                                                                             <td contenteditable="false"
-                                                                                class="colThresholdAmt">
+                                                                                class="colThresholdAmt clickable">
                                                                                 {{item.ThresholdAmount}}</td>
+                                                                            <td contenteditable="false" class="colDelete"><span
+                                                                                    class="table-remove"><button type="button"
+                                                                                        class="btn btn-danger btn-rounded btn-sm my-0"><i
+                                                                                            class="fa fa-remove"></i></button></span></td>
                                                                         </tr>
                                                                         {{/each}}
                                                                         {{else}}
                                                                         <tr class="dnd-moved" style="cursor: pointer;">
-                                                                            <td contenteditable="false" colspan="5"
+                                                                            <td contenteditable="false" colspan="6"
                                                                                 style="text-align: center;">
                                                                                 <span>
                                                                                     Table data doesn't exist
@@ -195,7 +200,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4>
-                                                                <div id="add-tax-title" name="add-tax-title"
+                                                                <div id="add-subtax-title" name="add-tax-title"
                                                                     style="float: left;">Add Sub Tax</div>
                                                             </h4>
                                                             <button type="button" class="close" data-dismiss="modal"
@@ -203,8 +208,8 @@
                                                                     aria-hidden="true">×</span></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <input type="hidden" class="form-control" id="edtTaxID"
-                                                                name="edtTaxID" style="display:none;">
+                                                            <input type="hidden" class="form-control" id="edtSubTaxLineId"
+                                                                name="edtSubTaxLineId" style="display:none;">
                                                             <div class="row no-gutters">
                                                                 <div class="col-6 d-xl-flex align-items-xl-end">
                                                                     <div class="form-group flex-grow-1"
@@ -215,7 +220,7 @@
                                                                             name="subTaxCode">
                                                                             <option value="" disabled>Select</option>
                                                                             {{#each item in subtaxcodes}}
-                                                                            <option value="{{item.id}}">
+                                                                            <option value="{{item.codename}}">
                                                                                 {{item.codename}}</option>
                                                                             {{/each}}
                                                                         </select>
@@ -272,7 +277,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button class="btn btn-success btnAddSubTax"
+                                                            <button class="btn btn-success btnSaveSubTax"
                                                                 type="button"><i class="fa fa-save"
                                                                     style="padding-right: 8px;"></i>Save</button>
                                                             <button class="btn btn-secondary" data-dismiss="modal"

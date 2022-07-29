@@ -4,21 +4,24 @@ import {SideBarService} from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 Template.uomlistpop.onCreated(function() {
-
+  const templateObject = Template.instance();
 });
 
 Template.uomlistpop.onRendered(function() {
-  let tempObj = Template.instance();
+  let templateObject = Template.instance();
+  let taxRateService = new TaxRateService();
+  const dataTableList = [];
+  const tableHeaderList = [];
   var splashArrayUOMList = new Array();
-  tempObj.getAllUOMs = function () {
+  templateObject.getAllUOMs = function () {
       getVS1Data('TUnitOfMeasure').then(function (dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getUOMVS1().then(function (data) {
-
+                addVS1Data('TUnitOfMeasure',JSON.stringify(data));
                   let records = [];
                   let inventoryData = [];
                   for (let i = 0; i < data.tunitofmeasure.length; i++) {
-                      var dataList = [
+                      var dataListUOM = [
                           data.tunitofmeasure[i].fields.ID || '',
                           data.tunitofmeasure[i].fields.UOMName || '',
                           data.tunitofmeasure[i].fields.Description || '-',
@@ -30,14 +33,16 @@ Template.uomlistpop.onRendered(function() {
                           data.tunitofmeasure[i].fields.NoOfBoxes || 0
                       ];
 
-                      splashArrayUOMList.push(dataList);
+                      splashArrayUOMList.push(dataListUOM);
                   }
 
                   if (splashArrayUOMList) {
-
                       $('#tblUOM').DataTable({
                           data: splashArrayUOMList,
                           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                          select: true,
+                          destroy: true,
+                          colReorder: true,
                           columnDefs: [{
                                   orderable: false,
                                   className: "colUOMID",
@@ -68,8 +73,6 @@ Template.uomlistpop.onRendered(function() {
                                   "targets": [8]
                               }
                           ],
-                          colReorder: true,
-
                           pageLength: initialDatatableLoad,
                           lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                           info: true,
@@ -91,7 +94,7 @@ Template.uomlistpop.onRendered(function() {
               let records = [];
               let inventoryData = [];
               for (let i = 0; i < data.tunitofmeasure.length; i++) {
-                  var dataList = [
+                  var dataListUOM = [
                     data.tunitofmeasure[i].fields.ID || '',
                     data.tunitofmeasure[i].fields.UOMName || '',
                     data.tunitofmeasure[i].fields.Description || '-',
@@ -104,14 +107,15 @@ Template.uomlistpop.onRendered(function() {
                   ];
 
 
-                  splashArrayUOMList.push(dataList);
+                  splashArrayUOMList.push(dataListUOM);
               }
               if (splashArrayUOMList) {
-
                   $('#tblUOM').DataTable({
                       data: splashArrayUOMList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
                       columnDefs: [{
                               orderable: false,
                               className: "colUOMID",
@@ -142,8 +146,6 @@ Template.uomlistpop.onRendered(function() {
                               "targets": [8]
                           }
                       ],
-                      colReorder: true,
-
                       pageLength: initialDatatableLoad,
                       lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                       info: true,
@@ -161,11 +163,11 @@ Template.uomlistpop.onRendered(function() {
           }
       }).catch(function (err) {
           sideBarService.getUOMVS1().then(function (data) {
-
+            addVS1Data('TUnitOfMeasure',JSON.stringify(data));
               let records = [];
               let inventoryData = [];
               for (let i = 0; i < data.tunitofmeasure.length; i++) {
-                  var dataList = [
+                  var dataListUOM = [
                     data.tunitofmeasure[i].fields.ID || '',
                     data.tunitofmeasure[i].fields.UOMName || '',
                     data.tunitofmeasure[i].fields.Description || '-',
@@ -177,15 +179,16 @@ Template.uomlistpop.onRendered(function() {
                     data.tunitofmeasure[i].fields.NoOfBoxes || 0
                   ];
 
-                  splashArrayUOMList.push(dataList);
+                  splashArrayUOMList.push(dataListUOM);
               }
 
               if (splashArrayUOMList) {
-
                   $('#tblUOM').DataTable({
                       data: splashArrayUOMList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
                       columnDefs: [{
                               orderable: false,
                               className: "colUOMID",
@@ -216,8 +219,6 @@ Template.uomlistpop.onRendered(function() {
                               "targets": [8]
                           }
                       ],
-                      colReorder: true,
-
                       pageLength: initialDatatableLoad,
                       lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                       info: true,
@@ -229,14 +230,14 @@ Template.uomlistpop.onRendered(function() {
                         // $("<button class='btn btn-primary btnAddNewUOM' data-dismiss='modal' data-toggle='modal' data-target='#newUOMModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblUOM_filter");
                         $("<button class='btn btn-primary btnRefreshUOM' type='button' id='btnRefreshUOM' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUOM_filter");
                       }
-                  });
 
+                  });
               }
           })
       });
 
   };
-  tempObj.getAllUOMs();
+  templateObject.getAllUOMs();
 
 });
 

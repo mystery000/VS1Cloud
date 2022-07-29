@@ -18,6 +18,8 @@ let sideBarService = new SideBarService();
 const contactService = new ContactService();
 // let purchaseService = new PurchaseBoardService();
 
+const refreshTableTimout = 300;
+
 function MakeNegative() {
   $("td").each(function () {
     if (
@@ -37,8 +39,6 @@ function setAlreadyLoaded(step, bool = false) {
 
 function isAlreadyLoaded(step) {
   const string = localStorage.getItem(`SETUP_STEP_ALREADY-${step}`) || false;
-
-  console.log("step", step, string);
 
   return string == "true" || string == true ? true : false;
 }
@@ -272,10 +272,7 @@ Template.setup.onRendered(function () {
   templateObject.isSetupFinished = async () => {
     const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
 
-    //console.log("isFinished", isFinished);
     if (isFinished == true || isFinished == "true") {
-      // window.location.href = "/";
-      //console.log('going to redirect to homepage');
       FlowRouter.go("dashboard");
     }
   };
@@ -2255,7 +2252,7 @@ Template.setup.onRendered(function () {
   };
   templateObject.loadEmployees = async (refresh = false) => {
     const sideBarService = new SideBarService();
-    console.log("Loading employees");
+
     LoadingOverlay.show();
     let dataObject = await sideBarService.getAllEmployees("All");
     let employeeList = [];
@@ -2263,13 +2260,6 @@ Template.setup.onRendered(function () {
     if (dataObject.temployee) {
       employeeList = Employee.fromList(dataObject.temployee);
     }
-
-    console.log(
-      "Before: ",
-      templateObject.currentEmployees.get().length,
-      " after: ",
-      employeeList.length
-    );
 
     await templateObject.currentEmployees.set(employeeList);
 
@@ -2447,13 +2437,19 @@ Template.setup.onRendered(function () {
           expirydate: account.fields.ExpiryDate || "",
           cvc: account.fields.CVC || "",
         };
-        _accountList.push(dataList);
+        if (account.fields.Active != false) {
+          _accountList.push(dataList);
+        }
       });
 
       templateObject.accountList.set(_accountList);
     }
 
-    setTimeout(function () {
+    if ($.fn.dataTable.isDataTable("#tblAccountOverview")) {
+      $("#tblAccountOverview").DataTable().destroy();
+    }
+
+    setTimeout(() => {
       // //$.fn.dataTable.moment('DD/MM/YY');
       $("#tblAccountOverview")
         .DataTable({
@@ -2464,52 +2460,6 @@ Template.setup.onRendered(function () {
           destroy: true,
           colReorder: true,
           sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          // buttons: [
-          //   {
-          //     extend: "csvHtml5",
-          //     text: "",
-          //     download: "open",
-          //     className: "btntabletocsv hiddenColumn",
-          //     filename: "accountoverview_" + moment().format(),
-          //     orientation: "portrait",
-          //     exportOptions: {
-          //       columns: ":visible",
-          //     },
-          //   },
-          //   {
-          //     extend: "print",
-          //     download: "open",
-          //     className: "btntabletopdf hiddenColumn",
-          //     text: "",
-          //     title: "Accounts Overview",
-          //     filename: "Accounts Overview_" + moment().format(),
-          //     exportOptions: {
-          //       columns: ":visible",
-          //     },
-          //   },
-          //   {
-          //     extend: "excelHtml5",
-          //     title: "",
-          //     download: "open",
-          //     className: "btntabletoexcel hiddenColumn",
-          //     filename: "accountoverview_" + moment().format(),
-          //     orientation: "portrait",
-          //     exportOptions: {
-          //       columns: ":visible",
-          //     },
-          //     // ,
-          //     // customize: function ( win ) {
-          //     //   $(win.document.body).children("h1:first").remove();
-          //     // }
-          //   },
-          // ],
-          // bStateSave: true,
-          // rowId: 0,
-          // pageLength: initialDatatableLoad,
-          // lengthMenu: [
-          //   [initialDatatableLoad, -1],
-          //   [initialDatatableLoad, "All"],
-          // ],
           pageLength: 25,
           paging: true,
           info: true,
@@ -2539,7 +2489,7 @@ Template.setup.onRendered(function () {
           }, 100);
         });
       // $('.fullScreenSpin').css('display','none');
-    }, 10);
+    }, refreshTableTimout);
 
     LoadingOverlay.hide();
   };
@@ -3211,16 +3161,16 @@ Template.setup.onRendered(function () {
 
   templateObject.loadDefaultCustomer = async (refresh = false) => {
     LoadingOverlay.show();
-    let dataObject = await getVS1Data("TCustomerVS1");
-    let data =
-      dataObject.length == 0 || refresh == true
-        ? await sideBarService.getAllCustomersDataVS1("All")
-        : JSON.parse(dataObject[0].data);
+    //let dataObject = await getVS1Data("TCustomerVS1");
+    // let data =
+    //   dataObject.length == 0 || refresh == true
+    //     ? await sideBarService.getAllCustomersDataVS1("All")
+    //     : JSON.parse(dataObject[0].data);
 
-    if (refresh) {
-      ///dataObject[0].data = data;
-      await addVS1Data("TCustomerVS1", JSON.stringify(data));
-    }
+    let data = await sideBarService.getAllCustomersDataVS1("All");
+
+    // if (refresh) await addVS1Data("TCustomerVS1", JSON.stringify(data));
+    await addVS1Data("TCustomerVS1", JSON.stringify(data));
 
     let _customerList = [];
     let _customerListHeaders = [];
@@ -3332,7 +3282,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#tblCustomerlist")) {
         $("#tblCustomerlist").DataTable().destroy();
-      } 
+      }
 
       setTimeout(() => {
         $("#tblCustomerlist")
@@ -3377,8 +3327,6 @@ Template.setup.onRendered(function () {
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
         $(".fullScreenSpin").css("display", "none");
       }, 300);
-
-      
     }
 
     LoadingOverlay.hide();
@@ -3437,13 +3385,16 @@ Template.setup.onRendered(function () {
 
   templateObject.loadSuppliers = async (refresh = false) => {
     LoadingOverlay.show();
-    let dataObject = await getVS1Data("TSupplierVS1");
-    let data =
-      dataObject.length == 0 || refresh == true
-        ? await sideBarService.getAllSuppliersDataVS1("All")
-        : JSON.parse(dataObject[0].data);
+    // let dataObject = await getVS1Data("TSupplierVS1");
+    // let data =
+    //   dataObject.length == 0 || refresh == true
+    //     ? await sideBarService.getAllSuppliersDataVS1("All")
+    //     : JSON.parse(dataObject[0].data);
 
-    if (refresh) await addVS1Data("TSupplierVS1", JSON.stringify(data));
+    let data = await sideBarService.getAllSuppliersDataVS1("All"); // always load from database fresh data
+
+    // if (refresh) await addVS1Data("TSupplierVS1", JSON.stringify(data));
+    await addVS1Data("TSupplierVS1", JSON.stringify(data));
 
     let _supplierList = [];
     let _supplierListHeaers = [];
@@ -3536,7 +3487,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#tblSupplierlist")) {
         $("#tblSupplierlist").DataTable().destroy();
-      } 
+      }
 
       setTimeout(function () {
         $("#tblSupplierlist")
@@ -3838,7 +3789,7 @@ Template.setup.onRendered(function () {
 
       if ($.fn.dataTable.isDataTable("#InventoryTable")) {
         $("#InventoryTable").DataTable().destroy();
-      } 
+      }
 
       setTimeout(function () {
         $("#InventoryTable")
@@ -4117,7 +4068,7 @@ Template.setup.onRendered(function () {
         $("div.dataTables_filter input").addClass(
           "form-control form-control-sm"
         );
-      }, 300);
+      }, refreshTableTimout);
     }
   };
 
@@ -4130,7 +4081,6 @@ Template.setup.onRendered(function () {
    * @returns
    */
   templateObject.lazyLoader = (stepId = 1) => {
-    console.log("Smart loading step", stepId);
     if (isAlreadyLoaded(stepId) == false) {
       //LoadingOverlay.show();
       switch (stepId) {
@@ -8767,9 +8717,8 @@ Template.setup.events({
   },
 
   // STEP 6
-  "click .setup-wizard .setup-step-6 .btnRefresh": (e) => {
-    const templateObject = Template.instance();
-    templateObject.loadAccountList();
+  "click .setup-wizard .setup-step-6 .btnRefresh": (e, template) => {
+    template.loadAccountList();
   },
 
   // TODO: Step 7
@@ -8801,7 +8750,6 @@ Template.setup.events({
   },
   // TODO: Step 9
   "click .setup-step-9 .btnRefresh": (e) => {
-    console.log("refreshing step 9");
     const templateObject = Template.instance();
     templateObject.loadInventory(true);
     $(".modal.show").modal("hide");
@@ -8865,7 +8813,8 @@ Template.setup.events({
     }
   },
   "click #btnNewProduct": (e) => {
-    $($(e.currentTarget).attr("data-toggle")).modal("toggle");
+    const modal = $(e.currentTarget).attr("data-toggle");
+    $(modal).modal("show");
   },
   // "click .btnRefresh": () => {
   //   Meteor._reload.reload();

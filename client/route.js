@@ -208,6 +208,15 @@ authenticatedRoutes.route('/dashboard', {
     }
 });
 
+authenticatedRoutes.route('/dashboardexe', {
+    name: 'dashboardexe',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'dashboardexe'
+        });
+    }
+});
+
 authenticatedRoutes.route('/appointments', {
     name: 'appointments',
     action() {
@@ -1065,6 +1074,15 @@ authenticatedRoutes.route('/departmentSettings', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'departmentSettings'
+        });
+    }
+});
+
+authenticatedRoutes.route('/reportsAccountantSettings', {
+    name: 'reportsAccountantSettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'reportsAccountantSettings'
         });
     }
 });

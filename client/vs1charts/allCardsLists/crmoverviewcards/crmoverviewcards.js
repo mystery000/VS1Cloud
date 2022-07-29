@@ -43,7 +43,6 @@ Template.crmoverviewcards.onRendered(function () {
         $(".fullScreenSpin").css("display", "none");
       }
     }).catch(function (err) {
-      console.log(err);
       templateObject.getAllTaskList();
     });
   };
@@ -78,7 +77,6 @@ Template.crmoverviewcards.onRendered(function () {
       }
       $(".fullScreenSpin").css("display", "none");
     }).catch(function (err) {
-      console.log(err);
       $(".fullScreenSpin").css("display", "none");
     });
   };
@@ -117,7 +115,6 @@ Template.crmoverviewcards.onRendered(function () {
         }
       }
     }).catch(function (err) {
-      console.log(err);
       templateObject.getTProjectList();
     });
   };
@@ -143,7 +140,7 @@ Template.crmoverviewcards.onRendered(function () {
       }
       addVS1Data("TCRMProjectList", JSON.stringify(data));
     }).catch(function (err) {
-      console.log(err);
+
     });
   };
 

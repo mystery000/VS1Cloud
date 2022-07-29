@@ -715,7 +715,15 @@ Template.taxRatesSettings.onRendered(function () {
         $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
         $("#edtTaxDesc").val(tax.description);
 
-        templateObject.subtaxlines.set(tax.lines);
+        let subTaxLines = tax.lines.map((v, index) => ({
+          RowId: `subtax_${index}`,
+          SubTaxCode: v.SubTaxCode,
+          Percentage: v.Percentage,
+          PercentageOn: v.PercentageOn,
+          CapAmount: v.CapAmount,
+          ThresholdAmount: v.ThresholdAmount
+        }));
+        templateObject.subtaxlines.set(subTaxLines);
 
         //});
 
@@ -1054,36 +1062,53 @@ Template.taxRatesSettings.events({
   "keydown #subTaxCapAmt": numberInputValidate,
   "keydown #subTaxThresholdAmt": numberInputValidate,
   "click .btnNewSubTax": function () {
+    $("#edtSubTaxLineId").val('');
     $('#subTaxCode').val('');
     $('#subTaxPercent').val('');
     $('#subTaxPercentageOn').prop('readonly', false);
     $('#subTaxCapAmt').val('');
     $('#subTaxThresholdAmt').val('');
+    $('#add-subtax-title').text('Add Sub Tax');
   },
-  "click .btnAddSubTax": function () {
+  "click .btnSaveSubTax": function () {
     let templateObject = Template.instance();
+    let edtSubTaxLineId = $("#edtSubTaxLineId").val();
     let subTaxId = $('#subTaxCode').val();
     let subTaxCodes = templateObject.subtaxcodes.get();
-    let subTaxCode = subTaxCodes.find((v) => String(v.id) === String(subTaxId));
+    let subTaxCode = subTaxCodes.find((v) => String(v.codename) === String(subTaxId));
 
     let subTaxPercent = parseFloat($('#subTaxPercent').val());
     let subTaxPercentageOn = $('#subTaxPercentageOn').val();
     let subTaxCapAmt = parseFloat($('#subTaxCapAmt').val());
     let subTaxThresholdAmt = parseFloat($('#subTaxThresholdAmt').val());
 
-    let newSubTaxLine = {
-      Id: subTaxId,
-      SubTaxCode: subTaxCode.codename,
-      Detail: subTaxCode,
-      Percentage: subTaxPercent,
-      PercentageOn: subTaxPercentageOn,
-      CapAmount: subTaxCapAmt,
-      ThresholdAmount: subTaxThresholdAmt
-    };
-
     let subTaxLines = templateObject.subtaxlines.get();
-    subTaxLines.push(newSubTaxLine);
-    templateObject.subtaxlines.set(subTaxLines);
+
+    if (edtSubTaxLineId == '') {
+      let newSubTaxLine = {
+        RowId: `subtax_${subTaxLines.length}`,
+        SubTaxCode: subTaxCode.codename,
+        Percentage: subTaxPercent,
+        PercentageOn: subTaxPercentageOn,
+        CapAmount: subTaxCapAmt,
+        ThresholdAmount: subTaxThresholdAmt
+      };
+  
+      subTaxLines.push(newSubTaxLine);
+      templateObject.subtaxlines.set(subTaxLines);
+    }
+    else {
+      subTaxLines = subTaxLines.map((v) => v.RowId === edtSubTaxLineId ? ({
+        RowId: v.RowId,
+        SubTaxCode: subTaxCode.codename,
+        Percentage: subTaxPercent,
+        PercentageOn: subTaxPercentageOn,
+        CapAmount: subTaxCapAmt,
+        ThresholdAmount: subTaxThresholdAmt
+      }) : v);
+
+      templateObject.subtaxlines.set(subTaxLines);
+    }
 
     let taxPercent = 0;
     subTaxLines.map((v) => taxPercent += v.Percentage);
@@ -1284,6 +1309,18 @@ Template.taxRatesSettings.events({
     let templateObject = Template.instance();
     templateObject.subtaxlines.set([]);
   },
+  "click #subTaxList td.clickable": (e) => SubTaxEditListener(e),
+  "click #subTaxList .table-remove": (e) => {
+    e.stopPropagation();
+    const targetID = $(e.target).closest("tr").attr("id"); // table row ID
+    let templateObject = Template.instance();
+    let subTaxLines = templateObject.subtaxlines.get();
+    subTaxLines = subTaxLines.filter((v) => v.RowId !== targetID);
+    templateObject.subtaxlines.set(subTaxLines);
+    let taxPercent = 0;
+    subTaxLines.map((v) => taxPercent += v.Percentage);
+    $('#edtTaxRate').val(Math.min(taxPercent, 100));
+  },
   'click .btnSubTaxes': function () {
     FlowRouter.go('/subtaxsettings');
   },
@@ -1338,7 +1375,7 @@ Template.taxRatesSettings.events({
     history.back(1);
   },
   "click #taxRatesList td.clickable": (e) => TaxRatesEditListener(e),
-  "click .table-remove": (e) => {
+  "click #taxRatesList .table-remove": (e) => {
     e.stopPropagation();
     const targetID = $(e.target).closest("tr").attr("id"); // table row ID
     $("#selectDeleteLineID").val(targetID);
@@ -1426,9 +1463,44 @@ export const TaxRatesEditListener = (e) => {
       $("#edtTaxRate").val(String(tax.rate).replace("%", ""));
       $("#edtTaxDesc").val(tax.description);
 
-      templateObject.subtaxlines.set(tax.lines);
+      let subTaxLines = tax.lines.map((v, index) => ({
+        RowId: `subtax_${index}`,
+        SubTaxCode: v.SubTaxCode,
+        Percentage: v.Percentage,
+        PercentageOn: v.PercentageOn,
+        CapAmount: v.CapAmount,
+        ThresholdAmount: v.ThresholdAmount
+      }));
+      templateObject.subtaxlines.set(subTaxLines);
 
       $("#addNewTaxRate").modal("toggle");
+    }
+  }
+};
+
+export const SubTaxEditListener = (e) => {
+  if (!e) return false;
+
+  const templateObject = Template.instance();
+
+  const tr = $(e.currentTarget).parent();
+  let lineId = tr.attr("id");
+
+  if (lineId) {
+    $("#add-subtax-title").text("Edit Sub Tax");
+    $("#edtTaxName").prop("readonly", true);
+    if (lineId !== "") {
+      var subTaxLineId = lineId || "";
+      let subTax = templateObject.subtaxlines.get().find((v) => String(v.RowId) === String(subTaxLineId));
+
+      $("#edtSubTaxLineId").val(subTaxLineId);
+      $("#subTaxCode").val(subTax.SubTaxCode);
+      $("#subTaxPercent").val(subTax.Percentage);
+      $("#subTaxPercentageOn").val(subTax.PercentageOn);
+      $("#subTaxCapAmt").val(subTax.CapAmount);
+      $("#subTaxThresholdAmt").val(subTax.ThresholdAmount);
+
+      $("#addSubTaxModal").modal("toggle");
     }
   }
 };

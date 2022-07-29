@@ -20,10 +20,9 @@ let utilityService = new UtilityService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;
-var template_list = [ 
+var template_list = [
     "Refunds",
- ];
-
+];
 
 Template.refundcard.onCreated(() => {
     const templateObject = Template.instance();
@@ -50,6 +49,7 @@ Template.refundcard.onCreated(() => {
     templateObject.termrecords = new ReactiveVar();
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.taxcodes = new ReactiveVar([]);
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
     /* Attachments */
@@ -139,11 +139,11 @@ Template.refundcard.onRendered(() => {
         const contactService = new ContactService();
 
         $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
-        
+
             title = $(this).parent().attr("data-id");
             number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
             templateObject.generateInvoiceData(title,number);
-            
+
         });
 
     const clientList = [];
@@ -170,7 +170,7 @@ Template.refundcard.onRendered(() => {
 
 
 
-      
+
     templateObject.getTemplateInfo = function() {
 
         getVS1Data('TemplateSettings').then(function(dataObject) {
@@ -188,16 +188,16 @@ Template.refundcard.onRendered(() => {
                 $('#choosetemplate').attr("checked", "checked");
 
                 if($('#choosetemplate').is(':checked'))
-                {        
+                {
                     //$('#templateselection').modal('show');
                 }
                 else
-                {   
+                {
                 $('#templateselection').modal('hide');
                 }
-               
+
             }
-    
+
 
         });
 
@@ -210,19 +210,19 @@ Template.refundcard.onRendered(() => {
         templateObject.generateInvoiceData = function (template_title,number) {
             object_invoce = [];
             switch (template_title) {
-        
+
             case "Refunds":
                 showRefund1(template_title,number);
                 break;
             }
-    
+
         };
 
 
         function showRefund1(template_title,number) {
-                    
+
             var array_data = [];
-            let lineItems = [];   
+            let lineItems = [];
             object_invoce = [];
             let item_invoices = '';
 
@@ -305,8 +305,8 @@ Template.refundcard.onRendered(() => {
             stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-     
-            
+
+
                 if(number == 1)
                 {
                     item_invoices = {
@@ -442,24 +442,24 @@ Template.refundcard.onRendered(() => {
                 }
 
 
-       
-            
+
+
                 object_invoce.push(item_invoices);
-            
+
                 $("#templatePreviewModal .field_payment").show();
                 $("#templatePreviewModal .field_amount").show();
 
                 updateTemplate1(object_invoce);
 
                   saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-      
+
     }
 
         function showRefund(template_title,number)
         {
-             
+
             var array_data = [];
-            let lineItems = [];   
+            let lineItems = [];
             object_invoce = [];
             let item_invoices = '';
 
@@ -542,8 +542,8 @@ Template.refundcard.onRendered(() => {
             stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-     
-            
+
+
                 if(number == 1)
                 {
                     item_invoices = {
@@ -678,9 +678,9 @@ Template.refundcard.onRendered(() => {
 
                 }
 
-        
+
             object_invoce.push(item_invoices);
-           
+
             $("#templatePreviewModal .field_payment").show();
             $("#templatePreviewModal .field_amount").show();
             updateTemplate(object_invoce);
@@ -702,7 +702,7 @@ Template.refundcard.onRendered(() => {
               $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
               $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
               $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
-        
+
               if(object_invoce[0]["applied"] == ""){
                 $("#templatePreviewModal .applied").hide()
                 $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
@@ -710,9 +710,9 @@ Template.refundcard.onRendered(() => {
                 $("#templatePreviewModal .applied").show()
                 $("#templatePreviewModal .applied").text("Applied : " +  object_invoce[0]["applied"]);
               }
-    
-    
-    
+
+
+
               if(object_invoce[0]["supplier_type"] == ""){
                 $("#templatePreviewModal .customer").hide()
               }else{
@@ -720,7 +720,7 @@ Template.refundcard.onRendered(() => {
               }
               $("#templatePreviewModal .customer").empty();
               $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
-        
+
               if(object_invoce[0]["supplier_name"] == ""){
                 $("#templatePreviewModal .pdfCustomerName").hide()
               }else{
@@ -728,7 +728,7 @@ Template.refundcard.onRendered(() => {
               }
               $("#templatePreviewModal .pdfCustomerName").empty();
               $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-        
+
               if(object_invoce[0]["supplier_addr"] == ""){
                 $("#templatePreviewModal .pdfCustomerAddress").hide()
               }else{
@@ -736,54 +736,54 @@ Template.refundcard.onRendered(() => {
               }
               $("#templatePreviewModal .pdfCustomerAddress").empty();
               $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-        
-              
+
+
               $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
               $("#templatePreviewModal .modal-title").text(
                 object_invoce[0]["title"] + " "+ " Template"
               );
-    
+
               if(object_invoce[0]["value"]=="")
               {
                   $('.print-header-value').text('');
-    
+
               }
               else{
                  $('.print-header-value').text(object_invoce[0]["value"]);
               }
-        
+
               if(object_invoce[0]["bsb"]=="")
-              { 
+              {
                   $('#templatePreviewModal .field_payment').hide();
-    
+
               }
               else{
-    
+
                   $('#templatePreviewModal .field_payment').show();
               }
-             
-        
+
+
               $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
               $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
               $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-        
-        
+
+
               if(object_invoce[0]["date"] == ""){
                 $("#templatePreviewModal .dateNumber").hide();
               }else{
                 $("#templatePreviewModal .dateNumber").show();
               }
-        
+
               $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
-        
+
               if(object_invoce[0]["pqnumber"] == ""){
                 $("#templatePreviewModal .pdfPONumber").hide();
               }else{
                 $("#templatePreviewModal .pdfPONumber").show();
               }
-        
+
               $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-        
+
               if(object_invoce[0]["invoicenumber"] == ""){
                 $("#templatePreviewModal .invoiceNumber").hide();
               }else{
@@ -797,14 +797,14 @@ Template.refundcard.onRendered(() => {
                 $("#templatePreviewModal .refNumber").show();
               }
               $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
-    
+
               if(object_invoce[0]["duedate"] == ""){
                 $("#templatePreviewModal .pdfTerms").hide();
               }else{
                 $("#templatePreviewModal .pdfTerms").show();
               }
               $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
-    
+
               if (object_invoce[0]["paylink"] == "") {
                     $("#templatePreviewModal .link").hide();
                     $("#templatePreviewModal .linkText").hide();
@@ -812,7 +812,7 @@ Template.refundcard.onRendered(() => {
                     $("#templatePreviewModal .link").show();
                     $("#templatePreviewModal .linkText").show();
               }
-    
+
               if (object_invoce[0]["showFX"] == "") {
                     $("#templatePreviewModal .showFx").hide();
                     $("#templatePreviewModal .showFxValue").hide();
@@ -821,31 +821,31 @@ Template.refundcard.onRendered(() => {
                     $("#templatePreviewModal .showFxValue").show();
                     $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
              }
-    
-    
+
+
               if(object_invoce[0]["customfield1"] == "NA")
-              {   
+              {
                       $('#customfieldtablenew').css('display', 'none');
                       $('#customdatatablenew').css('display', 'none');
                       $('#templatePreviewModal .customfield1').text('');
                       $('#templatePreviewModal .customfield2').text('');
                       $('#templatePreviewModal .customfield3').text('');
-                      
-                      
+
+
                       $('#templatePreviewModal .customfield1data').text('');
                       $('#templatePreviewModal .customfield2data').text('');
                       $('#templatePreviewModal .customfield3data').text('');
-        
+
               }
               else
               {
                     $('#customfieldtablenew').css('display', 'block');
                     $('#customdatatablenew').css('display', 'block');
-                    
+
                     $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
                     $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
                     $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-                    
+
                     if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
                     {
                       $('#templatePreviewModal .customfield1data').text('');
@@ -854,7 +854,7 @@ Template.refundcard.onRendered(() => {
                     {
                       $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
                     }
-      
+
                     if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
                     {
                       $('#templatePreviewModal .customfield2data').text('');
@@ -863,7 +863,7 @@ Template.refundcard.onRendered(() => {
                     {
                       $('#templatePreviewModal .customfield2data').text( object_invoce[0]["customfield2"]);
                     }
-    
+
                     if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
                     {
                       $('#templatePreviewModal .customfield3data').text('');
@@ -872,11 +872,11 @@ Template.refundcard.onRendered(() => {
                     {
                       $('#templatePreviewModal .customfield3data').text( object_invoce[0]["customfield3"]);
                     }
-    
-    
-    
+
+
+
               }
-    
+
               if(object_invoce[0]["customfield1"] == "NA")
               {
                     $('#customfieldlable').css('display', 'none');
@@ -887,7 +887,7 @@ Template.refundcard.onRendered(() => {
                     $('#customfieldlable').css('display', 'block');
                     $('#customfieldlabledata').css('display', 'block');
               }
-    
+
             //   table header
               var tbl_header = $("#templatePreviewModal .tbl_header")
               tbl_header.empty()
@@ -895,7 +895,7 @@ Template.refundcard.onRendered(() => {
                     tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
               }
             }
-    
+
             // table content
              var tbl_content = $("#templatePreviewModal .tbl_content")
              tbl_content.empty()
@@ -910,9 +910,9 @@ Template.refundcard.onRendered(() => {
                  tbl_content.append(content)
                  tbl_content.append("</tr>")
              }
-    
+
             // total amount
-    
+
             if(object_invoce[0]["subtotal"] == "")
             {
                 $("#templatePreviewModal .field_amount").hide();
@@ -925,33 +925,33 @@ Template.refundcard.onRendered(() => {
                   $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
                 }
                 if(object_invoce[0]["gst"] != ""){
-    
-    
+
+
                     $('#templatePreviewModal #grandTotal').text("Grand total");
                     $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
                 }
-    
+
                 if(object_invoce[0]["total"] != ""){
                     $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
                 }
-    
+
                 if(object_invoce[0]["bal_due"] != ""){
                     $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
                 }
-    
+
                 if(object_invoce[0]["paid_amount"] != ""){
                     $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
                 }
-    
+
             }
-    
-    
+
+
           }
-    
+
         function updateTemplate(object_invoce) {
-    
+
             if (object_invoce.length > 0) {
-            
+
             $('#html-2-pdfwrapper_new #printcomment').text(object_invoce[0]["comment"]);
             $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
             $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
@@ -963,7 +963,7 @@ Template.refundcard.onRendered(() => {
             $("#html-2-pdfwrapper_new .o_reg").text(object_invoce[0]["o_reg"]);
             $("#html-2-pdfwrapper_new .o_abn").text(object_invoce[0]["o_abn"]);
             $("#html-2-pdfwrapper_new .o_phone").text(object_invoce[0]["o_phone"]);
-    
+
             if(object_invoce[0]["applied"] == ""){
                 $("#html-2-pdfwrapper_new .applied").hide()
                 $("#html-2-pdfwrapper_new .applied").text(object_invoce[0]["applied"]);
@@ -971,9 +971,9 @@ Template.refundcard.onRendered(() => {
                 $("#html-2-pdfwrapper_new .applied").show()
                 $("#html-2-pdfwrapper_new .applied").text("Applied : " +  object_invoce[0]["applied"]);
             }
-    
-    
-    
+
+
+
             if(object_invoce[0]["supplier_type"] == ""){
                 $("#html-2-pdfwrapper_new .customer").hide()
             }else{
@@ -981,7 +981,7 @@ Template.refundcard.onRendered(() => {
             }
             $("#html-2-pdfwrapper_new .customer").empty();
             $("#html-2-pdfwrapper_new .customer").append(object_invoce[0]["supplier_type"]);
-    
+
             if(object_invoce[0]["supplier_name"] == ""){
                 $("#html-2-pdfwrapper_new .pdfCustomerName").hide()
             }else{
@@ -989,7 +989,7 @@ Template.refundcard.onRendered(() => {
             }
             $("#html-2-pdfwrapper_new .pdfCustomerName").empty();
             $("#html-2-pdfwrapper_new .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-    
+
             if(object_invoce[0]["supplier_addr"] == ""){
                 $("#html-2-pdfwrapper_new .pdfCustomerAddress").hide()
             }else{
@@ -997,46 +997,46 @@ Template.refundcard.onRendered(() => {
             }
             $("#html-2-pdfwrapper_new .pdfCustomerAddress").empty();
             $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-    
-    
+
+
             $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
-            
+
             $("#templatePreviewModal .modal-title").text(
                 object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
              );
-    
+
             if(object_invoce[0]["value"]=="")
             {
                   $('.print-header-value').text('');
-    
+
             }
             else
             {
                  $('.print-header-value').text(object_invoce[0]["value"]);
             }
-    
-    
+
+
             if(object_invoce[0]["bsb"]=="")
-            { 
+            {
                 $('#html-2-pdfwrapper_new .field_payment').hide();
-    
+
             }
             else{
-    
+
                 $('#html-2-pdfwrapper_new .field_payment').show();
             }
-    
+
             $("#html-2-pdfwrapper_new .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
             $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
             $("#html-2-pdfwrapper_new .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-    
-    
+
+
             if(object_invoce[0]["date"] == ""){
                 $("#html-2-pdfwrapper_new .dateNumber").hide();
             }else{
                 $("#html-2-pdfwrapper_new .dateNumber").show();
             }
-    
+
             if (object_invoce[0]["showFX"] == "") {
                 $("#html-2-pdfwrapper_new .showFx").hide();
                 $("#html-2-pdfwrapper_new .showFxValue").hide();
@@ -1045,15 +1045,15 @@ Template.refundcard.onRendered(() => {
                 $("#html-2-pdfwrapper_new .showFxValue").show();
                 $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
             }
-    
+
             $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
-    
+
             if(object_invoce[0]["pqnumber"] == ""){
                 $("#html-2-pdfwrapper_new .pdfPONumber").hide();
             }else{
                 $("#html-2-pdfwrapper_new .pdfPONumber").show();
             }
-    
+
             if(object_invoce[0]["customfield1"] == "NA")
             {
                     $('#customfieldtablenew').css('display', 'none');
@@ -1061,22 +1061,22 @@ Template.refundcard.onRendered(() => {
                     $('#html-2-pdfwrapper_new .customfield1').text('');
                     $('#html-2-pdfwrapper_new .customfield2').text('');
                     $('#html-2-pdfwrapper_new .customfield3').text('');
-                    
-                    
+
+
                     $('#html-2-pdfwrapper_new .customfield1data').text('');
                     $('#html-2-pdfwrapper_new .customfield2data').text('');
                     $('#html-2-pdfwrapper_new .customfield3data').text('');
-      
+
             }
             else
             {
                   $('#customfieldtablenew').css('display', 'block');
                   $('#customdatatablenew').css('display', 'block');
-                  
+
                   $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
                   $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
                   $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-                  
+
                   if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
                   {
                     $('#html-2-pdfwrapper_new .customfield1data').text('');
@@ -1085,7 +1085,7 @@ Template.refundcard.onRendered(() => {
                   {
                     $('#html-2-pdfwrapper_new .customfield1data').text(object_invoce[0]["customfield1"]);
                   }
-    
+
                   if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
                   {
                     $('#html-2-pdfwrapper_new .customfield2data').text('');
@@ -1094,7 +1094,7 @@ Template.refundcard.onRendered(() => {
                   {
                     $('#html-2-pdfwrapper_new .customfield2data').text( object_invoce[0]["customfield2"]);
                   }
-    
+
                   if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
                   {
                     $('#html-2-pdfwrapper_new .customfield3data').text('');
@@ -1103,37 +1103,37 @@ Template.refundcard.onRendered(() => {
                   {
                     $('#html-2-pdfwrapper_new .customfield3data').text(object_invoce[0]["customfield3"]);
                   }
-                  
-                
-                 
+
+
+
             }
-    
-           
-        
+
+
+
             $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
-        
+
             if(object_invoce[0]["invoicenumber"] == ""){
                 $("#html-2-pdfwrapper_new .invoiceNumber").hide();
             }else{
                 $("#html-2-pdfwrapper_new .invoiceNumber").show();
             }
-           
+
             $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
-        
+
             if(object_invoce[0]["refnumber"] == ""){
                 $("#html-2-pdfwrapper_new .refNumber").hide();
             }else{
                 $("#html-2-pdfwrapper_new .refNumber").show();
             }
             $("#html-2-pdfwrapper_new .ro").text(object_invoce[0]["refnumber"]);
-            
+
             if(object_invoce[0]["duedate"] == ""){
                 $("#html-2-pdfwrapper_new .pdfTerms").hide();
             }else{
                 $("#html-2-pdfwrapper_new .pdfTerms").show();
             }
             $("#html-2-pdfwrapper_new .due").text(object_invoce[0]["duedate"]);
-            
+
             if (object_invoce[0]["paylink"] == "") {
                 $("#html-2-pdfwrapper_new .link").hide();
                 $("#html-2-pdfwrapper_new .linkText").hide();
@@ -1141,19 +1141,19 @@ Template.refundcard.onRendered(() => {
                 $("#html-2-pdfwrapper_new .link").show();
                 $("#html-2-pdfwrapper_new .linkText").show();
             }
-    
+
              if(object_invoce[0]["customfield1"] == "")
-             {   
+             {
                         $('#customfieldlable').css('display', 'none');
                         $('#customfieldlabledata').css('display', 'none');
-    
+
              }
              else
              {
                         $('#customfieldlable').css('display', 'block');
                         $('#customfieldlabledata').css('display', 'block');
              }
-        
+
             //   table header
             var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
             tbl_header.empty()
@@ -1161,12 +1161,12 @@ Template.refundcard.onRendered(() => {
                     tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
             }
             }
-        
+
             // table content
             var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
             tbl_content.empty()
             const data = object_invoce[0]["data"]
-            
+
             for(item of data){
                 tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
                 var content = ""
@@ -1176,42 +1176,42 @@ Template.refundcard.onRendered(() => {
                 tbl_content.append(content)
                 tbl_content.append("</tr>")
             }
-            
-            // total amount 
-            
+
+            // total amount
+
             if(object_invoce[0]["subtotal"] == "")
-            {     
+            {
                 $("#html-2-pdfwrapper_new .field_amount").hide();
             }
             else
             {
                 $("#html-2-pdfwrapper_new .field_amount").show();
-              
+
                 if(object_invoce[0]["subtotal"] != ""){
                   $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
                   $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
                 }
-    
+
                 if(object_invoce[0]["gst"] != ""){
                     $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
                     $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
                 }
-                
-        
+
+
                 if(object_invoce[0]["total"] != ""){
                     $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
                 }
-        
+
                 if(object_invoce[0]["bal_due"] != ""){
                     $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
                 }
-        
+
                 if(object_invoce[0]["paid_amount"] != ""){
                     $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
                 }
-        
+
             }
-           
+
         }
         function saveTemplateFields(key, value){
             localStorage.setItem(key, value)
@@ -1301,7 +1301,7 @@ Template.refundcard.onRendered(() => {
     }
     templateObject.getAllClients();
 
-    templateObject.getSalesCustomFieldsList= function () { 
+    templateObject.getSalesCustomFieldsList= function () {
       return;
     };
     setTimeout(function(){
@@ -2622,7 +2622,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
                     //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
                     // }, 2500);
-                    
+
                     /* START attachment */
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
@@ -4460,9 +4460,9 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
 
     exportSalesToPdf1 = function() {
 
-       
 
-        
+
+
         var source = document.getElementById('html-2-pdfwrapper');
         let id = $('.printID').attr("id");
         var pdf = new jsPDF('p', 'pt', 'a4');
@@ -4505,13 +4505,13 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
     exportSalesToPdf = async function (template_title,number)
     {
 
-                     
+
         if(template_title == 'Refunds')
         {
             await showRefund(template_title,number);
 
         }
-      
+
 
         let margins = {
             top: 0,
@@ -4530,8 +4530,8 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             {
                 file = 'Refunds -' + invoice_data.id + '.pdf';
             }
-           
-        
+
+
         }
 
         var opt = {
@@ -4583,6 +4583,8 @@ Template.refundcard.onRendered(function() {
     var splashArrayTaxRateList = new Array();
     const taxCodesList = [];
     const lineExtaSellItems = [];
+    let taxCodes = [];
+
     tempObj.getAllProducts = function() {
         getVS1Data('TProductVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -4861,15 +4863,15 @@ Template.refundcard.onRendered(function() {
 
     //tempObj.getAllProducts();
 
-
-
     tempObj.getAllTaxCodes = function() {
         getVS1Data('TTaxcodeVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTaxCodesVS1().then(function(data) {
+                salesService.getTaxCodesDetailVS1().then(function(data) {
 
                     let records = [];
                     let inventoryData = [];
+                    taxCodes = data.ttaxcodevs1;
+                    tempObj.taxcodes.set(taxCodes);
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                         var dataList = [
@@ -4950,6 +4952,8 @@ Template.refundcard.onRendered(function() {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < useData.length; i++) {
                     let taxRate = (useData[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -5025,10 +5029,12 @@ Template.refundcard.onRendered(function() {
                 }
             }
         }).catch(function(err) {
-            salesService.getTaxCodesVS1().then(function(data) {
+            salesService.getTaxCodesDetailVS1().then(function(data) {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -5150,14 +5156,14 @@ Template.refundcard.onRendered(function() {
     //         }
     //       }
     //       tempObj.displayfields.set(custFields);
-          
+
     //     })
     // }
     function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
       let customData = {};
       let customFieldCount = 14;
-  
+
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
           customData = {
@@ -5193,7 +5199,7 @@ Template.refundcard.onRendered(function() {
     }
 
     tempObj.getAllCustomFieldDisplaySettings = function () {
-      
+
       let listType = 'ltSaleslines';   // tempcode until InvoiceLines is added on backend
       try {
         getVS1Data("TltSaleslines").then(function (dataObject) {
@@ -5212,7 +5218,6 @@ Template.refundcard.onRendered(function() {
         })
 
       } catch (error) {
-        console.log(error)
       }
     }
 
@@ -5220,11 +5225,11 @@ Template.refundcard.onRendered(function() {
 
 });
 Template.refundcard.helpers({
-    
+
     // custom field displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();
-    }, 
+    },
 
         getTemplateList: function () {
             return template_list;
@@ -5345,7 +5350,7 @@ Template.refundcard.helpers({
             return Session.get('vs1companyPOBox');
         },
         companyphone: () => {
-            
+
          let phone = "Phone: "+ Session.get('vs1companyPhone');
          return phone;
 
@@ -5412,7 +5417,7 @@ Template.refundcard.events({
         }
         else
         {
-        
+
             $('.fullScreenSpin').css('display', 'inline-block');
             $('#html-2-pdfwrapper').css('display', 'block');
             if ($('.edtCustomerEmail').val() != "") {
@@ -5421,9 +5426,9 @@ Template.refundcard.events({
                 $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
                 var ponumber = $('#ponumber').val() || '.';
                 $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;  
-                exportSalesToPdf1();          
-            } 
+                var rowCount = $('.tblInvoiceLine tbody tr').length;
+                exportSalesToPdf1();
+            }
 
             $('#confirmprint').modal('hide');
         }
@@ -5431,16 +5436,16 @@ Template.refundcard.events({
     },
 
     'click #choosetemplate':function(event)
-    {   
+    {
         if($('#choosetemplate').is(':checked'))
-        {        
+        {
             $('#templateselection').modal('show');
         }
         else
-        {   
+        {
         $('#templateselection').modal('hide');
         }
-        
+
     },
     'click #edtSaleCustField1': function(event) {
         clickedInput = "one";
@@ -6181,6 +6186,105 @@ Template.refundcard.events({
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectLineID').val(targetID);
     },
+    'click .lineTaxAmount': function (event) {
+        let targetRow = $(event.target).closest('tr');
+        let targetID = targetRow.attr('id');
+        let targetTaxCode = targetRow.find('.lineTaxCode').val();
+        let qty = targetRow.find(".lineQty").val() || 0
+        let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+        const tmpObj = Template.instance();
+        const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+        if (!taxDetail) {
+            return;
+        }
+
+        let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+        let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+
+        let taxRateDetailList = [];
+        taxRateDetailList.push([
+            taxDetail.Description,
+            taxDetail.Id,
+            taxDetail.CodeName,
+            `${taxDetail.Rate * 100}%`,
+            "Selling Price",
+            `$${priceTotal}`,
+            `$${taxTotal}`,
+            `$${priceTotal + taxTotal}`,
+        ]);
+        if (taxDetail.Lines) {
+            taxDetail.Lines.map((line) => {
+                taxRateDetailList.push([
+                    "",
+                    line.Id,
+                    line.SubTaxCode,
+                    `${line.Percentage}%`,
+                    line.PercentageOn,
+                    "",
+                    `$${priceTotal * line.Percentage / 100}`,
+                    ""
+                ]);
+            });
+        }
+
+        if (taxRateDetailList) {
+
+            if (! $.fn.DataTable.isDataTable('#tblTaxDetail')) {
+                $('#tblTaxDetail').DataTable({
+                    data: [],
+                    order: [[0, 'desc']],
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [{
+                            orderable: true,
+                            targets: [0]
+                        }, {
+                            className: "taxId",
+                            "targets": [1]
+                        }, {
+                            className: "taxCode",
+                            "targets": [2]
+                        }, {
+                            className: "taxRate text-right",
+                            "targets": [3]
+                        }, {
+                            className: "taxRateOn",
+                            "targets": [4]
+                        }, {
+                            className: "amountEx text-right",
+                            "targets": [5]
+                        }, {
+                            className: "tax text-right",
+                            "targets": [6]
+                        }, {
+                            className: "amountInc text-right",
+                            "targets": [7]
+                        }
+                    ],
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "fnDrawCallback": function (oSettings) {
+
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRateDetail_filter");
+                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRateDetail_filter");
+                    }
+                });
+            }
+
+            let datatable = $('#tblTaxDetail').DataTable();
+            datatable.clear();
+            datatable.rows.add(taxRateDetailList);
+            datatable.draw(false);
+        }
+
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+    },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);
        var offset = $earch.offset();
@@ -6312,10 +6416,10 @@ Template.refundcard.events({
 
 
     'click .printConfirm':async function (event) {
-   
+
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         getVS1Data('TemplateSettings').then(function(dataObject) {
 
             let data = JSON.parse(dataObject[0].data);
@@ -6327,7 +6431,7 @@ Template.refundcard.events({
             if(data.fields)
             {
 
-                var bill =data.fields.bill;         
+                var bill =data.fields.bill;
                 var credits =  data.fields.credits;
                 var customer_payment = data.fields.customer_payment;
                 var invoices = data.fields.invoices;
@@ -6340,10 +6444,10 @@ Template.refundcard.events({
                 var statements = data.fields.statements;
                 var customer_statement =  data.fields.customer_statement;
                 var delivery_docket =  data.fields.delivery_docket;
-               
+
                 var print_options  =  {
                     type:"TemplateSettings",
-                    fields:{                              
+                    fields:{
                                client_id:loggedCompany,
                                bill:bill,
                                credits:credits,
@@ -6359,15 +6463,15 @@ Template.refundcard.events({
                                statements:statements,
                                delivery_docket:delivery_docket,
                           }
-              
-              
-                          
+
+
+
                   }
 
                   addVS1Data("TemplateSettings", JSON.stringify(print_options));
 
             }
-    
+
 
         });
 
@@ -6380,32 +6484,32 @@ Template.refundcard.events({
             $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
             var ponumber = $('#ponumber').val() || '.';
             $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;   
+            var rowCount = $('.tblInvoiceLine tbody tr').length;
 
             if($('#print_refund').is(':checked') || $('#print_refund_second').is(':checked') ) {
                 printTemplate.push('Refunds');
             }
-            
+
             if(printTemplate.length > 0) {
-                  
+
                   for(var i = 0; i < printTemplate.length; i++)
-                  {  
+                  {
                     if(printTemplate[i] == 'Refunds')
                     {
                         var template_number = $('input[name="Refunds"]:checked').val();
                     }
-        
-                   
+
+
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
                     }
-                     
+
                   }
-                 
+
             }
 
-         
+
 
         } else {
             swal({
@@ -7243,15 +7347,6 @@ Template.refundcard.events({
             $('.colQty').css('display', 'none');
         }
     },
-    'click .chkUnitPrice': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colUnitPrice').css('display', 'table-cell');
-            $('.colUnitPrice').css('padding', '.75rem');
-            $('.colUnitPrice').css('vertical-align', 'top');
-        } else {
-            $('.colUnitPrice').css('display', 'none');
-        }
-    },
     'click .chkCostPrice': function(event) {
         if ($(event.target).is(':checked')) {
             $('.colCostPrice').css('display', 'table-cell');
@@ -7279,15 +7374,6 @@ Template.refundcard.events({
             $('.colTaxRate').css('display', 'none');
         }
     },
-    'click .chkAmount': function(event) {
-        if ($(event.target).is(':checked')) {
-            $('.colAmount').css('display', 'table-cell');
-            $('.colAmount').css('padding', '.75rem');
-            $('.colAmount').css('vertical-align', 'top');
-        } else {
-            $('.colAmount').css('display', 'none');
-        }
-    },
     'click .chkTaxCode': function(event) {
       if ($(event.target).is(':checked')) {
           $('.colTaxCode').css('display', 'table-cell');
@@ -7308,13 +7394,56 @@ Template.refundcard.events({
         }
     },
 
+    'click .chkAmount': function (event) {
+      if ($(event.target).is(':checked')) {
+          $('.colAmount').css('display', 'table-cell');
+          $('.colAmount').css('padding', '.75rem');
+          $('.colAmount').css('vertical-align', 'top');
+
+          $('.chkAmountInc').prop("checked", false);
+          $('.colAmountInc').css('display', 'none');
+        } else {
+          $('.colAmount').css('display', 'none');
+
+          $('.chkAmountInc').prop("checked", true);
+          $('.colAmountInc').css('display', 'table-cell');
+          $('.colAmountInc').css('padding', '.75rem');
+          $('.colAmountInc').css('vertical-align', 'top');
+      }
+    },
     'click .chkAmountInc': function(event) {
       if ($(event.target).is(':checked')) {
           $('.colAmountInc').css('display', 'table-cell');
           $('.colAmountInc').css('padding', '.75rem');
           $('.colAmountInc').css('vertical-align', 'top');
+
+          $('.chkAmount').prop("checked", false);
+          $('.colAmount').css('display', 'none');
       } else {
           $('.colAmountInc').css('display', 'none');
+
+          $('.chkAmount').prop("checked", true);
+          $('.colAmount').css('display', 'table-cell');
+          $('.colAmount').css('padding', '.75rem');
+          $('.colAmount').css('vertical-align', 'top');
+      }
+    },
+
+    'click .chkUnitPrice': function (event) {
+      if ($(event.target).is(':checked')) {
+          $('.colUnitPrice').css('display', 'table-cell');
+          $('.colUnitPrice').css('padding', '.75rem');
+          $('.colUnitPrice').css('vertical-align', 'top');
+
+          $('.chkUnitPriceInc').prop("checked", false);
+          $('.colUnitPriceInc').css('display', 'none');
+      } else {
+          $('.colUnitPrice').css('display', 'none');
+
+          $('.chkUnitPriceInc').prop("checked", true);
+          $('.colUnitPriceInc').css('display', 'table-cell');
+          $('.colUnitPriceInc').css('padding', '.75rem');
+          $('.colUnitPriceInc').css('vertical-align', 'top');
       }
     },
     'click .chkUnitPriceInc': function(event) {
@@ -7322,8 +7451,16 @@ Template.refundcard.events({
             $('.colUnitPriceInc').css('display', 'table-cell');
             $('.colUnitPriceInc').css('padding', '.75rem');
             $('.colUnitPriceInc').css('vertical-align', 'top');
+
+          $('.chkUnitPrice').prop("checked", false);
+          $('.colUnitPrice').css('display', 'none');
         } else {
             $('.colUnitPriceInc').css('display', 'none');
+
+          $('.chkUnitPrice').prop("checked", true);
+          $('.colUnitPrice').css('display', 'table-cell');
+          $('.colUnitPrice').css('padding', '.75rem');
+          $('.colUnitPrice').css('vertical-align', 'top');
         }
     },
 
@@ -7346,7 +7483,7 @@ Template.refundcard.events({
         }
     },
     // display settings
-    
+
     'change .rngRangeProductName': function(event) {
 
         let range = $(event.target).val();
@@ -7498,7 +7635,7 @@ Template.refundcard.events({
         { label: 'Description', class: 'colDescription', active: true },
         { label: 'Qty', class: 'colQty', active: true },
         { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: true },
+        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Cost Price', class: 'colCostPrice', active: false },
         { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
@@ -7507,16 +7644,17 @@ Template.refundcard.events({
         { label: 'Tax Amount', class: 'colTaxAmount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
         { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: true }
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: false }
       ];
-      var datable = $('#tblInvoiceLine').DataTable();
+      // var datable = $('#tblInvoiceLine').DataTable();
 
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
 
-        var title = datable.column( index ).header();
+        // var title = datable.column( index ).header();
+        var title = $('#tblInvoiceLine').find('th').eq(index);
         $(title).html(reset_data[index].label);
 
         if (reset_data[index].active) {
@@ -7528,7 +7666,7 @@ Template.refundcard.events({
         }
 
       });
- 
+
     },
 
     'click .btnResetSettings': function(event) {

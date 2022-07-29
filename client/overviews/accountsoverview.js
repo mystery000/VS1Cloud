@@ -522,7 +522,8 @@ Template.accountsoverview.onRendered(function () {
     var swiftCode = data.fields.Extra || "";
     var routingNo = data.fields.BankCode || "";
 
-    var showTrans = data.fields.IsHeader || false;
+    var showTrans = data.fields.Required || false;
+    let isHeader = data.fields.IsHeader || false;
     var cardnumber = data.fields.CarNumber || "";
     var cardcvc = data.fields.CVC || "";
     var cardexpiry = data.fields.ExpiryDate || "";
@@ -568,6 +569,13 @@ Template.accountsoverview.onRendered(function () {
     } else {
       $(".useReceiptClaim").prop("checked", false);
     }
+
+    if (isHeader == "true") {
+      $(".accountIsHeader").prop("checked", true);
+    } else {
+      $(".accountIsHeader").prop("checked", false);
+    }
+
     $("#expenseCategory").val(expenseCategory);
     $("#expenseCategory").append('<option value="' +expenseCategory +'" selected="selected">' +expenseCategory +"</option>");
 
@@ -650,6 +658,7 @@ Template.accountsoverview.onRendered(function () {
         routingNo: lineData.BankCode || "",
         apcanumber: lineData.BankNumber || "",
         balance: accBalance || 0.0,
+        forTransaction: lineData.Required || false,
         isheader: lineData.IsHeader || false,
         cardnumber: lineData.CarNumber || "",
         expirydate: lineData.ExpiryDate || "",
@@ -823,46 +832,24 @@ Template.accountsoverview.onRendered(function () {
           //accountService.getOneAccount(listData).then(function (data) {
 
           var accountid = listData || "";
-          var accounttype =
-            $(event.target)
-              .closest("tr")
-              .find(".colType")
-              .attr("accounttype") || "";
-          var accountname =
-            $(event.target).closest("tr").find(".colAccountName").text() || "";
-          var accountno =
-            $(event.target).closest("tr").find(".colAccountNo").text() || "";
-          var taxcode =
-            $(event.target).closest("tr").find(".colTaxCode").text() || "";
-          var accountdesc =
-            $(event.target).closest("tr").find(".colDescription").text() || "";
-          var bankaccountname =
-            $(event.target).closest("tr").find(".colBankAccountName").text() ||
-            "";
+          var accounttype = $(event.target).closest("tr").find(".colType").attr("accounttype") || "";
+          var accountname = $(event.target).closest("tr").find(".colAccountName").text() || "";
+          var accountno = $(event.target).closest("tr").find(".colAccountNo").text() || "";
+          var taxcode = $(event.target).closest("tr").find(".colTaxCode").text() || "";
+          var accountdesc = $(event.target).closest("tr").find(".colDescription").text() || "";
+          var bankaccountname = $(event.target).closest("tr").find(".colBankAccountName").text() ||"";
           var bankname = localStorage.getItem("vs1companyBankName") ||$(event.target).closest("tr").find(".colBankName").text()|| "";
-          var bankbsb =
-            $(event.target).closest("tr").find(".colBSB").text() || "";
-          var bankacountno =
-            $(event.target).closest("tr").find(".colBankAccountNo").text() ||
-            "";
+          var bankbsb = $(event.target).closest("tr").find(".colBSB").text() || "";
+          var bankacountno = $(event.target).closest("tr").find(".colBankAccountNo").text() ||"";
 
-          var swiftCode =
-            $(event.target).closest("tr").find(".colExtra").text() || "";
-          var routingNo =
-            $(event.target).closest("tr").find(".colAPCANumber").text() || "";
+          var swiftCode =$(event.target).closest("tr").find(".colExtra").text() || "";
+          var routingNo =$(event.target).closest("tr").find(".colAPCANumber").text() || "";
 
-          var showTrans =
-            $(event.target)
-              .closest("tr")
-              .find(".colAPCANumber")
-              .attr("checkheader") || false;
+          var showTrans = $(event.target).closest("tr").find(".colAPCANumber").attr("checkheader") || false;
 
-          var cardnumber =
-            $(event.target).closest("tr").find(".colCardNumber").text() || "";
-          var cardexpiry =
-            $(event.target).closest("tr").find(".colExpiryDate").text() || "";
-          var cardcvc =
-            $(event.target).closest("tr").find(".colCVC").text() || "";
+          var cardnumber = $(event.target).closest("tr").find(".colCardNumber").text() || "";
+          var cardexpiry = $(event.target).closest("tr").find(".colExpiryDate").text() || "";
+          var cardcvc = $(event.target).closest("tr").find(".colCVC").text() || "";
 
           if (accounttype === "BANK") {
             $(".isBankAccount").removeClass("isNotBankAccount");
@@ -899,20 +886,13 @@ Template.accountsoverview.onRendered(function () {
           } else {
             $(".showOnTransactions").prop("checked", false);
           }
-          let useReceiptClaim = $(event.target)
-                  .closest("tr")
-                  .find(".colUseReceiptClaim")
-                  .attr("checkheader") || false;
+          let useReceiptClaim = $(event.target).closest("tr").find(".colUseReceiptClaim").attr("checkheader") || false;
           if (useReceiptClaim == "true") {
             $(".useReceiptClaim").prop("checked", true);
           } else {
             $(".useReceiptClaim").prop("checked", false);
           }
-          let category =
-              $(event.target)
-                  .closest("tr")
-                  .find(".colExpenseCategpry")
-                  .attr("category") || "";
+          let category = $(event.target).closest("tr").find(".colExpenseCategpry").attr("category") || "";
           $("#expenseCategory").val(category);
           //});
 
@@ -1363,13 +1343,20 @@ Template.accountsoverview.events({
     let accountService = new AccountService();
     let organisationService = new OrganisationService();
     let forTransaction = false;
+    let isHeader = false;
+    let useReceiptClaim = false;
+
     if ($("#showOnTransactions").is(":checked")) {
       forTransaction = true;
     }
-    let useReceiptClaim = false;
     if ($("#useReceiptClaim").is(":checked")) {
       useReceiptClaim = true;
     }
+
+    if ($("#accountIsHeader").is(":checked")) {
+      isHeader = true;
+    }
+
     let accountID = $("#edtAccountID").val();
     var accounttype = $("#sltAccountType").val();
     var accountname = $("#edtAccountName").val();
@@ -1420,8 +1407,9 @@ Template.accountsoverview.events({
               PublishOnVS1: true,
               Extra: swiftCode,
               BankNumber: routingNo,
-              IsHeader: forTransaction,
-              AllowExpenseClaim: useReceiptClaim,
+              IsHeader: isHeader,
+              AllowExpenseClaim:useReceiptClaim,
+              Required:forTransaction,
               CarNumber: cardnumber || "",
               CVC: cardcvc || "",
               ExpiryDate: expiryDate || "",
@@ -1540,8 +1528,9 @@ Template.accountsoverview.events({
               Extra: swiftCode,
               BankNumber: routingNo,
               PublishOnVS1: true,
-              IsHeader: forTransaction,
-              AllowExpenseClaim: useReceiptClaim,
+              IsHeader: isHeader,
+              AllowExpenseClaim:useReceiptClaim,
+              Required:forTransaction,
               CarNumber: cardnumber || "",
               CVC: cardcvc || "",
               ExpiryDate: expiryDate || "",
@@ -1666,8 +1655,9 @@ Template.accountsoverview.events({
           BankNumber: routingNo,
           //Level4: bankname,
           PublishOnVS1: true,
-          IsHeader: forTransaction,
-          AllowExpenseClaim: useReceiptClaim,
+          IsHeader: isHeader,
+          AllowExpenseClaim:useReceiptClaim,
+          Required:forTransaction,
           CarNumber: cardnumber || "",
           CVC: cardcvc || "",
           ExpiryDate: expiryDate || "",

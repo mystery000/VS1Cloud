@@ -939,6 +939,7 @@
 
                           </style>
 
+                          {{#if displayfields}}
                           <table id="tblSalesOrderLine" style="width:100%" class="table table-striped table-bordered tblSalesOrderLine">
                             <thead>
                               <tr class="dnd-moved">
@@ -1034,6 +1035,7 @@
                               {{/each}}
                             </tbody>
                           </table>
+                          {{/if}}
 
                           <style>
                               .highlightInput {
@@ -2374,6 +2376,9 @@
       </div>
       <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
           {{> newtaxratepop}}
+      </div>
+      <div class="modal fade" role="dialog" tabindex="-1" id="taxRateDetailModal">
+        {{> taxdetailpop}}
       </div>
       <!-- End Modal Tax Rate -->
 

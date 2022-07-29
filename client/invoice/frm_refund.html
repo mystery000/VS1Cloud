@@ -923,6 +923,7 @@
 
                             </style>
 
+                            {{#if displayfields}}
                             <table id="tblInvoiceLine" style="width:100%" class="table table-striped table-bordered tblInvoiceLine">
                                 <thead>
                                   <tr class="dnd-moved">
@@ -1018,6 +1019,7 @@
                                     {{/each}}
                                 </tbody>
                             </table>
+                            {{/if}}
                             <!-- <div align="left">
 <button class="btn btn-primary" type="button" id="addRow" style="margin: 16px; margin-left: 0px;">+ Add New Entry</button>
 </div> -->
@@ -2161,6 +2163,9 @@
         </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
             {{> newtaxratepop}}
+        </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="taxRateDetailModal">
+            {{> taxdetailpop}}
         </div>
         <!-- End Modal Tax Rate -->
 

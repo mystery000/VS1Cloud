@@ -479,14 +479,13 @@ export class ReportService extends BaseService {
 
   /**
    * This function will return CustomerDetails
-   * 
-   * @param {*} dateFrom 
-   * @param {*} dateTo 
-   * @param {*} ignoreDate 
-   * @returns 
+   *
+   * @param {*} dateFrom
+   * @param {*} dateTo
+   * @param {*} ignoreDate
+   * @returns
    */
   getCustomerDetails(dateFrom, dateTo, ignoreDate = false) {
-    console.log("report-service: ", "getCustomerDetails endpoint needed");
     let options = "";
     if (ignoreDate == true) {
       options = {

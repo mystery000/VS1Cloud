@@ -41,6 +41,12 @@ Template.newproductpop.onCreated(() => {
 
 Template.newproductpop.onRendered(function () {
   let templateObject = Template.instance();
+
+  templateObject.reset = () => {
+    // $(".newproductpop").reset();
+    clearProduct();
+  };
+
   let productService = new ProductService();
   const records = [];
   const taxCodesList = [];
@@ -1761,6 +1767,7 @@ Template.newproductpop.events({
       productService
         .saveProductVS1(objDetails)
         .then(function (objDetails) {
+          // clearProduct();
           let linesave = objDetails.fields.ID;
           if (itrackThisItem == false) {
             let objServiceDetails = {
@@ -2569,18 +2576,25 @@ Template.newproductpop.events({
                         .then(function (datareturn) {
                           $("#product-list").val(productName);
                           $("#newProductModal").modal("toggle");
-                          if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+                          if ($(".setup-wizard"))
+                            $(
+                              ".setup-wizard .setup-step-9 .btnRefresh"
+                            ).click();
                         })
                         .catch(function (err) {
                           $("#product-list").val(productName);
                           $("#newProductModal").modal("toggle");
-                          if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+                          if ($(".setup-wizard"))
+                            $(
+                              ".setup-wizard .setup-step-9 .btnRefresh"
+                            ).click();
                         });
                     })
                     .catch(function (err) {
                       $("#product-list").val(productName);
                       $("#newProductModal").modal("toggle");
-                      if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+                      if ($(".setup-wizard"))
+                        $(".setup-wizard .setup-step-9 .btnRefresh").click();
                     });
                 }
 
@@ -2597,9 +2611,11 @@ Template.newproductpop.events({
                 $("#newProductModal").modal("toggle");
                 LoadingOverlay.hide();
                 //$('.loginSpinner').css('display','none');
-                if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+                if ($(".setup-wizard"))
+                  $(".setup-wizard .setup-step-9 .btnRefresh").click();
               });
           }
+          // clearProduct();
         })
         .catch(function (err) {
           if (itrackThisItem == true && $("#sltinventoryacount").val() != "") {
@@ -2687,6 +2703,7 @@ Template.newproductpop.events({
           productService
             .saveProductVS1(objDetails)
             .then(function (objDetails) {
+              // clearProduct();
               var productSaveID = objDetails.fields.ID;
               let linesave = objDetails.fields.ID;
               if (itrackThisItem == false) {
@@ -2850,34 +2867,37 @@ Template.newproductpop.events({
                       .then(function (datareturn) {
                         $("#product-list").val(productName);
                         $("#newProductModal").modal("toggle");
-                        if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+                        if ($(".setup-wizard"))
+                          $(".setup-wizard .setup-step-9 .btnRefresh").click();
                         LoadingOverlay.hide();
                       })
                       .catch(function (err) {
                         $("#product-list").val(productName);
                         $("#newProductModal").modal("toggle");
-                        if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+                        if ($(".setup-wizard"))
+                          $(".setup-wizard .setup-step-9 .btnRefresh").click();
                         LoadingOverlay.hide();
                       });
                   })
                   .catch(function (err) {
                     $("#product-list").val(productName);
                     $("#newProductModal").modal("toggle");
-                    if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+                    if ($(".setup-wizard"))
+                      $(".setup-wizard .setup-step-9 .btnRefresh").click();
                     LoadingOverlay.hide();
                   });
               }
 
-            //   sideBarService
-            //     .getNewProductListVS1(initialBaseDataLoad, 0)
-            //     .then(function (dataReload) {
-            //       addVS1Data("TProductVS1", JSON.stringify(dataReload))
-            //         .then(function (datareturn) {
-            //             if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
-            //         })
-            //         .catch(function (err) {});
-            //     })
-            //     .catch(function (err) {});
+              //   sideBarService
+              //     .getNewProductListVS1(initialBaseDataLoad, 0)
+              //     .then(function (dataReload) {
+              //       addVS1Data("TProductVS1", JSON.stringify(dataReload))
+              //         .then(function (datareturn) {
+              //             if ($(".setup-wizard")) $(".setup-wizard .setup-step-9 .btnRefresh").click();
+              //         })
+              //         .catch(function (err) {});
+              //     })
+              //     .catch(function (err) {});
             })
             .catch(function (err) {
               $("#newProductModal").modal("toggle");
@@ -2886,7 +2906,10 @@ Template.newproductpop.events({
             });
         });
     }
+    const templateObject = Template.instance();
+    templateObject.reset();
 
+   // clearProduct();
     // $("#isProductAdded").val("true");
     // $("#isProductAdded").trigger("change");
     // $('#newProductModal').modal('hide');
@@ -3210,3 +3233,16 @@ Template.newproductpop.events({
 Template.registerHelper("equals", function (a, b) {
   return a === b;
 });
+
+function clearProduct() {
+  $(".newproductpop")
+    .find("input[type=text], input[type=password], textarea")
+    .val("");
+  let checkboxes = $(".newproductpop").find("input[type=checkbox]");
+
+  // $(checkboxes).each((index, element) => {
+  //   if (element.checked) {
+  //     element.click();
+  //   }
+  // });
+}
