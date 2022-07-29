@@ -8806,6 +8806,82 @@ Template.setup.events({
     template.loadAccountList();
   },
 
+  "click .setup-step-6 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleAccounts" + ".csv";
+
+    const customers = templateObject.accountList.get();
+
+    //console.log("accountList", customers);
+    rows.push([
+      "Account Name",
+      "Description",
+      "Account No",
+      "Type",
+      "Balance",
+      "Tax Code",
+      "Bank Account Name",
+      "BSB",
+      "Bank Account No",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.accountname,
+        customer.description,
+        customer.accountnumber,
+        customer.accounttypename,
+        customer.balance,
+        customer.taxcode,
+        customer.bankaccountname,
+        customer.bsb, 
+        customer.bankaccountnumber
+      ]);
+    });
+
+    //console.log("Export rows inventoryList", rows);
+
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-6 .templateDownloadXLSX": (e, templateObject) => {
+    //console.log(e);
+    //e.preventDefault(); //stop the browser from following
+    //window.location.href = "sample_imports/SampleEmployee.xlsx";
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleAccounts" + ".xlsx";
+
+    const customers = templateObject.accountList.get();
+    rows.push([
+      "Account Name",
+      "Description",
+      "Account No",
+      "Type",
+      "Balance",
+      "Tax Code",
+      "Bank Account Name",
+      "BSB",
+      "Bank Account No",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.accountname,
+        customer.description,
+        customer.accountnumber,
+        customer.accounttypename,
+        customer.balance,
+        customer.taxcode,
+        customer.bankaccountname,
+        customer.bsb, 
+        customer.bankaccountnumber
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
+  },
+
   // TODO: Step 7
   "click #btnNewCustomer": (e) => {
     const target = $(e.currentTarget).attr("data-toggle");
