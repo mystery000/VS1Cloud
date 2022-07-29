@@ -761,29 +761,32 @@ Template.addcustomerpop.events({
 
 
     },
-    'click #chkSameAsShipping': function (event) {
-        /*if($(event.target).is(':checked')){
-      let streetAddress = $('.addcustomerpop #edtCustomerShippingAddress').val();
-      let city = $('.addcustomerpop #edtCustomerShippingCity').val();
-      let state =  $('.addcustomerpop #edtCustomerShippingState').val();
-      let zipcode =  $('.addcustomerpop #edtCustomerShippingZIP').val();
-      let country =  $('.addcustomerpop #sedtCountry').val();
+    'click .addcustomerpop #chkCustomerSameAsShipping': function (event) {
+        if($(event.target).is(':checked')){
+            $('.addcustomerpop .billingaddress').removeClass('show');
+            let streetAddress = $('.addcustomerpop #edtCustomerShippingAddress').val();
+            let city = $('.addcustomerpop #edtCustomerShippingCity').val();
+            let state =  $('.addcustomerpop #edtCustomerShippingState').val();
+            let zipcode =  $('.addcustomerpop #edtCustomerShippingZIP').val();
+            let country =  $('.addcustomerpop #sedtCountry').val();
 
-       $('.addcustomerpop #edtCustomerBillingAddress').val(streetAddress);
-       $('.addcustomerpop #edtCustomerBillingCity').val(city);
-       $('.addcustomerpop #edtCustomerBillingState').val(state);
-       $('.addcustomerpop #edtCustomerBillingZIP').val(zipcode);
-       $('.addcustomerpop #bedtCountry').val(country);
-    }else{
-      $('.addcustomerpop #edtCustomerBillingAddress').val('');
-      $('.addcustomerpop #edtCustomerBillingCity').val('');
-      $('.addcustomerpop #edtCustomerBillingState').val('');
-      $('.addcustomerpop #edtCustomerBillingZIP').val('');
-      $('.addcustomerpop #bedtCountry').val('');
-    }
-    */
+            $('.addcustomerpop #edtCustomerBillingAddress').val(streetAddress);
+            $('.addcustomerpop #edtCustomerBillingCity').val(city);
+            $('.addcustomerpop #edtCustomerBillingState').val(state);
+            $('.addcustomerpop #edtCustomerBillingZIP').val(zipcode);
+            $('.addcustomerpop #bedtCountry').val(country);
+        }else{
+            $('.addcustomerpop .billingaddress').addClass('show');
+
+            $('.addcustomerpop #edtCustomerBillingAddress').val('');
+            $('.addcustomerpop #edtCustomerBillingCity').val('');
+            $('.addcustomerpop #edtCustomerBillingState').val('');
+            $('.addcustomerpop #edtCustomerBillingZIP').val('');
+            $('.addcustomerpop #bedtCountry').val('');
+        }
+        
     },
-    'click .btnSaveCustPOP': async function (event) {
+    'click .addcustomerpop .btnSaveCustPOP': async function (event) {
         let templateObject = Template.instance();
         let contactService = new ContactService();
         LoadingOverlay.show();
@@ -818,12 +821,12 @@ Template.addcustomerpop.events({
         let bzipcode = '';
         let bcountry = '';
         let isSupplier = false;
-        if ($('.addcustomerpop #chkSameAsSupplier').is(':checked')) {
+        if ($('.addcustomerpop #chkCustomerSameAsShipping').is(':checked')) {
             isSupplier = true;
         }else{
             isSupplier = false;
         }
-        if ($('.addcustomerpop #chkSameAsShipping2').is(':checked')) {
+        if ($('.addcustomerpop #chkCustomerSameAsShipping').is(':checked')) {
             bstreetAddress = streetAddress;
             bcity = city;
             bstate = state;
@@ -1084,7 +1087,7 @@ Template.addcustomerpop.events({
         });
        
     },
-    'click .btnSaveJob': function (event) {
+    'click .addcustomerpop .btnSaveJob': function (event) {
         let templateObject = Template.instance();
         let contactService = new ContactService();
         LoadingOverlay.show();
@@ -1328,7 +1331,7 @@ Template.addcustomerpop.events({
 
     },
 
-    'keyup .search': function (event) {
+    'keyup .addcustomerpop .search': function (event) {
         var searchTerm = $(".search").val();
         var listItem = $('.results tbody').children('tr');
         var searchSplit = searchTerm.replace(/ /g, "'):containsi('");
@@ -1367,7 +1370,7 @@ Template.addcustomerpop.events({
         }
 
     },
-    'click .tblCustomerSideList tbody tr': function (event) {
+    'click .addcustomerpop .tblCustomerSideList tbody tr': function (event) {
 
         var custLineID = $(event.target).attr('id');
         var custLineClass = $(event.target).attr('class');
@@ -1381,7 +1384,7 @@ Template.addcustomerpop.events({
 
         }
     },
-    'click .chkDatatable': function (event) {
+    'click .addcustomerpop .chkDatatable': function (event) {
         var columns = $('.addcustomerpop #tblTransactionlist th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
@@ -1400,7 +1403,7 @@ Template.addcustomerpop.events({
             }
         });
     },
-    'click .resetTable': function (event) {
+    'click .addcustomerpop .resetTable': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1421,7 +1424,7 @@ Template.addcustomerpop.events({
             }
         }
     },
-    'click .saveTable': function (event) {
+    'click .addcustomerpop .saveTable': function (event) {
         let lineItems = [];
         //let datatable =$('.addcustomerpop #tblTransactionlist').DataTable();
         $('.columnSettings').each(function (index) {
@@ -1491,7 +1494,7 @@ Template.addcustomerpop.events({
         $('.addcustomerpop #myModal2').modal('toggle');
         //Meteor._reload.reload();
     },
-    'blur .divcolumn': function (event) {
+    'blur .addcustomerpop .divcolumn': function (event) {
         let columData = $(event.target).text();
 
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
@@ -1501,7 +1504,7 @@ Template.addcustomerpop.events({
         $(title).html(columData);
 
     },
-    'change .rngRange': function (event) {
+    'change .addcustomerpop .rngRange': function (event) {
         let range = $(event.target).val();
         // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
 
@@ -1518,7 +1521,7 @@ Template.addcustomerpop.events({
         });
 
     },
-    'click .btnOpenSettingsCustomer': function (event) {
+    'click .addcustomerpop .btnOpenSettingsCustomer': function (event) {
         let templateObject = Template.instance();
         var columns = $('.addcustomerpop #tblTransactionlist th');
 
@@ -1550,32 +1553,32 @@ Template.addcustomerpop.events({
 
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
-    'click #exportbtn': function () {
+    'click .addcustomerpop #exportbtn': function () {
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletocsv').click();
 
 
     },
-    'click .printConfirm': function (event) {
+    'click .addcustomerpop .printConfirm': function (event) {
 
         LoadingOverlay.show();
         jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
 
     },
-    'click #exportbtnJob': function () {
+    'click .addcustomerpop #exportbtnJob': function () {
         LoadingOverlay.show();
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletocsv').click();
 
     },
-    'click .printConfirmJob': function (event) {
+    'click .addcustomerpop .printConfirmJob': function (event) {
         LoadingOverlay.show();
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
 
     },
-    'click .btnRefresh': function () {
+    'click .addcustomerpop .btnRefresh': function () {
         Meteor._reload.reload();
     },
-    'click .btnRefreshTransaction': function () {
+    'click .addcustomerpop .btnRefreshTransaction': function () {
         let currentId = FlowRouter.current().queryParams;
         LoadingOverlay.show();
         sideBarService.getTTransactionListReport().then(function (data) {
@@ -1607,7 +1610,7 @@ Template.addcustomerpop.events({
             }
         });
     },
-    'click .btnRefreshJobDetails': function () {
+    'click .addcustomerpop .btnRefreshJobDetails': function () {
         let currentId = FlowRouter.current().queryParams;
         LoadingOverlay.show();
         sideBarService.getAllJobssDataVS1(initialBaseDataLoad,0).then(function (data) {
@@ -1639,7 +1642,7 @@ Template.addcustomerpop.events({
             }
         });
     },
-    'click #formCheck-TaxCode': function () {
+    'click .addcustomerpop #formCheck-TaxCode': function () {
         if ($(event.target).is(':checked')) {
             $('.addcustomerpop #autoUpdate').css('display', 'none');
         } else {
@@ -1647,7 +1650,7 @@ Template.addcustomerpop.events({
         }
     },
 
-    'click #formCheckJob-2': function () {
+    'click .addcustomerpop #formCheckJob-2': function () {
         if ($(event.target).is(':checked')) {
             $('.addcustomerpop #autoUpdateJob').css('display', 'none');
         } else {
@@ -1655,7 +1658,7 @@ Template.addcustomerpop.events({
         }
     },
 
-    'click #activeChk': function () {
+    'click .addcustomerpop #activeChk': function () {
         if ($(event.target).is(':checked')) {
             $('.addcustomerpop #customerInfo').css('color', '#00A3D3');
         } else {
@@ -1663,7 +1666,7 @@ Template.addcustomerpop.events({
         }
     },
 
-    'click #btnNewProject': function (event) {
+    'click .addcustomerpop #btnNewProject': function (event) {
         var x2 = document.getElementById("newProject");
         if (x2.style.display === "none") {
             x2.style.display = "block";
@@ -1671,7 +1674,7 @@ Template.addcustomerpop.events({
             x2.style.display = "none";
         }
     },
-    'keydown #custOpeningBalance, keydown #edtJobNumber, keydown #edtCustomerCardDiscount': function (event) {
+    'keydown .addcustomerpop #custOpeningBalance, keydown .addcustomerpop #edtJobNumber, keydown .addcustomerpop #edtCustomerCardDiscount': function (event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||333
             // Allow: Ctrl+A, Command+A
             (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
@@ -1694,19 +1697,19 @@ Template.addcustomerpop.events({
             event.preventDefault();
         }
     },
-    'click .new_attachment_btn': function (event) {
+    'click .addcustomerpop .new_attachment_btn': function (event) {
         $('.addcustomerpop #attachment-upload').trigger('click');
 
     },
-    'click #formCheck-one': function (event) {
+    'click .addcustomerpop #formCheck-one': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.checkbox1div').css('display', 'block');
+            $('.addcustomerpop .checkbox1div').css('display', 'block');
 
         } else {
-            $('.checkbox1div').css('display', 'none');
+            $('.addcustomerpop .checkbox1div').css('display', 'none');
         }
     },
-    'click #formCheck-two': function (event) {
+    'click .addcustomerpop #formCheck-two': function (event) {
         if ($(event.target).is(':checked')) {
             $('.checkbox2div').css('display', 'block');
 
@@ -1714,52 +1717,52 @@ Template.addcustomerpop.events({
             $('.checkbox2div').css('display', 'none');
         }
     },
-    'click #formCheck-three': function (event) {
+    'click .addcustomerpop #formCheck-three': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.checkbox3div').css('display', 'block');
+            $('.addcustomerpop .checkbox3div').css('display', 'block');
 
         } else {
-            $('.checkbox3div').css('display', 'none');
+            $('.addcustomerpop .checkbox3div').css('display', 'none');
         }
     },
-    'click #formCheck-four': function (event) {
+    'click .addcustomerpop #formCheck-four': function (event) {
         if ($(event.target).is(':checked')) {
-            $('.checkbox4div').css('display', 'block');
+            $('.addcustomerpop .checkbox4div').css('display', 'block');
 
         } else {
-            $('.checkbox4div').css('display', 'none');
+            $('.addcustomerpop .checkbox4div').css('display', 'none');
         }
     },
-    'blur .customField1Text': function (event) {
+    'blur .addcustomerpop .customField1Text': function (event) {
         var inputValue1 = $('.customField1Text').text();
         $('.lblCustomField1').text(inputValue1);
     },
-    'blur .customField2Text': function (event) {
+    'blur .addcustomerpop .customField2Text': function (event) {
         var inputValue2 = $('.customField2Text').text();
         $('.lblCustomField2').text(inputValue2);
     },
-    'blur .customField3Text': function (event) {
+    'blur .addcustomerpop .customField3Text': function (event) {
         var inputValue3 = $('.customField3Text').text();
         $('.lblCustomField3').text(inputValue3);
     },
-    'blur .customField4Text': function (event) {
+    'blur .addcustomerpop .customField4Text': function (event) {
         var inputValue4 = $('.customField4Text').text();
         $('.lblCustomField4').text(inputValue4);
     },
-    'click .btnSaveSettings': function (event) {
+    'click .addcustomerpop .btnSaveSettings': function (event) {
         let templateObject = Template.instance();
-        $('.lblCustomField1').html('');
-        $('.lblCustomField2').html('');
-        $('.lblCustomField3').html('');
-        $('.lblCustomField4').html('');
+        $('.addcustomerpop .lblCustomField1').html('');
+        $('.addcustomerpop .lblCustomField2').html('');
+        $('.addcustomerpop .lblCustomField3').html('');
+        $('.addcustomerpop .lblCustomField4').html('');
         let getchkcustomField1 = true;
         let getchkcustomField2 = true;
         let getchkcustomField3 = true;
         let getchkcustomField4 = true;
-        let getcustomField1 = $('.customField1Text').html();
-        let getcustomField2 = $('.customField2Text').html();
-        let getcustomField3 = $('.customField3Text').html();
-        let getcustomField4 = $('.customField4Text').html();
+        let getcustomField1 = $('.addcustomerpop .customField1Text').html();
+        let getcustomField2 = $('.addcustomerpop .customField2Text').html();
+        let getcustomField3 = $('.addcustomerpop .customField3Text').html();
+        let getcustomField4 = $('.addcustomerpop .customField4Text').html();
         if ($('.addcustomerpop #formCheck-one').is(':checked')) {
             getchkcustomField1 = false;
         }
@@ -1775,7 +1778,7 @@ Template.addcustomerpop.events({
         $('.addcustomerpop #customfieldModal').modal('toggle');
 
     },
-    'click .btnResetSettings': function (event) {
+    'click .addcustomerpop .btnResetSettings': function (event) {
         var getcurrentCloudDetails = CloudUser.findOne({ _id: Session.get('mycloudLogonID'), clouddatabaseID: Session.get('mycloudLogonDBID') });
         if (getcurrentCloudDetails) {
             if (getcurrentCloudDetails._id.length > 0) {
@@ -1805,11 +1808,11 @@ Template.addcustomerpop.events({
             }
         }
     },
-    'click .new_attachment_btn': function (event) {
+    'click .addcustomerpop .new_attachment_btn': function (event) {
         $('.addcustomerpop #attachment-upload').trigger('click');
 
     },
-    'change #attachment-upload': function (e) {
+    'change .addcustomerpop #attachment-upload': function (e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
@@ -1820,11 +1823,11 @@ Template.addcustomerpop.events({
         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCount.set(uploadData.totalAttachments);
     },
-    'click .img_new_attachment_btn': function (event) {
+    'click .addcustomerpop .img_new_attachment_btn': function (event) {
         $('.addcustomerpop #img-attachment-upload').trigger('click');
 
     },
-    'change #img-attachment-upload': function (e) {
+    'change .addcustomerpop #img-attachment-upload': function (e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
@@ -1835,7 +1838,7 @@ Template.addcustomerpop.events({
         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCount.set(uploadData.totalAttachments);
     },
-    'click .remove-attachment': function (event, ui) {
+    'click .addcustomerpop .remove-attachment': function (event, ui) {
         let tempObj = Template.instance();
         let attachmentID = parseInt(event.target.id.split('remove-attachment-')[1]);
         if (tempObj.$(".addcustomerpop #confirm-action-" + attachmentID).length) {
@@ -1848,7 +1851,7 @@ Template.addcustomerpop.events({
         tempObj.$(".addcustomerpop #new-attachment2-tooltip").show();
 
     },
-    'click .file-name': function (event) {
+    'click .addcustomerpop .file-name': function (event) {
         let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-name-')[1]);
         let templateObj = Template.instance();
         let uploadedFiles = templateObj.uploadedFiles.get();
@@ -1891,7 +1894,7 @@ Template.addcustomerpop.events({
 
         return;
     },
-    'click .confirm-delete-attachment': function (event, ui) {
+    'click .addcustomerpop .confirm-delete-attachment': function (event, ui) {
         let tempObj = Template.instance();
         tempObj.$(".addcustomerpop #new-attachment2-tooltip").show();
         let attachmentID = parseInt(event.target.id.split('delete-attachment-')[1]);
@@ -1913,7 +1916,7 @@ Template.addcustomerpop.events({
             $(".attchment-tooltip").show();
         }
     },
-    'click .attachmentTab': function () {
+    'click .addcustomerpop .attachmentTab': function () {
         let templateInstance = Template.instance();
         let uploadedFileArray = templateInstance.uploadedFiles.get();
         if (uploadedFileArray.length > 0) {
@@ -1923,11 +1926,11 @@ Template.addcustomerpop.events({
             $(".attchment-tooltip").show();
         }
     },
-    'click .new_attachment_btnJobPOP': function (event) {
+    'click .addcustomerpop .new_attachment_btnJobPOP': function (event) {
         $('.addcustomerpop #attachment-uploadJobPOP').trigger('click');
 
     },
-    'change #attachment-uploadJobPOP': function (e) {
+    'change .addcustomerpop #attachment-uploadJobPOP': function (e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
@@ -1941,7 +1944,7 @@ Template.addcustomerpop.events({
         templateObj.uploadedFilesJob.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCountJob.set(uploadData.totalAttachments);
     },
-    'click .remove-attachmentJobPOP': function (event, ui) {
+    'click .addcustomerpop .remove-attachmentJobPOP': function (event, ui) {
         let tempObj = Template.instance();
         let attachmentID = parseInt(event.target.id.split('remove-attachmentJobPOP-')[1]);
         if (tempObj.$(".addcustomerpop #confirm-actionJobPOP-" + attachmentID).length) {
@@ -1954,7 +1957,7 @@ Template.addcustomerpop.events({
         tempObj.$(".addcustomerpop #new-attachment2-tooltipJobPOP").show();
 
     },
-    'click .file-nameJobPOP': function (event) {
+    'click .addcustomerpop .file-nameJobPOP': function (event) {
         let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-nameJobPOP-')[1]);
         let templateObj = Template.instance();
         let uploadedFiles = templateObj.uploadedFilesJob.get();
@@ -1997,7 +2000,7 @@ Template.addcustomerpop.events({
 
         return;
     },
-    'click .confirm-delete-attachmentJobPOP': function (event, ui) {
+    'click .addcustomerpop .confirm-delete-attachmentJobPOP': function (event, ui) {
         let tempObj = Template.instance();
         tempObj.$(".addcustomerpop #new-attachment2-tooltipJobPOP").show();
         let attachmentID = parseInt(event.target.id.split('delete-attachmentJobPOP-')[1]);
@@ -2019,7 +2022,7 @@ Template.addcustomerpop.events({
             $(".attchment-tooltipJobPOP").show();
         }
     },
-    'click .attachmentTabJobPOP': function () {
+    'click .addcustomerpop .attachmentTabJobPOP': function () {
         let templateInstance = Template.instance();
         let uploadedFileArray = templateInstance.uploadedFilesJob.get();
         if (uploadedFileArray.length > 0) {
@@ -2029,11 +2032,11 @@ Template.addcustomerpop.events({
             $(".attchment-tooltipJobPOP").show();
         }
     },
-    'click .new_attachment_btnJobNoPOP': function (event) {
+    'click .addcustomerpop .new_attachment_btnJobNoPOP': function (event) {
         $('.addcustomerpop #attachment-uploadJobNoPOP').trigger('click');
 
     },
-    'change #attachment-uploadJobNoPOP': function (e) {
+    'change .addcustomerpop #attachment-uploadJobNoPOP': function (e) {
         let templateObj = Template.instance();
         let saveToTAttachment = false;
         let lineIDForAttachment = false;
@@ -2048,7 +2051,7 @@ Template.addcustomerpop.events({
         templateObj.uploadedFilesJobNoPOP.set(uploadData.uploadedFilesArray);
         templateObj.attachmentCountJobNoPOP.set(uploadData.totalAttachments);
     },
-    'click .remove-attachmentJobNoPOP': function (event, ui) {
+    'click .addcustomerpop .remove-attachmentJobNoPOP': function (event, ui) {
         let tempObj = Template.instance();
         let attachmentID = parseInt(event.target.id.split('remove-attachmentJobNoPOP-')[1]);
         if (tempObj.$(".addcustomerpop #confirm-actionJobNoPOP-" + attachmentID).length) {
@@ -2061,7 +2064,7 @@ Template.addcustomerpop.events({
         tempObj.$(".addcustomerpop #new-attachment2-tooltipJobNoPOP").show();
 
     },
-    'click .file-nameJobNoPOP': function (event) {
+    'click .addcustomerpop .file-nameJobNoPOP': function (event) {
         let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-nameJobNoPOP-')[1]);
         let templateObj = Template.instance();
         let uploadedFiles = templateObj.uploadedFilesJobNoPOP.get();
@@ -2104,7 +2107,7 @@ Template.addcustomerpop.events({
 
         return;
     },
-    'click .confirm-delete-attachmentJobNoPOP': function (event, ui) {
+    'click .addcustomerpop .confirm-delete-attachmentJobNoPOP': function (event, ui) {
         let tempObj = Template.instance();
         tempObj.$(".addcustomerpop #new-attachment2-tooltipJobNoPOP").show();
         let attachmentID = parseInt(event.target.id.split('delete-attachmentJobNoPOP-')[1]);
@@ -2126,30 +2129,30 @@ Template.addcustomerpop.events({
             $(".attchment-tooltipJobNoPOP").show();
         }
     },
-    'click .attachmentTabJobNoPOP': function () {
+    'click .addcustomerpop .attachmentTabJobNoPOP': function () {
         let templateInstance = Template.instance();
         let uploadedFileArray = templateInstance.uploadedFilesJobNoPOP.get();
         if (uploadedFileArray.length > 0) {
             let utilityService = new UtilityService();
             utilityService.showUploadedAttachmentJobNoPOP(uploadedFileArray);
         } else {
-            $(".attchment-tooltipJobNoPOP").show();
+            $(".addcustomerpop .attchment-tooltipJobNoPOP").show();
         }
     },
-    'change .customerTypeSelect': function (event) {
-        var custName = $('.customerTypeSelect').children("option:selected").val();
+    'change .addcustomerpop .customerTypeSelect': function (event) {
+        var custName = $('.addcustomerpop .customerTypeSelect').children("option:selected").val();
         if (custName == "newCust") {
             $('.addcustomerpop #myModalClientType').modal();
             $(this).prop("selected", false);
         }
     },
-    'click #btnNewJob': function (event) {
+    'click .addcustomerpop #btnNewJob': function (event) {
         let templateObject = Template.instance();
     },
-    'click .btnNewCustomer': function (event) {
+    'click .addcustomerpop .btnNewCustomer': function (event) {
         window.open('/customerscard', '_self');
     },
-    'click .btnView': function (e) {
+    'click .addcustomerpop .btnView': function (e) {
         var btnView = document.getElementById("btnView");
         var btnHide = document.getElementById("btnHide");
 
@@ -2169,7 +2172,7 @@ Template.addcustomerpop.events({
             btnHide.style.display = "none";
         }
     },
-    'click .btnDeleteCustomer': function (event) {
+    'click .addcustomerpop .btnDeleteCustomer': function (event) {
         LoadingOverlay.show();
 
         let templateObject = Template.instance();

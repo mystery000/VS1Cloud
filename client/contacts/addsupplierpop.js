@@ -489,39 +489,41 @@ Template.addsupplierpop.onRendered(function () {
 });
 
 Template.addsupplierpop.events({
-  "click #supplierShipping-1": function (event) {
+  "click .addsupplierpop #supplierShipping-1": function (event) {
     if ($(event.target).is(":checked")) {
       $(".supplierShipping-2").css("display", "none");
     } else {
       $(".supplierShipping-2").css("display", "block");
     }
   },
-  "click .btnBack": function (event) {
+  "click .addsupplierpop .btnBack": function (event) {
     event.preventDefault();
     history.back(1);
   },
-  "click #chkSameAsShipping": function (event) {
+  "click .addsupplierpop #chkSupplierSameAsShipping": function (event) {
     if ($(event.target).is(":checked")) {
-      // let streetAddress = $('#edtSupplierShippingAddress').val();
-      // let city = $('#edtSupplierShippingCity').val();
-      // let state =  $('#edtSupplierShippingState').val();
-      // let zipcode =  $('#edtSupplierShippingZIP').val();
-      //
-      // let country =  $('#sedtCountry').val();
-      //  $('#edtSupplierBillingAddress').val(streetAddress);
-      //  $('#edtSupplierBillingCity').val(city);
-      //  $('#edtSupplierBillingState').val(state);
-      //  $('#edtSupplierBillingZIP').val(zipcode);
-      //  $('#bcountry').val(country);
+      $('.billingaddress').removeClass('show');
+      let streetAddress = $('.addsupplierpop #edtSupplierShippingAddress').val();
+      let city = $('.addsupplierpop #edtSupplierShippingCity').val();
+      let state =  $('.addsupplierpop #edtSupplierShippingState').val();
+      let zipcode =  $('.addsupplierpop #edtSupplierShippingZIP').val();
+      
+      let country =  $('.addsupplierpop #sedtCountry').val();
+       $('.addsupplierpop #edtSupplierBillingAddress').val(streetAddress);
+       $('.addsupplierpop #edtSupplierBillingCity').val(city);
+       $('.addsupplierpop #edtSupplierBillingState').val(state);
+       $('.addsupplierpop #edtSupplierBillingZIP').val(zipcode);
+       $('.addsupplierpop #bcountry').val(country);
     } else {
-      // $('#edtSupplierBillingAddress').val('');
-      // $('#edtSupplierBillingCity').val('');
-      // $('#edtSupplierBillingState').val('');
-      // $('#edtSupplierBillingZIP').val('');
-      // $('#bcountry').val('');
+      $('.billingaddress').addClass('show');
+      $('.addsupplierpop #edtSupplierBillingAddress').val('');
+      $('.addsupplierpop #edtSupplierBillingCity').val('');
+      $('.addsupplierpop #edtSupplierBillingState').val('');
+      $('.addsupplierpop #edtSupplierBillingZIP').val('');
+      $('.addsupplierpop #bcountry').val('');
     }
   },
-  "click .btnSaveSuppPOP": async function (event) {
+  "click .addsupplierpop .btnSaveSuppPOP": async function (event) {
     let templateObject = Template.instance();
     let contactService = new ContactService();
     if ($("#edtSupplierCompany").val() === "") {
@@ -569,7 +571,7 @@ Template.addsupplierpop.events({
     if ($("#isformcontractor").is(":checked")) {
       isContractor = true;
     }
-    if ($("#chkSameAsShipping").is(":checked")) {
+    if ($("#chkSupplierSameAsShipping").is(":checked")) {
       bstreetAddress = streetAddress;
       bcity = city;
       bstate = state;
@@ -858,7 +860,7 @@ Template.addsupplierpop.events({
       });
   },
 
-  "keyup .search": function (event) {
+  "keyup .addsupplierpop .search": function (event) {
     var searchTerm = $(".search").val();
     var listItem = $(".results tbody").children("tr");
     var searchSplit = searchTerm.replace(/ /g, "'):containsi('");
@@ -903,13 +905,13 @@ Template.addsupplierpop.events({
       //}, 500);
     }
   },
-  "click .tblSupplierSideList tbody tr": function (event) {
+  "click .addsupplierpop .tblSupplierSideList tbody tr": function (event) {
     var suppLineID = $(event.target).attr("id");
     if (suppLineID) {
       window.open("/supplierscard?id=" + suppLineID, "_self");
     }
   },
-  "click .chkDatatable": function (event) {
+  "click .addsupplierpop .chkDatatable": function (event) {
     var columns = $("#tblTransactionlist th");
     let columnDataValue = $(event.target)
       .closest("div")
@@ -931,7 +933,7 @@ Template.addsupplierpop.events({
       }
     });
   },
-  "click .resetTable": function (event) {
+  "click .addsupplierpop .resetTable": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
       _id: Session.get("mycloudLogonID"),
       clouddatabaseID: Session.get("mycloudLogonDBID"),
@@ -959,7 +961,7 @@ Template.addsupplierpop.events({
       }
     }
   },
-  "click .saveTable": function (event) {
+  "click .addsupplierpop .saveTable": function (event) {
     let lineItems = [];
     //let datatable =$('#tblTransactionlist').DataTable();
     $(".columnSettings").each(function (index) {
@@ -1046,7 +1048,7 @@ Template.addsupplierpop.events({
     $("#myModal2").modal("toggle");
     //Meteor._reload.reload();
   },
-  "blur .divcolumn": function (event) {
+  "blur .addsupplierpop .divcolumn": function (event) {
     let columData = $(event.target).text();
 
     let columnDatanIndex = $(event.target)
@@ -1057,7 +1059,7 @@ Template.addsupplierpop.events({
     var title = datable.column(columnDatanIndex).header();
     $(title).html(columData);
   },
-  "change .rngRange": function (event) {
+  "change .addsupplierpop .rngRange": function (event) {
     let range = $(event.target).val();
     // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
 
@@ -1076,7 +1078,7 @@ Template.addsupplierpop.events({
       }
     });
   },
-  "click .btnOpenSettings": function (event) {
+  "click .addsupplierpop .btnOpenSettings": function (event) {
     let templateObject = Template.instance();
     var columns = $("#tblTransactionlist th");
 
@@ -1108,72 +1110,72 @@ Template.addsupplierpop.events({
 
     templateObject.tableheaderrecords.set(tableHeaderList);
   },
-  "click #exportbtn": function () {
+  "click .addsupplierpop #exportbtn": function () {
     LoadingOverlay.show();
     jQuery("#tblTransactionlist_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .printConfirm": function (event) {
+  "click .addsupplierpop .printConfirm": function (event) {
     LoadingOverlay.show();
     jQuery("#tblTransactionlist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefresh": function () {
+  "click .addsupplierpop .btnRefresh": function () {
     Meteor._reload.reload();
   },
 
-  "click #formCheck-2": function () {
+  "click .addsupplierpop #formCheck-2": function () {
     if ($(event.target).is(":checked")) {
       $("#autoUpdate").css("display", "none");
     } else {
       $("#autoUpdate").css("display", "block");
     }
   },
-  "click #formCheck-one": function (event) {
+  "click .addsupplierpop #formCheck-one": function (event) {
     if ($(event.target).is(":checked")) {
       $(".checkbox1div").css("display", "block");
     } else {
       $(".checkbox1div").css("display", "none");
     }
   },
-  "click #formCheck-two": function (event) {
+  "click .addsupplierpop #formCheck-two": function (event) {
     if ($(event.target).is(":checked")) {
       $(".checkbox2div").css("display", "block");
     } else {
       $(".checkbox2div").css("display", "none");
     }
   },
-  "click #formCheck-three": function (event) {
+  "click .addsupplierpop #formCheck-three": function (event) {
     if ($(event.target).is(":checked")) {
       $(".checkbox3div").css("display", "block");
     } else {
       $(".checkbox3div").css("display", "none");
     }
   },
-  "click #formCheck-four": function (event) {
+  "click .addsupplierpop #formCheck-four": function (event) {
     if ($(event.target).is(":checked")) {
       $(".checkbox4div").css("display", "block");
     } else {
       $(".checkbox4div").css("display", "none");
     }
   },
-  "blur .customField1Text": function (event) {
+  "blur .addsupplierpop .customField1Text": function (event) {
     var inputValue1 = $(".customField1Text").text();
     $(".lblCustomField1").text(inputValue1);
   },
-  "blur .customField2Text": function (event) {
+  "blur .addsupplierpop .customField2Text": function (event) {
     var inputValue2 = $(".customField2Text").text();
     $(".lblCustomField2").text(inputValue2);
   },
-  "blur .customField3Text": function (event) {
+  "blur .addsupplierpop .customField3Text": function (event) {
     var inputValue3 = $(".customField3Text").text();
     $(".lblCustomField3").text(inputValue3);
   },
-  "blur .customField4Text": function (event) {
+  "blur .addsupplierpop .customField4Text": function (event) {
     var inputValue4 = $(".customField4Text").text();
     $(".lblCustomField4").text(inputValue4);
   },
-  "click .btnSaveSettings": function (event) {
+  "click .addsupplierpop .btnSaveSettings": function (event) {
     let templateObject = Template.instance();
 
     $(".lblCustomField1").html("");
@@ -1203,7 +1205,7 @@ Template.addsupplierpop.events({
 
     $("#customfieldModal").modal("toggle");
   },
-  "click .btnResetSettings": function (event) {
+  "click .addsupplierpop .btnResetSettings": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
       _id: Session.get("mycloudLogonID"),
       clouddatabaseID: Session.get("mycloudLogonDBID"),
@@ -1231,10 +1233,10 @@ Template.addsupplierpop.events({
       }
     }
   },
-  "click .new_attachment_btn": function (event) {
+  "click .addsupplierpop .new_attachment_btn": function (event) {
     $("#attachment-upload").trigger("click");
   },
-  "change #attachment-upload": function (e) {
+  "change .addsupplierpop #attachment-upload": function (e) {
     let templateObj = Template.instance();
     let saveToTAttachment = false;
     let lineIDForAttachment = false;
@@ -1250,10 +1252,10 @@ Template.addsupplierpop.events({
     templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
     templateObj.attachmentCount.set(uploadData.totalAttachments);
   },
-  "click .img_new_attachment_btn": function (event) {
+  "click .addsupplierpop .img_new_attachment_btn": function (event) {
     $("#img-attachment-upload").trigger("click");
   },
-  "change #img-attachment-upload": function (e) {
+  "change .addsupplierpop #img-attachment-upload": function (e) {
     let templateObj = Template.instance();
     let saveToTAttachment = false;
     let lineIDForAttachment = false;
@@ -1269,7 +1271,7 @@ Template.addsupplierpop.events({
     templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
     templateObj.attachmentCount.set(uploadData.totalAttachments);
   },
-  "click .remove-attachment": function (event, ui) {
+  "click .addsupplierpop .remove-attachment": function (event, ui) {
     let tempObj = Template.instance();
     let attachmentID = parseInt(event.target.id.split("remove-attachment-")[1]);
     if (tempObj.$("#confirm-action-" + attachmentID).length) {
@@ -1286,7 +1288,7 @@ Template.addsupplierpop.events({
     }
     tempObj.$("#new-attachment2-tooltip").show();
   },
-  "click .file-name": function (event) {
+  "click .addsupplierpop .file-name": function (event) {
     let attachmentID = parseInt(
       event.currentTarget.parentNode.id.split("attachment-name-")[1]
     );
@@ -1352,7 +1354,7 @@ Template.addsupplierpop.events({
 
     return;
   },
-  "click .confirm-delete-attachment": function (event, ui) {
+  "click .addsupplierpop .confirm-delete-attachment": function (event, ui) {
     let tempObj = Template.instance();
     tempObj.$("#new-attachment2-tooltip").show();
     let attachmentID = parseInt(event.target.id.split("delete-attachment-")[1]);
@@ -1375,7 +1377,7 @@ Template.addsupplierpop.events({
       $(".attchment-tooltip").show();
     }
   },
-  "click .attachmentTab": function () {
+  "click .addsupplierpop .attachmentTab": function () {
     let templateInstance = Template.instance();
     let uploadedFileArray = templateInstance.uploadedFiles.get();
     if (uploadedFileArray.length > 0) {
@@ -1385,7 +1387,7 @@ Template.addsupplierpop.events({
       $(".attchment-tooltip").show();
     }
   },
-  "click .btnView": function (e) {
+  "click .addsupplierpop .btnView": function (e) {
     var btnView = document.getElementById("btnView");
     var btnHide = document.getElementById("btnHide");
 
@@ -1405,12 +1407,12 @@ Template.addsupplierpop.events({
       btnHide.style.display = "none";
     }
   },
-  "click .transTab": function (event) {
+  "click .addsupplierpop .transTab": function (event) {
     let templateObject = Template.instance();
     let supplierName = $("#edtSupplierCompany").val();
     templateObject.getAllProductRecentTransactions(supplierName);
   },
-  "click .btnDeleteSupplier": function (event) {
+  "click .addsupplierpop .btnDeleteSupplier": function (event) {
     LoadingOverlay.show();
 
     let templateObject = Template.instance();

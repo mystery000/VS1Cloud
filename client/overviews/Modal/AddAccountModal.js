@@ -21,9 +21,7 @@ function generate() {
   return id;
 }
 
-function MakeNegative() {
-
-};
+function MakeNegative() {}
 
 Template.addAccountModal.onCreated(function () {
   const templateObject = Template.instance();
@@ -67,7 +65,8 @@ Template.addAccountModal.onRendered(function () {
           }
           templateObject.accountTypes.set(accountTypeList);
         }
-      }).catch(function (err) {
+      })
+      .catch(function (err) {
         accountService.getAccountTypeCheck().then(function (data) {
           for (let i = 0; i < data.taccounttype.length; i++) {
             let accounttyperecordObj = {
@@ -84,7 +83,8 @@ Template.addAccountModal.onRendered(function () {
   templateObject.loadAccountTypes();
 
   templateObject.getTaxRates = function () {
-    getVS1Data("TTaxcodeVS1").then(function (dataObject) {
+    getVS1Data("TTaxcodeVS1")
+      .then(function (dataObject) {
         if (dataObject.length == 0) {
           taxRateService
             .getTaxRateVS1()
@@ -432,7 +432,8 @@ Template.addAccountModal.onRendered(function () {
             "form-control form-control-sm"
           );
         }
-      }).catch(function (err) {
+      })
+      .catch(function (err) {
         taxRateService
           .getTaxRateVS1()
           .then(function (data) {
@@ -611,6 +612,118 @@ Template.addAccountModal.onRendered(function () {
       });
   };
   templateObject.getTaxRates();
+
+  templateObject.deleteAccount = async () => {
+    let result = await swal({
+      title: "Delete Account",
+      text: "Are you sure you want to Delete Account?",
+      type: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    });
+
+    if (result.value) {
+      LoadingOverlay.show();
+      let templateObject = Template.instance();
+      let accountService = new AccountService();
+      let accountID = $("#edtAccountID").val();
+
+      let data = {
+        type: "TAccount",
+        fields: {
+          ID: accountID,
+          Active: false,
+        },
+      };
+
+      console.log("account id", accountID);
+
+      accountService
+        .saveAccount(data)
+        .then(() => {
+          $(".modal.show").modal("hide");
+          $(".setup-wizard")
+            ? $(".setup-wizard .setup-step-6 .btnRefresh").click()
+            : Meteor._reload.reload();
+          LoadingOverlay.hide();
+        })
+        .catch((err) => {
+          LoadingOverlay.hide();
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          });
+        });
+
+      // LoadingOverlay.hide();
+    }
+
+    // swal({
+    //   title: "Delete Account",
+    //   text: "Are you sure you want to Delete Account?",
+    //   type: "question",
+    //   showCancelButton: true,
+    //   confirmButtonText: "Yes",
+    // }).then((result) => {
+    //   if (result.value) {
+    //     LoadingOverlay.show();
+    //     let templateObject = Template.instance();
+    //     let accountService = new AccountService();
+    //     let accountID = $("#edtAccountID").val();
+
+    //     if (accountID == "") {
+    //       $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
+    //     } else {
+    //       data = {
+    //         type: "TAccount",
+    //         fields: {
+    //           ID: accountID,
+    //           Active: false,
+    //         },
+    //       };
+
+    //       accountService
+    //         .saveAccount(data)
+    //         .then(function (data) {
+    //           sideBarService
+    //             .getAccountListVS1()
+    //             .then(function (dataReload) {
+    //               addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+    //                 .then(function (datareturn) {
+    //                   $('.modal.show').modal("hide");
+    //                   $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
+    //                 })
+    //                 .catch(function (err) {
+    //                   $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
+    //                 });
+    //             })
+    //             .catch(function (err) {
+    //               $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
+    //             });
+    //         })
+    //         .catch(function (err) {
+    //           swal({
+    //             title: "Oooops...",
+    //             text: err,
+    //             type: "error",
+    //             showCancelButton: false,
+    //             confirmButtonText: "Try Again",
+    //           }).then((result) => {
+    //             if (result.value) {
+    //               $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : Meteor._reload.reload();
+    //             } else if (result.dismiss === "cancel") {
+    //             }
+    //           });
+    //           LoadingOverlay.hide();
+    //         });
+    //     }
+    //   } else {
+    //   }
+    // });
+  };
 
   $(document).ready(function () {
     setTimeout(function () {
@@ -1170,68 +1283,8 @@ Template.addAccountModal.events({
     //   $(".btnImport").Attr("disabled");
     // }
   },
-  "click .btnDeleteAccount": function () {
-    swal({
-      title: "Delete Account",
-      text: "Are you sure you want to Delete Account?",
-      type: "question",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-    }).then((result) => {
-      if (result.value) {
-        LoadingOverlay.show();
-        let templateObject = Template.instance();
-        let accountService = new AccountService();
-        let accountID = $("#edtAccountID").val();
-
-        if (accountID == "") {
-          $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
-        } else {
-          data = {
-            type: "TAccount",
-            fields: {
-              ID: accountID,
-              Active: false,
-            },
-          };
-
-          accountService
-            .saveAccount(data)
-            .then(function (data) {
-              sideBarService
-                .getAccountListVS1()
-                .then(function (dataReload) {
-                  addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                    .then(function (datareturn) {
-                      $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
-                    })
-                    .catch(function (err) {
-                      $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
-                    });
-                })
-                .catch(function (err) {
-                  $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : window.open("/accountsoverview", "_self");
-                });
-            })
-            .catch(function (err) {
-              swal({
-                title: "Oooops...",
-                text: err,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-              }).then((result) => {
-                if (result.value) {
-                  $('.setup-wizard') ? $('.setup-wizard .setup-step-6 .btnRefresh').click() : Meteor._reload.reload();
-                } else if (result.dismiss === "cancel") {
-                }
-              });
-              LoadingOverlay.hide();
-            });
-        }
-      } else {
-      }
-    });
+  "click .btnDeleteAccount": (e, template) => {
+    template.deleteAccount();
   },
 });
 
@@ -1270,5 +1323,5 @@ Template.addAccountModal.helpers({
       bsbname = "BSB";
     }
     return bsbname;
-  }
+  },
 });
