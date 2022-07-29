@@ -3730,14 +3730,17 @@ Template.setup.onRendered(function () {
   templateObject.loadInventory = async (refresh = false) => {
     LoadingOverlay.show();
     let _inventoryList = [];
-    let dataObject = await getVS1Data("TProductVS1");
+    // let dataObject = await getVS1Data("TProductVS1");
 
-    let data =
-      dataObject.length == 0 || refresh == true
-        ? await sideBarService.getNewProductListVS1("All")
-        : JSON.parse(dataObject[0].data);
+    // let data =
+    //   dataObject.length == 0 || refresh == true
+    //     ? await sideBarService.getNewProductListVS1("All")
+    //     : JSON.parse(dataObject[0].data);
 
-    if (refresh) await addVS1Data("TProductVS1", JSON.stringify(data));
+    let data = await sideBarService.getNewProductListVS1("All");
+
+    //if (refresh) await addVS1Data("TProductVS1", JSON.stringify(data));
+    await addVS1Data("TProductVS1", JSON.stringify(data));
 
     if (data.tproductvs1) {
       //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
@@ -8903,11 +8906,162 @@ Template.setup.events({
     templateObject.loadSuppliers(true);
     $(".modal.show").modal("hide");
   },
+
+  "click .setup-step-8 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleSupplier" + ".csv";
+
+    const customers = templateObject.supplierList.get();
+
+   // console.log("Suppliers", customers);
+    rows.push([
+      "Company",
+      "Phone",
+      "AR Balance",
+      "Credit balance",
+      "Balance",
+      "Credit limit",
+      "Order balance",
+      "Country",
+      "Notes",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.company,
+        customer.phone,
+        customer.arbalance,
+        customer.creditbalance,
+        customer.balance,
+        customer.creditlimit,
+        customer.salesorderbalance,
+        customer.country, 
+        customer.notes
+      ]);
+    });
+
+    //console.log("Export rows Suppliers", rows);
+
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-8 .templateDownloadXLSX": (e, templateObject) => {
+    //console.log(e);
+    //e.preventDefault(); //stop the browser from following
+    //window.location.href = "sample_imports/SampleEmployee.xlsx";
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleSupplier" + ".xlsx";
+
+    const customers = templateObject.supplierList.get();
+    rows.push([
+      "Company",
+      "Phone",
+      "AR Balance",
+      "Credit balance",
+      "Balance",
+      "Credit limit",
+      "Order balance",
+      "Country",
+      "Notes",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.company,
+        customer.phone,
+        customer.arbalance,
+        customer.creditbalance,
+        customer.balance,
+        customer.creditlimit,
+        customer.salesorderbalance,
+        customer.country, 
+        customer.notes
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
+  },
   // TODO: Step 9
   "click .setup-step-9 .btnRefresh": (e) => {
     const templateObject = Template.instance();
     templateObject.loadInventory(true);
     $(".modal.show").modal("hide");
+  },
+  "click .setup-step-9 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleInventory" + ".csv";
+
+    const customers = templateObject.inventoryList.get();
+
+    console.log("inventoryList", customers);
+    rows.push([
+      "Product Name",
+      "Sale description",
+      "Available",
+      "On SO",
+      "On BO",
+      "In Stock",
+      "On Order",
+      "Cost Price",
+      "Sale Price",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.ProductName,
+        customer.SalesDescription,
+        customer.AvailableQuantity,
+        customer.onSOOrder,
+        customer.onBOOrder,
+        customer.TotalQtyInStock,
+        customer.TotalQtyOnOrder,
+        customer.CostPrice, 
+        customer.SellPrice
+      ]);
+    });
+
+    console.log("Export rows inventoryList", rows);
+
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-9 .templateDownloadXLSX": (e, templateObject) => {
+    //console.log(e);
+    //e.preventDefault(); //stop the browser from following
+    //window.location.href = "sample_imports/SampleEmployee.xlsx";
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleInventory" + ".xlsx";
+
+    const customers = templateObject.inventoryList.get();
+    rows.push([
+      "Product Name",
+      "Sale description",
+      "Available",
+      "On SO",
+      "On BO",
+      "In Stock",
+      "On Order",
+      "Cost Price",
+      "Sale Price",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.ProductName,
+        customer.SalesDescription,
+        customer.AvailableQuantity,
+        customer.onSOOrder,
+        customer.onBOOrder,
+        customer.TotalQtyInStock,
+        customer.TotalQtyOnOrder,
+        customer.CostPrice, 
+        customer.SellPrice
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
   },
   "click .lblCostEx": function (event) {
     var $earch = $(event.currentTarget);
