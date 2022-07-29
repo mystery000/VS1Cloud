@@ -22,8 +22,7 @@ let clickedInput = "";
 let isDropDown = false;
 var template_list = [
     "Refunds",
- ];
-
+];
 
 Template.refundcard.onCreated(() => {
     const templateObject = Template.instance();
@@ -50,6 +49,7 @@ Template.refundcard.onCreated(() => {
     templateObject.termrecords = new ReactiveVar();
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.taxcodes = new ReactiveVar([]);
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
     /* Attachments */
@@ -4583,6 +4583,8 @@ Template.refundcard.onRendered(function() {
     var splashArrayTaxRateList = new Array();
     const taxCodesList = [];
     const lineExtaSellItems = [];
+    let taxCodes = [];
+
     tempObj.getAllProducts = function() {
         getVS1Data('TProductVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -4861,15 +4863,15 @@ Template.refundcard.onRendered(function() {
 
     //tempObj.getAllProducts();
 
-
-
     tempObj.getAllTaxCodes = function() {
         getVS1Data('TTaxcodeVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTaxCodesVS1().then(function(data) {
+                salesService.getTaxCodesDetailVS1().then(function(data) {
 
                     let records = [];
                     let inventoryData = [];
+                    taxCodes = data.ttaxcodevs1;
+                    tempObj.taxcodes.set(taxCodes);
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                         var dataList = [
@@ -4950,6 +4952,8 @@ Template.refundcard.onRendered(function() {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < useData.length; i++) {
                     let taxRate = (useData[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -5025,10 +5029,12 @@ Template.refundcard.onRendered(function() {
                 }
             }
         }).catch(function(err) {
-            salesService.getTaxCodesVS1().then(function(data) {
+            salesService.getTaxCodesDetailVS1().then(function(data) {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -6179,6 +6185,105 @@ Template.refundcard.events({
         $('#tblInvoiceLine tbody tr .lineTaxRate').attr("data-target", "#taxRateListModal");
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectLineID').val(targetID);
+    },
+    'click .lineTaxAmount': function (event) {
+        let targetRow = $(event.target).closest('tr');
+        let targetID = targetRow.attr('id');
+        let targetTaxCode = targetRow.find('.lineTaxCode').val();
+        let qty = targetRow.find(".lineQty").val() || 0
+        let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+        const tmpObj = Template.instance();
+        const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+        if (!taxDetail) {
+            return;
+        }
+
+        let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+        let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+
+        let taxRateDetailList = [];
+        taxRateDetailList.push([
+            taxDetail.Description,
+            taxDetail.Id,
+            taxDetail.CodeName,
+            `${taxDetail.Rate * 100}%`,
+            "Selling Price",
+            `$${priceTotal}`,
+            `$${taxTotal}`,
+            `$${priceTotal + taxTotal}`,
+        ]);
+        if (taxDetail.Lines) {
+            taxDetail.Lines.map((line) => {
+                taxRateDetailList.push([
+                    "",
+                    line.Id,
+                    line.SubTaxCode,
+                    `${line.Percentage}%`,
+                    line.PercentageOn,
+                    "",
+                    `$${priceTotal * line.Percentage / 100}`,
+                    ""
+                ]);
+            });
+        }
+
+        if (taxRateDetailList) {
+
+            if (! $.fn.DataTable.isDataTable('#tblTaxRateDetail')) {
+                $('#tblTaxRateDetail').DataTable({
+                    data: [],
+                    order: [[0, 'desc']],
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [{
+                            orderable: true,
+                            targets: [0]
+                        }, {
+                            className: "taxId",
+                            "targets": [1]
+                        }, {
+                            className: "taxCode",
+                            "targets": [2]
+                        }, {
+                            className: "taxRate text-right",
+                            "targets": [3]
+                        }, {
+                            className: "taxRateOn",
+                            "targets": [4]
+                        }, {
+                            className: "amountEx text-right",
+                            "targets": [5]
+                        }, {
+                            className: "tax text-right",
+                            "targets": [6]
+                        }, {
+                            className: "amountInc text-right",
+                            "targets": [7]
+                        }
+                    ],
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "fnDrawCallback": function (oSettings) {
+
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRateDetail_filter");
+                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRateDetail_filter");
+                    }
+                });
+            }
+
+            let datatable = $('#tblTaxRateDetail').DataTable();
+            datatable.clear();
+            datatable.rows.add(taxRateDetailList);
+            datatable.draw(false);
+        }
+
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);
