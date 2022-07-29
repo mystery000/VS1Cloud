@@ -1746,6 +1746,7 @@ Template.alltaskdatatable.onRendered(function () {
       },
     });
   }, 1000);
+  tableResize();
 });
 
 Template.alltaskdatatable.events({

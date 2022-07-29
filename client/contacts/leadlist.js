@@ -189,6 +189,7 @@ Template.leadlist.onRendered(function() {
             FlowRouter.go('/leadscard?id=' + listData);
         }
     });
+    tableResize();
 });
 
 Template.leadlist.events({

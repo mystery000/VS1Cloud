@@ -1273,6 +1273,7 @@ Template.inventorylist.onRendered(function() {
     };
     // templateObject.getAccountNames();
     // templateObject.getAllTaxCodes();
+    tableResize();
 });
 
 Template.inventorylist.helpers({

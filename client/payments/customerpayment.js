@@ -1305,6 +1305,7 @@ Template.customerpayment.onRendered(function() {
             $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
         }
     }
+    tableResize();
 });
 
 Template.customerpayment.events({

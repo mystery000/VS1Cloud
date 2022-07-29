@@ -1619,7 +1619,7 @@ Template.salesoverview.onRendered(function () {
   }
 
   templateObject.getAllCustomFieldDisplaySettings();
-
+  tableResize();
 });
 
 Template.salesoverview.events({
