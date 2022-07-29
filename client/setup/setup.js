@@ -8906,7 +8906,7 @@ Template.setup.events({
 
     const customers = templateObject.customerList.get();
 
-    console.log("customers", customers);
+    // console.log("customers", customers);
     rows.push([
       "Company",
       "Job",
@@ -9071,7 +9071,7 @@ Template.setup.events({
 
     const customers = templateObject.inventoryList.get();
 
-    console.log("inventoryList", customers);
+    // console.log("inventoryList", customers);
     rows.push([
       "Product Name",
       "Sale description",
@@ -9098,7 +9098,7 @@ Template.setup.events({
       ]);
     });
 
-    console.log("Export rows inventoryList", rows);
+    // console.log("Export rows inventoryList", rows);
 
     utilityService.exportToCsv(rows, filename, "csv");
   },
