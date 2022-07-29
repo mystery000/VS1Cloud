@@ -3312,7 +3312,7 @@ Template.employeescard.onRendered(function () {
             data = await templateObject.saveDeductionLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
-        }
+        }        
 
         let useData = PayTemplateDeductionLine.fromList(
             data.tpaytemplatedeductionline
@@ -3374,6 +3374,9 @@ Template.employeescard.onRendered(function () {
         }else{
             data = JSON.parse(dataObject[0].data);
         }
+
+        console.log('Superannuation Line', data);
+
         let useData = PayTemplateSuperannuationLine.fromList(
             data.tpaytemplatesuperannuationline
         ).filter((item) => {
@@ -3402,7 +3405,7 @@ Template.employeescard.onRendered(function () {
 
     templateObject.getPaySuperannuationLines();
 
-    templateObject.saveReiumbursementLocalDB = async function(){
+    templateObject.saveReiumbursementDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
@@ -3430,10 +3433,11 @@ Template.employeescard.onRendered(function () {
         let data = [];
         let dataObject = await getVS1Data('TPayTemplateReiumbursementLine')
         if ( dataObject.length == 0) {
-            data = await templateObject.saveReiumbursementLocalDB();
+            data = await templateObject.saveReiumbursementDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
+        console.log('ReiumbursementLine', data)
         let useData = PayTemplateReiumbursementLine.fromList(
             data.tpaytemplatereiumbursementline
         ).filter((item) => {
@@ -5908,338 +5912,297 @@ Template.employeescard.events({
     },
 
     // Pay Template Tab
-    'click #addEarningsLine': function(){
+    'click #addEarningsLine': async function(){
         let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'block');
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
 
-        swal({
-            title: "Confirm",
-            text: "New Earnings line will be saved",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save'
-        })
-        .then(async (result) => {
-            if (result.value) {
-                $('.fullScreenSpin').css('display', 'block');
-                let currentId = FlowRouter.current().queryParams;
-                let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        );
 
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateEarningLine
-                );
+        let EarningRate = $('#earningRateSelect').val();
+        let CalculationType = $('input[name=calculationType]:checked').val();
+        let ExpenseAccount = $('#expenseAccount').val();
 
-                let EarningRate = $('#earningRateSelect').val();
-                let CalculationType = $('input[name=calculationType]:checked').val();
-                let ExpenseAccount = $('#expenseAccount').val();
+        let payEarningLines = new PayTemplateEarningLine({
+                type: 'TPayTemplateEarningLine',
+                fields: new PayTemplateEarningLineFields({
+                    ID: 0,
+                    EmployeeID: employeeID,
+                    EarningRate: EarningRate,
+                    CalculationType: CalculationType,
+                    ExpenseAccount: ExpenseAccount,
+                    Amount: 0,
+                    Active: true
+                })
+            });
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payEarningLines),
+            });
 
-                let payEarningLines = new PayTemplateEarningLine({
-                        type: 'TPayTemplateEarningLine',
-                        fields: new PayTemplateEarningLineFields({
-                            ID: 0,
-                            EmployeeID: employeeID,
-                            EarningRate: EarningRate,
-                            CalculationType: CalculationType,
-                            ExpenseAccount: ExpenseAccount,
-                            Amount: 0,
-                            Active: true
-                        })
-                    });
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(payEarningLines),
-                    });
-
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        // Load all the earnings Line from Database
-                        await templateObject.saveEarningLocalDB();
-                        await templateObject.getPayEarningLines();
-                        $('input[name=calculationType]:checked').attr('checked', false);
-                        $('#expenseAccount').val('');
-                        $('#addEarningsLineModal').modal('hide');
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Success",
-                            text: "Earning line has been added",
-                            type: 'success',
-                        })
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Error",
-                            text: "Failed to add earning line",
-                            type: 'error',
-                        })
-                    }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add earning line",
-                        type: 'error',
-                    })
-                }
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                // Load all the earnings Line from Database
+                await templateObject.saveEarningLocalDB();
+                await templateObject.getPayEarningLines();
+                $('input[name=calculationType]:checked').attr('checked', false);
+                $('#expenseAccount').val('');
+                $('#addEarningsLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Success",
+                    text: "Earning line has been added",
+                    type: 'success',
+                })
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to add earning line",
+                    type: 'error',
+                })
             }
-        });
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add earning line",
+                type: 'error',
+            })
+        }
     },
 
-    'click #addDeductionLine': function(){
+    'click #addDeductionLine': async function(){
         let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'block');
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let DeductionType = $('#deductionTypeSelect').val();
+        let CalculationType = $('input[name=calculationTypeDeduction]:checked').val();
+        let ControlAccount = $('#controlAccountDeduction').val();
 
-        swal({
-            title: "Confirm",
-            text: "New Deduction line will be saved",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save'
-        })
-        .then(async (result) => {
-            if (result.value) {
-                $('.fullScreenSpin').css('display', 'block');
-                let currentId = FlowRouter.current().queryParams;
-                let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-                let DeductionType = $('#deductionTypeSelect').val();
-                let CalculationType = $('input[name=calculationTypeDeduction]:checked').val();
-                let ControlAccount = $('#controlAccountDeduction').val();
-
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateDeductionLine
-                );
-                let payDeductionLines = new PayTemplateDeductionLine({
-                    type: 'TPayTemplateDeductionLine',
-                    fields: new PayTemplateDeductionLineFields({
-                        ID: 0,
-                        EmployeeID: parseInt(employeeID),
-                        DeductionType: DeductionType,
-                        CalculationType: CalculationType,
-                        ExpenseAccount: ControlAccount,
-                        Amount: 0,
-                        Percentage: 0,
-                        Active: true
-                    })
-                })
-
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(payDeductionLines),
-                    });
-                    console.log("deduction", ApiResponse);
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        // Load all the earnings Line from Database
-                        await templateObject.saveDeductionLocalDB();
-                        await templateObject.getPayDeducitonLines();
-                        $('#deductionTypeSelect').val('');
-                        $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
-                        $('#controlAccountDeduction').val('');
-                        $('#addDeductionLineModal').modal('hide');
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Success",
-                            text: "Deduction line has been added",
-                            type: 'success',
-                        })
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Error",
-                            text: "Failed to add deduction line",
-                            type: 'error',
-                        })
-                    }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add deduction line",
-                        type: 'error',
-                    })
-                }
-            }
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateDeductionLine
+        );
+        let payDeductionLines = new PayTemplateDeductionLine({
+            type: 'TPayTemplateDeductionLine',
+            fields: new PayTemplateDeductionLineFields({
+                EmployeeID: parseInt(employeeID),
+                DeductionType: DeductionType,
+                CalculationType: CalculationType,
+                ExpenseAccount: ControlAccount,
+                Amount: 0,
+                // Percentage: 0,
+                Active: true
+            })
         });
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payDeductionLines),
+            });
+            console.log("deduction", ApiResponse);
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                // Load all the earnings Line from Database
+                await templateObject.saveDeductionLocalDB();
+                await templateObject.getPayDeducitonLines();
+                $('#deductionTypeSelect').val('');
+                $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
+                $('#controlAccountDeduction').val('');
+                $('#addDeductionLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Success",
+                    text: "Deduction line has been added",
+                    type: 'success',
+                })
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to add deduction line",
+                    type: 'error',
+                })
+            }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add deduction line",
+                type: 'error',
+            })
+        }
     },
 
-    'click #addSuperannuationLine': function(){
-        swal({
-            title: "Confirm",
-            text: "New superannuation line will be saved",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save'
-        })
-        .then(async (result) => {
-            if (result.value) {
-                let templateObject = Template.instance();
-                let currentId = FlowRouter.current().queryParams;
-                let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-                let Fund = $('#superannuationFund').val();
-                let ContributionType = $('#superannuationTypeSelect').val();
-                let ReducesSGC = ( $('#reducesSGC').is(':checked') )? true: false;
-                let CalculationType = $('input[name=calculationTypeSuperannuation]:checked').val();
-                let MinimumMonthlyEarnings = $('#minimumMonthlyEarnings').val();
-                let ExpenseAccount = $('#expenseSuperannuationAccount').val();
-                let LiabilityAccount = $('#liabilityAccount').val();
-                let PaymentFrequency = $('#paymentFrequency').val();
-                let PeriodPaymentDate = $('#edtPeriodPaymentDate').val();
+    'click #addSuperannuationLine': async function(){
+        $('.fullScreenSpin').css('display', 'block');
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let Fund = $('#superannuationFund').val();
+        let ContributionType = $('#superannuationTypeSelect').val();
+        let ReducesSGC = ( $('#reducesSGC').is(':checked') )? "1": "0";
+        let CalculationType = $('input[name=calculationTypeSuperannuation]:checked').val();
+        let MinimumMonthlyEarnings = $('#minimumMonthlyEarnings').val();
+        let ExpenseAccount = $('#expenseSuperannuationAccount').val();
+        let LiabilityAccount = $('#liabilityAccount').val();
+        let PaymentFrequency = $('#paymentFrequency').val();
+        let PeriodPaymentDate = $('#edtPeriodPaymentDate').val();
 
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
-                );
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
+        );
 
-                let paySuperannuationLines = new PayTemplateSuperannuationLine({
-                    type: 'TPayTemplateSuperannuationLine',
-                    fields: new PayTemplateSuperannuationLineFields({
-                        ID: 0,
-                        EmployeeID: employeeID,
-                        Fund: Fund,
-                        ContributionType: ContributionType,
-                        ReducesSGC: ReducesSGC,
-                        CalculationType: CalculationType,
-                        MinimumMonthlyEarnings: MinimumMonthlyEarnings,
-                        ExpenseAccount: ExpenseAccount,
-                        LiabilityAccount: LiabilityAccount,
-                        PaymentFrequency: PaymentFrequency,
-                        PeriodPaymentDate: PeriodPaymentDate,
-                        Percentage: 0,
-                        Amount: 0,
-                        Active: true
-                    })
-                });
-
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(paySuperannuationLines),
-                    });
-
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        // Load all the earnings Line from Database
-                        await templateObject.saveSuperannuationLocalDB();
-                        await templateObject.getPaySuperannuationLines();
-                        $('#superannuationFund').val('');
-                        $('#superannuationTypeSelect').val('');
-                        $('#reducesSGC').attr('checked', false);
-                        $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
-                        $('#minimumMonthlyEarnings').val('');
-                        $('#expenseSuperannuationAccount').val('');
-                        $('#liabilityAccount').val('');
-                        $('#paymentFrequency').val('Monthly');
-                        $('#edtPeriodPaymentDate').val('');
-                        $('#addSuperannuationLineModal').modal('hide');
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Success",
-                            text: "Superannuation line has been added",
-                            type: 'success',
-                        })
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Error",
-                            text: "Failed to add superannuation line",
-                            type: 'error',
-                        })
-                    }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add superannuation line",
-                        type: 'error',
-                    })
-                }
-            }
+        let paySuperannuationLines = new PayTemplateSuperannuationLine({
+            type: 'TPayTemplateSuperannuationLine',
+            fields: new PayTemplateSuperannuationLineFields({
+                ID: 0,
+                EmployeeID: employeeID,
+                Fund: Fund,
+                ContributionType: ContributionType,
+                ReducesSGC: ReducesSGC,
+                CalculationType: parseInt(CalculationType),
+                MinimumMonthlyEarnings: parseInt(MinimumMonthlyEarnings),
+                // NEED TO UPDATE API FOR ExpenseAccount
+                // ExpenseAccount: ExpenseAccount,
+                ExpenseAccount: 0,
+                // NEED TO ADD API FOR ExpenseAccount
+                // LiabilityAccount: LiabilityAccount,
+                PaymentFrequency: PaymentFrequency,
+                // NEED TO UPDATE API FOR PERIODPAYMENTDATE
+                // PeriodPaymentDate: moment(PeriodPaymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
+                PeriodPaymentDate: 0,
+                Percentage: 0,
+                Amount: 0,
+                Active: true
+            })
         });
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(paySuperannuationLines),
+            });
+
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                // Load all the earnings Line from Database
+                await templateObject.saveSuperannuationLocalDB();
+                await templateObject.getPaySuperannuationLines();
+                $('#superannuationFund').val('');
+                $('#superannuationTypeSelect').val('');
+                $('#reducesSGC').attr('checked', false);
+                $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
+                $('#minimumMonthlyEarnings').val('');
+                $('#expenseSuperannuationAccount').val('');
+                $('#liabilityAccount').val('');
+                $('#paymentFrequency').val('Monthly');
+                $('#edtPeriodPaymentDate').val('');
+                $('#addSuperannuationLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Success",
+                    text: "Superannuation line has been added",
+                    type: 'success',
+                })
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to add superannuation line",
+                    type: 'error',
+                })
+            }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add superannuation line",
+                type: 'error',
+            })
+        }
     },
 
-    'click #addReiumbursementLine': function(){
-        swal({
-            title: "Confirm",
-            text: "New Reiumbursment line will be saved",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save'
+    'click #addReiumbursementLine': async function(){
+        $('.fullScreenSpin').css('display', 'block');
+        const templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let ReiumbursementType = $('#reimbursementTypeSelect').val();
+        let Description = $('#reiumbursementDescription').val();
+        let ControlExpenseAccount = $('#controlExpenseAccount').val();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
+        );
+
+        let payReiumbursementLines = new PayTemplateReiumbursementLine({
+            type: 'TPayTemplateReiumbursementLine',
+            fields: new PayTemplateReiumbursementLineFields({
+                ID: 0,
+                EmployeeID: employeeID,
+                ReiumbursementType: ReiumbursementType,
+                Description: Description,
+                ExpenseAccount: ControlExpenseAccount,
+                Amount: 0,
+                Active: true
+            })
         })
-        .then(async (result) => {
-            if (result.value) {
-                let templateObject = Template.instance();
-                let currentId = FlowRouter.current().queryParams;
-                let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-                let ReiumbursementType = $('#reimbursementTypeSelect').val();
-                let Description = $('#reiumbursementDescription').val();
-                let ControlExpenseAccount = $('#controlExpenseAccount').val();
 
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
-                );
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payReiumbursementLines),
+            });
 
-                let payReiumbursementLines = new PayTemplateReiumbursementLine({
-                    type: 'TPayTemplateReiumbursementLine',
-                    fields: new PayTemplateReiumbursementLineFields({
-                        ID: 0,
-                        EmployeeID: employeeID,
-                        ReiumbursementType: ReiumbursementType,
-                        Description: Description,
-                        ExpenseAccount: ControlExpenseAccount,
-                        Amount: 0,
-                        Active: true
-                    })
+            if (ApiResponse.ok == true) {
+                // Load all the earnings Line from Database
+                await templateObject.saveReiumbursementDB();
+                await templateObject.getPayReiumbursementLines();
+                $('#reimbursementTypeSelect').val('');
+                $('#reiumbursementDescription').val('');
+                $('#controlExpenseAccount').val('');
+                $('#addReimbursementLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Success",
+                    text: "Reiumbursement line has been added",
+                    type: 'success',
                 })
-
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(payReiumbursementLines),
-                    });
-
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        // Load all the earnings Line from Database
-                        await templateObject.saveReiumbursementLocalDB();
-                        await templateObject.getPayReiumbursementLines();
-                        $('#reimbursementTypeSelect').val('');
-                        $('#reiumbursementDescription').val('');
-                        $('#controlExpenseAccount').val('');
-                        $('#addReimbursementLineModal').modal('hide');
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Success",
-                            text: "Reiumbursement line has been added",
-                            type: 'success',
-                        })
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Error",
-                            text: "Failed to add Reiumbursement line",
-                            type: 'error',
-                        })
-                    }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add Reiumbursement line",
-                        type: 'error',
-                    })
-                }
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to add Reiumbursement line",
+                    type: 'error',
+                })
             }
-        });
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add Reiumbursement line",
+                type: 'error',
+            })
+        }
     },
 
     'change #superannuationTypeSelect': function(){
