@@ -9,19 +9,19 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 
-Template.taxratedetailpop.onCreated(function () {
+Template.taxdetailpop.onCreated(function () {
 
 });
 
-Template.taxratedetailpop.onRendered(function () {
+Template.taxdetailpop.onRendered(function () {
 
 });
 
-Template.taxratedetailpop.events({
+Template.taxdetailpop.events({
     
 });
 
-Template.taxratedetailpop.helpers({
+Template.taxdetailpop.helpers({
 
 });
 
