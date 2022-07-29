@@ -5696,7 +5696,7 @@ Template.purchaseordercard.events({
         }
 
         $('#tblPurchaseOrderLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
-        $('#tblPurchaseOrderLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+        $('#tblPurchaseOrderLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);

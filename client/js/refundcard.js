@@ -6283,7 +6283,7 @@ Template.refundcard.events({
         }
 
         $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
-        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);

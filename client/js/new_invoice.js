@@ -11481,7 +11481,7 @@ Template.new_invoice.events({
         }
 
         $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
-        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+        $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
     'click .lineSerialNo, keydown .lineSerialNo': function(event) {
         var $earch = $(event.currentTarget);

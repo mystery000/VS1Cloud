@@ -7864,7 +7864,7 @@ Template.new_salesorder.events({
         }
 
         $('#tblSalesOrderLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
-        $('#tblSalesOrderLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+        $('#tblSalesOrderLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);

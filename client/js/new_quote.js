@@ -7102,7 +7102,7 @@ Template.new_quote.events({
         }
 
         $('#tblQuoteLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
-        $('#tblQuoteLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+        $('#tblQuoteLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);
