@@ -445,6 +445,13 @@ Template.setup.onRendered(function () {
     LoadingOverlay.hide();
   };
 
+  let imageData = localStorage.getItem("Image");
+  if (imageData) {
+    $(".setup-step-1 .uploadedImageLogo").attr("src", imageData);
+    $(".setup-step-1 .uploadedImageLogo").attr("width", "160");
+    $(".setup-step-1 .uploadedImageLogo").attr("height", "50%");
+  }
+
   templateObject.getCountryData = () => {
     getVS1Data("TCountries")
       .then(function (dataObject) {
@@ -4450,7 +4457,7 @@ Template.setup.events({
       templateObject.phAddress3.set(address[2] ? address[2] : "");
     }
   },
-  "click #uploadImg": function (event) {
+  "click .setup-step-1 #uploadImg": function (event) {
     //let imageData= (localStorage.getItem("Image"));
     let templateObject = Template.instance();
     let imageData = templateObject.imageFileData.get();
@@ -4462,22 +4469,22 @@ Template.setup.events({
       $("#changeLogo").show();
     }
   },
-  "change #fileInput": function (event) {
+  "change .setup-step-1 #fileInput": function (event) {
     let templateObject = Template.instance();
     let selectedFile = event.target.files[0];
     let reader = new FileReader();
-    $(".Choose_file").text("");
+    $(".setup-step-1 .Choose_file").text("");
     reader.onload = function (event) {
-      $("#uploadImg").prop("disabled", false);
-      $("#uploadImg").addClass("on-upload-logo");
-      $(".Choose_file").text(selectedFile.name);
-      //$("#uploadImg").css("background-color","yellow");
+      $(".setup-step-1 #uploadImg").prop("disabled", false);
+      $(".setup-step-1 #uploadImg").addClass("on-upload-logo");
+      $(".setup-step-1 .Choose_file").text(selectedFile.name);
+      // $("#uploadImg").css("background-color","yellow");
       templateObject.imageFileData.set(event.target.result);
-      //localStorage.setItem("Image",event.target.result);
+      // localStorage.setItem("organisation-logo-tmp",event.target.result);
     };
     reader.readAsDataURL(selectedFile);
   },
-  "click #removeLogo": function (event) {
+  "click .setup-step-1 #removeLogo": function (event) {
     let templateObject = Template.instance();
     templateObject.imageFileData.set(null);
     localStorage.removeItem("Image");
@@ -4486,8 +4493,8 @@ Template.setup.events({
     //window.open('/organisationsettings','_self');
     //Router.current().render(Template.organisationSettings);
   },
-  "click .btnUploadLogoImgFile": function (event) {
-    $("#fileInput").trigger("click");
+  "click .setup-step-1 .btnUploadLogoImgFile": (event) => {
+    $(".setup-step-1 #fileInput").trigger("click");
   },
 
   // TODO: Step 2
