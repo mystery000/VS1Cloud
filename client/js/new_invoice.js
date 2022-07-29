@@ -11428,8 +11428,8 @@ Template.new_invoice.events({
 
         if (taxRateDetailList) {
 
-            if (! $.fn.DataTable.isDataTable('#tblTaxRateDetail')) {
-                $('#tblTaxRateDetail').DataTable({
+            if (! $.fn.DataTable.isDataTable('#tblTaxDetail')) {
+                $('#tblTaxDetail').DataTable({
                     data: [],
                     order: [[0, 'desc']],
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -11474,7 +11474,7 @@ Template.new_invoice.events({
                 });
             }
 
-            let datatable = $('#tblTaxRateDetail').DataTable();
+            let datatable = $('#tblTaxDetail').DataTable();
             datatable.clear();
             datatable.rows.add(taxRateDetailList);
             datatable.draw(false);
