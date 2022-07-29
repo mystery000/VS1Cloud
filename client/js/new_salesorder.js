@@ -53,6 +53,7 @@ Template.new_salesorder.onCreated(() => {
     templateObject.termrecords = new ReactiveVar();
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.taxcodes = new ReactiveVar([]);
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
     templateObject.uploadedFile = new ReactiveVar();
@@ -79,7 +80,7 @@ Template.new_salesorder.onRendered(() => {
         number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
         templateObject.generateInvoiceData(title,number);
 
-     });
+    });
 
     let currentSalesOrder;
     let getso_id;
@@ -124,7 +125,6 @@ Template.new_salesorder.onRendered(() => {
         yearRange: "-90:+10",
     });
 
-
     templateObject.getTemplateInfo = function() {
 
         getVS1Data('TemplateSettings').then(function(dataObject) {
@@ -158,25 +158,21 @@ Template.new_salesorder.onRendered(() => {
 
         });
 
-   };
-
+    };
 
    templateObject.getTemplateInfo();
 
     templateObject.generateInvoiceData = function (template_title,number) {
         object_invoce = [];
-         switch (template_title) {
-
-         case "Sales Order":
-            showSealsOrder1(template_title,number);
-           break;
-
-         case "Delivery Docket":
-            showDeliveryDocket1(template_title,number);
-           break;
-         }
-
-      };
+        switch (template_title) {
+            case "Sales Order":
+                showSealsOrder1(template_title,number);
+            break;
+            case "Delivery Docket":
+                showDeliveryDocket1(template_title,number);
+            break;
+        }
+    };
 
 
     function showSealsOrder1(template_title,number)
@@ -909,7 +905,7 @@ Template.new_salesorder.onRendered(() => {
         }
 
 
-      }
+    }
 
     function updateTemplate(object_invoce) {
 
@@ -1381,8 +1377,8 @@ Template.new_salesorder.onRendered(() => {
     }
 
     setTimeout(function(){
-            templateObject.getSalesCustomFieldsList()
-        },500);
+        templateObject.getSalesCustomFieldsList()
+    },500);
 
     let url = FlowRouter.current().path;
     let bankDetails = Session.get('vs1companyBankDetails') || '';
@@ -6225,6 +6221,7 @@ Template.new_salesorder.onRendered(() => {
     }, 10);
 
 });
+
 Template.new_salesorder.onRendered(function() {
     let tempObj = Template.instance();
     let utilityService = new UtilityService();
@@ -6235,6 +6232,8 @@ Template.new_salesorder.onRendered(function() {
     const splashArrayTaxRateList = [];
     const taxCodesList = [];
     const lineExtaSellItems = [];
+    let taxCodes = [];
+
     tempObj.getAllProducts = function() {
         getVS1Data('TProductVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -6467,10 +6466,12 @@ Template.new_salesorder.onRendered(function() {
     tempObj.getAllTaxCodes = function() {
         getVS1Data('TTaxcodeVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTaxCodesVS1().then(function(data) {
+                salesService.getTaxCodesDetailVS1().then(function(data) {
 
                     let records = [];
                     let inventoryData = [];
+                    taxCodes = data.ttaxcodevs1;
+                    tempObj.taxcodes.set(taxCodes);
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                         var dataList = [
@@ -6490,7 +6491,6 @@ Template.new_salesorder.onRendered(function() {
                         splashArrayTaxRateList.push(dataList);
                     }
                     tempObj.taxraterecords.set(taxCodesList);
-
 
                     if (splashArrayTaxRateList) {
 
@@ -6547,6 +6547,8 @@ Template.new_salesorder.onRendered(function() {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < useData.length; i++) {
                     let taxRate = (useData[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -6618,10 +6620,12 @@ Template.new_salesorder.onRendered(function() {
                 }
             }
         }).catch(function(err) {
-            salesService.getTaxCodesVS1().then(function(data) {
+            salesService.getTaxCodesDetailVS1().then(function(data) {
 
                 let records = [];
                 let inventoryData = [];
+                taxCodes = data.ttaxcodevs1;
+                tempObj.taxcodes.set(taxCodes);
                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                     var dataList = [
@@ -6738,30 +6742,31 @@ Template.new_salesorder.onRendered(function() {
 
     tempObj.getAllCustomFieldDisplaySettings = function () {
 
-      let listType = 'ltSaleslines';
-      try {
-        getVS1Data("TltSaleslines").then(function (dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-              initCustomFieldDisplaySettings(data, listType);
-              addVS1Data("TltSaleslines", JSON.stringify(data));
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            initCustomFieldDisplaySettings(data, listType);
-            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-              addVS1Data("TltSaleslines", JSON.stringify(data));
-            });
-          }
-        })
+        let listType = 'ltSaleslines';
+        try {
+            getVS1Data("TltSaleslines").then(function (dataObject) {
+                if (dataObject.length == 0) {
+                    sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                        initCustomFieldDisplaySettings(data, listType);
+                        addVS1Data("TltSaleslines", JSON.stringify(data));
+                    });
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    initCustomFieldDisplaySettings(data, listType);
+                    sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                        addVS1Data("TltSaleslines", JSON.stringify(data));
+                    });
+                }
+            })
 
-      } catch (error) {
-      }
+        } catch (error) {
+        }
     }
 
     tempObj.getAllCustomFieldDisplaySettings();
     //$('#tblInventory').DataTable().column( 6 ).visible( false );
 });
+
 Template.new_salesorder.helpers({
 
     getTemplateList: function () {
@@ -7761,6 +7766,105 @@ Template.new_salesorder.events({
         $('#tblSalesOrderLine tbody tr .lineTaxRate').attr("data-target", "#taxRateListModal");
         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectLineID').val(targetID);
+    },
+    'click .lineTaxAmount': function (event) {
+        let targetRow = $(event.target).closest('tr');
+        let targetID = targetRow.attr('id');
+        let targetTaxCode = targetRow.find('.lineTaxCode').val();
+        let qty = targetRow.find(".lineQty").val() || 0
+        let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+        const tmpObj = Template.instance();
+        const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+        if (!taxDetail) {
+            return;
+        }
+
+        let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+        let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+
+        let taxRateDetailList = [];
+        taxRateDetailList.push([
+            taxDetail.Description,
+            taxDetail.Id,
+            taxDetail.CodeName,
+            `${taxDetail.Rate * 100}%`,
+            "Selling Price",
+            `$${priceTotal}`,
+            `$${taxTotal}`,
+            `$${priceTotal + taxTotal}`,
+        ]);
+        if (taxDetail.Lines) {
+            taxDetail.Lines.map((line) => {
+                taxRateDetailList.push([
+                    "",
+                    line.Id,
+                    line.SubTaxCode,
+                    `${line.Percentage}%`,
+                    line.PercentageOn,
+                    "",
+                    `$${priceTotal * line.Percentage / 100}`,
+                    ""
+                ]);
+            });
+        }
+
+        if (taxRateDetailList) {
+
+            if (! $.fn.DataTable.isDataTable('#tblTaxRateDetail')) {
+                $('#tblTaxRateDetail').DataTable({
+                    data: [],
+                    order: [[0, 'desc']],
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [{
+                            orderable: true,
+                            targets: [0]
+                        }, {
+                            className: "taxId",
+                            "targets": [1]
+                        }, {
+                            className: "taxCode",
+                            "targets": [2]
+                        }, {
+                            className: "taxRate text-right",
+                            "targets": [3]
+                        }, {
+                            className: "taxRateOn",
+                            "targets": [4]
+                        }, {
+                            className: "amountEx text-right",
+                            "targets": [5]
+                        }, {
+                            className: "tax text-right",
+                            "targets": [6]
+                        }, {
+                            className: "amountInc text-right",
+                            "targets": [7]
+                        }
+                    ],
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "fnDrawCallback": function (oSettings) {
+
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRateDetail_filter");
+                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRateDetail_filter");
+                    }
+                });
+            }
+
+            let datatable = $('#tblTaxRateDetail').DataTable();
+            datatable.clear();
+            datatable.rows.add(taxRateDetailList);
+            datatable.draw(false);
+        }
+
+        $('#tblSalesOrderLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
+        $('#tblSalesOrderLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);
