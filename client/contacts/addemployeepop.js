@@ -3588,24 +3588,24 @@ Template.addemployeepop.events({
     },
     'click .addemployeepop .confirm-delete-attachment': function (event, ui) {
         let tempObj = Template.instance();
-        tempObj.$("#new-attachment2-tooltip").show();
+        tempObj.$(".addemployeepop #new-attachment2-tooltip").show();
         let attachmentID = parseInt(event.target.id.split('delete-attachment-')[1]);
         let uploadedArray = tempObj.uploadedFiles.get();
         let attachmentCount = tempObj.attachmentCount.get();
-        $('#attachment-upload').val('');
+        $('.addemployeepop #attachment-upload').val('');
         uploadedArray.splice(attachmentID, 1);
         tempObj.uploadedFiles.set(uploadedArray);
         attachmentCount--;
         if (attachmentCount === 0) {
             let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-            $('#file-display').html(elementToAdd);
+            $('.addemployeepop #file-display').html(elementToAdd);
         }
         tempObj.attachmentCount.set(attachmentCount);
         if (uploadedArray.length > 0) {
             let utilityService = new UtilityService();
             utilityService.showUploadedAttachmentTabs(uploadedArray);
         } else {
-            $(".attchment-tooltip").show();
+            $(".addemployeepop .attchment-tooltip").show();
         }
     },
     'click .addemployeepop .attachmentTab': function () {
@@ -3615,22 +3615,22 @@ Template.addemployeepop.events({
             let utilityService = new UtilityService();
             utilityService.showUploadedAttachmentTabs(uploadedFileArray);
         } else {
-            $(".attchment-tooltip").show();
+            $(".addemployeepop .attchment-tooltip").show();
         }
     },
     'click .addemployeepop .btnUploadFilePicture': function (event) {
-        $('#fileInput').trigger('click');
+        $('.addemployeepop #fileInput').trigger('click');
     },
     'change .addemployeepop #fileInput': function (event) {
         let templateObject = Template.instance();
         let selectedFile = event.target.files[0];
         let reader = new FileReader();
-        $(".Choose_file").text('');
+        $(".addemployeepop .Choose_file").text('');
         reader.onload = function (event) {
 
-            $("#uploadImg").prop("disabled", false);
-            $("#uploadImg").addClass("on-upload-logo");
-            $(".Choose_file").text(selectedFile.name);
+            $(".addemployeepop #uploadImg").prop("disabled", false);
+            $(".addemployeepop #uploadImg").addClass("on-upload-logo");
+            $(".addemployeepop .Choose_file").text(selectedFile.name);
             templateObject.imageFileData.set(event.target.result);
         };
         reader.readAsDataURL(selectedFile);
@@ -3641,10 +3641,11 @@ Template.addemployeepop.events({
         let imageData = templateObject.imageFileData.get();
         if (imageData != null && imageData != "") {
             //localStorage.setItem("Image",imageData);
-            $('#uploadedImage').attr('src', imageData);
-            $('#uploadedImage').attr('width', '50%');
-            $('#removeLogo').show();
-            $('#changeLogo').show();
+            $('.addemployeepop #uploadedImage').attr('src', imageData);
+            $('.addemployeepop #uploadedImage').attr('width', '50%');
+            $('.addemployeepop #removeLogo').show();
+            $('.addemployeepop #changeLogo').show();
+            $('#addEmployeePicture').modal('hide');
         }
 
     },
@@ -3652,8 +3653,8 @@ Template.addemployeepop.events({
         let templateObject = Template.instance();
         templateObject.imageFileData.set(null);
         let imageData = templateObject.imageFileData.get();
-        $('#uploadedImage').attr('src', imageData);
-        $('#uploadedImage').attr('width', '50%');
+        $('.addemployeepop #uploadedImage').attr('src', imageData);
+        $('.addemployeepop #uploadedImage').attr('width', '50%');
     },
     'click .addemployeepop .btnNewEmployee': function (event) {
         // FlowRouter.go('/employeescard');
