@@ -1773,7 +1773,7 @@ Template.contactoverview.onRendered(function () {
       );
     }
   }
-
+  tableResize();
 });
 
 Template.contactoverview.events({

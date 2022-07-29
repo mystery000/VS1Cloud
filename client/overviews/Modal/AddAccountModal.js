@@ -636,8 +636,6 @@ Template.addAccountModal.onRendered(function () {
         },
       };
 
-      console.log("account id", accountID);
-
       accountService
         .saveAccount(data)
         .then(() => {
