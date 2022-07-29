@@ -5728,43 +5728,37 @@ Template.employeescard.events({
                 text: "Hours accrued annually is required",
                 type: 'warning',
             })
-        }
-        else if(isNaN(HoursAccruedAnnually)){
+        }else if(isNaN(HoursAccruedAnnually)){
             swal({
                 title: "Warning",
                 text: "Hour must be a number",
                 type: 'warning',
             })
-        }
-        else if(isNaN(HoursAccruedAnnually)){
+        }else if(isNaN(HoursAccruedAnnually)){
             swal({
                 title: "Warning",
                 text: "Hour must be a number",
                 type: 'warning',
             })
-        }
-        else if(isNaN(HoursLeave)){
+        }else if(isNaN(HoursLeave)){
             swal({
                 title: "Confirm",
                 text: "Hours leave must be a number",
                 type: 'warning',
             })
-        }
-        else if(OpeningBalance == ''){
+        }else if(OpeningBalance == ''){
             swal({
                 title: "Warning",
                 text: "Opening balance must not be empty",
                 type: 'warning',
             })
-        }
-        else if(isNaN(OpeningBalance)){
+        }else if(isNaN(OpeningBalance)){
             swal({
                 title: "Warning",
                 text: "Opening balance be a number",
                 type: 'warning',
             })
-        }
-        else{
+        }else{
             $('.fullScreenSpin').css('display', 'block');
 
             let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
@@ -6167,7 +6161,7 @@ Template.employeescard.events({
     'click #addReiumbursementLine': function(){
         swal({
             title: "Confirm",
-            text: "New Reiumbursment line will be saved",
+            text: "New Reimbursement line will be saved",
             type: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, save'
@@ -6219,14 +6213,14 @@ Template.employeescard.events({
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: "Success",
-                            text: "Reiumbursement line has been added",
+                            text: "Reimbursement line has been added",
                             type: 'success',
                         })
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: "Error",
-                            text: "Failed to add Reiumbursement line",
+                            text: "Failed to add Reimbursement line",
                             type: 'error',
                         })
                     }
@@ -6234,7 +6228,7 @@ Template.employeescard.events({
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: "Error",
-                        text: "Failed to add Reiumbursement line",
+                        text: "Failed to add Reimbursement line",
                         type: 'error',
                     })
                 }
