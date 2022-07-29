@@ -1224,7 +1224,7 @@ Template.appointmenttimelist.onRendered(function () {
     var id = $(this).closest('tr').attr('id');
     window.open('appointments?id='+id,'_self');
   });
-
+  tableResize();
 
 });
 
