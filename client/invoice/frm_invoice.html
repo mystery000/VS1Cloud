@@ -969,7 +969,7 @@
                                                                     <input class="custom-range widthElement rngRangeDescription" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[1].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-
+                                                            {{#if includeBOnShippedQty}}
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[2].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="{{displayfields.[2].active}}">
@@ -981,6 +981,41 @@
                                                                     <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
+                                                            <div class="columnSettings displaySettings" custid="{{displayfields.[2].id}}">
+                                                                <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                    <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="{{displayfields.[2].active}}">
+                                                                    <label class="custom-control-label" for="formCheck-03"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}" valueupdate="th.colQty">{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}</div>
+                                                                </div>
+                                                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                                    <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                </div>
+                                                            </div>
+                                                            <div class="columnSettings displaySettings" custid="{{displayfields.[17].id}}">
+                                                                <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                    <input class="custom-control-input chkBO" type="checkbox" id="formCheck-03" checked="{{displayfields.[17].active}}">
+                                                                    <label class="custom-control-label" for="formCheck-03"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[17].custfieldlabel}}{{else}}BO{{/if}}" valueupdate="th.colBO">{{#if displayfields}}{{displayfields.[17].custfieldlabel}}{{else}}BO{{/if}}</div>
+                                                                </div>
+                                                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                                    <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[17].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                </div>
+                                                            </div>
+                                                            {{else}}
+                                                            <div class="columnSettings displaySettings" custid="{{displayfields.[2].id}}">
+                                                                <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                    <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="{{displayfields.[2].active}}">
+                                                                    <label class="custom-control-label" for="formCheck-03"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}" valueupdate="th.colQty">{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}</div>
+                                                                </div>
+                                                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                                    <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                </div>
+                                                            </div>
+                                                            {{/if}}
 
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[3].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">

@@ -13307,6 +13307,9 @@ Template.new_invoice.events({
 
     // custom field displaysettings
     'click .btnResetGridSettings': function(event) {
+      let templateObject = Template.instance();
+      let checkBackOrder = templateObject.includeBOnShippedQty.get();
+
       let reset_data = [
         { label: 'Product Name', class: 'colProductName', active: true },
         { label: 'Description', class: 'colDescription', active: true },
@@ -13324,6 +13327,27 @@ Template.new_invoice.events({
         { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
         { label: 'Units', class: 'colUOM', active: false }
       ];
+      if(checkBackOrder) {
+        reset_data = [
+          { label: 'Product Name', class: 'colProductName', active: true },
+          { label: 'Description', class: 'colDescription', active: true },
+          { label: 'Ordered', class: 'colOrdered', active: true },
+          { label: 'Shipped', class: 'colQty', active: true },
+          { label: 'BO', class: 'colBO', active: true },
+          { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+          { label: 'Disc %', class: 'colDiscount', active: true },
+          { label: 'Cost Price', class: 'colCostPrice', active: false },
+          { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+          { label: 'Tax Rate', class: 'colTaxRate', active: false },
+          { label: 'Tax Code', class: 'colTaxCode', active: true },
+          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+          { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+          { label: 'Amount (Ex)', class: 'colAmount', active: true },
+          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+          { label: 'Units', class: 'colUOM', active: false }
+        ];
+      }
       // var datable = $('#tblInvoiceLine');
       // var datable = $('#tblInvoiceLine').DataTable();
 
