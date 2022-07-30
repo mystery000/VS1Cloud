@@ -1175,7 +1175,7 @@ Template.receiptsoverview.onRendered(function() {
             if (!data.vendor.name) {
                 let isExistSupplier = false;
                 templateObject.suppliers.get().forEach(supplier => {
-                    if (data.vendor.name == supplier.suupliername) {
+                    if (data.vendor.name == supplier.suppliername) {
                         isExistSupplier = true;
                         $(parentElement + ' .merchants').val(data.vendor.name);
                         $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
@@ -1234,15 +1234,24 @@ Template.receiptsoverview.onRendered(function() {
             $(parentElement + ' .transactionTypes').val(transactionTypeName);
 
         }).catch(function(err) {
+            let errText = "";
+            if (err.error == "401") {
+                errText = "You have run out of free scans. Please upgrade your account to get more scans";
+            } else {
+                errText = err;
+            }
             swal({
                 title: 'Oooops...',
-                text: err,
+                text: errText,
                 type: 'error',
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'
             }).then((result) => {
-                if (result.value) {if(err == checkResponseError){window.open('/', '_self');}}
-                else if (result.dismiss == 'cancel') {
+                if (result.value) {
+                    if(err == checkResponseError){
+                        window.open('/', '_self');
+                    }
+                } else if (result.dismiss == 'cancel') {
 
                 }
             });
