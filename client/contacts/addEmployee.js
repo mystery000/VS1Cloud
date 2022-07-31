@@ -30,6 +30,8 @@ import LeaveRequest from "../js/Api/Model/LeaveRequest";
 import LeaveRequestFields from "../js/Api/Model/LeaveRequestFields";
 import PayNotes from "../js/Api/Model/PayNotes";
 import PayNotesFields from "../js/Api/Model/PayNotesFields";
+import PaySlips from "../js/Api/Model/PaySlips";
+import PaySlipsFields from "../js/Api/Model/PaySlipsFields";
 import 'jquery-editable-select';
 import '../lib/global/indexdbstorage.js';
 import { functionsIn } from "lodash";
@@ -2826,6 +2828,29 @@ Template.employeescard.onRendered(function () {
         }, 1000);
     }
 
+    templateObject.savePaySlipLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPaySlips
+        );
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+        
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if( employeePayrolEndpointJsonResponse.tpayslips.length ){
+                await addVS1Data('TPaySlips', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }
+        return '';
+    };
+
     templateObject.saveLeaveRequestLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
@@ -5278,6 +5303,97 @@ Template.employeescard.events({
         });
 
     },
+    'click #btnPayslip': async function(event) {
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let period = $('#period').val();
+        let paymentDate = $('#paymentDate').val();
+        let totalPay = $('#totalPay').val();
+        
+        
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPaySlips
+        );
+    
+        if(period == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter period",
+                type: 'warning',
+            })
+        }else if(paymentDate == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter total pay",
+                type: 'warning',
+            })
+        }else if(totalPay == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter total pay",
+                type: 'warning',
+            })
+        } else if(isNaN(totalPay)){
+            swal({
+                title: "Warning",
+                text: "Please enter a number as total pay",
+                type: 'warning',
+            })
+        } else{
+            $('.fullScreenSpin').css('display', 'block');
+
+            // leaveRequests.push(
+                let paySlipSettings =  new PaySlips({
+                    type: "TPaySlips",
+                    fields: new PaySlipsFields({
+                        EmployeeID: parseInt( employeeID ),
+                        Period: period,
+                        PaymentDate: 0,
+                        TotalPay: parseInt( totalPay )
+                    }),
+                })
+            // );
+
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(paySlipSettings),
+            });
+            console.log("dataPay", ApiResponse);
+            try {
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await templateObject.savePaySlipLocalDB();
+                    await templateObject.getPaySlips();
+                    $('#paySlipModal').modal('hide');
+                    $('#Period, #paymentDate, #totalPay').val('');
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Success",
+                        text: "Pay slip added",
+                        type: 'success',
+                    })
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add pay slip",
+                        type: 'error',
+                    })
+                }
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to add pay slip",
+                    type: 'error',
+                })
+            }
+        }
+    },
 
     'click #saveObEarningsRate': async function(event) {
         $('.fullScreenSpin').css('display', 'block');
@@ -5831,7 +5947,6 @@ Template.employeescard.events({
     },
 
     'click #savePayRollNotes': async function(){
-        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
 
         const employeePayrolApis = new EmployeePayrollApi();
@@ -5843,38 +5958,60 @@ Template.employeescard.events({
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let Notes = $('#payRollNotes').val();
-        let noteSetting = new PayNotes({
-            type: "TPayNotes",
-            fields: new PayNotesFields({
-                EmployeeID: parseInt(employeeID),
-                Notes: Notes,
-                // CreatedAt: moment(),
-                CreatedAt:0,
-                UserID: Session.get("mySessionEmployeeLoggedID"),
-                UserName: Session.get('mySessionEmployee') || '',
-            }),
-        })
-        try {
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(noteSetting),
-            });
-
-            if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                await templateObject.saveNotesLocalDB();
-                await templateObject.getPayNotesTypes();
-                $('#payRollNotes').val('');
-                $('#newNoteModal').modal('hide');
+        if(Notes == ''){
+            swal({
+                title: "Error",
+                text: "Please enter a note",
+                type: 'warning',
+            })
+        } else {
+            $('.fullScreenSpin').css('display', 'block');
+            let noteSetting = new PayNotes({
+                type: "TPayNotes",
+                fields: new PayNotesFields({
+                    EmployeeID: parseInt(employeeID),
+                    Notes: Notes,
+                    // CreatedAt: moment(),
+                    CreatedAt:0,
+                    UserID: Session.get("mySessionEmployeeLoggedID"),
+                    UserName: Session.get('mySessionEmployee') || '',
+                }),
+            })
+            try {
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(noteSetting),
+                });
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await templateObject.saveNotesLocalDB();
+                    await templateObject.getPayNotesTypes();
+                    $('#payRollNotes').val('');
+                    $('#newNoteModal').modal('hide');
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Success",
+                        text: "Note has been added",
+                        type: 'success',
+                    })
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add note",
+                        type: 'warning',
+                    })
+                }
+            } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
-            }else{
-                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Note could not be added",
+                    type: 'error',
+                })
             }
-        } catch (error) {
-            $('.fullScreenSpin').css('display', 'none');
         }
-
     },
 
     // NEXT TASK HERE
