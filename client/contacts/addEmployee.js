@@ -3733,7 +3733,7 @@ Template.employeescard.onRendered(function () {
             openingBalanceLines = OpeningBalance.fromList(
                 checkOpeningBalances
             ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Balance == type ) {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Balance == type && item.fields.Active == true ) {
                     return item;
                 }
             });
@@ -7485,33 +7485,125 @@ Template.employeescard.events({
         }else if(activeTab == "paytemplate") {
 
         }else if(activeTab == "openingbalances") {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let currentId = FlowRouter.current().queryParams;
+            let templateObject = Template.instance();
+
+            const employeePayrolApis = new EmployeePayrollApi();
+            // now we have to make the post request to save the data in database
+            const apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TOpeningBalances
+            );
 
             // WORKING HERE
-            // Fetch earning lines values
+            /**
+             * Fetch Earning Opening fields data
+             */
             let tOpeningBalance = [];
             let obEarningLines = templateObject.filterOpeningBalance(0);
             if( obEarningLines ){
                 for (const item of obEarningLines) {
                     if( item.fields.Active == true ){
-                        let EarningRate = $(`#obEarningRate${item.fields.ID}`).val();
+                        let AType = $(`#obEarningRate${item.fields.ID}`).val();
                         let amount = $(`#obEarningAmount${item.fields.ID}`).val();
                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-                        tOpeningBalance.push(
-                            new OpeningBalance({
-                                type: "TOpeningBalances",
-                                fields: new OpeningBalanceFields({
-                                    ID: item.fields.ID,
-                                    AType: EarningsRate,
-                                    Amount: parseFloat( amount ),
-                                    Active: true
-                                }),
-                            })
-                        )
+                        tOpeningBalance.push({
+                            type: "TOpeningBalances",
+                            fields: {
+                                ID: item.fields.ID,
+                                AType: AType,
+                                Amount: amount,
+                                Active: true
+                            }
+                        })
                     }
                 }
             }
-            console.log( tOpeningBalance );
+            /**
+             * Fetch deduction Opening fields data
+             */
+            let obDeductionLines = templateObject.filterOpeningBalance(1);
+            if( obDeductionLines ){
+                for (const item of obDeductionLines) {
+                    if( item.fields.Active == true ){
+                        let AType = $(`#obDeductionLine${item.fields.ID}`).val();
+                        let amount = $(`#obDeductionAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push({
+                            type: "TOpeningBalances",
+                            fields: {
+                                ID: item.fields.ID,
+                                AType: AType,
+                                Amount: amount,
+                                Active: true
+                            }
+                        })
+                    }
+                }
+            }
+            /**
+             * Fetch superannuation Opening fields data
+             */
+             let obSAnnuationLines = templateObject.filterOpeningBalance(2);
+             if( obSAnnuationLines ){
+                 for (const item of obSAnnuationLines) {
+                     if( item.fields.Active == true ){
+                         let AType = $(`#obSuperannuationFund${item.fields.ID}`).val();
+                         let amount = $(`#obSuperannuationAmount${item.fields.ID}`).val();
+                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                         tOpeningBalance.push({
+                            type: "TOpeningBalances",
+                            fields: {
+                                ID: item.fields.ID,
+                                AType: AType,
+                                Amount: amount,
+                                Active: true
+                            }
+                        })
+                     }
+                 }
+             }
+            /**
+             * Fetch Reinmbursment Opening fields data
+             */
+             let obReImbursmentLines = templateObject.filterOpeningBalance(3);
+             if( obReImbursmentLines ){
+                 for (const item of obReImbursmentLines) {
+                     if( item.fields.Active == true ){
+                         let AType = $(`#obReimbursementFund${item.fields.ID}`).val();
+                         let amount = $(`#obReimbursementAmount${item.fields.ID}`).val();
+                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                         tOpeningBalance.push({
+                            type: "TOpeningBalances",
+                            fields: {
+                                ID: item.fields.ID,
+                                AType: AType,
+                                Amount: amount,
+                                Active: true
+                            }
+                        })
+                     }
+                 }
+            }
+
+            let openingBalanceJSON = {
+                type: "TOpeningBalances",
+                objects: tOpeningBalance
+            };
+            
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(openingBalanceJSON),
+            });
+            if (ApiResponse.ok == true) {
+                console.log( ApiResponse );
+            }
+            $('.fullScreenSpin').css('display', 'none');
 
         }else if(activeTab == "notes") {
 
@@ -9016,23 +9108,19 @@ Template.employeescard.helpers({
     },
     obEarningLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance(0);
-        return obEarningLines;
+        return templateObject.filterOpeningBalance(0);
     },
     obDeductionLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance(1);
-        return obEarningLines;
+        return templateObject.filterOpeningBalance(1);
     },
     obSuperannuationLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance(2);
-        return obEarningLines;
+        return templateObject.filterOpeningBalance(2);
     },
     obReimbursementLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance(3);
-        return obEarningLines;
+        return templateObject.filterOpeningBalance(3);
     },
     payTemplateDeductionLines: () => {
         return Template.instance().payTemplateDeductionLineInfo.get();
@@ -9057,13 +9145,17 @@ Template.employeescard.helpers({
     },
     formatPrice( amount ){
         let utilityService = new UtilityService();
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+        if( isNaN(amount) ){
+            amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+            amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+        }        
         return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
     },
     formatPercent( percentVal ){
-        percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
-        percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
+        if( isNaN(percentVal) ){
+            percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
+            percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
+        }
         return `${parseFloat(percentVal).toFixed(2)}%`;
     },
     formatDate: ( date ) => {
