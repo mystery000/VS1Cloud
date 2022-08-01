@@ -6465,7 +6465,7 @@ Template.billcard.events({
                 let tdamount = $('#' + lineID + " .lineAmount").val();
                 let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
 
                 if (tdaccount != "") {
 
@@ -6524,6 +6524,12 @@ Template.billcard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             var objDetails = '';
+            if ($('#sltDept').val() === '') {
+                swal('Department has not been selected!', '', 'warning');
+                $('.fullScreenSpin').css('display', 'none');
+                event.preventDefault();
+                return false;
+            }
             if (getso_id[1]) {
                 currentBill = parseInt(currentBill);
                 objDetails = {
@@ -6578,7 +6584,14 @@ Template.billcard.events({
                     }
                 };
             }
+            if(splashLineArray.length > 0){
 
+            }else{
+              swal('Account name has not been selected!', '', 'warning');
+              $('.fullScreenSpin').css('display', 'none');
+              event.preventDefault();
+              return false;
+            };
             purchaseService.saveBillEx(objDetails).then(function(objDetails) {
                 var supplierID = $('#edtSupplierEmail').attr('supplierid');
 
@@ -7452,7 +7465,7 @@ Template.billcard.events({
                     let tdamount = $('#' + lineID + " .lineAmount").val();
                     let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
 
                     if (tdaccount != "") {
 
@@ -7565,6 +7578,16 @@ Template.billcard.events({
                         }
                     };
                 }
+
+                if(splashLineArray.length > 0){
+
+                }else{
+                  swal('Account name has not been selected!', '', 'warning');
+                  $('.fullScreenSpin').css('display', 'none');
+                  event.preventDefault();
+                  return false;
+                }
+
                 purchaseService.saveBillEx(objDetails).then(function(objDetails) {
                     var supplierID = $('#edtSupplierEmail').attr('supplierid');
                     if (supplierID !== " ") {

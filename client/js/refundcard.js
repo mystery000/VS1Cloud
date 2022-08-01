@@ -266,7 +266,7 @@ Template.refundcard.onRendered(() => {
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let taxamount = $('#' + lineID + " .colTaxAmount").text();
                 let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
@@ -503,7 +503,7 @@ Template.refundcard.onRendered(() => {
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let taxamount = $('#' + lineID + " .colTaxAmount").text();
                 let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
@@ -6848,7 +6848,7 @@ Template.refundcard.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {
@@ -7845,7 +7845,7 @@ Template.refundcard.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {

@@ -3029,7 +3029,7 @@ Template.journalentrycard.events({
                     let tddebitex = $('#' + lineID + " .lineDebitInc").val();
                     let erpLineID = $('#' + lineID + " .lineAccountName").attr('lineid');
 
-                    tdtaxCode = tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    tdtaxCode = tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
 
 
                     if (tdaccount != "") {
@@ -3076,7 +3076,7 @@ Template.journalentrycard.events({
                     let tddebitex = $('#' + lineID + " .lineDebitInc").val();
                     let erpLineID = $('#' + lineID + " .lineAccountName").attr('lineid');
 
-                    tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
 
 
                     if (tdaccount != "") {
@@ -3114,6 +3114,14 @@ Template.journalentrycard.events({
 
                     }
                 };
+            }
+            if(splashLineArray.length > 0){
+
+            }else{
+                swal('Account name has not been selected!', '', 'warning');
+                $('.fullScreenSpin').css('display', 'none');
+                event.preventDefault();
+                return false;
             }
             purchaseService.saveJournalEnrtry(objDetails).then(function(objDetails) {
                 FlowRouter.go('/journalentrylist?success=true');

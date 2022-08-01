@@ -202,7 +202,7 @@ Template.new_quote.onRendered(() => {
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#' + lineID + " .colTaxAmount").text();
 
@@ -436,7 +436,7 @@ Template.new_quote.onRendered(() => {
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
 
@@ -5266,7 +5266,7 @@ Template.new_quote.onRendered(() => {
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
             let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
             lineItemObj = {
@@ -7761,7 +7761,7 @@ Template.new_quote.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 lineItemObj = {
@@ -9046,7 +9046,7 @@ Template.new_quote.events({
                     let tdQty = $('#' + lineID + " .lineQty").val();
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                     lineItemObj = {
@@ -9109,7 +9109,7 @@ Template.new_quote.events({
                         let tdQty = $('#' + lineID + " .lineQty").val();
                         let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                         let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                         lineItemObj = {
@@ -9741,7 +9741,7 @@ Template.new_quote.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {
@@ -10005,7 +10005,7 @@ Template.new_quote.events({
                     let tdQty = $('#' + lineID + " .lineQty").val();
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                     if (tdproduct != "") {
@@ -10266,7 +10266,7 @@ Template.new_quote.events({
                     let tdQty = $('#' + lineID + " .lineQty").val();
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                     if (tdproduct != "") {

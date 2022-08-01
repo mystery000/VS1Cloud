@@ -625,7 +625,8 @@ Template.new_invoice.onRendered(() => {
                                 curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                 TaxTotal: TaxTotalGbp || 0,
                                 TaxRate: TaxRateGbp || 0,
-                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                             };
                             var dataListTable = [
@@ -926,7 +927,8 @@ Template.new_invoice.onRendered(() => {
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
                                         TaxRate: TaxRateGbp || 0,
-                                        DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                        DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                        UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                                     };
                                     var dataListTable = [
@@ -1284,7 +1286,8 @@ Template.new_invoice.onRendered(() => {
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
-                                            DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0
+                                            DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0,
+                                            UnitOfMeasure: useData[d].fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
 
                                         };
                                         var dataListTable = [
@@ -1588,7 +1591,8 @@ Template.new_invoice.onRendered(() => {
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
-                                            DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                            DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                            UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                                         };
                                         var dataListTable = [
@@ -1950,7 +1954,8 @@ Template.new_invoice.onRendered(() => {
                                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                     TaxTotal: TaxTotalGbp || 0,
                                     TaxRate: TaxRateGbp || 0,
-                                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                    UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                                 };
                                 var dataListTable = [
@@ -2380,7 +2385,8 @@ Template.new_invoice.onRendered(() => {
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
                                         TaxRate: TaxRateGbp || 0,
-                                        DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                        DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                        UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                                     };
                                     var dataListTable = [
@@ -2419,7 +2425,8 @@ Template.new_invoice.onRendered(() => {
                                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                     TaxTotal: TaxTotalGbp || 0,
                                     TaxRate: TaxRateGbp || 0,
-                                    DiscountPercent: data.fields.Lines.fields.DiscountPercent || 0
+                                    DiscountPercent: data.fields.Lines.fields.DiscountPercent || 0,
+                                    UnitOfMeasure: data.fields.Lines.fields.UnitOfMeasure || defaultUOM
                                 };
                                 lineItems.push(lineItemObj);
                             }
@@ -2717,6 +2724,7 @@ Template.new_invoice.onRendered(() => {
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
                                             DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0,
+                                            UnitOfMeasure: useData[d].fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
                                             pqaseriallotdata:useData[d].fields.Lines[i].fields.PQA||''
 
                                         };
@@ -2757,6 +2765,7 @@ Template.new_invoice.onRendered(() => {
                                         TaxTotal: TaxTotalGbp || 0,
                                         TaxRate: TaxRateGbp || 0,
                                         DiscountPercent: useData[d].fields.Lines.fields.DiscountPercent || 0,
+                                        UnitOfMeasure: useData[d].fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
                                         pqaseriallotdata:useData[d].fields.Lines.fields.PQA||''
                                     };
                                     lineItems.push(lineItemObj);
@@ -3026,7 +3035,8 @@ Template.new_invoice.onRendered(() => {
                                                 curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
-                                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                                UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                                             };
                                             var dataListTable = [
@@ -3332,7 +3342,8 @@ Template.new_invoice.onRendered(() => {
                                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                     TaxTotal: TaxTotalGbp || 0,
                                     TaxRate: TaxRateGbp || 0,
-                                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                    UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                                 };
                                 var dataListTable = [
@@ -3662,7 +3673,8 @@ Template.new_invoice.onRendered(() => {
                                 curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                 TaxTotal: TaxTotalGbp || 0,
                                 TaxRate: TaxRateGbp || 0,
-                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                             };
                             var dataListTable = [
@@ -3947,7 +3959,8 @@ Template.new_invoice.onRendered(() => {
                                 curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                 TaxTotal: TaxTotalGbp || 0,
                                 TaxRate: TaxRateGbp || 0,
-                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                                DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM
 
                             };
                             var dataListTable = [
@@ -4188,6 +4201,7 @@ Template.new_invoice.onRendered(() => {
             curTotalAmt: 0,
             TaxTotal: 0,
             TaxRate: 0,
+            UnitOfMeasure: defaultUOM||''
         };
         const dataListTable = [
             ' ' || '',
@@ -9441,10 +9455,10 @@ Template.new_invoice.onRendered(function () {
 
     //     })
     // }
-    
+
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
-      
+
       let custFields = [];
       let customData = {};
       let customFieldCount = 15;
@@ -9480,7 +9494,7 @@ Template.new_invoice.onRendered(function () {
           };
           custFields.push(customData);
         }
-      } 
+      }
 
       let remainder = customFieldCount - data.tcustomfieldlist.length;
       for (let r = 0; r < remainder; r++) {
@@ -9494,7 +9508,7 @@ Template.new_invoice.onRendered(function () {
           dropdown: null,
         };
         custFields.push(customData);
-      } 
+      }
 
       if (custFields.length < customFieldCount) {
         let remainder = customFieldCount - custFields.length;
@@ -9509,7 +9523,7 @@ Template.new_invoice.onRendered(function () {
           };
           custFields.push(customData);
         }
-      } 
+      }
 
       tempObj.displayfields.set(custFields);
     }
@@ -9947,7 +9961,7 @@ Template.new_invoice.events({
                         let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                         let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
+                        let tdlineUnit = $('#' + lineID + " .lineUOM").text()||defaultUOM;
                         lineItemObj = {
                             description: tddescription || '',
                             quantity: tdQty || 0,
@@ -10025,7 +10039,7 @@ Template.new_invoice.events({
                         let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                         let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
+                        let tdlineUnit = $('#' + lineID + " .lineUOM").text()||defaultUOM;
                         lineItemObj = {
                             description: tddescription || '',
                             quantity: tdQty || 0,
@@ -10049,7 +10063,8 @@ Template.new_invoice.events({
                                         LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                         Headershipdate: saleDate,
                                         LineTaxCode: tdtaxCode || '',
-                                        DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                        DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0,
+                                        UnitOfMeasure:tdlineUnit
                                     }
                                 };
                             } else {
@@ -10063,7 +10078,8 @@ Template.new_invoice.events({
                                         LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                         Headershipdate: saleDate,
                                         LineTaxCode: tdtaxCode || '',
-                                        DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                        DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0,
+                                        UnitOfMeasure:tdlineUnit
                                     }
                                 };
                             }
@@ -12339,7 +12355,7 @@ Template.new_invoice.events({
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
+                let tdlineUnit = $('#' + lineID + " .lineUOM").text()||defaultUOM;
                 lineItemObj = {
                     description: tddescription || '',
                     quantity: tdQty || 0,
@@ -12363,7 +12379,8 @@ Template.new_invoice.events({
                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                 Headershipdate: saleDate,
                                 LineTaxCode: tdtaxCode || '',
-                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0,
+                                UnitOfMeasure:tdlineUnit
                             }
                         };
                     } else {
@@ -12377,7 +12394,8 @@ Template.new_invoice.events({
                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                 Headershipdate: saleDate,
                                 LineTaxCode: tdtaxCode || '',
-                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0,
+                                UnitOfMeasure:tdlineUnit
                             }
                         };
                     }
@@ -13613,7 +13631,7 @@ Template.new_invoice.events({
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
+                let tdlineUnit = $('#' + lineID + " .lineUOM").text()||defaultUOM;
                 lineItemObj = {
                     description: tddescription || '',
                     quantity: tdQty || 0,
@@ -13637,7 +13655,8 @@ Template.new_invoice.events({
                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                 Headershipdate: saleDate,
                                 LineTaxCode: tdtaxCode || '',
-                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0,
+                                UnitOfMeasure:tdlineUnit
                             }
                         };
                     } else {
@@ -13651,7 +13670,8 @@ Template.new_invoice.events({
                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                 Headershipdate: saleDate,
                                 LineTaxCode: tdtaxCode || '',
-                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0,
+                                UnitOfMeasure:tdlineUnit
                             }
                         };
                     }
@@ -14258,7 +14278,7 @@ Template.new_invoice.events({
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                     let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
+                    let tdlineUnit = $('#' + lineID + " .lineUOM").text()||defaultUOM;
                     lineItemObj = {
                         description: tddescription || '',
                         quantity: tdQty || 0,
@@ -14282,7 +14302,8 @@ Template.new_invoice.events({
                                     LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                     Headershipdate: saleDate,
                                     LineTaxCode: tdtaxCode || '',
-                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0,
+                                    UnitOfMeasure:tdlineUnit
                                 }
                             };
                         } else {
@@ -14296,7 +14317,8 @@ Template.new_invoice.events({
                                     LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                     Headershipdate: saleDate,
                                     LineTaxCode: tdtaxCode || '',
-                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0,
+                                    UnitOfMeasure:tdlineUnit
                                 }
                             };
                         }

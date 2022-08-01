@@ -4655,7 +4655,7 @@ Template.employeescard.events({
         if (firstname === '') {
             $('.fullScreenSpin').css('display', 'none');
             // Bert.alert('<strong>WARNING:</strong> First Name cannot be blank!', 'warning');
-            swal('First Name cannot be blank!', '', 'info');
+            swal('Please provide the first name !', '', 'warning');
             e.preventDefault();
             $('#edtFirstName').focus();
         }

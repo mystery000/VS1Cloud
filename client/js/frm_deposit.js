@@ -3089,6 +3089,16 @@ Template.depositcard.events({
                           }
                       };
                     }
+
+                    if(splashLineArray.length > 0){
+
+                    }else{
+                        swal('From account has not been selected!', '', 'warning');
+                        $('.fullScreenSpin').css('display', 'none');
+                        event.preventDefault();
+                        return false;
+                    };
+
                     purchaseService.saveBankDeposit(objDetails).then(function (objDetails) {
                     FlowRouter.go('/depositlist?success=true');
                     $('.modal-backdrop').css('display','none');
@@ -3226,6 +3236,15 @@ Template.depositcard.events({
                   }
               };
             }
+
+            if(splashLineArray.length > 0){
+
+            }else{
+                swal('From account has not been selected!', '', 'warning');
+                $('.fullScreenSpin').css('display', 'none');
+                event.preventDefault();
+                return false;
+            };
             purchaseService.saveBankDeposit(objDetails).then(function (objDetails) {
             FlowRouter.go('/depositlist?success=true');
             $('.modal-backdrop').css('display','none');

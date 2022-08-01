@@ -1148,7 +1148,7 @@
                                                                     <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[11].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[14].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkUnits" type="checkbox" id="formCheck-14" checked="{{displayfields.[14].active}}">
@@ -1380,7 +1380,7 @@
                                     </th>
 
                                     <th class="th colUOM {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
-                                    style="width: 95px; text-align: left!important;">{{#if displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Units{{/if}}</th> 
+                                    style="width: 95px; text-align: left!important;">{{#if displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Units{{/if}}</th>
                                     <th class="th" style="width: 25px;"></th>
                                   </tr>
                                 </thead>
@@ -1438,7 +1438,7 @@
 
                                       <td contenteditable="false"
                                         class="lineUOM colUOM pointer {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
-                                        style="text-align: right!important;cursor: pointer;"><input class="es-input highlightSelect colUOM lineUOM" type="search" value="{{item.uom}}"></td>
+                                        style="text-align: right!important;cursor: pointer;"><input class="es-input highlightSelect colUOM lineUOM" type="search" value="{{item.UnitOfMeasure}}"></td>
                                       <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
                                               class="fa fa-remove"></i></button></span></td>
                                     </tr>
