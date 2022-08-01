@@ -1632,7 +1632,7 @@ Template.newproductpop.events({
     }
 
     if (productName == "") {
-      swal("Please provide product Name !", "", "warning");
+      swal("Please provide the product name !", "", "warning");
 
       e.preventDefault();
       return false;
