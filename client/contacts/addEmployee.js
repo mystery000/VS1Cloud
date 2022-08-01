@@ -4085,6 +4085,7 @@ Template.employeescard.onRendered(function () {
                         }, 100);
                     },
                     "fnInitComplete": function () {
+                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
                         $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
                     }
 
@@ -5817,6 +5818,14 @@ Template.employeescard.events({
         switch(LeaveCalcMethod){
             case 'Manually Recorded Rate':
                 HoursLeave = $('#hoursLeave').val();
+                if(isNaN(HoursLeave)){
+                    swal({
+                        title: "Confirm",
+                        text: "Hours leave must be a number",
+                        type: 'warning',
+                    })
+                    return false;
+                }
             break;
             case 'No Calculation Required':
 
@@ -5846,12 +5855,6 @@ Template.employeescard.events({
             swal({
                 title: "Warning",
                 text: "Hour must be a number",
-                type: 'warning',
-            })
-        }else if(isNaN(HoursLeave)){
-            swal({
-                title: "Confirm",
-                text: "Hours leave must be a number",
                 type: 'warning',
             })
         }else if(OpeningBalance == ''){

@@ -115,6 +115,7 @@ async function saveCharts() {
       headers: ApiService.getPostHeaders(),
       body: JSON.stringify(chartJSON),
     });
+    console.log("save". ApiResponse);
 
     if (ApiResponse.ok == true) {
       const jsonResponse = await ApiResponse.json();
