@@ -6819,55 +6819,9 @@ Template.setup.events({
       ]);
     });
 
-    // rows[0] = [
-    //   "First Name",
-    //   "Last Name",
-    //   "Phone",
-    //   "Mobile",
-    //   "Email",
-    //   "Skype",
-    //   "Street",
-    //   "City/Suburb",
-    //   "State",
-    //   "Post Code",
-    //   "Country",
-    //   "Gender",
-    // ];
-    // rows[1] = [
-    //   "John",
-    //   "Smith",
-    //   "9995551213",
-    //   "9995551213",
-    //   "johnsmith@email.com",
-    //   "johnsmith",
-    //   "123 Main Street",
-    //   "Brooklyn",
-    //   "New York",
-    //   "1234",
-    //   "United States",
-    //   "M",
-    // ];
-    // rows[1] = [
-    //   "Jane",
-    //   "Smith",
-    //   "9995551213",
-    //   "9995551213",
-    //   "janesmith@email.com",
-    //   "janesmith",
-    //   "123 Main Street",
-    //   "Brooklyn",
-    //   "New York",
-    //   "1234",
-    //   "United States",
-    //   "F",
-    // ];
     utilityService.exportToCsv(rows, filename, "csv");
   },
   "click .templateDownloadXLSX-employee": (e, templateObject) => {
-    //console.log(e);
-    //e.preventDefault(); //stop the browser from following
-    //window.location.href = "sample_imports/SampleEmployee.xlsx";
-
     let utilityService = new UtilityService();
     let rows = [];
     const filename = "SampleEmployee" + ".xlsx";
@@ -6906,7 +6860,7 @@ Template.setup.events({
     });
 
 
-    utilityService.exportToCsv(rows, filename, "xls"); 
+    utilityService.exportToCsv(rows, filename, "xls");
   },
   "click .btnUploadFile-employee": function (event) {
     $("#attachment-upload-employee").val("");
@@ -8812,8 +8766,6 @@ Template.setup.events({
     const filename = "SampleAccounts" + ".csv";
 
     const customers = templateObject.accountList.get();
-
-    //console.log("accountList", customers);
     rows.push([
       "Account Name",
       "Description",
@@ -8835,19 +8787,15 @@ Template.setup.events({
         customer.balance,
         customer.taxcode,
         customer.bankaccountname,
-        customer.bsb, 
+        customer.bsb,
         customer.bankaccountnumber
       ]);
     });
 
-    //console.log("Export rows inventoryList", rows);
 
     utilityService.exportToCsv(rows, filename, "csv");
   },
   "click .setup-step-6 .templateDownloadXLSX": (e, templateObject) => {
-    //console.log(e);
-    //e.preventDefault(); //stop the browser from following
-    //window.location.href = "sample_imports/SampleEmployee.xlsx";
 
     let utilityService = new UtilityService();
     let rows = [];
@@ -8875,7 +8823,7 @@ Template.setup.events({
         customer.balance,
         customer.taxcode,
         customer.bankaccountname,
-        customer.bsb, 
+        customer.bsb,
         customer.bankaccountnumber
       ]);
     });
@@ -8906,7 +8854,6 @@ Template.setup.events({
 
     const customers = templateObject.customerList.get();
 
-    // console.log("customers", customers);
     rows.push([
       "Company",
       "Job",
@@ -8928,16 +8875,13 @@ Template.setup.events({
         customer.balance,
         customer.creditlimit,
         customer.salesorderbalance,
-        customer.country, 
+        customer.country,
         customer.notes
       ]);
     });
     utilityService.exportToCsv(rows, filename, "csv");
   },
   "click .setup-step-7 .templateDownloadXLSX": (e, templateObject) => {
-    //console.log(e);
-    //e.preventDefault(); //stop the browser from following
-    //window.location.href = "sample_imports/SampleEmployee.xlsx";
 
     let utilityService = new UtilityService();
     let rows = [];
@@ -8965,7 +8909,7 @@ Template.setup.events({
         customer.balance,
         customer.creditlimit,
         customer.salesorderbalance,
-        customer.country, 
+        customer.country,
         customer.notes
       ]);
     });
@@ -8990,7 +8934,6 @@ Template.setup.events({
 
     const customers = templateObject.supplierList.get();
 
-   // console.log("Suppliers", customers);
     rows.push([
       "Company",
       "Phone",
@@ -9012,19 +8955,15 @@ Template.setup.events({
         customer.balance,
         customer.creditlimit,
         customer.salesorderbalance,
-        customer.country, 
+        customer.country,
         customer.notes
       ]);
     });
 
-    //console.log("Export rows Suppliers", rows);
 
     utilityService.exportToCsv(rows, filename, "csv");
   },
   "click .setup-step-8 .templateDownloadXLSX": (e, templateObject) => {
-    //console.log(e);
-    //e.preventDefault(); //stop the browser from following
-    //window.location.href = "sample_imports/SampleEmployee.xlsx";
 
     let utilityService = new UtilityService();
     let rows = [];
@@ -9052,7 +8991,7 @@ Template.setup.events({
         customer.balance,
         customer.creditlimit,
         customer.salesorderbalance,
-        customer.country, 
+        customer.country,
         customer.notes
       ]);
     });
@@ -9071,7 +9010,6 @@ Template.setup.events({
 
     const customers = templateObject.inventoryList.get();
 
-    // console.log("inventoryList", customers);
     rows.push([
       "Product Name",
       "Sale description",
@@ -9093,19 +9031,15 @@ Template.setup.events({
         customer.onBOOrder,
         customer.TotalQtyInStock,
         customer.TotalQtyOnOrder,
-        customer.CostPrice, 
+        customer.CostPrice,
         customer.SellPrice
       ]);
     });
 
-    // console.log("Export rows inventoryList", rows);
 
     utilityService.exportToCsv(rows, filename, "csv");
   },
   "click .setup-step-9 .templateDownloadXLSX": (e, templateObject) => {
-    //console.log(e);
-    //e.preventDefault(); //stop the browser from following
-    //window.location.href = "sample_imports/SampleEmployee.xlsx";
 
     let utilityService = new UtilityService();
     let rows = [];
@@ -9133,7 +9067,7 @@ Template.setup.events({
         customer.onBOOrder,
         customer.TotalQtyInStock,
         customer.TotalQtyOnOrder,
-        customer.CostPrice, 
+        customer.CostPrice,
         customer.SellPrice
       ]);
     });

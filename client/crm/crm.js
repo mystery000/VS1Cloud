@@ -606,7 +606,6 @@ Template.crmoverview.events({
     try {
       maichimpService.createNewUser("bitcoin.blog.ytb@gmail.com", "Bitc");
     } catch (error) {
-      console.log(error);
     }
     // swal("You are not set up yet, do you wish to create an account with Mail Chimp", "", "warning");
     return;
