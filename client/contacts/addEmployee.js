@@ -3248,6 +3248,72 @@ Template.employeescard.onRendered(function () {
     };
     templateObject.getPayNotesTypes();
 
+    templateObject.filterPayTemplates = ( type ) => {
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        if(type == "earningLines"){
+            let payTemplateEarningLines = []
+            let checkPayTemplateEarningLine = templateObject.payTemplateEarningLineInfo.get();
+            if( Array.isArray( checkPayTemplateEarningLine ) ){
+                payTemplateEarningLines = PayTemplateEarningLine.fromList(
+                    checkPayTemplateEarningLine
+                ).filter((item) => {
+                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                        return item;
+                    }
+                });
+            }
+            return payTemplateEarningLines;
+
+        }
+        if(type == "deductionLines"){
+
+            let payTemplateDeductionLines = []
+            let checkPayTemplateDeductionLine = templateObject.payTemplateDeductionLineInfo.get();
+            if( Array.isArray( checkPayTemplateDeductionLine ) ){
+                payTemplateDeductionLines = PayTemplateDeductionLine.fromList(
+                    checkPayTemplateDeductionLine
+                ).filter((item) => {
+                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                        return item;
+                    }
+                });
+            }
+            return payTemplateDeductionLines;
+            
+        }else if(type == "superannuationLines"){
+            let payTemplateSuperannuationLines = []
+            let checkPayTemplateSuperannuationLine = templateObject.payTemplateSuperannuationLineInfo.get();
+            if( Array.isArray( checkPayTemplateSuperannuationLine ) ){
+                payTemplateSuperannuationLines = PayTemplateSuperannuationLine.fromList(
+                    checkPayTemplateSuperannuationLine
+                ).filter((item) => {
+                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                        return item;
+                    }
+                });
+            }
+            return payTemplateSuperannuationLines;
+
+        }else if(type == "reiumbursementLines"){
+            let payTemplateReiumbursementLines = []
+            let checkPayTemplateReiumbursementLine = templateObject.payTemplateReiumbursementLineInfo.get();
+            if( Array.isArray( checkPayTemplateReiumbursementLine ) ){
+                payTemplateReiumbursementLines = PayTemplateReiumbursementLine.fromList(
+                    checkPayTemplateReiumbursementLine
+                ).filter((item) => {
+                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                        return item;
+                    }
+                });
+            }
+            return payTemplateReiumbursementLines;
+        }else{
+            return '';
+        }
+    };
+
     templateObject.saveEarningLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
@@ -7556,8 +7622,195 @@ Template.employeescard.events({
         }else if(activeTab == "payslips") {
 
         }else if(activeTab == "paytemplate") {
+            // $('.fullScreenSpin').show();
+            let templateObject = Template.instance();
+            let currentId = FlowRouter.current().queryParams;
+            let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+            const employeePayrolApis = new EmployeePayrollApi();
+            const apiEndpoint=[];
+
+            // WORKING HERE
+            // Fetch earning lines values
+            let tPayTemplateEarningLine = [];
+            let tPayTemplateDeductionLine = [];
+            let tPayTemplateSuperannuationLine = [];
+            let tPayTemplateReiumbursementLine = [];
+            let earningLines = templateObject.filterPayTemplates("earningLines");
+            if( earningLines ){
+                for (const item of earningLines) {
+                    if( item.fields.Active == true ){
+                        let EarningRate = $(`#ptEarningRate${item.fields.ID}`).val();
+                        let amount = $(`#ptEarningAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tPayTemplateEarningLine.push(
+                            new PayTemplateEarningLine({
+                                type: "TPayTemplateEarningLine",
+                                fields: new PayTemplateEarningLineFields({
+                                    ID: item.fields.ID,
+                                    EarningRate: EarningRate,
+                                    Amount: parseFloat( amount ),
+                                    Active: true,
+                                    EmployeeID: employeeID,
+                                }),
+                            })
+                        )
+                    }
+                }
+                apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TPayTemplateEarningLine
+                );
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(tPayTemplateEarningLine),
+                });
+                console.log("api", ApiResponse);
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    // await templateObject.saveEarningLocalDB();
+                    // await templateObject.getPayEarningLines();
+                }
+            }
+            // Fetch deduction lines values
+            let deductionLines = templateObject.filterPayTemplates("deductionLines");
+            if( deductionLines ){
+                for (const item of deductionLines) {
+                    if( item.fields.Active == true ){
+                        let DeductionType = $(`#ptDeductionType${item.fields.ID}`).val();
+                        let amount = $(`#ptDeductionAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tPayTemplateDeductionLine.push(
+                            new PayTemplateDeductionLine({
+                                type: "TPayTemplateDeductionLine",
+                                fields: new PayTemplateDeductionLineFields({
+                                    ID: item.fields.ID,
+                                    DeductionType: DeductionType,
+                                    Amount: parseFloat( amount ),
+                                    Active: true,
+                                    EmployeeID: employeeID,
+                                }),
+                            })
+                        )
+                    }
+                }
+                
+                apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TPayTemplateDeductionLine
+                );
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(tPayTemplateDeductionLine),
+                });
+                console.log("api", ApiResponse);
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await templateObject.saveDeductionLocalDB();
+                    await templateObject.getPayDeducitonLines();
+                }
+            }
+            // Fetch superannuation funds values
+            let superannuationLines = templateObject.filterPayTemplates("superannuationLines");
+            if( superannuationLines ){
+                for (const item of superannuationLines) {
+                    if( item.fields.Active == true ){
+                        let SuperannuationType = $(`#ptSuperannuationFund${item.fields.ID}`).val();
+                        let amount = $(`#ptSuperannuationAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tPayTemplateSuperannuationLine.push(
+                            new PayTemplateSuperannuationLine({
+                                type: "TPayTemplateSuperannuationLine",
+                                fields: new PayTemplateSuperannuationLineFields({
+                                    ID: item.fields.ID,
+                                    SuperannuationType: SuperannuationType,
+                                    Amount: parseFloat( amount ),
+                                    Active: true,
+                                    EmployeeID: employeeID,
+                                }),
+                            })
+                        )
+                    }
+                }
+                
+                apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
+                );
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(tPayTemplateSuperannuationLine),
+                });
+                console.log("api", ApiResponse);
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await templateObject.saveSuperannuationLocalDB();
+                    await templateObject.getPaySuperannuationLines();
+                }
+            }
+            // Fetch reiumbursement funds values
+            let reiumbursementLines = templateObject.filterPayTemplates("reiumbursementLines");
+            if( reiumbursementLines ){
+                for (const item of reiumbursementLines) {
+                    if( item.fields.Active == true ){
+                        let ReiumbursementType = $(`#ptReimbursementType${item.fields.ID}`).val();
+                        let amount = $(`#ptReimbursementAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tPayTemplateReiumbursementLine.push(
+                            new PayTemplateReiumbursementLine({
+                                type: "TPayTemplateReiumbursementLine",
+                                fields: new PayTemplateReiumbursementLineFields({
+                                    ID: item.fields.ID,
+                                    ReiumbursementType: ReiumbursementType,
+                                    Amount: parseFloat( amount ),
+                                    Active: true,
+                                    EmployeeID: employeeID,
+                                }),
+                            })
+                        )
+                    }
+                }
+                
+                apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
+                );
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(tPayTemplateReiumbursementLine),
+                });
+                console.log("api", ApiResponse);
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await templateObject.saveReiumbursementDB();
+                    await templateObject.getPayReiumbursementLines();
+                }
+            }
+            
+            // if (ApiResponse.ok == true) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Success",
+                    text: "Pay template has been saved",
+                    type: 'success',
+                })
+            // }else{
+            //     $('.fullScreenSpin').css('display', 'none');
+            //     swal({
+            //         title: "Error",
+            //         text: "Failed to save pay template",
+            //         type: 'error',
+            //     })
+            // }
 
         }else if(activeTab == "openingbalances") {
+            $('.fullScreenSpin').show();
+            let templateObject = Template.instance();
+            let currentId = FlowRouter.current().queryParams;
+            let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
 
             // WORKING HERE
             // Fetch earning lines values
@@ -7566,7 +7819,7 @@ Template.employeescard.events({
             if( obEarningLines ){
                 for (const item of obEarningLines) {
                     if( item.fields.Active == true ){
-                        let EarningRate = $(`#obEarningRate${item.fields.ID}`).val();
+                        let EarningsRate = $(`#obEarningRate${item.fields.ID}`).val();
                         let amount = $(`#obEarningAmount${item.fields.ID}`).val();
                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
@@ -7577,15 +7830,120 @@ Template.employeescard.events({
                                     ID: item.fields.ID,
                                     AType: EarningsRate,
                                     Amount: parseFloat( amount ),
-                                    Active: true
+                                    Active: true,
+                                    Balance: 0,
+                                    EmployeeID: employeeID,
                                 }),
                             })
                         )
                     }
                 }
             }
-            console.log( tOpeningBalance );
-
+            // Fetch deduction lines values
+            let obDeductionLines = templateObject.filterOpeningBalance(1);
+            if( obDeductionLines ){
+                for (const item of obDeductionLines) {
+                    if( item.fields.Active == true ){
+                        let DeductionType = $(`#obDeductionLine${item.fields.ID}`).val();
+                        let amount = $(`#obDeductionAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push(
+                            new OpeningBalance({
+                                type: "TOpeningBalances",
+                                fields: new OpeningBalanceFields({
+                                    ID: item.fields.ID,
+                                    AType: DeductionType,
+                                    Amount: parseFloat( amount ),
+                                    Active: true,
+                                    Balance: 1,
+                                    EmployeeID: employeeID,
+                                }),
+                            })
+                        )
+                    }
+                }
+            }
+            // Fetch superannuation funds values
+            let obSuperannuationFund = templateObject.filterOpeningBalance(2);
+            if( obSuperannuationFund ){
+                for (const item of obSuperannuationFund) {
+                    if( item.fields.Active == true ){
+                        let SuperannuationFund = $(`#obSuperannuationFund${item.fields.ID}`).val();
+                        let amount = $(`#obSuperannuationAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push(
+                            new OpeningBalance({
+                                type: "TOpeningBalances",
+                                fields: new OpeningBalanceFields({
+                                    ID: item.fields.ID,
+                                    AType: SuperannuationFund,
+                                    Amount: parseFloat( amount ),
+                                    Active: true,
+                                    Balance: 2,
+                                    EmployeeID: employeeID,
+                                }),
+                            })
+                        )
+                    }
+                }
+            }
+            // Fetch reiumbursement funds values
+            let obReimbursementFund = templateObject.filterOpeningBalance(3);
+            if( obReimbursementFund ){
+                for (const item of obReimbursementFund) {
+                    if( item.fields.Active == true ){
+                        let ReimbursementFund = $(`#obReimbursementFund${item.fields.ID}`).val();
+                        let amount = $(`#obReimbursementAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push(
+                            new OpeningBalance({
+                                type: "TOpeningBalances",
+                                fields: new OpeningBalanceFields({
+                                    ID: item.fields.ID,
+                                    AType: ReimbursementFund,
+                                    Amount: parseFloat( amount ),
+                                    Active: true,
+                                    Balance: 3,
+                                    EmployeeID: employeeID,
+                                }),
+                            })
+                        )
+                    }
+                }
+            }
+            const employeePayrolApis = new EmployeePayrollApi();
+            // now we have to make the post request to save the data in database
+            const apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TOpeningBalances
+            );
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(tOpeningBalance),
+            });
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#obEarningsRate').val('');
+                await templateObject.saveOpeningBalanceLocalDB();
+                await templateObject.getOpeningBalances();
+                $('#addEarningsLineModal2').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Success",
+                    text: "Opening balances has been saved",
+                    type: 'success',
+                })
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to save opening balances",
+                    type: 'error',
+                })
+            }
         }else if(activeTab == "notes") {
 
         }else{
@@ -9085,7 +9443,24 @@ Template.employeescard.helpers({
         return Template.instance().bankAccList.get();
     },
     payTemplateEarningLines: () => {
-        return Template.instance().payTemplateEarningLineInfo.get();
+        const templateObject = Template.instance();
+        let ptEarningLines = templateObject.filterPayTemplates("earningLines");
+        return ptEarningLines;
+    },
+    payTemplateDeductionLines: () => {
+        const templateObject = Template.instance();
+        let ptEarningLines = templateObject.filterPayTemplates("deductionLines");
+        return ptEarningLines;
+    },
+    payTemplateSuperannuationLines: () => {
+        const templateObject = Template.instance();
+        let ptEarningLines = templateObject.filterPayTemplates("superannuationLines");
+        return ptEarningLines;
+    },
+    payTemplateReiumbursementLines: () => {
+        const templateObject = Template.instance();
+        let ptEarningLines = templateObject.filterPayTemplates("reiumbursementLines");
+        return ptEarningLines;
     },
     obEarningLines: () => {
         const templateObject = Template.instance();
@@ -9106,15 +9481,6 @@ Template.employeescard.helpers({
         const templateObject = Template.instance();
         let obEarningLines = templateObject.filterOpeningBalance(3);
         return obEarningLines;
-    },
-    payTemplateDeductionLines: () => {
-        return Template.instance().payTemplateDeductionLineInfo.get();
-    },
-    payTemplateSuperannuationLines: () => {
-        return Template.instance().payTemplateSuperannuationLineInfo.get();
-    },
-    payTemplateReiumbursementLines: () => {
-        return Template.instance().payTemplateReiumbursementLineInfo.get();
     },
     calculateOpeningBalanceTotal( amountField ){
         let totalAmount = 0;

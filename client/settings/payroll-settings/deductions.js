@@ -282,6 +282,7 @@ Template.deductionSettings.onRendered(function() {
                 }else{
                     data = JSON.parse(dataObject[0].data);
                 }
+                console.log("data", data);
                 if( data.tdeduction.length > 0 ){
                     let tDeduction = data.tdeduction.filter((item) => {
                         if( item.fields.Description == searchName ){
@@ -307,6 +308,7 @@ Template.deductionSettings.onRendered(function() {
                         $('#edtDeductionType').val(deductionType)
                         $('#edtDeductionAccount').val(tDeduction[0].fields.Accountname)
                         $('#edtDeductionAccountID').val(tDeduction[0].fields.Accountid)
+                        $('#edtDeductionDesctiption').val(tDeduction[0].fields.Description)
                         $('#formCheck-ReducesPAYGDeduction').prop('checked', tDeduction[0].fields.Payrolltaxexempt || false)
                         $('#formCheck-ReducesSuperannuationDeduction').prop('checked', tDeduction[0].fields.Superinc || false)
                         $('#formCheck-ExcludedDeduction').prop('checked', tDeduction[0].fields.Workcoverexempt || false)
@@ -442,6 +444,8 @@ Template.deductionSettings.events({
         let deductionID = $('#edtDeductionID').val();
         let deductionAccount = $('#edtDeductionAccount').val();
         let deductionAccountID = $('#edtDeductionAccountID').val();
+        let deductionDesctiption = $('#edtDeductionDesctiption').val();
+        let deductionAmount = $('#edtDeductionAmount').val();
         let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
         let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
         let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
@@ -451,14 +455,17 @@ Template.deductionSettings.events({
         let deductionRateSettings = {
             type: "TDeduction",
             fields: {
-                ID: parseInt(deductionID),
+                ID: 0,
                 Active: true,
-                Accountid: deductionAccountID,
+                Accountid: parseInt(deductionAccountID),
                 Accountname: deductionAccount,
                 IsWorkPlacegiving:isIsWorkPlacegiving,
                 Taxexempt:isTaxexempt,
                 Unionfees:isUnionfees,
-                // Description: deductionName,
+                Description: deductionDesctiption,
+                Amount: parseInt(deductionAmount),
+                Basedonid:18,
+
                 // DisplayIn: displayName,
                 // Superinc: ExemptSuperannuation,
                 // Workcoverexempt: ExemptReportable,
@@ -472,9 +479,6 @@ Template.deductionSettings.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(deductionRateSettings),
         });
-        console.log("ss", ApiResponse);
-        console.log("opj", getVS1Data("TDeduction"));
-        
     
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
@@ -482,9 +486,14 @@ Template.deductionSettings.events({
             await templateObject.saveDataLocalDB();
             await templateObject.getDeductions();
             $('#noneModal').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
+            $('.fullScreenSpin').css('display', 'none')
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add deduction",
+                type: 'error',
+            })
         }
         
         
