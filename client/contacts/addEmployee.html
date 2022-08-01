@@ -1871,8 +1871,8 @@
                                                                                         <div class="form-group">
                                                                                             <label>On termination unused balance is:</label>
                                                                                             <select class="form-control" id="onTerminationUnusedBalance" name="onTerminationUnusedBalance" style="cursor: pointer;">
-                                                                                                <option value="Not Paid Out">Not Paid Out</option>
-                                                                                                <option value="Paid Out">Paid Out</option>
+                                                                                                <option value="0">Not Paid Out</option>
+                                                                                                <option value="1">Paid Out</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -3601,7 +3601,7 @@
         {{> newproductpop}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal" style="z-index: 9999999 !important;">
         {{> accountlistpop}}
     </div>
 

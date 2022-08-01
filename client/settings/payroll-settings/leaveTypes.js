@@ -315,10 +315,6 @@ Template.leaveTypeSettings.onRendered(function() {
                     if (searchName.replace(/\s/g, '') == '') {
                         $('#leaveTypeSettingsModal').modal('show');
                     }
-                    else{
-
-                    }
-
                 }
             });
 

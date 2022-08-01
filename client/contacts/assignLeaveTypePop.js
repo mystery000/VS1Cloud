@@ -55,22 +55,26 @@ Template.assignLeaveTypePop.onCreated(function () {
                     if ( dataObject.length > 0) {
                         data = JSON.parse(dataObject[0].data);
                         let tAssignteavetype = data.tassignleavetype.filter((item) => {
-                            if( item.fields.Description == searchName ){
+                            if( item.fields.LeaveType == searchName ){
                                 return item;
                             }
                         });
+                        console.log("obj", dataObject);
 
 
                         
                         if( tAssignteavetype.length > 0 ){
                             
                             let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
+                            console.log("leaveCalcMethod1", leaveCalcMethod);
+
                             $('#leaveCalcMethodSelect').val(leaveCalcMethod)
                             switch(leaveCalcMethod){
                                 case 'Manually Recorded Rate':
                                     $('#hoursLeave').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement')
-                                    $('.manuallyRecordedRate').removeClass('hideelement')
+                                    $('.handleLeaveTypeOption').addClass('hideelement');
+                                    $('.manuallyRecordedRate').removeClass('hideelement');
+                                    $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
                                 break;
                                 case 'No Calculation Required':
                                     $('.handleLeaveTypeOption').addClass('hideelement')
@@ -78,13 +82,16 @@ Template.assignLeaveTypePop.onCreated(function () {
                                 case 'Based on Ordinary Earnings':
                                     $('#hoursAccruedAnnuallyFullTimeEmp').val('');
                                     $('#hoursFullTimeEmpFortnightlyPay').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement')
-                                    $('.basedonOrdinaryEarnings').removeClass('hideelement')
+                                    $('.handleLeaveTypeOption').addClass('hideelement');
+                                    $('.basedonOrdinaryEarnings').removeClass('hideelement');
+                                    $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
+                                    $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
                                 break;
                                 default:
                                     $('#hoursAccruedAnnually').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement')
-                                    $('.fixedAmountEachPeriodOption').removeClass('hideelement')
+                                    $('.handleLeaveTypeOption').addClass('hideelement');
+                                    $('.fixedAmountEachPeriodOption').removeClass('hideelement');
+                                    $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
                                 break;
                             }
 
@@ -94,24 +101,25 @@ Template.assignLeaveTypePop.onCreated(function () {
                             let HoursAccruedAnnuallyFullTimeEmp = '';
                             let HoursFullTimeEmpFortnightlyPay = '';
                             let HoursAccruedAnnually = '';
-                            switch(LeaveCalcMethod){
-                                case 'Manually Recorded Rate':
-                                    $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
-                                break;
-                                case 'No Calculation Required':
 
-                                break;
-                                case 'Based on Ordinary Earnings':
-                                    $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
-                                    $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
-                                break;
-                                default:
-                                   $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
-                                break;
-                            }
+                            // switch(leaveCalcMethod){
+                            //     case 'Manually Recorded Rate':
+                            //         $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
+                            //     break;
+                            //     case 'No Calculation Required':
+
+                            //     break;
+                            //     case 'Based on Ordinary Earnings':
+                            //         $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
+                            //         $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
+                            //     break;
+                            //     default:
+                            //        $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
+                            //     break;
+                            // }
 
                             $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
-                            $('#onTerminationUnusedBalance').val(tAssignteavetype[0].fields.OnTerminationUnusedBalance);
+                            $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
                             $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
                             $("#superannuationGuarantee").prop('checked', tAssignteavetype[0].fields.SuperannuationGuarantee)
                             

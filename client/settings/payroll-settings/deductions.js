@@ -472,6 +472,8 @@ Template.deductionSettings.events({
             headers: ApiService.getPostHeaders(),
             body: JSON.stringify(deductionRateSettings),
         });
+        console.log("ss", ApiResponse);
+        console.log("opj", getVS1Data("TDeduction"));
         
     
         if (ApiResponse.ok == true) {

@@ -5397,13 +5397,20 @@ Template.employeescard.events({
     },
 
     'click #saveObEarningsRate': async function(event) {
-        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let EarningsRate = $('#obEarningsRate').val();
+        if(EarningsRate == ''){
+            swal({
+                title: "Warning",
+                text: "Please select earning rate",
+                type: 'warning',
+            })
+            return false;
+        }
+        $('.fullScreenSpin').css('display', 'block');
         const openingBalances = [];
-        console.log("opening bal", getVS1Data("TOpeningBalances"));
 
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
@@ -5439,8 +5446,18 @@ Template.employeescard.events({
             await templateObject.getOpeningBalances();
             $('#addEarningsLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Earning rate has been added",
+                type: 'success',
+            })
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add earning rate",
+                type: 'error',
+            })
         }
 
         return false
@@ -5466,11 +5483,19 @@ Template.employeescard.events({
     },
 
     'click #saveObDeductionType': async function(event) {
-        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let DeductionType = $('#obDeductionType').val();
+        if(DeductionType == ''){
+            swal({
+                title: "Warning",
+                text: "Please select deduction type",
+                type: 'warning',
+            })
+            return false;
+        }
+        $('.fullScreenSpin').css('display', 'block');
         const openingBalances = [];
 
         const employeePayrolApis = new EmployeePayrollApi();
@@ -5507,8 +5532,18 @@ Template.employeescard.events({
             await templateObject.getOpeningBalances();
             $('#addDeductionLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Deduction type has been added",
+                type: 'success',
+            })
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add deduction type",
+                type: 'error',
+            })
         }
 
         return false;
@@ -5534,12 +5569,20 @@ Template.employeescard.events({
     },
 
     'click #saveObSuperannuationType': async function(event) {
-        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let SuperannuationFund = $('#obSuperannuationFund').val();
         let ContributionType = $('#obContributionType').val();
+        if(SuperannuationFund == ''){
+            swal({
+                title: "Warning",
+                text: "Please selec Superannuation fund",
+                type: 'warning',
+            })
+            return false;
+        }
+        $('.fullScreenSpin').css('display', 'block');
         const openingBalances = [];
 
         const employeePayrolApis = new EmployeePayrollApi();
@@ -5577,8 +5620,18 @@ Template.employeescard.events({
             await templateObject.getOpeningBalances();
             $('#addSuperannuationLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Superannuation has been added",
+                type: 'success',
+            })
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add Superannuation line",
+                type: 'error',
+            })
         }
 
         return false;
@@ -5605,11 +5658,19 @@ Template.employeescard.events({
     },
 
     'click #saveobReimbursement': async function(event) {
-        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let Reimbursement = $('#obReimbursementType').val();
+        if(Reimbursement == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Reimbursement",
+                type: 'warning',
+            })
+            return false;
+        }
+        $('.fullScreenSpin').css('display', 'block');
         const openingBalances = [];
 
         const employeePayrolApis = new EmployeePayrollApi();
@@ -5645,8 +5706,18 @@ Template.employeescard.events({
             await templateObject.getOpeningBalances();
             $('#addReimbursementLineModal2').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Reimbursement type has been added",
+                type: 'success',
+            })
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add Reimbursement type",
+                type: 'error',
+            })
         }
 
         return false;
