@@ -7559,6 +7559,33 @@ Template.employeescard.events({
 
         }else if(activeTab == "openingbalances") {
 
+            // WORKING HERE
+            // Fetch earning lines values
+            let tOpeningBalance = [];
+            let obEarningLines = templateObject.filterOpeningBalance(0);
+            if( obEarningLines ){
+                for (const item of obEarningLines) {
+                    if( item.fields.Active == true ){
+                        let EarningRate = $(`#obEarningRate${item.fields.ID}`).val();
+                        let amount = $(`#obEarningAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push(
+                            new OpeningBalance({
+                                type: "TOpeningBalances",
+                                fields: new OpeningBalanceFields({
+                                    ID: item.fields.ID,
+                                    AType: EarningsRate,
+                                    Amount: parseFloat( amount ),
+                                    Active: true
+                                }),
+                            })
+                        )
+                    }
+                }
+            }
+            console.log( tOpeningBalance );
+
         }else if(activeTab == "notes") {
 
         }else{
