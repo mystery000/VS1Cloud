@@ -9441,11 +9441,30 @@ Template.new_invoice.onRendered(function () {
 
     //     })
     // }
+    
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
       let customData = {};
-      let customFieldCount = 14;
+      let customFieldCount = 15;
+
+      let reset_data = [
+        { label: 'Product Name', class: 'colProductName', active: true },
+        { label: 'Description', class: 'colDescription', active: true },
+        { label: 'Qty', class: 'colQty', active: true },
+        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+        { label: 'Disc %', class: 'colDiscount', active: true },
+        { label: 'Cost Price', class: 'colCostPrice', active: false },
+        { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+        { label: 'Tax Rate', class: 'colTaxRate', active: false },
+        { label: 'Tax Code', class: 'colTaxCode', active: true },
+        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+        { label: 'Amount (Ex)', class: 'colAmount', active: true },
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+        { label: 'Units', class: 'colUOM', active: false }
+      ];
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -9461,12 +9480,24 @@ Template.new_invoice.onRendered(function () {
           custFields.push(customData);
         }
       }
+      let remainder = customFieldCount - data.tcustomfieldlist.length;
+      for (let r = 0; r < remainder; r++) {
+        customData = {
+          active: reset_data[data.tcustomfieldlist.length + r ].active,
+          id: 0,
+          custfieldlabel: reset_data[data.tcustomfieldlist.length + r ].label,
+          datatype: "",
+          isempty: false,
+          iscombo: false,
+          dropdown: null,
+        };
+        custFields.push(customData);
+      }
+
 
       if (custFields.length < customFieldCount) {
         let remainder = customFieldCount - custFields.length;
-        let getRemCustomFields = parseInt(custFields.length);
         for (let r = 0; r < remainder; r++) {
-          getRemCustomFields++;
           customData = {
             active: false,
             id: "",
@@ -9493,10 +9524,17 @@ Template.new_invoice.onRendered(function () {
             });
           } else {
             let data = JSON.parse(dataObject[0].data);
-            initCustomFieldDisplaySettings(data, listType);
-            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-              addVS1Data("TltSaleslines", JSON.stringify(data));
-            });
+            if(data.tcustomfieldlist.length == 0){
+              sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                initCustomFieldDisplaySettings(data, listType);
+                addVS1Data("TltSaleslines", JSON.stringify(data));
+              });
+            } else {
+              initCustomFieldDisplaySettings(data, listType);
+              sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                addVS1Data("TltSaleslines", JSON.stringify(data));
+              });
+            }
           }
         })
 
