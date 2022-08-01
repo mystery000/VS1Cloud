@@ -9444,6 +9444,7 @@ Template.new_invoice.onRendered(function () {
     
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
+      
       let custFields = [];
       let customData = {};
       let customFieldCount = 15;
@@ -9453,18 +9454,18 @@ Template.new_invoice.onRendered(function () {
         { label: 'Description', class: 'colDescription', active: true },
         { label: 'Qty', class: 'colQty', active: true },
         { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-        { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Cost Price', class: 'colCostPrice', active: false },
         { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
         { label: 'Tax Rate', class: 'colTaxRate', active: false },
         { label: 'Tax Code', class: 'colTaxCode', active: true },
-        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
         { label: 'Amount (Ex)', class: 'colAmount', active: true },
+        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
         { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+        { label: 'Disc %', class: 'colDiscount', active: true },
+        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
         { label: 'Units', class: 'colUOM', active: false }
-      ];
+       ];
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -9479,7 +9480,8 @@ Template.new_invoice.onRendered(function () {
           };
           custFields.push(customData);
         }
-      }
+      } 
+
       let remainder = customFieldCount - data.tcustomfieldlist.length;
       for (let r = 0; r < remainder; r++) {
         customData = {
@@ -9492,8 +9494,7 @@ Template.new_invoice.onRendered(function () {
           dropdown: null,
         };
         custFields.push(customData);
-      }
-
+      } 
 
       if (custFields.length < customFieldCount) {
         let remainder = customFieldCount - custFields.length;
@@ -9508,7 +9509,8 @@ Template.new_invoice.onRendered(function () {
           };
           custFields.push(customData);
         }
-      }
+      } 
+
       tempObj.displayfields.set(custFields);
     }
 
