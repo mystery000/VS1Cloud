@@ -12263,7 +12263,7 @@ Template.new_invoice.events({
         let name = $('#edtCustomerEmail').attr('customerfirstname');
         let surname = $('#edtCustomerEmail').attr('customerlastname');
         let salesService = new SalesBoardService();
-        let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
+        let termname = $('#sltTerms').val() || '';
         if (termname === '') {
             swal('Terms has not been selected!', '', 'warning');
             event.preventDefault();
@@ -12293,11 +12293,11 @@ Template.new_invoice.events({
                 let tddescription = $('#' + lineID + " .lineProductDesc").text();
                 let tdQty = $('#' + lineID + " .lineQty").val();
 
-                let tdOrderd = $('#' + lineID + " .lineOrdered").val();
+                let tdOrderd = $('#' + lineID + " .lineOrdered").val()||1;
 
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 lineItemObj = {
@@ -12364,7 +12364,7 @@ Template.new_invoice.events({
             let poNumber = $('#ponumber').val();
             let reference = $('#edtRef').val();
 
-            let departement = $('#sltDept').val();
+            let departement = $('#sltDept').val()||'';
             let shippingAddress = $('#txaShipingInfo').val();
             let comments = $('#txaComment').val();
             let pickingInfrmation = $('#txapickmemo').val();
@@ -12379,6 +12379,13 @@ Template.new_invoice.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             var objDetails = '';
+            if (departement === '') {
+                swal('Department has not been selected!', '', 'warning');
+                $('.fullScreenSpin').css('display', 'none');
+                event.preventDefault();
+                return false;
+            }
+          if(splashLineArray.length > 0){
             if (getso_id[1]) {
                 currentInvoice = parseInt(currentInvoice);
                 objDetails = {
@@ -12428,7 +12435,12 @@ Template.new_invoice.events({
                     }
                 };
             }
-
+          }else{
+            swal('Product name has not been selected!', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            event.preventDefault();
+            return false;
+          }
             salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
 
                 // add to custom field

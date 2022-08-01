@@ -30,6 +30,8 @@ import LeaveRequest from "../js/Api/Model/LeaveRequest";
 import LeaveRequestFields from "../js/Api/Model/LeaveRequestFields";
 import PayNotes from "../js/Api/Model/PayNotes";
 import PayNotesFields from "../js/Api/Model/PayNotesFields";
+import PaySlips from "../js/Api/Model/PaySlips";
+import PaySlipsFields from "../js/Api/Model/PaySlipsFields";
 import 'jquery-editable-select';
 import '../lib/global/indexdbstorage.js';
 import { functionsIn } from "lodash";
@@ -2820,24 +2822,23 @@ Template.employeescard.onRendered(function () {
         }, 1000);
     }
 
-    templateObject.saveLeaveRequestLocalDB = async function(){
+    templateObject.savePaySlipLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TPayNotes
+            employeePayrolApis.collectionNames.TPaySlips
         );
 
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
         );
-
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-            if( employeePayrolEndpointJsonResponse.tpaynotes.length ){
-                await addVS1Data('TPayNotes', JSON.stringify(employeePayrolEndpointJsonResponse))
+            if( employeePayrolEndpointJsonResponse.tpayslips.length ){
+                await addVS1Data('TPaySlips', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
         }
@@ -2855,7 +2856,6 @@ Template.employeescard.onRendered(function () {
             "ListType",
             "'Detail'"
         );
-
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -2867,6 +2867,32 @@ Template.employeescard.onRendered(function () {
         }
         return '';
     };
+    templateObject.saveAssignLeaveLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint={};
+        employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TAssignLeaveType
+        );
+
+
+
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );
+
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if(employeePayrolEndpointJsonResponse.tassignleavetype.length ){
+                await addVS1Data('TAssignLeaveType', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }
+        return '';
+    };
+
 
     templateObject.getLeaveRequests = async () => {
         let data = []
@@ -2876,24 +2902,25 @@ Template.employeescard.onRendered(function () {
         }else{
             data = JSON.parse(dataObject[0].data);
         }
-        let useData = LeaveRequest.fromList(
-            data.tleavrequest
-        ).filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                return item;
-            }
-        });
-
         let splashArrayList = [];
-        for (let i = 0; i < useData.length; i++) {
-            let dataListAllowance = [
-                useData[i].fields.ID || '',
-                useData[i].fields.Description || '',
-                useData[i].fields.PayPeriod || '',
-                useData[i].fields.LeaveMethod || '',
-                useData[i].fields.Status || '',
-            ];
-            splashArrayList.push(dataListAllowance);
+        if( data.tleavrequest.length > 0 ){
+            let useData = LeaveRequest.fromList(
+                data.tleavrequest
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    return item;
+                }
+            });
+            for (let i = 0; i < useData.length; i++) {
+                let dataListAllowance = [
+                    useData[i].fields.ID || '',
+                    useData[i].fields.Description || '',
+                    useData[i].fields.PayPeriod || '',
+                    useData[i].fields.LeaveMethod || '',
+                    useData[i].fields.Status || '',
+                ];
+                splashArrayList.push(dataListAllowance);
+            }
         }
 
         setTimeout(function () {
@@ -3364,6 +3391,8 @@ Template.employeescard.onRendered(function () {
         }else{
             data = JSON.parse(dataObject[0].data);
         }
+
+
         let useData = PayTemplateSuperannuationLine.fromList(
             data.tpaytemplatesuperannuationline
         ).filter((item) => {
@@ -3392,7 +3421,7 @@ Template.employeescard.onRendered(function () {
 
     templateObject.getPaySuperannuationLines();
 
-    templateObject.saveReiumbursementLocalDB = async function(){
+    templateObject.saveReiumbursementDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
@@ -3420,7 +3449,7 @@ Template.employeescard.onRendered(function () {
         let data = [];
         let dataObject = await getVS1Data('TPayTemplateReiumbursementLine')
         if ( dataObject.length == 0) {
-            data = await templateObject.saveReiumbursementLocalDB();
+            data = await templateObject.saveReiumbursementDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
@@ -3698,7 +3727,7 @@ Template.employeescard.onRendered(function () {
             openingBalanceLines = OpeningBalance.fromList(
                 checkOpeningBalances
             ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Balance == type ) {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Balance == type && item.fields.Active == true ) {
                     return item;
                 }
             });
@@ -3710,7 +3739,7 @@ Template.employeescard.onRendered(function () {
         let data = [];
         let TOpeningBalances = await getVS1Data('TOpeningBalances');
         if( TOpeningBalances.length == 0 ){
-            data = templateObject.saveOpeningBalanceLocalDB();
+            data = await templateObject.saveOpeningBalanceLocalDB();
         }else{
             data = JSON.parse(TOpeningBalances[0].data);
         }
@@ -4048,6 +4077,7 @@ Template.employeescard.onRendered(function () {
                         }, 100);
                     },
                     "fnInitComplete": function () {
+                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
                         $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
                     }
 
@@ -5266,6 +5296,96 @@ Template.employeescard.events({
         });
 
     },
+    'click #btnPayslip': async function(event) {
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let period = $('#period').val();
+        let paymentDate = $('#paymentDate').val();
+        let totalPay = $('#totalPay').val();
+
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPaySlips
+        );
+
+        if(period == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter period",
+                type: 'warning',
+            })
+        }else if(paymentDate == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter total pay",
+                type: 'warning',
+            })
+        }else if(totalPay == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter total pay",
+                type: 'warning',
+            })
+        } else if(isNaN(totalPay)){
+            swal({
+                title: "Warning",
+                text: "Please enter a number as total pay",
+                type: 'warning',
+            })
+        } else{
+            $('.fullScreenSpin').css('display', 'block');
+
+            // leaveRequests.push(
+                let paySlipSettings =  new PaySlips({
+                    type: "TPaySlips",
+                    fields: new PaySlipsFields({
+                        EmployeeID: parseInt( employeeID ),
+                        Period: period,
+                        PaymentDate: 0,
+                        TotalPay: parseInt( totalPay )
+                    }),
+                })
+            // );
+
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(paySlipSettings),
+            });
+            try {
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await templateObject.savePaySlipLocalDB();
+                    await templateObject.getPaySlips();
+                    $('#paySlipModal').modal('hide');
+                    $('#Period, #paymentDate, #totalPay').val('');
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Success",
+                        text: "Pay slip added",
+                        type: 'success',
+                    })
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add pay slip",
+                        type: 'error',
+                    })
+                }
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to add pay slip",
+                    type: 'error',
+                })
+            }
+        }
+    },
 
     'click #saveObEarningsRate': async function(event) {
         $('.fullScreenSpin').css('display', 'block');
@@ -5280,7 +5400,6 @@ Template.employeescard.events({
         const apiEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TOpeningBalances
         );
-
         // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
         // if( Array.isArray( checkOpeningBalances ) ){
         //     openingBalances = checkOpeningBalances
@@ -5543,7 +5662,6 @@ Template.employeescard.events({
 
     // Save LeaveRequest Popup
     'click #btnSaveLeaveRequest': async function(event) {
-        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -5568,43 +5686,102 @@ Template.employeescard.events({
         //         TLeaveRequestData.tleaverequest
         //     );
         // }
-        let dbStartDate = moment(StartDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
-        let dbEndDate = moment(EndDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
-        // leaveRequests.push(
-            let leaveRequestSettings =  new LeaveRequest({
-                type: "TLeavRequest",
-                fields: new LeaveRequestFields({
-                    EmployeeID: parseInt( employeeID ),
-                    TypeofRequest: parseInt(TypeofRequest),
-                    LeaveMethod: Leave,
-                    Description: Description,
-                    StartDate: dbStartDate,
-                    EndDate: dbEndDate,
-                    PayPeriod: PayPeriod,
-                    Hours: parseInt(Hours),
-                    Status: Status
-                }),
+        if(isNaN(TypeofRequest)){
+            swal({
+                title: "Warning",
+                text: "Request type must be a number",
+                type: 'warning',
             })
-        // );
+        }else if(Description == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter leave description",
+                type: 'warning',
+            })
+        }else if(PayPeriod == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter Pay Period",
+                type: 'warning',
+            })
+        }else if(Hours == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter hours",
+                type: 'warning',
+            })
+        }else if(isNaN(Hours)){
+            swal({
+                title: "Warning",
+                text: "Hours must be a number",
+                type: 'warning',
+            })
+        }else if(Status == ''){
+            swal({
+                title: "Warning",
+                text: "Please select status",
+                type: 'warning',
+            })
+        } else{
+            $('.fullScreenSpin').css('display', 'block');
 
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(leaveRequestSettings),
-        });
+            let dbStartDate = moment(StartDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
+            let dbEndDate = moment(EndDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
+            // leaveRequests.push(
+                let leaveRequestSettings =  new LeaveRequest({
+                    type: "TLeavRequest",
+                    fields: new LeaveRequestFields({
+                        EmployeeID: parseInt( employeeID ),
+                        TypeofRequest: parseInt(TypeofRequest),
+                        LeaveMethod: Leave,
+                        Description: Description,
+                        StartDate: dbStartDate,
+                        EndDate: dbEndDate,
+                        PayPeriod: PayPeriod,
+                        Hours: parseInt(Hours),
+                        Status: Status
+                    }),
+                })
+            // );
 
-        try {
-            if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                await templateObject.saveLeaveRequestLocalDB();
-                await templateObject.getLeaveRequests();
-                $('#newLeaveRequestModal').modal('hide');
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(leaveRequestSettings),
+            });
+
+            try {
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await templateObject.saveLeaveRequestLocalDB();
+                    await templateObject.getLeaveRequests();
+                    $('#newLeaveRequestModal').modal('hide');
+                    $('#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus').val('');
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Success",
+                        text: "Leave request added",
+                        type: 'success',
+
+                    })
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add leave request",
+                        type: 'error',
+
+                    })
+                }
+            } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
-            }else{
-                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to add leave request",
+                    type: 'error',
+
+                })
             }
-        } catch (error) {
-            $('.fullScreenSpin').css('display', 'none');
         }
     },
 
@@ -5631,6 +5808,14 @@ Template.employeescard.events({
         switch(LeaveCalcMethod){
             case 'Manually Recorded Rate':
                 HoursLeave = $('#hoursLeave').val();
+                if(isNaN(HoursLeave)){
+                    swal({
+                        title: "Confirm",
+                        text: "Hours leave must be a number",
+                        type: 'warning',
+                    })
+                    return false;
+                }
             break;
             case 'No Calculation Required':
 
@@ -5650,36 +5835,31 @@ Template.employeescard.events({
                 text: "Hours accrued annually is required",
                 type: 'warning',
             })
-        }
-        else if(isNaN(HoursAccruedAnnually)){
+        }else if(isNaN(HoursAccruedAnnually)){
             swal({
                 title: "Warning",
                 text: "Hour must be a number",
                 type: 'warning',
             })
-        }
-        else if(isNaN(HoursAccruedAnnually)){
+        }else if(isNaN(HoursAccruedAnnually)){
             swal({
                 title: "Warning",
                 text: "Hour must be a number",
                 type: 'warning',
             })
-        }
-        else if(isNaN(HoursLeave)){
+        }else if(OpeningBalance == ''){
             swal({
-                title: "Confirm",
-                text: "Hours leave must be a number",
+                title: "Warning",
+                text: "Opening balance must not be empty",
                 type: 'warning',
             })
-        }
-        else if(isNaN(OpeningBalance)){
+        }else if(isNaN(OpeningBalance)){
             swal({
                 title: "Warning",
                 text: "Opening balance be a number",
                 type: 'warning',
             })
-        }
-        else{
+        }else{
             $('.fullScreenSpin').css('display', 'block');
 
             let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
@@ -5725,7 +5905,6 @@ Template.employeescard.events({
                     body: JSON.stringify(assignLeaveTypes),
                 });
 
-
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     // $('#deductionRateForm')[0].reset();
@@ -5736,7 +5915,7 @@ Template.employeescard.events({
                     swal({
                         title: "Success",
                         text: "Leave type has been assigned",
-                        type: 'warning',
+                        type: 'success',
 
                     })
                 }else{
@@ -5750,12 +5929,17 @@ Template.employeescard.events({
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Failed to assigned leave type",
+                    type: 'error',
+
+                })
             }
         }
     },
 
     'click #savePayRollNotes': async function(){
-        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
 
         const employeePayrolApis = new EmployeePayrollApi();
@@ -5767,38 +5951,60 @@ Template.employeescard.events({
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let Notes = $('#payRollNotes').val();
-        let noteSetting = new PayNotes({
-            type: "TPayNotes",
-            fields: new PayNotesFields({
-                EmployeeID: parseInt(employeeID),
-                Notes: Notes,
-                // CreatedAt: moment(),
-                CreatedAt:0,
-                UserID: Session.get("mySessionEmployeeLoggedID"),
-                UserName: Session.get('mySessionEmployee') || '',
-            }),
-        })
-        try {
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(noteSetting),
-            });
-
-            if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                await templateObject.saveNotesLocalDB();
-                await templateObject.getPayNotesTypes();
-                $('#payRollNotes').val('');
-                $('#newNoteModal').modal('hide');
+        if(Notes == ''){
+            swal({
+                title: "Error",
+                text: "Please enter a note",
+                type: 'warning',
+            })
+        } else {
+            $('.fullScreenSpin').css('display', 'block');
+            let noteSetting = new PayNotes({
+                type: "TPayNotes",
+                fields: new PayNotesFields({
+                    EmployeeID: parseInt(employeeID),
+                    Notes: Notes,
+                    // CreatedAt: moment(),
+                    CreatedAt:0,
+                    UserID: Session.get("mySessionEmployeeLoggedID"),
+                    UserName: Session.get('mySessionEmployee') || '',
+                }),
+            })
+            try {
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(noteSetting),
+                });
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await templateObject.saveNotesLocalDB();
+                    await templateObject.getPayNotesTypes();
+                    $('#payRollNotes').val('');
+                    $('#newNoteModal').modal('hide');
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Success",
+                        text: "Note has been added",
+                        type: 'success',
+                    })
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add note",
+                        type: 'warning',
+                    })
+                }
+            } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
-            }else{
-                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Error",
+                    text: "Note could not be added",
+                    type: 'error',
+                })
             }
-        } catch (error) {
-            $('.fullScreenSpin').css('display', 'none');
         }
-
     },
 
     // NEXT TASK HERE
@@ -5820,7 +6026,6 @@ Template.employeescard.events({
     // Pay Template Tab
     'click #addEarningsLine': function(){
         let templateObject = Template.instance();
-
         swal({
             title: "Confirm",
             text: "New Earnings line will be saved",
@@ -5828,8 +6033,8 @@ Template.employeescard.events({
             showCancelButton: true,
             confirmButtonText: 'Yes, save'
         })
-        .then(async (result) => {
-            if (result.value) {
+        .then(async (result)=>{
+            if(result){
                 $('.fullScreenSpin').css('display', 'block');
                 let currentId = FlowRouter.current().queryParams;
                 let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -5852,7 +6057,8 @@ Template.employeescard.events({
                             EarningRate: EarningRate,
                             CalculationType: CalculationType,
                             ExpenseAccount: ExpenseAccount,
-                            Amount: 0
+                            Amount: 0,
+                            Active: true
                         })
                     });
                 try {
@@ -5871,19 +6077,33 @@ Template.employeescard.events({
                         $('#expenseAccount').val('');
                         $('#addEarningsLineModal').modal('hide');
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Success",
+                            text: "Earning line has been added",
+                            type: 'success',
+                        })
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Error",
+                            text: "Failed to add earning line",
+                            type: 'error',
+                        })
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add earning line",
+                        type: 'error',
+                    })
                 }
             }
-        });
+        })
     },
 
     'click #addDeductionLine': function(){
         let templateObject = Template.instance();
-
         swal({
             title: "Confirm",
             text: "New Deduction line will be saved",
@@ -5891,8 +6111,8 @@ Template.employeescard.events({
             showCancelButton: true,
             confirmButtonText: 'Yes, save'
         })
-        .then(async (result) => {
-            if (result.value) {
+        .then(async (result)=>{
+            if(result){
                 $('.fullScreenSpin').css('display', 'block');
                 let currentId = FlowRouter.current().queryParams;
                 let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -5908,15 +6128,15 @@ Template.employeescard.events({
                 let payDeductionLines = new PayTemplateDeductionLine({
                     type: 'TPayTemplateDeductionLine',
                     fields: new PayTemplateDeductionLineFields({
-                        ID: 0,
                         EmployeeID: parseInt(employeeID),
                         DeductionType: DeductionType,
                         CalculationType: CalculationType,
                         ExpenseAccount: ControlAccount,
                         Amount: 0,
-                        Percentage: 0
+                        // Percentage: 0,
+                        Active: true
                     })
-                })
+                });
 
                 try {
                     const ApiResponse = await apiEndpoint.fetch(null, {
@@ -5924,7 +6144,6 @@ Template.employeescard.events({
                         headers: ApiService.getPostHeaders(),
                         body: JSON.stringify(payDeductionLines),
                     });
-
                     if (ApiResponse.ok == true) {
                         const jsonResponse = await ApiResponse.json();
                         // Load all the earnings Line from Database
@@ -5935,108 +6154,185 @@ Template.employeescard.events({
                         $('#controlAccountDeduction').val('');
                         $('#addDeductionLineModal').modal('hide');
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Success",
+                            text: "Deduction line has been added",
+                            type: 'success',
+                        })
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Error",
+                            text: "Failed to add deduction line",
+                            type: 'error',
+                        })
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add deduction line",
+                        type: 'error',
+                    })
                 }
             }
-        });
+        })
     },
 
     'click #addSuperannuationLine': function(){
-        swal({
-            title: "Confirm",
-            text: "New superannuation line will be saved",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save'
-        })
-        .then(async (result) => {
-            if (result.value) {
-                let templateObject = Template.instance();
-                let currentId = FlowRouter.current().queryParams;
-                let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-                let Fund = $('#superannuationFund').val();
-                let ContributionType = $('#superannuationTypeSelect').val();
-                let ReducesSGC = ( $('#reducesSGC').is(':checked') )? true: false;
-                let CalculationType = $('input[name=calculationTypeSuperannuation]:checked').val();
-                let MinimumMonthlyEarnings = $('#minimumMonthlyEarnings').val();
-                let ExpenseAccount = $('#expenseSuperannuationAccount').val();
-                let LiabilityAccount = $('#liabilityAccount').val();
-                let PaymentFrequency = $('#paymentFrequency').val();
-                let PeriodPaymentDate = $('#edtPeriodPaymentDate').val();
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let Fund = $('#superannuationFund').val();
+        let ContributionType = $('#superannuationTypeSelect').val();
+        let ReducesSGC = ( $('#reducesSGC').is(':checked') )? "1": "0";
+        let CalculationType = $('input[name=calculationTypeSuperannuation]:checked').val();
+        let MinimumMonthlyEarnings = $('#minimumMonthlyEarnings').val();
+        let ExpenseAccount = $('#expenseSuperannuationAccount').val();
+        let LiabilityAccount = $('#liabilityAccount').val();
+        let PaymentFrequency = $('#paymentFrequency').val();
+        let PeriodPaymentDate = $('#edtPeriodPaymentDate').val();
+        if(Fund == ''){
+            swal({
+                title: "Error",
+                text: "Please select superannuation fund",
+                type: 'error',
+            })
+        } else if(ContributionType == ''){
+            swal({
+                title: "Error",
+                text: "Please select contribution type",
+                type: 'error',
+            })
+        }else if(CalculationType == ''){
+            swal({
+                title: "Error",
+                text: "Please enter calculation type",
+                type: 'error',
+            })
+        } else if(isNaN(CalculationType)){
+            swal({
+                title: "Error",
+                text: "Calculation type must be a number",
+                type: 'error',
+            })
+        } else if(MinimumMonthlyEarnings == ''){
+            swal({
+                title: "Error",
+                text: "Please enter Minimum monthly earnings",
+                type: 'error',
+            })
+        } else if(isNaN(MinimumMonthlyEarnings)){
+            swal({
+                title: "Error",
+                text: "Minimum monthly earnings must be a number",
+                type: 'error',
+            })
+        }
+        else{
+            swal({
+                title: "Confirm",
+                text: "New Superannuation line will be saved",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, save'
+            })
+            .then(async (result)=>{
+                if(result){
+                    $('.fullScreenSpin').css('display', 'block');
+                    const employeePayrolApis = new EmployeePayrollApi();
+                    // now we have to make the post request to save the data in database
+                    const apiEndpoint = employeePayrolApis.collection.findByName(
+                        employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
+                    );
 
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
-                );
-
-                let paySuperannuationLines = new PayTemplateSuperannuationLine({
-                    type: 'TPayTemplateSuperannuationLine',
-                    fields: new PayTemplateSuperannuationLineFields({
-                        ID: 0,
-                        EmployeeID: employeeID,
-                        Fund: Fund,
-                        ContributionType: ContributionType,
-                        ReducesSGC: ReducesSGC,
-                        CalculationType: CalculationType,
-                        MinimumMonthlyEarnings: MinimumMonthlyEarnings,
-                        ExpenseAccount: ExpenseAccount,
-                        LiabilityAccount: LiabilityAccount,
-                        PaymentFrequency: PaymentFrequency,
-                        PeriodPaymentDate: PeriodPaymentDate,
-                        Percentage: 0,
-                        Amount: 0
-                    })
-                });
-
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(paySuperannuationLines),
+                    let paySuperannuationLines = new PayTemplateSuperannuationLine({
+                        type: 'TPayTemplateSuperannuationLine',
+                        fields: new PayTemplateSuperannuationLineFields({
+                            ID: 0,
+                            EmployeeID: employeeID,
+                            Fund: Fund,
+                            ContributionType: ContributionType,
+                            ReducesSGC: ReducesSGC,
+                            CalculationType: parseInt(CalculationType),
+                            MinimumMonthlyEarnings: parseInt(MinimumMonthlyEarnings),
+                            // NEED TO UPDATE API FOR ExpenseAccount
+                            // ExpenseAccount: ExpenseAccount,
+                            ExpenseAccount: 0,
+                            // NEED TO ADD API FOR ExpenseAccount
+                            // LiabilityAccount: LiabilityAccount,
+                            PaymentFrequency: PaymentFrequency,
+                            // NEED TO UPDATE API FOR PERIODPAYMENTDATE
+                            // PeriodPaymentDate: moment(PeriodPaymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
+                            PeriodPaymentDate: 0,
+                            Percentage: 0,
+                            Amount: 0,
+                            Active: true
+                        })
                     });
 
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        // Load all the earnings Line from Database
-                        await templateObject.saveSuperannuationLocalDB();
-                        await templateObject.getPaySuperannuationLines();
-                        $('#superannuationFund').val('');
-                        $('#superannuationTypeSelect').val('');
-                        $('#reducesSGC').attr('checked', false);
-                        $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
-                        $('#minimumMonthlyEarnings').val('');
-                        $('#expenseSuperannuationAccount').val('');
-                        $('#liabilityAccount').val('');
-                        $('#paymentFrequency').val('Monthly');
-                        $('#edtPeriodPaymentDate').val('');
-                        $('#addSuperannuationLineModal').modal('hide');
+                    try {
+                        const ApiResponse = await apiEndpoint.fetch(null, {
+                            method: "POST",
+                            headers: ApiService.getPostHeaders(),
+                            body: JSON.stringify(paySuperannuationLines),
+                        });
+
+                        if (ApiResponse.ok == true) {
+                            const jsonResponse = await ApiResponse.json();
+                            // Load all the earnings Line from Database
+                            await templateObject.saveSuperannuationLocalDB();
+                            await templateObject.getPaySuperannuationLines();
+                            $('#superannuationFund').val('');
+                            $('#superannuationTypeSelect').val('');
+                            $('#reducesSGC').attr('checked', false);
+                            $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
+                            $('#minimumMonthlyEarnings').val('');
+                            $('#expenseSuperannuationAccount').val('');
+                            $('#liabilityAccount').val('');
+                            $('#paymentFrequency').val('Monthly');
+                            $('#edtPeriodPaymentDate').val('');
+                            $('#addSuperannuationLineModal').modal('hide');
+                            $('.fullScreenSpin').css('display', 'none');
+                            swal({
+                                title: "Success",
+                                text: "Superannuation line has been added",
+                                type: 'success',
+                            })
+                        }else{
+                            $('.fullScreenSpin').css('display', 'none');
+                            swal({
+                                title: "Error",
+                                text: "Failed to add superannuation line",
+                                type: 'error',
+                            })
+                        }
+                    } catch (error) {
                         $('.fullScreenSpin').css('display', 'none');
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Error",
+                            text: "Failed to add superannuation line",
+                            type: 'error',
+                        })
                     }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
                 }
-            }
-        });
+            })
+        }
     },
 
     'click #addReiumbursementLine': function(){
+        const templateObject = Template.instance();
+
         swal({
             title: "Confirm",
-            text: "New Reiumbursment line will be saved",
+            text: "New Reimbursement line will be saved",
             type: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes, save'
         })
-        .then(async (result) => {
-            if (result.value) {
-                let templateObject = Template.instance();
+        .then(async (result)=>{
+            if(result){
+                $('.fullScreenSpin').css('display', 'block');
                 let currentId = FlowRouter.current().queryParams;
                 let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
                 let ReiumbursementType = $('#reimbursementTypeSelect').val();
@@ -6048,7 +6344,6 @@ Template.employeescard.events({
                 const apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
                 );
-
                 let payReiumbursementLines = new PayTemplateReiumbursementLine({
                     type: 'TPayTemplateReiumbursementLine',
                     fields: new PayTemplateReiumbursementLineFields({
@@ -6057,7 +6352,8 @@ Template.employeescard.events({
                         ReiumbursementType: ReiumbursementType,
                         Description: Description,
                         ExpenseAccount: ControlExpenseAccount,
-                        Amount: 0
+                        Amount: 0,
+                        Active: true
                     })
                 })
 
@@ -6069,23 +6365,37 @@ Template.employeescard.events({
                     });
 
                     if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
                         // Load all the earnings Line from Database
-                        await templateObject.saveReiumbursementLocalDB();
+                        await templateObject.saveReiumbursementDB();
                         await templateObject.getPayReiumbursementLines();
                         $('#reimbursementTypeSelect').val('');
                         $('#reiumbursementDescription').val('');
                         $('#controlExpenseAccount').val('');
                         $('#addReimbursementLineModal').modal('hide');
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Success",
+                            text: "Reiumbursement line has been added",
+                            type: 'success',
+                        })
                     }else{
                         $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: "Error",
+                            text: "Failed to add Reiumbursement line",
+                            type: 'error',
+                        })
                     }
                 } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to add Reimbursement line",
+                        type: 'error',
+                    })
                 }
             }
-        });
+        })
     },
 
     'change #superannuationTypeSelect': function(){
@@ -6135,213 +6445,517 @@ Template.employeescard.events({
         let payLines = templateObject.payTemplateEarningLineInfo.get();
         let updatedLines = PayTemplateEarningLine.fromList(
             payLines
-        ).filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.EarningRate = $('#ptEarningRate' + index).val();
-                item.fields.Amount = $('#ptEarningAmount' + index).val();
-                return item;
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
+                item.fields.Active = false;
             }
+            return item;
         });
-        await templateObject.payTemplateEarningLineInfo.set(updatedLines);
-        await templateObject.displayPayTempEarningLines();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        );
+
+        let earningSettings =  new PayTemplateEarningLine({
+            type: "TPayTemplateEarningLine",
+            fields: new PayTemplateEarningLineFields({
+                ID: deleteID,
+                Active: false,
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(earningSettings),
+        });
+
+        let earningObj = {
+            tpaytemplateearningline: updatedLines
+        }
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TPayTemplateEarningLine', JSON.stringify(earningObj))
+            // Bind with html content
+            await templateObject.payTemplateEarningLineInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click .removePayTempDeduction': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         let payLines = templateObject.payTemplateDeductionLineInfo.get();
-        let updatedLines = payLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.DeductionType = $('#ptDeductionType' + index).val();
-                item.fields.Amount = $('#ptDeductionAmount' + index).val();
-                item.fields.Percentage = $('#ptDeductionPercentage' + index).val();
-                return item;
+        let updatedLines = PayTemplateDeductionLine.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
+                item.fields.Active = false;
             }
+
+            return item;
         });
-        await templateObject.payTemplateDeductionLineInfo.set(updatedLines);
-        await templateObject.displayPayTempDeductionLines()
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateDeductionLine
+        );
+
+        let deductionSettings =  new PayTemplateDeductionLine({
+            type: "TPayTemplateDeductionLine",
+            fields: new PayTemplateDeductionLineFields({
+                ID: deleteID,
+                Active: false,
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(deductionSettings),
+        });
+
+
+        let deductionObj = {
+            tpaytemplatedeductionline: updatedLines
+        }
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TPayTemplateDeductionLine', JSON.stringify(deductionObj));
+
+            // Bind with html content
+            await templateObject.payTemplateDeductionLineInfo.set(updatedLines);
+
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click .removePayTempSuperannuation': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         let payLines = templateObject.payTemplateSuperannuationLineInfo.get();
-        let updatedLines = payLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.Fund = $('#ptSuperannuationFund' + index).val();
-                item.fields.Amount = $('#ptSuperannuationAmount' + index).val();
-                item.fields.Percentage = $('#ptSuperannuationPercentage' + index).val();
-                return item;
+        let updatedLines = PayTemplateSuperannuationLine.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
+                item.fields.Active = false;
             }
+            return item;
         });
-        await templateObject.payTemplateSuperannuationLineInfo.set(updatedLines);
-        await templateObject.displayPayTempSuperannuationLines();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
+        );
+
+        let superannuationSettings =  new PayTemplateSuperannuationLine({
+            type: "TPayTemplateSuperannuationLine",
+            fields: new PayTemplateSuperannuationLineFields({
+                ID: deleteID,
+                Active: false,
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(superannuationSettings),
+        });
+
+        let superannuationObj = {
+            tPaytemplatesuperannuationline: updatedLines
+        }
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TPayTemplateSuperannuationLine', JSON.stringify(superannuationObj))
+            // Bind with html content
+            await templateObject.payTemplateSuperannuationLineInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click .removePayTempReimbursement': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         let payLines = templateObject.payTemplateReiumbursementLineInfo.get();
-        let updatedLines = payLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.ReiumbursementType = $('#ptReimbursementType' + index).val();
-                item.fields.Amount = $('#ptReimbursementAmount' + index).val();
-                return item;
+        let updatedLines = PayTemplateReiumbursementLine.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
+                item.fields.Active = false;
             }
+            return item;
         });
-        await templateObject.payTemplateReiumbursementLineInfo.set(updatedLines);
-        await templateObject.displayPayTempReimbursementLines();
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
+        );
+
+        let reiumbursementSettings =  new PayTemplateReiumbursementLine({
+            type: "TPayTemplateReiumbursementLine",
+            fields: new PayTemplateReiumbursementLineFields({
+                ID: deleteID,
+                Active: false,
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(reiumbursementSettings),
+        });
+
+        let reiumbursementObj = {
+            tpaytemplatereiumbursementline: updatedLines
+        }
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TPayTemplateReiumbursementLine', JSON.stringify(reiumbursementObj))
+            // Bind with html content
+            await templateObject.payTemplateReiumbursementLineInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
+        }
     },
 
     'click .removeObEarning': async function(e){
         let templateObject = Template.instance();
-        let currentId = FlowRouter.current().queryParams;
-        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        // let currentId = FlowRouter.current().queryParams;
+        // let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let deleteID = $(e.target).data('id');
-        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        let counter = 0;
-        let openingBalanceLines = [];
-        if( Array.isArray( checkOpeningBalances ) ){
-            openingBalanceLines = OpeningBalance.fromList(
-                checkOpeningBalances
-            ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                    if( item.fields.Type == 'EarningLine' ){
-                        item.fields.BalanceField = $('#obEarningRate' + counter).val();
-                        item.fields.Amount = $('#obEarningAmount' + counter).val();
-                        if( parseInt( counter ) != parseInt( deleteID ) ){
-                            return item;
-                        }
-                        counter++
-                    }else{
-                        return item;
-                    }
-                }else{
-                    return item;
-                }
-            });
+        let payLines = templateObject.openingBalanceInfo.get();
+        let updatedLines = OpeningBalance.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                item.fields.Active = false;
+            }
+            return item;
+        });
+
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
+
+        let reiumbursementSettings =  new OpeningBalance({
+            type: "TOpeningBalances",
+            fields: new OpeningBalanceFields({
+                ID: deleteID,
+                Active: false,
+                Balance: 0
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(reiumbursementSettings),
+        });
+
+        let openineBalanceObj = {
+            topeningbalances: updatedLines
         }
 
-
-        await templateObject.openingBalanceInfo.set(openingBalanceLines);
-        let totalAmount = 0;
-        let amount = 0;
-        let bCounter = 0;
-        if( openingBalanceLines.length ){
-            Array.prototype.forEach.call(openingBalanceLines, (item, index) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
-                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-                    totalAmount += parseFloat( amount );
-                    $('#obEarningRate' + bCounter).val(item.fields.BalanceField);
-                    $('#obEarningAmount' + bCounter).val(item.fields.Amount);
-                    bCounter++;
-                }
-            })
-
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
+            // Bind with html content
+            await templateObject.openingBalanceInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
         }
-        let utilityService = new UtilityService();
-        let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
-        $('#obEarningTotalAmount').text(totalFomattedAmount);
+        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        // let counter = 0;
+        // let openingBalanceLines = [];
+        // if( Array.isArray( checkOpeningBalances ) ){
+        //     openingBalanceLines = OpeningBalance.fromList(
+        //         checkOpeningBalances
+        //     ).filter((item) => {
+        //         if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+        //             if( item.fields.Type == 'EarningLine' ){
+        //                 item.fields.BalanceField = $('#obEarningRate' + counter).val();
+        //                 item.fields.Amount = $('#obEarningAmount' + counter).val();
+        //                 if( parseInt( counter ) != parseInt( deleteID ) ){
+        //                     return item;
+        //                 }
+        //                 counter++
+        //             }else{
+        //                 return item;
+        //             }
+        //         }else{
+        //             return item;
+        //         }
+        //     });
+        // }
+
+
+        // await templateObject.openingBalanceInfo.set(openingBalanceLines);
+        // let totalAmount = 0;
+        // let amount = 0;
+        // let bCounter = 0;
+        // if( openingBalanceLines.length ){
+        //     Array.prototype.forEach.call(openingBalanceLines, (item, index) => {
+        //         if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
+        //             amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+        //             amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+        //             totalAmount += parseFloat( amount );
+        //             $('#obEarningRate' + bCounter).val(item.fields.BalanceField);
+        //             $('#obEarningAmount' + bCounter).val(item.fields.Amount);
+        //             bCounter++;
+        //         }
+        //     })
+
+        // }
+        // let utilityService = new UtilityService();
+        // let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+        // $('#obEarningTotalAmount').text(totalFomattedAmount);
     },
 
     'click .removeObDeduction': async function(e){
         let templateObject = Template.instance();
-        let currentId = FlowRouter.current().queryParams;
-        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        // let currentId = FlowRouter.current().queryParams;
+        // let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let deleteID = $(e.target).data('id');
-        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        let counter = 0;
-        let openingBalanceLines = [];
-        if( Array.isArray( checkOpeningBalances ) ){
-            openingBalanceLines = OpeningBalance.fromList(
-                checkOpeningBalances
-            ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-                    if( item.fields.Type == 'DeductionLine' ){
-                        item.fields.BalanceField = $('#obDeductionLine' + counter).val();
-                        item.fields.Amount = $('#obDeductionAmount' + counter).val();
-                        if( parseInt( counter ) != parseInt( deleteID ) ){
-                            return item;
-                        }
-                        counter++
-                    }else{
-                        return item;
-                    }
-                }
-            });
+        let payLines = templateObject.openingBalanceInfo.get();
+        let updatedLines = OpeningBalance.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                item.fields.Active = false;
+            }
+            return item;
+        });
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
+
+        let reiumbursementSettings =  new OpeningBalance({
+            type: "TOpeningBalances",
+            fields: new OpeningBalanceFields({
+                ID: deleteID,
+                Active: false,
+                Balance: 1
+            }),
+        })
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(reiumbursementSettings),
+        });
+
+        let openineBalanceObj = {
+            topeningbalances: updatedLines
         }
 
-        await templateObject.openingBalanceInfo.set(openingBalanceLines);
-        let totalAmount = 0;
-        let amount = 0;
-        let bCounter = 0;
-        if( openingBalanceLines.length ){
-            Array.prototype.forEach.call(openingBalanceLines, (item, index) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'DeductionLine' ) {
-                    amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-                    totalAmount += parseFloat( amount );
-                    $('#obDeductionLine' + bCounter).val(item.fields.BalanceField);
-                    $('#obDeductionAmount' + bCounter).val(item.fields.Amount);
-                    bCounter++;
-                }
-            })
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
+            // Bind with html content
+            await templateObject.openingBalanceInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
         }
-        let utilityService = new UtilityService();
-        let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
-        $('#obDeductionTotalAmount').text(totalFomattedAmount);
+
+        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        // let counter = 0;
+        // let openingBalanceLines = [];
+        // if( Array.isArray( checkOpeningBalances ) ){
+        //     openingBalanceLines = OpeningBalance.fromList(
+        //         checkOpeningBalances
+        //     ).filter((item) => {
+        //         if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+        //             if( item.fields.Type == 'DeductionLine' ){
+        //                 item.fields.BalanceField = $('#obDeductionLine' + counter).val();
+        //                 item.fields.Amount = $('#obDeductionAmount' + counter).val();
+        //                 if( parseInt( counter ) != parseInt( deleteID ) ){
+        //                     return item;
+        //                 }
+        //                 counter++
+        //             }else{
+        //                 return item;
+        //             }
+        //         }
+        //     });
+        // }
+
+        // await templateObject.openingBalanceInfo.set(openingBalanceLines);
+        // let totalAmount = 0;
+        // let amount = 0;
+        // let bCounter = 0;
+        // if( openingBalanceLines.length ){
+        //     Array.prototype.forEach.call(openingBalanceLines, (item, index) => {
+        //         if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'DeductionLine' ) {
+        //             amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+        //             amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+        //             totalAmount += parseFloat( amount );
+        //             $('#obDeductionLine' + bCounter).val(item.fields.BalanceField);
+        //             $('#obDeductionAmount' + bCounter).val(item.fields.Amount);
+        //             bCounter++;
+        //         }
+        //     })
+        // }
+        // let utilityService = new UtilityService();
+        // let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+        // $('#obDeductionTotalAmount').text(totalFomattedAmount);
     },
 
     'click .removeObSuperannuation': async function(e){
         let templateObject = Template.instance();
+
         let deleteID = $(e.target).data('id');
-        let obLines = templateObject.filterOpeningBalance(2);
-        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        checkOpeningBalances.push( obLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.BalanceField = $('#obSuperannuationFund' + index).val();
-                item.fields.Amount = $('#obSuperannuationAmount' + index).val();
-                return item;
+        let payLines = templateObject.openingBalanceInfo.get();
+        let updatedLines = OpeningBalance.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                item.fields.Active = false;
             }
-        }) );
-        await templateObject.openingBalanceInfo.set(checkOpeningBalances);
-        let totalAmount = 0;
-        let amount = 0;
-        Array.prototype.forEach.call(updatedLines, (item, index) => {
-            amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-            totalAmount += parseFloat( amount );
-            $('#obSuperannuationFund' + index).val(item.fields.BalanceField);
-            $('#obSuperannuationAmount' + index).val(item.fields.Amount);
+            return item;
+        });
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
+
+        let reiumbursementSettings =  new OpeningBalance({
+            type: "TOpeningBalances",
+            fields: new OpeningBalanceFields({
+                ID: deleteID,
+                Active: false,
+                Balance: 2
+            }),
         })
-        let utilityService = new UtilityService();
-        let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
-        $('#obSuperannuationTotalAmount').text(totalFomattedAmount);
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(reiumbursementSettings),
+        });
+
+        let openineBalanceObj = {
+            topeningbalances: updatedLines
+        }
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
+            // Bind with html content
+            await templateObject.openingBalanceInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
+        }
+
+        // let obLines = templateObject.filterOpeningBalance(2);
+        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        // checkOpeningBalances.push( obLines.filter((item, index) => {
+        //     if ( parseInt( index ) != parseInt( deleteID ) ) {
+        //         item.fields.BalanceField = $('#obSuperannuationFund' + index).val();
+        //         item.fields.Amount = $('#obSuperannuationAmount' + index).val();
+        //         return item;
+        //     }
+        // }) );
+        // await templateObject.openingBalanceInfo.set(checkOpeningBalances);
+        // let totalAmount = 0;
+        // let amount = 0;
+        // Array.prototype.forEach.call(updatedLines, (item, index) => {
+        //     amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+        //     totalAmount += parseFloat( amount );
+        //     $('#obSuperannuationFund' + index).val(item.fields.BalanceField);
+        //     $('#obSuperannuationAmount' + index).val(item.fields.Amount);
+        // })
+        // let utilityService = new UtilityService();
+        // let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+        // $('#obSuperannuationTotalAmount').text(totalFomattedAmount);
     },
 
     'click .removeObReimbursement': async function(e){
         let templateObject = Template.instance();
+
         let deleteID = $(e.target).data('id');
-        let obLines = templateObject.filterOpeningBalance(3);
-        let updatedLines = obLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.BalanceField = $('#obReimbursementFund' + index).val();
-                item.fields.Amount = $('#obReimbursementAmount' + index).val();
-                return item;
+        let payLines = templateObject.openingBalanceInfo.get();
+        let updatedLines = OpeningBalance.fromList(
+            payLines
+        ).filter(async (item) => {
+            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                item.fields.Active = false;
             }
+            return item;
         });
-        await templateObject.openingBalanceInfo.set(updatedLines);
-        let totalAmount = 0;
-        let amount = 0;
-        Array.prototype.forEach.call(updatedLines, (item, index) => {
-            amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-            totalAmount += parseFloat( amount );
-            $('#obReimbursementFund' + index).val(item.fields.BalanceField);
-            $('#obReimbursementAmount' + index).val(item.fields.Amount);
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TOpeningBalances
+        );
+
+        let reiumbursementSettings =  new OpeningBalance({
+            type: "TOpeningBalances",
+            fields: new OpeningBalanceFields({
+                ID: deleteID,
+                Active: false,
+                Balance: 3
+            }),
         })
-        let utilityService = new UtilityService();
-        let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
-        $('#obReimbursementTotalAmount').text(totalFomattedAmount);
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(reiumbursementSettings),
+        });
+
+        let openineBalanceObj = {
+            topeningbalances: updatedLines
+        }
+
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            // Save into indexDB
+            await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
+            // Bind with html content
+            await templateObject.openingBalanceInfo.set(updatedLines);
+            $('.fullScreenSpin').css('display', 'none');
+        }
+        // let obLines = templateObject.filterOpeningBalance(3);
+        // let updatedLines = obLines.filter((item, index) => {
+        //     if ( parseInt( index ) != parseInt( deleteID ) ) {
+        //         item.fields.BalanceField = $('#obReimbursementFund' + index).val();
+        //         item.fields.Amount = $('#obReimbursementAmount' + index).val();
+        //         return item;
+        //     }
+        // });
+        // await templateObject.openingBalanceInfo.set(updatedLines);
+        // let totalAmount = 0;
+        // let amount = 0;
+        // Array.prototype.forEach.call(updatedLines, (item, index) => {
+        //     amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+        //     totalAmount += parseFloat( amount );
+        //     $('#obReimbursementFund' + index).val(item.fields.BalanceField);
+        //     $('#obReimbursementAmount' + index).val(item.fields.Amount);
+        // })
+        // let utilityService = new UtilityService();
+        // let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+        // $('#obReimbursementTotalAmount').text(totalFomattedAmount);
     },
 
     'change .obCalculateEarningTotalAmount': function(e){
@@ -6389,7 +7003,6 @@ Template.employeescard.events({
                 }
             });
         }
-
         if( obEarningLines.length ){
             Array.prototype.forEach.call(obEarningLines, (EarningLine, index) => {
                 EarningLine.fields.Amount = $('#obEarningAmount' + index).val();
@@ -6863,12 +7476,133 @@ Template.employeescard.events({
         }else if(activeTab == "paytemplate") {
 
         }else if(activeTab == "openingbalances") {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let currentId = FlowRouter.current().queryParams;
+            let templateObject = Template.instance();
+
+            const employeePayrolApis = new EmployeePayrollApi();
+            // now we have to make the post request to save the data in database
+            const apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TOpeningBalances
+            );
+
+            // WORKING HERE
+            /**
+             * Fetch Earning Opening fields data
+             */
+            let tOpeningBalance = [];
+            let obEarningLines = templateObject.filterOpeningBalance(0);
+            if( obEarningLines ){
+                for (const item of obEarningLines) {
+                    if( item.fields.Active == true ){
+                        let AType = $(`#obEarningRate${item.fields.ID}`).val();
+                        let amount = $(`#obEarningAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push({
+                            type: "TOpeningBalances",
+                            fields: {
+                                ID: item.fields.ID,
+                                AType: AType,
+                                Amount: amount,
+                                Active: true
+                            }
+                        })
+                    }
+                }
+            }
+            /**
+             * Fetch deduction Opening fields data
+             */
+            let obDeductionLines = templateObject.filterOpeningBalance(1);
+            if( obDeductionLines ){
+                for (const item of obDeductionLines) {
+                    if( item.fields.Active == true ){
+                        let AType = $(`#obDeductionLine${item.fields.ID}`).val();
+                        let amount = $(`#obDeductionAmount${item.fields.ID}`).val();
+                        amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        tOpeningBalance.push({
+                            type: "TOpeningBalances",
+                            fields: {
+                                ID: item.fields.ID,
+                                AType: AType,
+                                Amount: amount,
+                                Active: true
+                            }
+                        })
+                    }
+                }
+            }
+            /**
+             * Fetch superannuation Opening fields data
+             */
+             let obSAnnuationLines = templateObject.filterOpeningBalance(2);
+             if( obSAnnuationLines ){
+                 for (const item of obSAnnuationLines) {
+                     if( item.fields.Active == true ){
+                         let AType = $(`#obSuperannuationFund${item.fields.ID}`).val();
+                         let amount = $(`#obSuperannuationAmount${item.fields.ID}`).val();
+                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                         tOpeningBalance.push({
+                            type: "TOpeningBalances",
+                            fields: {
+                                ID: item.fields.ID,
+                                AType: AType,
+                                Amount: amount,
+                                Active: true
+                            }
+                        })
+                     }
+                 }
+             }
+            /**
+             * Fetch Reinmbursment Opening fields data
+             */
+             let obReImbursmentLines = templateObject.filterOpeningBalance(3);
+             if( obReImbursmentLines ){
+                 for (const item of obReImbursmentLines) {
+                     if( item.fields.Active == true ){
+                         let AType = $(`#obReimbursementFund${item.fields.ID}`).val();
+                         let amount = $(`#obReimbursementAmount${item.fields.ID}`).val();
+                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                         tOpeningBalance.push({
+                            type: "TOpeningBalances",
+                            fields: {
+                                ID: item.fields.ID,
+                                AType: AType,
+                                Amount: amount,
+                                Active: true
+                            }
+                        })
+                     }
+                 }
+            }
+
+            let openingBalanceJSON = {
+                type: "TOpeningBalances",
+                objects: tOpeningBalance
+            };
+
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(openingBalanceJSON),
+            });
+            if (ApiResponse.ok == true) {
+            }
+            $('.fullScreenSpin').css('display', 'none');
 
         }else if(activeTab == "notes") {
 
         }else{
             return;
         }
+    },
+    'click #addPaySlip': async function(event) {
+
     },
     'change .colServiceCostPrice': function (event) {
 
@@ -8364,23 +9098,19 @@ Template.employeescard.helpers({
     },
     obEarningLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance(0);
-        return obEarningLines;
+        return templateObject.filterOpeningBalance(0);
     },
     obDeductionLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance(1);
-        return obEarningLines;
+        return templateObject.filterOpeningBalance(1);
     },
     obSuperannuationLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance(2);
-        return obEarningLines;
+        return templateObject.filterOpeningBalance(2);
     },
     obReimbursementLines: () => {
         const templateObject = Template.instance();
-        let obEarningLines = templateObject.filterOpeningBalance(3);
-        return obEarningLines;
+        return templateObject.filterOpeningBalance(3);
     },
     payTemplateDeductionLines: () => {
         return Template.instance().payTemplateDeductionLineInfo.get();
@@ -8405,13 +9135,17 @@ Template.employeescard.helpers({
     },
     formatPrice( amount ){
         let utilityService = new UtilityService();
-        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+        if( isNaN(amount) ){
+            amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+            amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+        }
         return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
     },
     formatPercent( percentVal ){
-        percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
-        percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
+        if( isNaN(percentVal) ){
+            percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
+            percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
+        }
         return `${parseFloat(percentVal).toFixed(2)}%`;
     },
     formatDate: ( date ) => {

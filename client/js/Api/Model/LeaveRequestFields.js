@@ -9,7 +9,8 @@ export default class LeaveRequestFields {
         Hours,
         Status,
         Leave,
-        LeaveMethod
+        LeaveMethod,
+        Active
     }){
         this.EmployeeID = EmployeeID;
         this.TypeofRequest = TypeofRequest;
@@ -21,6 +22,7 @@ export default class LeaveRequestFields {
         this.Status = Status;
         this.Leave = Leave;
         this.LeaveMethod = LeaveMethod;
+        this.Active = Active;
     }
 }
   
