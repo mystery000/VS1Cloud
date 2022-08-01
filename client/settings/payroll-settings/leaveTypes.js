@@ -310,10 +310,15 @@ Template.leaveTypeSettings.onRendered(function() {
                 let searchName = e.target.value || '';
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                     $('#leaveTypeSettingsModal').modal('show');
+
                 } else {
                     if (searchName.replace(/\s/g, '') == '') {
                         $('#leaveTypeSettingsModal').modal('show');
                     }
+                    else{
+
+                    }
+
                 }
             });
 

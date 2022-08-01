@@ -6,6 +6,7 @@ export default class PayNotesFields {
         CreatedAt,
         UserID,
         UserName,
+        Active
     }){
         this.EmployeeID = EmployeeID;
         this.ID = ID;
@@ -13,6 +14,7 @@ export default class PayNotesFields {
         this.CreatedAt = CreatedAt;
         this.UserID = UserID;
         this.UserName = UserName;
+        this.Active = Active;
     }
 }
   

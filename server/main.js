@@ -148,7 +148,7 @@ Meteor.startup(() => {
         });
     };
 
-    callVerifiApi = function (imageData, fileName, cb) {
+    callVeryfiApi = function (imageData, fileName, cb) {
         let apiUrl = "https://api.veryfi.com/api/v7/partner/documents/";
         let postHeaders = {
           "Content-Type": "application/json",
@@ -168,8 +168,10 @@ Meteor.startup(() => {
             headers: postHeaders,
         }, (error, result) => {
             if (error) {
+                console.log(error);
                 cb(error, null);
             } else {
+                console.log(result);
                 cb(null, result);
             }
         });
@@ -193,7 +195,7 @@ Meteor.startup(() => {
         },
         'getOcrResultFromVerifi': function(imageData, fileName) {
             this.unblock();
-            return Meteor.wrapAsync(callVerifiApi)(imageData, fileName);
+            return Meteor.wrapAsync(callVeryfiApi)(imageData, fileName);
         },
         'magentoAWSProfileRenewal': function() {
             return mageClient.get('/V1/awSarp2/profile/search?', $jsonProfile)
@@ -206,26 +208,25 @@ Meteor.startup(() => {
         },
         'magentoAWSProfileLoggedUser': function(useremail) {
             let $jsonOneProfile = {
-                    "search_criteria": {
-                    "filter_groups": [
-                            {
-                                "filters": [
-                                    {
-                                        "field": "customer_email",
-                                        "value": useremail,
-                                        "condition_type": "eq"
-                                    },
-                                    {
-                                        "field": "status",
-                                        "value": "active",
-                                        "condition_type": "eq"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                };
-
+                "search_criteria": {
+                "filter_groups": [
+                        {
+                            "filters": [
+                                {
+                                    "field": "customer_email",
+                                    "value": useremail,
+                                    "condition_type": "eq"
+                                },
+                                {
+                                    "field": "status",
+                                    "value": "active",
+                                    "condition_type": "eq"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            };
             return mageClient.get('/V1/awSarp2/profile/search?', $jsonOneProfile)
                 .then(function(option) {
                     return option;
@@ -235,26 +236,25 @@ Meteor.startup(() => {
         },
         'magentoSKUProductsDetail': function(productSKU) {
             let $jsonOneProfile = {
-                    "search_criteria": {
-                    "filter_groups": [
-                            {
-                            "filters": [
-                            {
-                            "field": "sku",
-                            "value": productSKU,
-                            "condition_type": "eq"
-                            },
-                            {
-                            "field": "status",
-                            "value": "active",
-                            "condition_type": "eq"
-                            }
-                        ]
+                "search_criteria": {
+                "filter_groups": [
+                        {
+                        "filters": [
+                        {
+                        "field": "sku",
+                        "value": productSKU,
+                        "condition_type": "eq"
+                        },
+                        {
+                        "field": "status",
+                        "value": "active",
+                        "condition_type": "eq"
                         }
-                        ]
+                    ]
                     }
-                };
-
+                    ]
+                }
+            };
             return mageClient.get('/V1/products', $jsonOneProfile)
                 .then(function(option) {
                     return option;
@@ -266,7 +266,7 @@ Meteor.startup(() => {
             gateway.customer.search((search) => {
                 search.email().is(stripeToken);
             }, (err, response) => {
-                customerID  = response.ids[0];
+                let customerID  = response.ids[0];
                 if(customerID){
                     gateway.transaction.sale({
                         amount: amountCharged,
