@@ -167,6 +167,30 @@ export class ReportService extends BaseService {
     );
   }
 
+  getPayHistory(dateFrom, dateTo, ignoreDate, periodType) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        PeriodType: '"' + periodType + '"',
+        ListType: "'Detail'",
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        PeriodType: '"' + periodType + '"',
+        ListType: "'Detail'",
+      };
+    }
+
+    return this.getList(
+      this.ERPObjects.TPayHistory,
+      options
+    );
+  }
+
   getDepartment() {
     let options = {
       PropertyList: "DeptClassName",
