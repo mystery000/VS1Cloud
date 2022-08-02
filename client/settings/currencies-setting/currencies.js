@@ -19,7 +19,7 @@ Template.currenciessettings.onCreated(function () {
 });
 
 Template.currenciessettings.onRendered(function () {
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
   const dataTableList = [];
@@ -53,31 +53,37 @@ Template.currenciessettings.onRendered(function () {
     );
   }
 
-  templateObject.getCurrencies = async () => {
+  templateObject.getCurrencies = async (fromRemote = true, refresh = false) => {
     LoadingOverlay.show();
     let currencies = [];
-    let dataObject = await getVS1Data("TCurrency");
-    let data = dataObject.length == 0
-      ? await taxRateService.getCurrencies()
-      : JSON.parse(dataObject[0].data);
+    let data;
 
-    for (let i = 0; i < data.tcurrency.length; i++) {
-      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-      var dataList = {
-        id: data.tcurrency[i].fields.Id || "",
-        code: data.tcurrency[i].fields.Code || "-",
-        currency: data.tcurrency[i].fields.Currency || "-",
-        symbol: data.tcurrency[i].fields.CurrencySymbol || "-",
-        buyrate: data.tcurrency[i].fields.BuyRate || "-",
-        sellrate: data.tcurrency[i].fields.SellRate || "-",
-        country: data.tcurrency[i].fields.Country || "-",
-        description: data.tcurrency[i].fields.CurrencyDesc || "-",
-        ratelastmodified: data.tcurrency[i].fields.RateLastModified || "-"
-      };
-
-      currencies.push(dataList);
-      //}
+    if (fromRemote == true) {
+      data = await taxRateService.getCurrencies();
+      // TO DO: We should save these locally too
+      // await addVS1Data("TCurrency", data);
+    } else {
+      let dataObject = await getVS1Data("TCurrency");
+      data = dataObject.length == 0 == refresh == true
+        ? await taxRateService.getCurrencies()
+        : JSON.parse(dataObject[0].data);
+    
     }
+
+    data.tcurrency.forEach(_currency => {
+      //console.log(_currency);
+      currencies.push({
+        id: _currency.Id || "",
+        code: _currency.Code || "-",
+        currency: _currency.Currency || "-",
+        symbol: _currency.CurrencySymbol || "-",
+        buyrate: _currency.BuyRate || "-",
+        sellrate: _currency.SellRate || "-",
+        country: _currency.Country || "-",
+        description: _currency.CurrencyDesc || "-",
+        ratelastmodified: _currency.RateLastModified || "-"
+      });
+    });
 
     await templateObject.datatablerecords.set(currencies);
 
@@ -983,12 +989,12 @@ Template.currenciessettings.events({
     templateObject.tableheaderrecords.set(tableHeaderList);
   },
   "click #exportbtn": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     jQuery("#currencyLists_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
   "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     sideBarService.getCurrencies().then(function (dataReload) {
       addVS1Data("TCurrency", JSON.stringify(dataReload)).then(function (datareturn) {
         location.reload(true);
@@ -1237,7 +1243,7 @@ Template.currenciessettings.events({
     $("#edtSellRate").val(1);
   },
   // "change #sedtCountry": async (e) => {
-  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   LoadingOverlay.show();
 
   //   let taxRateService = new TaxRateService();
   //   let selectCountry = $("#sedtCountry").val();
@@ -1293,7 +1299,7 @@ Template.currenciessettings.events({
   // },
   "click .btnSaveCurrency": e => {
     let taxRateService = new TaxRateService();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     var currencyid = $("#edtCurrencyID").val();
     var country = $("#sedtCountry").val();
     var currencyCode = $("#currencyCode").val();
