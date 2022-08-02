@@ -20,7 +20,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
-  
+
 
   getNewGroupListVS1(limitcount, limitfrom) {
     let options = "";
@@ -69,12 +69,12 @@ export class SideBarService extends BaseService {
 
 
   getTemplateInformation() {
-   
+
     let options = {
       ListType:"Detail",
       select: "[EmployeeID]=" + Session.get('mySessionEmployeeLoggedID'),
     };
-    
+
     return this.getList(this.ERPObjects.TTemplateSettings, options);
   }
 
@@ -190,14 +190,14 @@ export class SideBarService extends BaseService {
   }
 
   getNewHolidayGroup(datasearch)
-  { 
+  {
       let options = "";
-  
+
       options = {
           ListType: "Detail",
           select:  "[PayrollHolidaysGroupName]='" + datasearch + "'",
         };
-    
+
       return this.getList(this.ERPObjects.TPayrollHolidays, options);
 
   }
@@ -1769,7 +1769,7 @@ export class SideBarService extends BaseService {
         OrderBy: "CreationDate desc",
         IgnoreDates: true,
         IsDetailReport: false,
-        Search: 'TrainerID = "' + loggedEmpID + '" OR ClientName = "' + dataSearchName + '" OR EnteredByEmployeeName = "' + dataSearchName + '"',
+        Search: 'AppointID = "' + dataSearchName + '" OR ClientName = "' + dataSearchName + '" OR EnteredByEmployeeName = "' + dataSearchName + '"',
       };
 
     }else{
@@ -1777,7 +1777,7 @@ export class SideBarService extends BaseService {
         OrderBy: "CreationDate desc",
         IgnoreDates: true,
         IsDetailReport: false,
-        Search: 'ClientName = "' + dataSearchName + '" OR EnteredByEmployeeName = "' + dataSearchName + '"',
+        Search: 'AppointID = "' + dataSearchName + '" OR ClientName = "' + dataSearchName + '" OR EnteredByEmployeeName = "' + dataSearchName + '"',
       };
     }
     return this.getList(this.ERPObjects.TAppointmentList, options);
@@ -3117,7 +3117,7 @@ export class SideBarService extends BaseService {
         ListType: "Detail",
         select: "[ListType]='ltOrder' OR [ListType]='ltPurchaseOverview'",
       };
-    } 
+    }
 
     return this.getList(this.ERPObjects.TCustomFieldList, options);
   }

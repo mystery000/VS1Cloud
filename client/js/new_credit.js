@@ -5875,7 +5875,7 @@ Template.creditcard.events({
                 let tddmemo = $('#' + lineID + " .lineMemo").text();
                 let tdamount = $('#' + lineID + " .lineAmount").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
 
                 if (tdaccount != "") {
 
@@ -5987,6 +5987,15 @@ Template.creditcard.events({
                     }
                 };
             }
+
+            if(splashLineArray.length > 0){
+
+            }else{
+              swal('Account name has not been selected!', '', 'warning');
+              $('.fullScreenSpin').css('display', 'none');
+              event.preventDefault();
+              return false;
+            };
 
             purchaseService.saveCredit(objDetails).then(function(objDetails) {
                 var supplierID = $('#edtSupplierEmail').attr('supplierid');
@@ -6840,7 +6849,7 @@ Template.creditcard.events({
                 let tddmemo = $('#' + lineID + " .lineMemo").text();
                 let tdamount = $('#' + lineID + " .lineAmount").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
 
                 if (tdaccount != "") {
 

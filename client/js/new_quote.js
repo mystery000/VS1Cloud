@@ -202,7 +202,7 @@ Template.new_quote.onRendered(() => {
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#' + lineID + " .colTaxAmount").text();
 
@@ -436,7 +436,7 @@ Template.new_quote.onRendered(() => {
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
 
@@ -5266,7 +5266,7 @@ Template.new_quote.onRendered(() => {
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
             let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
             lineItemObj = {
@@ -5960,6 +5960,23 @@ Template.new_quote.onRendered(function() {
       let customData = {};
       let customFieldCount = 14;
 
+      let reset_data = [
+        { label: 'Product Name', class: 'colProductName', active: true },
+        { label: 'Description', class: 'colDescription', active: true },
+        { label: 'Qty', class: 'colQty', active: true },
+        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+        { label: 'Cost Price', class: 'colCostPrice', active: false },
+        { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+        { label: 'Tax Rate', class: 'colTaxRate', active: false },
+        { label: 'Tax Code', class: 'colTaxCode', active: true },
+        { label: 'Amount (Ex)', class: 'colAmount', active: true },
+        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+        { label: 'Disc %', class: 'colDiscount', active: true },
+        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+      ]; 
+
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
           customData = {
@@ -5975,6 +5992,20 @@ Template.new_quote.onRendered(function() {
         }
       }
 
+      let remainder = customFieldCount - data.tcustomfieldlist.length;
+      for (let r = 0; r < remainder; r++) {
+        customData = {
+          active: reset_data[data.tcustomfieldlist.length + r ].active,
+          id: 0,
+          custfieldlabel: reset_data[data.tcustomfieldlist.length + r ].label,
+          datatype: "",
+          isempty: false,
+          iscombo: false,
+          dropdown: null,
+        };
+        custFields.push(customData);
+      }
+      
       if (custFields.length < customFieldCount) {
         let remainder = customFieldCount - custFields.length;
         let getRemCustomFields = parseInt(custFields.length);
@@ -6006,10 +6037,17 @@ Template.new_quote.onRendered(function() {
             });
           } else {
             let data = JSON.parse(dataObject[0].data);
-            initCustomFieldDisplaySettings(data, listType);
-            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-              addVS1Data("TltSaleslines", JSON.stringify(data));
-            });
+            if(data.tcustomfieldlist.length == 0){
+              sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                initCustomFieldDisplaySettings(data, listType);
+                addVS1Data("TltSaleslines", JSON.stringify(data));
+              });
+            } else {
+              initCustomFieldDisplaySettings(data, listType);
+              sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                addVS1Data("TltSaleslines", JSON.stringify(data));
+              });
+            }
           }
         })
 
@@ -7761,7 +7799,7 @@ Template.new_quote.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 lineItemObj = {
@@ -9046,7 +9084,7 @@ Template.new_quote.events({
                     let tdQty = $('#' + lineID + " .lineQty").val();
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                     lineItemObj = {
@@ -9109,7 +9147,7 @@ Template.new_quote.events({
                         let tdQty = $('#' + lineID + " .lineQty").val();
                         let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                         let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                         lineItemObj = {
@@ -9741,7 +9779,7 @@ Template.new_quote.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {
@@ -10005,7 +10043,7 @@ Template.new_quote.events({
                     let tdQty = $('#' + lineID + " .lineQty").val();
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                     if (tdproduct != "") {
@@ -10266,7 +10304,7 @@ Template.new_quote.events({
                     let tdQty = $('#' + lineID + " .lineQty").val();
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                     if (tdproduct != "") {
