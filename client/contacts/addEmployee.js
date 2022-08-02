@@ -3249,11 +3249,11 @@ Template.employeescard.onRendered(function () {
     templateObject.getPayNotesTypes();
 
     templateObject.filterPayTemplates = ( type ) => {
-        let templateObject = Template.instance();
+        const templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         if(type == "earningLines"){
-            let payTemplateEarningLines = []
+            let payTemplateEarningLines = [];
             let checkPayTemplateEarningLine = templateObject.payTemplateEarningLineInfo.get();
             if( Array.isArray( checkPayTemplateEarningLine ) ){
                 payTemplateEarningLines = PayTemplateEarningLine.fromList(
@@ -3266,10 +3266,8 @@ Template.employeescard.onRendered(function () {
             }
             return payTemplateEarningLines;
 
-        }
-        if(type == "deductionLines"){
-
-            let payTemplateDeductionLines = []
+        } else if(type == "deductionLines"){
+            let payTemplateDeductionLines = [];
             let checkPayTemplateDeductionLine = templateObject.payTemplateDeductionLineInfo.get();
             if( Array.isArray( checkPayTemplateDeductionLine ) ){
                 payTemplateDeductionLines = PayTemplateDeductionLine.fromList(
@@ -3283,7 +3281,7 @@ Template.employeescard.onRendered(function () {
             return payTemplateDeductionLines;
             
         }else if(type == "superannuationLines"){
-            let payTemplateSuperannuationLines = []
+            let payTemplateSuperannuationLines = [];
             let checkPayTemplateSuperannuationLine = templateObject.payTemplateSuperannuationLineInfo.get();
             if( Array.isArray( checkPayTemplateSuperannuationLine ) ){
                 payTemplateSuperannuationLines = PayTemplateSuperannuationLine.fromList(
@@ -3297,7 +3295,7 @@ Template.employeescard.onRendered(function () {
             return payTemplateSuperannuationLines;
 
         }else if(type == "reiumbursementLines"){
-            let payTemplateReiumbursementLines = []
+            let payTemplateReiumbursementLines = [];
             let checkPayTemplateReiumbursementLine = templateObject.payTemplateReiumbursementLineInfo.get();
             if( Array.isArray( checkPayTemplateReiumbursementLine ) ){
                 payTemplateReiumbursementLines = PayTemplateReiumbursementLine.fromList(
