@@ -171,7 +171,7 @@ Template.new_quote.onRendered(() => {
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
-                $(".heading").html("New Quote " +newQuoteId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
+                $(".heading").html("New Quote " +newQuoteId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
                 };
             }, 50);
         }).catch(function(err) {
