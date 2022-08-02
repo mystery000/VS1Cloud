@@ -5853,7 +5853,22 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
                 taxcode1 = getCustDetails[0].taxCode || '';
             } else {
-                lineTaxRate = table.find(".taxrate").text();
+                var customerTaxCode = $('#edtCustomerName').attr('custtaxcode').replace(/\s/g, '') || '';
+                taxRate = taxcodeList.filter(taxrate => {
+                    return taxrate.codename == customerTaxCode || '';
+                });
+                if (taxRate.length > 0) {
+                    if (taxRate.codename != "") {
+                        lineTaxRate = taxRate[0].codename;
+                    } else {
+                        lineTaxRate = table.find(".taxrate").text();
+                    }
+                } else {
+                    lineTaxRate = table.find(".taxrate").text();
+                }
+
+                taxcode1 = customerTaxCode || '';
+
             }
 
             if (selectLineID) {
@@ -6252,6 +6267,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
         const tableCustomer = $(this);
         $('#edtCustomerName').val(tableCustomer.find(".colCompany").text());
         $('#edtCustomerName').attr("custid", tableCustomer.find(".colID").text());
+        $('#edtCustomerName').attr("custtaxcode", tableCustomer.find(".colCustomerTaxCode").text());
         $('#customerListModal').modal('toggle');
         // $('#customerType').text(tableCustomer.find(".colCustomerType").text()||'Default');
         // $('#customerDiscount').text(tableCustomer.find(".colCustomerDiscount").text()+'%'|| 0+'%');
