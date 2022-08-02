@@ -8356,82 +8356,84 @@ Template.supplierpaymentcard.onRendered(() => {
      let selectedSupplierPayments = templateObject.outstandingExpenses.get();
 
 
-     if (selectedSupplierPayments.length > 0) {
-      let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
-      currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
-      let total = parseFloat(currentApplied);
-
-      for (let x = 0; x < selectedSupplierPayments.length; x++) {
-        var rowData =
-          '<tr class="dnd-moved" id="' +
-          selectedSupplierPayments[x].awaitingId +
-          '" name="' +
-          selectedSupplierPayments[x].awaitingId +
-          '">\n' +
-          '	<td contenteditable="false" class="colTransDate">' +
-          selectedSupplierPayments[x].date +
-          "</td>\n" +
-          '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
-          selectedSupplierPayments[x].type +
-          "</td>\n" +
-          '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
-          selectedSupplierPayments[x].awaitingId +
-          "</td>\n" +
-          '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
-          selectedSupplierPayments[x].originalAmount +
-          "</td>\n" +
-          '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
-          selectedSupplierPayments[x].outstandingAmount +
-          "</td>\n" +
-          '	<td><input class="linePaymentamount highlightInput" type="text" value="' +
-          selectedSupplierPayments[x].paymentAmount +
-          '"></td>\n' +
-
-          (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign" type="text" value="' +
-          selectedSupplierPayments[x].paymentAmount +
-          '"></td>\n' : '') +
-
-          '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' +
-          selectedSupplierPayments[x].paymentAmount +
-          "</td>\n" +
-
-          (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign" style="text-align: right!important;">' +
-          selectedSupplierPayments[x].paymentAmount +
-          "</td>\n" : '') +
-
-          '	<td contenteditable="true" class="colComments">' +
-          selectedSupplierPayments[x].comments +
-          "</td>\n" +
-          '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
-          "</tr>";
-
-        let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
-        let isCheckedTrue = true;
-        $(".tblSupplierPaymentcard > tbody > tr").each(function () {
-          var lineID = this.id;
-          if (lineID == checkCompareID) {
-            isCheckedTrue = false;
+     setTimeout(() => {
+      if (selectedSupplierPayments.length > 0) {
+        let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
+        currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
+        let total = parseFloat(currentApplied);
+  
+        for (let x = 0; x < selectedSupplierPayments.length; x++) {
+          var rowData =
+            '<tr class="dnd-moved" id="' +
+            selectedSupplierPayments[x].awaitingId +
+            '" name="' +
+            selectedSupplierPayments[x].awaitingId +
+            '">\n' +
+            '	<td contenteditable="false" class="colTransDate">' +
+            selectedSupplierPayments[x].date +
+            "</td>\n" +
+            '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
+            selectedSupplierPayments[x].type +
+            "</td>\n" +
+            '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
+            selectedSupplierPayments[x].awaitingId +
+            "</td>\n" +
+            '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
+            selectedSupplierPayments[x].originalAmount +
+            "</td>\n" +
+            '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
+            selectedSupplierPayments[x].outstandingAmount +
+            "</td>\n" +
+            '	<td><input class="linePaymentamount highlightInput" type="text" value="' +
+            selectedSupplierPayments[x].paymentAmount +
+            '"></td>\n' +
+  
+            (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign" type="text" value="' +
+            convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+            '"></td>\n' : '') +
+  
+            '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' +
+            selectedSupplierPayments[x].paymentAmount +
+            "</td>\n" +
+  
+            (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign" style="text-align: right!important;">' +
+            convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+            "</td>\n" : '') +
+  
+            '	<td contenteditable="true" class="colComments">' +
+            selectedSupplierPayments[x].comments +
+            "</td>\n" +
+            '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+            "</tr>";
+  
+          let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
+          let isCheckedTrue = true;
+          $(".tblSupplierPaymentcard > tbody > tr").each(function () {
+            var lineID = this.id;
+            if (lineID == checkCompareID) {
+              isCheckedTrue = false;
+            }
+          });
+          //setTimeout(function() {
+          if (isCheckedTrue) {
+            $("#tblSupplierPaymentcard tbody").append(rowData);
+            total =
+              total +
+              parseFloat(
+                selectedSupplierPayments[x].paymentAmount.replace(
+                  /[^0-9.-]+/g,
+                  ""
+                )
+              );
           }
-        });
-        //setTimeout(function() {
-        if (isCheckedTrue) {
-          $("#tblSupplierPaymentcard tbody").append(rowData);
-          total =
-            total +
-            parseFloat(
-              selectedSupplierPayments[x].paymentAmount.replace(
-                /[^0-9.-]+/g,
-                ""
-              )
-            );
+          //}, 500);
         }
-        //}, 500);
+        $(".appliedAmount").text(
+          utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+        );
+        localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
       }
-      $(".appliedAmount").text(
-        utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
-      );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-    }
+     }, 300)
    
 
     
@@ -13443,7 +13445,7 @@ export function onExchangeRateChange(e) {
  const templateObject = Template.instance();
   const mainValue = localStorage.getItem('APPLIED_AMOUNT') || 0.0;
   const rate = parseFloat($("#exchange_rate").val());
-  const currency = utilityService.extractCurrency(mainValue);
+  const currency = getCurrentCurrencySymbol();
 
   let foreignAmount = rate * utilityService.removeCurrency(mainValue);
   let appliedAmount = rate * utilityService.removeCurrency(mainValue);
@@ -13473,4 +13475,23 @@ export function calculateApplied() {
 
     $('#edtApplied').val(calculatedApplied);
     $('.appliedAmount').text(calculatedApplied);
+}
+
+function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
+  let utilityService = new UtilityService();
+  const currency = utilityService.extractCurrency(amount);
+  console.log("pre amount: ", amount);
+  amount = utilityService.removeCurrency(amount, currency);
+
+  console.log("amount to convert", amount);
+  console.log('rate', rate);
+  let convert = amount * rate;
+
+  console.log("converted", convert);
+
+  if(withSymbol) {
+    return `${withSymbol}${convert}`;
+  }
+  return convert;
+
 }
