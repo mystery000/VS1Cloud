@@ -3103,7 +3103,7 @@ Template.employeescard.onRendered(function () {
         let useData = PayNotes.fromList(
             TPayNotesData.tpaynotes
         ).filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
                 return item;
             }
         });
@@ -4042,7 +4042,7 @@ Template.employeescard.onRendered(function () {
     templateObject.getPaySlips = async function(){
         try {
             let data = {};
-            let splashArrayPaySlipList = new Array();
+            let splashArrayPaySlipList = [];
             let dataObject = await getVS1Data('TPaySlips')
             if ( dataObject.length == 0) {
                 const employeePayrolApis = new EmployeePayrollApi();
@@ -4067,176 +4067,171 @@ Template.employeescard.onRendered(function () {
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
-            
 
-            let isActive=false;
             let dataListAllowance =[];
             let useData = PaySlips.fromList(
                 data.tpayslips
             ).filter((item) => {
-                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
                     return item;
                 }
             });
             templateObject.paySlipInfos.set(useData);
-            for (let i = 0; i < useData.length; i++) {
 
-                if(useData[i].fields.Active){
-                    isActive=true;
-                    dataListAllowance = [
-                        useData[i].fields.ID || '',
-                        useData[i].fields.Period || '',
-                        useData[i].fields.PaymentDate || '',
-                        useData[i].fields.TotalPay || '',
-                        `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                        <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ data.tpayslips[i].fields.ID +`"><i class="fas fa-trash"></i></button>
-                        `,
-                    ];
-                    splashArrayPaySlipList.push(dataListAllowance);
-                }
+            console.log( 'useData', useData )
+
+            for (let i = 0; i < useData.length; i++) {
+                dataListAllowance = [
+                    useData[i].fields.ID || '',
+                    useData[i].fields.Period || '',
+                    useData[i].fields.PaymentDate || '',
+                    useData[i].fields.TotalPay || '',
+                    `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
+                    <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ data.tpayslips[i].fields.ID +`"><i class="fas fa-trash"></i></button>
+                    `,
+                ];
+                splashArrayPaySlipList.push(dataListAllowance);
             }
 
-            templateObject.datatablerecords.set(splashArrayPaySlipList);
-            $('.fullScreenSpin').css('display', 'none');
-            if(isActive){
-                setTimeout(function () {
-                    $('#tblPayslipHistory').DataTable({
-                        data: splashArrayPaySlipList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        columnDefs: [
-                            {
-                                className: "colPayslipID hiddenColumn",
-                                "targets": [0]
-                            },
-                            {
-                                className: "colPayslipPeriod",
-                                "targets": [1]
-                            },
-                            {
-                                className: "colPayslipPaymentDate",
-                                "targets": [2]
-                            },
-                            {
-                                className: "colPayslipTotalPay",
-                                "targets": [3]
-                            },
-                            {
-                                className: "colPayslipActions",
-                                "targets": [4]
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "order": [[0, "asc"]],
-                        action: function () {
-                            $('#tblPayslipHistory').DataTable().ajax.reload();
+            // templateObject.datatablerecords.set(splashArrayPaySlipList);
+            
+            setTimeout(function () {
+                $('#tblPayslipHistory').DataTable({
+                    data: splashArrayPaySlipList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
+                        {
+                            className: "colPayslipID hiddenColumn",
+                            "targets": [0]
                         },
-                        "fnDrawCallback": function (oSettings) {
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblPayslipHistory_ellipsis').addClass('disabled');
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-
-                                }
-                            } else {
-
-                            }
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    var splashArrayPaySlipListDupp = new Array();
-                                    let dataLenght = oSettings._iDisplayLength;
-                                    let customerSearch = $('#tblPayslipHistory_filter input').val();
-
-                                    sideBarService.getPaySlip(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                        for (let i = 0; i < useData.length; i++) {
-
-                                            let dataListAllowance = [
-                                                useData[i].fields.ID || '',
-                                                useData[i].fields.Period || '',
-                                                useData[i].fields.PaymentDate || '',
-                                                useData[i].fields.TotalPay || '',
-                                                `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                                                <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ data.tpayslips[i].fields.ID +`"><i class="fas fa-trash"></i></button>
-                                                `,
-                                            ];
-
-                                            splashArrayPaySlipList.push(dataListAllowance);
-                                        }
-
-                                        let uniqueChars = [...new Set(splashArrayPaySlipList)];
-                                        var datatable = $('#tblPayslipHistory').DataTable();
-                                        datatable.clear();
-                                        datatable.rows.add(uniqueChars);
-                                        datatable.draw(false);
-                                        setTimeout(function () {
-                                            $("#tblPayslipHistory").dataTable().fnPageChange('last');
-                                        }, 400);
-
-                                        $('.fullScreenSpin').css('display', 'none');
-
-
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-
-                                });
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
+                        {
+                            className: "colPayslipPeriod",
+                            "targets": [1]
                         },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
-                            $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
+                        {
+                            className: "colPayslipPaymentDate",
+                            "targets": [2]
+                        },
+                        {
+                            className: "colPayslipTotalPay",
+                            "targets": [3]
+                        },
+                        {
+                            className: "colPayslipActions",
+                            "targets": [4]
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblPayslipHistory').DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblPayslipHistory_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+
+                            }
+                        } else {
+
+                        }
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
                         }
 
-                    }).on('page', function () {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayPaySlipListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblPayslipHistory_filter input').val();
 
-                    }).on('column-reorder', function () {
+                                sideBarService.getPaySlip(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                    }).on('length.dt', function (e, settings, len) {
-                        //$('.fullScreenSpin').css('display', 'inline-block');
-                        let dataLenght = settings._iDisplayLength;
-                        splashArrayPaySlipList = [];
-                        if (dataLenght == -1) {
-                        $('.fullScreenSpin').css('display', 'none');
+                                    for (let i = 0; i < useData.length; i++) {
 
-                        } else {
-                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            } else {
-                                sideBarService.getPaySlip(dataLenght, 0).then(function (dataNonBo) {
+                                        let dataListAllowance = [
+                                            useData[i].fields.ID || '',
+                                            useData[i].fields.Period || '',
+                                            useData[i].fields.PaymentDate || '',
+                                            useData[i].fields.TotalPay || '',
+                                            `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
+                                            <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ data.tpayslips[i].fields.ID +`"><i class="fas fa-trash"></i></button>
+                                            `,
+                                        ];
 
-                                    addVS1Data('TPaySlips', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                        // templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
+                                        splashArrayPaySlipList.push(dataListAllowance);
+                                    }
+
+                                    let uniqueChars = [...new Set(splashArrayPaySlipList)];
+                                    var datatable = $('#tblPayslipHistory').DataTable();
+                                    datatable.clear();
+                                    datatable.rows.add(uniqueChars);
+                                    datatable.draw(false);
+                                    setTimeout(function () {
+                                        $("#tblPayslipHistory").dataTable().fnPageChange('last');
+                                    }, 400);
+
+                                    $('.fullScreenSpin').css('display', 'none');
+
+
                                 }).catch(function (err) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 });
-                            }
-                        }
+
+                            });
                         setTimeout(function () {
                             MakeNegative();
                         }, 100);
-                    });
-                }, 0);
-            }
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
+                        $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
+                    }
+
+                }).on('page', function () {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+
+                }).on('column-reorder', function () {
+
+                }).on('length.dt', function (e, settings, len) {
+                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = settings._iDisplayLength;
+                    splashArrayPaySlipList = [];
+                    if (dataLenght == -1) {
+                    $('.fullScreenSpin').css('display', 'none');
+
+                    } else {
+                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        } else {
+                            sideBarService.getPaySlip(dataLenght, 0).then(function (dataNonBo) {
+
+                                addVS1Data('TPaySlips', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                    // templateObject.resetData(dataNonBo);
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }
+                    }
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
+            }, 0);
             
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -9502,33 +9497,37 @@ Template.employeescard.events({
                 body: JSON.stringify(paySlipSettings),
             });
 
-            let payLines = templateObject.paySlipInfos.get();
-            let updatedLines = PaySlips.fromList(
-                payLines
-            ).filter(async (item) => {
-
-                if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                    item.fields.Active = false;
+            let dataObject = await getVS1Data('TPaySlips')
+            
+            if ( dataObject.length > 0) {
+                data = JSON.parse(dataObject[0].data);
+                let updatedLines = PaySlips.fromList(
+                    data.tpayslips
+                ).filter(async (item) => {
+                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                        item.fields.Active = false;
+                    }
+                    return item;
+                });
+                let paySlipObj = {
+                    tpayslips: updatedLines
                 }
-                return item;
-            });
-            let paySlipObj = {
-                tpayslips: updatedLines
-            }
-            try {
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    await addVS1Data('TPaySlips', JSON.stringify(paySlipObj))
-                    await templateObject.getPaySlips();
-                    // await templateObject.paySlipInfos.set(updatedLines);
+                console.log( paySlipObj, deleteID )
+                try {
+                    if (ApiResponse.ok == true) {
+                        const jsonResponse = await ApiResponse.json();
+                        await addVS1Data('TPaySlips', JSON.stringify(paySlipObj))
+                        await templateObject.getPaySlips();
+                        // await templateObject.paySlipInfos.set(updatedLines);
 
-                } 
-                $('.fullScreenSpin').hide();
+                    } 
+                    $('.fullScreenSpin').hide();
 
-            }
-            catch(e){
-                $('.fullScreenSpin').hide();
+                }
+                catch(e){
+                    $('.fullScreenSpin').hide();
 
+                }
             }
         }
     });
