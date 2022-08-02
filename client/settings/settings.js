@@ -103,6 +103,9 @@ Template.settings.events({
     },
     'click .btnEDIIntegrations': function(event) {
         FlowRouter.go('/settings/edi-integrations');
+    },
+    'click .btnMailchimp': function (event) {
+      FlowRouter.go('/mailchimpSettings');
     }
 });
 

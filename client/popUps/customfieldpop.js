@@ -1014,16 +1014,24 @@ Template.customfieldpop.onRendered(() => {
 
         if (url.includes("/invoicecard")) {
           listType = "ltSales";
+          if (!isNaN(currentID)) {
           templateObject.getTInvoiceExData(currentID);
+          }
         } else if (url.includes("/salesordercard")) {
           listType = "ltSales";
+          if (!isNaN(currentID)) {
           templateObject.getTSalesOrderExData(currentID);
+          }
         } else if (url.includes("/quotecard")) {
           listType = "ltSales";
+            if (!isNaN(currentID)) {
           templateObject.getTQuoteExData(currentID);
+          }
         } else if (url.includes("/refundcard")) {
           listType = "ltSales";
+            if (!isNaN(currentID)) {
           templateObject.getTRefundSaleData(currentID);
+            }
         } else if (url.includes("/customerscard")) {
           // how to handle job???
           // getso_id = url.split("?jobid=");
@@ -1031,19 +1039,29 @@ Template.customfieldpop.onRendered(() => {
           // currentID = parseInt(currentID);
 
           listType = "ltCustomer";
+          if (!isNaN(currentID)) {
           templateObject.getTCustomerExData(currentID);
+          }
         } else if (url.includes("/supplierscard")) {
           listType = "ltSupplier";
+            if (!isNaN(currentID)) {
           templateObject.getTSupplierExData(currentID);
+          }
         } else if (url.includes("/employeescard")) {
           listType = "ltContact";
+          if (!isNaN(currentID)) {
           templateObject.getTEmployeeExData(currentID);
+         }
         } else if (url.includes("/leadscard")) {
           listType = "ltLeads";
+          if (!isNaN(currentID)) {
           templateObject.getTLeadExData(currentID);
+          }
         } else if (url.includes("/productview")) {
           listType = "ltProducts";
+          if (!isNaN(currentID)) {
           templateObject.getTProductExData(currentID);
+          }
         } else if (
           url.includes("/purchaseordercard") ||
           url.includes("/billcard") ||
@@ -1052,7 +1070,9 @@ Template.customfieldpop.onRendered(() => {
           url.includes("/depositcard")) {
           // customfield tempcode
           listType = "ltOrderLines";
+          if (!isNaN(currentID)) {
           templateObject.getChequeData(currentID);
+          }
         }
 
       }, 1500);
@@ -2254,4 +2274,4 @@ Template.customfieldpop.helpers({
   custfields: () => {
     return Template.instance().custfields.get();
   },
-}); 
+});

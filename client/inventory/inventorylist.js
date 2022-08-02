@@ -1859,7 +1859,7 @@ Template.inventorylist.events({
         let productName = $("#edtproductvs1name").val();
         if (productName == "") {
             // Bert.alert('<strong>Please provide product Name !</strong>', 'danger');
-            swal("Please provide product Name !", "", "info");
+            swal("Please provide the product name !", "", "info");
             e.preventDefault();
             return false;
         }

@@ -5579,7 +5579,7 @@ Template.chequecard.events({
         let tddmemo = $("#" + lineID + " .lineMemo").text();
         let tdamount = $("#" + lineID + " .colAmountExChange").val();
         let tdtaxrate = $("#" + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $("#" + lineID + " .lineTaxCode").val();
+        let tdtaxCode = $("#" + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
         let erpLineID = $("#" + lineID + " .lineAccountName").attr("lineid");
         if (tdaccount != "") {
           lineItemObjForm = {
@@ -5617,18 +5617,8 @@ Template.chequecard.events({
       var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
       var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
 
-      let saleDate =
-        saledateTime.getFullYear() +
-        "-" +
-        (saledateTime.getMonth() + 1) +
-        "-" +
-        saledateTime.getDate();
-      let dueDate =
-        duedateTime.getFullYear() +
-        "-" +
-        (duedateTime.getMonth() + 1) +
-        "-" +
-        duedateTime.getDate();
+      let saleDate = saledateTime.getFullYear() +"-" +(saledateTime.getMonth() + 1) +"-" +saledateTime.getDate();
+      let dueDate =duedateTime.getFullYear() +"-" +(duedateTime.getMonth() + 1) +"-" +duedateTime.getDate();
 
       let bankAccount = $("#sltBankAccountName").val();
       let poNumber = $("#ponumber").val();
@@ -5696,9 +5686,16 @@ Template.chequecard.events({
         };
       }
 
-      purchaseService
-        .saveChequeEx(objDetails)
-        .then(function (objDetails) {
+      if(splashLineArray.length > 0){
+
+      }else{
+          swal('Account name has not been selected!', '', 'warning');
+          $('.fullScreenSpin').css('display', 'none');
+          event.preventDefault();
+          return false;
+      };
+
+      purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
 
           const supplierID = $("#edtSupplierEmail").attr("supplierid");
           localStorage.setItem("check_acc", bankAccount);

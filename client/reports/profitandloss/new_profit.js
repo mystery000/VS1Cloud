@@ -685,8 +685,12 @@ Template.newprofitandloss.onRendered(function () {
     const profitLossLayoutEndpoint = profitLossLayoutApi.collection.findByName(
       profitLossLayoutApi.collectionNames.TProfitLossLayout
     );
+    // Fetch a default layout
+    // reportService.getProfitLossLayout();
+    // return false
 
-      return false
+    profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
+
     const profitLossLayoutEndResponse = await profitLossLayoutEndpoint.fetch();
     if (profitLossLayoutEndResponse.ok == true) {
       let profitLossLayouts = [];

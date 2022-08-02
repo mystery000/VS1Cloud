@@ -1840,7 +1840,9 @@ Template.vs1login.onRendered(function () {
                                                         .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                                         .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                                         .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
-
+                                                        if(dataReturnRes.ProcessLog.LicenseLevel != "Simple Start"){
+                                                          isExpenseClaimsLicence = true;
+                                                        };
                                                     let erpdbname = ERPIPAdderess + ',' + ERPdbName + ',' + ERPuserName + ',' + ERPpassword + ',' + ERPport;
                                                     let licenceOptions = dataReturnRes.ProcessLog.Modules.Modules;
                                                     $.each(licenceOptions, function (item, option) {
@@ -2510,7 +2512,9 @@ Template.vs1login.onRendered(function () {
                             .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                             .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                             .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
-
+                            if(dataReturnRes.ProcessLog.LicenseLevel != "Simple Start"){
+                              isExpenseClaimsLicence = true;
+                            };
                                 let erpdbname = ERPIPAdderess + ',' + ERPdbName + ',' + ERPuserName + ',' + ERPpassword + ',' + ERPport;
                                 let licenceOptions = dataReturnRes.ProcessLog.Modules.Modules;
                                 $.each(licenceOptions, function (item, option) {
@@ -3043,7 +3047,9 @@ Template.vs1login.onRendered(function () {
                                             .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                             .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                             .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
-
+                                              if(dataReturnRes.ProcessLog.LicenseLevel != "Simple Start"){
+                                                isExpenseClaimsLicence = true;
+                                              };
                                                 let erpdbname = ERPIPAdderess + ',' + ERPdbName + ',' + ERPuserName + ',' + ERPpassword + ',' + ERPport;
                                                 let licenceOptions = dataReturnRes.ProcessLog.Modules.Modules;
                                                 $.each(licenceOptions, function (item, option) {
@@ -3739,7 +3745,9 @@ Template.vs1login.onRendered(function () {
                                         .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                         .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                         .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
-
+                                        if(dataReturnRes.ProcessLog.LicenseLevel != "Simple Start"){
+                                          isExpenseClaimsLicence = true;
+                                        };
                                             let erpdbname = ERPIPAdderess + ',' + ERPdbName + ',' + ERPuserName + ',' + ERPpassword + ',' + ERPport;
                                             let licenceOptions = dataReturnRes.ProcessLog.Modules.Modules;
                                             $.each(licenceOptions, function (item, option) {
@@ -4473,7 +4481,9 @@ Template.vs1login.onRendered(function () {
                                     .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                     .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                     .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
-
+                                    if(dataReturnRes.ProcessLog.LicenseLevel != "Simple Start"){
+                                      isExpenseClaimsLicence = true;
+                                    };
                                         let erpdbname = ERPIPAdderess + ',' + ERPdbName + ',' + ERPuserName + ',' + ERPpassword + ',' + ERPport;
                                         let licenceOptions = dataReturnRes.ProcessLog.Modules.Modules;
                                         $.each(licenceOptions, function (item, option) {

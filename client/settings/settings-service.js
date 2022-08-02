@@ -133,7 +133,7 @@ export class TaxRateService extends BaseService {
 
     checkTaxRateByName(codeName) {
         let options = {
-            select: "[Code]='" + codeName + "'"
+            select: "[CodeName]='" + codeName + "'"
         };
         return this.getList(this.ERPObjects.TTaxCode, options);
     }
@@ -657,7 +657,7 @@ export class TaxRateService extends BaseService {
             };
             return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
          }
-        
+
          checkGroupByName(dataSearchName)
          {
             let options = {
@@ -665,14 +665,14 @@ export class TaxRateService extends BaseService {
               select: '[Groupdesc]="'+dataSearchName+'"'
             };
            return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
-        
+
          }
-        
+
          saveGroupType(data)
-        { 
-          
+        {
+
           return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
-        
+
         }
 
 }

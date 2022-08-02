@@ -1874,3 +1874,12 @@ authenticatedRoutes.route('/uomSettings', {
         });
     }
 });
+
+authenticatedRoutes.route('/mailchimpsettings', {
+  name: 'mailchimpSettings',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'mailchimpSettings'
+      });
+  }
+});
