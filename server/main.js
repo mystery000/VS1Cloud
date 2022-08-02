@@ -168,10 +168,8 @@ Meteor.startup(() => {
             headers: postHeaders,
         }, (error, result) => {
             if (error) {
-                console.log(error);
-                cb(error, null);
+                cb(null, error);
             } else {
-                console.log(result);
                 cb(null, result);
             }
         });
@@ -193,9 +191,11 @@ Meteor.startup(() => {
             this.unblock();
             return Meteor.wrapAsync(callYodleeAccount)(token, accountId);
         },
-        'getOcrResultFromVerifi': function(imageData, fileName) {
+        'getOcrResultFromVerifi': async function(imageData, fileName) {
             this.unblock();
-            return Meteor.wrapAsync(callVeryfiApi)(imageData, fileName);
+            const generateOcrResult = await Meteor.wrapAsync(callVeryfiApi)(imageData, fileName);
+            return generateOcrResult;
+            //Meteor.wrapAsync(callVeryfiApi)(imageData, fileName);
         },
         'magentoAWSProfileRenewal': function() {
             return mageClient.get('/V1/awSarp2/profile/search?', $jsonProfile)
