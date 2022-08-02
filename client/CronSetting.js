@@ -136,8 +136,11 @@ export default class CronSetting {
 
         text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
       } else {
-        text += " every " + this.convertDayNumberToString(this.every) + " day";
+        // TODO: We must shedule throught database, we cannot schedule by using the parser
+        text += " every " + this.every + " day";
         // text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
+
+        
       }
 
       // text += " also at " + (
