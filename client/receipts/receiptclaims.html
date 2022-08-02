@@ -304,6 +304,10 @@
                                 <th class="th colAccountID hiddenColumn"></th>
                                 <th class="th colEmployeeID hiddenColumn"></th>
                                 <th class="th colEmployeeName hiddenColumn"></th>
+                                <th class="th colTaxCode hiddenColumn"></th>
+                                <th class="th colTaxAmount hiddenColumn"></th>
+                                <th class="th colAmountEx hiddenColumn"></th>
+                                <th class="th colAmountInc hiddenColumn"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -327,6 +331,10 @@
                                         <td contenteditable="false" class="hiddenColumn colAccountID">{{item.AccountId}}</td>
                                         <td contenteditable="false" class="hiddenColumn colEmployeeID">{{item.EmployeeID}}</td>
                                         <td contenteditable="false" class="hiddenColumn colEmployeeName">{{item.EmployeeName}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colTaxCode">{{item.TaxCode}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colTaxAmount">{{item.Tax}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colAmountEx">{{item.AmountEx}}</td>
+                                        <td contenteditable="false" class="hiddenColumn colAmountInc">{{item.AmountInc}}</td>
                                     </tr>
                                 {{/each}}
                             {{/if}}
@@ -425,7 +433,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
-                                        <label>Chart of Accounts</label>
+                                        <label>Category</label>
                                         <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                     </div>
                                 </div>
@@ -1013,7 +1021,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label>Chart of Accounts</label>
+                                                <label>Category</label>
                                                 <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </div>
                                         </div>
@@ -1141,7 +1149,7 @@
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group">
-                                                <label>Chart of Accounts</label>
+                                                <label>Category</label>
                                                 <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </div>
                                         </div>
@@ -1363,6 +1371,56 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
         {{> addaccountpop}}
+    </div>
+
+    <div class="modal fade categoryListModal" role="dialog" tabindex="-1" id="categoryListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Category List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                <div class="card-body p-1 rounded" >
+                    <div class="table-responsive">
+                        <style>
+                            .thCategory {
+                                width: 20% !important;
+                            }
+                            .thAccountName {
+                                width: 20% !important;
+                            }
+                            .thDescription {
+                                width: 40% !important;
+                            }
+                            .thAccountNo {
+                                width: 10% !important;
+                            }
+                            .thTaxRate {
+                                width: 10% !important;
+                            }
+                        </style>
+                        <table id="tblCategory" style="width:100%" class="table table-striped table-bordered tblCategory">
+                            <thead>
+                            <tr class="dnd-moved">
+                                <th class="thCategory">Category</th>
+                                <th class="thAccountName">Account Name</th>
+                                <th class="thDescription">Description</th>
+                                <th class="thAccountNo">Account No</th>
+                                <th class="thTaxRate" style="text-align: left!important;">Tax Rate</th>
+                                <th class="thAccountID hiddenColumn">Account ID</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+        </div>
+    </div>
     </div>
 
     <!-- Currency Select Standard Modals -->

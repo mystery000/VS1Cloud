@@ -168,10 +168,8 @@ Meteor.startup(() => {
             headers: postHeaders,
         }, (error, result) => {
             if (error) {
-                console.log(error);
                 cb(error, null);
             } else {
-                console.log(result);
                 cb(null, result);
             }
         });

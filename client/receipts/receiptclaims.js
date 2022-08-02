@@ -86,8 +86,20 @@ Template.receiptsoverview.onRendered(function() {
         setCurrencySelect(e);
     });
     $('.chart-accounts').on('click', function(e, li) {
-        templateObject.setAccountSelect(e);
+        templateObject.setCategoryAccountList();
     });
+    templateObject.setCategoryAccountList = function() {
+        $('#categoryListModal').modal('toggle');
+        setTimeout(function() {
+            $('#tblCategory_filter .form-control-sm').focus();
+            $('#tblCategory_filter .form-control-sm').val('');
+            $('#tblCategory_filter .form-control-sm').trigger("input");
+            const datatable = $('#tblCategory').DataTable();
+            datatable.draw();
+            $('#tblCategory_filter .form-control-sm').trigger("input");
+        }, 500);
+    };
+
     $('.transactionTypes').on('click', function(e, li) {
         setPaymentMethodSelect(e);
     });
@@ -2570,6 +2582,10 @@ Template.receiptsoverview.events({
                     let accountID = $(this).find(".colAccountID").text();
                     let employeeID = $(this).find(".colEmployeeID").text();
                     let employeeName = $(this).find(".colEmployeeName").text();
+                    let taxCode = $(this).find(".colTaxCode").text();
+                    let taxAmount = $(this).find(".colTaxAmount").text();
+                    let amountEx = $(this).find(".colAmountEx").text();
+                    let amountInc = $(this).find(".colAmountInc").text();
                     let lineItemsForm = [];
                     let lineItemObjForm = {};
                     lineItemObjForm = {
@@ -2579,7 +2595,9 @@ Template.receiptsoverview.events({
                             AccountName: accountName || "",
                             ProductDescription: description || "",
                             LineCost: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
-                            // LineTaxCode: tdtaxCode || "",
+                            LineTaxCode: taxCode || "",
+                            TotalLineAmount: Number(amountEx.replace(/[^0-9.-]+/g, "")) || 0,
+                            TotalLineAmountInc: Number(amountInc.replace(/[^0-9.-]+/g, "")) || 0,
                         },
                     };
                     lineItemsForm.push(lineItemObjForm);
@@ -2589,7 +2607,8 @@ Template.receiptsoverview.events({
                             // ID: 0,
                             SupplierID: supplierID || 0,
                             SupplierName: supplierName,
-                            ClientName: employeeName || "",
+                            // ClientName: employeeName || "",
+                            ClientName: supplierName || "",
                             // ForeignExchangeCode: currencyCode,
                             Lines: lineItemsForm,
                             // OrderTo: billingAddress,
@@ -2608,7 +2627,27 @@ Template.receiptsoverview.events({
                         },
                     };
 
-                    purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
+                    console.log(JSON.stringify(objDetails));
+
+                    purchaseService.saveChequeEx(objDetails).then(function (result) {
+                        if (result.fields.ID) {
+                            swal({
+                                title: 'Success',
+                                text: 'Make new cheque Successfully',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Done'
+                            }).then((result) => {
+                                if (result.value) {
+
+                                } else if (result.dismiss == 'cancel') {
+
+                                }
+                            });
+                        } else {
+
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
                     }).catch(function (err) {
                         swal({
                             title: 'Oooops...',
@@ -2626,7 +2665,7 @@ Template.receiptsoverview.events({
                         $('.fullScreenSpin').css('display', 'none');
                     })
                 } else {
-                    if (supplierName == "") {
+                    if (checked == "on" && supplierName == "") {
                         let errText = "Merchant is empty.";
                         swal({
                             title: 'Oooops...',
@@ -2644,7 +2683,7 @@ Template.receiptsoverview.events({
                     }
                     $('.fullScreenSpin').css('display', 'none');
                 }
-            })
+            });
         } else {
             let errText = "Please select receipt claim line.";
             swal({
