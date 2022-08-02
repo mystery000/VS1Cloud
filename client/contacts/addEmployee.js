@@ -4046,7 +4046,9 @@ Template.employeescard.onRendered(function () {
                     data.tpayslips[i].fields.Period || '',
                     data.tpayslips[i].fields.PaymentDate || '',
                     data.tpayslips[i].fields.TotalPay || '',
-                    '<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>',
+                    `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
+                    <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip"><i class="fas fa-trash"></i></button>
+                    `,
                 ];
 
                 splashArrayPaySlipList.push(dataListAllowance);
@@ -4121,7 +4123,9 @@ Template.employeescard.onRendered(function () {
                                             data.tpayslips[i].fields.Period || '',
                                             data.tpayslips[i].fields.PaymentDate || '',
                                             data.tpayslips[i].fields.TotalPay || '',
-                                            '<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>',
+                                            `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
+                                            <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id=`+ data.tpayslips[i].fields.ID +`><i class="fas fa-trash"></i></button>
+                                            `,
                                         ];
 
                                         splashArrayPaySlipList.push(dataListAllowance);
@@ -9392,6 +9396,14 @@ Template.employeescard.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
+  "click #btnDeletePayslip": function (e){
+    let ID=$(".sorting_1").text();
+    let deleteID = $(e.target).data('id');
+
+    console.log('id', ID);
+    console.log('deleteID', deleteID);
+    console.log('e', e);
+  }
 });
 
 Template.employeescard.helpers({
