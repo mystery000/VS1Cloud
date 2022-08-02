@@ -59,14 +59,12 @@ Template.assignLeaveTypePop.onCreated(function () {
                                 return item;
                             }
                         });
-                        console.log("obj", dataObject);
 
 
                         
                         if( tAssignteavetype.length > 0 ){
                             
                             let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
-                            console.log("leaveCalcMethod1", leaveCalcMethod);
 
                             $('#leaveCalcMethodSelect').val(leaveCalcMethod)
                             switch(leaveCalcMethod){
@@ -134,7 +132,6 @@ Template.assignLeaveTypePop.onCreated(function () {
     $(document).on("click", "#tblAssignLeaveTypes tbody tr", function (e) {
         var table = $(this);
         let name = table.find(".colALTypeLeave").text()||'';
-        console.log(name)
         let ID = table.find(".colALTypeID").text()||'';
         let searchFilterID = templateObject.currentDrpDownID.get()
         $('#' + searchFilterID).val(name);
