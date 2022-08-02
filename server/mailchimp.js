@@ -13,7 +13,7 @@ Meteor.startup(function () {
 
 Meteor.methods({
 
-  MCNewUser: function (email, firstname = '') {
+  createListMember: function (email, firstname = '') {
 
     let data = {
       "email_address": email,
@@ -21,27 +21,25 @@ Meteor.methods({
       "merge_fields": { "FNAME": firstname }
     };
 
-    MCApi('POST', listAurl, data);
+    Meteor.call('MCApi', 'POST', listAurl, data, function (error, result) {});
   },
 
   //this is our API function call
   MCApi: function (method, apiUrl, data) {
 
-    let options = { 'auth': apikey };
+    let options = { 'auth': 'xAuthorization:' + apikey };
     options['data'] = data || '';
-
-    // try…catch allows you to handle errors properly
+ 
     try {
       var response = HTTP.call(method, apiUrl, options).data;
     } catch (error) {
       console.log(error);
       Meteor.defer(function () {
-        var text = JSON.stringify(error);
         Email.send({
           from: data.email_address,
           to: 'bluestars088@gmail.com',
           subject: 'API Error encountered - Mailchimp',
-          text: text
+          text: error
         });
       });
 
