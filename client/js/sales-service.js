@@ -626,4 +626,31 @@ export class SalesBoardService extends BaseService {
       return this.getList(this.ERPObjects.TCustomerPaymentLine, options);
   }
 
+  getLastQuoteID() {
+    let options = {
+      PropertyList: "ID",
+      orderby:'"SaleID desc"',
+      LimitCount:'"1"',
+    };
+    return this.getList(this.ERPObjects.TQuote, options);
+  }
+
+  getLastInvoiceID() {
+    let options = {
+      PropertyList: "ID",
+      orderby:'"SaleID desc"',
+      LimitCount:'"1"',
+    };
+    return this.getList(this.ERPObjects.TInvoice, options);
+  }
+
+  getLastSOID() {
+    let options = {
+      PropertyList: "ID",
+      orderby:'"SaleID desc"',
+      LimitCount:'"1"',
+    };
+    return this.getList(this.ERPObjects.TSalesOrder, options);
+  }
+
 }

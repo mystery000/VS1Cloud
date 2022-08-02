@@ -134,6 +134,31 @@ Template.purchaseordercard.onRendered(() => {
    templateObject.getTemplateInfo();
 
 
+   templateObject.getLastPOData = async function() {
+       let lastBankAccount = "Bank";
+       let lastDepartment = defaultDept || "";
+       purchaseService.getLastPOID().then(function(data) {
+         let latestPOId;
+           if (data.tpurchaseorder.length > 0) {
+               lastPO = data.tpurchaseorder[data.tpurchaseorder.length - 1]
+               latestPOId = (lastPO.Id);
+           } else {
+             latestPOId = 0;
+           }
+           newPOId = (latestPOId + 1);
+           setTimeout(function() {
+               $('#sltDept').val(lastDepartment);
+               if (FlowRouter.current().queryParams.id) {
+
+               }else{
+               $(".heading").html("New Purchase Order " +newPOId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
+               };
+           }, 50);
+       }).catch(function(err) {
+           $('#sltDept').val(lastDepartment);
+       });
+   };
+
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
 
         title = $(this).parent().attr("data-id");
@@ -2657,6 +2682,7 @@ Template.purchaseordercard.onRendered(() => {
         }
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
+            templateObject.getLastPOData();
         }, 200);
         templateObject.purchaseorderrecord.set(purchaseorderrecord);
         if (templateObject.purchaseorderrecord.get()) {

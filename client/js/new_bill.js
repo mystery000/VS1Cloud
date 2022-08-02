@@ -110,7 +110,7 @@ Template.billcard.onRendered(() => {
 
     templateObject.getLastBillData = async function() {
         let lastBankAccount = "Bank";
-        let lastDepartment = Session.get('department') || "";
+        let lastDepartment = defaultDept || "";
         purchaseService.getLastBillID().then(function(data) {
           let latestBillId;
             if (data.tbill.length > 0) {
