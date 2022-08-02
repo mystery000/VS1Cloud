@@ -2626,7 +2626,6 @@ Template.receiptsoverview.events({
                         },
                     };
 
-                    console.log(JSON.stringify(objDetails));
 
                     purchaseService.saveChequeEx(objDetails).then(function (result) {
                         if (result.fields.ID) {
