@@ -177,9 +177,9 @@ export class ReportService extends BaseService {
 
   getProfitLossLayout() {
     let options = {
-      LayoutToUse: "'1'"
+      LayoutToUse: "'3'"
     };
-    return this.getList('TProfitLossLayout/35', options);
+    return this.getList('TProfitLossLayout', options);
   }
 
   getAgedPayableDetailsData(dateFrom, dateTo, ignoreDate) {

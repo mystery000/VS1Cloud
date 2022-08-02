@@ -1123,7 +1123,7 @@ Template.supplierpaymentcard.onRendered(() => {
   let newPaymentId = "";
   templateObject.getLastPaymentData = function () {
     let lastBankAccount = "Bank";
-    let lastDepartment = Session.get("department") || "";
+    let lastDepartment = Session.get('department') ||defaultDept|| "";
     paymentService
       .getAllSupplierPaymentData1()
       .then(function (data) {

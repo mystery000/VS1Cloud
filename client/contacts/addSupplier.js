@@ -53,20 +53,6 @@ Template.supplierscard.onRendered(function () {
 
     let purchasetaxcode = '';
     templateObject.defaultpurchasetaxcode.set(loggedTaxCodeSalesInc);
-    setTimeout(function () {
-        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'defaulttax', function(error, result){
-            if(error){
-                purchasetaxcode =  loggedTaxCodeSalesInc;
-                templateObject.defaultpurchasetaxcode.set(loggedTaxCodeSalesInc);
-            }else{
-                if(result){
-                    purchasetaxcode = result.customFields[0].taxvalue || loggedTaxCodePurchaseInc;
-                    templateObject.defaultpurchasetaxcode.set(purchasetaxcode);
-                }
-
-            }
-        });
-    }, 500);
 
     // $(document).ready(function () {
     //     history.pushState(null, document.title, location.href);
@@ -118,27 +104,6 @@ Template.supplierscard.onRendered(function () {
         });
     }, 100);
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblTransactionlist', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
     function MakeNegative() {
         $('td').each(function(){
             if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
@@ -416,6 +381,14 @@ Template.supplierscard.onRendered(function () {
             terms.push(data.ttermsvs1[i].TermsName);
             if(data.ttermsvs1[i].isPurchasedefault === true){
                 templateObject.defaultpurchaseterm.set(data.ttermsvs1[i].TermsName);
+                Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
+                if(JSON.stringify(currentId) != '{}'){
+                  if (currentId.id == "undefined") {
+                   $('#sltTerms').val(data.ttermsvs1[i].TermsName);
+                  }
+                }else{
+                   $('#sltTerms').val(data.ttermsvs1[i].TermsName);
+                }
             }
         }
         terms = _.sortBy(terms);
@@ -626,7 +599,7 @@ Template.supplierscard.onRendered(function () {
         //templateObject.getAllProductRecentTransactions(data.fields.ClientName);
         $('.fullScreenSpin').css('display','none');
     }
-    function setInitialForEmptyCurrentID() {
+    async function setInitialForEmptyCurrentID() {
         let lineItemObj = {
             id : '',
             lid : 'Add Supplier',
@@ -637,6 +610,7 @@ Template.supplierscard.onRendered(function () {
             middlename : '',
             lastname : '',
             tfn: '',
+            terms: loggedTermsPurchase|| '',
             phone : '',
             mobile:  '',
             fax: '',
@@ -660,13 +634,14 @@ Template.supplierscard.onRendered(function () {
             $('.supplierTab').trigger('click');
             $('.fullScreenSpin').css('display','none');
         }, 100);
-        setTimeout(function () {
-            $('#sltTerms').val(templateObject.defaultpurchaseterm.get()||'');
 
-        }, 2000);
+        await templateObject.getTermsList();
+        setTimeout(function () {
+            $('#sltTerms').val(lineItemObj.terms);
+        },3000);
         $('.fullScreenSpin').css('display','none');
     }
-
+    if(JSON.stringify(currentId) != '{}'){
     if(currentId.id === "undefined" || currentId.name === "undefined"){
         setInitialForEmptyCurrentID();
     } else {
@@ -680,7 +655,9 @@ Template.supplierscard.onRendered(function () {
             setInitialForEmptyCurrentID();
         }
     }
-
+  }else{
+    setInitialForEmptyCurrentID();
+  }
     templateObject.getSuppliersList = function () {
         getVS1Data('TSupplierVS1').then(function (dataObject) {
             if(dataObject.length === 0){
@@ -1159,6 +1136,35 @@ Template.supplierscard.events({
         let currentEmployee = getemp_id[getemp_id.length - 1];
         let objDetails = '';
         let uploadedItems = templateObject.uploadedFiles.get();
+
+        if (company == '') {
+            swal('Please provide the compamy name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+        if (firstname == '') {
+            swal('Please provide the first name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+
+        if (lastname == '') {
+            swal('Please provide the last name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+        if (sltTermsName == '') {
+            swal("Terms has not been selected!", "", "warning");
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
 
         if(getemp_id[1]){
             currentEmployee = parseInt(currentEmployee);

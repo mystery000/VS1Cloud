@@ -374,13 +374,13 @@ Template.leadscard.onRendered(function () {
     }
 
     templateObject.getAllCrm = function (leadName) {
-        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+        let employeeID = Session.get("mySessionEmployeeLoggedID");
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
             employeeID = url.searchParams.get("id");
         }
-        
+
         crmService.getAllTaskList(employeeID).then(function (dataObject) {
             if (dataObject.tprojecttasks.length === 0) {
                 sideBarService.getTProjectTasks().then(function (data) {
@@ -685,6 +685,29 @@ Template.leadscard.events({
         let bcountry = '';
         let bsuburb = '';
         let isSupplier = !!$('#chkSameAsSupplier').is(':checked');
+
+        if (employeeName == '') {
+            swal('Please provide the lead name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+        if (firstname == '') {
+            swal('Please provide the first name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+
+        if (lastname == '') {
+            swal('Please provide the last name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
         if ($('#chkSameAsShipping2').is(':checked')) {
             bstreetAddress = streetAddress;
             bcity = city;
@@ -1260,7 +1283,7 @@ Template.leadscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/crmoverview?leadid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnEmail': function (event) {
@@ -1270,7 +1293,7 @@ Template.leadscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/crmoverview?leadid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnAppointment': function (event) {
@@ -1280,7 +1303,7 @@ Template.leadscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/appointments?leadid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnQuote': async function (event) {

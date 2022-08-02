@@ -162,6 +162,31 @@ Template.new_salesorder.onRendered(() => {
 
    templateObject.getTemplateInfo();
 
+   templateObject.getLastSOData = async function() {
+       let lastBankAccount = "Bank";
+       let lastDepartment = defaultDept || "";
+       salesService.getLastSOID().then(function(data) {
+         let latestSOId;
+           if (data.tsalesorder.length > 0) {
+               lastSO = data.tsalesorder[data.tsalesorder.length - 1]
+               latestSOId = (lastSO.Id);
+           } else {
+             latestSOId = 0;
+           }
+           newSOId = (latestSOId + 1);
+           setTimeout(function() {
+               $('#sltDept').val(lastDepartment);
+               if (FlowRouter.current().queryParams.id) {
+
+               }else{
+               $(".heading").html("New Sales Order " +newSOId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+               };
+           }, 50);
+       }).catch(function(err) {
+           $('#sltDept').val(lastDepartment);
+       });
+   };
+
     templateObject.generateInvoiceData = function (template_title,number) {
         object_invoce = [];
         switch (template_title) {
@@ -223,7 +248,7 @@ Template.new_salesorder.onRendered(() => {
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let taxamount = $('#'+ lineID+" .lineTaxAmount").text();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
 
             array_data.push([
@@ -461,7 +486,7 @@ Template.new_salesorder.onRendered(() => {
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let taxamount = $('#'+ lineID+" .lineTaxAmount").text();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .colAmountEx").text();
 
                 array_data.push([
@@ -1208,18 +1233,18 @@ Template.new_salesorder.onRendered(() => {
     });
     $('.fullScreenSpin').css('display', 'inline-block');
 
-    templateObject.getAllClients = function() {
-        getVS1Data('TCustomerVS1').then(function(dataObject) {
+    templateObject.getAllClients = function () {
+        getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
-                clientsService.getClientVS1().then(function(data) {
-                    setClientVS1(data);
-                });
+            sideBarService.getAllCustomersDataVS1("All").then(function (data) {
+                setClientVS1(data);
+            });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 setClientVS1(data);
             }
-        }).catch(function(err) {
-            clientsService.getClientVS1().then(function(data) {
+        }).catch(function (err) {
+            sideBarService.getAllCustomersDataVS1("All").then(function (data) {
                 setClientVS1(data);
             });
         });
@@ -1227,23 +1252,23 @@ Template.new_salesorder.onRendered(() => {
     function setClientVS1(data){
         for (let i in data.tcustomervs1) {
             if (data.tcustomervs1.hasOwnProperty(i)) {
-                let customerrecordObj = {
-                    customerid: data.tcustomervs1[i].Id || ' ',
-                    firstname: data.tcustomervs1[i].FirstName || ' ',
-                    lastname: data.tcustomervs1[i].LastName || ' ',
-                    customername: data.tcustomervs1[i].ClientName || ' ',
-                    customeremail: data.tcustomervs1[i].Email || ' ',
-                    street: data.tcustomervs1[i].Street || ' ',
-                    street2: data.tcustomervs1[i].Street2 || ' ',
-                    street3: data.tcustomervs1[i].Street3 || ' ',
-                    suburb: data.tcustomervs1[i].Suburb || ' ',
-                    statecode: data.tcustomervs1[i].State + ' ' + data.tcustomervs1[i].Postcode || ' ',
-                    country: data.tcustomervs1[i].Country || ' ',
-                    termsName: data.tcustomervs1[i].TermsName || '',
-                    taxCode: data.tcustomervs1[i].TaxCodeName || 'E',
-                    clienttypename: data.tcustomervs1[i].ClientTypeName || 'Default',
-                    discount: data.tcustomervs1[i].Discount || 0
-                };
+              let customerrecordObj = {
+                  customerid: data.tcustomervs1[i].fields.ID || ' ',
+                  firstname: data.tcustomervs1[i].fields.FirstName || ' ',
+                  lastname: data.tcustomervs1[i].fields.LastName || ' ',
+                  customername: data.tcustomervs1[i].fields.ClientName || ' ',
+                  customeremail: data.tcustomervs1[i].fields.Email || ' ',
+                  street: data.tcustomervs1[i].fields.Street || ' ',
+                  street2: data.tcustomervs1[i].fields.Street2 || ' ',
+                  street3: data.tcustomervs1[i].fields.Street3 || ' ',
+                  suburb: data.tcustomervs1[i].fields.Suburb || ' ',
+                  statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
+                  country: data.tcustomervs1[i].fields.Country || ' ',
+                  termsName: data.tcustomervs1[i].fields.TermsName || '',
+                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                  clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
+                  discount: data.tcustomervs1[i].fields.Discount || 0
+              };
                 clientList.push(customerrecordObj);
             }
         }
@@ -3891,6 +3916,7 @@ Template.new_salesorder.onRendered(() => {
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
             $('#sltTerms').val(salesorderrecord.termsName);
+            templateObject.getLastSOData();
         }, 200);
 
         templateObject.salesorderrecord.set(salesorderrecord);
@@ -4151,11 +4177,11 @@ Template.new_salesorder.onRendered(() => {
     });
 
     /* On clik Inventory Line */
-    $(document).on("click", "#tblInventory tbody tr", function(e) {
+    $(document).on("click", "#tblInventory tbody tr", async function(e) {
         $(".colProductName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
-        let taxcodeList = templateObject.taxraterecords.get();
-        let customers = templateObject.clientrecords.get();
+        let taxcodeList = await templateObject.taxraterecords.get();
+        let customers = await templateObject.clientrecords.get();
         let productExtraSell = templateObject.productextrasellrecords.get();
 
 
@@ -5555,7 +5581,7 @@ Template.new_salesorder.onRendered(() => {
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let taxamount = $('#'+ lineID+" .lineTaxAmount").text();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
 
             array_data.push([
@@ -5791,7 +5817,7 @@ Template.new_salesorder.onRendered(() => {
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let taxamount = $('#'+ lineID+" .lineTaxAmount").text();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .colAmountEx").text();
 
                     array_data.push([
@@ -6000,7 +6026,7 @@ Template.new_salesorder.onRendered(() => {
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 lineItemObj = {
@@ -6706,6 +6732,23 @@ Template.new_salesorder.onRendered(function() {
       let customData = {};
       let customFieldCount = 14;
 
+      let reset_data = [
+        { label: 'Product Name', class: 'colProductName', active: true },
+        { label: 'Description', class: 'colDescription', active: true },
+        { label: 'Qty', class: 'colQty', active: true },
+        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+        { label: 'Cost Price', class: 'colCostPrice', active: false },
+        { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+        { label: 'Tax Rate', class: 'colTaxRate', active: false },
+        { label: 'Tax Code', class: 'colTaxCode', active: true },
+        { label: 'Amount (Ex)', class: 'colAmount', active: true },
+        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+        { label: 'Disc %', class: 'colDiscount', active: true },
+        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+      ];
+
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
           customData = {
@@ -6719,6 +6762,20 @@ Template.new_salesorder.onRendered(function() {
           };
           custFields.push(customData);
         }
+      }
+
+      let remainder = customFieldCount - data.tcustomfieldlist.length;
+      for (let r = 0; r < remainder; r++) {
+        customData = {
+          active: reset_data[data.tcustomfieldlist.length + r ].active,
+          id: 0,
+          custfieldlabel: reset_data[data.tcustomfieldlist.length + r ].label,
+          datatype: "",
+          isempty: false,
+          iscombo: false,
+          dropdown: null,
+        };
+        custFields.push(customData);
       }
 
       if (custFields.length < customFieldCount) {
@@ -6752,10 +6809,17 @@ Template.new_salesorder.onRendered(function() {
                     });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
-                    initCustomFieldDisplaySettings(data, listType);
-                    sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                    if(data.tcustomfieldlist.length == 0){
+                      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                        initCustomFieldDisplaySettings(data, listType);
                         addVS1Data("TltSaleslines", JSON.stringify(data));
-                    });
+                      });
+                    } else {
+                      initCustomFieldDisplaySettings(data, listType);
+                      sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                        addVS1Data("TltSaleslines", JSON.stringify(data));
+                      });
+                    }
                 }
             })
 
@@ -8522,7 +8586,7 @@ Template.new_salesorder.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {
@@ -9779,7 +9843,7 @@ Template.new_salesorder.events({
                     let tdQty = $('#' + lineID + " .lineQty").val();
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                     lineItemObj = {
@@ -9837,7 +9901,7 @@ Template.new_salesorder.events({
                         let tdQty = $('#' + lineID + " .lineQty").val();
                         let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                         let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                         if (tdproduct != "") {
@@ -10525,7 +10589,7 @@ Template.new_salesorder.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {
@@ -10785,7 +10849,7 @@ Template.new_salesorder.events({
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {

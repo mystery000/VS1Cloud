@@ -66,28 +66,7 @@ Template.creditlist.onRendered(function() {
     if(FlowRouter.current().queryParams.success){
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblcreditlist', function(error, result){
-        if(error){
 
-        }else{
-            if(result){
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function(){
@@ -98,6 +77,12 @@ Template.creditlist.onRendered(function() {
             if ($(this).text() == "Full") $(this).addClass('text-fullyPaid');
             if ($(this).text() == "Part") $(this).addClass('text-partialPaid');
             if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
+            if ($(this).text() == ""){
+              $(this).removeClass('text-deleted');
+              $(this).removeClass('text-fullyPaid');
+              $(this).removeClass('text-partialPaid');
+              $(this).removeClass('text-reconciled');
+            }
         });
     };
 

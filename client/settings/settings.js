@@ -102,7 +102,7 @@ Template.settings.events({
         FlowRouter.go('/uomSettings');
     },
     'click .btnEDIIntegrations': function(event) {
-        FlowRouter.go('/settings/edi-integrations');
+        FlowRouter.go('/edi-integrations');
     },
     'click .btnMailchimp': function (event) {
       FlowRouter.go('/mailchimpSettings');

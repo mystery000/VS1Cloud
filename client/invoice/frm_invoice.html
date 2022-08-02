@@ -78,7 +78,7 @@
         {{#if invoicerecord}}
             <form>
                 <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-                    <h2 style="margin: 16px;margin-bottom: 0px;">
+                    <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
                         {{invoicerecord.lid}}
                         <a class="btnSettings" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
                         <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
@@ -511,7 +511,7 @@
                             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                                 <div class="formgoup">
                                     <div class="form-group"><label>Customer</label>
-                                        <select type="search" class="form-control" id="edtCustomerName" name="edtCustomerName" custid=" " style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        <select type="search" class="form-control" id="edtCustomerName" name="edtCustomerName" custid=" " custtaxcode=" " style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                         </select>
                                     </div>
                                     <div>
@@ -1148,7 +1148,7 @@
                                                                     <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[11].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[14].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkUnits" type="checkbox" id="formCheck-14" checked="{{displayfields.[14].active}}">
@@ -1380,7 +1380,7 @@
                                     </th>
 
                                     <th class="th colUOM {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
-                                    style="width: 95px; text-align: left!important;">{{#if displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Units{{/if}}</th> 
+                                    style="width: 95px; text-align: left!important;">{{#if displayfields}}{{displayfields.[14].custfieldlabel}}{{else}}Units{{/if}}</th>
                                     <th class="th" style="width: 25px;"></th>
                                   </tr>
                                 </thead>
@@ -1438,7 +1438,7 @@
 
                                       <td contenteditable="false"
                                         class="lineUOM colUOM pointer {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
-                                        style="text-align: right!important;cursor: pointer;"><input class="es-input highlightSelect colUOM lineUOM" type="search" value="{{item.uom}}"></td>
+                                        style="text-align: right!important;cursor: pointer;"><input class="es-input highlightSelect colUOM lineUOM" type="search" value="{{item.UnitOfMeasure}}"></td>
                                       <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
                                               class="fa fa-remove"></i></button></span></td>
                                     </tr>

@@ -1081,21 +1081,66 @@ Template.reportsAccountantSettings.events({
         });
 
     },
-    'click .btnSaveDept': function () {
+    'click .btnSaveAccountant': function () {
         $('.fullScreenSpin').css('display','inline-block');
         let taxRateService = new TaxRateService();
-        let deptID = $('#edtDepartmentID').val();
-        //let headerDept = $('#sltDepartment').val();
-        let deptName = $('#edtDeptName').val();
-        if (deptName === ''){
-        swal('Department name cannot be blank!', '', 'warning');
-        $('.fullScreenSpin').css('display','none');
-        e.preventDefault();
+        let accountantID = $('#edtAccountantID').val();
+        let firstName = $('#edtFirstName').val();
+        let lastName = $('#edtLastName').val();
+        let companyName = $('#edtCompanyName').val();
+        let address = $('#edtAddress').val();
+        let docName = $('#edtDocName').val();
+        let townCity = $('#edtTownCity').val();
+        let postalZip = $('#edtPostalZip').val();
+        let stateRegion = $('#edtStateRegion').val();
+        let country = $('#edtCountry').val();
+        
+        if (firstName === ''){
+            swal('First name cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
+        }
+        else if(lastName === ''){
+            swal('Last name cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
+        }
+        else if(companyName === ''){
+            swal('Company name cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
+        }
+        else if(address === ''){
+            swal('Address cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
+        }
+        else if(docName === ''){
+            swal('Document name cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
+        }
+        else if(townCity === ''){
+            swal('Town / City cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
+        }
+        else if(postalZip === ''){
+            swal('Postal / Zip cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
+        }
+        else if(stateRegion === ''){
+            swal('State / Region cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
+        }
+        else if(country === ''){
+            swal('Country cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            e.preventDefault();
         }
 
-        let deptDesc = $('#edtDeptDesc').val();
-        let siteCode = $('#edtSiteCode').val();
-        let checkDeptID ='';
         let objDetails = '';
         let objStSDetails = null;
 
@@ -1118,31 +1163,66 @@ Template.reportsAccountantSettings.events({
             }
         }
 
-        if (deptName === ''){
-            Bert.alert('<strong>WARNING:</strong> Department Name cannot be blank!', 'warning');
+        if (firstName === ''){
+            Bert.alert('<strong>WARNING:</strong> First Name cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+        else if (lastName === ''){
+            Bert.alert('<strong>WARNING:</strong> Last Name cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+        else if (companyName === ''){
+            Bert.alert('<strong>WARNING:</strong> Company Name cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+        else if (address === ''){
+            Bert.alert('<strong>WARNING:</strong> Address cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+        else if (docName === ''){
+            Bert.alert('<strong>WARNING:</strong> Document Name cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+        else if (townCity === ''){
+            Bert.alert('<strong>WARNING:</strong> Town / City cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+        else if (postalZip === ''){
+            Bert.alert('<strong>WARNING:</strong> Postal / Zip cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+        else if (stateRegion === ''){
+            Bert.alert('<strong>WARNING:</strong> State / Region cannot be blank!', 'warning');
+            e.preventDefault();
+        }
+        else if (country === ''){
+            Bert.alert('<strong>WARNING:</strong> Country cannot be blank!', 'warning');
             e.preventDefault();
         }
 
-        if(deptID == ""){
-
-            taxRateService.checkDepartmentByName(deptName).then(function (data) {
-                deptID = data.tdeptclass[0].Id;
+        if(accountantID == ""){
+            taxRateService.checkAccountantByName(docName).then(function (data) {
+                accountantID = data.tdeptclass[0].Id;
                 objDetails = {
-                    type: "TDeptClass",
+                    type: "TReportsAccountantsCategory",
                     fields: {
-                        ID: parseInt(deptID)||0,
+                        ID: parseInt(accountantID)||0,
                         Active: true,
-                        //DeptClassGroup: headerDept,
-                        //DeptClassName: deptName,
-                        Description: deptDesc,
-                        SiteCode: siteCode,
-                        StSClass: objStSDetails
+                        FirstName: firstName,
+                        LastName: lastName,
+                        CompanyName: companyName,
+                        Address: address,
+                        DocName: docName,
+                        TownCity: townCity,
+                        PostalZip: postalZip,
+                        StateRegion: stateRegion,
+                        Country: country,
                     }
                 };
 
-                taxRateService.saveDepartment(objDetails).then(function (objDetails) {
-                  sideBarService.getDepartment().then(function(dataReload) {
-                      addVS1Data('TDeptClass',JSON.stringify(dataReload)).then(function (datareturn) {
+                taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
+                  sideBarService.getAccountantCategory().then(function(dataReload) {
+                      addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
                       location.reload(true);
                       }).catch(function (err) {
                         location.reload(true);
@@ -1169,20 +1249,26 @@ Template.reportsAccountantSettings.events({
 
             }).catch(function (err) {
                 objDetails = {
-                    type: "TDeptClass",
+                    type: "TReportsAccountantsCategory",
                     fields: {
                         Active: true,
-                        DeptClassName: deptName,
-                        Description: deptDesc,
-                        SiteCode: siteCode,
-                        StSClass: objStSDetails
+                        FirstName: firstName,
+                        LastName: lastName,
+                        CompanyName: companyName,
+                        Address: address,
+                        DocName: docName,
+                        TownCity: townCity,
+                        PostalZip: postalZip,
+                        StateRegion: stateRegion,
+                        Country: country
                     }
                 };
 
-                taxRateService.saveDepartment(objDetails).then(function (objDetails) {
-                  sideBarService.getDepartment().then(function(dataReload) {
-                      addVS1Data('TDeptClass',JSON.stringify(dataReload)).then(function (datareturn) {
-                      location.reload(true);
+                taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
+                    console.log("--------");
+                  sideBarService.getAccountantCategory().then(function(dataReload) {
+                      addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
+                        location.reload(true);
                       }).catch(function (err) {
                         location.reload(true);
                       });
@@ -1190,6 +1276,7 @@ Template.reportsAccountantSettings.events({
                       location.reload(true);
                   });
                 }).catch(function (err) {
+                    console.log("========");
                     swal({
                         title: 'Oooops...',
                         text: err,
@@ -1209,21 +1296,26 @@ Template.reportsAccountantSettings.events({
 
         }else{
             objDetails = {
-                type: "TDeptClass",
+                type: "TReportsAccountantsCategory",
                 fields: {
-                    ID: parseInt(deptID),
+                    ID: parseInt(accountantID),
                     Active: true,
-                    //  DeptClassGroup: headerDept,
-                    DeptClassName: deptName,
-                    Description: deptDesc,
-                    SiteCode: siteCode,
-                    StSClass: objStSDetails
+                    FirstName: firstName,
+                    LastName: lastName,
+                    CompanyName: companyName,
+                    Address: address,
+                    DocName: docName,
+                    TownCity: townCity,
+                    PostalZip: postalZip,
+                    StateRegion: stateRegion,
+                    Country: country
                 }
             };
 
-            taxRateService.saveDepartment(objDetails).then(function (objDetails) {
-              sideBarService.getDepartment().then(function(dataReload) {
-                  addVS1Data('TDeptClass',JSON.stringify(dataReload)).then(function (datareturn) {
+            taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
+                console.log('objDetails', objDetails);
+              sideBarService.getAccountantCategory().then(function(dataReload) {
+                  addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
                   location.reload(true);
                   }).catch(function (err) {
                     location.reload(true);
@@ -1232,6 +1324,7 @@ Template.reportsAccountantSettings.events({
                   location.reload(true);
               });
             }).catch(function (err) {
+                console.log('==========');
                 swal({
                     title: 'Oooops...',
                     text: err,
@@ -1251,45 +1344,22 @@ Template.reportsAccountantSettings.events({
     },
     'click .btnAddAccountant': function () {
         $('#add-accountant-title').text('Add New Accountant');
-        $('#edtDepartmentID').val('');
-        $('#edtSiteCode').val('');
-
-        $('#edtDeptName').val('');
-        $('#edtDeptName').prop('readonly', false);
-        $('#edtDeptDesc').val('');
+        $('#edtAccountantID').val('');
+        
+        $('#edtFirstName').val('');
+        $('#edtLastName').val('');
+        $('#edtCompanyName').val('');
+        $('#edtAddress').val('');
+        $('#edtDocName').val('');
+        $('#edtTownCity').val('');
+        $('#edtPostalZip').val('');
+        $('#edtStateRegion').val('');
+        $('#edtCountry').val('');
+        // $('#edtDeptName').prop('readonly', false);
     },
     'click .btnBack':function(event){
         event.preventDefault();
         history.back(1);
-    },
-    'keydown #edtSiteCode, keyup #edtSiteCode': function(event){
-        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-            // Allow: Ctrl+A, Command+A
-            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
-            // Allow: home, end, left, right, down, up
-            (event.keyCode >= 35 && event.keyCode <= 40)) {
-            // let it happen, don't do anything
-            return;
-        }
-
-        if (event.shiftKey == true) {
-
-        }
-
-        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-            (event.keyCode >= 96 && event.keyCode <= 105) ||
-            event.keyCode == 8 || event.keyCode == 9 ||
-            event.keyCode == 37 || event.keyCode == 39 ||
-            event.keyCode == 46 || event.keyCode == 190) {
-            event.preventDefault();
-        } else {
-            //event.preventDefault();
-        }
-
-    },
-    'blur #edtSiteCode': function(event){
-        $(event.target).val($(event.target).val().toUpperCase());
-
     },
     'click .btnSaveRoom': function () {
         $('.fullScreenSpin').css('display','inline-block');
@@ -1310,7 +1380,6 @@ Template.reportsAccountantSettings.events({
                 BinNumber: newroomnum|| ''
             }
         };
-
 
         taxRateService.saveRoom(data).then(function (data) {
             window.open('/reportsAccountantSettings','_self');

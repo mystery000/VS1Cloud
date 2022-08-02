@@ -104,13 +104,7 @@ Template.chequecard.onRendered(() => {
           lastBankAccount = lastCheque.GLAccountName;
         } else {
         }
-        $(".heading").html(
-          "New " +
-          chequeSpelling +
-          " #" +
-          newChequeID +
-          '<a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 8px;"></i></a>  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a><!--<button class="btn float-right" type="button" id="btnCustomFileds" name="btnCustomFileds"><i class="icon ion-android-more-horizontal"></i></button>-->'
-        );
+        $(".heading").html("New " +chequeSpelling +" #" +newChequeID +'<a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 8px;"></i></a>  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
         setTimeout(function () {
           $("#sltBankAccountName").val(lastBankAccount);
           $("#ponumber").val(newChequeID);
@@ -5579,7 +5573,7 @@ Template.chequecard.events({
         let tddmemo = $("#" + lineID + " .lineMemo").text();
         let tdamount = $("#" + lineID + " .colAmountExChange").val();
         let tdtaxrate = $("#" + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $("#" + lineID + " .lineTaxCode").val();
+        let tdtaxCode = $("#" + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
         let erpLineID = $("#" + lineID + " .lineAccountName").attr("lineid");
         if (tdaccount != "") {
           lineItemObjForm = {
@@ -5617,18 +5611,8 @@ Template.chequecard.events({
       var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
       var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
 
-      let saleDate =
-        saledateTime.getFullYear() +
-        "-" +
-        (saledateTime.getMonth() + 1) +
-        "-" +
-        saledateTime.getDate();
-      let dueDate =
-        duedateTime.getFullYear() +
-        "-" +
-        (duedateTime.getMonth() + 1) +
-        "-" +
-        duedateTime.getDate();
+      let saleDate = saledateTime.getFullYear() +"-" +(saledateTime.getMonth() + 1) +"-" +saledateTime.getDate();
+      let dueDate =duedateTime.getFullYear() +"-" +(duedateTime.getMonth() + 1) +"-" +duedateTime.getDate();
 
       let bankAccount = $("#sltBankAccountName").val();
       let poNumber = $("#ponumber").val();
@@ -5696,9 +5680,16 @@ Template.chequecard.events({
         };
       }
 
-      purchaseService
-        .saveChequeEx(objDetails)
-        .then(function (objDetails) {
+      if(splashLineArray.length > 0){
+
+      }else{
+          swal('Account name has not been selected!', '', 'warning');
+          $('.fullScreenSpin').css('display', 'none');
+          event.preventDefault();
+          return false;
+      };
+
+      purchaseService.saveChequeEx(objDetails).then(function (objDetails) {
 
           const supplierID = $("#edtSupplierEmail").attr("supplierid");
           localStorage.setItem("check_acc", bankAccount);
