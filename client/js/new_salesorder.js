@@ -162,6 +162,31 @@ Template.new_salesorder.onRendered(() => {
 
    templateObject.getTemplateInfo();
 
+   templateObject.getLastSOData = async function() {
+       let lastBankAccount = "Bank";
+       let lastDepartment = defaultDept || "";
+       salesService.getLastSOID().then(function(data) {
+         let latestSOId;
+           if (data.tsalesorder.length > 0) {
+               lastSO = data.tsalesorder[data.tsalesorder.length - 1]
+               latestSOId = (lastSO.Id);
+           } else {
+             latestSOId = 0;
+           }
+           newSOId = (latestSOId + 1);
+           setTimeout(function() {
+               $('#sltDept').val(lastDepartment);
+               if (FlowRouter.current().queryParams.id) {
+
+               }else{
+               $(".heading").html("New Sales Order " +newSOId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+               };
+           }, 50);
+       }).catch(function(err) {
+           $('#sltDept').val(lastDepartment);
+       });
+   };
+
     templateObject.generateInvoiceData = function (template_title,number) {
         object_invoce = [];
         switch (template_title) {
@@ -3891,6 +3916,7 @@ Template.new_salesorder.onRendered(() => {
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
             $('#sltTerms').val(salesorderrecord.termsName);
+            templateObject.getLastSOData();
         }, 200);
 
         templateObject.salesorderrecord.set(salesorderrecord);

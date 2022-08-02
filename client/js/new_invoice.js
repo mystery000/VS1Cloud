@@ -157,6 +157,31 @@ Template.new_invoice.onRendered(() => {
 
         templateObject.getTemplateInfo();
 
+        templateObject.getLastInvoiceData = async function() {
+            let lastBankAccount = "Bank";
+            let lastDepartment = defaultDept || "";
+            salesService.getLastInvoiceID().then(function(data) {
+              let latestInvoiceId;
+                if (data.tinvoice.length > 0) {
+                    lastInvoice = data.tinvoice[data.tinvoice.length - 1]
+                    latestInvoiceId = (lastInvoice.Id);
+                } else {
+                  latestInvoiceId = 0;
+                }
+                newInvoiceId = (latestInvoiceId + 1);
+                setTimeout(function() {
+                    $('#sltDept').val(lastDepartment);
+                    if (FlowRouter.current().queryParams.id) {
+
+                    }else{
+                    $(".heading").html("New Invoice " +newInvoiceId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+                    };
+                }, 50);
+            }).catch(function(err) {
+                $('#sltDept').val(lastDepartment);
+            });
+        };
+
         $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
 
             title = $(this).parent().attr("data-id");
@@ -4261,6 +4286,7 @@ Template.new_invoice.onRendered(() => {
         setTimeout(function () {
             $('#sltDept').val(defaultDept);
             $('#sltTerms').val(invoicerecord.termsName);
+            templateObject.getLastInvoiceData();
         }, 200);
 
         templateObject.invoicerecord.set(invoicerecord);
@@ -5853,7 +5879,22 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
 
                 taxcode1 = getCustDetails[0].taxCode || '';
             } else {
-                lineTaxRate = table.find(".taxrate").text();
+                var customerTaxCode = $('#edtCustomerName').attr('custtaxcode').replace(/\s/g, '') || '';
+                taxRate = taxcodeList.filter(taxrate => {
+                    return taxrate.codename == customerTaxCode || '';
+                });
+                if (taxRate.length > 0) {
+                    if (taxRate.codename != "") {
+                        lineTaxRate = taxRate[0].codename;
+                    } else {
+                        lineTaxRate = table.find(".taxrate").text();
+                    }
+                } else {
+                    lineTaxRate = table.find(".taxrate").text();
+                }
+
+                taxcode1 = customerTaxCode || '';
+
             }
 
             if (selectLineID) {
@@ -6252,6 +6293,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
         const tableCustomer = $(this);
         $('#edtCustomerName').val(tableCustomer.find(".colCompany").text());
         $('#edtCustomerName').attr("custid", tableCustomer.find(".colID").text());
+        $('#edtCustomerName').attr("custtaxcode", tableCustomer.find(".colCustomerTaxCode").text());
         $('#customerListModal').modal('toggle');
         // $('#customerType').text(tableCustomer.find(".colCustomerType").text()||'Default');
         // $('#customerDiscount').text(tableCustomer.find(".colCustomerDiscount").text()+'%'|| 0+'%');
