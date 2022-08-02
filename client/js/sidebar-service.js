@@ -94,7 +94,7 @@ export class SideBarService extends BaseService {
   {
     let options = {
       ListType:"Detail",
-      select: "[GlobalRef] = '" +name + "' and [EmployeeID]=" + employeeID + " and Template="+template+"",
+      select: "[SettingName] = '" +name + "' and [EmployeeID]=" + employeeID + " and Template="+template+"",
     };
     return this.getList(this.ERPObjects.TTemplateSettings, options);
   }
