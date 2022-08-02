@@ -133,7 +133,7 @@ export class TaxRateService extends BaseService {
 
     checkTaxRateByName(codeName) {
         let options = {
-            select: "[Code]='" + codeName + "'"
+            select: "[CodeName]='" + codeName + "'"
         };
         return this.getList(this.ERPObjects.TTaxCode, options);
     }
@@ -320,6 +320,10 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TDeptClass, data);
     }
 
+    saveAccountantCategory(data) {
+        return this.POST(this.ERPObjects.TReportsAccountantsCategory, data);
+    }
+
     saveRateType(data){
         return this.POST(this.ERPObjects.TPayRateType, data);
     }
@@ -346,6 +350,14 @@ export class TaxRateService extends BaseService {
         };
         return this.getList(this.ERPObjects.TDeptClass, options);
     }
+    
+    checkAccountantByName(docName) {
+        let options = {
+            select: "[DocName]='" + docName + "'"
+        };
+        return this.getList(this.ERPObjects.TReportsAccountantsCategory, options);
+    }
+
     checkCurrency(Country) {
         let options = {
             PropertyList: "Code,CurrencyDesc,Currency,BuyRate,SellRate,Active,CurrencySymbol,ID",
@@ -357,13 +369,20 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TCurrency, data);
     }
 
-
     getDepartment() {
         let options = {
             PropertyList: "ID,GlobalRef,KeyValue,DeptClassGroup,DeptClassName,Description,SiteCode,Active",
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TDeptClass, options);
+    }
+
+    getAccountantCategory() {
+        let options = {
+            PropertyList: "ID,FirstName,LastName,CompanyName,Address,DocName,TownCity,PostalZip,StateRegion,Country,Active",
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TReportsAccountantsCategory, options);
     }
 
     getClientType() {
@@ -638,7 +657,7 @@ export class TaxRateService extends BaseService {
             };
             return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
          }
-        
+
          checkGroupByName(dataSearchName)
          {
             let options = {
@@ -646,14 +665,14 @@ export class TaxRateService extends BaseService {
               select: '[Groupdesc]="'+dataSearchName+'"'
             };
            return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
-        
+
          }
-        
+
          saveGroupType(data)
-        { 
-          
+        {
+
           return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
-        
+
         }
 
 }

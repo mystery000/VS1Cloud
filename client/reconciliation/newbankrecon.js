@@ -84,21 +84,18 @@ Template.newbankrecon.onRendered(function() {
                     }
                 }
             }
-            // Session - set account dropdown BEGIN
-            setTimeout(function() {
+            // setTimeout(function() {
                 if (bankaccountid != '') {
                     $('#bankAccountID').val(bankaccountid);
                     $('#bankAccountName').val(bankaccountname);
                     templateObject.getOpenBalance(bankaccountname);
                     templateObject.getBankTransactionData(bankaccountid, statementDate, true);
                     templateObject.getMatchTransactionData(bankaccountid, statementDate, true);
-                }else{
+                } else {
                     $('.fullScreenSpin').css('display', 'none');
                 }
-            }, 100);
+            // }, 100);
 
-            // Session - set account dropdown END
-            // $('.fullScreenSpin').css('display', 'none');
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
         });
@@ -276,7 +273,6 @@ Template.newbankrecon.onRendered(function() {
     }
 
     templateObject.getBankTransactionData = function (accountId, statementDate, ignoreDate) {
-        $('.fullScreenSpin').css('display', 'inline-block');
         let yodleeFromDate = null;
         if (ignoreDate) {
             yodleeFromDate = '2000-01-01';
@@ -598,7 +594,6 @@ Template.newbankrecon.onRendered(function() {
     }
 
     templateObject.getMatchTransactionData = function (accountId, statementDate, ignoreDate) {
-        $('.fullScreenSpin').css('display', 'inline-block');
         let matchData = [];
         reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
             if (data.ttobereconcileddeposit.length > 0) {
@@ -775,12 +770,14 @@ Template.newbankrecon.onRendered(function() {
     };
 
     setTimeout(function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
         templateObject.getAccountNames();
         templateObject.getAllTaxCodes();
         templateObject.getAllCustomers();
         templateObject.getAllSuppliers();
         // templateObject.getAllReconListData();
     }, 100);
+
 
     $('#bankAccountName').editableSelect();
     $('#bankAccountName').editableSelect().on('click.editable-select', function (e, li) {

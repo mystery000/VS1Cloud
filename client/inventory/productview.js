@@ -3414,14 +3414,14 @@ Template.productview.events({
         }
 
         if (productName == '') {
-            swal('Please provide product Name !', '', 'warning');
+            swal('Please provide the product name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
             return false;
         }
 
-        let TaxCodePurchase = $("#slttaxcodepurchase").val();
-        let TaxCodeSales = $("#slttaxcodesales").val();
+        let TaxCodePurchase = $("#slttaxcodepurchase").val()||'P';
+        let TaxCodeSales = $("#slttaxcodesales").val()||'S';
         if (TaxCodePurchase == '' || TaxCodeSales == '') {
             swal('Please fill Tax rate !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');

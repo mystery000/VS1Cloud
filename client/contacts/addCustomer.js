@@ -904,11 +904,19 @@ Template.customerscard.onRendered(function () {
             });
         });
     };
-    function setTermsDataVS1(data) {
+
+     function setTermsDataVS1(data) {
         for (let i = 0; i < data.ttermsvs1.length; i++) {
             terms.push(data.ttermsvs1[i].TermsName);
             if(data.ttermsvs1[i].isSalesdefault == true){
                 templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
+                if(JSON.stringify(currentId) != '{}'){
+                  if (currentId.id == "undefined") {
+                   $('#sltTerms').val(data.ttermsvs1[i].TermsName);
+                  }
+                }else{
+                   $('#sltTerms').val(data.ttermsvs1[i].TermsName);
+                }
                 Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
             }
         }
@@ -1162,7 +1170,7 @@ Template.customerscard.onRendered(function () {
             bcountry: data.fields.Billcountry || '',
             notes: data.fields.Notes || '',
             preferedpayment: data.fields.PaymentMethodName || '',
-            terms: data.fields.TermsName || templateObject.defaultsaleterm.get(),
+            terms: data.fields.TermsName ||Session.get('ERPTermsSales'),
             deliverymethod: data.fields.ShippingMethodName || '',
             clienttype: data.fields.ClientTypeName || '',
             openingbalance: data.fields.RewardPointsOpeningBalance || 0.00,
@@ -1254,7 +1262,7 @@ Template.customerscard.onRendered(function () {
             setTab();
         }, 1000);
     }
-    function setInitialForEmptyCurrentID() {
+    async function setInitialForEmptyCurrentID() {
         let lineItemObj = {
             id: '',
             lid: 'Add Customer',
@@ -1271,7 +1279,7 @@ Template.customerscard.onRendered(function () {
             shippingaddress: '',
             scity: '',
             sstate: '',
-            terms: loggedTermsSales||templateObject.defaultsaleterm.get() || '',
+            terms: loggedTermsSales|| '',
             spostalcode: '',
             scountry: LoggedCountry || '',
             billingaddress: '',
@@ -1285,6 +1293,7 @@ Template.customerscard.onRendered(function () {
             jobscountry: LoggedCountry || '',
             discount:0
         };
+        await templateObject.getTermsList();
         setTimeout(function () {
             $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
             $('#sltTerms').val(lineItemObj.terms);
@@ -1295,7 +1304,7 @@ Template.customerscard.onRendered(function () {
             $('#sltJobCustomerType').val(lineItemObj.jobclienttype);
             $('#sltJobTaxCode').val(lineItemObj.jobtaxcode);
             $('.customerTypeSelect').append('<option value="newCust">Add Customer Type</option>');
-        },1000);
+        },3000);
         templateObject.isSameAddress.set(true);
         templateObject.records.set(lineItemObj);
         setTimeout(function () {
@@ -1329,7 +1338,7 @@ Template.customerscard.onRendered(function () {
             $('.customerTab').trigger('click');
         }
     }
-
+    if(JSON.stringify(currentId) != '{}'){
     if (currentId.id == "undefined") {
         setInitialForEmptyCurrentID();
     } else {
@@ -1346,6 +1355,9 @@ Template.customerscard.onRendered(function () {
             setInitialForEmptyCurrentID();
         }
     }
+  }else{
+    setInitialForEmptyCurrentID();
+  }
     templateObject.getCustomersList = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -2135,6 +2147,42 @@ Template.customerscard.events({
         let custField4 = $('#edtCustomField4').val()||'';
         let customerType = $('#sltCustomerType').val()||'';
         let uploadedItems = templateObject.uploadedFiles.get();
+
+        if (company == '') {
+            swal('Please provide the compamy name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+        if (firstname == '') {
+            swal('Please provide the first name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+
+        if (lastname == '') {
+            swal('Please provide the last name !', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+        if (sltTermsName == '') {
+            swal("Terms has not been selected!", "", "warning");
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
+
+        if (sltTaxCodeName == '') {
+            swal("Tax Code has not been selected!", "", "warning");
+            $('.fullScreenSpin').css('display', 'none');
+            e.preventDefault();
+            return false;
+        }
 
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');
@@ -3257,7 +3305,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/crmoverview?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnCustomerEmail': function (event) {
@@ -3267,7 +3315,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/crmoverview?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnCustomerAppointment': function (event) {
@@ -3277,7 +3325,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/appointments?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnCustomerQuote': function (event) {
@@ -3287,7 +3335,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/quotecard?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnCustomerSalesOrder': function (event) {
@@ -3297,7 +3345,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/salesordercard?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnCustomerInvoice': function (event) {
@@ -3307,7 +3355,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/invoicecard?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnCustomerRefund': function (event) {
@@ -3317,7 +3365,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/refundcard?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnJobTask': function (event) {
@@ -3327,7 +3375,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.jobid);
             FlowRouter.go('/crmoverview?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnJobEmail': function (event) {
@@ -3337,7 +3385,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.jobid);
             FlowRouter.go('/crmoverview?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnJobAppointment': function (event) {
@@ -3347,7 +3395,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.jobid);
             FlowRouter.go('/appointments?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnJobQuote': function (event) {
@@ -3357,7 +3405,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.jobid);
             FlowRouter.go('/quotecard?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnJobSalesOrder': function (event) {
@@ -3367,7 +3415,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.jobid);
             FlowRouter.go('/salesordercard?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnJobInvoice': function (event) {
@@ -3377,7 +3425,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.jobid);
             FlowRouter.go('/invoicecard?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
     'click .btnJobRefund': function (event) {
@@ -3387,7 +3435,7 @@ Template.customerscard.events({
             let customerID = parseInt(currentId.jobid);
             FlowRouter.go('/refundcard?customerid=' + customerID);
         } else {
-
+          $('.fullScreenSpin').css('display', 'none');
         }
     },
 });

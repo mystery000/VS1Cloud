@@ -1248,12 +1248,6 @@ Template.employeescard.onRendered(function () {
       });
             let countriesPhone = [];
             let dataPhone = countryService.getCountryJeyhun();
-            // for (let i = 0; i < dataPhone.length; i++) {
-            //     countriesPhone.push(dataPhone[i].name)
-            // }
-            // console.log("countries______", countriesPhone)
-            // countriesPhone = _.sortBy(countriesPhone);
-            // console.log("countries", countriesPhone)
             templateObject.phoneCodeData.set(dataPhone);
     };
     templateObject.getCountryData();
@@ -2840,7 +2834,7 @@ Template.employeescard.onRendered(function () {
             "'Detail'"
         );
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-        
+
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tpayslips.length ){
@@ -2863,7 +2857,7 @@ Template.employeescard.onRendered(function () {
             "'Detail'"
         );
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-        
+
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
             if( employeePayrolEndpointJsonResponse.tleavrequest.length ){
@@ -2880,14 +2874,14 @@ Template.employeescard.onRendered(function () {
         employeePayrolEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TAssignLeaveType
         );
-        
-        
+
+
 
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
@@ -2895,10 +2889,10 @@ Template.employeescard.onRendered(function () {
                 await addVS1Data('TAssignLeaveType', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
-    
+
 
     templateObject.getLeaveRequests = async () => {
         let data = []
@@ -3335,7 +3329,7 @@ Template.employeescard.onRendered(function () {
             data = await templateObject.saveDeductionLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
-        }        
+        }
 
         let useData = PayTemplateDeductionLine.fromList(
             data.tpaytemplatedeductionline
@@ -4661,7 +4655,7 @@ Template.employeescard.events({
         if (firstname === '') {
             $('.fullScreenSpin').css('display', 'none');
             // Bert.alert('<strong>WARNING:</strong> First Name cannot be blank!', 'warning');
-            swal('First Name cannot be blank!', '', 'info');
+            swal('Please provide the first name !', '', 'warning');
             e.preventDefault();
             $('#edtFirstName').focus();
         }
@@ -5309,14 +5303,14 @@ Template.employeescard.events({
         let period = $('#period').val();
         let paymentDate = $('#paymentDate').val();
         let totalPay = $('#totalPay').val();
-        
-        
+
+
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TPaySlips
         );
-    
+
         if(period == ''){
             swal({
                 title: "Warning",
@@ -5361,7 +5355,6 @@ Template.employeescard.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(paySlipSettings),
             });
-            console.log("dataPay", ApiResponse);
             try {
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
@@ -5401,7 +5394,6 @@ Template.employeescard.events({
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let EarningsRate = $('#obEarningsRate').val();
         const openingBalances = [];
-        console.log("opening bal", getVS1Data("TOpeningBalances"));
 
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
@@ -6285,7 +6277,6 @@ Template.employeescard.events({
                             headers: ApiService.getPostHeaders(),
                             body: JSON.stringify(paySuperannuationLines),
                         });
-                        console.log("json", JSON.stringify(paySuperannuationLines));
 
                         if (ApiResponse.ok == true) {
                             const jsonResponse = await ApiResponse.json();
@@ -7594,14 +7585,13 @@ Template.employeescard.events({
                 type: "TOpeningBalances",
                 objects: tOpeningBalance
             };
-            
+
             const ApiResponse = await apiEndpoint.fetch(null, {
                 method: "POST",
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(openingBalanceJSON),
             });
             if (ApiResponse.ok == true) {
-                console.log( ApiResponse );
             }
             $('.fullScreenSpin').css('display', 'none');
 
@@ -9148,7 +9138,7 @@ Template.employeescard.helpers({
         if( isNaN(amount) ){
             amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
             amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-        }        
+        }
         return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
     },
     formatPercent( percentVal ){

@@ -26,11 +26,6 @@ export class MailchimpService extends BaseService {
     let options = { 'auth': 'Authorization:' + this.apikey };
 
     try {
-      // if (Meteor.isServer) {
-      //   const response = HTTP.call(method, apiUrl, options).data;
-      //   console.log('response', response);
-      // }
-
       let promise = new Promise(function (resolve, reject) {
         HTTP.post(apiUrl, { headers: options, data: data }, function (err, response) {
           if (err) {
@@ -43,7 +38,6 @@ export class MailchimpService extends BaseService {
       return promise;
 
     } catch (error) {
-      console.log(error);
       return error;
     }
   };
