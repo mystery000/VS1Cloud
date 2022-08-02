@@ -3107,153 +3107,159 @@ Template.employeescard.onRendered(function () {
                 return item;
             }
         });
+        let isActive=false;
         let splashArrayPayNotesList = [];
         for (let i = 0; i < useData.length; i++) {
-            let dataListAllowance = [
-                useData[i].fields.ID || '',
-                (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
-                useData[i].fields.UserName || '',
-                useData[i].fields.Notes || '',
-                `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-edit"></i></button>
-                <button type="button" class="btn btn-danger btnDeleteNote" id="btnDeleteNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
-            ];
-            splashArrayPayNotesList.push(dataListAllowance);
+            if(useData[i].fields.Active){
+                isActive=true;
+                let dataListAllowance = [
+                    useData[i].fields.ID || '',
+                    (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
+                    useData[i].fields.UserName || '',
+                    useData[i].fields.Notes || '',
+                    `<button type="button" class="btn btn-success btnEditPayNote" id="btnEditPayNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-edit"></i></button>
+                    <button type="button" class="btn btn-danger btnDeletePayNote" id="btnDeletePayNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                ];
+                splashArrayPayNotesList.push(dataListAllowance);
+            }
         }
-        setTimeout(function () {
-            $('#tblEmpPayrollNotes').DataTable({
-                data: splashArrayPayNotesList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [
+        if(isActive){
+            setTimeout(function () {
+                $('#tblEmpPayrollNotes').DataTable({
+                    data: splashArrayPayNotesList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
 
-                    {
-                        className: "colEmpPayrollNotesID hiddenColumn",
-                        "targets": [0]
+                        {
+                            className: "colEmpPayrollNotesID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colEmpPayrollNotesDate",
+                            "targets": [1]
+                        },
+                        {
+                            className: "colEmpPayrollNotesUser",
+                            "targets": [2]
+                        },
+                        {
+                            className: "colEmpPayrollNotesDesc",
+                            "targets": [3]
+                        },
+                        {
+                            className: "colEmpPayrollDeleteEdit",
+                            "targets": [4]
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblEmpPayrollNotes').DataTable().ajax.reload();
                     },
-                    {
-                        className: "colEmpPayrollNotesDate",
-                        "targets": [1]
-                    },
-                    {
-                        className: "colEmpPayrollNotesUser",
-                        "targets": [2]
-                    },
-                    {
-                        className: "colEmpPayrollNotesDesc",
-                        "targets": [3]
-                    },
-                    {
-                        className: "colEmpPayrollDeleteEdit",
-                        "targets": [4]
-                    }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                info: true,
-                responsive: true,
-                "order": [[0, "asc"]],
-                action: function () {
-                    $('#tblEmpPayrollNotes').DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function (oSettings) {
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#tblEmpPayrollNotes_ellipsis').addClass('disabled');
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblEmpPayrollNotes_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+
+                            }
+                        } else {
 
                         }
-                    } else {
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
 
-                    }
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayPayNotesListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblEmpPayrollNotes_filter input').val();
 
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                        .on('click', function () {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            var splashArrayPayNotesListDupp = new Array();
-                            let dataLenght = oSettings._iDisplayLength;
-                            let customerSearch = $('#tblEmpPayrollNotes_filter input').val();
+                                sideBarService.getPayNotes(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                            sideBarService.getPayNotes(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                    for (let i = 0; i < useData.length; i++) {
+                                        let dataListAllowance = [
+                                            useData[i].fields.ID || '',
+                                            (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
+                                            useData[i].fields.UserName || '',
+                                            useData[i].fields.Notes || '',
+                                            `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-danger btnDeletePayNote" id="btnDeletePayNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                                        ];
+                                        splashArrayPayNotesList.push(dataListAllowance);
+                                    }
 
-                                for (let i = 0; i < useData.length; i++) {
-                                    let dataListAllowance = [
-                                        useData[i].fields.ID || '',
-                                        (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
-                                        useData[i].fields.UserName || '',
-                                        useData[i].fields.Notes || '',
-                                        `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-danger btnDeleteNote" id="btnDeleteNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
-                                    ];
-                                    splashArrayPayNotesList.push(dataListAllowance);
-                                }
+                                    let uniqueChars = [...new Set(splashArrayPayNotesList)];
+                                    var datatable = $('#tblEmpPayrollNotes').DataTable();
+                                    datatable.clear();
+                                    datatable.rows.add(uniqueChars);
+                                    datatable.draw(false);
+                                    setTimeout(function () {
+                                        $("#tblEmpPayrollNotes").dataTable().fnPageChange('last');
+                                    }, 400);
 
-                                let uniqueChars = [...new Set(splashArrayPayNotesList)];
-                                var datatable = $('#tblEmpPayrollNotes').DataTable();
-                                datatable.clear();
-                                datatable.rows.add(uniqueChars);
-                                datatable.draw(false);
-                                setTimeout(function () {
-                                    $("#tblEmpPayrollNotes").dataTable().fnPageChange('last');
-                                }, 400);
-
-                                $('.fullScreenSpin').css('display', 'none');
+                                    $('.fullScreenSpin').css('display', 'none');
 
 
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+
                             });
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddordinaryTimePayNotes' data-dismiss='modal' data-toggle='modal' data-target='#newNoteModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpPayrollNotes_filter");
+                        $("<button class='btn btn-primary btnRefreshPayNotes' type='button' id='btnRefreshPayNotes' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpPayrollNotes_filter");
+                    }
 
-                        });
+                }).on('page', function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
-                },
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddordinaryTimePayNotes' data-dismiss='modal' data-toggle='modal' data-target='#newNoteModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpPayrollNotes_filter");
-                    $("<button class='btn btn-primary btnRefreshPayNotes' type='button' id='btnRefreshPayNotes' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpPayrollNotes_filter");
-                }
 
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
+                }).on('column-reorder', function () {
 
-            }).on('column-reorder', function () {
+                }).on('length.dt', function (e, settings, len) {
+                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = settings._iDisplayLength;
+                    splashArrayPayNotesList = [];
+                    if (dataLenght == -1) {
+                    $('.fullScreenSpin').css('display', 'none');
 
-            }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArrayPayNotesList = [];
-                if (dataLenght == -1) {
-                $('.fullScreenSpin').css('display', 'none');
-
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
                     } else {
-                        sideBarService.getPayNotes(dataLenght, 0).then(function (dataNonBo) {
+                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        } else {
+                            sideBarService.getPayNotes(dataLenght, 0).then(function (dataNonBo) {
 
-                            addVS1Data('TPayNotes', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                // templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
+                                addVS1Data('TPayNotes', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                    // templateObject.resetData(dataNonBo);
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
                             }).catch(function (err) {
                                 $('.fullScreenSpin').css('display', 'none');
                             });
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
+                        }
                     }
-                }
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            });
-        }, 0);
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
+            }, 0);
+        }
     };
     templateObject.getPayNotesTypes();
 
@@ -5466,7 +5472,7 @@ Template.employeescard.events({
                     fields: new PaySlipsFields({
                         EmployeeID: parseInt( employeeID ),
                         Period: period,
-                        PaymentDate: moment(),
+                        PaymentDate: moment(paymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
                         TotalPay: parseInt( totalPay ),
                         Active: true
                     }),
@@ -6162,6 +6168,7 @@ Template.employeescard.events({
                     CreatedAt: moment(),
                     UserID: Session.get("mySessionEmployeeLoggedID"),
                     UserName: Session.get('mySessionEmployee') || '',
+                    Active: true
                 }),
             })
             try {
@@ -9476,7 +9483,7 @@ Template.employeescard.events({
         title: 'Confirm.',
         text: 'You are about to delete this payslip. Proceed?',
         type: 'info',
-        showCancelButton: false,
+        showCancelButton: true,
         confirmButtonText: 'Yes. proceed'
     }).then(async (result) => {
         if (result.value) {
@@ -9540,7 +9547,7 @@ Template.employeescard.events({
         title: 'Confirm.',
         text: 'You are about to delete this assign leave type. Proceed?',
         type: 'info',
-        showCancelButton: false,
+        showCancelButton: true,
         confirmButtonText: 'Yes. proceed'
     }).then(async (result) => {
         if (result.value) {
@@ -9584,7 +9591,71 @@ Template.employeescard.events({
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await addVS1Data('TAssignLeaveType', JSON.stringify(leaveTypeObj))
-                    await templateObject.getAssignLeaveType();
+                    await templateObject.getAssignLeaveTypes();
+
+                } 
+                $('.fullScreenSpin').hide();
+
+            }
+            catch(e){
+                $('.fullScreenSpin').hide();
+
+            }
+        }
+    });
+  },
+  "click #btnDeletePayNote": function (e){
+    let templateObject = Template.instance();
+    let deleteID = $(e.target).data('id') || '';
+    swal({
+        title: 'Confirm.',
+        text: 'You are about to delete this note. Proceed?',
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Yes. proceed'
+    }).then(async (result) => {
+        if (result.value) {
+            $('.fullScreenSpin').css('display', 'block');
+
+            const employeePayrolApis = new EmployeePayrollApi();
+            // now we have to make the post request to save the data in database
+            const apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPayNotes
+            );
+        
+            let noteSettings =  new PayNotes({
+                type: "TPayNotes",
+                fields: new PayNotesFields({
+                    ID: parseInt( deleteID ),
+                    Active: false
+                }),
+            })
+
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(noteSettings),
+            });
+
+            let payNote = templateObject.assignLeaveTypeInfos.get();
+
+            let updatedLines = PayNotes.fromList(
+                payNote
+            ).filter(async (item) => {
+
+                if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                    item.fields.Active = false;
+                }
+                return item;
+            });
+            let payNoteObj = {
+                tpaynotes: updatedLines
+            }
+            try {
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await addVS1Data('TPayNotes', JSON.stringify(payNoteObj))
+                    await templateObject.getPayNotesTypes();
 
                 } 
                 $('.fullScreenSpin').hide();
