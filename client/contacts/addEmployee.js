@@ -64,6 +64,7 @@ Template.employeescard.onCreated(function () {
     templateObject.payTemplateDeductionLineInfo = new ReactiveVar();
     templateObject.payTemplateSuperannuationLineInfo = new ReactiveVar();
     templateObject.payTemplateReiumbursementLineInfo = new ReactiveVar();
+    templateObject.paySlipInfos = new ReactiveVar();
     templateObject.currentDrpDownID = new ReactiveVar();
     templateObject.employeePayInfos = new ReactiveVar();
     templateObject.employeePaySettings = new ReactiveVar();
@@ -3113,6 +3114,8 @@ Template.employeescard.onRendered(function () {
                 (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
                 useData[i].fields.UserName || '',
                 useData[i].fields.Notes || '',
+                `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-edit"></i></button>
+                <button type="button" class="btn btn-danger btnDeleteNote" id="btnDeleteNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
             ];
             splashArrayPayNotesList.push(dataListAllowance);
         }
@@ -3137,6 +3140,10 @@ Template.employeescard.onRendered(function () {
                     {
                         className: "colEmpPayrollNotesDesc",
                         "targets": [3]
+                    },
+                    {
+                        className: "colEmpPayrollDeleteEdit",
+                        "targets": [4]
                     }
                 ],
                 select: true,
@@ -3179,6 +3186,8 @@ Template.employeescard.onRendered(function () {
                                         (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
                                         useData[i].fields.UserName || '',
                                         useData[i].fields.Notes || '',
+                                        `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-edit"></i></button>
+                                        <button type="button" class="btn btn-danger btnDeleteNote" id="btnDeleteNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
                                     ];
                                     splashArrayPayNotesList.push(dataListAllowance);
                                 }
@@ -3607,6 +3616,8 @@ Template.employeescard.onRendered(function () {
             data = JSON.parse(dataObject[0].data);
         }
         let splashArrayAssignLeaveList = [];
+        let isActive=false;
+
         if( data.tassignleavetype.length > 0 ){
             let useData = AssignLeaveType.fromList(
                 data.tassignleavetype
@@ -3615,176 +3626,192 @@ Template.employeescard.onRendered(function () {
                     return item;
                 }
             });
+
             templateObject.assignLeaveTypeInfos.set(useData);
             for (let i = 0; i < useData.length; i++) {
-                let dataListAllowance = [
-                    useData[i].fields.ID || '',
-                    useData[i].fields.LeaveType || '',
-                    useData[i].fields.LeaveCalcMethod || '',
-                    useData[i].fields.HoursAccruedAnnually || '',
-                    useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
-                    useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
-                    useData[i].fields.HoursLeave || '',
-                    useData[i].fields.OpeningBalance || '',
-                    ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
-                ];
-                splashArrayAssignLeaveList.push(dataListAllowance);
+
+                if(useData[i].fields.Active){
+                    isActive=true;
+                    let dataListAllowance = [
+                        useData[i].fields.ID || '',
+                        useData[i].fields.LeaveType || '',
+                        useData[i].fields.LeaveCalcMethod || '',
+                        useData[i].fields.HoursAccruedAnnually || '',
+                        useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
+                        useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
+                        useData[i].fields.HoursLeave || '',
+                        useData[i].fields.OpeningBalance || '',
+                        ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
+                        `<button type="button" class="btn btn-success btnEditAssignLeaveType"><i class="fas fa-edit"></i></button>
+                        <button type="button" class="btn btn-danger btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                    ];
+                    splashArrayAssignLeaveList.push(dataListAllowance);
+                }
             }
         }
-        setTimeout(function () {
-            $('#tblAssignLeaveTypes').DataTable({
-                data: splashArrayAssignLeaveList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [
+        if(isActive){
+            setTimeout(function () {
+                $('#tblAssignLeaveTypes').DataTable({
+                    data: splashArrayAssignLeaveList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    columnDefs: [
 
-                    {
-                        className: "colALTypeID hiddenColumn",
-                        "targets": [0]
+                        {
+                            className: "colALTypeID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colALTypeLeave",
+                            "targets": [1]
+                        },
+                        {
+                            className: "colALTypeLeaveCalMethod",
+                            "targets": [2]
+                        },
+                        {
+                            className: "colALTypeHoursAccruedAnnually",
+                            "targets": [3]
+                        },
+                        {
+                            className: "colALTypeHoursAccruedAnnuallyFullTimeEmp",
+                            "targets": [4]
+                        },
+                        {
+                            className: "colALTypeHoursFullTimeEmpFortnightlyPay",
+                            "targets": [5]
+                        },
+                        {
+                            className: "colALTypeHours",
+                            "targets": [6]
+                        },
+                        {
+                            className: "colALTypeOpeningBalance",
+                            "targets": [7]
+                        },
+                        {
+                            className: "colALTypeTerminationBalance",
+                            "targets": [8]
+                        }
+                        ,
+                        {
+                            className: "colALTypeActions",
+                            "targets": [9]
+                        }
+                    ],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "asc"]],
+                    action: function () {
+                        $('#tblAssignLeaveTypes').DataTable().ajax.reload();
                     },
-                    {
-                        className: "colALTypeLeave",
-                        "targets": [1]
-                    },
-                    {
-                        className: "colALTypeLeaveCalMethod",
-                        "targets": [2]
-                    },
-                    {
-                        className: "colALTypeHoursAccruedAnnually",
-                        "targets": [3]
-                    },
-                    {
-                        className: "colALTypeHoursAccruedAnnuallyFullTimeEmp",
-                        "targets": [4]
-                    },
-                    {
-                        className: "colALTypeHoursFullTimeEmpFortnightlyPay",
-                        "targets": [5]
-                    },
-                    {
-                        className: "colALTypeHours",
-                        "targets": [6]
-                    },
-                    {
-                        className: "colALTypeOpeningBalance",
-                        "targets": [7]
-                    },
-                    {
-                        className: "colALTypeTerminationBalance",
-                        "targets": [8]
-                    }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                info: true,
-                responsive: true,
-                "order": [[0, "asc"]],
-                action: function () {
-                    $('#tblAssignLeaveTypes').DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function (oSettings) {
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#tblAssignLeaveTypes_ellipsis').addClass('disabled');
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
+                    "fnDrawCallback": function (oSettings) {
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblAssignLeaveTypes_ellipsis').addClass('disabled');
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+
+                            }
+                        } else {
 
                         }
-                    } else {
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
 
-                    }
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                var splashArrayAssignLeaveListDupp = new Array();
+                                let dataLenght = oSettings._iDisplayLength;
+                                let customerSearch = $('#tblAssignLeaveTypes_filter input').val();
 
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                        .on('click', function () {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            var splashArrayAssignLeaveListDupp = new Array();
-                            let dataLenght = oSettings._iDisplayLength;
-                            let customerSearch = $('#tblAssignLeaveTypes_filter input').val();
+                                sideBarService.getAssignLeaveType(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (useData) {
 
-                            sideBarService.getAssignLeaveType(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (useData) {
+                                    for (let i = 0; i < useData.length; i++) {
+                                        let dataListAllowance = [
+                                            useData[i].fields.ID || '',
+                                            useData[i].fields.LeaveType || '',
+                                            useData[i].fields.LeaveCalcMethod || '',
+                                            useData[i].fields.HoursAccruedAnnually || '',
+                                            useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
+                                            useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
+                                            useData[i].fields.HoursLeave || '',
+                                            useData[i].fields.OpeningBalance || '',
+                                            ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
+                                            `<button type="button" class="btn btn-success btnEditAssignLeaveType"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-danger btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                                        ];
+                                        splashArrayAssignLeaveList.push(dataListAllowance);
+                                    }
 
-                                for (let i = 0; i < useData.length; i++) {
-                                    let dataListAllowance = [
-                                        useData[i].fields.ID || '',
-                                        useData[i].fields.LeaveType || '',
-                                        useData[i].fields.LeaveCalcMethod || '',
-                                        useData[i].fields.HoursAccruedAnnually || '',
-                                        useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
-                                        useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
-                                        useData[i].fields.HoursLeave || '',
-                                        useData[i].fields.OpeningBalance || '',
-                                        ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
-                                    ];
-                                    splashArrayAssignLeaveList.push(dataListAllowance);
-                                }
+                                    let uniqueChars = [...new Set(splashArrayAssignLeaveList)];
+                                    var datatable = $('#tblAssignLeaveTypes').DataTable();
+                                    datatable.clear();
+                                    datatable.rows.add(uniqueChars);
+                                    datatable.draw(false);
+                                    setTimeout(function () {
+                                        $("#tblAssignLeaveTypes").dataTable().fnPageChange('last');
+                                    }, 400);
 
-                                let uniqueChars = [...new Set(splashArrayAssignLeaveList)];
-                                var datatable = $('#tblAssignLeaveTypes').DataTable();
-                                datatable.clear();
-                                datatable.rows.add(uniqueChars);
-                                datatable.draw(false);
-                                setTimeout(function () {
-                                    $("#tblAssignLeaveTypes").dataTable().fnPageChange('last');
-                                }, 400);
-
-                                $('.fullScreenSpin').css('display', 'none');
+                                    $('.fullScreenSpin').css('display', 'none');
 
 
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+
                             });
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddAssignLeave' data-dismiss='modal' data-toggle='modal' data-target='#assignLeaveTypeModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAssignLeaveTypes_filter");
+                        $("<button class='btn btn-primary btnRefreshAssignLeave' type='button' id='btnRefreshAssignLeave' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAssignLeaveTypes_filter");
+                    }
 
-                        });
+                }).on('page', function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
-                },
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddAssignLeave' data-dismiss='modal' data-toggle='modal' data-target='#assignLeaveTypeModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAssignLeaveTypes_filter");
-                    $("<button class='btn btn-primary btnRefreshAssignLeave' type='button' id='btnRefreshAssignLeave' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAssignLeaveTypes_filter");
-                }
 
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
+                }).on('column-reorder', function () {
 
-            }).on('column-reorder', function () {
+                }).on('length.dt', function (e, settings, len) {
+                    //$('.fullScreenSpin').css('display', 'inline-block');
+                    let dataLenght = settings._iDisplayLength;
+                    splashArrayAssignLeaveList = [];
+                    if (dataLenght == -1) {
+                    $('.fullScreenSpin').css('display', 'none');
 
-            }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArrayAssignLeaveList = [];
-                if (dataLenght == -1) {
-                $('.fullScreenSpin').css('display', 'none');
-
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
                     } else {
-                        sideBarService.getAssignLeaveType(dataLenght, 0).then(function (dataNonBo) {
+                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        } else {
+                            sideBarService.getAssignLeaveType(dataLenght, 0).then(function (dataNonBo) {
 
-                            addVS1Data('TAssignLeaveType', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                // templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
+                                addVS1Data('TAssignLeaveType', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                    // templateObject.resetData(dataNonBo);
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
                             }).catch(function (err) {
                                 $('.fullScreenSpin').css('display', 'none');
                             });
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
+                        }
                     }
-                }
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            });
-        }, 0);
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                });
+            }, 0);
+        }
     };
 
     templateObject.getAssignLeaveTypes();
@@ -4040,163 +4067,181 @@ Template.employeescard.onRendered(function () {
             }else{
                 data = JSON.parse(dataObject[0].data);
             }
-            for (let i = 0; i < data.tpayslips.length; i++) {
+            
 
-                let dataListAllowance = [
-                    data.tpayslips[i].fields.ID || '',
-                    data.tpayslips[i].fields.Period || '',
-                    data.tpayslips[i].fields.PaymentDate || '',
-                    data.tpayslips[i].fields.TotalPay || '',
-                    `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                    <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip"><i class="fas fa-trash"></i></button>
-                    `,
-                ];
+            let isActive=false;
+            let dataListAllowance =[];
+            let useData = PaySlips.fromList(
+                data.tpayslips
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    return item;
+                }
+            });
+            templateObject.paySlipInfos.set(useData);
+            for (let i = 0; i < useData.length; i++) {
 
-                splashArrayPaySlipList.push(dataListAllowance);
+                if(useData[i].fields.Active){
+                    isActive=true;
+                    dataListAllowance = [
+                        useData[i].fields.ID || '',
+                        useData[i].fields.Period || '',
+                        useData[i].fields.PaymentDate || '',
+                        useData[i].fields.TotalPay || '',
+                        `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
+                        <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ data.tpayslips[i].fields.ID +`"><i class="fas fa-trash"></i></button>
+                        `,
+                    ];
+                    splashArrayPaySlipList.push(dataListAllowance);
+                }
             }
 
             templateObject.datatablerecords.set(splashArrayPaySlipList);
             $('.fullScreenSpin').css('display', 'none');
-            setTimeout(function () {
-                $('#tblPayslipHistory').DataTable({
-                    data: splashArrayPaySlipList,
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    columnDefs: [
-                        {
-                            className: "colPayslipID hiddenColumn",
-                            "targets": [0]
+            if(isActive){
+                setTimeout(function () {
+                    $('#tblPayslipHistory').DataTable({
+                        data: splashArrayPaySlipList,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        columnDefs: [
+                            {
+                                className: "colPayslipID hiddenColumn",
+                                "targets": [0]
+                            },
+                            {
+                                className: "colPayslipPeriod",
+                                "targets": [1]
+                            },
+                            {
+                                className: "colPayslipPaymentDate",
+                                "targets": [2]
+                            },
+                            {
+                                className: "colPayslipTotalPay",
+                                "targets": [3]
+                            },
+                            {
+                                className: "colPayslipActions",
+                                "targets": [4]
+                            }
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "order": [[0, "asc"]],
+                        action: function () {
+                            $('#tblPayslipHistory').DataTable().ajax.reload();
                         },
-                        {
-                            className: "colPayslipPeriod",
-                            "targets": [1]
-                        },
-                        {
-                            className: "colPayslipPaymentDate",
-                            "targets": [2]
-                        },
-                        {
-                            className: "colPayslipTotalPay",
-                            "targets": [3]
-                        },
-                        {
-                            className: "colPayslipDownload",
-                            "targets": [4]
-                        }
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                    info: true,
-                    responsive: true,
-                    "order": [[0, "asc"]],
-                    action: function () {
-                        $('#tblPayslipHistory').DataTable().ajax.reload();
-                    },
-                    "fnDrawCallback": function (oSettings) {
-                        $('.paginate_button.page-item').removeClass('disabled');
-                        $('#tblPayslipHistory_ellipsis').addClass('disabled');
-                        if (oSettings._iDisplayLength == -1) {
-                            if (oSettings.fnRecordsDisplay() > 150) {
+                        "fnDrawCallback": function (oSettings) {
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblPayslipHistory_ellipsis').addClass('disabled');
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+
+                                }
+                            } else {
 
                             }
-                        } else {
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
 
-                        }
-                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                            $('.paginate_button.page-item.next').addClass('disabled');
-                        }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function () {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    var splashArrayPaySlipListDupp = new Array();
+                                    let dataLenght = oSettings._iDisplayLength;
+                                    let customerSearch = $('#tblPayslipHistory_filter input').val();
 
-                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                            .on('click', function () {
-                                $('.fullScreenSpin').css('display', 'inline-block');
-                                var splashArrayPaySlipListDupp = new Array();
-                                let dataLenght = oSettings._iDisplayLength;
-                                let customerSearch = $('#tblPayslipHistory_filter input').val();
+                                    sideBarService.getPaySlip(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                                sideBarService.getPaySlip(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                        for (let i = 0; i < useData.length; i++) {
 
-                                    for (let i = 0; i < data.tpayslips.length; i++) {
+                                            let dataListAllowance = [
+                                                useData[i].fields.ID || '',
+                                                useData[i].fields.Period || '',
+                                                useData[i].fields.PaymentDate || '',
+                                                useData[i].fields.TotalPay || '',
+                                                `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
+                                                <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ data.tpayslips[i].fields.ID +`"><i class="fas fa-trash"></i></button>
+                                                `,
+                                            ];
 
-                                        let dataListAllowance = [
-                                            data.tpayslips[i].fields.ID || '',
-                                            data.tpayslips[i].fields.Period || '',
-                                            data.tpayslips[i].fields.PaymentDate || '',
-                                            data.tpayslips[i].fields.TotalPay || '',
-                                            `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                                            <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id=`+ data.tpayslips[i].fields.ID +`><i class="fas fa-trash"></i></button>
-                                            `,
-                                        ];
+                                            splashArrayPaySlipList.push(dataListAllowance);
+                                        }
 
-                                        splashArrayPaySlipList.push(dataListAllowance);
-                                    }
+                                        let uniqueChars = [...new Set(splashArrayPaySlipList)];
+                                        var datatable = $('#tblPayslipHistory').DataTable();
+                                        datatable.clear();
+                                        datatable.rows.add(uniqueChars);
+                                        datatable.draw(false);
+                                        setTimeout(function () {
+                                            $("#tblPayslipHistory").dataTable().fnPageChange('last');
+                                        }, 400);
 
-                                    let uniqueChars = [...new Set(splashArrayPaySlipList)];
-                                    var datatable = $('#tblPayslipHistory').DataTable();
-                                    datatable.clear();
-                                    datatable.rows.add(uniqueChars);
-                                    datatable.draw(false);
-                                    setTimeout(function () {
-                                        $("#tblPayslipHistory").dataTable().fnPageChange('last');
-                                    }, 400);
-
-                                    $('.fullScreenSpin').css('display', 'none');
+                                        $('.fullScreenSpin').css('display', 'none');
 
 
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    }).catch(function (err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
+
                                 });
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                        "fnInitComplete": function () {
+                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
+                            $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
+                        }
 
-                            });
+                    }).on('page', function () {
                         setTimeout(function () {
                             MakeNegative();
                         }, 100);
-                    },
-                    "fnInitComplete": function () {
-                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
-                        $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
-                    }
 
-                }).on('page', function () {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
+                    }).on('column-reorder', function () {
 
-                }).on('column-reorder', function () {
+                    }).on('length.dt', function (e, settings, len) {
+                        //$('.fullScreenSpin').css('display', 'inline-block');
+                        let dataLenght = settings._iDisplayLength;
+                        splashArrayPaySlipList = [];
+                        if (dataLenght == -1) {
+                        $('.fullScreenSpin').css('display', 'none');
 
-                }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    splashArrayPaySlipList = [];
-                    if (dataLenght == -1) {
-                    $('.fullScreenSpin').css('display', 'none');
-
-                    } else {
-                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
                         } else {
-                            sideBarService.getPaySlip(dataLenght, 0).then(function (dataNonBo) {
+                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            } else {
+                                sideBarService.getPaySlip(dataLenght, 0).then(function (dataNonBo) {
 
-                                addVS1Data('TPaySlips', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                    // templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
+                                    addVS1Data('TPaySlips', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                        // templateObject.resetData(dataNonBo);
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    }).catch(function (err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
                                 }).catch(function (err) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 });
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
+                            }
                         }
-                    }
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                });
-            }, 0);
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    });
+                }, 0);
+            }
+            
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
+
     };
 
 
@@ -5421,8 +5466,9 @@ Template.employeescard.events({
                     fields: new PaySlipsFields({
                         EmployeeID: parseInt( employeeID ),
                         Period: period,
-                        PaymentDate: 0,
-                        TotalPay: parseInt( totalPay )
+                        PaymentDate: moment(),
+                        TotalPay: parseInt( totalPay ),
+                        Active: true
                     }),
                 })
             // );
@@ -5432,7 +5478,6 @@ Template.employeescard.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(paySlipSettings),
             });
-            console.log("dataPay", ApiResponse);
             try {
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
@@ -6114,8 +6159,7 @@ Template.employeescard.events({
                 fields: new PayNotesFields({
                     EmployeeID: parseInt(employeeID),
                     Notes: Notes,
-                    // CreatedAt: moment(),
-                    CreatedAt:0,
+                    CreatedAt: moment(),
                     UserID: Session.get("mySessionEmployeeLoggedID"),
                     UserName: Session.get('mySessionEmployee') || '',
                 }),
@@ -6785,96 +6829,107 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         // let currentId = FlowRouter.current().queryParams;
         // let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-        let deleteID = $(e.target).data('id');
-        let payLines = templateObject.openingBalanceInfo.get();
-        let updatedLines = OpeningBalance.fromList(
-            payLines
-        ).filter(async (item) => {
-            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                item.fields.Active = false;
+        swal({
+            title: 'Confirm.',
+            text: 'You are about to delete this earning line. Proceed?',
+            type: 'info',
+            showCancelButton: false,
+            confirmButtonText: 'Yes. proceed'
+        }).then(async (result) => {
+            if (result) {
+                $('.fullScreenSpin').css('display', 'block');
+                let deleteID = $(e.target).data('id');
+                let payLines = templateObject.openingBalanceInfo.get();
+                let updatedLines = OpeningBalance.fromList(
+                    payLines
+                ).filter(async (item) => {
+                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                        item.fields.Active = false;
+                    }
+                    return item;
+                });
+
+
+                const employeePayrolApis = new EmployeePayrollApi();
+                // now we have to make the post request to save the data in database
+                const apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TOpeningBalances
+                );
+
+                let reiumbursementSettings =  new OpeningBalance({
+                    type: "TOpeningBalances",
+                    fields: new OpeningBalanceFields({
+                        ID: deleteID,
+                        Active: false,
+                        Balance: 0
+                    }),
+                })
+
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(reiumbursementSettings),
+                });
+
+                let openineBalanceObj = {
+                    topeningbalances: updatedLines
+                }
+
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    // Save into indexDB
+                    await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
+                    // Bind with html content
+                    await templateObject.openingBalanceInfo.set(updatedLines);
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+                // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+                // let counter = 0;
+                // let openingBalanceLines = [];
+                // if( Array.isArray( checkOpeningBalances ) ){
+                //     openingBalanceLines = OpeningBalance.fromList(
+                //         checkOpeningBalances
+                //     ).filter((item) => {
+                //         if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                //             if( item.fields.Type == 'EarningLine' ){
+                //                 item.fields.BalanceField = $('#obEarningRate' + counter).val();
+                //                 item.fields.Amount = $('#obEarningAmount' + counter).val();
+                //                 if( parseInt( counter ) != parseInt( deleteID ) ){
+                //                     return item;
+                //                 }
+                //                 counter++
+                //             }else{
+                //                 return item;
+                //             }
+                //         }else{
+                //             return item;
+                //         }
+                //     });
+                // }
+
+
+                // await templateObject.openingBalanceInfo.set(openingBalanceLines);
+                // let totalAmount = 0;
+                // let amount = 0;
+                // let bCounter = 0;
+                // if( openingBalanceLines.length ){
+                //     Array.prototype.forEach.call(openingBalanceLines, (item, index) => {
+                //         if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
+                //             amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+                //             amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                //             totalAmount += parseFloat( amount );
+                //             $('#obEarningRate' + bCounter).val(item.fields.BalanceField);
+                //             $('#obEarningAmount' + bCounter).val(item.fields.Amount);
+                //             bCounter++;
+                //         }
+                //     })
+
+                // }
+                // let utilityService = new UtilityService();
+                // let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+                // $('#obEarningTotalAmount').text(totalFomattedAmount);
             }
-            return item;
-        });
-
-
-        const employeePayrolApis = new EmployeePayrollApi();
-        // now we have to make the post request to save the data in database
-        const apiEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TOpeningBalances
-        );
-
-        let reiumbursementSettings =  new OpeningBalance({
-            type: "TOpeningBalances",
-            fields: new OpeningBalanceFields({
-                ID: deleteID,
-                Active: false,
-                Balance: 0
-            }),
         })
-
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(reiumbursementSettings),
-        });
-
-        let openineBalanceObj = {
-            topeningbalances: updatedLines
-        }
-
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            // Save into indexDB
-            await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
-            // Bind with html content
-            await templateObject.openingBalanceInfo.set(updatedLines);
-            $('.fullScreenSpin').css('display', 'none');
-        }
-        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        // let counter = 0;
-        // let openingBalanceLines = [];
-        // if( Array.isArray( checkOpeningBalances ) ){
-        //     openingBalanceLines = OpeningBalance.fromList(
-        //         checkOpeningBalances
-        //     ).filter((item) => {
-        //         if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
-        //             if( item.fields.Type == 'EarningLine' ){
-        //                 item.fields.BalanceField = $('#obEarningRate' + counter).val();
-        //                 item.fields.Amount = $('#obEarningAmount' + counter).val();
-        //                 if( parseInt( counter ) != parseInt( deleteID ) ){
-        //                     return item;
-        //                 }
-        //                 counter++
-        //             }else{
-        //                 return item;
-        //             }
-        //         }else{
-        //             return item;
-        //         }
-        //     });
-        // }
-
-
-        // await templateObject.openingBalanceInfo.set(openingBalanceLines);
-        // let totalAmount = 0;
-        // let amount = 0;
-        // let bCounter = 0;
-        // if( openingBalanceLines.length ){
-        //     Array.prototype.forEach.call(openingBalanceLines, (item, index) => {
-        //         if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
-        //             amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-        //             amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-        //             totalAmount += parseFloat( amount );
-        //             $('#obEarningRate' + bCounter).val(item.fields.BalanceField);
-        //             $('#obEarningAmount' + bCounter).val(item.fields.Amount);
-        //             bCounter++;
-        //         }
-        //     })
-
-        // }
-        // let utilityService = new UtilityService();
-        // let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
-        // $('#obEarningTotalAmount').text(totalFomattedAmount);
     },
 
     'click .removeObDeduction': async function(e){
@@ -7675,6 +7730,8 @@ Template.employeescard.events({
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(payTemplateEarningLineObj),
                 });
+                console.log("ApiResponse", ApiResponse);
+                
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     // await templateObject.saveEarningLocalDB();
@@ -7714,7 +7771,7 @@ Template.employeescard.events({
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(payTemplateDeductionLineObj),
                 });
-                // console.log("api", ApiResponse);
+                console.log("api", ApiResponse);
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     // await templateObject.saveDeductionLocalDB();
@@ -7724,7 +7781,7 @@ Template.employeescard.events({
             if( superannuationLines ){
                 for (const item of superannuationLines) {
                     if( item.fields.Active == true ){
-                        let SuperannuationType = $(`#ptSuperannuationFund${item.fields.ID}`).val();
+                        let SuperannuationFund = $(`#ptSuperannuationFund${item.fields.ID}`).val();
                         let amount = $(`#ptSuperannuationAmount${item.fields.ID}`).val();
                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
@@ -7732,7 +7789,7 @@ Template.employeescard.events({
                             type: "TPayTemplateSuperannuationLine",
                             fields: {
                                 ID: item.fields.ID,
-                                SuperannuationType: SuperannuationType,
+                                Fund: SuperannuationFund,
                                 Amount: parseFloat( amount ),
                                 Active: true,
                             },
@@ -9413,12 +9470,132 @@ Template.employeescard.events({
     $("#clickedControl").val("three");
   },
   "click #btnDeletePayslip": function (e){
-    let ID=$(".sorting_1").text();
-    let deleteID = $(e.target).data('id');
+    let templateObject = Template.instance();
+    let deleteID = $(e.target).data('id') || '';
+    swal({
+        title: 'Confirm.',
+        text: 'You are about to delete this payslip. Proceed?',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonText: 'Yes. proceed'
+    }).then(async (result) => {
+        if (result.value) {
+            $('.fullScreenSpin').css('display', 'block');
 
-    console.log('id', ID);
-    console.log('deleteID', deleteID);
-    console.log('e', e);
+            const employeePayrolApis = new EmployeePayrollApi();
+            // now we have to make the post request to save the data in database
+            const apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TPaySlips
+            );
+        
+            let paySlipSettings =  new PaySlips({
+                type: "TPaySlips",
+                fields: new PaySlipsFields({
+                    ID: parseInt( deleteID ),
+                    Active: false
+                }),
+            })
+
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(paySlipSettings),
+            });
+
+            let payLines = templateObject.paySlipInfos.get();
+            let updatedLines = PaySlips.fromList(
+                payLines
+            ).filter(async (item) => {
+
+                if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                    item.fields.Active = false;
+                }
+                return item;
+            });
+            let paySlipObj = {
+                tpayslips: updatedLines
+            }
+            try {
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await addVS1Data('TPaySlips', JSON.stringify(paySlipObj))
+                    await templateObject.getPaySlips();
+                    // await templateObject.paySlipInfos.set(updatedLines);
+
+                } 
+                $('.fullScreenSpin').hide();
+
+            }
+            catch(e){
+                $('.fullScreenSpin').hide();
+
+            }
+        }
+    });
+  },
+  "click #btnDeleteAssignLeaveType": function (e){
+    let templateObject = Template.instance();
+    let deleteID = $(e.target).data('id') || '';
+    swal({
+        title: 'Confirm.',
+        text: 'You are about to delete this assign leave type. Proceed?',
+        type: 'info',
+        showCancelButton: false,
+        confirmButtonText: 'Yes. proceed'
+    }).then(async (result) => {
+        if (result.value) {
+            $('.fullScreenSpin').css('display', 'block');
+
+            const employeePayrolApis = new EmployeePayrollApi();
+            // now we have to make the post request to save the data in database
+            const apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TAssignLeaveType
+            );
+        
+            let assignLeaveSettings =  new AssignLeaveType({
+                type: "TAssignLeaveType",
+                fields: new AssignLeaveTypeFields({
+                    ID: parseInt( deleteID ),
+                    Active: false
+                }),
+            })
+
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(assignLeaveSettings),
+            });
+
+            let leaveType = templateObject.assignLeaveTypeInfos.get();
+
+            let updatedLines = AssignLeaveType.fromList(
+                leaveType
+            ).filter(async (item) => {
+
+                if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                    item.fields.Active = false;
+                }
+                return item;
+            });
+            let leaveTypeObj = {
+                tassignleavetype: updatedLines
+            }
+            try {
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    await addVS1Data('TAssignLeaveType', JSON.stringify(leaveTypeObj))
+                    await templateObject.getAssignLeaveType();
+
+                } 
+                $('.fullScreenSpin').hide();
+
+            }
+            catch(e){
+                $('.fullScreenSpin').hide();
+
+            }
+        }
+    });
   }
 });
 
