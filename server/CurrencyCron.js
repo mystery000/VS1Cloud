@@ -168,6 +168,7 @@ Meteor.methods({
     return SyncedCron.add({
       name: cronId,
       schedule: function (parser) {
+        console.log(cronSetting.toParse);
         const parsed = parser.text(cronSetting.toParse);
         return parsed;
         //return parser.text("every 2 minutes");
