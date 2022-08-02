@@ -1158,7 +1158,7 @@ Template.receiptsoverview.onRendered(function() {
     templateObject.getOCRResultFromImage = function(imageData, fileName) {
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
-
+          console.log(data);
             $('.fullScreenSpin').css('display', 'none');
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
@@ -1246,8 +1246,9 @@ Template.receiptsoverview.onRendered(function() {
             $(parentElement + ' .transactionTypes').val(transactionTypeName);
 
         }).catch(function(err) {
+          console.log(err);
             let errText = "";
-            if (err.error == "401") {
+            if (err.error == "500") {
                 errText = "You have run out of free scans. Please upgrade your account to get more scans";
             } else {
                 errText = err;
