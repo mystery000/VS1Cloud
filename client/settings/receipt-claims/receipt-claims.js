@@ -56,7 +56,7 @@ Template.receiptclaims.events({
   'click #receiptClaimsSignUp': function() {
     window.open("https://hub.veryfi.com/");
   },
-  'click #saveReceiptClaimsSettings': async function(){
+  'click #saveReceiptClaimsSettings': function(){
     swal({
         title: 'Confirm saving',
         text: "You're about to save Report Claims, proceed?.",

@@ -204,13 +204,13 @@ Template.trueerp.events({
         event.preventDefault();
     }
 },
-'click .btnUploadERPUSer': async function (event) {
+'click .btnUploadERPUSer': function (event) {
   swal({
     title: 'Confirm saving',
     text: "You're about to save True ERP, proceed?.",
     showCancelButton: true,
     confirmButtonText: 'Yes, proceed',
-}).then((result) => {
+}).then(async (result) => {
     if (result.value) {
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
