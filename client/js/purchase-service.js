@@ -97,6 +97,49 @@ export class PurchaseBoardService extends BaseService {
         return this.getList(this.ERPObjects.TTaxcodeVS1, options);
     }
 
+    getTaxCodesDetailVS1() {
+        let options = {
+            ListType: "Detail",
+            select: "[Active]=true",
+        };
+        let that = this;
+        let promise = new Promise(function(resolve, reject) {
+            that.getList(that.ERPObjects.TTaxcodeVS1, options).then(function (data) {
+                let ttaxcodevs1 = data.ttaxcodevs1.map((v) => {
+                    let fields = v.fields;
+                    let lines = fields.Lines;
+                    if (lines !== null) {
+                        if (Array.isArray(lines)) {         // if lines is array
+                            lines = lines.map((line) => {
+                                let f = line.fields;
+                                return {
+                                    ...{Id: f.ID},
+                                    ...f,
+                                }
+                            })
+                        }
+                        else if (typeof lines === 'object') {   // else if it is object
+                            lines = [
+                                {
+                                    ...{Id: lines.fields.ID},
+                                    ...lines.fields
+                                }
+                            ];
+                        }
+                    }
+                    return {
+                        ...{ Id: fields.ID },
+                        ...fields,
+                        ...{ Lines: lines }
+                    }
+                });
+                resolve({ ttaxcodevs1 });
+            }).catch(function (err) {
+                reject(err);
+            })
+        });
+        return promise;
+    }
 
     saveSalesQuote(data) {
         return this.POST(this.ERPObjects.TQuoteEx, data);
