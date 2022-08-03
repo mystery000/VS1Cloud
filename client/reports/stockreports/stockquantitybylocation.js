@@ -83,7 +83,6 @@ Template.stockquantitybylocation.onRendered(() => {
     let dateFrom = moment().subtract(6, "months").format("YYYY-MM-DD");;
     let dateTo = moment().format("YYYY-MM-DD");
     let data = await reportService.getStockQuantityLocationReport( dateFrom, dateTo, false);
-    console.log(data);
   }
 
   templateObject.getStockLocationReportData();
