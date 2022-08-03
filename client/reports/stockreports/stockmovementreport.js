@@ -89,6 +89,49 @@ Template.stockmovementreport.onRendered(() => {
     let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
     let dateTo = moment().format("YYYY-MM-DD");
     let data = await reportService.getStockMovementReport( dateFrom, dateTo, false);
+    let movementReport = [];
+    if( data.t_vs1_report_productmovement.length > 0 ){
+        let reportGroups = []; 
+        for (const item of data.t_vs1_report_productmovement) {   
+            let isExist = reportGroups.filter((subitem) => {
+                if( subitem.ID == item.fields.ProductID ){
+                    subitem.SubAccounts.push(item)
+                    return subitem
+                }
+            });
+
+            if( isExist.length == 0 ){
+                reportGroups.push({
+                    ID: item.fields.ProductID,
+                    ProductName: item.fields.ProductName,
+                    SubAccounts: [item],
+                    TotalRunningQty: 0,
+                    TotalCurrentQty: 0,
+                    TotalUnitCost: 0
+                });
+            }
+        }
+
+        movementReport = reportGroups.filter((item) => {
+            let TotalRunningQty = 0;
+            let TotalCurrentQty = 0;
+            let TotalUnitCost = 0;
+            item.SubAccounts.map((subitem) => {
+              TotalRunningQty += subitem.fields.Qty;
+              TotalCurrentQty += subitem.fields.Qty;
+              TotalUnitCost += subitem.fields.Cost;
+            });
+            item.TotalRunningQty = TotalRunningQty;
+            item.TotalCurrentQty = TotalCurrentQty;
+            item.TotalUnitCost = TotalUnitCost;
+            return item;
+        });        
+    }
+    templateObject.records.set(movementReport);
+    setTimeout(function() {
+        MakeNegative();
+    }, 1000);
+    $(".fullScreenSpin").css("display", "none");
   }
 
   templateObject.getStockMovementReportData();

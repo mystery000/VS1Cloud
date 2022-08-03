@@ -57,6 +57,7 @@ Template.receiptclaims.events({
     window.open("https://hub.veryfi.com/");
   },
   'click #saveReceiptClaimsSettings': async function(){
+    $('.fullScreenSpin').css('display','block');
     let settingObject = [];
     const templateObject = Template.instance();
     let settingDetails = templateObject.settingDetails.get();
@@ -67,8 +68,8 @@ Template.receiptclaims.events({
                 settingObject.push({
                     type: "TERPPreference",
                     fields: {
-                    Id: item.Id,
-                    Fieldvalue: FieldValue
+                        Id: item.Id,
+                        Fieldvalue: FieldValue
                     }
                 });
             }
@@ -95,22 +96,53 @@ Template.receiptclaims.events({
             objects:settingObject
         };
 
-        const ApiResponse = await settingService.savePreferenceSettings( settingJSON );
-        let data = await settingService.getPreferenceSettings( settingFields );
-        let dataObject = await getVS1Data('TERPPreference')
-        let details = [];
-        if ( dataObject.length > 0) {
-            dataObj = JSON.parse(dataObject[0].data);
-            details = dataObj.terppreference.filter(function( item ){
-                if( settingFields.includes( item.PrefName ) == false ){
-                    return item;
+        try {
+            // Saving data
+            let ApiResponse = await settingService.savePreferenceSettings( settingJSON ); 
+            if( ApiResponse.result == 'Success' ){              
+                let data = await settingService.getPreferenceSettings( settingFields );
+                let dataObject = await getVS1Data('TERPPreference')
+                let details = [];
+                if ( dataObject.length > 0) {
+                    dataObj = JSON.parse(dataObject[0].data);
+                    details = dataObj.terppreference.filter(function( item ){
+                        if( settingFields.includes( item.PrefName ) == false ){
+                            return item;
+                        }
+                    }); 
+                    templateObject.settingDetails.set( data.terppreference );
+                    data.terppreference.push(...details);
+                    await addVS1Data('TERPPreference', JSON.stringify(data))
+                    $('.fullScreenSpin').css('display','none');
                 }
-            }); 
-            templateObject.settingDetails.set( data.terppreference );
-            data.terppreference.push(...details);
-            await addVS1Data('TERPPreference', JSON.stringify(data))
+                swal({
+                    title: 'Receipt Claims settings successfully updated!',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: "Error in updation",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                })
+            }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            })
         }
+        
     }
-
   }
 });
