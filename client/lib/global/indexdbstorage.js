@@ -222,7 +222,7 @@ openDb = function (dbName) {
       db.createObjectStore("TPayNotes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
-      
+
 
       db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });
@@ -558,7 +558,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 52);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 54);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };
