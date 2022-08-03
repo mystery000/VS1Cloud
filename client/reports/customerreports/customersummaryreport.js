@@ -18,6 +18,8 @@ Template.customersummaryreport.onCreated(() => {
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  templateObject.records = new ReactiveVar([]);
+
 });
 
 Template.customersummaryreport.onRendered(() => {
@@ -97,6 +99,35 @@ Template.customersummaryreport.onRendered(() => {
   templateObject.initDate();
   templateObject.initUploadedImage();
   LoadingOverlay.hide();
+
+  templateObject.getCustomerDetailsHistory = async function () {
+    console.log("data", 'data');
+
+    let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
+    let dateTo = moment().format("YYYY-MM-DD");
+    let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, false);
+    let customerDetails = [];
+    console.log("data", data);
+
+    console.log("data", data.tcustomersummaryreport);
+    if( data.tcustomersummaryreport.length > 0 ){
+        for (const item of data.tcustomersummaryreport) {   
+
+            customerDetails.push({
+              ID: item.ClientID,
+              Name: item.Name,
+              Phone: item.Phone,
+              Address: item.Address,
+              State: item.Superannuation,
+            });
+
+            
+        }
+
+    }
+    templateObject.records.set(customerDetails);    
+  };
+  templateObject.getCustomerDetailsHistory();
 });
 
 Template.customersummaryreport.events({
@@ -422,6 +453,9 @@ Template.customersummaryreport.events({
 Template.customersummaryreport.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
+  },
+  records: () => {
+    return Template.instance().records.get();
   },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory

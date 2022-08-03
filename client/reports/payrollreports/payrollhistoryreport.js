@@ -94,6 +94,7 @@ Template.payrollhistoryreport.onRendered(() => {
     let paySlipReport = [];
     if( data.tpayhistory.length > 0 ){
         let employeeGroups = [];
+        console.log("data", data.tpayhistory);
         // employeeGroups = await objectGrouping(data.tpayhistory, "Employeeid");   
         for (const item of data.tpayhistory) {   
 

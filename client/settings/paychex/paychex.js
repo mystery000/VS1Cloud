@@ -109,7 +109,12 @@ Template.paychex.events({
             await addVS1Data('TERPPreference', JSON.stringify(data))
         }
     }
-
+    $('.fullScreenSpin').css('display','none');
+    swal({
+      title: 'Paychex successfully updated!',
+      text: '',
+      type: 'success',
+    })
   }
   
 });

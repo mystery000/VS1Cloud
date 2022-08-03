@@ -54,6 +54,7 @@ Template.adp.events({
         window.open("https://in.adp.com");
     },
     'click #saveAdpSetting': async function(){
+        $('.fullScreenSpin').css('display','block');
         let settingObject = [];
         const templateObject = Template.instance();
         let settingDetails = templateObject.settingDetails.get();
@@ -105,6 +106,12 @@ Template.adp.events({
                 await addVS1Data('TERPPreference', JSON.stringify(data))
             }
         }
+        $('.fullScreenSpin').css('display','none');
+    swal({
+      title: 'ADP successfully updated!',
+      text: '',
+      type: 'success',
+    })
 
     }
 
