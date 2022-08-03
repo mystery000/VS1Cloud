@@ -8454,7 +8454,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $('#tblSupplierPaymentcard tbody tr').remove();
 
     let selectedSupplierPayments = templateObject.outstandingExpenses.get();
-    console.log(selectedSupplierPayments);
+    //console.log(selectedSupplierPayments);
 
     if (selectedSupplierPayments.length > 0) {
       let currentApplied = $(".lead")
@@ -13468,7 +13468,7 @@ Template.supplierpaymentcard.events({
       // convert to forign payment amount
       const valueToConvert = $(e.currentTarget).val();
       const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-      console.log(valueToConvert, convertedValue, $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to'));
+      //console.log(valueToConvert, convertedValue, $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to'));
       $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
 
       // Convert oustanding to foriegn oustanding
@@ -13520,14 +13520,14 @@ export function calculateApplied() {
 function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
   let utilityService = new UtilityService();
   const currency = utilityService.extractCurrency(amount);
-  console.log("pre amount: ", amount);
+  //console.log("pre amount: ", amount);
   amount = utilityService.removeCurrency(amount, currency);
 
-  console.log("amount to convert", amount);
-  console.log('rate', rate);
+  //console.log("amount to convert", amount);
+  //console.log('rate', rate);
   let convert = amount * rate;
 
-  console.log("converted", convert);
+  //console.log("converted", convert);
 
   if(withSymbol) {
     return `${withSymbol}${convert}`;
