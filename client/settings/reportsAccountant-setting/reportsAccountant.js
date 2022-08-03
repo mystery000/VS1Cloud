@@ -1265,9 +1265,10 @@ Template.reportsAccountantSettings.events({
                 };
 
                 taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
+                    console.log("--------");
                   sideBarService.getAccountantCategory().then(function(dataReload) {
                       addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
-                      location.reload(true);
+                        location.reload(true);
                       }).catch(function (err) {
                         location.reload(true);
                       });
@@ -1275,6 +1276,7 @@ Template.reportsAccountantSettings.events({
                       location.reload(true);
                   });
                 }).catch(function (err) {
+                    console.log("========");
                     swal({
                         title: 'Oooops...',
                         text: err,
@@ -1311,6 +1313,7 @@ Template.reportsAccountantSettings.events({
             };
 
             taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
+                console.log('objDetails', objDetails);
               sideBarService.getAccountantCategory().then(function(dataReload) {
                   addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
                   location.reload(true);
@@ -1321,6 +1324,7 @@ Template.reportsAccountantSettings.events({
                   location.reload(true);
               });
             }).catch(function (err) {
+                console.log('==========');
                 swal({
                     title: 'Oooops...',
                     text: err,
