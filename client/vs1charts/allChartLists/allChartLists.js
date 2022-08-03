@@ -109,7 +109,7 @@ async function saveCharts() {
         type: "Tvs1dashboardpreferences",
         objects:chartList
     };
-  
+
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
@@ -195,7 +195,7 @@ Template.allChartLists.onRendered(function () {
             chart.fields.ID
           );
 
-          // Default charts          
+          // Default charts
           let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
           let defaultPosition = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-position');
           $(`[key='${chart.fields._chartSlug}']`).addClass(defaultClass);
@@ -210,7 +210,7 @@ Template.allChartLists.onRendered(function () {
             "height",
             "auto"
           );
-          
+
 
           if (chart.fields.ChartGroup == _chartGroup) {
 
@@ -357,7 +357,7 @@ Template.allChartLists.onRendered(function () {
           $(`[key='${item}']`).removeClass("hideelement");
           $(`[key='${item}']`).addClass("chart-visibility");
         }
-      }      
+      }
     }
     await ChartHandler.buildPositions();
     // Handle sorting
@@ -439,7 +439,7 @@ Template.allChartLists.events({
     const apiEndpoint = dashboardApis.collection.findByName(
       dashboardApis.collectionNames.Tvs1dashboardpreferences
     );
-  
+
     let resetCharts = {
       type: "Tvs1dashboardpreferences",
       delete: true,
@@ -454,7 +454,7 @@ Template.allChartLists.events({
         headers: ApiService.getPostHeaders(),
         body: JSON.stringify(resetCharts),
       });
-  
+
       if (ApiResponse.ok == true) {
         const jsonResponse = await ApiResponse.json();
         await ChartHandler.saveChartsInLocalDB();

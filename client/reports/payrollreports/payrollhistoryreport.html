@@ -177,98 +177,33 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td colspan="7" style="font-weight: 800;">Rasheed</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>25/05/2022</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>25/05/2022</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>25/05/2022</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>25/05/2022</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>25/05/2022</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="font-weight: 800;">Rasheed Totals</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                            </tr>
-                                            <tr class="departmentHeader">
-                                                <td colspan="7" style="font-weight: 800;">Josef</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>24/05/2022</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="font-weight: 800;">Josef Totals</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                            </tr>
-                                            <!-- {{#if records}}
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
-                                                </tr>
-                                            {{/if}} -->
+                                            {{#if records}}
+                                                {{#each arrayify records}}
+                                                    <tr>
+                                                        <td colspan="7" style="font-weight: 800;">{{ value.EmpName }}</td>
+                                                    </tr>
+                                                    {{#each item in value.SubAccounts}}
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ formatDate item.fields.PayDate }}</td>
+                                                            <td>{{ formatPrice item.fields.Wages }}</td>
+                                                            <td>{{ formatPrice item.fields.Tax }}</td>
+                                                            <td>{{ formatPrice item.fields.Superannuation }}</td>
+                                                            <td>{{ formatPrice item.fields.Gross }}</td>
+                                                            <td>{{ formatPrice item.fields.Net }}</td>
+                                                        </tr>
+                                                    {{/each}}
+                                                    <tr>
+                                                        <td colspan="2" style="font-weight: 800;">{{ value.EmpName }} Totals</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalWages }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalTax }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalSuperannuation }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalGross }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalNet }}</td>
+                                                    </tr>    
+                                                {{/each}}
+                                            {{/if}}
+                                                                                    
                                         </tbody>
                                     </table>
                                 </div>

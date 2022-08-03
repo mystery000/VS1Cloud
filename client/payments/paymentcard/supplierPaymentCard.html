@@ -176,7 +176,7 @@
         
                         </div>
                         <div class="form-group"><label>Variation</label>
-                            <input class="form-control form-control" type="text" value="$0.00" data-value="0.00"  id="edtVariation" name='variation'>
+                            <input class="form-control form-control" type="text" value="0.00" data-value="0.00"  id="edtVariation" name='variation'>
                         </div>
                         <div class="form-group ">
                             <label>Applied</label>
@@ -1360,8 +1360,13 @@
                                         <th class="th colTransNo" style="width: 100px;">Trans No.</th>
                                         <th class="th lineOrginalamount" style="width: 80px;">Original</th>
                                         <th class="th lineAmountdue" style="width: 80px;">Due</th>
-                                        <th colspan="2" class="th linePaymentamount pointer" style="width: 120px;">Payment <i class="fa fa-pencil-square-o"></i></th>
-                                        <th colspan="2" class="th lineOutstandingAmount" style="width: 80px;">Outstanding</th>
+                                        {{#if isForeignEnabled}}
+                                            <th colspan="2" class="th linePaymentamount pointer" style="width: 120px;">Payment <i class="fa fa-pencil-square-o"></i></th>
+                                            <th colspan="2" class="th lineOutstandingAmount" style="width: 80px;">Outstanding</th>
+                                        {{else}}
+                                            <th class="th linePaymentamount pointer" style="width: 120px;">Payment <i class="fa fa-pencil-square-o"></i></th>
+                                            <th class="th lineOutstandingAmount" style="width: 80px;">Outstanding</th>
+                                        {{/if}}
                                         <th class="th colComments">Comments on Transaction form</th>
                                         <th class="th" style="width: 25px;"></th>
                                     </tr>
@@ -1372,50 +1377,43 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th>AUD</th>
+                                            <th>{{ getDefaultCurrency }}</th>
                                             <th>Foreign</th>
-                                            <th>AUD</th>
+                                            <th>{{ getDefaultCurrency }}</th>
                                             <th>Foreign</th>
                                             <th></th>
                                             <th></th>
                                         </tr>
                                     {{/if}}
                                 </thead>
+                            
                                 <tbody>
-                                    <!-- {{currentTransDate}} -->
-                                    <!-- <tr class="dnd-moved tr">
-<td contenteditable="true" class="">2020-02-23</td>
-<td contenteditable="true" class="">P012345</td>
-<td contenteditable="true" class="" style="text-align: right!important;">$ 10,000.34</td>
-<td contenteditable="true" class="" style="text-align: right!important;">$ 12,000.34</td>
-<td contenteditable="true" class="" style="text-align: right!important;">$ 12,000.34</td>
-<td contenteditable="true" class="" style="text-align: right!important;">$ 0.00</td>
-<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
-</tr> -->
-                                    {{#each item in record.LineItems}}
+                                    
+                                    <!-- {{#each item in outstandingExpenses}}
                                         <tr class="dnd-moved" id="{{item.poid}}" name="{{item.poid}}">
                                             <td contenteditable="false" class="colTransDate">{{item.invoicedate}}</td>
                                             <td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">{{item.transtype}}</td>
                                             <td contenteditable="false" class="colTransNo" style="color:#00a3d3">{{item.poid}}</td>
                                             <td contenteditable="false" class="lineOrginalamount">{{item.orginalamount}}</td>
                                             <td contenteditable="false" class="lineAmountdue">{{item.amountdue}}</td>
-                                            <!--                                    <td contenteditable="true" class="linePaymentamount">{{item.paymentamount}}</td>-->
-                                            <td><input class="linePaymentamount highlightInput" type="text" value="{{item.paymentamount}}"></td>
-                                            {{#if isForeignEnabled}}
-                                                <td><input class="linePaymentamount highlightInput 2" type="text" value="{{item.paymentamount}}"></td>
-                                            {{/if}}
-                                            <td contenteditable="false" class="lineOutstandingAmount">{{item.ouststandingamount}}</td>
-                                            {{#if isForeignEnabled}}
-                                                <td contenteditable="false" class="lineOutstandingAmount2">{{item.ouststandingamount}}</td>
-                                            {{/if}}
+                                                                    <td contenteditable="true" class="linePaymentamount">{{item.paymentamount}}</td>
+                                           
+                                                <td class="foreign"><input class="linePaymentamount highlightInput" type="text" value="{{item.paymentamount}}"></td>
+                                                <td class="foreign"><input class="linePaymentamount highlightInput" type="text" value="{{item.paymentamount}}"></td>
+
+                                                <td contenteditable="false" class="lineOutstandingAmount">{{item.ouststandingamount}}</td>
+                                                <td contenteditable="false" class="lineOutstandingAmount foreign">{{item.ouststandingamount}}</td>
 
                                             <td></td>
                                             <td contenteditable="true" class="colComments">{{item.comments}}</td>
                                             <td></td>
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
                                         </tr>
-                                    {{/each}}
+                                    {{/each}} -->
+                                  
                                 </tbody>
+                                  
+                               
                             </table>
                             <div class="d-xl-flex justify-content-xl-center">
                                 <div align="left" style="width:100%;">

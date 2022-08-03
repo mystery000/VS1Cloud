@@ -20,7 +20,7 @@ let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 var times = 0;
 let purchaseDefaultTerms = "";
-var template_list = [ 
+var template_list = [
     "Purchase Orders",
 ];
 
@@ -117,15 +117,15 @@ Template.purchaseordercard.onRendered(() => {
                 $('#choosetemplate').attr("checked", "checked");
 
                 if($('#choosetemplate').is(':checked'))
-                {        
+                {
                   //  $('#templateselection').modal('show');
                 }
                 else
-                {   
+                {
                 $('#templateselection').modal('hide');
                 }
             }
-    
+
 
         });
 
@@ -135,29 +135,54 @@ Template.purchaseordercard.onRendered(() => {
    templateObject.getTemplateInfo();
 
 
+   templateObject.getLastPOData = async function() {
+       let lastBankAccount = "Bank";
+       let lastDepartment = defaultDept || "";
+       purchaseService.getLastPOID().then(function(data) {
+         let latestPOId;
+           if (data.tpurchaseorder.length > 0) {
+               lastPO = data.tpurchaseorder[data.tpurchaseorder.length - 1]
+               latestPOId = (lastPO.Id);
+           } else {
+             latestPOId = 0;
+           }
+           newPOId = (latestPOId + 1);
+           setTimeout(function() {
+               $('#sltDept').val(lastDepartment);
+               if (FlowRouter.current().queryParams.id) {
+
+               }else{
+               $(".heading").html("New Purchase Order " +newPOId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+               };
+           }, 50);
+       }).catch(function(err) {
+           $('#sltDept').val(lastDepartment);
+       });
+   };
+
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
-    
+
         title = $(this).parent().attr("data-id");
         number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
         templateObject.generateInvoiceData(title,number);
-           
+
      });
 
      templateObject.generateInvoiceData = function (template_title,number) {
         object_invoce = [];
          switch (template_title) {
-     
+
          case "Purchase Orders":
             showPurchaseOrder1(template_title,number);
             break;
          }
-   
+
       };
 
     function showPurchaseOrder1(template_title,number)
     {
         var array_data = [];
-        let lineItems = [];   
+        let lineItems = [];
         object_invoce = [];
         let item_invoices = '';
 
@@ -196,18 +221,18 @@ Template.purchaseordercard.onRendered(() => {
 
         $('#tblPurchaseOrderLine > tbody > tr').each(function () {
             var lineID = this.id;
-        
-        
+
+
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
-        
-        
+
+
             array_data.push([
                 tdproduct,
                 tddescription,
@@ -216,7 +241,7 @@ Template.purchaseordercard.onRendered(() => {
                 taxAmount,
                 tdlineamt,
             ]);
-        
+
             lineItemObj = {
                 description: tddescription || '',
                 quantity: tdQty || 0,
@@ -224,7 +249,7 @@ Template.purchaseordercard.onRendered(() => {
                     minimumFractionDigits: 2
                 }) || 0
             }
-        
+
             lineItems.push(lineItemObj);
         });
 
@@ -245,11 +270,11 @@ Template.purchaseordercard.onRendered(() => {
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             file = 'PurchaseOrder-' + id + '.pdf';
         }
-        
+
 
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-     
+
         if(number == 1)
         {
               item_invoices = {
@@ -298,7 +323,7 @@ Template.purchaseordercard.onRendered(() => {
         else if(number == 2)
         {
             item_invoices = {
-             
+
                 o_url: Session.get('vs1companyURL'),
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
@@ -387,10 +412,10 @@ Template.purchaseordercard.onRendered(() => {
         }
 
 
-       
-    
+
+
         object_invoce.push(item_invoices);
-    
+
         $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
 
@@ -404,7 +429,7 @@ Template.purchaseordercard.onRendered(() => {
     function showPurchaseOrder(template_title,number)
     {
         var array_data = [];
-        let lineItems = [];   
+        let lineItems = [];
         object_invoce = [];
         let item_invoices = '';
 
@@ -443,18 +468,18 @@ Template.purchaseordercard.onRendered(() => {
 
         $('#tblPurchaseOrderLine > tbody > tr').each(function () {
             var lineID = this.id;
-        
-        
+
+
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
-        
-        
+
+
             array_data.push([
                 tdproduct,
                 tddescription,
@@ -463,7 +488,7 @@ Template.purchaseordercard.onRendered(() => {
                 taxAmount,
                 tdlineamt,
             ]);
-        
+
             lineItemObj = {
                 description: tddescription || '',
                 quantity: tdQty || 0,
@@ -471,7 +496,7 @@ Template.purchaseordercard.onRendered(() => {
                     minimumFractionDigits: 2
                 }) || 0
             }
-        
+
             lineItems.push(lineItemObj);
         });
 
@@ -492,11 +517,11 @@ Template.purchaseordercard.onRendered(() => {
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             file = 'PurchaseOrder-' + id + '.pdf';
         }
-        
+
 
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
-     
+
         if(number == 1)
         {
               item_invoices = {
@@ -545,7 +570,7 @@ Template.purchaseordercard.onRendered(() => {
         else if(number == 2)
         {
             item_invoices = {
-             
+
                 o_url: Session.get('vs1companyURL'),
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
@@ -634,21 +659,21 @@ Template.purchaseordercard.onRendered(() => {
         }
 
 
-       
-    
+
+
         object_invoce.push(item_invoices);
         $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
         updateTemplate(object_invoce);
 
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-        
+
     }
 
     function updateTemplate1(object_invoce) {
         $("#templatePreviewModal").modal("toggle");
         if (object_invoce.length > 0) {
-         
+
           $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
           $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
           $("#templatePreviewModal .o_address1").text(
@@ -659,7 +684,7 @@ Template.purchaseordercard.onRendered(() => {
           $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
           $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
           $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
-    
+
           if(object_invoce[0]["applied"] == ""){
             $("#templatePreviewModal .applied").hide()
             $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
@@ -677,7 +702,7 @@ Template.purchaseordercard.onRendered(() => {
           }
           $("#templatePreviewModal .customer").empty();
           $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
-    
+
           if(object_invoce[0]["supplier_name"] == ""){
             $("#templatePreviewModal .pdfCustomerName").hide()
           }else{
@@ -685,7 +710,7 @@ Template.purchaseordercard.onRendered(() => {
           }
           $("#templatePreviewModal .pdfCustomerName").empty();
           $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-    
+
           if(object_invoce[0]["supplier_addr"] == ""){
             $("#templatePreviewModal .pdfCustomerAddress").hide()
           }else{
@@ -693,8 +718,8 @@ Template.purchaseordercard.onRendered(() => {
           }
           $("#templatePreviewModal .pdfCustomerAddress").empty();
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-    
-          
+
+
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
             object_invoce[0]["title"] + " "+ " Template"
@@ -708,9 +733,9 @@ Template.purchaseordercard.onRendered(() => {
           else{
              $('.print-header-value').text(object_invoce[0]["value"]);
           }
-    
+
           if(object_invoce[0]["bsb"]=="")
-          { 
+          {
               $('#templatePreviewModal .field_payment').hide();
 
           }
@@ -718,29 +743,29 @@ Template.purchaseordercard.onRendered(() => {
 
               $('#templatePreviewModal .field_payment').show();
           }
-         
-    
+
+
           $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
           $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
           $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-    
-    
+
+
           if(object_invoce[0]["date"] == ""){
             $("#templatePreviewModal .dateNumber").hide();
           }else{
             $("#templatePreviewModal .dateNumber").show();
           }
-    
+
           $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
-    
+
           if(object_invoce[0]["pqnumber"] == ""){
             $("#templatePreviewModal .pdfPONumber").hide();
           }else{
             $("#templatePreviewModal .pdfPONumber").show();
           }
-    
+
           $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-    
+
           if(object_invoce[0]["invoicenumber"] == ""){
             $("#templatePreviewModal .invoiceNumber").hide();
           }else{
@@ -798,7 +823,7 @@ Template.purchaseordercard.onRendered(() => {
           {
                 $('#customfieldtablenew').css('display', 'block');
                 $('#customdatatablenew').css('display', 'block');
-                
+
                 $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
                 $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
                 $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
@@ -811,7 +836,7 @@ Template.purchaseordercard.onRendered(() => {
                 {
                   $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
                 }
-  
+
                 if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
                 {
                   $('#templatePreviewModal .customfield2data').text('');
@@ -1133,17 +1158,17 @@ Template.purchaseordercard.onRendered(() => {
             tbl_content.append(content)
             tbl_content.append("</tr>")
         }
-        
-        // total amount 
-        
+
+        // total amount
+
         if(object_invoce[0]["subtotal"] == "")
-        {     
+        {
             $("#html-2-pdfwrapper_new .field_amount").hide();
         }
         else
         {
             $("#html-2-pdfwrapper_new .field_amount").show();
-          
+
             if(object_invoce[0]["subtotal"] != ""){
               $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
               $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
@@ -1153,22 +1178,22 @@ Template.purchaseordercard.onRendered(() => {
                 $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
                 $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
             }
-            
-    
+
+
             if(object_invoce[0]["total"] != ""){
                 $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
             }
-    
+
             if(object_invoce[0]["bal_due"] != ""){
                 $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
             }
-    
+
             if(object_invoce[0]["paid_amount"] != ""){
                 $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
             }
-    
+
         }
-       
+
     }
 
     function saveTemplateFields(key, value){
@@ -2658,6 +2683,7 @@ Template.purchaseordercard.onRendered(() => {
         }
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
+            templateObject.getLastPOData();
         }, 200);
         templateObject.purchaseorderrecord.set(purchaseorderrecord);
         if (templateObject.purchaseorderrecord.get()) {
@@ -4107,7 +4133,7 @@ Template.purchaseordercard.onRendered(() => {
             await showPurchaseOrder(template_title,number);
 
         }
-      
+
 
         let margins = {
             top: 0,
@@ -4126,8 +4152,8 @@ Template.purchaseordercard.onRendered(() => {
             {
                 file = 'Purchase Order-' + quoteData.id + '.pdf';
             }
-           
-        
+
+
         }
 
         var opt = {
@@ -6259,7 +6285,7 @@ Template.purchaseordercard.events({
         }
         else
         {
-        
+
             $('.fullScreenSpin').css('display', 'inline-block');
             $('#html-2-pdfwrapper').css('display', 'block');
             if ($('.edtCustomerEmail').val() != "") {
@@ -6268,11 +6294,11 @@ Template.purchaseordercard.events({
                 $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
                 var ponumber = $('#ponumber').val() || '.';
                 $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;  
+                var rowCount = $('.tblInvoiceLine tbody tr').length;
 
                 exportSalesToPdf1();
-            
-            } 
+
+            }
 
             $('#confirmprint').modal('hide');
         }
@@ -6280,22 +6306,22 @@ Template.purchaseordercard.events({
     },
 
     'click #choosetemplate':function(event)
-    {   
+    {
         if($('#choosetemplate').is(':checked'))
-        {        
+        {
             $('#templateselection').modal('show');
         }
         else
-        {   
+        {
         $('#templateselection').modal('hide');
         }
-        
+
     },
     'click .printConfirm':async function (event) {
-   
+
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         getVS1Data('TemplateSettings').then(function(dataObject) {
 
             let data = JSON.parse(dataObject[0].data);
@@ -6307,7 +6333,7 @@ Template.purchaseordercard.events({
             if(data.fields)
             {
 
-                var bill =data.fields.bill;         
+                var bill =data.fields.bill;
                 var credits =  data.fields.credits;
                 var customer_payment = data.fields.customer_payment;
                 var invoices = data.fields.invoices;
@@ -6320,10 +6346,10 @@ Template.purchaseordercard.events({
                 var statements = data.fields.statements;
                 var customer_statement =  data.fields.customer_statement;
                 var delivery_docket =  data.fields.delivery_docket;
-               
+
                 var print_options  =  {
                     type:"TemplateSettings",
-                    fields:{                              
+                    fields:{
                                client_id:loggedCompany,
                                bill:bill,
                                credits:credits,
@@ -6339,15 +6365,15 @@ Template.purchaseordercard.events({
                                statements:statements,
                                delivery_docket:delivery_docket,
                           }
-              
-              
-                          
+
+
+
                   }
 
                   addVS1Data("TemplateSettings", JSON.stringify(print_options));
 
             }
-    
+
 
         });
 
@@ -6361,22 +6387,22 @@ Template.purchaseordercard.events({
             $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
             var ponumber = $('#ponumber').val() || '.';
             $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;   
+            var rowCount = $('.tblInvoiceLine tbody tr').length;
 
             if($('#print_purchase_order').is(':checked') || $('#print_purchase_order_second').is(':checked')) {
                 printTemplate.push('Purchase Orders');
             }
- 
+
             if(printTemplate.length > 0) {
-                  
+
                   for(var i = 0; i < printTemplate.length; i++)
-                  {  
+                  {
                     if(printTemplate[i] == 'Purchase Orders')
                     {
                         var template_number = $('input[name="Purchase Orders"]:checked').val();
                     }
-        
-                   
+
+
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
@@ -6790,13 +6816,13 @@ Template.purchaseordercard.events({
                 var lineID = this.id;
                 let tdproduct = $('#' + lineID + " .lineProductName").val();
                 let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                let tdQty = $('#' + lineID + " .lineQty").val();
+                let tdQty = $('#' + lineID + " .lineQty").val()||1;
                 let tdOrderd = $('#' + lineID + " .lineOrdered").val();
 
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {
@@ -6890,7 +6916,12 @@ Template.purchaseordercard.events({
             let uploadedItems = templateObject.uploadedFiles.get();
             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
             var objDetails = '';
-
+            if ($('#sltDept').val() === '') {
+                swal('Department has not been selected!', '', 'warning');
+                $('.fullScreenSpin').css('display', 'none');
+                event.preventDefault();
+                return false;
+            }
             // tempcode. missed to add customfields here.
             if (getso_id[1]) {
                 currentPurchaseOrder = parseInt(currentPurchaseOrder);
@@ -6969,6 +7000,15 @@ Template.purchaseordercard.events({
                     }
                 };
             }
+
+            if(splashLineArray.length > 0){
+
+            }else{
+              swal('Product name has not been selected!', '', 'warning');
+              $('.fullScreenSpin').css('display', 'none');
+              event.preventDefault();
+              return false;
+            };
 
             purchaseService.savePurchaseOrderEx(objDetails).then(function(objDetails) {
                 var supplierID = $('#edtSupplierEmail').attr('supplierid');
@@ -7848,7 +7888,7 @@ Template.purchaseordercard.events({
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {
@@ -8124,7 +8164,7 @@ Template.purchaseordercard.events({
                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                     let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                     if (tdproduct != "") {
@@ -8396,7 +8436,7 @@ Template.purchaseordercard.events({
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                 if (tdproduct != "") {
@@ -8854,7 +8894,7 @@ Template.purchaseordercard.events({
                             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                             let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                             let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                             if (tdproduct != "") {
@@ -9166,7 +9206,7 @@ Template.purchaseordercard.events({
                                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                                     let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                                     if (tdproduct != "") {
@@ -9485,7 +9525,7 @@ Template.purchaseordercard.events({
                             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                             let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                             let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                             if (tdproduct != "") {
@@ -9802,7 +9842,7 @@ Template.purchaseordercard.events({
                         let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                         let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                         let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
                         if (tdproduct != "") {

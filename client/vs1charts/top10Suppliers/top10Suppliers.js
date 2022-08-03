@@ -20,7 +20,7 @@ Template.top10Suppliers.onRendered(() => {
 
   function chartClickEvent() {
     FlowRouter.go("/supplierlist");
-  } 
+  }
 
   getSupplierPurchases(function (data) {
     setTimeout(function () {
@@ -135,8 +135,7 @@ Template.top10Suppliers.onRendered(() => {
   function getSupplierPurchases(callback) {
     return new Promise((res, rej) => {
       var salesBoardService = new SalesBoardService();
-      getVS1Data("TPurchaseOrderEx")
-        .then(function (dataObject) {
+      getVS1Data("TPurchaseOrderEx").then(function (dataObject) {
           if (dataObject.length == 0) {
             salesBoardService.getPurchaseBySupplier().then((data) => {
               // templateObject.getAllData(data);
@@ -147,10 +146,7 @@ Template.top10Suppliers.onRendered(() => {
                 return data.ClientName;
               });
 
-              let groupData = _.omit(
-                _.groupBy(filterDueDateData, "ClientName"),
-                [""]
-              );
+              let groupData = _.omit(_.groupBy(filterDueDateData, "ClientName"),[""]);
               let totalAmountCalculation = _.map(
                 groupData,
                 function (value, key) {
@@ -189,9 +185,7 @@ Template.top10Suppliers.onRendered(() => {
               return data.ClientName;
             });
 
-            let groupData = _.omit(_.groupBy(filterDueDateData, "ClientName"), [
-              "",
-            ]);
+            let groupData = _.omit(_.groupBy(filterDueDateData, "ClientName"), [""]);
             let totalAmountCalculation = _.map(
               groupData,
               function (value, key) {
@@ -215,8 +209,7 @@ Template.top10Suppliers.onRendered(() => {
               callback(sortedArray);
             }
           }
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
           salesBoardService.getPurchaseBySupplier().then((data) => {
             // templateObject.getAllData(data);
             let filterData = _.filter(data.tpurchaseorderex, function (data) {
@@ -226,9 +219,7 @@ Template.top10Suppliers.onRendered(() => {
               return data.ClientName;
             });
 
-            let groupData = _.omit(_.groupBy(filterDueDateData, "ClientName"), [
-              "",
-            ]);
+            let groupData = _.omit(_.groupBy(filterDueDateData, "ClientName"), [""]);
             let totalAmountCalculation = _.map(
               groupData,
               function (value, key) {

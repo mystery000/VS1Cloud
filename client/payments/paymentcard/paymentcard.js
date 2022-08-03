@@ -153,12 +153,12 @@ Template.paymentcard.onRendered(() => {
         templateObject.getTemplateInfo = function() {
 
             getVS1Data('TemplateSettings').then(function(dataObject) {
-    
+
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data;
                 let lineItems = [];
                 let lineItemObj = {};
-      
+
                 if(data.fields)
                 {
                     var customer_payment = data.fields.customer_payment;
@@ -166,21 +166,21 @@ Template.paymentcard.onRendered(() => {
                     $('#choosetemplate').attr("checked", "checked");
 
                     if($('#choosetemplate').is(':checked'))
-                    {        
+                    {
                         //$('#templateselection').modal('show');
                     }
                     else
-                    {   
+                    {
                     $('#templateselection').modal('hide');
-                    }                
+                    }
                 }
-        
-    
+
+
             });
-    
+
        };
-    
-    
+
+
        templateObject.getTemplateInfo();
 
 
@@ -1200,7 +1200,7 @@ Template.paymentcard.onRendered(() => {
 
     templateObject.getLastPaymentData = async function() {
         let lastBankAccount = "Bank";
-        let lastDepartment = Session.get('department') || "";
+        let lastDepartment = Session.get('department') ||defaultDept|| "";
         paymentService.getAllCustomerPaymentData1().then(function(data) {
           let latestPaymentId;
             if (data.tcustomerpayment.length > 0) {

@@ -1677,7 +1677,7 @@ authenticatedRoutes.route('/smssettings', {
     }
 });
 
-authenticatedRoutes.route('/settings/edi-integrations', {
+authenticatedRoutes.route('/edi-integrations', {
     name: 'ediintegrations',
     action() {
         BlazeLayout.render('layout', {
@@ -1873,4 +1873,22 @@ authenticatedRoutes.route('/uomSettings', {
             yield: 'uomSettings'
         });
     }
+});
+
+authenticatedRoutes.route('/mailchimpsettings', {
+  name: 'mailchimpSettings',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'mailchimpSettings'
+      });
+  }
+});
+
+authenticatedRoutes.route('/email-list', {
+  name: 'mailchimpList',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'mailchimpList'
+      });
+  }
 });

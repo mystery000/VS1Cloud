@@ -661,4 +661,22 @@ export class PurchaseBoardService extends BaseService {
     return this.getList(this.ERPObjects.TBill, options);
   }
 
+
+  getLastPOID() {
+    let options = {
+      PropertyList: "ID",
+      orderby:'"PurchaseOrderID desc"',
+      LimitCount:'"1"',
+    };
+    return this.getList(this.ERPObjects.TPurchaseOrder, options);
+  }
+
+  getLastCreditID() {
+    let options = {
+      PropertyList: "ID",
+      orderby:'"PurchaseOrderID desc"',
+      LimitCount:'"1"',
+    };
+    return this.getList(this.ERPObjects.TCredit, options);
+  }
 }

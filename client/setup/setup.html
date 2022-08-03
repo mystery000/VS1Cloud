@@ -370,6 +370,64 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade" role="dialog" tabindex="-1" id="changeLogoModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Upload logo</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                        <p class="maximums">The maximum file size is 1MB. For best results, upload the largest logo you have, at
+                                            least 140 pixels on its shortest side.</p>
+                
+                                    </div>
+                                    <hr>
+                
+                                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                        <p style="margin-bottom: 0px;font-weight: bold;">Choose a file to upload</p>
+                                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Save your updated template and you're ready to go.</p>
+                
+                                        <div class="divTable" id="file-display">
+                                        </div>
+                                        <label for="FileName" class="browseBtn"></label>
+                                        <label for="exampleFormControlFile1" class="Choose_file">No file selected</label>
+                                        <input type="file" name="fileInput" id="fileInput" style="display:none;" accept="image/*">
+                                        <!-- <div class="check">
+                <label class="checkbox_div"> <input class="form-check-input" type="checkbox" checked> Use on my invoices and other documents I send to clients</label>
+                </div> -->
+                                        <style>
+                                            #row1 {
+                                                display: flex;
+                                                flex-direction: row;
+                                                justify-content: space-around;
+                                            }
+                
+                                            #column1 {
+                                                display: flex;
+                                            }
+                
+                
+                                            #column2 {
+                                                display: flex;
+                                                flex-direction: column;
+                                                margin: 16px;
+                                                padding: .375rem .75rem;
+                                            }
+                                        </style>
+                                        <div id="row1">
+                                            <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn btnUploadLogoImgFile" type="button" style="margin: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
+                                            <div class="file-name" id="column2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer"><button class="btn btn-primary btnImport" data-dismiss="modal" type="button" id="uploadImg" disabled><i class="fas fa-file-import" style="margin-right: 5px;"></i>Upload</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="setup-step setup-step-2 {{#if isActive currentStep '2'}} show {{/if}}"  >
                     <div class="container-fluid">
@@ -1820,8 +1878,8 @@
                                                 </div>
                                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start pr-0">
                                                     <div>
-                                                        <button style="margin: 16px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                                                        <button style="margin: 16px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step8"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step8">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
@@ -2041,8 +2099,8 @@
                                                 </div>
                                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start pr-0">
                                                     <div>
-                                                        <button style="margin: 16px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                                                        <button style="margin: 16px; margin-right: 0;" class="btn btn-primary alerts-border" role="button" data-toggle="modal" href="#importModal_step9"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step9">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
@@ -2317,63 +2375,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="changeLogoModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title alerts-border">Upload logo</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
-                        <p class="maximums">The maximum file size is 1MB. For best results, upload the largest logo you have, at
-                            least 140 pixels on its shortest side.</p>
-
-                    </div>
-                    <hr>
-
-                    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
-                        <p style="margin-bottom: 0px;font-weight: bold;">Choose a file to upload</p>
-                        <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">Save your updated template and you're ready to go.</p>
-
-                        <div class="divTable" id="file-display">
-                        </div>
-                        <label for="FileName" class="browseBtn"></label>
-                        <label for="exampleFormControlFile1" class="Choose_file">No file selected</label>
-                        <input type="file" name="fileInput" id="fileInput" style="display:none;" accept="image/*">
-                        <!-- <div class="check">
-<label class="checkbox_div"> <input class="form-check-input" type="checkbox" checked> Use on my invoices and other documents I send to clients</label>
-</div> -->
-                        <style>
-                            #row1 {
-                                display: flex;
-                                flex-direction: row;
-                                justify-content: space-around;
-                            }
-
-                            #column1 {
-                                display: flex;
-                            }
-
-
-                            #column2 {
-                                display: flex;
-                                flex-direction: column;
-                                margin: 16px;
-                                padding: .375rem .75rem;
-                            }
-                        </style>
-                        <div id="row1">
-                            <div id="column1"></div><button class="btn btn-primary btnUploadFile new_attachment_btn btnUploadLogoImgFile" type="button" style="margin: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
-                            <div class="file-name" id="column2"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer"><button class="btn btn-primary btnImport" data-dismiss="modal" type="button" id="uploadImg" disabled><i class="fas fa-file-import" style="margin-right: 5px;"></i>Upload</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
     
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModalTaxRate">

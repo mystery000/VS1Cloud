@@ -11,7 +11,8 @@ export default class AssignLeaveTypeFields {
         OpeningBalance,
         OnTerminationUnusedBalance,
         EFTLeaveType,
-        SuperannuationGuarantee
+        SuperannuationGuarantee,
+        Active
     }){
         this.ID = ID;
         this.LeaveType = LeaveType;
@@ -25,6 +26,7 @@ export default class AssignLeaveTypeFields {
         this.OnTerminationUnusedBalance = OnTerminationUnusedBalance;
         this.EFTLeaveType = EFTLeaveType;
         this.SuperannuationGuarantee = SuperannuationGuarantee;
+        this.Active = Active;
     }
 }
 

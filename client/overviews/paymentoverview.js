@@ -168,27 +168,6 @@ Template.paymentoverview.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentOverview', function(error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function() {
@@ -204,7 +183,7 @@ Template.paymentoverview.onRendered(function() {
     if ((!localStorage.getItem('VS1OutstandingInvoiceAmt_dash')) && (!localStorage.getItem('VS1OutstandingInvoiceQty_dash'))) {
         getVS1Data('TSalesList').then(function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(data) {
+                sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                     let itemsAwaitingPaymentcount = [];
                     let itemsOverduePaymentcount = [];
                     let dataListAwaitingCust = {};
@@ -447,7 +426,7 @@ Template.paymentoverview.onRendered(function() {
 
         getVS1Data('TPaymentList').then(function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(data) {
+                sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                     let lineItems = [];
                     let lineItemObj = {};
 
@@ -1085,7 +1064,7 @@ Template.paymentoverview.onRendered(function() {
                 });
             }
         }).catch(function(err) {
-            sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(data) {
+            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                 let lineItems = [];
                 let lineItemObj = {};
 
@@ -1801,7 +1780,7 @@ Template.paymentoverview.events({
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllBillListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataBill) {
+        sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataBill) {
             addVS1Data('TBillList',JSON.stringify(dataBill)).then(function (datareturn) {
 
             }).catch(function (err) {
@@ -1811,7 +1790,7 @@ Template.paymentoverview.events({
 
         });
 
-        sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataInvoice) {
+        sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (dataInvoice) {
             addVS1Data('TInvoiceList', JSON.stringify(dataInvoice)).then(function (datareturn) {
 
             }).catch(function (err) {
@@ -1821,7 +1800,7 @@ Template.paymentoverview.events({
 
         });
 
-        sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPO) {
+        sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPO) {
             addVS1Data("TPurchaseOrderList", JSON.stringify(dataPO)).then(function (datareturn) {
 
               }).catch(function (err) {
@@ -1831,7 +1810,7 @@ Template.paymentoverview.events({
 
           });
 
-          sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0,'').then(function (data) {
+          sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, true,initialReportLoad,0,'').then(function (data) {
               addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data)).then(function (datareturn) {
 
               }).catch(function (err) {
@@ -1850,7 +1829,7 @@ Template.paymentoverview.events({
 
           });
 
-        sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
                 sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {

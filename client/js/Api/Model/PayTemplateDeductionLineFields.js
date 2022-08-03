@@ -7,6 +7,7 @@ export default class PayTemplateDeductionLineFields {
         ExpenseAccount,
         Percentage,
         Amount,
+        Active
     }){
         this.ID = ID;
         this.EmployeeID = EmployeeID;
@@ -15,6 +16,7 @@ export default class PayTemplateDeductionLineFields {
         this.ExpenseAccount = ExpenseAccount;
         this.Percentage = Percentage;
         this.Amount = Amount;
+        this.Active = Active;
     }
 }
   

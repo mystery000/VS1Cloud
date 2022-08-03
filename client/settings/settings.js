@@ -80,9 +80,9 @@ Template.settings.events({
     'click .btnSubcription': function (event) {
         FlowRouter.go('/subscriptionSettings');
     },
-    // 'click .btnSetupWizard': function (event) {
-    //     FlowRouter.go('/setup');
-    // },
+    'click .btnSetupWizard': function (event) {
+        FlowRouter.go('/setup');
+    },
     'click .btnBackupRestore': function (event) {
         FlowRouter.go('/backuprestore');
     },
@@ -102,7 +102,10 @@ Template.settings.events({
         FlowRouter.go('/uomSettings');
     },
     'click .btnEDIIntegrations': function(event) {
-        FlowRouter.go('/settings/edi-integrations');
+        FlowRouter.go('/edi-integrations');
+    },
+    'click .btnMailchimp': function (event) {
+      FlowRouter.go('/mailchimpSettings');
     }
 });
 

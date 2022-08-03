@@ -445,6 +445,13 @@ Template.setup.onRendered(function () {
     LoadingOverlay.hide();
   };
 
+  let imageData = localStorage.getItem("Image");
+  if (imageData) {
+    $(".setup-step-1 .uploadedImageLogo").attr("src", imageData);
+    $(".setup-step-1 .uploadedImageLogo").attr("width", "160");
+    $(".setup-step-1 .uploadedImageLogo").attr("height", "50%");
+  }
+
   templateObject.getCountryData = () => {
     getVS1Data("TCountries")
       .then(function (dataObject) {
@@ -3723,14 +3730,17 @@ Template.setup.onRendered(function () {
   templateObject.loadInventory = async (refresh = false) => {
     LoadingOverlay.show();
     let _inventoryList = [];
-    let dataObject = await getVS1Data("TProductVS1");
+    // let dataObject = await getVS1Data("TProductVS1");
 
-    let data =
-      dataObject.length == 0 || refresh == true
-        ? await sideBarService.getNewProductListVS1("All")
-        : JSON.parse(dataObject[0].data);
+    // let data =
+    //   dataObject.length == 0 || refresh == true
+    //     ? await sideBarService.getNewProductListVS1("All")
+    //     : JSON.parse(dataObject[0].data);
 
-    if (refresh) await addVS1Data("TProductVS1", JSON.stringify(data));
+    let data = await sideBarService.getNewProductListVS1("All");
+
+    //if (refresh) await addVS1Data("TProductVS1", JSON.stringify(data));
+    await addVS1Data("TProductVS1", JSON.stringify(data));
 
     if (data.tproductvs1) {
       //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
@@ -4450,7 +4460,7 @@ Template.setup.events({
       templateObject.phAddress3.set(address[2] ? address[2] : "");
     }
   },
-  "click #uploadImg": function (event) {
+  "click .setup-step-1 #uploadImg": function (event) {
     //let imageData= (localStorage.getItem("Image"));
     let templateObject = Template.instance();
     let imageData = templateObject.imageFileData.get();
@@ -4462,22 +4472,22 @@ Template.setup.events({
       $("#changeLogo").show();
     }
   },
-  "change #fileInput": function (event) {
+  "change .setup-step-1 #fileInput": function (event) {
     let templateObject = Template.instance();
     let selectedFile = event.target.files[0];
     let reader = new FileReader();
-    $(".Choose_file").text("");
+    $(".setup-step-1 .Choose_file").text("");
     reader.onload = function (event) {
-      $("#uploadImg").prop("disabled", false);
-      $("#uploadImg").addClass("on-upload-logo");
-      $(".Choose_file").text(selectedFile.name);
-      //$("#uploadImg").css("background-color","yellow");
+      $(".setup-step-1 #uploadImg").prop("disabled", false);
+      $(".setup-step-1 #uploadImg").addClass("on-upload-logo");
+      $(".setup-step-1 .Choose_file").text(selectedFile.name);
+      // $("#uploadImg").css("background-color","yellow");
       templateObject.imageFileData.set(event.target.result);
-      //localStorage.setItem("Image",event.target.result);
+      // localStorage.setItem("organisation-logo-tmp",event.target.result);
     };
     reader.readAsDataURL(selectedFile);
   },
-  "click #removeLogo": function (event) {
+  "click .setup-step-1 #removeLogo": function (event) {
     let templateObject = Template.instance();
     templateObject.imageFileData.set(null);
     localStorage.removeItem("Image");
@@ -4486,8 +4496,8 @@ Template.setup.events({
     //window.open('/organisationsettings','_self');
     //Router.current().render(Template.organisationSettings);
   },
-  "click .btnUploadLogoImgFile": function (event) {
-    $("#fileInput").trigger("click");
+  "click .setup-step-1 .btnUploadLogoImgFile": (event) => {
+    $(".setup-step-1 #fileInput").trigger("click");
   },
 
   // TODO: Step 2
@@ -6771,11 +6781,13 @@ Template.setup.events({
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .templateDownload-employee": function () {
+  "click .templateDownload-employee": (e, templateObject) => {
     let utilityService = new UtilityService();
     let rows = [];
     const filename = "SampleEmployee" + ".csv";
-    rows[0] = [
+
+    const employees = templateObject.currentEmployees.get();
+    rows.push([
       "First Name",
       "Last Name",
       "Phone",
@@ -6788,40 +6800,67 @@ Template.setup.events({
       "Post Code",
       "Country",
       "Gender",
-    ];
-    rows[1] = [
-      "John",
-      "Smith",
-      "9995551213",
-      "9995551213",
-      "johnsmith@email.com",
-      "johnsmith",
-      "123 Main Street",
-      "Brooklyn",
-      "New York",
-      "1234",
-      "United States",
-      "M",
-    ];
-    rows[1] = [
-      "Jane",
-      "Smith",
-      "9995551213",
-      "9995551213",
-      "janesmith@email.com",
-      "janesmith",
-      "123 Main Street",
-      "Brooklyn",
-      "New York",
-      "1234",
-      "United States",
-      "F",
-    ];
+    ]);
+
+    employees.forEach((employee) => {
+      rows.push([
+        employee.fields.FirstName,
+        employee.fields.LastName,
+        employee.fields.Phone,
+        employee.fields.Mobile,
+        employee.fields.Email,
+        employee.fields.SkypeName,
+        employee.fields.Street,
+        employee.fields.Suburb,
+        employee.fields.State,
+        employee.fields.PostCode,
+        employee.fields.Country,
+        employee.fields.Sex
+      ]);
+    });
+
     utilityService.exportToCsv(rows, filename, "csv");
   },
-  "click .templateDownloadXLSX-employee": function (e) {
-    e.preventDefault(); //stop the browser from following
-    window.location.href = "sample_imports/SampleEmployee.xlsx";
+  "click .templateDownloadXLSX-employee": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleEmployee" + ".xlsx";
+
+    const employees = templateObject.currentEmployees.get();
+    rows.push([
+      "First Name",
+      "Last Name",
+      "Phone",
+      "Mobile",
+      "Email",
+      "Skype",
+      "Street",
+      "City/Suburb",
+      "State",
+      "Post Code",
+      "Country",
+      "Gender",
+    ]);
+
+    employees.forEach((employee) => {
+      rows.push([
+        employee.fields.FirstName,
+        employee.fields.LastName,
+        employee.fields.Phone,
+        employee.fields.Mobile,
+        employee.fields.Email,
+        employee.fields.SkypeName,
+        employee.fields.Street,
+        employee.fields.Suburb,
+        employee.fields.State,
+        employee.fields.PostCode,
+        employee.fields.Country,
+        employee.fields.Sex
+      ]);
+    });
+
+
+    utilityService.exportToCsv(rows, filename, "xls");
   },
   "click .btnUploadFile-employee": function (event) {
     $("#attachment-upload-employee").val("");
@@ -8721,6 +8760,76 @@ Template.setup.events({
     template.loadAccountList();
   },
 
+  "click .setup-step-6 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleAccounts" + ".csv";
+
+    const customers = templateObject.accountList.get();
+    rows.push([
+      "Account Name",
+      "Description",
+      "Account No",
+      "Type",
+      "Balance",
+      "Tax Code",
+      "Bank Account Name",
+      "BSB",
+      "Bank Account No",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.accountname,
+        customer.description,
+        customer.accountnumber,
+        customer.accounttypename,
+        customer.balance,
+        customer.taxcode,
+        customer.bankaccountname,
+        customer.bsb,
+        customer.bankaccountnumber
+      ]);
+    });
+
+
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-6 .templateDownloadXLSX": (e, templateObject) => {
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleAccounts" + ".xlsx";
+
+    const customers = templateObject.accountList.get();
+    rows.push([
+      "Account Name",
+      "Description",
+      "Account No",
+      "Type",
+      "Balance",
+      "Tax Code",
+      "Bank Account Name",
+      "BSB",
+      "Bank Account No",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.accountname,
+        customer.description,
+        customer.accountnumber,
+        customer.accounttypename,
+        customer.balance,
+        customer.taxcode,
+        customer.bankaccountname,
+        customer.bsb,
+        customer.bankaccountnumber
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
+  },
+
   // TODO: Step 7
   "click #btnNewCustomer": (e) => {
     const target = $(e.currentTarget).attr("data-toggle");
@@ -8738,6 +8847,75 @@ Template.setup.events({
     $(".modal.show").modal("hide");
   },
 
+  "click .setup-step-7 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleCustomers" + ".csv";
+
+    const customers = templateObject.customerList.get();
+
+    rows.push([
+      "Company",
+      "Job",
+      "AR Balance",
+      "Credit balance",
+      "Balance",
+      "Credit limit",
+      "Order balance",
+      "Country",
+      "Notes",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.company,
+        customer.job,
+        customer.arbalance,
+        customer.creditbalance,
+        customer.balance,
+        customer.creditlimit,
+        customer.salesorderbalance,
+        customer.country,
+        customer.notes
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-7 .templateDownloadXLSX": (e, templateObject) => {
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleCustomers" + ".xlsx";
+
+    const customers = templateObject.customerList.get();
+    rows.push([
+      "Company",
+      "Job",
+      "AR Balance",
+      "Credit balance",
+      "Balance",
+      "Credit limit",
+      "Order balance",
+      "Country",
+      "Notes",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.company,
+        customer.job,
+        customer.arbalance,
+        customer.creditbalance,
+        customer.balance,
+        customer.creditlimit,
+        customer.salesorderbalance,
+        customer.country,
+        customer.notes
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
+  },
+
   // TODO: Step 8
   "click #btnNewSupplier": (e) => {
     $($(e.currentTarget).attr("data-toggle")).modal("toggle");
@@ -8748,11 +8926,152 @@ Template.setup.events({
     templateObject.loadSuppliers(true);
     $(".modal.show").modal("hide");
   },
+
+  "click .setup-step-8 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleSupplier" + ".csv";
+
+    const customers = templateObject.supplierList.get();
+
+    rows.push([
+      "Company",
+      "Phone",
+      "AR Balance",
+      "Credit balance",
+      "Balance",
+      "Credit limit",
+      "Order balance",
+      "Country",
+      "Notes",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.company,
+        customer.phone,
+        customer.arbalance,
+        customer.creditbalance,
+        customer.balance,
+        customer.creditlimit,
+        customer.salesorderbalance,
+        customer.country,
+        customer.notes
+      ]);
+    });
+
+
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-8 .templateDownloadXLSX": (e, templateObject) => {
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleSupplier" + ".xlsx";
+
+    const customers = templateObject.supplierList.get();
+    rows.push([
+      "Company",
+      "Phone",
+      "AR Balance",
+      "Credit balance",
+      "Balance",
+      "Credit limit",
+      "Order balance",
+      "Country",
+      "Notes",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.company,
+        customer.phone,
+        customer.arbalance,
+        customer.creditbalance,
+        customer.balance,
+        customer.creditlimit,
+        customer.salesorderbalance,
+        customer.country,
+        customer.notes
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
+  },
   // TODO: Step 9
   "click .setup-step-9 .btnRefresh": (e) => {
     const templateObject = Template.instance();
     templateObject.loadInventory(true);
     $(".modal.show").modal("hide");
+  },
+  "click .setup-step-9 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleInventory" + ".csv";
+
+    const customers = templateObject.inventoryList.get();
+
+    rows.push([
+      "Product Name",
+      "Sale description",
+      "Available",
+      "On SO",
+      "On BO",
+      "In Stock",
+      "On Order",
+      "Cost Price",
+      "Sale Price",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.ProductName,
+        customer.SalesDescription,
+        customer.AvailableQuantity,
+        customer.onSOOrder,
+        customer.onBOOrder,
+        customer.TotalQtyInStock,
+        customer.TotalQtyOnOrder,
+        customer.CostPrice,
+        customer.SellPrice
+      ]);
+    });
+
+
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-9 .templateDownloadXLSX": (e, templateObject) => {
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleInventory" + ".xlsx";
+
+    const customers = templateObject.inventoryList.get();
+    rows.push([
+      "Product Name",
+      "Sale description",
+      "Available",
+      "On SO",
+      "On BO",
+      "In Stock",
+      "On Order",
+      "Cost Price",
+      "Sale Price",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.ProductName,
+        customer.SalesDescription,
+        customer.AvailableQuantity,
+        customer.onSOOrder,
+        customer.onBOOrder,
+        customer.TotalQtyInStock,
+        customer.TotalQtyOnOrder,
+        customer.CostPrice,
+        customer.SellPrice
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
   },
   "click .lblCostEx": function (event) {
     var $earch = $(event.currentTarget);

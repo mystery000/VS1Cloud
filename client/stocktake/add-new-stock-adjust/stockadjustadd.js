@@ -1749,13 +1749,13 @@ Template.stockscan.events({
         let DataList=[];
         let productCode = $("#NProdCode").val();
         if (productCode == '') {
-            Bert.alert('<strong>Please provide item code !</strong>', 'danger');
+            Bert.alert('<strong>Please provide the item code !</strong>', 'danger');
             e.preventDefault();
             return false;
         }
         let productName = $("#NProdName").val();
         if (productName == '') {
-            Bert.alert('<strong>Please provide product Name !</strong>', 'danger');
+            Bert.alert('<strong>Please provide the product name !</strong>', 'danger');
             e.preventDefault();
             return false;
         }

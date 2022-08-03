@@ -10,6 +10,7 @@ import "jquery-editable-select";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
+import LoadingOverlay from "../../LoadingOverlay";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -21,6 +22,7 @@ let defaultCurrencyCode = CountryAbbr;
 Template.supplierpaymentcard.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.isForeignEnabled = new ReactiveVar(false);
+  templateObject.outstandingExpenses = new ReactiveVar([]);
 
   templateObject.records = new ReactiveVar();
   templateObject.record = new ReactiveVar({});
@@ -46,7 +48,7 @@ Template.supplierpaymentcard.onCreated(() => {
 Template.supplierpaymentcard.onRendered(() => {
   const dataTableList = [];
   const tableHeaderList = [];
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   let imageData = localStorage.getItem("Image");
   if (imageData) {
     $(".uploadedImage").attr("src", imageData);
@@ -1121,7 +1123,7 @@ Template.supplierpaymentcard.onRendered(() => {
   let newPaymentId = "";
   templateObject.getLastPaymentData = function () {
     let lastBankAccount = "Bank";
-    let lastDepartment = Session.get("department") || "";
+    let lastDepartment = Session.get('department') ||defaultDept|| "";
     paymentService
       .getAllSupplierPaymentData1()
       .then(function (data) {
@@ -1531,7 +1533,7 @@ Template.supplierpaymentcard.onRendered(() => {
         templateObject.datatablerecords.set(dataTableList);
         templateObject.datatablerecords1.set(dataTableList);
 
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         setTimeout(function () {
           //$.fn.dataTable.moment('DD/MM/YY');
           $("#tblSupplierAwaitingCard")
@@ -1666,7 +1668,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 MakeNegative();
               }, 100);
             });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         }, 0);
 
         $("div.dataTables_filter input").addClass(
@@ -1675,7 +1677,7 @@ Template.supplierpaymentcard.onRendered(() => {
       })
       .catch(function (err) {
         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         // Meteor._reload.reload();
       });
   };
@@ -1852,6 +1854,8 @@ Template.supplierpaymentcard.onRendered(() => {
       });
   };
 
+  
+
   templateObject.getAllClients();
   templateObject.getDepartments();
   templateObject.getPaymentMethods();
@@ -1889,7 +1893,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#tblAccount_filter .form-control-sm").val("");
     setTimeout(function () {
       $(".btnRefreshAccount").trigger("click");
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
     }, 1000);
   });
 
@@ -1952,7 +1956,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#tblSupplierlist_filter .form-control-sm").val("");
     setTimeout(function () {
       $(".btnRefreshSupplier").trigger("click");
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
     }, 1000);
   });
 
@@ -2079,7 +2083,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }, 500);
                   })
                   .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
+                    LoadingOverlay.hide();
                   });
               } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -2285,7 +2289,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       }, 500);
                     })
                     .catch(function (err) {
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     });
                 }
               }
@@ -2382,7 +2386,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }, 500);
                 })
                 .catch(function (err) {
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                 });
             });
           $("#addAccountModal").modal("toggle");
@@ -2418,7 +2422,7 @@ Template.supplierpaymentcard.onRendered(() => {
           getVS1Data("TPaymentMethod")
             .then(function (dataObject) {
               if (dataObject.length == 0) {
-                $(".fullScreenSpin").css("display", "inline-block");
+                LoadingOverlay.show();
                 sideBarService.getPaymentMethodDataVS1().then(function (data) {
                   for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                     if (
@@ -2441,7 +2445,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                   setTimeout(function () {
-                    $(".fullScreenSpin").css("display", "none");
+                    LoadingOverlay.hide();
                     $("#newPaymentMethodModal").modal("toggle");
                   }, 200);
                 });
@@ -2470,13 +2474,13 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
                 setTimeout(function () {
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                   $("#newPaymentMethodModal").modal("toggle");
                 }, 200);
               }
             })
             .catch(function (err) {
-              $(".fullScreenSpin").css("display", "inline-block");
+              LoadingOverlay.show();
               sideBarService.getPaymentMethodDataVS1().then(function (data) {
                 for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                   if (
@@ -2499,7 +2503,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
                 setTimeout(function () {
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                   $("#newPaymentMethodModal").modal("toggle");
                 }, 200);
               });
@@ -2535,7 +2539,7 @@ Template.supplierpaymentcard.onRendered(() => {
           getVS1Data("TDeptClass")
             .then(function (dataObject) {
               if (dataObject.length == 0) {
-                $(".fullScreenSpin").css("display", "inline-block");
+                LoadingOverlay.show();
                 sideBarService.getDepartment().then(function (data) {
                   for (let i = 0; i < data.tdeptclass.length; i++) {
                     if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -2548,7 +2552,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                   setTimeout(function () {
-                    $(".fullScreenSpin").css("display", "none");
+                    LoadingOverlay.hide();
                     $("#newDepartmentModal").modal("toggle");
                   }, 200);
                 });
@@ -2564,13 +2568,13 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
                 setTimeout(function () {
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                   $("#newDepartmentModal").modal("toggle");
                 }, 200);
               }
             })
             .catch(function (err) {
-              $(".fullScreenSpin").css("display", "inline-block");
+              LoadingOverlay.show();
               sideBarService.getDepartment().then(function (data) {
                 for (let i = 0; i < data.tdeptclass.length; i++) {
                   if (data.tdeptclass[i].DeptClassName === deptDataName) {
@@ -2581,7 +2585,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
                 setTimeout(function () {
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                   $("#newDepartmentModal").modal("toggle");
                 }, 200);
               });
@@ -2654,11 +2658,11 @@ Template.supplierpaymentcard.onRendered(() => {
           getVS1Data("TSupplierVS1")
             .then(function (dataObject) {
               if (dataObject.length == 0) {
-                $(".fullScreenSpin").css("display", "inline-block");
+                LoadingOverlay.show();
                 sideBarService
                   .getOneSupplierDataExByName(supplierDataName)
                   .then(function (data) {
-                    $(".fullScreenSpin").css("display", "none");
+                    LoadingOverlay.hide();
                     let lineItems = [];
 
                     $("#add-supplier-title").text("Edit Supplier");
@@ -2778,7 +2782,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }, 200);
                   })
                   .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
+                    LoadingOverlay.hide();
                   });
               } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -2789,7 +2793,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     data.tsuppliervs1[i].fields.ClientName === supplierDataName
                   ) {
                     added = true;
-                    $(".fullScreenSpin").css("display", "none");
+                    LoadingOverlay.hide();
                     let lineItems = [];
                     $("#add-supplier-title").text("Edit Supplier");
                     let popSupplierID = data.tsuppliervs1[i].fields.ID || "";
@@ -2915,11 +2919,11 @@ Template.supplierpaymentcard.onRendered(() => {
                 }
 
                 if (!added) {
-                  $(".fullScreenSpin").css("display", "inline-block");
+                  LoadingOverlay.show();
                   sideBarService
                     .getOneSupplierDataExByName(supplierDataName)
                     .then(function (data) {
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                       let lineItems = [];
 
                       $("#add-supplier-title").text("Edit Supplier");
@@ -3044,7 +3048,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       }, 200);
                     })
                     .catch(function (err) {
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     });
                 }
               }
@@ -3053,7 +3057,7 @@ Template.supplierpaymentcard.onRendered(() => {
               sideBarService
                 .getOneSupplierDataExByName(supplierDataName)
                 .then(function (data) {
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                   let lineItems = [];
 
                   $("#add-supplier-title").text("Edit Supplier");
@@ -3171,7 +3175,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }, 200);
                 })
                 .catch(function (err) {
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                 });
             });
         } else {
@@ -3460,7 +3464,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                 }
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               });
           } else {
             let data = JSON.parse(dataObject[0].data);
@@ -3469,7 +3473,7 @@ Template.supplierpaymentcard.onRendered(() => {
             var added = false;
             for (let d = 0; d < useData.length; d++) {
               if (parseInt(useData[d].fields.ID) === currentSalesID) {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
                 added = true;
                 let lineItems = [];
                 let lineItemObj = {};
@@ -3745,7 +3749,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                 }
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               }
             }
             if (!added) {
@@ -4030,7 +4034,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       }
                     }
                   }
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                 });
             }
           }
@@ -4292,7 +4296,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
               }
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         });
     }
@@ -4497,7 +4501,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                 );
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               });
           } else {
             let data = JSON.parse(dataObject[0].data);
@@ -4506,7 +4510,7 @@ Template.supplierpaymentcard.onRendered(() => {
             for (let d = 0; d < useData.length; d++) {
               if (parseInt(useData[d].fields.ID) === currentPOID) {
                 added = true;
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
                 let lineItems = [];
                 let lineItemObj = {};
 
@@ -4686,7 +4690,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                 );
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               }
             }
 
@@ -4874,7 +4878,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       }
                     }
                   );
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                 });
             }
           }
@@ -5053,7 +5057,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
               );
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         });
     }
@@ -5236,7 +5240,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
               );
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
           } else {
             let data = JSON.parse(dataObject[0].data);
@@ -5245,7 +5249,7 @@ Template.supplierpaymentcard.onRendered(() => {
             for (let d = 0; d < useData.length; d++) {
               if (parseInt(useData[d].fields.ID) === currentPOID) {
                 added = true;
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
                 let lineItems = [];
                 let lineItemObj = {};
 
@@ -5424,7 +5428,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                 );
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               }
             }
             if (!added) {
@@ -5611,7 +5615,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       }
                     }
                   );
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                 });
             }
           }
@@ -5785,7 +5789,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 }
               }
             );
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           });
         });
     }
@@ -5972,7 +5976,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                 );
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               });
           } else {
             let data = JSON.parse(dataObject[0].data);
@@ -5981,7 +5985,7 @@ Template.supplierpaymentcard.onRendered(() => {
             for (let d = 0; d < useData.length; d++) {
               if (parseInt(useData[d].fields.ID) === currentPOID) {
                 added = true;
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
                 let lineItems = [];
                 let lineItemObj = {};
 
@@ -6157,7 +6161,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     }
                   }
                 );
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               }
             }
             if (!added) {
@@ -6329,7 +6333,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 }
               }
             );
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           });
         });
     }
@@ -6558,7 +6562,7 @@ Template.supplierpaymentcard.onRendered(() => {
               }
             }
           );
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     }
   } else if (url.indexOf("?bsuppname=") > 0 && url.indexOf("from=") > 0) {
@@ -6879,7 +6883,7 @@ Template.supplierpaymentcard.onRendered(() => {
               }
             }
           );
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     }
   } else if (
@@ -7058,7 +7062,7 @@ Template.supplierpaymentcard.onRendered(() => {
               }
             }
           );
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
           if (currentSalesURL) {
             let currentSalesName = currentSalesURL[0].replace(/%20/g, " ");
             paymentService
@@ -7282,7 +7286,7 @@ Template.supplierpaymentcard.onRendered(() => {
     url.indexOf("&selectsuppbill") > 0 &&
     url.indexOf("&selectsuppcredit") > 0
   ) {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     var getpo_id = url.split("?selectsupppo=");
     var getbill_id = url.split("&selectsuppbill=");
     var getcredit_id = url.split("&selectsuppcredit=");
@@ -7298,7 +7302,7 @@ Template.supplierpaymentcard.onRendered(() => {
           paymentService
             .getOnePurchaseOrderPayment(currentPOID)
             .then(function (data) {
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
               let total = utilityService
                 .modifynegativeCurrencyFormat(data.fields.TotalBalance)
                 .toLocaleString(undefined, {
@@ -7466,7 +7470,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
               );
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         }
       }
@@ -7642,7 +7646,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 }
               }
             );
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           });
         }
       }
@@ -7819,7 +7823,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }
                 }
               );
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         }
       }
@@ -7995,12 +7999,12 @@ Template.supplierpaymentcard.onRendered(() => {
               }
             }
           );
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
       }
     }
   } else {
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
     let lineItems = [];
     let lineItemsTable = [];
     let lineItemObj = {};
@@ -8148,11 +8152,11 @@ Template.supplierpaymentcard.onRendered(() => {
           $(".printID").attr("id") == ""
         ) {
           //$(".btnSave").trigger("click");
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         } else {
           document.getElementById("html-2-pdfwrapper").style.display = "none";
           $("#html-2-pdfwrapper").css("display", "none");
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         }
       });
 
@@ -8223,14 +8227,14 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#html-2-pdfwrapper_new").css("display", "none");
           $("#html-2-pdfwrapper").css("display", "none");
           $("#confirmprint").modal("hide");
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         } else {
           document.getElementById("html-2-pdfwrapper_new").style.display =
             "none";
           $("#html-2-pdfwrapper_new").css("display", "none");
           $("#html-2-pdfwrapper").css("display", "none");
           $("#confirmprint").modal("hide");
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         }
       });
 
@@ -8241,16 +8245,16 @@ Template.supplierpaymentcard.onRendered(() => {
     "click",
     "tr .colType, tr .colTransNo",
     function () {
-      var listData = $(this).closest("tr").attr("id");
+      const id = $(this).closest("tr").attr("id");
       var columnType = $(event.target).closest("tr").find(".colType").text();
       //var columnType = $(event.target).text();
-      if (listData) {
+      if (id) {
         if (columnType == "Purchase Order") {
-          window.open("/purchaseordercard?id=" + listData, "_self");
+          window.open("/purchaseordercard?id=" + id, "_self");
         } else if (columnType == "Bill") {
-          window.open("/billcard?id=" + listData, "_self");
+          window.open("/billcard?id=" + id, "_self");
         } else if (columnType == "Credit") {
-          window.open("/creditcard?id=" + listData, "_self");
+          window.open("/creditcard?id=" + id, "_self");
         }
       }
     }
@@ -8274,7 +8278,7 @@ Template.supplierpaymentcard.onRendered(() => {
         });
 
         setTimeout(function () {
-          $(".fullScreenSpin").css("display", "inline-block");
+          LoadingOverlay.show();
           templateObject.getAllSupplierPaymentData(custname);
         }, 500);
         let geturl = location.href;
@@ -8300,7 +8304,7 @@ Template.supplierpaymentcard.onRendered(() => {
           id = geturl.searchParams.get("creditid");
         }
         let $tblrows = $("#tblSupplierPaymentcard tbody tr");
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         let paymentData = templateObject.datatablerecords1.get();
         let paymentDataList = [];
         if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
@@ -8326,7 +8330,7 @@ Template.supplierpaymentcard.onRendered(() => {
         templateObject.datatablerecords.set(paymentDataList);
         $("#supplierPaymentListModal").modal();
       }
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
     });
     // var rowData = $('#tblPaymentcard tbody>tr:last').clone(true);
     // let tokenid = Random.id();
@@ -8342,9 +8346,218 @@ Template.supplierpaymentcard.onRendered(() => {
     // rowData.attr('name', tokenid);
     // $("#tblPaymentcard tbody").append(rowData);
   });
+
+  templateObject.addExpenseToTable = (withForeignAmount = false) => {
+    $('#tblSupplierPaymentcard tbody tr').remove(); // first lets clean it
+
+    /**
+     * Now we need to add right values depending on FX currency
+     */
+     let selectedSupplierPayments = templateObject.outstandingExpenses.get();
+
+
+     setTimeout(() => {
+      if (selectedSupplierPayments.length > 0) {
+        let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
+        currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
+        let total = parseFloat(currentApplied);
+  
+        for (let x = 0; x < selectedSupplierPayments.length; x++) {
+          var rowData =
+            '<tr class="dnd-moved dynamic-converter-js" id="' +
+            selectedSupplierPayments[x].awaitingId +
+            '" name="' +
+            selectedSupplierPayments[x].awaitingId +
+            '">\n' +
+            '	<td contenteditable="false" class="colTransDate">' +
+            selectedSupplierPayments[x].date +
+            "</td>\n" +
+            '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
+            selectedSupplierPayments[x].type +
+            "</td>\n" +
+            '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
+            selectedSupplierPayments[x].awaitingId +
+            "</td>\n" +
+            '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
+            selectedSupplierPayments[x].originalAmount +
+            "</td>\n" +
+            '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
+            selectedSupplierPayments[x].outstandingAmount +
+            "</td>\n" +
+            '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
+            selectedSupplierPayments[x].paymentAmount +
+            '"></td>\n' +
+  
+            (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
+            convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+            '"></td>\n' : '') +
+  
+            '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
+            selectedSupplierPayments[x].outstandingAmount +
+            "</td>\n" +
+  
+            (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
+            convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+            "</td>\n" : '') +
+  
+            '	<td contenteditable="true" class="colComments">' +
+            selectedSupplierPayments[x].comments +
+            "</td>\n" +
+            '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+            "</tr>";
+  
+          let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
+          let isCheckedTrue = true;
+          $(".tblSupplierPaymentcard > tbody > tr").each(function () {
+            var lineID = this.id;
+            if (lineID == checkCompareID) {
+              isCheckedTrue = false;
+            }
+          });
+          //setTimeout(function() {
+          if (isCheckedTrue) {
+            $("#tblSupplierPaymentcard tbody").append(rowData);
+            total =
+              total +
+              parseFloat(
+                selectedSupplierPayments[x].paymentAmount.replace(
+                  /[^0-9.-]+/g,
+                  ""
+                )
+              );
+          }
+          //}, 500);
+        }
+        $(".appliedAmount").text(
+          utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+        );
+        localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      }
+     }, 300)
+   
+
+    
+    setTimeout(function () {
+      $("td").each(function () {
+        if (
+          $(this)
+            .text()
+            .indexOf("-" + Currency) >= 0
+        )
+          $(this).addClass("text-danger");
+      });
+    }, 1000);
+  }
+
+  templateObject.updateRecordsWithForeign = (override = false) => {
+
+    $('#tblSupplierPaymentcard tbody tr').remove();
+
+    let selectedSupplierPayments = templateObject.outstandingExpenses.get();
+    //console.log(selectedSupplierPayments);
+
+    if (selectedSupplierPayments.length > 0) {
+      let currentApplied = $(".lead")
+        .text()
+        .replace(/[^0-9.-]+/g, "");
+      currentApplied = parseFloat(
+        currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]
+      );
+      let total = parseFloat(currentApplied);
+      for (let x = 0; x < selectedSupplierPayments.length; x++) {
+        var rowData =
+          '<tr class="dnd-moved" id="' +
+          selectedSupplierPayments[x].awaitingId +
+          '" name="' +
+          selectedSupplierPayments[x].awaitingId +
+          '">\n' +
+          '	<td contenteditable="false" class="colTransDate">' +
+          selectedSupplierPayments[x].date +
+          "</td>\n" +
+          '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
+          selectedSupplierPayments[x].type +
+          "</td>\n" +
+          '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
+          selectedSupplierPayments[x].awaitingId +
+          "</td>\n" +
+          '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
+          selectedSupplierPayments[x].originalAmount +
+          "</td>\n" +
+          '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
+          selectedSupplierPayments[x].outstandingAmount +
+          "</td>\n" +
+          '	<td><input class="linePaymentamount highlightInput" type="text" value="' +
+          selectedSupplierPayments[x].paymentAmount +
+          '"></td>\n' +
+
+          '	<td><input class="linePaymentamount highlightInput foreign" type="text" value="' +
+          selectedSupplierPayments[x].paymentAmount +
+          '"></td>\n' +
+
+          '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' +
+          selectedSupplierPayments[x].paymentAmount +
+          "</td>\n" +
+
+          '	<td contenteditable="false" class="lineOutstandingAmount foreign" style="text-align: right!important;">' +
+          selectedSupplierPayments[x].paymentAmount +
+          "</td>\n" +
+
+          '	<td contenteditable="true" class="colComments">' +
+          selectedSupplierPayments[x].comments +
+          "</td>\n" +
+          '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+          "</tr>";
+
+        let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
+        let isCheckedTrue = true;
+        $(".tblSupplierPaymentcard > tbody > tr").each(function () {
+          var lineID = this.id;
+          if (lineID == checkCompareID) {
+            isCheckedTrue = false;
+          }
+        });
+        //setTimeout(function() {
+        if (isCheckedTrue) {
+          $("#tblSupplierPaymentcard tbody").append(rowData);
+          total =
+            total +
+            parseFloat(
+              selectedSupplierPayments[x].paymentAmount.replace(
+                /[^0-9.-]+/g,
+                ""
+              )
+            );
+        }
+        //}, 500);
+      }
+      $(".appliedAmount").text(
+        utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+      );
+      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+    }
+    
+    setTimeout(function () {
+      $("td").each(function () {
+        if (
+          $(this)
+            .text()
+            .indexOf("-" + Currency) >= 0
+        )
+          $(this).addClass("text-danger");
+      });
+    }, 1000);
+
+
+  }
 });
 
 Template.supplierpaymentcard.helpers({
+  getDefaultCurrency: () => {
+    return defaultCurrencyCode;
+  },
+  outstandingExpenses: () => {
+    return Template.instance().outstandingExpenses.get();
+  },
   isForeignEnabled: () => {
     return Template.instance().isForeignEnabled.get();
   },
@@ -8479,21 +8692,21 @@ Template.supplierpaymentcard.helpers({
   },
 });
 
-function calulateApplied() {
-  const exchangeRate = $("#exchange_rate").val();
+// function calulateApplied() {
+//   const exchangeRate = $("#exchange_rate").val();
 
-  const paymentAmount = $("#edtPaymentAmount").val().includes("$")
-    ? $("#edtPaymentAmount").val().substring(1)
-    : $("#edtPaymentAmount").val();
-  const variation = $("#edtVariation").val().includes("$")
-    ? $("#edtVariation").val().substring(1)
-    : $("#edtVariation").val();
+//   const paymentAmount = $("#edtPaymentAmount").val().includes("$")
+//     ? $("#edtPaymentAmount").val().substring(1)
+//     : $("#edtPaymentAmount").val();
+//   const variation = $("#edtVariation").val().includes("$")
+//     ? $("#edtVariation").val().substring(1)
+//     : $("#edtVariation").val();
 
-  const appliedAmount = (paymentAmount - variation) * exchangeRate;
+//   const appliedAmount = (paymentAmount - variation) * exchangeRate;
 
-  $("#edtApplied").val(appliedAmount);
-  $("#edtApplied").trigger("change");
-}
+//   $("#edtApplied").val(appliedAmount);
+//   $("#edtApplied").trigger("change");
+// }
 
 Template.supplierpaymentcard.events({
   // 'click #sltDepartment': function(event) {
@@ -8502,7 +8715,7 @@ Template.supplierpaymentcard.events({
 
   "click .printConfirm": async function (event) {
     var printTemplate = [];
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
 
     getVS1Data("TemplateSettings").then(function (dataObject) {
       let data = JSON.parse(dataObject[0].data);
@@ -8604,7 +8817,7 @@ Template.supplierpaymentcard.events({
     if ($("#choosetemplate").is(":checked")) {
       $("#confirmprint").modal("show");
     } else {
-      $(".fullScreenSpin").css("display", "inline-block");
+      LoadingOverlay.show();
       $("#html-2-pdfwrapper").css("display", "block");
       if ($(".edtCustomerEmail").val() != "") {
         $(".pdfCustomerName").html($("#edtCustomerName").val());
@@ -8649,31 +8862,45 @@ Template.supplierpaymentcard.events({
       $(".foreign-currency-js").css("display", "block");
 
       ui.isForeignEnabled.set(true);
+     // ui.updateRecordsWithForeign(false);
+      ui.addExpenseToTable(true);
     } else {
       $(".foreign-currency-js").css("display", "none");
       ui.isForeignEnabled.set(false);
+      //ui.updateRecordsWithForeign(true);
+      ui.addExpenseToTable(false);
 
     }
   },
   "change #exchange_rate": (e) => {
-    const exchangeRate = $("#exchange_rate").val();
-    const paymentAmount = $("#edtPaymentAmount").val().includes("$")
-      ? $("#edtPaymentAmount").val().substring(1)
-      : $("#edtPaymentAmount").val();
-    const foreignAmount = exchangeRate * paymentAmount;
+    // const exchangeRate = $("#exchange_rate").val();
+    // const paymentAmount = $("#edtPaymentAmount").val().includes("$")
+    //   ? $("#edtPaymentAmount").val().substring(1)
+    //   : $("#edtPaymentAmount").val();
+    // const foreignAmount = exchangeRate * paymentAmount;
 
-    $("#edtForeignAmount").val("$" + foreignAmount);
+    // $("#edtForeignAmount").val("$" + foreignAmount);
 
-    calulateApplied();
+    // calulateApplied();
+
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "change #edtForeignAmount": (e) => {
-    calulateApplied();
+    // calulateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "change #edtVariation": (e) => {
-    calulateApplied();
+    // calulateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "click .btnSave": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     let customer = $("#edtSupplierName").val();
@@ -8961,7 +9188,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -8994,7 +9221,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -9027,7 +9254,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -9124,7 +9351,7 @@ Template.supplierpaymentcard.events({
           //window.open('/supplierpayment','_self');
           //window.history.go(-2);
           //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else if (url.indexOf("?poid=") > 0) {
       var getsale_id = url.split("?poid=");
@@ -9158,7 +9385,7 @@ Template.supplierpaymentcard.events({
       });
       let objDetails = "";
       if (paymentData.length === 0) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Ooops...",
           text: "There is no amount due for payment. A payment amount cannot be applied",
@@ -9377,7 +9604,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -9410,7 +9637,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -9443,7 +9670,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -9546,7 +9773,7 @@ Template.supplierpaymentcard.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else if (url.indexOf("?billid=") > 0) {
       var getsale_id = url.split("?billid=");
@@ -9581,7 +9808,7 @@ Template.supplierpaymentcard.events({
 
       let objDetails = "";
       if (paymentData.length === 0) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Ooops...",
           text: "There is no amount due for payment. A payment amount cannot be applied",
@@ -9798,7 +10025,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -9831,7 +10058,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -9864,7 +10091,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -9962,7 +10189,7 @@ Template.supplierpaymentcard.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else if (url.indexOf("?creditid=") > 0) {
       var getsale_id = url.split("?creditid=");
@@ -9996,7 +10223,7 @@ Template.supplierpaymentcard.events({
 
       let objDetails = "";
       if (paymentData.length === 0) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Ooops...",
           text: "There is no amount due for payment. A payment amount cannot be applied",
@@ -10207,7 +10434,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -10240,7 +10467,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -10273,7 +10500,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -10379,7 +10606,7 @@ Template.supplierpaymentcard.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else if (url.indexOf("?suppname=") > 0 && url.indexOf("from=") > 0) {
       let paymentID = templateObject.supppaymentid.get();
@@ -10411,7 +10638,7 @@ Template.supplierpaymentcard.events({
 
       let objDetails = "";
       if (paymentData.length === 0) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Ooops...",
           text: "There is no amount due for payment. A payment amount cannot be applied",
@@ -10634,7 +10861,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -10667,7 +10894,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -10700,7 +10927,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -10806,7 +11033,7 @@ Template.supplierpaymentcard.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else if (
       url.indexOf("?suppcreditname=") > 0 &&
@@ -10840,7 +11067,7 @@ Template.supplierpaymentcard.events({
 
       let objDetails = "";
       if (paymentData.length === 0) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Ooops...",
           text: "There is no amount due for payment. A payment amount cannot be applied",
@@ -11059,7 +11286,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -11092,7 +11319,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -11125,7 +11352,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -11243,7 +11470,7 @@ Template.supplierpaymentcard.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else if (
       url.indexOf("?selectsupppo") > 0 &&
@@ -11294,7 +11521,7 @@ Template.supplierpaymentcard.events({
 
       let objDetails = "";
       if (paymentData.length === 0) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Ooops...",
           text: "There is no amount due for payment. A payment amount cannot be applied",
@@ -11523,7 +11750,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -11557,7 +11784,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -11591,7 +11818,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -11704,7 +11931,7 @@ Template.supplierpaymentcard.events({
               window.open(newURL, "_self");
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else {
       $(".tblSupplierPaymentcard > tbody > tr").each(function () {
@@ -11736,7 +11963,7 @@ Template.supplierpaymentcard.events({
       });
       let objDetails = "";
       if (paymentData.length === 0) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Ooops...",
           text: "There is no amount due for payment. A payment amount cannot be applied",
@@ -11955,7 +12182,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -11988,7 +12215,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -12021,7 +12248,7 @@ Template.supplierpaymentcard.events({
                         }
                       });
 
-                      $(".fullScreenSpin").css("display", "none");
+                      LoadingOverlay.hide();
                     }
                   }
                 );
@@ -12125,7 +12352,7 @@ Template.supplierpaymentcard.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     }
   },
@@ -12137,7 +12364,7 @@ Template.supplierpaymentcard.events({
     } else {
       if ($("#addRow").prop("disabled") == false) {
         let templateObject = Template.instance();
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         $(".chkBox").prop("checked", false);
         let paymentList = [""];
         $(".tblSupplierPaymentcard tbody tr").each(function () {
@@ -12166,7 +12393,7 @@ Template.supplierpaymentcard.events({
           id = geturl.searchParams.get("creditid");
         }
 
-        $(".fullScreenSpin").css("display", "inline-block");
+        LoadingOverlay.show();
         let paymentData = templateObject.datatablerecords1.get();
         let paymentDataList = [];
         if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
@@ -12191,7 +12418,7 @@ Template.supplierpaymentcard.events({
         $(".dataTables_info").hide();
         templateObject.datatablerecords.set(paymentDataList);
         $("#supplierPaymentListModal").modal();
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }
     }
   },
@@ -12391,91 +12618,98 @@ Template.supplierpaymentcard.events({
     }
   },
 
-  "click .btnSelectSuppliers": function (event) {
+  "click .btnSelectSuppliers": function (event, ui) {
     const templateObject = Template.instance();
+  
+    let selectedSupplierPayments = templateObject.selectedAwaitingPayment.get(); // tmp table
+    // if (selectedSupplierPayments.length > 0) {
+    //   let currentApplied = $(".lead")
+    //     .text()
+    //     .replace(/[^0-9.-]+/g, "");
+    //   currentApplied = parseFloat(
+    //     currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]
+    //   );
+    //   let total = parseFloat(currentApplied);
+    //   for (let x = 0; x < selectedSupplierPayments.length; x++) {
+    //     var rowData =
+    //       '<tr class="dnd-moved" id="' +
+    //       selectedSupplierPayments[x].awaitingId +
+    //       '" name="' +
+    //       selectedSupplierPayments[x].awaitingId +
+    //       '">\n' +
+    //       '	<td contenteditable="false" class="colTransDate">' +
+    //       selectedSupplierPayments[x].date +
+    //       "</td>\n" +
+    //       '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
+    //       selectedSupplierPayments[x].type +
+    //       "</td>\n" +
+    //       '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
+    //       selectedSupplierPayments[x].awaitingId +
+    //       "</td>\n" +
+    //       '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
+    //       selectedSupplierPayments[x].originalAmount +
+    //       "</td>\n" +
+    //       '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
+    //       selectedSupplierPayments[x].outstandingAmount +
+    //       "</td>\n" +
+    //       '	<td><input class="linePaymentamount highlightInput" type="text" value="' +
+    //       selectedSupplierPayments[x].paymentAmount +
+    //       '"></td>\n' +
+    //       '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' +
+    //       selectedSupplierPayments[x].paymentAmount +
+    //       "</td>\n" +
+    //       '	<td contenteditable="true" class="colComments">' +
+    //       selectedSupplierPayments[x].comments +
+    //       "</td>\n" +
+    //       '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+    //       "</tr>";
 
-    let selectedSupplierPayments = templateObject.selectedAwaitingPayment.get();
-    if (selectedSupplierPayments.length > 0) {
-      let currentApplied = $(".lead")
-        .text()
-        .replace(/[^0-9.-]+/g, "");
-      currentApplied = parseFloat(
-        currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]
-      );
-      let total = parseFloat(currentApplied);
-      for (let x = 0; x < selectedSupplierPayments.length; x++) {
-        var rowData =
-          '<tr class="dnd-moved" id="' +
-          selectedSupplierPayments[x].awaitingId +
-          '" name="' +
-          selectedSupplierPayments[x].awaitingId +
-          '">\n' +
-          '	<td contenteditable="false" class="colTransDate">' +
-          selectedSupplierPayments[x].date +
-          "</td>\n" +
-          '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
-          selectedSupplierPayments[x].type +
-          "</td>\n" +
-          '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
-          selectedSupplierPayments[x].awaitingId +
-          "</td>\n" +
-          '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
-          selectedSupplierPayments[x].originalAmount +
-          "</td>\n" +
-          '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
-          selectedSupplierPayments[x].outstandingAmount +
-          "</td>\n" +
-          '	<td><input class="linePaymentamount highlightInput" type="text" value="' +
-          selectedSupplierPayments[x].paymentAmount +
-          '"></td>\n' +
-          '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' +
-          selectedSupplierPayments[x].paymentAmount +
-          "</td>\n" +
-          '	<td contenteditable="true" class="colComments">' +
-          selectedSupplierPayments[x].comments +
-          "</td>\n" +
-          '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
-          "</tr>";
+    //     // var rowData = $('#tblSupplierPaymentcard tbody>tr:last').clone(true);
+    //     // $(".colTransDate", rowData).text(selectedSupplierPayments[x].date);
+    //     // $(".colType", rowData).text(selectedSupplierPayments[x].type);
+    //     // $(".colTransNo", rowData).text(selectedSupplierPayments[x].orderNo);
+    //     // $(".lineOrginalamount", rowData).text(selectedSupplierPayments[x].originalAmount);
+    //     // $(".lineAmountdue", rowData).text(selectedSupplierPayments[x].outstandingAmount);
+    //     // $(".linePaymentamount", rowData).val(selectedSupplierPayments[x].paymentAmount);
+    //     // $(".lineOutstandingAmount", rowData).text(selectedSupplierPayments[x].paymentAmount);
+    //     // $(".colComments", rowData).text(selectedSupplierPayments[x].comments);
+    //     // rowData.attr('id', selectedSupplierPayments[x].awaitingId);
+    //     // rowData.attr('name', selectedSupplierPayments[x].awaitingId);
+    //     let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
+    //     let isCheckedTrue = true;
+    //     $(".tblSupplierPaymentcard > tbody > tr").each(function () {
+    //       var lineID = this.id;
+    //       if (lineID == checkCompareID) {
+    //         isCheckedTrue = false;
+    //       }
+    //     });
+    //     //setTimeout(function() {
+    //     if (isCheckedTrue) {
+    //       $("#tblSupplierPaymentcard tbody").append(rowData);
+    //       total =
+    //         total +
+    //         parseFloat(
+    //           selectedSupplierPayments[x].paymentAmount.replace(
+    //             /[^0-9.-]+/g,
+    //             ""
+    //           )
+    //         );
+    //     }
+    //     //}, 500);
+    //   }
+    //   $(".appliedAmount").text(
+    //     utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+    //   );
+    //   localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+    // }
 
-        // var rowData = $('#tblSupplierPaymentcard tbody>tr:last').clone(true);
-        // $(".colTransDate", rowData).text(selectedSupplierPayments[x].date);
-        // $(".colType", rowData).text(selectedSupplierPayments[x].type);
-        // $(".colTransNo", rowData).text(selectedSupplierPayments[x].orderNo);
-        // $(".lineOrginalamount", rowData).text(selectedSupplierPayments[x].originalAmount);
-        // $(".lineAmountdue", rowData).text(selectedSupplierPayments[x].outstandingAmount);
-        // $(".linePaymentamount", rowData).val(selectedSupplierPayments[x].paymentAmount);
-        // $(".lineOutstandingAmount", rowData).text(selectedSupplierPayments[x].paymentAmount);
-        // $(".colComments", rowData).text(selectedSupplierPayments[x].comments);
-        // rowData.attr('id', selectedSupplierPayments[x].awaitingId);
-        // rowData.attr('name', selectedSupplierPayments[x].awaitingId);
-        let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
-        let isCheckedTrue = true;
-        $(".tblSupplierPaymentcard > tbody > tr").each(function () {
-          var lineID = this.id;
-          if (lineID == checkCompareID) {
-            isCheckedTrue = false;
-          }
-        });
-        //setTimeout(function() {
-        if (isCheckedTrue) {
-          $("#tblSupplierPaymentcard tbody").append(rowData);
-          total =
-            total +
-            parseFloat(
-              selectedSupplierPayments[x].paymentAmount.replace(
-                /[^0-9.-]+/g,
-                ""
-              )
-            );
-        }
-        //}, 500);
-      }
-      $(".appliedAmount").text(
-        utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
-      );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-    }
-    templateObject.selectedAwaitingPayment.set([]);
+    let outstandingExpenses = templateObject.outstandingExpenses.get();
+    outstandingExpenses.push(...selectedSupplierPayments);
+    templateObject.outstandingExpenses.set(outstandingExpenses);
+
+    templateObject.addExpenseToTable(templateObject.isForeignEnabled.get());
+
+    templateObject.selectedAwaitingPayment.set([]);// we clean the tmp table
     $("#supplierPaymentListModal").modal("hide");
 
     setTimeout(function () {
@@ -12638,7 +12872,7 @@ Template.supplierpaymentcard.events({
     }
   },
   "click .btnRecoverPayment": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     var url = FlowRouter.current().path;
@@ -12654,7 +12888,7 @@ Template.supplierpaymentcard.events({
           Deleted: false,
         },
       };
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
       swal({
         title: "Recover Payment",
         text: "Are you sure that you want to recover this payment?",
@@ -12709,7 +12943,7 @@ Template.supplierpaymentcard.events({
     }
   },
   "click .btnDeletePayment": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     var url = FlowRouter.current().path;
@@ -12800,7 +13034,7 @@ Template.supplierpaymentcard.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
           $(".modal-backdrop").css("display", "none");
         });
     } else {
@@ -12867,7 +13101,7 @@ Template.supplierpaymentcard.events({
               } else if (result.dismiss === "cancel") {
               }
             });
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             $(".modal-backdrop").css("display", "none");
           });
       } else {
@@ -13199,16 +13433,24 @@ Template.supplierpaymentcard.events({
     onExchangeRateChange(e);
   },
   "change #edtForeignAmount": (e) => {
-    calculateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "keyup #edtForeignAmount": (e) => {
-    calculateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "change #edtVariation": (e) => {
-    calculateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "keyup #edtVariation": (e) => {
-    calculateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "change #edtApplied": (e) => {
     const currency = getCurrentCurrencySymbol();
@@ -13217,14 +13459,33 @@ Template.supplierpaymentcard.events({
   "keyup #edtApplied": (e) => {
     const currency = getCurrentCurrencySymbol();
     $('.appliedAmount').text(currency + $(e.currentTarget).val());
+  },
+  "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
+    //console.log(e);
+
+    setTimeout(() => {
+
+      // convert to forign payment amount
+      const valueToConvert = $(e.currentTarget).val();
+      const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+      //console.log(valueToConvert, convertedValue, $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to'));
+      $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
+
+      // Convert oustanding to foriegn oustanding
+      const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
+      const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+      $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+    }, 500);
+
   }
 });
+
 
 export function onExchangeRateChange(e) {
  const templateObject = Template.instance();
   const mainValue = localStorage.getItem('APPLIED_AMOUNT') || 0.0;
   const rate = parseFloat($("#exchange_rate").val());
-  const currency = utilityService.extractCurrency(mainValue);
+  const currency = getCurrentCurrencySymbol();
 
   let foreignAmount = rate * utilityService.removeCurrency(mainValue);
   let appliedAmount = rate * utilityService.removeCurrency(mainValue);
@@ -13254,4 +13515,23 @@ export function calculateApplied() {
 
     $('#edtApplied').val(calculatedApplied);
     $('.appliedAmount').text(calculatedApplied);
+}
+
+function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
+  let utilityService = new UtilityService();
+  const currency = utilityService.extractCurrency(amount);
+  //console.log("pre amount: ", amount);
+  amount = utilityService.removeCurrency(amount, currency);
+
+  //console.log("amount to convert", amount);
+  //console.log('rate', rate);
+  let convert = amount * rate;
+
+  //console.log("converted", convert);
+
+  if(withSymbol) {
+    return `${withSymbol}${convert}`;
+  }
+  return convert;
+
 }

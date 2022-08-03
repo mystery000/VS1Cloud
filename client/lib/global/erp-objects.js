@@ -256,7 +256,8 @@ const erpObject = {
     TPayrollHolidayGroup:"TPayrollHolidayGroup",
     TVS1Superannuation:"TVS1Superannuation",
     TTripGroup: "TTripGroup",
-    TTemplateSettings:"TTemplateSettings"
+    TTemplateSettings:"TTemplateSettings",
+    TReportsAccountantsCategory:"TReportsAccountantsCategory"
 
 };
 

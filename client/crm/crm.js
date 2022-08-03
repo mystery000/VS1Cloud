@@ -2,6 +2,7 @@ import "../lib/global/indexdbstorage.js";
 
 import { CRMService } from "./crm-service";
 import { ContactService } from "../contacts/contact-service";
+import { MailchimpService } from "../js/mailchimp-service.js"
 let crmService = new CRMService();
 
 Template.crmoverview.onCreated(function () {
@@ -601,7 +602,21 @@ Template.crmoverview.events({
   },
 
   "click .btnMailchimp": function (e) {
-    swal("You are not set up yet, do you wish to create an account with Mail Chimp", "", "warning");
+    FlowRouter.go("/email-list");
+
+    // let maichimpService = new MailchimpService();
+    // try {
+    //   // maichimpService.createNewUser("bitcoin.blog.ytb@gmail.com", "Bitc");
+    //   Meteor.call('createListMember', 'popovicjovan185@gmail.com', 'Blogger test2', function (error, result) {
+    //     if (error && error.error === "error") {
+
+    //     } else {
+
+    //     }
+    //   });
+    // } catch (error) {
+    // }
+    // swal("You are not set up yet, do you wish to create an account with Mail Chimp", "", "warning");
     return;
   },
 

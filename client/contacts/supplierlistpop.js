@@ -37,29 +37,6 @@ Template.supplierlistpop.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierlist', function (error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
-
     templateObject.resetData = function (dataVal) {
         location.reload();
     }
