@@ -13517,7 +13517,7 @@ export function calculateApplied() {
     $('.appliedAmount').text(calculatedApplied);
 }
 
-function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
+export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
   let utilityService = new UtilityService();
   const currency = utilityService.extractCurrency(amount);
  
