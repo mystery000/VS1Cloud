@@ -2117,7 +2117,7 @@ Template.salesorderslist.onRendered(function() {
       let dispFields = [];
       let customData = {};
       let customFieldCount = 11;
-      let listType = "ltSalesOrderList";   
+      let listType = "ltSalesOrderList";
 
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -2470,7 +2470,7 @@ Template.salesorderslist.events({
     'click .saveTable' : function(event){
       let lineItems = [];
       let organisationService = new OrganisationService();
-      let listType = "ltSalesOrderList";    
+      let listType = "ltSalesOrderList";
 
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -2681,21 +2681,13 @@ Template.salesorderslist.events({
 
         let templateObject = Template.instance();
 
-        sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataSaleOrder) {
+        sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataSaleOrder) {
             addVS1Data('TSalesOrderList',JSON.stringify(dataSaleOrder)).then(function (datareturn) {
               sideBarService.getAllSalesOrderList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TSalesOrderEx',JSON.stringify(data)).then(function (datareturn) {
-                    sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+                    sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
                        addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
-                           sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
-                               addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
-                                   window.open('/salesorderslist','_self');
-                                 }).catch(function (err) {
-                                   window.open('/salesorderslist','_self');
-                                 });
-                             }).catch(function (err) {
-                               window.open('/salesorderslist','_self');
-                             });
+                          window.open('/salesorderslist','_self');
                          }).catch(function (err) {
                            sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
                                addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
