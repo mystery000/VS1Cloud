@@ -602,6 +602,8 @@ Template.crmoverview.events({
   },
 
   "click .btnMailchimp": function (e) {
+    FlowRouter.go("/email-list");
+
     // let maichimpService = new MailchimpService();
     // try {
     //   // maichimpService.createNewUser("bitcoin.blog.ytb@gmail.com", "Bitc");

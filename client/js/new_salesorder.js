@@ -4723,7 +4723,7 @@ Template.new_salesorder.onRendered(() => {
         $('#tblCustomerlist_filter .form-control-sm').val('');
         setTimeout(function() {
             //$('#tblCustomerlist_filter .form-control-sm').focus();
-            $('.btnRefreshCustomer').trigger('click');
+            // $('.btnRefreshCustomer').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
         // }

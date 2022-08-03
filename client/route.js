@@ -1883,3 +1883,12 @@ authenticatedRoutes.route('/mailchimpsettings', {
       });
   }
 });
+
+authenticatedRoutes.route('/email-list', {
+  name: 'mailchimpList',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'mailchimpList'
+      });
+  }
+});
