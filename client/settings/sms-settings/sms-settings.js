@@ -94,42 +94,51 @@ Template.smssettings.events({
     window.open("https://twilio.com/try-twilio");
   },
   'click #saveTwilioSettings': async function() {
-    $('.fullScreenSpin').css('display','inline-block');
-
-    const templateObject = Template.instance();
-
-    //TODO: Save SMS Settings with API
-    const allKeys = ["VS1SMSID", "VS1SMSToken", "VS1SMSPhone", "VS1HEADERSMSMSG", "VS1SAVESMSMSG", "VS1STARTSMSMSG", "VS1STOPSMSMSG"];
-    for (const eKey of allKeys) {
-      let value = '';
-      let tag = '';
-      switch (eKey) {
-        case "VS1SMSID": value = $('#twilioAccountId').val(); tag = "sid,twilliotoken,phone"; break;
-        case "VS1SMSToken": value = $('#twilioAccountToken').val(); tag = "sid,twilliotoken,phone"; break;
-        case "VS1SMSPhone": value = $('#twilioTelephoneNumber').val(); tag = "sid,twilliotoken,phone"; break;
-        case "VS1HEADERSMSMSG": value = $('#headerAppointmentSMS').val(); break;
-        case "VS1SAVESMSMSG": value = $('#saveAppointmentSMS').val(); break;
-        case "VS1STARTSMSMSG": value = $('#startAppointmentSMS').val(); break;
-        case "VS1STOPSMSMSG": value = $('#stopAppointmentSMS').val();
-      }
-      const data = {
-        eKey,
-        Fieldvalue: value,
-        KeyValue: tag
-      }
-      await templateObject.saveSettingObject(data);
-    }
-    $('.fullScreenSpin').css('display','none');
     swal({
-      title: 'SMS settings successfully updated!',
-      text: '',
-      type: 'success',
-      showCancelButton: false,
-      confirmButtonText: 'OK'
-    }).then((result) => {
+      title: 'Confirm saving',
+      text: "You're about to save SMS Settings, proceed?.",
+      showCancelButton: true,
+      confirmButtonText: 'Yes, proceed',
+  }).then((result) => {
       if (result.value) {
-        window.open('/settings','_self');
-      } else if (result.dismiss === 'cancel') {}
-    });
+        $('.fullScreenSpin').css('display','inline-block');
+
+        const templateObject = Template.instance();
+
+        //TODO: Save SMS Settings with API
+        const allKeys = ["VS1SMSID", "VS1SMSToken", "VS1SMSPhone", "VS1HEADERSMSMSG", "VS1SAVESMSMSG", "VS1STARTSMSMSG", "VS1STOPSMSMSG"];
+        for (const eKey of allKeys) {
+          let value = '';
+          let tag = '';
+          switch (eKey) {
+            case "VS1SMSID": value = $('#twilioAccountId').val(); tag = "sid,twilliotoken,phone"; break;
+            case "VS1SMSToken": value = $('#twilioAccountToken').val(); tag = "sid,twilliotoken,phone"; break;
+            case "VS1SMSPhone": value = $('#twilioTelephoneNumber').val(); tag = "sid,twilliotoken,phone"; break;
+            case "VS1HEADERSMSMSG": value = $('#headerAppointmentSMS').val(); break;
+            case "VS1SAVESMSMSG": value = $('#saveAppointmentSMS').val(); break;
+            case "VS1STARTSMSMSG": value = $('#startAppointmentSMS').val(); break;
+            case "VS1STOPSMSMSG": value = $('#stopAppointmentSMS').val();
+          }
+          const data = {
+            eKey,
+            Fieldvalue: value,
+            KeyValue: tag
+          }
+          await templateObject.saveSettingObject(data);
+        }
+        $('.fullScreenSpin').css('display','none');
+        swal({
+          title: 'SMS settings successfully updated!',
+          text: '',
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonText: 'OK'
+        }).then((result) => {
+          if (result.value) {
+            window.open('/settings','_self');
+          } else if (result.dismiss === 'cancel') {}
+        });
+      }
+    })
   }
 });

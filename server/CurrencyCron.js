@@ -92,6 +92,11 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
           // dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
           dbCurrency.fields.BuyRate = fxCurrencyRates.mid;
           dbCurrency.fields.SellRate = fxCurrencyRates.inverse;
+          //console.log(dbCurrency.fields.CurrencySymbol);
+          // if(dbCurrency.fields.CurrencySymbol = "") {
+          //   console.log("-", "replaced");
+          //   dbCurrency.fields.CurrencySymbol = "N/A";
+          // }
           // save funciton here
 
           _currencies.push(dbCurrency);
@@ -99,10 +104,17 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
         }
       });
 
+
       Meteor.wrapAsync(_saveCurrency)({
         type: "TCurrency",
         objects: _currencies
-      }, erpGet);
+      }, erpGet, (error, result) => {
+        if(error) {
+          //console.log("error", error);
+        } else {
+          //console.log("result", result);
+        }
+      });
   }
 
 }
@@ -111,7 +123,7 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
  * This functions will save one currency
  * @param {*} currency
  */
-async function _saveCurrency(currency, erpGet) {
+async function _saveCurrency(currency, erpGet, cb = (error, result) => {}) {
   const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency`;
   const _headers = {
     database: erpGet.ERPDatabase,
@@ -132,7 +144,9 @@ async function _saveCurrency(currency, erpGet) {
     },
     (error, result) => {
       if (error) {
+        cb(error, null);
       } else {
+        cb(null, result);
       }
     }
   );
@@ -168,9 +182,11 @@ Meteor.methods({
     return SyncedCron.add({
       name: cronId,
       schedule: function (parser) {
-        const parsed = parser.text(cronSetting.toParse);
+        //console.log(cronSetting.toParse);
+        // const parsed = parser.text(cronSetting.toParse);
+        const parsed = parser.text("every 2 minutes");
         return parsed;
-        //return parser.text("every 2 minutes");
+  
       },
       job: () => {
         Meteor.call("runCron", cronSetting, erpGet, function (error, results) {

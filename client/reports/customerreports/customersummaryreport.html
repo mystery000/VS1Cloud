@@ -192,21 +192,19 @@
                                         </thead>
                                         <tbody>
                                             {{#if records}}
-                                                {{#each item in records}}
-                                                  
-                                                        <tr>
-                                                            <td></td>
-                                                            <td>{{ item.Name }}</td>
-                                                            <td>{{ item.Phone }}</td>
-                                                            <td>{{ item.Address }}</td>
-                                                            <td>City</td>
-                                                            <td>Zip</td>
-                                                            <td>{{ item.State }}</td>
-                                                            <td>Total (Ex)</td>
-                                                            <td>Total (Inc)</td>
-                                                            <td>Gross Profit</td>
-                                                            <td>Margin</td>                                                        </tr>
-                                                        </tr>
+                                                {{#each arrayify records}}
+                                                <tr>
+                                                    <td style="font-weight: 800;">{{ value.Name }}</td>
+                                                    <td style="font-weight: 800;">{{ value.Phone }}</td>
+                                                    <td style="font-weight: 800;">{{ value.Address }}</td>
+                                                    <td style="font-weight: 800;">{{ getSpaceKeyData value "Address 2" }}</td>
+                                                    <td style="font-weight: 800;">{{ value.Postcode }}</td>
+                                                    <td style="font-weight: 800;">{{ value.State }}</td>
+                                                    <td class="text-right text-success">{{ getSpaceKeyData value "Total Amount (Ex)" }}</td>
+                                                    <td class="text-right text-success">{{ getSpaceKeyData value "Total Amount (Inc)" }}</td>
+                                                    <td class="text-right text-success">{{ getSpaceKeyData value "Gross Profit" }}</td>
+                                                    <td style="font-weight: 800;">{{ value.Margin }}</td>
+                                                </tr>
                                                 {{/each}}
                                             {{/if}}
                                                         

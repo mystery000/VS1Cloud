@@ -101,31 +101,32 @@ Template.customersummaryreport.onRendered(() => {
   LoadingOverlay.hide();
 
   templateObject.getCustomerDetailsHistory = async function () {
-    console.log("data", 'data');
 
     let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
     let dateTo = moment().format("YYYY-MM-DD");
     let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, false);
-    let customerDetails = [];
-    console.log("data", data);
 
-    console.log("data", data.tcustomersummaryreport);
+    let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
-        for (const item of data.tcustomersummaryreport) {   
+      let reportGroups = []; 
+      for (const item of data.tcustomersummaryreport) {   
+        let isExist = reportGroups.filter((subitem) => {
+          if( subitem.EMAIL == item.EMAIL ){
+              subitem.SubAccounts.push(item)
+              return subitem
+          }
+        });
 
-            customerDetails.push({
-              ID: item.ClientID,
-              Name: item.Name,
-              Phone: item.Phone,
-              Address: item.Address,
-              State: item.Superannuation,
-            });
-
-            
+        if( isExist.length == 0 ){
+          reportData.push({
+              Margin: 0,
+              ...item
+          });
         }
-
+      }
+      
     }
-    templateObject.records.set(customerDetails);    
+    templateObject.records.set(reportData);    
   };
   templateObject.getCustomerDetailsHistory();
 });
@@ -453,6 +454,9 @@ Template.customersummaryreport.events({
 Template.customersummaryreport.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
+  },
+  getSpaceKeyData( array, key ){
+    return array[key] || ''
   },
   records: () => {
     return Template.instance().records.get();
