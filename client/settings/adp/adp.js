@@ -59,14 +59,16 @@ Template.adp.events({
         let settingDetails = templateObject.settingDetails.get();
         if( settingDetails.length > 0 ){
             for (const item of settingDetails) {
-                let FieldValue = $('#' + item.PrefName).val();
-                settingObject.push({
-                    type: "TERPPreference",
-                    fields: {
-                      Id: item.Id,
-                      Fieldvalue: FieldValue
-                    }
-                });
+                if( settingFields.includes( item.PrefName ) == true ){
+                    let FieldValue = $('#' + item.PrefName).val();
+                    settingObject.push({
+                        type: "TERPPreference",
+                        fields: {
+                        Id: item.Id,
+                        Fieldvalue: FieldValue
+                        }
+                    });
+                }
             }
         }else{
             for (const PrefName of settingFields) {
@@ -101,6 +103,7 @@ Template.adp.events({
                         return item;
                     }
                 }); 
+                templateObject.settingDetails.set( data.terppreference );
                 data.terppreference.push(...details);
                 await addVS1Data('TERPPreference', JSON.stringify(data))
             }
