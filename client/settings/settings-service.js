@@ -1,3 +1,4 @@
+import { functionsIn } from 'lodash';
 import {
     BaseService
 } from '../js/base-service.js';
@@ -674,5 +675,27 @@ export class TaxRateService extends BaseService {
           return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
 
         }
+
+    savePreferenceSettings(data){
+        return this.POST(this.ERPObjects.TERPPreference, data);
+    }
+
+    getPreferenceSettings( customSelect = [] ){
+        let options = {};
+        if( customSelect.length > 0 ){
+            let select = customSelect.map(function(item){
+                return `[PrefName]='${item}'`
+            })
+            options = {
+                PropertyList: "PrefName,Fieldvalue",
+                select: select.join(' or ')
+            }
+        }else{
+            options = {
+                PropertyList: "PrefName,Fieldvalue"
+            }
+        }
+        return this.getList(this.ERPObjects.TERPPreference, options);
+    }
 
 }

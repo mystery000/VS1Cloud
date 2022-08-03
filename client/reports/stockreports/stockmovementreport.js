@@ -77,6 +77,15 @@ Template.stockmovementreport.onRendered(() => {
     //--------- END OF DATE ---------------//
   };
 
+  templateObject.getStockMovementReportData = async function () {
+    let dateFrom = moment().subtract(6, "months").format("YYYY-MM-DD");;
+    let dateTo = moment().format("YYYY-MM-DD");
+    let data = await reportService.getStockMovementReport( dateFrom, dateTo, false);
+    console.log(data);
+  }
+
+  templateObject.getStockMovementReportData();
+
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
     if (imageData) {
