@@ -1,6 +1,5 @@
 const listAid = 'bc36c79985';
 const apikey = 'fdaeb86ecef07dfd9e7bb401a5bd9262-us12';
-const listAurl = 'https://us12.api.mailchimp.com/3.0/lists/' + listAid + '/members';
 
 
 Meteor.startup(function () {
@@ -13,23 +12,27 @@ Meteor.startup(function () {
 
 Meteor.methods({
 
-  createListMember: function (email, firstname = '') {
+  createListMember: function (email, firstname = '', lastname = '') {
 
     let data = {
       "email_address": email,
       "status": "subscribed",
-      "merge_fields": { "FNAME": firstname }
+      "merge_fields": { "FNAME": firstname, "LNAME": lastname }
+      // "tags": [tag]
     };
 
-    Meteor.call('MCApi', 'POST', listAurl, data, function (error, result) {});
+    const apiregion = apikey.split('-')[1];
+    const listAurl = 'https://' + apiregion + '.api.mailchimp.com/3.0/lists/' + listAid + '/members';
+    console.log(listAurl)
+    Meteor.call('MCApi', 'POST', listAurl, data, function (error, result) { });
   },
 
-  //this is our API function call
+  // call mailchimp api
   MCApi: function (method, apiUrl, data) {
 
-    let options = { 'auth': 'xAuthorization:' + apikey };
+    let options = { 'auth': 'Authorization:' + apikey };
     options['data'] = data || '';
- 
+
     try {
       var response = HTTP.call(method, apiUrl, options).data;
     } catch (error) {
