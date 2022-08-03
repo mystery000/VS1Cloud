@@ -2,6 +2,7 @@ import { TaxRateService } from "../../settings/settings-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
+import { setCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 let sideBarService = new SideBarService();
 
 Template.CurrencyWidget.onCreated(function () {
@@ -21,12 +22,15 @@ Template.CurrencyWidget.events({
 
     const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
 
+    const currencySymbol = $(e.currentTarget).find('.colSymbol').text() || "N/A";
+    setCurrentCurrencySymbol(currencySymbol);
     const currencyCode = $(e.currentTarget).find(".colCode").text();
     const currencyRate =
       rateType == "buy"
         ? $(e.currentTarget).find(".colBuyRate").text()
         : $(e.currentTarget).find(".colSellRate").text();
 
+    $('#sltCurrency').attr('currency-symbol', currencySymbol);
     $("#sltCurrency").val(currencyCode);
     $("#sltCurrency").trigger("change");
     $("#exchange_rate").val(currencyRate);
