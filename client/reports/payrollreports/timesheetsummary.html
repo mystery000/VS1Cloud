@@ -169,63 +169,32 @@
                                             <tr class="table-active">
                                                 <th>Employee</th>
                                                 <th>Date</th>
-                                                <th class="text-right">Hours</th>
-                                                <th class="text-right">Overtime</th>
-                                                <th class="text-right">Double</th>
-                                                <th class="text-right">Additional</th>
-                                                <th class="text-right">Tips</th>
+                                                <th>Hours</th>
+                                                <th>Overtime</th>
+                                                <th>Double</th>
+                                                <th>Additional</th>
+                                                <th>Tips</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td colspan="7" style="font-weight: 800;">Rasheed</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>24/05/2022</td>
-                                                <td class="text-right">58.5</td>
-                                                <td class="text-right">12.75</td>
-                                                <td class="text-right">3.25</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>24/05/2022</td>
-                                                <td class="text-right">58.5</td>
-                                                <td class="text-right">12.75</td>
-                                                <td class="text-right">3.25</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="font-weight: 800;">Rasheed Total</td>
-                                                <td class="text-right" style="font-weight: 800;">58.5</td>
-                                                <td class="text-right" style="font-weight: 800;">12.75</td>
-                                                <td class="text-right" style="font-weight: 800;">3.25</td>
-                                                <td class="text-right" style="font-weight: 800;">0</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                            </tr>
-                                            <tr class="departmentHeader">
-                                                <td colspan="7" style="font-weight: 800;">Josef</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>24/05/2022</td>
-                                                <td class="text-right">58.5</td>
-                                                <td class="text-right">12.75</td>
-                                                <td class="text-right">3.25</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right">$ 0.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="font-weight: 800;">Josef Total</td>
-                                                <td class="text-right" style="font-weight: 800;">58.5</td>
-                                                <td class="text-right" style="font-weight: 800;">12.75</td>
-                                                <td class="text-right" style="font-weight: 800;">3.25</td>
-                                                <td class="text-right" style="font-weight: 800;">0</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 0.00</td>
-                                            </tr>
+                                            {{#if records}}
+                                                {{#each arrayify records}}
+                                                    <tr>
+                                                        <td style="font-weight: 800;" colspan="7">{{ value.EmployeeName }}</td>
+                                                    </tr>
+                                                    {{#each item in value.records}}
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ formatDate item.fields.MsTimeStamp }}</td>
+                                                            <td>{{ item.fields.Hours }}</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/each}}
+                                            {{/if}}
                                             <!-- {{#if records}}
                                                 <tr>
                                                     <td></td>
