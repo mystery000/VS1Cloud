@@ -194,16 +194,16 @@
                                             {{#if records}}
                                                 {{#each arrayify records}}
                                                 <tr>
-                                                    <td style="font-weight: 800;">{{ value.Name }}</td>
-                                                    <td style="font-weight: 800;">{{ value.Phone }}</td>
-                                                    <td style="font-weight: 800;">{{ value.Address }}</td>
-                                                    <td style="font-weight: 800;">{{ getSpaceKeyData value "Address 2" }}</td>
-                                                    <td style="font-weight: 800;">{{ value.Postcode }}</td>
-                                                    <td style="font-weight: 800;">{{ value.State }}</td>
-                                                    <td class="text-right text-success">{{ getSpaceKeyData value "Total Amount (Ex)" }}</td>
-                                                    <td class="text-right text-success">{{ getSpaceKeyData value "Total Amount (Inc)" }}</td>
-                                                    <td class="text-right text-success">{{ getSpaceKeyData value "Gross Profit" }}</td>
-                                                    <td style="font-weight: 800;">{{ value.Margin }}</td>
+                                                    <td>{{ value.Name }}</td>
+                                                    <td>{{ value.Phone }}</td>
+                                                    <td>{{ value.Address }}</td>
+                                                    <td>{{ value.Address_2 }}</td>
+                                                    <td>{{ value.Postcode }}</td>
+                                                    <td>{{ value.State }}</td>
+                                                    <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
+                                                    <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
+                                                    <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td>
+                                                    <td>{{ formatPrice value.Margin }}</td>
                                                 </tr>
                                                 {{/each}}
                                             {{/if}}

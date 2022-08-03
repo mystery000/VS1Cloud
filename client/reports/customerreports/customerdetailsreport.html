@@ -203,7 +203,7 @@
                                                         <td style="font-weight: 800;"></td>
                                                         <td style="font-weight: 800;"></td>
                                                         <td style="font-weight: 800;">{{ value.Address }}</td>
-                                                        <td style="font-weight: 800;">{{ getSpaceKeyData value "Address 2" }}</td>
+                                                        <td style="font-weight: 800;">{{ value.Address_2 }}</td>
                                                         <td style="font-weight: 800;">{{ value.Postcode }}</td>
                                                         <td style="font-weight: 800;">{{ value.State }}</td>
                                                     </tr>
@@ -211,10 +211,10 @@
                                                         <tr>
                                                             <td></td>
                                                             <td></td>
-                                                            <td>{{ value['Type'] }}</td>
-                                                            <td class="text-right text-success">{{ getSpaceKeyData value "Total Amount (Ex)" }}</td>
-                                                            <td class="text-right text-success">{{ getSpaceKeyData value "Total Amount (Inc)" }}</td>
-                                                            <td class="text-right text-success">{{ getSpaceKeyData value "Gross Profit" }}</td>
+                                                            <td>{{ item.Type }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td>
                                                             <td class="text-right text-success">0</td>
                                                             <td></td>
                                                             <td></td>
@@ -226,9 +226,9 @@
                                                         <td style="font-weight: 800;"></td>
                                                         <td style="font-weight: 800;"></td>
                                                         <td style="font-weight: 800;"></td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ value.TotalEx }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ value.TotalInc }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ value.TotalGrossProfit }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalEx }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalInc }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalGrossProfit }}</td>
                                                         <td class="text-right" style="font-weight: 800;">0</td>
                                                         <td style="font-weight: 800;"></td>
                                                         <td style="font-weight: 800;"></td>

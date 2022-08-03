@@ -108,8 +108,17 @@ Template.customersummaryreport.onRendered(() => {
 
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
+        let reportSummary = data.tcustomersummaryreport.map(el => {
+          let resultobj = {};
+          Object.entries(el).map(([key, val]) => {      
+              resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+              return resultobj;
+          })
+          return resultobj;
+        })
+
       let reportGroups = []; 
-      for (const item of data.tcustomersummaryreport) {   
+      for (const item of reportSummary ) {   
         let isExist = reportGroups.filter((subitem) => {
           if( subitem.EMAIL == item.EMAIL ){
               subitem.SubAccounts.push(item)
@@ -460,6 +469,17 @@ Template.customersummaryreport.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  formatPrice( amount ){
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatDate: ( date ) => {
+      return ( date )? moment(date).format("DD/MM/YYYY") : '';
   },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
