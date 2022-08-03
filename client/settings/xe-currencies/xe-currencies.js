@@ -1,34 +1,51 @@
 import {ReactiveVar} from 'meteor/reactive-var';
-import { SideBarService } from '../../js/sidebar-service';
+import { TaxRateService } from '../settings-service';
 import '../../lib/global/indexdbstorage.js';
 
-let sideBarService = new SideBarService();
+const settingService = new TaxRateService();
+const settingFields = ['VS1XECLIENTID', 'VS1ADPCLIENTSECRET'];
+const specialSearchKey = "vs1xecurrencysettings"
 
 Template.xecurrencies.onCreated(() => {
   const templateObject = Template.instance();
-  
+  templateObject.settingDetails = new ReactiveVar([]);
+
 });
 
 Template.xecurrencies.onRendered(function () {
+
   const templateObject = Template.instance();
 
-    templateObject.getXeCurrencySettings = async () => {
-      let employeeId = Session.get("mySessionEmployeeLoggedID");
-      let xeSettings = await getVS1Data('TXeCurrencySettings');
-      if( xeSettings.length ){
-          let data = JSON.parse(xeSettings[0].data);
-          let currentXeCurrency = data.txecurrencysettings.filter((item) => {
-              if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeId ) ) {
+  templateObject.getSettingsList = async function () {
+      $('.fullScreenSpin').css('display','none');
+      let data = [];
+      let details = [];
+      let dataObject = await getVS1Data('TERPPreference')
+      if ( dataObject.length > 0) {
+          data = JSON.parse(dataObject[0].data);
+          details = data.terppreference.filter(function( item ){
+              if( settingFields.includes( item.PrefName ) ){
                   return item;
               }
-          });
-          if( currentXeCurrency.length ){
-            $('#apiId').val(currentXeCurrency[0].fields.ApiID);
-            $('#apiKey').val(currentXeCurrency[0].fields.ApiKey);
+          }); 
+      }
+      if( details.length == 0 ){
+          dataobj = await settingService.getPreferenceSettings( settingFields );
+          details = dataobj.terppreference;
+          data.terppreference.push(...details);
+          await addVS1Data('TERPPreference', JSON.stringify(data))
+      }
+
+      if( details.length > 0 ){
+          templateObject.settingDetails.set( details );
+          for (const item of details) {
+              $('#' + item.PrefName).val( item.Fieldvalue );
           }
       }
-    }
-    templateObject.getXeCurrencySettings();
+
+  };
+
+  templateObject.getSettingsList();
 
 });
 
@@ -39,38 +56,66 @@ Template.xecurrencies.events({
   'click #saveXeCurrencySettings': async function(event){
     $('.fullScreenSpin').css('display','block');
     event.preventDefault();
-    $(".fullScreenSpin").css("display", "block");
-    let employeeId = Session.get("mySessionEmployeeLoggedID");
-    let apiId = $('#apiId').val();
-    let apiKey = $('#apiKey').val();
-    let xeSettings = await getVS1Data('TXeCurrencySettings');
-    let xeCurrenciesList = [];
-    if( xeSettings.length ){
-        let data = JSON.parse(xeSettings[0].data);
-        xeCurrenciesList = data.txecurrencysettings.filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) != parseInt( employeeId ) ) {
-                return item;
+    let settingObject = [];
+    const templateObject = Template.instance();
+    let settingDetails = templateObject.settingDetails.get();
+    if( settingDetails.length > 0 ){
+        for (const item of settingDetails) {
+            if( settingFields.includes( item.PrefName ) == true ){
+                let FieldValue = $('#' + item.PrefName).val();
+                settingObject.push({
+                    type: "TERPPreference",
+                    fields: {
+                    Id: item.Id,
+                    Fieldvalue: FieldValue
+                    }
+                });
             }
-        });
+        }
+    }else{
+        for (const PrefName of settingFields) {
+            let FieldValue = $('#' + PrefName).val();
+            settingObject.push({
+                type: "TERPPreference",
+                fields: {
+                    FieldType: "ftString",
+                    FieldValue: FieldValue,
+                    KeyValue: specialSearchKey,
+                    PrefName: PrefName,
+                    PrefType: "ptCompany",
+                    RefType: "None"
+                }
+            })
+        }
     }
-    xeCurrenciesList.push({
-      type: "TXeCurrencySettings",
-      fields: {
-        ApiID: apiId,
-        ApiKey: apiKey,
-        EmployeeID: employeeId,
-      }
-    });
+    if( settingObject.length ){
+        let settingJSON = {
+            type: "TERPPreference",
+            objects:settingObject
+        };
 
-    let tXeSettings = {
-      txecurrencysettings: xeCurrenciesList
+        const ApiResponse = await settingService.savePreferenceSettings( settingJSON );
+        let data = await settingService.getPreferenceSettings( settingFields );
+        let dataObject = await getVS1Data('TERPPreference')
+        let details = [];
+        if ( dataObject.length > 0) {
+            dataObj = JSON.parse(dataObject[0].data);
+            details = dataObj.terppreference.filter(function( item ){
+                if( settingFields.includes( item.PrefName ) == false ){
+                    return item;
+                }
+            }); 
+            templateObject.settingDetails.set( data.terppreference );
+            data.terppreference.push(...details);
+            await addVS1Data('TERPPreference', JSON.stringify(data))
+        }
     }
-
     await addVS1Data('TXeCurrencySettings', JSON.stringify(tXeSettings));
     $('.fullScreenSpin').css('display','none');
     swal({
       title: 'Xe Currency successfully updated!',
       text: '',
       type: 'success',
-    })  }
+    }) 
+  }
 });

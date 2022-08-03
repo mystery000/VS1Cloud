@@ -15,34 +15,37 @@ Template.receiptclaims.onCreated(() => {
 });
 
 Template.receiptclaims.onRendered(function () {
-  templateObject.getSettingsList = async function () {
-    $('.fullScreenSpin').css('display','none');
-    let data = [];
-    let details = [];
-    let dataObject = await getVS1Data('TERPPreference')
-    if ( dataObject.length > 0) {
-        data = JSON.parse(dataObject[0].data);
-        details = data.terppreference.filter(function( item ){
-            if( settingFields.includes( item.PrefName ) ){
-                return item;
-            }
-        }); 
-    }
-    if( details.length == 0 ){
-        dataobj = await settingService.getPreferenceSettings( settingFields );
-        details = dataobj.terppreference;
-        data.terppreference.push(...details);
-        await addVS1Data('TERPPreference', JSON.stringify(data))
-    }
 
-    if( details.length > 0 ){
-        templateObject.settingDetails.set( details );
-        for (const item of details) {
-            $('#' + item.PrefName).val( item.Fieldvalue );
+    const templateObject = Template.instance();
+
+    templateObject.getSettingsList = async function () {
+        $('.fullScreenSpin').css('display','none');
+        let data = [];
+        let details = [];
+        let dataObject = await getVS1Data('TERPPreference')
+        if ( dataObject.length > 0) {
+            data = JSON.parse(dataObject[0].data);
+            details = data.terppreference.filter(function( item ){
+                if( settingFields.includes( item.PrefName ) ){
+                    return item;
+                }
+            }); 
         }
-    }
+        if( details.length == 0 ){
+            dataobj = await settingService.getPreferenceSettings( settingFields );
+            details = dataobj.terppreference;
+            data.terppreference.push(...details);
+            await addVS1Data('TERPPreference', JSON.stringify(data))
+        }
 
-  };
+        if( details.length > 0 ){
+            templateObject.settingDetails.set( details );
+            for (const item of details) {
+                $('#' + item.PrefName).val( item.Fieldvalue );
+            }
+        }
+
+    };
 
   templateObject.getSettingsList();
 
@@ -59,14 +62,16 @@ Template.receiptclaims.events({
     let settingDetails = templateObject.settingDetails.get();
     if( settingDetails.length > 0 ){
         for (const item of settingDetails) {
-            let FieldValue = $('#' + item.PrefName).val();
-            settingObject.push({
-                type: "TERPPreference",
-                fields: {
-                  Id: item.Id,
-                  Fieldvalue: FieldValue
-                }
-            });
+            if( settingFields.includes( item.PrefName ) == true ){
+                let FieldValue = $('#' + item.PrefName).val();
+                settingObject.push({
+                    type: "TERPPreference",
+                    fields: {
+                    Id: item.Id,
+                    Fieldvalue: FieldValue
+                    }
+                });
+            }
         }
     }else{
         for (const PrefName of settingFields) {
@@ -101,6 +106,7 @@ Template.receiptclaims.events({
                     return item;
                 }
             }); 
+            templateObject.settingDetails.set( data.terppreference );
             data.terppreference.push(...details);
             await addVS1Data('TERPPreference', JSON.stringify(data))
         }

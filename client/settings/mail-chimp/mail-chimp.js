@@ -36,7 +36,6 @@ Template.mailchimp.onRendered(function () {
       }
 
       if( details.length > 0 ){
-          console.log( details )
           templateObject.settingDetails.set( details );
           for (const item of details) {
               $('#' + item.PrefName).val( item.Fieldvalue );
@@ -59,14 +58,16 @@ Template.mailchimp.events({
     let settingDetails = templateObject.settingDetails.get();
     if( settingDetails.length > 0 ){
         for (const item of settingDetails) {
-            let FieldValue = $('#' + item.PrefName).val();
-            settingObject.push({
-                type: "TERPPreference",
-                fields: {
-                  Id: item.Id,
-                  Fieldvalue: FieldValue
-                }
-            });
+            if( settingFields.includes( item.PrefName ) == true ){
+                let FieldValue = $('#' + item.PrefName).val();
+                settingObject.push({
+                    type: "TERPPreference",
+                    fields: {
+                    Id: item.Id,
+                    Fieldvalue: FieldValue
+                    }
+                });
+            }
         }
     }else{
         for (const PrefName of settingFields) {
@@ -101,6 +102,7 @@ Template.mailchimp.events({
                     return item;
                 }
             }); 
+            templateObject.settingDetails.set( data.terppreference );
             data.terppreference.push(...details);
             await addVS1Data('TERPPreference', JSON.stringify(data))
         }
