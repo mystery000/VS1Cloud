@@ -222,7 +222,7 @@ openDb = function (dbName) {
       db.createObjectStore("TPayNotes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
-
+      
 
       db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });
@@ -293,6 +293,7 @@ openDb = function (dbName) {
       db.createObjectStore('TltInventoryOverview',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TltProductList',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TltProductLines',{ keyPath: "EmployeeEmail"});
+   
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
   });
