@@ -18,6 +18,7 @@ Template.timesheetsummary.onCreated(() => {
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  templateObject.records = new ReactiveVar([]);
 });
 
 Template.timesheetsummary.onRendered(() => {
@@ -85,6 +86,33 @@ Template.timesheetsummary.onRendered(() => {
       $("#uploadedImage").attr("width", "50%");
     }
   };
+
+  
+  templateObject.getTimeSheetEntry = async function () {
+    let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
+    let dateTo = moment().format("YYYY-MM-DD");
+    let data = await reportService.getTimeSheetEntry( dateFrom, dateTo, true, '1 month');
+    const result = new Array();
+    if(data){
+      data.ttimesheetentry.map((subitem) => {
+        if(subitem.fields && subitem.fields.TimeSheet) {
+          subitem.fields.TimeSheet.map((y) => {
+            let index = result.findIndex(x => x.EmployeeName == y.fields.EmployeeName)
+            if(index == -1) {
+              result.push({ EmployeeName:y.fields.EmployeeName, records: [y]})
+            } else {
+              result[index].records.push(y)
+            }
+          });
+        }
+      });
+    }
+    templateObject.records.set(result);    
+  };
+  templateObject.getTimeSheetEntry();
+
+
+
 
   //----------- CURRENCY MODULE ------------------//
   templateObject.loadCurrency = async () => {
@@ -421,7 +449,20 @@ Template.timesheetsummary.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
-
+  records: () => {
+    return Template.instance().records.get();
+  },
+  formatPrice( amount ){
+      let utilityService = new UtilityService();
+      if( isNaN( amount ) ){
+          amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+          amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+      }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatDate: ( date ) => {
+      return ( date )? moment(date).format("DD/MM/YYYY") : '';
+  },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 

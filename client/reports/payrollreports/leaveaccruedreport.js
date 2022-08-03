@@ -77,6 +77,14 @@ Template.leaveaccruedreport.onRendered(() => {
     //--------- END OF DATE ---------------//
   };
 
+  templateObject.getleaveAccrualReport = async () => {
+    let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
+    let dateTo = moment().format("YYYY-MM-DD");
+    let data = await reportService.getleaveAccruals( dateFrom, dateTo, false, '1 month');
+  }
+
+  templateObject.getleaveAccrualReport();
+
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
     if (imageData) {

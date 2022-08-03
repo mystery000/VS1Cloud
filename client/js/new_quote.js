@@ -154,6 +154,31 @@ Template.new_quote.onRendered(() => {
 
     templateObject.getTemplateInfo();
 
+    templateObject.getLastQuoteData = async function() {
+        let lastBankAccount = "Bank";
+        let lastDepartment = defaultDept || "";
+        salesService.getLastQuoteID().then(function(data) {
+          let latestQuoteId;
+            if (data.tquote.length > 0) {
+                lastQuote = data.tquote[data.tquote.length - 1]
+                latestQuoteId = (lastQuote.Id);
+            } else {
+              latestQuoteId = 0;
+            }
+            newQuoteId = (latestQuoteId + 1);
+            setTimeout(function() {
+                $('#sltDept').val(lastDepartment);
+                if (FlowRouter.current().queryParams.id) {
+
+                }else{
+                $(".heading").html("New Quote " +newQuoteId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+                };
+            }, 50);
+        }).catch(function(err) {
+            $('#sltDept').val(lastDepartment);
+        });
+    };
+
     function showQuotes1(template_title, number) {
         var array_data = [];
         let lineItems = [];
@@ -4154,6 +4179,7 @@ Template.new_quote.onRendered(() => {
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
             $('#sltTerms').val(quoterecord.termsName|| templateObject.defaultsaleterm.get() ||'');
+            templateObject.getLastQuoteData();
         }, 200);
         templateObject.quoterecord.set(quoterecord);
         if (templateObject.quoterecord.get()) {

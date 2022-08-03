@@ -145,6 +145,32 @@ Template.creditcard.onRendered(() => {
 
     templateObject.getTemplateInfo();
 
+    templateObject.getLastCreditData = async function() {
+        let lastBankAccount = "Bank";
+        let lastDepartment = defaultDept || "";
+        purchaseService.getLastCreditID().then(function(data) {
+          let latestCreditId;
+            if (data.tcredit.length > 0) {
+                lastCredit = data.tcredit[data.tcredit.length - 1]
+                latestCreditId = (lastCredit.Id);
+            } else {
+              latestCreditId = 0;
+            }
+            newCreditId = (latestCreditId + 1);
+            setTimeout(function() {
+                $('#sltDept').val(lastDepartment);
+                if (FlowRouter.current().queryParams.id) {
+
+                }else{
+                $(".heading").html("New Credit " +newCreditId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+                };
+            }, 50);
+        }).catch(function(err) {
+            $('#sltDept').val(lastDepartment);
+        });
+    };
+
+
     $("#date-input,#dtSODate,#dtDueDate").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
@@ -1850,6 +1876,7 @@ Template.creditcard.onRendered(() => {
         }
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
+            templateObject.getLastCreditData();
         }, 200);
         templateObject.creditrecord.set(creditrecord);
         if (templateObject.creditrecord.get()) {

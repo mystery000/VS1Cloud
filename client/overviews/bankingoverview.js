@@ -70,28 +70,6 @@ Template.bankingoverview.onRendered(function() {
 
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblBankingOverview', function(error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function() {
@@ -376,7 +354,7 @@ Template.bankingoverview.onRendered(function() {
         getVS1Data('TBankAccountReport').then(function(dataObject) {
 
             if (dataObject.length == 0) {
-                sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+                sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
                     addVS1Data('TBankAccountReport', JSON.stringify(data));
                     let lineItems = [];
                     let lineItemObj = {};
@@ -1077,7 +1055,7 @@ Template.bankingoverview.onRendered(function() {
 
             }
         }).catch(function(err) {
-            sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+            sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
                 addVS1Data('TBankAccountReport', JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
@@ -1482,7 +1460,7 @@ Template.bankingoverview.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
 
-        sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
             addVS1Data('TBankAccountReport', JSON.stringify(data)).then(function(datareturn) {
                 window.open('/bankingoverview','_self');
             }).catch(function(err) {

@@ -602,21 +602,20 @@ Template.crmoverview.events({
   },
 
   "click .btnMailchimp": function (e) {
-    let maichimpService = new MailchimpService();
-    try {
-      // maichimpService.createNewUser("bitcoin.blog.ytb@gmail.com", "Bitc");
-      Meteor.call('MCNewUser', { 
-        email: 'bitcoin.blog.ytb@gmail.com',
-        firstname: 'Blogger test'
-      }, function (error, result) {
-        if (error && error.error === "error") {
+    FlowRouter.go("/email-list");
 
-        } else {
+    // let maichimpService = new MailchimpService();
+    // try {
+    //   // maichimpService.createNewUser("bitcoin.blog.ytb@gmail.com", "Bitc");
+    //   Meteor.call('createListMember', 'popovicjovan185@gmail.com', 'Blogger test2', function (error, result) {
+    //     if (error && error.error === "error") {
 
-        }
-      });
-    } catch (error) {
-    }
+    //     } else {
+
+    //     }
+    //   });
+    // } catch (error) {
+    // }
     // swal("You are not set up yet, do you wish to create an account with Mail Chimp", "", "warning");
     return;
   },

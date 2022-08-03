@@ -3876,6 +3876,7 @@ Template.templatesettings.events({
 },
 
 'click .btnTopGlobalSave':function(){
+  
     $('.fullScreenSpin').css('display', 'inline-block');
     var bill = $('input[name="Bills"]:checked').val();
     var credits = $('input[name="Credits"]:checked').val();
@@ -3892,10 +3893,8 @@ Template.templatesettings.events({
     var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
     $('.fullScreenSpin').css('display','inline-block');
     let emid = Session.get('mySessionEmployeeLoggedID');
-
-    // Bill Template Section 
-
-     sideBarService.getTemplateNameandEmployeId("bill",emid,1).then(function (data) {
+    let count = 0; 
+    sideBarService.getTemplateNameandEmployeId("bill",emid,1).then(function (data) {
                             templateid = data.ttemplatesettings;
                             var id = templateid[0].fields.ID;    
                             objDetails =  {
@@ -3911,19 +3910,38 @@ Template.templatesettings.events({
                                     }            
                              }
                         
-                             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                        
+                            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {                      
+                    
+                            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                            addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                            count++;
+                            if(count >= 39)
+                            {
+                               $('.fullScreenSpin').css('display', 'none');
+                               swal({
+                                title: 'Success',
+                                text: 'Template Setting Saved Successfully.',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Done'
                             
-                        
-                            }).catch(function (err) {
-                        
-                         
-                           
+                                }).then((result) => {
+                                      if (result.value) {
+                                        
+                                    
+                                      }else if (result.dismiss === 'cancel') {
+                                  
+                                      }
+                                });
+                            }
                             });
+                                      
+                          }).catch(function (err) {
+                          });
                         
-     }).catch(function (err) {
+    }).catch(function (err) {
                               
-                            objDetails =  {
+                              objDetails =  {
                               type:"TTemplateSettings",
                               fields:{                                                                  
                                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
@@ -3935,20 +3953,40 @@ Template.templatesettings.events({
                               }
                           
                               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                          
-                            
-                          
-                              }).catch(function (err) {
-                          
-                               
-                              });  
+                                                        
+                                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                                  addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                                  count++;
+                                  if(count >= 39)
+                                  {
+                                          $('.fullScreenSpin').css('display', 'none');
+                                          swal({
+                                                  title: 'Success',
+                                                  text: 'Template Setting Saved Successfully.',
+                                                  type: 'success',
+                                                  showCancelButton: false,
+                                                  confirmButtonText: 'Done'
+                                                          
+                                                }).then((result) => {
+                                                        if (result.value) {
+
+                                                        }else if (result.dismiss === 'cancel') {
+                                                          
+                                                        }
+                                                });
+                                  }          
+                                  });
+                                                    
+                                                  
+                                  }).catch(function (err) {
+                                                  
+                                  });  
     
-     });
+    });
         
      sideBarService.getTemplateNameandEmployeId("bill",emid,2).then(function (data) {
                             templateid = data.ttemplatesettings;
-                            var id = templateid[0].fields.ID;
-                        
+                            var id = templateid[0].fields.ID;                        
                             objDetails =  {
                             type:"TTemplateSettings",
                             fields:{        
@@ -3962,19 +4000,37 @@ Template.templatesettings.events({
                                     }            
                              }
                         
-                             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                        
+     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+               $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });                 
                            
                         
-                            }).catch(function (err) {
-                        
-                            
-                           
-                            });
+     }).catch(function (err) { });
                         
      }).catch(function (err) {
                               
-                            objDetails =  {
+                              objDetails =  {
                               type:"TTemplateSettings",
                               fields:{                                                                  
                                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
@@ -3987,19 +4043,37 @@ Template.templatesettings.events({
                           
                               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                           
-                           
+                              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                              addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                              count++;
+                              if(count >= 39)
+                              {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                     swal({
+                                      title: 'Success',
+                                      text: 'Template Setting Saved Successfully.',
+                                      type: 'success',
+                                      showCancelButton: false,
+                                      confirmButtonText: 'Done'
+                                  
+                                      }).then((result) => {
+                                      if (result.value) {
+                                         
+                                    
+                                      }else if (result.dismiss === 'cancel') {
+                                  
+                                      }
+                                      });
+                              }          
+                              });
                           
-                              }).catch(function (err) {
-                          
-                               
-                            
-                              });  
+                              }).catch(function (err) {  });  
     
      });
 
      sideBarService.getTemplateNameandEmployeId("bill",emid,3).then(function (data) {
-      templateid = data.ttemplatesettings;
-      var id = templateid[0].fields.ID;
+     templateid = data.ttemplatesettings;
+     var id = templateid[0].fields.ID;
   
       objDetails =  {
       type:"TTemplateSettings",
@@ -4015,15 +4089,34 @@ Template.templatesettings.events({
        }
   
        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-  
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+              addVS1Data('TTemplateSettings', JSON.stringify(data));     
+              count++;
+              if(count >= 39)
+              {
+                  $('.fullScreenSpin').css('display', 'none');
+                   swal({
+                    title: 'Success',
+                    text: 'Template Setting Saved Successfully.',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Done'
+                
+                    }).then((result) => {
+                    if (result.value) {
+                       
+                  
+                    }else if (result.dismiss === 'cancel') {
+                
+                    }
+                    });
+              }       
+              });
      
   
-      }).catch(function (err) {
-  
-      
-     
-      });
-  
+       }).catch(function (err) {   
+       });
+    
      }).catch(function (err) {
               
             objDetails =  {
@@ -4038,13 +4131,33 @@ Template.templatesettings.events({
               }
           
               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          
-           
+             
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                  count++;
+                  if(count >= 39)
+                  {
+                    $('.fullScreenSpin').css('display', 'none');
+                     swal({
+                      title: 'Success',
+                      text: 'Template Setting Saved Successfully.',
+                      type: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Done'
+                  
+                      }).then((result) => {
+                      if (result.value) {
+                         
+                    
+                      }else if (result.dismiss === 'cancel') {
+                  
+                      }
+                      });
+                  }           
+                });        
           
               }).catch(function (err) {
-          
-             
-            
+                    
               });  
 
      });
@@ -4052,8 +4165,8 @@ Template.templatesettings.events({
       // Credit Template Section 
 
       sideBarService.getTemplateNameandEmployeId("Credits",emid,1).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
+      templateid = data.ttemplatesettings;
+      var id = templateid[0].fields.ID;
     
         objDetails =  {
         type:"TTemplateSettings",
@@ -4069,18 +4182,39 @@ Template.templatesettings.events({
          }
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-    
-       
-    
-        }).catch(function (err) {
+        
+         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+         addVS1Data('TTemplateSettings', JSON.stringify(data));    
+         count++;
+         if(count >= 39)
+         {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+          }        
+         });
+        
+         }).catch(function (err) {
     
           
-       
-        });
+         });
     
       }).catch(function (err) {
                 
-              objDetails =  {
+                objDetails =  {
                 type:"TTemplateSettings",
                 fields:{                                                                  
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
@@ -4092,22 +4226,42 @@ Template.templatesettings.events({
                 }
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-            
+                
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));     
+                    count++;
+                    if(count >= 39)
+                    {
+                       $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                            if (result.value) {
+                                                     
+                            }else if (result.dismiss === 'cancel') {
+                        
+                            }
+                        });
+                    }       
+                  });
                 
             
                 }).catch(function (err) {
             
-                  
-              
+           
                 });  
   
       });
 
       sideBarService.getTemplateNameandEmployeId("Credits",emid,2).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
-    
-        objDetails =  {
+      templateid = data.ttemplatesettings;
+      var id = templateid[0].fields.ID;
+      objDetails =  {
         type:"TTemplateSettings",
         fields:{        
                     ID:parseInt(id),                      
@@ -4120,14 +4274,30 @@ Template.templatesettings.events({
                 }            
          }
     
-         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-    
+      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                count++;
+                if(count >= 39)
+                {
+                   $('.fullScreenSpin').css('display', 'none');
+                   swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'             
+                  }).then((result) => {
+                        if (result.value) {              
+                        }else if (result.dismiss === 'cancel') {            
+                        }
+                  });
+              }           
+              });
          
     
         }).catch(function (err) {
-    
           
-       
         });
     
       }).catch(function (err) {
@@ -4145,6 +4315,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }        
+                  });
                   
                 }).catch(function (err) {
             
@@ -4152,12 +4345,14 @@ Template.templatesettings.events({
                 });  
   
       });
+
+
     
       sideBarService.getTemplateNameandEmployeId("Credits",emid,3).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
+      templateid = data.ttemplatesettings;
+      var id = templateid[0].fields.ID;
     
-        objDetails =  {
+      objDetails =  {
         type:"TTemplateSettings",
         fields:{        
                     ID:parseInt(id),                      
@@ -4172,6 +4367,29 @@ Template.templatesettings.events({
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));    
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+             }        
+          });
         
     
         }).catch(function (err) {
@@ -4195,6 +4413,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));      
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }      
+                });
                  
             
                 }).catch(function (err) {
@@ -4222,14 +4463,29 @@ Template.templatesettings.events({
          }
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-    
         
-    
-        }).catch(function (err) {
-    
-          
-       
-        });
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));          
+            count++;
+            if(count >= 39)
+            {
+               $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                    if (result.value) {            
+                    }else if (result.dismiss === 'cancel') {            
+                    }
+                });
+            }  
+          });
+         }).catch(function (err) {      
+         });
     
       }).catch(function (err) {
                 
@@ -4246,6 +4502,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
                   
             
                 }).catch(function (err) {
@@ -4274,13 +4553,30 @@ Template.templatesettings.events({
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
-         
-    
-        }).catch(function (err) {
-    
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));      
+            count++;
+            if(count >= 39)
+            {
+               $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {      
+                }else if (result.dismiss === 'cancel') {            
+                }
+                });
+            }      
+          });
+           
+          }).catch(function (err) {
           
-       
-        });
+          });
     
       }).catch(function (err) {
                 
@@ -4297,22 +4593,43 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
-                  
+                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 39)
+                    {
+                       $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                     }        
+                  });
             
                 }).catch(function (err) {
-            
-                  
+                             
               
                 });  
   
       });
 
       sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,3).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;    
-        objDetails =  {
-        type:"TTemplateSettings",
-        fields:{        
+      templateid = data.ttemplatesettings;
+      var id = templateid[0].fields.ID;    
+      objDetails =  {
+      type:"TTemplateSettings",
+      fields:{        
                             ID:parseInt(id),                      
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"Customer Payments",
@@ -4323,14 +4640,35 @@ Template.templatesettings.events({
                 }            
          }
     
-         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));    
+            count++;
+            if(count >= 39)
+            {
+               $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }        
+           });
          
     
         }).catch(function (err) {
-    
-         
-       
+        
         });
     
       }).catch(function (err) {
@@ -4348,13 +4686,33 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));      
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }      
+                });
                   
-            
                 }).catch(function (err) {
-            
-                  
-              
-                  });  
+         
+                });  
   
       });
 
@@ -4362,11 +4720,11 @@ Template.templatesettings.events({
       // Customer Statements Template Section 
 
       sideBarService.getTemplateNameandEmployeId("Customer Statements",emid,1).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;    
-        objDetails =  {
-        type:"TTemplateSettings",
-        fields:{        
+      templateid = data.ttemplatesettings;
+      var id = templateid[0].fields.ID;    
+      objDetails =  {
+      type:"TTemplateSettings",
+      fields:{        
                             ID:parseInt(id),                      
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"Customer Statements",
@@ -4375,20 +4733,38 @@ Template.templatesettings.events({
                             Template:"1",
                             Active:customer_statement == 1 ? true:false,
                 }            
-         }
-    
-         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-    
+      }
+      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));      
+            count++;
+            if(count >= 39)
+            {
+               $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
         
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }      
+           });
     
-        }).catch(function (err) {
-    
-       
-        });
+           }).catch(function (err) {
+          
+           });
     
       }).catch(function (err) {
                 
-               objDetails =  {
+                objDetails =  {
                 type:"TTemplateSettings",
                 fields:{                                                                  
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
@@ -4401,13 +4777,34 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }          
+                  });
                   
             
-                }).catch(function (err) {
+                 }).catch(function (err) {
             
-                  
-              
-                  });  
+                 });  
   
       });
 
@@ -4430,16 +4827,37 @@ Template.templatesettings.events({
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+             addVS1Data('TTemplateSettings', JSON.stringify(data));     
+             count++;
+             if(count >= 39)
+             {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+             }       
+          });
         
     
-        }).catch(function (err) {
-    
-         
-        });
+         }).catch(function (err) {
+         });
     
       }).catch(function (err) {
                 
-               objDetails =  {
+                objDetails =  {
                 type:"TTemplateSettings",
                 fields:{                                                                  
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
@@ -4452,13 +4870,33 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
-                   
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 39)
+                    {
+                         $('.fullScreenSpin').css('display', 'none');
+                         swal({
+                          title: 'Success',
+                          text: 'Template Setting Saved Successfully.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonText: 'Done'
+                      
+                          }).then((result) => {
+                          if (result.value) {
+                            
+                        
+                          }else if (result.dismiss === 'cancel') {
+                      
+                          }
+                          });
+                    }        
+                    });
             
                 }).catch(function (err) {
             
-                   
-              
-                  });  
+                });  
   
       });
 
@@ -4480,13 +4918,33 @@ Template.templatesettings.events({
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
-        
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+               $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
     
-        }).catch(function (err) {
-    
-         
+          }).catch(function (err) {
        
-        });
+          });
     
       }).catch(function (err) {
                 
@@ -4504,11 +4962,31 @@ Template.templatesettings.events({
                  sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
 
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                       addVS1Data('TTemplateSettings', JSON.stringify(data));     
+                       count++;
+                       if(count >= 39)
+                       {
+                          $('.fullScreenSpin').css('display', 'none');
+                          swal({
+                            title: 'Success',
+                            text: 'Template Setting Saved Successfully.',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Done'
+                       
+                           }).then((result) => {
+                           if (result.value) {
+                       
+                           }else if (result.dismiss === 'cancel') {
+                       
+                           }
+                           });
+                       }       
+                     });
             
-                 }).catch(function (err) {
-            
-                  
-              
+                  }).catch(function (err) {
+
                   });  
   
       });
@@ -4516,23 +4994,47 @@ Template.templatesettings.events({
       // Invoices Template Section 
 
        sideBarService.getTemplateNameandEmployeId("Invoices",emid,1).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;    
-        objDetails =  {
-        type:"TTemplateSettings",
-        fields:{        
+       templateid = data.ttemplatesettings;
+       var id = templateid[0].fields.ID;    
+  
+       objDetails =  {
+       type:"TTemplateSettings",
+       fields:{        
                             ID:parseInt(id),                      
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"Invoices",
                             GlobalRef:"Invoices",
                             Description:$('input[name="Invoices_1"]').val(),
                             Template:"1",
-                            Active:invoices == 1 ? true:false,
-                }            
+                            Active:invoices == 1 ? true:false
+                }          
          }
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+           });
          
     
         }).catch(function (err) {
@@ -4556,6 +5058,29 @@ Template.templatesettings.events({
             
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                      count++;
+                      if(count >= 39)
+                      {
+                        $('.fullScreenSpin').css('display', 'none');
+                         swal({
+                          title: 'Success',
+                          text: 'Template Setting Saved Successfully.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonText: 'Done'
+                      
+                          }).then((result) => {
+                          if (result.value) {
+                             
+                        
+                          }else if (result.dismiss === 'cancel') {
+                      
+                          }
+                          });
+                      }        
+                     });
                   
             
                   }).catch(function (err) {
@@ -4584,6 +5109,29 @@ Template.templatesettings.events({
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));        
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }    
+          });
          
     
         }).catch(function (err) {
@@ -4607,6 +5155,29 @@ Template.templatesettings.events({
             
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                      count++;
+                      if(count >= 39)
+                      {
+                        $('.fullScreenSpin').css('display', 'none');
+                         swal({
+                          title: 'Success',
+                          text: 'Template Setting Saved Successfully.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonText: 'Done'
+                      
+                          }).then((result) => {
+                          if (result.value) {
+                             
+                        
+                          }else if (result.dismiss === 'cancel') {
+                      
+                          }
+                          });
+                      }          
+                    });
                    
             
                   }).catch(function (err) {
@@ -4636,6 +5207,29 @@ Template.templatesettings.events({
     
          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
          
     
         }).catch(function (err) {
@@ -4659,6 +5253,29 @@ Template.templatesettings.events({
             
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                      count++;
+                      if(count >= 39)
+                      {
+                        $('.fullScreenSpin').css('display', 'none');
+                         swal({
+                          title: 'Success',
+                          text: 'Template Setting Saved Successfully.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonText: 'Done'
+                      
+                          }).then((result) => {
+                          if (result.value) {
+                             
+                        
+                          }else if (result.dismiss === 'cancel') {
+                      
+                          }
+                          });
+                      }         
+                    });
                   
             
                   }).catch(function (err) {
@@ -4689,6 +5306,29 @@ Template.templatesettings.events({
       
           sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
       
+            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+              addVS1Data('TTemplateSettings', JSON.stringify(data));    
+              count++;
+              if(count >= 39)
+              {
+                $('.fullScreenSpin').css('display', 'none');
+                 swal({
+                  title: 'Success',
+                  text: 'Template Setting Saved Successfully.',
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonText: 'Done'
+              
+                  }).then((result) => {
+                  if (result.value) {
+                     
+                
+                  }else if (result.dismiss === 'cancel') {
+              
+                  }
+                  });
+              }        
+            });
          
       
           }).catch(function (err) {
@@ -4712,7 +5352,29 @@ Template.templatesettings.events({
               
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
               
-                   
+                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                        count++;
+                        if(count >= 39)
+                        {
+                          $('.fullScreenSpin').css('display', 'none');
+                           swal({
+                            title: 'Success',
+                            text: 'Template Setting Saved Successfully.',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Done'
+                        
+                            }).then((result) => {
+                            if (result.value) {
+                               
+                          
+                            }else if (result.dismiss === 'cancel') {
+                        
+                            }
+                            });
+                        }         
+                       });
               
                     }).catch(function (err) {
               
@@ -4741,7 +5403,29 @@ Template.templatesettings.events({
       
           sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
       
-          
+            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+              addVS1Data('TTemplateSettings', JSON.stringify(data));    
+              count++;
+              if(count >= 39)
+              {
+                $('.fullScreenSpin').css('display', 'none');
+                 swal({
+                  title: 'Success',
+                  text: 'Template Setting Saved Successfully.',
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonText: 'Done'
+              
+                  }).then((result) => {
+                  if (result.value) {
+                     
+                
+                  }else if (result.dismiss === 'cancel') {
+              
+                  }
+                  });
+              }        
+            });
       
           }).catch(function (err) {
       
@@ -4764,7 +5448,29 @@ Template.templatesettings.events({
               
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
               
-                    
+                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                        count++;
+                        if(count >= 39)
+                        {
+                          $('.fullScreenSpin').css('display', 'none');
+                           swal({
+                            title: 'Success',
+                            text: 'Template Setting Saved Successfully.',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Done'
+                        
+                            }).then((result) => {
+                            if (result.value) {
+                               
+                          
+                            }else if (result.dismiss === 'cancel') {
+                        
+                            }
+                            });
+                        }        
+                       });
               
                     }).catch(function (err) {
               
@@ -4792,6 +5498,29 @@ Template.templatesettings.events({
       
           sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
       
+            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+              addVS1Data('TTemplateSettings', JSON.stringify(data));   
+              count++;
+              if(count >= 39)
+              {
+                $('.fullScreenSpin').css('display', 'none');
+                 swal({
+                  title: 'Success',
+                  text: 'Template Setting Saved Successfully.',
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonText: 'Done'
+              
+                  }).then((result) => {
+                  if (result.value) {
+                     
+                
+                  }else if (result.dismiss === 'cancel') {
+              
+                  }
+                  });
+              }         
+            });
           
       
           }).catch(function (err) {
@@ -4815,6 +5544,29 @@ Template.templatesettings.events({
               
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
               
+                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                        count++;
+                        if(count >= 39)
+                        {
+                          $('.fullScreenSpin').css('display', 'none');
+                           swal({
+                            title: 'Success',
+                            text: 'Template Setting Saved Successfully.',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Done'
+                        
+                            }).then((result) => {
+                            if (result.value) {
+                               
+                          
+                            }else if (result.dismiss === 'cancel') {
+                        
+                            }
+                            });
+                        }         
+                       });
                     
               
                     }).catch(function (err) {
@@ -4843,6 +5595,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
          
     
         }).catch(function (err) {
@@ -4866,6 +5641,29 @@ Template.templatesettings.events({
             
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                      count++;
+                      if(count >= 39)
+                      {
+                        $('.fullScreenSpin').css('display', 'none');
+                         swal({
+                          title: 'Success',
+                          text: 'Template Setting Saved Successfully.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonText: 'Done'
+                      
+                          }).then((result) => {
+                          if (result.value) {
+                             
+                        
+                          }else if (result.dismiss === 'cancel') {
+                      
+                          }
+                          });
+                      }         
+                    });
                   
                   }).catch(function (err) {
             
@@ -4894,6 +5692,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
           
     
         }).catch(function (err) {
@@ -4917,6 +5738,29 @@ Template.templatesettings.events({
             
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                      count++;
+                      if(count >= 39)
+                      {
+                        $('.fullScreenSpin').css('display', 'none');
+                         swal({
+                          title: 'Success',
+                          text: 'Template Setting Saved Successfully.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonText: 'Done'
+                      
+                          }).then((result) => {
+                          if (result.value) {
+                             
+                        
+                          }else if (result.dismiss === 'cancel') {
+                      
+                          }
+                          });
+                      }        
+                    });
                   
             
                   }).catch(function (err) {
@@ -4946,7 +5790,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
-         
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));     
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }       
+          });
     
         }).catch(function (err) {
     
@@ -4969,7 +5835,29 @@ Template.templatesettings.events({
             
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
-                  
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                      count++;
+                      if(count >= 39)
+                      {
+                        $('.fullScreenSpin').css('display', 'none');
+                         swal({
+                          title: 'Success',
+                          text: 'Template Setting Saved Successfully.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonText: 'Done'
+                      
+                          }).then((result) => {
+                          if (result.value) {
+                             
+                        
+                          }else if (result.dismiss === 'cancel') {
+                      
+                          }
+                          });
+                      }         
+                    });
             
                   }).catch(function (err) {
             
@@ -4999,7 +5887,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
-          
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+           });
     
         }).catch(function (err) {
     
@@ -5022,6 +5932,29 @@ Template.templatesettings.events({
             
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                      count++;
+                      if(count >= 39)
+                      {
+                        $('.fullScreenSpin').css('display', 'none');
+                         swal({
+                          title: 'Success',
+                          text: 'Template Setting Saved Successfully.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonText: 'Done'
+                      
+                          }).then((result) => {
+                          if (result.value) {
+                             
+                        
+                          }else if (result.dismiss === 'cancel') {
+                      
+                          }
+                          });
+                      }          
+                    });
                  
             
                   }).catch(function (err) {
@@ -5051,6 +5984,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));  
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }          
+          });
           
     
         }).catch(function (err) {
@@ -5074,6 +6030,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }        
+                  });
                     
             
                 }).catch(function (err) {
@@ -5103,6 +6082,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));  
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }          
+          });
           
     
         }).catch(function (err) {
@@ -5126,6 +6128,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }           
+                  });
                     
             
                 }).catch(function (err) {
@@ -5156,7 +6181,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
-          
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));  
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }          
+           });
     
         }).catch(function (err) {
     
@@ -5179,6 +6226,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }           
+                   });
                     
             
                 }).catch(function (err) {
@@ -5208,6 +6278,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));    
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }        
+          });
          
     
         }).catch(function (err) {
@@ -5230,6 +6323,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
                    
             
                 }).catch(function (err) {
@@ -5259,6 +6375,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
           
     
         }).catch(function (err) {
@@ -5282,7 +6421,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
-                   
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }           
+                  });
             
                 }).catch(function (err) {
             
@@ -5312,6 +6473,29 @@ Template.templatesettings.events({
   
       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
   
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));   
+          count++;
+          if(count >= 39)
+          {
+            $('.fullScreenSpin').css('display', 'none');
+             swal({
+              title: 'Success',
+              text: 'Template Setting Saved Successfully.',
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'Done'
+          
+              }).then((result) => {
+              if (result.value) {
+                 
+            
+              }else if (result.dismiss === 'cancel') {
+          
+              }
+              });
+          }         
+        });
        
   
       }).catch(function (err) {
@@ -5335,7 +6519,29 @@ Template.templatesettings.events({
           
               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
           
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+                  count++;
+                  if(count >= 39)
+                  {
+                    $('.fullScreenSpin').css('display', 'none');
+                     swal({
+                      title: 'Success',
+                      text: 'Template Setting Saved Successfully.',
+                      type: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Done'
                   
+                      }).then((result) => {
+                      if (result.value) {
+                         
+                    
+                      }else if (result.dismiss === 'cancel') {
+                  
+                      }
+                      });
+                  }            
+                });
           
               }).catch(function (err) {
           
@@ -5363,7 +6569,29 @@ Template.templatesettings.events({
   
       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
   
-        
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));   
+          count++;
+          if(count >= 39)
+          {
+            $('.fullScreenSpin').css('display', 'none');
+             swal({
+              title: 'Success',
+              text: 'Template Setting Saved Successfully.',
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'Done'
+          
+              }).then((result) => {
+              if (result.value) {
+                 
+            
+              }else if (result.dismiss === 'cancel') {
+          
+              }
+              });
+          }         
+        });
   
       }).catch(function (err) {
   
@@ -5386,7 +6614,29 @@ Template.templatesettings.events({
           
               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
           
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                  count++;
+                  if(count >= 39)
+                  {
+                    $('.fullScreenSpin').css('display', 'none');
+                     swal({
+                      title: 'Success',
+                      text: 'Template Setting Saved Successfully.',
+                      type: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Done'
                   
+                      }).then((result) => {
+                      if (result.value) {
+                         
+                    
+                      }else if (result.dismiss === 'cancel') {
+                  
+                      }
+                      });
+                  }           
+                });
           
               }).catch(function (err) {
           
@@ -5414,7 +6664,29 @@ Template.templatesettings.events({
       }
   
       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-  
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));   
+          count++;
+          if(count >= 39)
+          {
+            $('.fullScreenSpin').css('display', 'none');
+             swal({
+              title: 'Success',
+              text: 'Template Setting Saved Successfully.',
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'Done'
+          
+              }).then((result) => {
+              if (result.value) {
+                 
+            
+              }else if (result.dismiss === 'cancel') {
+          
+              }
+              });
+          }         
+        });
        
   
       }).catch(function (err) {
@@ -5437,7 +6709,29 @@ Template.templatesettings.events({
               }
           
               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                  count++;
+                  if(count >= 39)
+                  {
+                    $('.fullScreenSpin').css('display', 'none');
+                     swal({
+                      title: 'Success',
+                      text: 'Template Setting Saved Successfully.',
+                      type: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Done'
+                  
+                      }).then((result) => {
+                      if (result.value) {
+                         
+                    
+                      }else if (result.dismiss === 'cancel') {
+                  
+                      }
+                      });
+                  }          
+                });
                  
           
               }).catch(function (err) {
@@ -5467,7 +6761,29 @@ Template.templatesettings.events({
       }
   
       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-  
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));   
+          count++;
+          if(count >= 39)
+          {
+            $('.fullScreenSpin').css('display', 'none');
+             swal({
+              title: 'Success',
+              text: 'Template Setting Saved Successfully.',
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'Done'
+          
+              }).then((result) => {
+              if (result.value) {
+                 
+            
+              }else if (result.dismiss === 'cancel') {
+          
+              }
+              });
+          }         
+        });
         
   
       }).catch(function (err) {
@@ -5490,7 +6806,29 @@ Template.templatesettings.events({
               }
           
               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                  count++;
+                  if(count >= 39)
+                  {
+                    $('.fullScreenSpin').css('display', 'none');
+                     swal({
+                      title: 'Success',
+                      text: 'Template Setting Saved Successfully.',
+                      type: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Done'
+                  
+                      }).then((result) => {
+                      if (result.value) {
+                         
+                    
+                      }else if (result.dismiss === 'cancel') {
+                  
+                      }
+                      });
+                  }           
+                });
                  
           
               }).catch(function (err) {
@@ -5519,7 +6857,29 @@ Template.templatesettings.events({
       }
   
       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-  
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));      
+          count++;
+          if(count >= 39)
+          {
+            $('.fullScreenSpin').css('display', 'none');
+             swal({
+              title: 'Success',
+              text: 'Template Setting Saved Successfully.',
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'Done'
+          
+              }).then((result) => {
+              if (result.value) {
+                 
+            
+              }else if (result.dismiss === 'cancel') {
+          
+              }
+              });
+          }      
+        });
        
   
       }).catch(function (err) {
@@ -5541,7 +6901,29 @@ Template.templatesettings.events({
               }
           
               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                  count++;
+                  if(count >= 39)
+                  {
+                    $('.fullScreenSpin').css('display', 'none');
+                     swal({
+                      title: 'Success',
+                      text: 'Template Setting Saved Successfully.',
+                      type: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Done'
+                  
+                      }).then((result) => {
+                      if (result.value) {
+                         
+                    
+                      }else if (result.dismiss === 'cancel') {
+                  
+                      }
+                      });
+                  }         
+                });
           
               }).catch(function (err) {
           
@@ -5568,7 +6950,32 @@ Template.templatesettings.events({
       }
   
       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-  
+        
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));   
+          count++;
+          if(count >= 39)
+          {
+            $('.fullScreenSpin').css('display', 'none');
+             swal({
+              title: 'Success',
+              text: 'Template Setting Saved Successfully.',
+              type: 'success',
+              showCancelButton: false,
+              confirmButtonText: 'Done'
+          
+              }).then((result) => {
+              if (result.value) {
+                 
+            
+              }else if (result.dismiss === 'cancel') {
+          
+              }
+              });
+          }  
+          
+          
+        });
         
   
       }).catch(function (err) {
@@ -5592,7 +6999,29 @@ Template.templatesettings.events({
           
               sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
           
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                  count++;
+                  if(count >= 39)
+                  {
+                    $('.fullScreenSpin').css('display', 'none');
+                     swal({
+                      title: 'Success',
+                      text: 'Template Setting Saved Successfully.',
+                      type: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Done'
                   
+                      }).then((result) => {
+                      if (result.value) {
+                         
+                    
+                      }else if (result.dismiss === 'cancel') {
+                  
+                      }
+                      });
+                  }     
+                });
           
               }).catch(function (err) {
           
@@ -5622,7 +7051,29 @@ Template.templatesettings.events({
         }
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-    
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));    
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }        
+          });
           
     
         }).catch(function (err) {
@@ -5645,7 +7096,29 @@ Template.templatesettings.events({
                 }
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
                    
             
                 }).catch(function (err) {
@@ -5674,7 +7147,29 @@ Template.templatesettings.events({
         }
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-    
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));  
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }          
+          });
          
         }).catch(function (err) {
     
@@ -5696,7 +7191,29 @@ Template.templatesettings.events({
                 }
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }          
+                  });
                     
             
                 }).catch(function (err) {
@@ -5726,7 +7243,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
-          
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
     
         }).catch(function (err) {
     
@@ -5748,7 +7287,29 @@ Template.templatesettings.events({
                 }
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-            
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }        
+                  });
                     
             
                 }).catch(function (err) {
@@ -5778,7 +7339,29 @@ Template.templatesettings.events({
         }
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-    
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));     
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }       
+          });
           
     
         }).catch(function (err) {
@@ -5802,7 +7385,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
                     
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
             
                 }).catch(function (err) {
             
@@ -5832,7 +7437,29 @@ Template.templatesettings.events({
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
     
-          
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }           
+          });
     
         }).catch(function (err) {
     
@@ -5855,7 +7482,29 @@ Template.templatesettings.events({
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
             
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
                     
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }         
+                  });
             
                 }).catch(function (err) {
             
@@ -5885,21 +7534,30 @@ Template.templatesettings.events({
         }
     
         sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          swal({
-            title: 'Success',
-            text: 'Template Setting Saved Successfully.',
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'Done'
-    
-            }).then((result) => {
-            if (result.value) {
-               
-          
-            }else if (result.dismiss === 'cancel') {
-    
-            }
-            });
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));   
+            count++;
+            if(count >= 39)
+            {
+              $('.fullScreenSpin').css('display', 'none');
+               swal({
+                title: 'Success',
+                text: 'Template Setting Saved Successfully.',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Done'
+            
+                }).then((result) => {
+                if (result.value) {
+                   
+              
+                }else if (result.dismiss === 'cancel') {
+            
+                }
+                });
+            }         
+          });
+        
           
     
         }).catch(function (err) {
@@ -5924,21 +7582,32 @@ Template.templatesettings.events({
                 }
             
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                   swal({
-                    title: 'Success',
-                    text: 'Template Setting Saved Successfully.',
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Done'
-            
-                    }).then((result) => {
-                    if (result.value) {
-                       
-                  
-                    }else if (result.dismiss === 'cancel') {
-            
-                    }
-                    });
+
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                    count++;
+                    if(count >= 39)
+                    {
+                      $('.fullScreenSpin').css('display', 'none');
+                       swal({
+                        title: 'Success',
+                        text: 'Template Setting Saved Successfully.',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Done'
+                    
+                        }).then((result) => {
+                        if (result.value) {
+                           
+                      
+                        }else if (result.dismiss === 'cancel') {
+                    
+                        }
+                        });
+                    }        
+                  });
+
+             
                     
                 }).catch(function (err) {
             
@@ -5950,6 +7619,31 @@ Template.templatesettings.events({
 
 
        
+
+},
+
+'click .btnRefresh':function(){
+  $('.fullScreenSpin').css('display', 'inline-block');
+  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+    $('.fullScreenSpin').css('display', 'none'); 
+    swal({
+      title: 'Success',
+      text: 'Template Setting Refreshed Successfully.',
+      type: 'success',
+      showCancelButton: false,
+      confirmButtonText: 'Done'
+
+      }).then((result) => {
+      if (result.value) {
+         window.location.reload();
+      
+      }else if (result.dismiss === 'cancel') {
+
+      }
+      });
+    
+  });
 
 },
 
