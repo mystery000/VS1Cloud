@@ -1287,7 +1287,6 @@ export class UtilityService {
             stringNumber = stringNumber.replace('-', "");
         }
 
-        //console.log("1", stringNumber);
         if(_currency) {
             stringNumber = stringNumber.replace(_currency, '');
         } else {
@@ -1295,12 +1294,9 @@ export class UtilityService {
             stringNumber = stringNumber.replace(currency, '');
         }
 
-        //console.log("2", stringNumber);
-   
-
         const value = parseFloat(stringNumber).toFixed(2);
         if(isNegative) value = value * -1;
-        //console.log("3", stringNumber);
+
 
         return value;
     }
