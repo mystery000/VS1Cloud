@@ -92,7 +92,7 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
           // dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
           dbCurrency.fields.BuyRate = fxCurrencyRates.mid;
           dbCurrency.fields.SellRate = fxCurrencyRates.inverse;
-          console.log(dbCurrency.fields.CurrencySymbol);
+          //console.log(dbCurrency.fields.CurrencySymbol);
           // if(dbCurrency.fields.CurrencySymbol = "") {
           //   console.log("-", "replaced");
           //   dbCurrency.fields.CurrencySymbol = "N/A";
