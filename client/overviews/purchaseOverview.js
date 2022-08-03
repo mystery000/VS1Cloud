@@ -96,16 +96,8 @@ Template.purchasesoverview.onRendered(function () {
   var all_days = [];
   var all_daysNoYear = [];
   while (date.getMonth() + 1 == month) {
-    var d =
-      date.getFullYear() +
-      "-" +
-      month.toString().padStart(2, "0") +
-      "-" +
-      date.getDate().toString().padStart(2, "0");
-    var dnoyear =
-      moment(month.toString().padStart(2, "0")).format("MMMM").substring(0, 3) +
-      " " +
-      date.getDate().toString().padStart(2, "0");
+    var d = date.getFullYear() +"-" +month.toString().padStart(2, "0") +"-" +date.getDate().toString().padStart(2, "0");
+    var dnoyear = moment(month.toString().padStart(2, "0")).format("MMMM").substring(0, 3) +" " +date.getDate().toString().padStart(2, "0");
     all_days.push(d);
     all_daysNoYear.push(dnoyear);
     date.setDate(date.getDate() + 1);
@@ -141,15 +133,12 @@ Template.purchasesoverview.onRendered(function () {
     if (currentBeginDate.getDate() < 10) {
       fromDateDay = "0" + currentBeginDate.getDate();
     }
-    var toDate =
-      currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-    let prevMonth11Date = moment()
-      .subtract(reportsloadMonths, "months")
-      .format("YYYY-MM-DD");
+    var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
+    let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
 
     getVS1Data("TPurchasesList").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllPurchasesList(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
               addVS1Data("TPurchasesList", JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
@@ -922,7 +911,7 @@ Template.purchasesoverview.onRendered(function () {
           let groupData = _.omit(_.groupBy(initialData, "OrderDate"), [""]);
         }
       }).catch(function (err) {
-        sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+        sideBarService.getAllPurchasesList(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
             addVS1Data("TPurchasesList", JSON.stringify(data));
             let lineItems = [];
             let lineItemObj = {};
@@ -1438,7 +1427,7 @@ Template.purchasesoverview.onRendered(function () {
       { label: 'Phone', class: 'colPurchaseCustField1', active: false, width: 0 },
       { label: 'Invoice No.', class: 'colPurchaseCustField2', active: false, width: 0 },
       { label: 'Contact', class: 'colEmployee', active: false, width: 0 },
-      { label: 'Comments', class: 'colComments', active: true, width: 0 } 
+      { label: 'Comments', class: 'colComments', active: true, width: 0 }
     ];
 
     for (let x = 0; x < data.tcustomfieldlist.length; x++) {
@@ -1516,9 +1505,9 @@ Template.purchasesoverview.onRendered(function () {
   }
 
   templateObject.getAllCustomFieldDisplaySettings = function () {
-      
+
       let listType = "ltPurchaseOverview";
-      try { 
+      try {
         getVS1Data("TltPurchaseOverview").then(function (dataObject) {
           if (dataObject.length == 0) {
             sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
@@ -1568,9 +1557,9 @@ Template.purchasesoverview.events({
     var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
     let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
 
-      sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+      sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
           addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
-            sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+            sideBarService.getAllPurchasesList(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPList) {
                 addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
                     batchUpdateCall('/purchasesoverview');
                   }).catch(function (err) {
@@ -1580,7 +1569,7 @@ Template.purchasesoverview.events({
                 batchUpdateCall('/purchasesoverview');
               });
             }).catch(function (err) {
-              sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+              sideBarService.getAllPurchasesList(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPList) {
                   addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
                       batchUpdateCall('/purchasesoverview');
                     }).catch(function (err) {
@@ -1591,7 +1580,7 @@ Template.purchasesoverview.events({
                 });
             });
         }).catch(function (err) {
-          sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+          sideBarService.getAllPurchasesList(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPList) {
               addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
                   window.open("/purchasesoverview", "_self");
                 }).catch(function (err) {
