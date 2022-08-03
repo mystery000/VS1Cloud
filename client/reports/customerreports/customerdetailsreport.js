@@ -504,7 +504,7 @@ Template.customerdetailsreport.helpers({
     return Template.instance().dateAsAt.get() || "-";
   },
   getSpaceKeyData( array, key ){
-    return array['key'] || ''
+    return array[key] || ''
   },
   records: () => {
     return Template.instance().records.get();
