@@ -22,7 +22,7 @@ Template.CurrencyWidget.events({
 
     const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
 
-    const currencySymbol = $(e.currentTarget).find('.colSymbol').text();
+    const currencySymbol = $(e.currentTarget).find('.colSymbol').text() || "N/A";
     setCurrentCurrencySymbol(currencySymbol);
     const currencyCode = $(e.currentTarget).find(".colCode").text();
     const currencyRate =

@@ -8364,7 +8364,7 @@ Template.supplierpaymentcard.onRendered(() => {
   
         for (let x = 0; x < selectedSupplierPayments.length; x++) {
           var rowData =
-            '<tr class="dnd-moved" id="' +
+            '<tr class="dnd-moved dynamic-converter-js" id="' +
             selectedSupplierPayments[x].awaitingId +
             '" name="' +
             selectedSupplierPayments[x].awaitingId +
@@ -8384,20 +8384,20 @@ Template.supplierpaymentcard.onRendered(() => {
             '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
             selectedSupplierPayments[x].outstandingAmount +
             "</td>\n" +
-            '	<td><input class="linePaymentamount highlightInput" type="text" value="' +
+            '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
             selectedSupplierPayments[x].paymentAmount +
             '"></td>\n' +
   
-            (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign" type="text" value="' +
+            (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
             convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
             '"></td>\n' : '') +
   
-            '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].paymentAmount +
+            '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
+            selectedSupplierPayments[x].outstandingAmount +
             "</td>\n" +
   
-            (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign" style="text-align: right!important;">' +
-            convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+            (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
+            convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
             "</td>\n" : '') +
   
             '	<td contenteditable="true" class="colComments">' +
@@ -8552,6 +8552,9 @@ Template.supplierpaymentcard.onRendered(() => {
 });
 
 Template.supplierpaymentcard.helpers({
+  getDefaultCurrency: () => {
+    return defaultCurrencyCode;
+  },
   outstandingExpenses: () => {
     return Template.instance().outstandingExpenses.get();
   },
@@ -8689,21 +8692,21 @@ Template.supplierpaymentcard.helpers({
   },
 });
 
-function calulateApplied() {
-  const exchangeRate = $("#exchange_rate").val();
+// function calulateApplied() {
+//   const exchangeRate = $("#exchange_rate").val();
 
-  const paymentAmount = $("#edtPaymentAmount").val().includes("$")
-    ? $("#edtPaymentAmount").val().substring(1)
-    : $("#edtPaymentAmount").val();
-  const variation = $("#edtVariation").val().includes("$")
-    ? $("#edtVariation").val().substring(1)
-    : $("#edtVariation").val();
+//   const paymentAmount = $("#edtPaymentAmount").val().includes("$")
+//     ? $("#edtPaymentAmount").val().substring(1)
+//     : $("#edtPaymentAmount").val();
+//   const variation = $("#edtVariation").val().includes("$")
+//     ? $("#edtVariation").val().substring(1)
+//     : $("#edtVariation").val();
 
-  const appliedAmount = (paymentAmount - variation) * exchangeRate;
+//   const appliedAmount = (paymentAmount - variation) * exchangeRate;
 
-  $("#edtApplied").val(appliedAmount);
-  $("#edtApplied").trigger("change");
-}
+//   $("#edtApplied").val(appliedAmount);
+//   $("#edtApplied").trigger("change");
+// }
 
 Template.supplierpaymentcard.events({
   // 'click #sltDepartment': function(event) {
@@ -8870,21 +8873,31 @@ Template.supplierpaymentcard.events({
     }
   },
   "change #exchange_rate": (e) => {
-    const exchangeRate = $("#exchange_rate").val();
-    const paymentAmount = $("#edtPaymentAmount").val().includes("$")
-      ? $("#edtPaymentAmount").val().substring(1)
-      : $("#edtPaymentAmount").val();
-    const foreignAmount = exchangeRate * paymentAmount;
+    // const exchangeRate = $("#exchange_rate").val();
+    // const paymentAmount = $("#edtPaymentAmount").val().includes("$")
+    //   ? $("#edtPaymentAmount").val().substring(1)
+    //   : $("#edtPaymentAmount").val();
+    // const foreignAmount = exchangeRate * paymentAmount;
 
-    $("#edtForeignAmount").val("$" + foreignAmount);
+    // $("#edtForeignAmount").val("$" + foreignAmount);
 
-    calulateApplied();
+    // calulateApplied();
+
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "change #edtForeignAmount": (e) => {
-    calulateApplied();
+    // calulateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "change #edtVariation": (e) => {
-    calulateApplied();
+    // calulateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "click .btnSave": function () {
     LoadingOverlay.show();
@@ -13420,16 +13433,24 @@ Template.supplierpaymentcard.events({
     onExchangeRateChange(e);
   },
   "change #edtForeignAmount": (e) => {
-    calculateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "keyup #edtForeignAmount": (e) => {
-    calculateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "change #edtVariation": (e) => {
-    calculateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "keyup #edtVariation": (e) => {
-    calculateApplied();
+    setTimeout(() => {
+      calculateApplied();
+    }, 300);
   },
   "change #edtApplied": (e) => {
     const currency = getCurrentCurrencySymbol();
@@ -13438,8 +13459,27 @@ Template.supplierpaymentcard.events({
   "keyup #edtApplied": (e) => {
     const currency = getCurrentCurrencySymbol();
     $('.appliedAmount').text(currency + $(e.currentTarget).val());
+  },
+  "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
+    //console.log(e);
+
+    setTimeout(() => {
+
+      // convert to forign payment amount
+      const valueToConvert = $(e.currentTarget).val();
+      const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+      console.log(valueToConvert, convertedValue, $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to'));
+      $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
+
+      // Convert oustanding to foriegn oustanding
+      const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
+      const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+      $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+    }, 500);
+
   }
 });
+
 
 export function onExchangeRateChange(e) {
  const templateObject = Template.instance();

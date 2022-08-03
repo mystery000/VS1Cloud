@@ -4,6 +4,7 @@ import {CountryService} from "../js/country-service";
 import {SideBarService} from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
+import { currencySymbolEmpty } from "../packages/currency/CurrencyGlobals";
 let sideBarService = new SideBarService();
 
 export function setCurrentCurrencySymbol(symbol = "N/A") {
@@ -67,14 +68,14 @@ Template.currencypop.onRendered(function () {
         //console.log(_currency);
         currencies.push({
           id: _currency.Id || "",
-          code: _currency.Code || "-",
-          currency: _currency.Currency || "-",
-          symbol: _currency.CurrencySymbol || "-",
-          buyrate: _currency.BuyRate || "-",
-          sellrate: _currency.SellRate || "-",
-          country: _currency.Country || "-",
-          description: _currency.CurrencyDesc || "-",
-          ratelastmodified: _currency.RateLastModified || "-"
+          code: _currency.Code || "N/A",
+          currency: _currency.Currency || "N/A",
+          symbol: _currency.CurrencySymbol || currencySymbolEmpty,
+          buyrate: _currency.BuyRate || "N/A",
+          sellrate: _currency.SellRate || "N/A",
+          country: _currency.Country || "N/A",
+          description: _currency.CurrencyDesc || "N/A",
+          ratelastmodified: _currency.RateLastModified ||"N/A",
         });
       });
 

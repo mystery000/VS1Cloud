@@ -4,6 +4,7 @@ import { CountryService } from "../../js/country-service";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import FxApi from "../../settings/currencies-setting/FxApi";
+import { currencySymbolEmpty } from "./CurrencyGlobals";
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
@@ -73,13 +74,13 @@ Template.newcurrencypop.onRendered(function () {
                 // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
                 var dataList = {
                   id: data.tcurrency[i].Id || "",
-                  code: data.tcurrency[i].Code || "-",
-                  currency: data.tcurrency[i].Currency || "-",
-                  symbol: data.tcurrency[i].CurrencySymbol || "-",
+                  code: data.tcurrency[i].Code || "N/A",
+                  currency: data.tcurrency[i].Currency || "N/A",
+                  symbol: data.tcurrency[i].CurrencySymbol || currencySymbolEmpty,
                   buyrate: data.tcurrency[i].BuyRate || "-",
                   sellrate: data.tcurrency[i].SellRate || "-",
-                  country: data.tcurrency[i].Country || "-",
-                  description: data.tcurrency[i].CurrencyDesc || "-",
+                  country: data.tcurrency[i].Country || "N/A",
+                  description: data.tcurrency[i].CurrencyDesc || "N/A",
                   ratelastmodified: data.tcurrency[i].RateLastModified || "-",
                 };
 
