@@ -11,13 +11,6 @@ let defaultCurrencyCode = CountryAbbr;
 
 const currentDate = new Date();
 
-async function objectGrouping( xs, key ){
-    return await xs.reduce(function(rv, x) {
-        (rv[x.fields[key]] = rv[x.fields[key]] || []).push(x);
-        return rv;
-    }, {});
-}
-
 Template.payrollhistoryreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
@@ -106,22 +99,24 @@ Template.payrollhistoryreport.onRendered(() => {
 
             let employeeExist = employeeGroups.filter((subitem) => {
                 if( subitem.ID == item.fields.Employeeid ){
-                    subitem.SubAccounts.push(item)
-                    return subitem
+                  subitem.SubAccounts.push(item)
+                  return subitem
                 }
             });
 
             if( employeeExist.length == 0 ){
+
                 employeeGroups.push({
-                    ID: item.fields.Employeeid,
-                    EmpName: item.fields.Empname,
-                    TotalWages: item.fields.Wages,
-                    TotalTax: item.fields.Tax,
-                    TotalSuperannuation: item.fields.Superannuation,
-                    TotalGross: item.fields.Gross,
-                    TotalNet: item.fields.Net,
-                    SubAccounts: [item]
+                  ID: item.fields.Employeeid,
+                  EmpName: item.fields.Empname,
+                  TotalWages: item.fields.Wages,
+                  TotalTax: item.fields.Tax,
+                  TotalSuperannuation: item.fields.Superannuation,
+                  TotalGross: item.fields.Gross,
+                  TotalNet: item.fields.Net,
+                  SubAccounts: [item]
                 });
+
             }
         }
 
