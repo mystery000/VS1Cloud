@@ -538,19 +538,69 @@ export class ReportService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        ListType: "'Summary'",
+        ListType: "'Detail'"
       };
     } else {
       options = {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        ListType: "'Summary'",
+        ListType: "'Detail'"
       };
     }
     return this.getList(this.ERPObjects.T_VS1_Report_Productmovement, options);
   }
 
-  
+  getSerialNumberReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        ListType: "'Detail'"
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        ListType: "'Detail'"
+      };
+    }
+    return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
+  }
+
+  getBinLocationReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        ListType: "'Detail'"
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        ListType: "'Detail'"
+      };
+    }
+    return this.getList(this.ERPObjects.TProductBin, options);
+  }
+
+  getCustomerDetailReport(dateFrom, dateTo, ignoreDate = false) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TCustomerSummaryReport, options);
+  }
   
 }

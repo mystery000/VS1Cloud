@@ -18,8 +18,13 @@ Template.binlocationslist.onCreated(() => {
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  templateObject.records = new ReactiveVar([]);
 });
-
+function MakeNegative() {
+  $('td').each(function(){
+      if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+  });
+}
 Template.binlocationslist.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
@@ -77,6 +82,59 @@ Template.binlocationslist.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
+
+  templateObject.getBinLocationReportData = async function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
+    let dateTo = moment().format("YYYY-MM-DD");
+    let data = await reportService.getBinLocationReport( dateFrom, dateTo, true);
+    return false
+    let movementReport = [];
+    if( data.tproductbin.length > 0 ){
+        let reportGroups = []; 
+        for (const item of data.tproductbin) {   
+            let isExist = reportGroups.filter((subitem) => {
+                if( subitem.ID == item.fields.ProductID ){
+                    subitem.SubAccounts.push(item)
+                    return subitem
+                }
+            });
+
+            if( isExist.length == 0 ){
+                reportGroups.push({
+                    ID: item.fields.ProductID,
+                    ProductName: item.fields.ProductName,
+                    SubAccounts: [item],
+                    TotalRunningQty: 0,
+                    TotalCurrentQty: 0,
+                    TotalUnitCost: 0
+                });
+            }
+        }
+
+        movementReport = reportGroups.filter((item) => {
+            let TotalRunningQty = 0;
+            let TotalCurrentQty = 0;
+            let TotalUnitCost = 0;
+            item.SubAccounts.map((subitem) => {
+              TotalRunningQty += subitem.fields.Qty;
+              TotalCurrentQty += subitem.fields.Qty;
+              TotalUnitCost += subitem.fields.Cost;
+            });
+            item.TotalRunningQty = TotalRunningQty;
+            item.TotalCurrentQty = TotalCurrentQty;
+            item.TotalUnitCost = TotalUnitCost;
+            return item;
+        });        
+    }
+    templateObject.records.set(movementReport);
+    setTimeout(function() {
+        MakeNegative();
+    }, 1000);
+    $(".fullScreenSpin").css("display", "none");
+  }
+
+  templateObject.getBinLocationReportData();
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
@@ -420,6 +478,20 @@ Template.binlocationslist.events({
 Template.binlocationslist.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
+  },
+  records: () => {
+    return Template.instance().records.get();
+  },
+  formatPrice( amount ){
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatDate: ( date ) => {
+      return ( date )? moment(date).format("DD/MM/YYYY") : '';
   },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
