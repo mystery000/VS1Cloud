@@ -59,7 +59,7 @@ Template.xecurrencies.events({
         text: "You're about to save Xe Currencies, proceed?.",
         showCancelButton: true,
         confirmButtonText: 'Yes, proceed',
-    }).then((result) => {
+    }).then( async (result) => {
         if (result.value) {
             $('.fullScreenSpin').css('display','block');
             event.preventDefault();

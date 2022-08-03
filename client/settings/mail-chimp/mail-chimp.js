@@ -58,7 +58,7 @@ Template.mailchimp.events({
         text: "You're about to save Mail Chimp, proceed?.",
         showCancelButton: true,
         confirmButtonText: 'Yes, proceed',
-    }).then((result) => {
+    }).then( async (result) => {
         if (result.value) {
             $('.fullScreenSpin').css('display','block');
 
