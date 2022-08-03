@@ -6,7 +6,7 @@ export default class PaySlipsFields {
         // CreatedAt,
         PaymentDate,
         TotalPay,
-        // Active
+        Active
     }){
         this.EmployeeID = EmployeeID;
         this.ID = ID;
@@ -14,7 +14,7 @@ export default class PaySlipsFields {
         // this.CreatedAt = CreatedAt;
         this.PaymentDate = PaymentDate;
         this.TotalPay = TotalPay;
-        // this.Active = Active;
+        this.Active = Active;
     }
 }
   
