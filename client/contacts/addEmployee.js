@@ -7972,21 +7972,7 @@ Template.employeescard.events({
                      }
                  }
             }
-
-            let openingBalanceJSON = {
-                type: "TOpeningBalances",
-                objects: tOpeningBalance
-            };
-
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(openingBalanceJSON),
-            });
-            if (ApiResponse.ok == true) {
-            }
-            $('.fullScreenSpin').css('display', 'none');
-
+            
             // Making bulk saving object
             let openingBalanceObj = {
                 type: "TOpeningBalances",

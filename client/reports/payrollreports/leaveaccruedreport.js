@@ -81,7 +81,6 @@ Template.leaveaccruedreport.onRendered(() => {
     let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
     let dateTo = moment().format("YYYY-MM-DD");
     let data = await reportService.getleaveAccruals( dateFrom, dateTo, false, '1 month');
-    console.log('data', data)
   }
 
   templateObject.getleaveAccrualReport();
