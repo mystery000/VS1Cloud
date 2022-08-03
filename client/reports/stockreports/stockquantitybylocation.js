@@ -5,7 +5,7 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 
 
-let reportService = new ReportService();
+const reportService = new ReportService();
 let utilityService = new UtilityService();
 let taxRateService = new TaxRateService();
 let defaultCurrencyCode = CountryAbbr;
@@ -18,6 +18,7 @@ Template.stockquantitybylocation.onCreated(() => {
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
+
 });
 
 Template.stockquantitybylocation.onRendered(() => {
@@ -77,6 +78,15 @@ Template.stockquantitybylocation.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
+
+  templateObject.getStockLocationReportData = async function () {
+    let dateFrom = moment().subtract(6, "months").format("YYYY-MM-DD");;
+    let dateTo = moment().format("YYYY-MM-DD");
+    let data = await reportService.getStockQuantityLocationReport( dateFrom, dateTo, false);
+    console.log(data);
+  }
+
+  templateObject.getStockLocationReportData();
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
