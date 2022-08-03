@@ -277,7 +277,7 @@ Template.setup.onRendered(function () {
     }
   };
 
-  templateObject.isSetupFinished();
+  //templateObject.isSetupFinished();
   // Get step local storage variable and set step
   const currentStep = getCurrentStep();
 
