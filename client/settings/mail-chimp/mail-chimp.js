@@ -117,12 +117,12 @@ Template.mailchimp.events({
                 }
                 $('.fullScreenSpin').css('display','none');
             }
+            swal({
+                title: 'Mail chimp successfully updated!',
+                text: '',
+                type: 'success',
+            })
         }
-        swal({
-            title: 'Mail chimp successfully updated!',
-            text: '',
-            type: 'success',
-        })
     })
 }
 });

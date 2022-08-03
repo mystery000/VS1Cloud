@@ -116,13 +116,13 @@ Template.adp.events({
                         await addVS1Data('TERPPreference', JSON.stringify(data))
                     }
                 }
+                $('.fullScreenSpin').css('display','none');
+                swal({
+                    title: 'ADP successfully updated!',
+                    text: '',
+                    type: 'success',
+                })
             }
-            $('.fullScreenSpin').css('display','none');
-            swal({
-                title: 'ADP successfully updated!',
-                text: '',
-                type: 'success',
-            })
         })
     }
 

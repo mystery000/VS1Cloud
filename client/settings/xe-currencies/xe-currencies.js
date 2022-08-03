@@ -117,13 +117,13 @@ Template.xecurrencies.events({
                     await addVS1Data('TERPPreference', JSON.stringify(data))
                 }
             }
+            $('.fullScreenSpin').css('display','none');
+            swal({
+                title: 'Xe Currency successfully updated!',
+                text: '',
+                type: 'success',
+            }) 
         }
-        $('.fullScreenSpin').css('display','none');
-        swal({
-            title: 'Xe Currency successfully updated!',
-            text: '',
-            type: 'success',
-        }) 
     })
     // await addVS1Data('TXeCurrencySettings', JSON.stringify(tXeSettings));
   }
