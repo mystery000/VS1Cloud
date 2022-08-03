@@ -93,13 +93,13 @@ Template.smssettings.events({
   'click #twilioSignUp': function() {
     window.open("https://twilio.com/try-twilio");
   },
-  'click #saveTwilioSettings': async function() {
+  'click #saveTwilioSettings': function() {
     swal({
       title: 'Confirm saving',
       text: "You're about to save SMS Settings, proceed?.",
       showCancelButton: true,
       confirmButtonText: 'Yes, proceed',
-  }).then((result) => {
+  }).then(async (result) => {
       if (result.value) {
         $('.fullScreenSpin').css('display','inline-block');
 

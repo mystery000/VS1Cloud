@@ -55,13 +55,13 @@ Template.yoodledeveloper.events({
   'click #yoodleDeveloperSignUp': function() {
     window.open("https://developer.yodlee.com/user/login");
   },
-  'click #saveYoodleDeveloperSettings': async function(){
+  'click #saveYoodleDeveloperSettings': function(){
     swal({
         title: 'Confirm saving',
         text: "You're about to save Yoodle Developer, proceed?.",
         showCancelButton: true,
         confirmButtonText: 'Yes, proceed',
-    }).then((result) => {
+    }).then(async (result) => {
         if (result.value) {
             $('.fullScreenSpin').css('display','block');
 

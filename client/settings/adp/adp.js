@@ -53,13 +53,13 @@ Template.adp.events({
     'click #openLink': function() {
         window.open("https://in.adp.com");
     },
-    'click #saveAdpSetting': async function(){
+    'click #saveAdpSetting':  function(){
         swal({
             title: 'Confirm saving',
             text: "You're about to save ADP, proceed?.",
             showCancelButton: true,
             confirmButtonText: 'Yes, proceed',
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.value) {
                 $('.fullScreenSpin').css('display','block');
                 let settingObject = [];
