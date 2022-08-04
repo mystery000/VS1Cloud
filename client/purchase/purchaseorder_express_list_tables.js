@@ -67,29 +67,6 @@ Template.purchaseorderlist.onRendered(function () {
   if (FlowRouter.current().queryParams.success) {
     $(".btnRefresh").addClass("btnRefreshAlert");
   }
-  Meteor.call(
-    "readPrefMethod",
-    Session.get("mycloudLogonID"),
-    "tblpurchaseorderlist",
-    function (error, result) {
-      if (error) {
-      } else {
-        if (result) {
-          for (let i = 0; i < result.customFields.length; i++) {
-            let customcolumn = result.customFields;
-            let columData = customcolumn[i].label;
-            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-            let hiddenColumn = customcolumn[i].hidden;
-            let columnClass = columHeaderUpdate.split(".")[1];
-            let columnWidth = customcolumn[i].width;
-
-            $("th." + columnClass + "").html(columData);
-            $("th." + columnClass + "").css("width", "" + columnWidth + "px");
-          }
-        }
-      }
-    }
-  );
 
   function MakeNegative() {
     $("td").each(function () {
@@ -136,7 +113,7 @@ Template.purchaseorderlist.onRendered(function () {
             .getAllTPurchaseOrderListData(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0
             )
@@ -1006,7 +983,7 @@ Template.purchaseorderlist.onRendered(function () {
         sideBarService.getAllTPurchaseOrderListData(
             prevMonth11Date,
             toDate,
-            false,
+            true,
             initialReportLoad,
             0
           )
@@ -1896,11 +1873,11 @@ Template.purchaseorderlist.events({
 
     sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPO) {
         addVS1Data("TPurchaseOrderList", JSON.stringify(dataPO)).then(function (datareturn) {
-          sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
+          sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
           addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
-              sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataSuppPay) {
+              sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
                   addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
-                      sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
+                      sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
                           addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                             setTimeout(function () {
                               window.open('/purchaseorderlist', '_self');

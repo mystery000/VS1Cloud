@@ -1424,7 +1424,7 @@ Template.invoicelistBO.events({
             sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
                 addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
 
-                    sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+                    sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
                         addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
                           window.open('/invoicelistBO', '_self');
                           }).catch(function (err) {

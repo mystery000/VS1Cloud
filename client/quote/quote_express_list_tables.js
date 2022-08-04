@@ -2671,7 +2671,7 @@ Template.quoteslist.events({
             addVS1Data('TQuoteList',JSON.stringify(dataQuote)).then(function (datareturn) {
               sideBarService.getAllQuoteList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TQuote',JSON.stringify(data)).then(function (datareturn) {
-                    sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+                    sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
                       addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
                           sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
                               addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {

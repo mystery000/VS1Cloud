@@ -68,7 +68,7 @@ Template.purchasesoverviewcards.onRendered(function() {
         } else {
           fromDateMonth = currentBeginDate.getMonth() + 1;
         }
-    
+
         if (currentBeginDate.getDate() < 10) {
           fromDateDay = "0" + currentBeginDate.getDate();
         }
@@ -77,7 +77,7 @@ Template.purchasesoverviewcards.onRendered(function() {
         let prevMonth11Date = moment()
           .subtract(reportsloadMonths, "months")
           .format("YYYY-MM-DD");
-    
+
         getVS1Data("TbillReport")
           .then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -85,7 +85,7 @@ Template.purchasesoverviewcards.onRendered(function() {
                 .getAllPurchaseOrderListAll(
                   prevMonth11Date,
                   toDate,
-                  false,
+                  true,
                   initialReportLoad,
                   0
                 )
@@ -97,7 +97,7 @@ Template.purchasesoverviewcards.onRendered(function() {
                   let totalBill = 0;
                   let totalCredit = 0;
                   let totalPO = 0;
-    
+
                   for (let i = 0; i < data.tbillreport.length; i++) {
                     let orderType = data.tbillreport[i].Type;
                     totalExpense += Number(
@@ -109,14 +109,14 @@ Template.purchasesoverviewcards.onRendered(function() {
                         data.tbillreport[i]["Total Amount (Inc)"]
                       );
                     }
-    
+
                     if (data.tbillreport[i].Type == "Bill") {
                       totBillCount++;
                       totalBill += Number(
                         data.tbillreport[i]["Total Amount (Inc)"]
                       );
                     }
-    
+
                     if (data.tbillreport[i].Type == "Purchase Order") {
                       totPOCount++;
                       orderType = "PO";
@@ -205,7 +205,7 @@ Template.purchasesoverviewcards.onRendered(function() {
               let useData = data.tbillreport;
               let lineItems = [];
               let lineItemObj = {};
-    
+
               if (data.Params.IgnoreDates == true) {
                 $("#dateFrom").attr("readonly", true);
                 $("#dateTo").attr("readonly", true);
@@ -234,12 +234,12 @@ Template.purchasesoverviewcards.onRendered(function() {
                   totCreditCount++;
                   totalCredit += Number(useData[i]["Total Amount (Inc)"]);
                 }
-    
+
                 if (useData[i].Type == "Bill") {
                   totBillCount++;
                   totalBill += Number(useData[i]["Total Amount (Inc)"]);
                 }
-    
+
                 if (useData[i].Type == "Purchase Order") {
                   totPOCount++;
                   orderType = "PO";
@@ -294,11 +294,11 @@ Template.purchasesoverviewcards.onRendered(function() {
                 if (useData[i].Type == "Purchase Order") {
                   totAmount += Number(useData[i].Balance);
                 }
-    
+
                 if (useData[i].Type == "Bill") {
                   totAmountBill += Number(useData[i].Balance);
                 }
-    
+
                 if (useData[i].Type == "Credit") {
                   totAmountCredit += Number(useData[i].Balance);
                 }
@@ -323,7 +323,7 @@ Template.purchasesoverviewcards.onRendered(function() {
               .getAllPurchaseOrderListAll(
                 prevMonth11Date,
                 toDate,
-                false,
+                true,
                 initialReportLoad,
                 0
               )
@@ -331,12 +331,12 @@ Template.purchasesoverviewcards.onRendered(function() {
                 addVS1Data("TbillReport", JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
-    
+
                 let totalExpense = 0;
                 let totalBill = 0;
                 let totalCredit = 0;
                 let totalPO = 0;
-    
+
                 for (let i = 0; i < data.tbillreport.length; i++) {
                   let orderType = data.tbillreport[i].Type;
                   totalExpense += Number(data.tbillreport[i]["Total Amount (Inc)"]);
@@ -346,12 +346,12 @@ Template.purchasesoverviewcards.onRendered(function() {
                       data.tbillreport[i]["Total Amount (Inc)"]
                     );
                   }
-    
+
                   if (data.tbillreport[i].Type == "Bill") {
                     totBillCount++;
                     totalBill += Number(data.tbillreport[i]["Total Amount (Inc)"]);
                   }
-    
+
                   if (data.tbillreport[i].Type == "Purchase Order") {
                     totPOCount++;
                     orderType = "PO";
@@ -434,10 +434,10 @@ Template.purchasesoverviewcards.onRendered(function() {
               });
           });
       };
-    
+
       templateObject.getAllPurchaseOrderAll();
 });
 
 Template.purchasesoverviewcards.helpers({
-    
+
 });
