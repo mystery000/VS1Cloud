@@ -1353,6 +1353,7 @@ Template.newbankrecon.onRendered(function() {
         } else if (selectedAccountFlag == 'ForWhat') {
             if (accountId != "") {
                 $('#what_'+selectedYodleeID).val(accountname);
+                $('#whatTaxCode_' + selectedYodleeID).val($(this).find(".taxrate").text());
             }
         }
         $('#tblAccount_filter .form-control-sm').val('');
@@ -2669,8 +2670,12 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         if (DepOrWith == "spent") {
             discountAmount = clientDetail? Amount * clientDetail.discount / 100 : 0;
         }
+        let ctax = $('#ctaxRate_'+selectedYodleeID).val();
+        if (ctax == "") {
+            ctax = $('#whatTaxCode_'+selectedYodleeID).val();
+        }
         let taxCodeDetail = taxcodeList.filter(taxcode => {
-            return taxcode.codename == $('#ctaxRate_'+selectedYodleeID).val();
+            return taxcode.codename == ctax;
         });
         taxCodeDetail = taxCodeDetail[0];
         let taxAmount = (taxCodeDetail != undefined)?Amount*taxCodeDetail.coderate/100:0;
@@ -2691,13 +2696,13 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         $('#divLineDetail_'+selectedYodleeID+' #textComment').text($('#why_'+selectedYodleeID).val());
 
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductName').val('');
-        $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductDesc').val('');
+        $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductDesc').val($('#YNote_'+selectedYodleeID).text());
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineQty').val(1);
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineUnitPrice').val(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineSubTotal').val(utilityService.modifynegativeCurrencyFormat(Amount));
         if (DepOrWith == "received") {
-            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountID').val('');
-            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountName').val('');
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountID').val($('#whatID_'+selectedYodleeID).val());
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountName').val($('#what_'+selectedYodleeID).val());
         }
         if (DepOrWith == "spent") {
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineDiscount').val(utilityService.modifynegativeCurrencyFormat(discountAmount));

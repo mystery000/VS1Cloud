@@ -323,7 +323,7 @@
                                     <div class="row" style="margin-left: 0; margin-right: 0;">
                                         <div class="col-6 compactPadding" style="border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0;">
                                             <p style="margin-bottom: 0; font-weight: 700;">{{ itemTransaction.CompanyName }}</p>
-                                            <p style="margin-bottom: 0;"><span>{{ itemTransaction.YodleeDescription }}</span></p>
+                                            <p style="margin-bottom: 0;"><span id="YNote_{{ itemTransaction.YodleeLineID }}">{{ itemTransaction.YodleeDescription }}</span></p>
                                             <br>
                                             <a href="" id="btnMoreDetail_{{ itemTransaction.YodleeLineID }}">More Details</a>
                                         </div>
@@ -413,6 +413,7 @@
                                                         <label>What</label>
                                                         <select type="search" class="form-control" id="what_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the account..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
                                                         <input type="hidden" id="whatID_{{ itemTransaction.YodleeLineID }}" value="">
+                                                        <input type="hidden" id="whatTaxCode_{{ itemTransaction.YodleeLineID }}" value="">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 compactPadding" style="padding-bottom: 5px;">
