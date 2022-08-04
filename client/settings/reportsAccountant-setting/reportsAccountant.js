@@ -1,1363 +1,846 @@
-import {TaxRateService} from "../settings-service";
-import { ReactiveVar } from 'meteor/reactive-var';
-import { SideBarService } from '../../js/sidebar-service';
+import { OrganisationService } from "../../js/organisation-service";
 import { CountryService } from "../../js/country-service";
-import '../../lib/global/indexdbstorage.js';
+import { ReactiveVar } from "meteor/reactive-var";
+import { SideBarService } from "../../js/sidebar-service";
+import "../../lib/global/indexdbstorage.js";
+import LoadingOverlay from "../../LoadingOverlay";
 let sideBarService = new SideBarService();
+let organisationService = new OrganisationService();
 
-Template.reportsAccountantSettings.onCreated(function(){
-    const templateObject = Template.instance();
-    templateObject.countryData = new ReactiveVar();
-    templateObject.datatablerecords = new ReactiveVar([]);
-    templateObject.tableheaderrecords = new ReactiveVar([]);
-    templateObject.employeerecords = new ReactiveVar([]);
-    templateObject.accountantrecords = new ReactiveVar();
-    templateObject.roomrecords = new ReactiveVar([]);
+Template.organisationsettings.onCreated(() => {
+  const templateObject = Template.instance();
+  templateObject.showSkype = new ReactiveVar();
+  templateObject.showMob = new ReactiveVar();
+  templateObject.showFax = new ReactiveVar();
+  templateObject.showLinkedIn = new ReactiveVar();
+  templateObject.countryList = new ReactiveVar([]);
+  templateObject.showPoAddress = new ReactiveVar();
+  templateObject.phCity = new ReactiveVar();
+  templateObject.samePhysicalAddress1 = new ReactiveVar();
+  templateObject.samePhysicalAddress2 = new ReactiveVar();
+  templateObject.samePhysicalAddress3 = new ReactiveVar();
+  templateObject.phState = new ReactiveVar();
+  templateObject.phCountry = new ReactiveVar();
+  templateObject.phCode = new ReactiveVar();
+  templateObject.phAttention = new ReactiveVar();
+  templateObject.countryData = new ReactiveVar();
+  templateObject.hideCreateField = new ReactiveVar();
+  templateObject.paAddress1 = new ReactiveVar();
+  templateObject.paAddress2 = new ReactiveVar();
+  templateObject.paAddress3 = new ReactiveVar();
+  templateObject.phAddress1 = new ReactiveVar();
+  templateObject.phAddress2 = new ReactiveVar();
+  templateObject.phAddress3 = new ReactiveVar();
+  templateObject.fieldLength = new ReactiveVar();
+  templateObject.completePoAddress = new ReactiveVar();
+  templateObject.completePhAddress = new ReactiveVar();
+  templateObject.imageFileData = new ReactiveVar();
 
-    templateObject.accountantlist = new ReactiveVar([]);
+  templateObject.isSameAddress = new ReactiveVar();
+  templateObject.isSameAddress.set(false);
+
+  templateObject.iscompanyemail = new ReactiveVar();
+  templateObject.iscompanyemail.set(false);
+
+  templateObject.isChkUSRegionTax = new ReactiveVar();
+  templateObject.isChkUSRegionTax.set(false);
 });
 
-Template.reportsAccountantSettings.onRendered(function() {
-    $('.fullScreenSpin').css('display','inline-block');
-    let templateObject = Template.instance();
-    let taxRateService = new TaxRateService();
-    const dataTableList = [];
-    const tableHeaderList = [];
-    const accountantrecords = [];
-    let countries = [];
-    let deptprodlineItems = [];
-
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'accountantList', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-                }
+Template.organisationsettings.onRendered(function () {
+  $(".fullScreenSpin").css("display", "inline-block");
+  const templateObject = Template.instance();
+  let showPoAddress = false;
+  let countries = [];
+  let organizations = [
+    "Club or Society",
+    "Company",
+    "Individual",
+    "Not for Profit",
+    "Partnership",
+    "Self Managed Superannuation Fund",
+    "Sole Trader",
+    "Superannuation Fund",
+    "Trust",
+  ];
+  var countryService = new CountryService();
+  templateObject.getCountryData = function () {
+    getVS1Data("TCountries")
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          countryService.getCountry().then((data) => {
+            for (let i = 0; i < data.tcountries.length; i++) {
+              countries.push(data.tcountries[i].Country);
             }
-        }
-    });
-
-    var countryService = new CountryService();
-    templateObject.getCountryData = function () {
-        getVS1Data("TCountries")
-          .then(function (dataObject) {
-            if (dataObject.length == 0) {
-              countryService.getCountry().then((data) => {
-                for (let i = 0; i < data.tcountries.length; i++) {
-                  countries.push(data.tcountries[i].Country);
-                }
-                countries = _.sortBy(countries);
-                templateObject.countryData.set(countries);
-              });
-            } else {
-              let data = JSON.parse(dataObject[0].data);
-              let useData = data.tcountries;
-              for (let i = 0; i < useData.length; i++) {
-                countries.push(useData[i].Country);
-              }
-              countries = _.sortBy(countries);
-              templateObject.countryData.set(countries);
-            }
-          })
-          .catch(function (err) {
-            countryService.getCountry().then((data) => {
-              for (let i = 0; i < data.tcountries.length; i++) {
-                countries.push(data.tcountries[i].Country);
-              }
-              countries = _.sortBy(countries);
-              templateObject.countryData.set(countries);
-            });
+            countries = _.sortBy(countries);
+            templateObject.countryData.set(countries);
           });
-    };
-    templateObject.getCountryData();
-
-    function MakeNegative() {
-        $('td').each(function(){
-            if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-        });
-    };
-
-    templateObject.getRooms = function () {
-
-        taxRateService.getBins().then(function (data) {
-            let binList = [];
-            for (let i = 0; i < data.tproductbin.length; i++) {
-                let dataObj = {
-                    roomid: data.tproductbin[i].BinNumber || ' ',
-                    roomname: data.tproductbin[i].BinLocation || ' '
-                };
-                if(data.tproductbin[i].BinLocation.replace(/\s/g, '') != ''){
-                    binList.push(dataObj);
-                }
-            }
-            templateObject.roomrecords.set(binList);
-        });
-    };
-    templateObject.getRooms();
-
-    // templateObject.getAccountantList = function () {
-    //   getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
-    //     if(dataObject.length == 0){
-    //       taxRateService.getAccountantCategory().then(function (data) {
-    //           let accountantList = [];
-    //           for (let i = 0; i < data.tdeptclass.length; i++) {
-
-    //               let dataObject = {
-    //                   accountantid: data.tdeptclass[i].Id || ' ',
-    //                   firstname: data.tdeptclass[i].FirstName || ' ',
-    //                   lastname: data.tdeptclass[i].LastName || ' ',
-    //                   companyname: data.tdeptclass[i].CompanyName || ' ',
-    //                   address: data.tdeptclass[i].Address || ' ',
-    //                   docname: data.tdeptclass[i].DocName || ' ',
-    //                   towncity: data.tdeptclass[i].TownCity || ' ',
-    //                   postalzip: data.tdeptclass[i].PostalZip || ' ',
-    //                   stateregion: data.tdeptclass[i].StateRegion || ' ',
-    //                   country: data.tdeptclass[i].Country || ' ',
-    //               };
-
-    //               accountantList.push(dataObject);
-
-    //           }
-    //           templateObject.accountantlist.set(accountantList);
-    //       });
-    //     }
-    //     else{
-    //         let data = JSON.parse(dataObject[0].data);
-    //         let useData = data.tdeptclass;
-    //         let accountantList = [];
-    //         for (let i = 0; i < data.tdeptclass.length; i++) {
-
-    //             let dataObject = {
-    //                 accountantid: data.tdeptclass[i].Id || ' ',
-    //                 firstname: data.tdeptclass[i].FirstName || ' ',
-    //                 lastname: data.tdeptclass[i].LastName || ' ',
-    //                 companyname: data.tdeptclass[i].CompanyName || ' ',
-    //                 address: data.tdeptclass[i].Address || ' ',
-    //                 docname: data.tdeptclass[i].DocName || ' ',
-    //                 towncity: data.tdeptclass[i].TownCity || ' ',
-    //                 postalzip: data.tdeptclass[i].PostalZip || ' ',
-    //                 stateregion: data.tdeptclass[i].StateRegion || ' ',
-    //                 country: data.tdeptclass[i].Country || ' ',
-    //             };
-
-    //             accountantList.push(dataObject);
-    //         }
-    //         templateObject.accountantlist.set(accountantList);
-    //     }
-    //   }).catch(function (err) {
-    //     taxRateService.getAccountantCategory().then(function (data) {
-    //         let accountantList = [];
-    //         for (let i = 0; i < data.tdeptclass.length; i++) {
-
-    //             let dataObject = {
-    //                 accountantid: data.tdeptclass[i].Id || ' ',
-    //                 firstname: data.tdeptclass[i].FirstName || ' ',
-    //                 lastname: data.tdeptclass[i].LastName || ' ',
-    //                 companyname: data.tdeptclass[i].CompanyName || ' ',
-    //                 address: data.tdeptclass[i].Address || ' ',
-    //                 docname: data.tdeptclass[i].DocName || ' ',
-    //                 towncity: data.tdeptclass[i].TownCity || ' ',
-    //                 postalzip: data.tdeptclass[i].PostalZip || ' ',
-    //                 stateregion: data.tdeptclass[i].StateRegion || ' ',
-    //                 country: data.tdeptclass[i].Country || ' ',
-    //             };
-
-    //             accountantList.push(dataObject);
-
-    //         }
-    //         templateObject.accountantlist.set(accountantList);
-    //     });
-    //   });
-
-    // };
-    // templateObject.getAccountantList();
-
-    templateObject.getAccountantList = function () {
-      getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
-
-//         if(dataObject.length == 0){
-//           taxRateService.getAccountantCategory().then(function (data) {
-//               let lineItems = [];
-//               let lineItemObj = {};
-//               for(let i=0; i<data.tdeptclass.length; i++){
-//                   var dataList = {
-//                     id: data.tdeptclass[i].Id || ' ',
-//                     firstname: data.tdeptclass[i].FirstName || '-',
-//                     lastname: data.tdeptclass[i].LastName || '-',
-//                     companyname: data.tdeptclass[i].CompanyName || '-',
-//                     address: data.tdeptclass[i].Address || '-',
-//                     docname: data.tdeptclass[i].DocName || '-',
-//                     towncity: data.tdeptclass[i].TownCity || '-',
-//                     postalzip: data.tdeptclass[i].PostalZip || '-',
-//                     stateregion: data.tdeptclass[i].StateRegion || '-',
-//                     country: data.tdeptclass[i].Country || '-',
-//                     status:data.tdeptclass[i].Active || 'false',
-//                   };
-
-//                   dataTableList.push(dataList);
-//               }
-
-//               templateObject.datatablerecords.set(dataTableList);
-
-//               if(templateObject.datatablerecords.get()){
-
-//                   Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'accountantList', function(error, result){
-//                       if(error){
-
-//                       }else{
-//                           if(result){
-//                               for (let i = 0; i < result.customFields.length; i++) {
-//                                   let customcolumn = result.customFields;
-//                                   let columData = customcolumn[i].label;
-//                                   let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-//                                   let hiddenColumn = customcolumn[i].hidden;
-//                                   let columnClass = columHeaderUpdate.split('.')[1];
-//                                   let columnWidth = customcolumn[i].width;
-//                                   let columnindex = customcolumn[i].index + 1;
-
-//                                   if(hiddenColumn == true){
-//                                       $("."+columnClass+"").addClass('hiddenColumn');
-//                                       $("."+columnClass+"").removeClass('showColumn');
-//                                   }
-//                                   else if(hiddenColumn == false){
-//                                       $("."+columnClass+"").removeClass('hiddenColumn');
-//                                       $("."+columnClass+"").addClass('showColumn');
-//                                   }
-//                               }
-//                           }
-//                       }
-//                   });
-
-//                   setTimeout(function () {
-//                       MakeNegative();
-//                   }, 100);
-//               }
-
-//               $('.fullScreenSpin').css('display','none');
-//               setTimeout(function () {
-//                   $('#accountantList').DataTable({
-//                       columnDefs: [
-//                           {type: 'date', targets: 0},
-//                           { "orderable": false, "targets": -1 }
-//                       ],
-//                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-//                       buttons: [
-//                           {
-//                               extend: 'excelHtml5',
-//                               text: '',
-//                               download: 'open',
-//                               className: "btntabletocsv hiddenColumn",
-//                               filename: "departmentlist_"+ moment().format(),
-//                               orientation:'portrait',
-//                               exportOptions: {
-//                                   columns: ':visible'
-//                               }
-//                           },{
-//                               extend: 'print',
-//                               download: 'open',
-//                               className: "btntabletopdf hiddenColumn",
-//                               text: '',
-//                               title: 'Department List',
-//                               filename: "departmentlist_"+ moment().format(),
-//                               exportOptions: {
-//                                   columns: ':visible'
-//                               }
-//                           }],
-//                       select: true,
-//                       destroy: true,
-//                       colReorder: true,
-//                       colReorder: {
-//                           fixedColumnsRight: 1
-//                       },
-//                       // bStateSave: true,
-//                       // rowId: 0,
-//                       paging: false,
-// //                      "scrollY": "400px",
-// //                      "scrollCollapse": true,
-//                       info: true,
-//                       responsive: true,
-//                       "order": [[ 0, "asc" ]],
-//                       action: function () {
-//                           $('#accountantList').DataTable().ajax.reload();
-//                       },
-//                       "fnDrawCallback": function (oSettings) {
-//                           setTimeout(function () {
-//                               MakeNegative();
-//                           }, 100);
-//                       },
-
-//                   }).on('page', function () {
-//                       setTimeout(function () {
-//                           MakeNegative();
-//                       }, 100);
-//                       let draftRecord = templateObject.datatablerecords.get();
-//                       templateObject.datatablerecords.set(draftRecord);
-//                   }).on('column-reorder', function () {
-
-//                   }).on( 'length.dt', function ( e, settings, len ) {
-//                       setTimeout(function () {
-//                           MakeNegative();
-//                       }, 100);
-//                   });
-
-//                   // $('#accountantList').DataTable().column( 0 ).visible( true );
-//                   $('.fullScreenSpin').css('display','none');
-//               }, 0);
-
-//               var columns = $('#accountantList th');
-//               let sTible = "";
-//               let sWidth = "";
-//               let sIndex = "";
-//               let sVisible = "";
-//               let columVisible = false;
-//               let sClass = "";
-//               $.each(columns, function(i,v) {
-//                   if(v.hidden == false){
-//                       columVisible =  true;
-//                   }
-//                   if((v.className.includes("hiddenColumn"))){
-//                       columVisible = false;
-//                   }
-//                   sWidth = v.style.width.replace('px', "");
-
-//                   let datatablerecordObj = {
-//                       sTitle: v.innerText || '',
-//                       sWidth: sWidth || '',
-//                       sIndex: v.cellIndex || '',
-//                       sVisible: columVisible || false,
-//                       sClass: v.className || ''
-//                   };
-//                   tableHeaderList.push(datatablerecordObj);
-//               });
-//               templateObject.tableheaderrecords.set(tableHeaderList);
-//               $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-//           }).catch(function (err) {
-//               swal({
-//                   title: 'Oooops...',
-//                   text: err,
-//                   type: 'error',
-//                   showCancelButton: false,
-//                   confirmButtonText: 'Try Again'
-//               }).then((result) => {
-//                   if (result.value) {
-//                       Meteor._reload.reload();
-//                   } else if (result.dismiss === 'cancel') {
-
-//                   }
-//               });
-//               $('.fullScreenSpin').css('display','none');
-//               // Meteor._reload.reload();
-//           });
-//         }
-//         else{
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.taccountantcategory;
-            let lineItems = [];
-            let lineItemObj = {};
-
-            for(let i=0; i<useData.length; i++){
-                var dataList = {
-                    id: useData[i].Id || '',
-                    firstname: useData[i].FirstName || '-',
-                    lastname: useData[i].LastName || '-',
-                    companyname: useData[i].CompanyName || '-',
-                    address: useData[i].Address || '-',
-                    docname: useData[i].DocName || '-',
-                    towncity: useData[i].TownCity || '-',
-                    postalzip: useData[i].PostalZip || '-',
-                    stateregion: useData[i].StateRegion || '-',
-                    country: useData[i].Country || '-',
-                    status: useData[i].Active || 'false',
-                };
-                dataTableList.push(dataList);
-            }
-
-            templateObject.datatablerecords.set(dataTableList);
-            if(templateObject.datatablerecords.get()){
-                Meteor.call('readPrefMethod',Session.get('mycloudLogonID'), 'accountantList', function(error, result){
-                    if(error){
-
-                    }else{
-                        if(result){
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.split('.')[1];
-                                let columnWidth = customcolumn[i].width;
-                                let columnindex = customcolumn[i].index + 1;
-
-                                if(hiddenColumn == true){
-
-                                    $("."+columnClass+"").addClass('hiddenColumn');
-                                    $("."+columnClass+"").removeClass('showColumn');
-                                }else if(hiddenColumn == false){
-                                    $("."+columnClass+"").removeClass('hiddenColumn');
-                                    $("."+columnClass+"").addClass('showColumn');
-                                }
-                            }
-                        }
-                    }
-                });
-
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            }
-
-            $('.fullScreenSpin').css('display','none');
-            setTimeout(function () {
-                $('#accountantList').DataTable({
-                    columnDefs: [
-                        {type: 'date', targets: 0},
-                        { "orderable": false, "targets": -1 }
-                    ],
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            text: '',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "accountantlist_"+ moment().format(),
-                            orientation:'portrait',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        },{
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'Accountant List',
-                            filename: "accountantlist_"+ moment().format(),
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    colReorder: {
-                        fixedColumnsRight: 1
-                    },
-                    // bStateSave: true,
-                    // rowId: 0,
-                    paging: false,
-    //                "scrollY": "400px",
-    //                "scrollCollapse": true,
-                    info: true,
-                    responsive: true,
-                    "order": [[ 0, "asc" ]],
-                    action: function () {
-                        $('#accountantList').DataTable().ajax.reload();
-                    },
-                    "fnDrawCallback": function (oSettings) {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    },
-
-                }).on('page', function () {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                    let draftRecord = templateObject.datatablerecords.get();
-                    templateObject.datatablerecords.set(draftRecord);
-                }).on('column-reorder', function () {
-
-                }).on( 'length.dt', function ( e, settings, len ) {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                });
-
-                // $('#accountantList').DataTable().column( 0 ).visible( true );
-                $('.fullScreenSpin').css('display','none');
-            }, 0);
-
-            var columns = $('#accountantList th');
-            let sTible = "";
-            let sWidth = "";
-            let sIndex = "";
-            let sVisible = "";
-            let columVisible = false;
-            let sClass = "";
-            $.each(columns, function(i,v) {
-                if(v.hidden == false){
-                    columVisible =  true;
-                }
-                if((v.className.includes("hiddenColumn"))){
-                    columVisible = false;
-                }
-                sWidth = v.style.width.replace('px', "");
-
-                let datatablerecordObj = {
-                    sTitle: v.innerText || '',
-                    sWidth: sWidth || '',
-                    sIndex: v.cellIndex || '',
-                    sVisible: columVisible || false,
-                    sClass: v.className || ''
-                };
-                tableHeaderList.push(datatablerecordObj);
-            });
-            templateObject.tableheaderrecords.set(tableHeaderList);
-            $('div.dataTables_filter input').addClass('form-control form-control-sm');
-        // }
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.tcountries;
+          for (let i = 0; i < useData.length; i++) {
+            countries.push(useData[i].Country);
+          }
+          countries = _.sortBy(countries);
+          templateObject.countryData.set(countries);
+        }
       })
       .catch(function (err) {
-        taxRateService.getAccountantCategory().then(function (data) {
-            let lineItems = [];
-            let lineItemObj = {};
-            for(let i=0; i<data.tdeptclass.length; i++){
-                var dataList = {
-                    id: data.tdeptclass[i].Id || '',
-                    firstname: data.tdeptclass[i].FirstName || '-',
-                    lastname: data.tdeptclass[i].LastName || '-',
-                    companyname: data.tdeptclass[i].CompanyName || '-',
-                    address: data.tdeptclass[i].Address || '-',
-                    docname: data.tdeptclass[i].DocName || '-',
-                    towncity: data.tdeptclass[i].TownCity || '-',
-                    postalzip: data.tdeptclass[i].PostalZip || '-',
-                    stateregion: data.tdeptclass[i].StateRegion || '-',
-                    country: data.tdeptclass[i].Country || '-',
-                    status:data.tdeptclass[i].Active || 'false',
-                };
+        countryService.getCountry().then((data) => {
+          for (let i = 0; i < data.tcountries.length; i++) {
+            countries.push(data.tcountries[i].Country);
+          }
+          countries = _.sortBy(countries);
+          templateObject.countryData.set(countries);
+        });
+      });
+  };
+  templateObject.getCountryData();
 
-                dataTableList.push(dataList);
-            }
+  templateObject.getCompLogoData = function () {
+    organisationService.getCompLogo().then((data) => {
+      for (let i = 0; i < data.tcomplogo.length; i++) {
+        //countries.push(data.tcomplogo[i].Country)
+      }
+      countries = _.sortBy(countries);
+      templateObject.countryData.set(countries);
+    });
+  };
+  // templateObject.getCompLogoData();
 
-            templateObject.datatablerecords.set(dataTableList);
+  templateObject.getDropDown = function (id, country) {
+    $("#" + id)
+      .autocomplete({
+        source: country,
+        minLength: 0,
+      })
+      .focus(function () {
+        $(this).autocomplete("search", "");
+      });
+    $("#" + id)
+      .autocomplete("widget")
+      .addClass("countries-dropdown");
+  };
+  templateObject.getOrganisationDetails = async () => {
+    LoadingOverlay.show();
 
-            if(templateObject.datatablerecords.get()){
+    const dataListRet = await organisationService.getOrganisationDetail();
+    let mainData = dataListRet.tcompanyinfo[0];
 
-                Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'accountantList', function(error, result){
-                    if(error){
+    templateObject.showSkype.set(mainData.ContactEmail);
+    templateObject.showMob.set(mainData.MobileNumber);
+    templateObject.showFax.set(mainData.FaxNumber);
+    templateObject.showLinkedIn.set(mainData.DvaABN);
+    templateObject.phCity.set(mainData.PoCity);
+    templateObject.phState.set(mainData.PoState);
+    templateObject.phCountry.set(mainData.PoCountry);
+    templateObject.phCode.set(mainData.PoPostcode);
+    templateObject.phAttention.set(mainData.Contact);
+    let companyName = mainData.CompanyName;
+    let postalAddress =
+      mainData.PoBox + "\n" + mainData.PoBox2 + "\n" + mainData.PoBox3;
+    let physicalAddress =
+      mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
+    templateObject.samePhysicalAddress1.set(mainData.Address);
+    templateObject.samePhysicalAddress2.set(mainData.Address2);
+    templateObject.samePhysicalAddress3.set(mainData.Address3);
 
-                    }else{
-                        if(result){
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.split('.')[1];
-                                let columnWidth = customcolumn[i].width;
-                                let columnindex = customcolumn[i].index + 1;
+    $("#displayname").val(mainData.CompanyName);
+    $("#tradingname").val(mainData.TradingName);
 
-                                if(hiddenColumn == true){
+    $("#ownerfirstname").val(mainData.Firstname);
+    $("#ownerlastname").val(mainData.LastName);
+    $("#edtCompanyNumber").val(mainData.CompanyNumber);
+    $("#edtABNNumber").val(mainData.abn);
+    $("#edtAddress").val(mainData.Address);
+    $("#edtCity").val(mainData.City);
+    $("#edtState").val(mainData.State);
+    $("#edtPostCode").val(mainData.Postcode);
+    $("#edtCountry").val(mainData.Country);
+    $("#edtCountry").append(
+      '<option selected="selected" value="' +
+      mainData.Country +
+      '">' +
+      mainData.Country +
+      "</option>"
+    );
+    $("#edtpostaladdress").val(mainData.PoBox);
+    $("#edtPostalCity").val(mainData.PoCity);
+    $("#edtPostalState").val(mainData.PoState);
+    $("#edtPostalPostCode").val(mainData.PoPostcode);
+    $("#edtPostalCountry").val(mainData.PoCountry);
+    $("#edtPostalCountry").append('<option selected="selected" value="' +mainData.PoCountry +'">' +mainData.PoCountry +"</option>");
 
-                                    $("."+columnClass+"").addClass('hiddenColumn');
-                                    $("."+columnClass+"").removeClass('showColumn');
-                                }else if(hiddenColumn == false){
-                                    $("."+columnClass+"").removeClass('hiddenColumn');
-                                    $("."+columnClass+"").addClass('showColumn');
-                                }
-                            }
-                        }
-                    }
-                });
+    if (mainData.IsUSRegionTax || mainData.Country == "United States") {
+      templateObject.isChkUSRegionTax.set(true);
+      $("#chkusregiontax").prop("checked", true);
+      $(".chkusregiontax-col").show();
+    } else {
+      $(".chkusregiontax-col").hide();
+    }
 
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            }
+    if (
+      mainData.Address == mainData.PoBox &&
+      mainData.City == mainData.PoCity &&
+      mainData.State == mainData.PoState &&
+      mainData.Postcode == mainData.PoPostcode &&
+      mainData.Country == mainData.PoCountry
+    ) {
+      templateObject.isSameAddress.set(true);
+      $("#chksameaddress").attr("checked", "checked");
+      $("#show_address_data").css("display", "none");
+    } else {
+      $("#chksameaddress").removeAttr("checked");
+      $("#show_address_data").css("display", "block");
+    }
+    if (mainData.TrackEmails) {
+      templateObject.iscompanyemail.set(true);
+      $("#chkIsDefailtEmail").attr("checked", "checked");
+    } else {
+      //templateObject.iscompanyemail.set(false);
+      $("#chkIsDefailtEmail").removeAttr("checked");
+    }
 
-            $('.fullScreenSpin').css('display','none');
-            setTimeout(function () {
-                $('#accountantList').DataTable({
-                    columnDefs: [
-                        {type: 'date', targets: 0},
-                        { "orderable": false, "targets": -1 }
-                    ],
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            text: '',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "departmentlist_"+ moment().format(),
-                            orientation:'portrait',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        },{
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'Department List',
-                            filename: "departmentlist_"+ moment().format(),
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    colReorder: {
-                        fixedColumnsRight: 1
-                    },
-                    // bStateSave: true,
-                    // rowId: 0,
-                    paging: false,
-//                    "scrollY": "400px",
-//                    "scrollCollapse": true,
-                    info: true,
-                    responsive: true,
-                    "order": [[ 0, "asc" ]],
-                    action: function () {
-                        $('#accountantList').DataTable().ajax.reload();
-                    },
-                    "fnDrawCallback": function (oSettings) {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    },
+    $("#pocontact").val(mainData.Contact);
+    $("#contact").val(mainData.ContactName);
+    $("#edtphonenumber").val(mainData.PhoneNumber);
+    $("#edtemailaddress").val(mainData.Email);
+    $("#edtWebsite").val(mainData.Url);
+    //$('#mobile').val(mainData.MobileNumber);
+    $("#edtfaxnumber").val(mainData.FaxNumber);
 
-                }).on('page', function () {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                    let draftRecord = templateObject.datatablerecords.get();
-                    templateObject.datatablerecords.set(draftRecord);
-                }).on('column-reorder', function () {
+    LoadingOverlay.hide();
+  };
+  templateObject.getOrganisationDetails();
 
-                }).on( 'length.dt', function ( e, settings, len ) {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                });
+  let imageData = localStorage.getItem("Image");
+  if (imageData) {
+    $("#uploadedImage").attr("src", imageData);
+    $("#uploadedImage").attr("width", "50%");
+    $("#removeLogo").show();
+    $("#changeLogo").show();
+  }
+});
 
-                // $('#accountantList').DataTable().column( 0 ).visible( true );
-                $('.fullScreenSpin').css('display','none');
-            }, 0);
+Template.organisationsettings.helpers({
+  showMob: () => {
+    return Template.instance().showMob.get();
+  },
+  showSkype: () => {
+    return Template.instance().showSkype.get();
+  },
+  showFax: () => {
+    return Template.instance().showFax.get();
+  },
+  showLinkedIn: () => {
+    return Template.instance().showLinkedIn.get();
+  },
+  countryList: () => {
+    return Template.instance().countryData.get();
+  },
+  showPoAddress: () => {
+    return Template.instance().showPoAddress.get();
+  },
+  hideCreateField: () => {
+    return Template.instance().hideCreateField.get();
+  },
+  fieldLength: () => {
+    return Template.instance().fieldLength.get();
+  },
+  isSameAddress: () => {
+    return Template.instance().isSameAddress.get();
+  },
+  iscompanyemail: () => {
+    return Template.instance().iscompanyemail.get();
+  },
+  isChkUSRegionTax: () => {
+    return Template.instance().isChkUSRegionTax.get();
+  },
+  checkCountryABN: () => {
+    let countryABNValue = "ABN";
+    if (LoggedCountry == "South Africa") {
+      countryABNValue = "VAT";
+    }
+    return countryABNValue;
+  },
+});
 
-            var columns = $('#accountantList th');
-            let sTible = "";
-            let sWidth = "";
-            let sIndex = "";
-            let sVisible = "";
-            let columVisible = false;
-            let sClass = "";
-            $.each(columns, function(i,v) {
-                if(v.hidden == false){
-                    columVisible =  true;
-                }
-                if((v.className.includes("hiddenColumn"))){
-                    columVisible = false;
-                }
-                sWidth = v.style.width.replace('px', "");
+Template.organisationsettings.events({
+  "click #mobField": function (event) {
+    $("#ul_o li:hidden").slice(0, 1);
+    var Length = $("#ul_o li:visible").length;
+    let templateObject = Template.instance();
+    templateObject.fieldLength.set(Length);
+    document.getElementById("open_mob").style.display = "inline-block";
+    document.getElementById("exitMob").style.display = "inline-block";
+    document.getElementById("mobField").style.display = "none";
+  },
+  "click #chkIsDefailtEmail": function (event) {
+    let templateObj = Template.instance();
+    if ($(event.target).is(":checked")) {
+      templateObj.iscompanyemail.set(true);
+    } else {
+      //alert("not checked");
+      templateObj.iscompanyemail.set(false);
+    }
+  },
+  "click #exitMob": function (event) {
+    let templateObject = Template.instance();
+    let length = templateObject.fieldLength.get();
+    templateObject.fieldLength.set(length + 1);
+    document.getElementById("open_mob").style.display = "none";
+    document.getElementById("exitMob").style.display = "none";
+    document.getElementById("mobField").style.display = "inline-block";
+  },
+  "click #skypeId": function (event) {
+    $("#ul_o li:hidden").slice(0, 1);
+    var Length = $("#ul_o li:visible").length;
+    let templateObject = Template.instance();
+    templateObject.fieldLength.set(Length);
+    document.getElementById("skypeId").style.display = "none";
+    document.getElementById("open_skype").style.display = "inline-block";
+    document.getElementById("exitSkype").style.display = "inline-block";
+  },
+  "click #exitSkype": function (event) {
+    let templateObject = Template.instance();
+    let length = templateObject.fieldLength.get();
+    templateObject.fieldLength.set(length + 1);
+    document.getElementById("open_skype").style.display = "none";
+    document.getElementById("exitSkype").style.display = "none";
+    document.getElementById("skypeId").style.display = "inline-block";
+  },
+  "click #faxId": function (event) {
+    $("#ul_o li:hidden").slice(0, 1);
+    var Length = $("#ul_o li:visible").length;
+    let templateObject = Template.instance();
+    templateObject.fieldLength.set(Length);
+    document.getElementById("faxId").style.display = "none";
+    document.getElementById("open_fax").style.display = "inline-block";
+    document.getElementById("exitFax").style.display = "inline-block";
+  },
+  "click #exitFax": function (event) {
+    let templateObject = Template.instance();
+    let length = templateObject.fieldLength.get();
+    templateObject.fieldLength.set(length + 1);
+    document.getElementById("faxId").style.display = "inline-block";
+    document.getElementById("open_fax").style.display = "none";
+    document.getElementById("exitFax").style.display = "none";
+  },
+  "click #ddiField": function (event) {
+    $("#ul_o li:hidden").slice(0, 1);
+    var Length = $("#ul_o li:visible").length;
+    let templateObject = Template.instance();
+    templateObject.fieldLength.set(Length);
+    document.getElementById("ddiField").style.display = "none";
+    document.getElementById("open_ddi").style.display = "inline-block";
+    document.getElementById("exitDdi").style.display = "inline-block";
+  },
+  "click #exitDdi": function (event) {
+    let templateObject = Template.instance();
+    let length = templateObject.fieldLength.get();
+    templateObject.fieldLength.set(length + 1);
+    document.getElementById("ddiField").style.display = "inline-block";
+    document.getElementById("open_ddi").style.display = "none";
+    document.getElementById("exitDdi").style.display = "none";
+  },
+  "click #linkedInField": function (event) {
+    $("#ul_o li:hidden").slice(0, 1);
+    var Length = $("#ul_o li:visible").length;
+    let templateObject = Template.instance();
+    templateObject.fieldLength.set(Length);
+    document.getElementById("linkedInField").style.display = "none";
+    document.getElementById("open_linkedIn").style.display = "inline-block";
+    document.getElementById("exitlinkedIn").style.display = "inline-block";
+  },
+  "click #exitlinkedIn": function (event) {
+    let templateObject = Template.instance();
+    let length = templateObject.fieldLength.get();
+    templateObject.fieldLength.set(length + 1);
+    document.getElementById("linkedInField").style.display = "inline-block";
+    document.getElementById("open_linkedIn").style.display = "none";
+    document.getElementById("exitlinkedIn").style.display = "none";
+  },
+  "click #fbField": function (event) {
+    $("#ul_o li:hidden").slice(0, 1);
+    var Length = $("#ul_o li:visible").length;
+    let templateObject = Template.instance();
+    templateObject.fieldLength.set(Length);
+    document.getElementById("fbField").style.display = "none";
+    document.getElementById("open_fb").style.display = "inline-block";
+    document.getElementById("exitFb").style.display = "inline-block";
+  },
+  "click #exitFb": function (event) {
+    let templateObject = Template.instance();
+    let length = templateObject.fieldLength.get();
+    templateObject.fieldLength.set(length + 1);
+    document.getElementById("fbField").style.display = "inline-block";
+    document.getElementById("open_fb").style.display = "none";
+    document.getElementById("exitFb").style.display = "none";
+  },
+  "click #googleField": function (event) {
+    $("#ul_o li:hidden").slice(0, 1);
+    var Length = $("#ul_o li:visible").length;
+    let templateObject = Template.instance();
+    templateObject.fieldLength.set(Length);
+    document.getElementById("googleField").style.display = "none";
+    document.getElementById("open_google").style.display = "inline-block";
+    document.getElementById("exitGplus").style.display = "inline-block";
+  },
+  "click #exitGplus": function (event) {
+    let templateObject = Template.instance();
+    let length = templateObject.fieldLength.get();
+    templateObject.fieldLength.set(length + 1);
+    document.getElementById("googleField").style.display = "inline-block";
+    document.getElementById("open_google").style.display = "none";
+    document.getElementById("exitGplus").style.display = "none";
+  },
+  "click #twitField": function (event) {
+    $("#ul_o li:hidden").slice(0, 1);
+    var Length = $("#ul_o li:visible").length;
+    let templateObject = Template.instance();
+    templateObject.fieldLength.set(Length);
+    document.getElementById("twitField").style.display = "none";
+    document.getElementById("open_twitter").style.display = "inline-block";
+    document.getElementById("exitTwitter").style.display = "inline-block";
+  },
+  "click #exitTwitter": function (event) {
+    let templateObject = Template.instance();
+    let length = templateObject.fieldLength.get();
+    templateObject.fieldLength.set(length + 1);
+    document.getElementById("twitField").style.display = "inline-block";
+    document.getElementById("open_twitter").style.display = "none";
+    document.getElementById("exitTwitter").style.display = "none";
+  },
+  "click #chksameaddress": function (event) {
+    const templateObject = Template.instance();
+    //templateObject.showPoAddress.set(!templateObject.showPoAddress.get());
+    //let hideAddressData = templateObject.showPoAddress.get();
+    if ($(event.target).is(":checked")) {
+      document.getElementById("show_address_data").style.display = "none";
+    } else {
+      document.getElementById("show_address_data").style.display =
+        "inline-flex";
+    }
+  },
+  "click #saveCompanyInfo": function (event) {
+    $(".fullScreenSpin").css("display", "inline-block");
+    const templateObject = Template.instance();
+    let companyID = 1;
+    let companyName = $("#displayname").val();
+    let tradingName = $("#tradingname").val();
 
-                let datatablerecordObj = {
-                    sTitle: v.innerText || '',
-                    sWidth: sWidth || '',
-                    sIndex: v.cellIndex || '',
-                    sVisible: columVisible || false,
-                    sClass: v.className || ''
-                };
-                tableHeaderList.push(datatablerecordObj);
-            });
-            templateObject.tableheaderrecords.set(tableHeaderList);
-            $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    let ownerFistName = $("#ownerfirstname").val() || "";
+    let ownerlastName = $("#ownerlastname").val() || "";
+    // let companyCategory = $('#org_type').val();
+    let companyABNNumber = $("#edtABNNumber").val();
+    let companyNumber = $("#edtCompanyNumber").val();
+    let pocontact = $("#pocontact").val();
+    let contact = $("#contact").val();
+    let phone = $("#edtphonenumber").val();
+    let emailAddress =
+      $("#edtemailaddress").val() || localStorage.getItem("VS1AdminUserName");
+    let websiteURL = $("#edtWebsite").val();
+    let fax = $("#edtfaxnumber").val();
 
-        }).catch(function (err) {
-            // swal({
-            //     title: 'Oooops...',
-            //     text: err,
-            //     type: 'error',
-            //     showCancelButton: false,
-            //     confirmButtonText: 'Try Again'
-            // }).then((result) => {
-            //     if (result.value) {
-            //         Meteor._reload.reload();
-            //     } else if (result.dismiss === 'cancel') {
+    let shipAddress = $("#edtAddress").val();
+    let shipCity = $("#edtCity").val();
+    let shipState = $("#edtState").val();
+    let shipPostCode = $("#edtPostCode").val();
+    let shipCountry = $("#edtCountry").val();
 
-            //     }
-            // });
-            $('.fullScreenSpin').css('display','none');
+    let poAddress = "";
+    let poCity = "";
+    let poState = "";
+    let poPostCode = "";
+    let poCountry = "";
+    let isDefaultEmail = false;
+    let isChkUSRegionTax = $("#chkusregiontax").is(":checked");
+
+    if ($("#chksameaddress").is(":checked")) {
+      poAddress = shipAddress;
+      poCity = shipCity;
+      poState = shipState;
+      poPostCode = shipPostCode;
+      poCountry = shipCountry;
+    } else {
+      poAddress = $("#edtpostaladdress").val();
+      poCity = $("#edtPostalCity").val();
+      poState = $("#edtPostalState").val();
+      poPostCode = $("#edtPostalPostCode").val();
+      poCountry = $("#edtPostalCountry").val();
+    }
+
+    if ($("#chkIsDefailtEmail").is(":checked")) {
+      isDefaultEmail = true;
+    }
+
+    var objDetails = {
+      type: "TCompanyInfo",
+      fields: {
+        Id: companyID,
+        CompanyName: companyName,
+        TradingName: tradingName,
+        Firstname: ownerFistName,
+        LastName: ownerlastName,
+        // CompanyCategory: companyCategory,
+        abn: companyABNNumber,
+        CompanyNumber: companyNumber,
+        ContactName: contact,
+        Contact: pocontact,
+        PhoneNumber: phone,
+        Email: emailAddress,
+        Url: websiteURL,
+        FaxNumber: fax,
+        Address: shipAddress,
+        City: shipCity,
+        State: shipState,
+        Postcode: shipPostCode,
+        Country: shipCountry,
+        PoBox: poAddress,
+        PoCity: poCity,
+        PoState: poState,
+        PoPostcode: poPostCode,
+        PoCountry: poCountry,
+        TrackEmails: isDefaultEmail,
+        IsUSRegionTax: isChkUSRegionTax,
+      },
+    };
+    organisationService
+      .saveOrganisationSetting(objDetails)
+      .then(function (data) {
+        // Bert.alert('<strong>'+ 'Organisation details successfully updated!'+'</strong>!', 'success');
+        // swal('Organisation details successfully updated!', '', 'success');
+        if (isDefaultEmail) {
+          localStorage.setItem("VS1OrgEmail", emailAddress);
+        } else {
+          localStorage.setItem(
+            "VS1OrgEmail",
+            localStorage.getItem("mySession")
+          );
+        }
+
+        swal({
+          title: "Organisation details successfully updated!",
+          text: "",
+          type: "success",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+        }).then((result) => {
+          if (result.value) {
+            window.open("/settings", "_self");
+          } else if (result.dismiss === "cancel") {
+          }
+        });
+        $(".fullScreenSpin").css("display", "none");
+      })
+      .catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => {
+          if (result.value) {
             // Meteor._reload.reload();
+          } else if (result.dismiss === "cancel") {
+          }
         });
       });
+  },
+  "click .mob-img": function (event) {
+    let templateObject = Template.instance();
+    let allCountries = templateObject.countryData.get();
+    templateObject.getDropDown("open-mobile", allCountries);
+    templateObject.$("#open-mobile").trigger("focus");
+  },
+  "click .phone-img": function (event) {
+    let templateObject = Template.instance();
+    let allCountries = templateObject.countryData.get();
+    templateObject.getDropDown("open-phonenumber", allCountries);
+    templateObject.$("#open-phonenumber").trigger("focus");
+  },
+  "click .country-img": function (event) {
+    let templateObject = Template.instance();
+    let allCountries = templateObject.countryData.get();
+    templateObject.getDropDown("open-country", allCountries);
+    templateObject.$("#open-country").trigger("focus");
+  },
+  "click .pocountry-img": function (event) {
+    let templateObject = Template.instance();
+    let allCountries = templateObject.countryData.get();
+    templateObject.getDropDown("open-pocountry", allCountries);
+    templateObject.$("#open-pocountry").trigger("focus");
+  },
+  "click .fax-img": function (event) {
+    let templateObject = Template.instance();
+    let allCountries = templateObject.countryData.get();
+    templateObject.getDropDown("open-fax", allCountries);
+    templateObject.$("#open-fax").trigger("focus");
+  },
+  "click .ddi-img": function (event) {
+    let templateObject = Template.instance();
+    let allCountries = templateObject.countryData.get();
+    templateObject.getDropDown("open-ddi", allCountries);
+    templateObject.$("#open-ddi").trigger("focus");
+  },
+  "click .orgType-img": function (event) {
+    let templateObject = Template.instance();
+    let organizations = [
+      "Club or Society",
+      "Company",
+      "Individual",
+      "Not for Profit",
+      "Partnership",
+      "Self Managed Superannuation Fund",
+      "Sole Trader",
+      "Superannuation Fund",
+      "Trust",
+    ];
 
+    templateObject.getDropDown("org_type", organizations);
+    templateObject.$("#org_type").trigger("focus");
+  },
+  "keyup #postaladdress": function (event) {
+    let templateObject = Template.instance();
+    var text = document.getElementById("postaladdress").value;
+    var lines = text.split("\n");
+    var arrArr = text.split("\n");
+    let add = "";
+    for (let i = 0; i < arrArr.length; i++) {
+      if (!arrArr[i]) {
+        lines.splice(i, 1);
+      }
     }
-    templateObject.getAccountantList();
+    templateObject.paAddress1.set(lines[0] ? lines[0] : "");
+    templateObject.paAddress2.set(lines[1] ? lines[1] : "");
+    if (lines.length > 3) {
+      for (let i = 2; i < arrArr.length; i++) {
+        add += lines[i] + " ";
+      }
+      templateObject.paAddress3.set(add ? add : "");
+    } else {
+      templateObject.paAddress3.set(lines[2] ? lines[2] : "");
+    }
+  },
+  "keyup #physicaladdress": function (event) {
+    let templateObject = Template.instance();
+    let text = document.getElementById("physicaladdress").value;
+    let address = text.split("\n");
+    let arrArr = text.split("\n");
+    let add = "";
+    for (let i = 0; i < arrArr.length; i++) {
+      if (!arrArr[i]) {
+        address.splice(i, 1);
+      }
+    }
 
-    $(document).on('click', '.table-remove', function() {
-        event.stopPropagation();
-        event.stopPropagation();
-        var targetID = $(event.target).closest('tr').attr('id'); // table row ID
-        $('#selectDeleteLineID').val(targetID);
-        $('#deleteLineModal').modal('toggle');
-    });
+    templateObject.phAddress1.set(address[0] ? address[0] : "");
+    templateObject.phAddress2.set(address[1] ? address[1] : "");
+    if (address.length > 3) {
+      for (let i = 2; i < arrArr.length; i++) {
+        add += address[i] + " ";
+      }
+      templateObject.phAddress3.set(add ? add : "");
+    } else {
+      templateObject.phAddress3.set(address[2] ? address[2] : "");
+    }
+  },
+  "click #uploadImg": async function (event) {
+    //let imageData= (localStorage.getItem("Image"));
+    let templateObject = Template.instance();
+    let imageData = templateObject.imageFileData.get();
+    let checkCompLogoData = await organisationService.getCheckTcompLogoData();
+    let myFilesType = $("#fileInput")[0].files[0].type || "";
+    if (imageData != null && imageData != "") {
+      localStorage.setItem("Image", imageData);
+      $("#uploadedImage").attr("src", imageData);
+      $("#uploadedImage").attr("width", "50%");
+      $("#removeLogo").show();
+      $("#changeLogo").show();
 
-    $('#accountantList tbody').on( 'click', 'tr .colFirstName, tr .colLastName, tr .colCompanyName, tr .colAddress, tr .colDocName, tr .colTownCity, tr .colPostalZip, tr .colStateRegion, tr .colCountry', function () {
-        var listData = $(this).closest('tr').attr('id');
-        
-        if(listData){
-            $('#add-accountant-title').text('Edit Accountant');
-            if (listData !== '') {
-                listData = Number(listData);
-
-                var accountantID = listData || '';
-                var firstName = $(event.target).closest("tr").find(".colFirstName").text() || '';
-                var lastName = $(event.target).closest("tr").find(".colLastName").text() || '';
-                var companyName = $(event.target).closest("tr").find(".colCompanyName").text() || '';
-                var address = $(event.target).closest("tr").find(".colAddress").text() || '';
-                var docName = $(event.target).closest("tr").find(".colDocName").text() || '';
-                var townCity = $(event.target).closest("tr").find(".colTownCity").text() || '';
-                var postalZip = $(event.target).closest("tr").find(".colPostalZip").text() || '';
-                var stateRegion = $(event.target).closest("tr").find(".colStateRegion").text() || '';
-                var country = $(event.target).closest("tr").find(".colCountry").text() || '';
-         
-                $('#edtAccountantID').val(accountantID);
-                $('#edtFirstName').val(firstName);
-                $('#edtLastName').val(lastName);
-                $('#edtCompanyName').val(companyName);
-                $('#edtAddress').val(address);
-                $('#edtDocName').val(docName);
-                $('#edtTownCity').val(townCity);
-                $('#edtPostalZip').val(postalZip);
-                $('#edtStateRegion').val(stateRegion);
-                $('#edtCountry').val(country);
-
-                $(this).closest('tr').attr('data-target', '#myModal');
-                $(this).closest('tr').attr('data-toggle', 'modal');
-            }
-        }
-    });
-});
-
-
-Template.reportsAccountantSettings.events({
-    'click #btnNewInvoice':function(event){
-        // FlowRouter.go('/invoicecard');
-    },
-    'click .chkDatatable' : function(event){
-        var columns = $('#accountantList th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i,v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if(v.innerText == columnDataValue){
-                if($(event.target).is(':checked')){
-                    $("."+replaceClass+"").css('display','table-cell');
-                    $("."+replaceClass+"").css('padding','.75rem');
-                    $("."+replaceClass+"").css('vertical-align','top');
-                }else{
-                    $("."+replaceClass+"").css('display','none');
-                }
-            }
-        });
-    },
-    'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'accountantList'});
-                if (checkPrefDetails) {
-                    CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
-                        if (err) {
-
-                        }else{
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
-    },
-    'click .saveTable' : function(event){
-        let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text()||'';
-            var colWidth = $tblrow.find(".custom-range").val()||0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate")||'';
-            var colHidden = false;
-            if($tblrow.find(".custom-control-input").is(':checked')){
-                colHidden = false;
-            }else{
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'accountantList'});
-                if (checkPrefDetails) {
-                    CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-                                                                               PrefGroup:'salesform',PrefName:'accountantList',published:true,
-                                                                               customFields:lineItems,
-                                                                               updatedAt: new Date() }}, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                }else{
-                    CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-                                            PrefGroup:'salesform',PrefName:'accountantList',published:true,
-                                            customFields:lineItems,
-                                            createdAt: new Date() }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-                }
-            }
-        }
-
-    },
-    'blur .divcolumn' : function(event){
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#accountantList').DataTable();
-        var title = datable.column( columnDatanIndex ).header();
-        $(title).html(columData);
-
-    },
-    'change .rngRange' : function(event){
-        let range = $(event.target).val();
-        $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
-
-        let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#accountantList th');
-        $.each(datable, function(i,v) {
-
-            if(v.innerText == columnDataValue){
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("."+replaceClass+"").css('width',range+'px');
-
-            }
-        });
-
-    },
-    'click .btnOpenSettings' : function(event){
-        let templateObject = Template.instance();
-        var columns = $('#accountantList th');
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i,v) {
-            if(v.hidden == false){
-                columVisible =  true;
-            }
-            if((v.className.includes("hiddenColumn"))){
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
-    'click #exportbtn': function () {
-        $('.fullScreenSpin').css('display','inline-block');
-        jQuery('#departmentList_wrapper .dt-buttons .btntabletocsv').click();
-        $('.fullScreenSpin').css('display','none');
-
-    },
-    'click .btnRefresh': function () {
-      $('.fullScreenSpin').css('display','inline-block');
-      sideBarService.getAccountantCategory().then(function(dataReload) {
-          addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
-            location.reload(true);
-          }).catch(function (err) {
-            location.reload(true);
-          });
-      }).catch(function(err) {
-          location.reload(true);
-      });
-    },
-    'click .btnDeleteAccountant': function () {
-        $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
-        let accountantId = $('#selectDeleteLineID').val();
-
-        let objDetails = {
-            type: "TReportsAccountantsCategory",
-            fields: {
-                Id: parseInt(accountantId),
-                Active: false
-            }
+      let companyLogoObj = "";
+      if (checkCompLogoData.tcomplogo.length) {
+        companyLogoObj = {
+          type: "TCompLogo",
+          fields: {
+            ID: parseInt(checkCompLogoData.tcomplogo[0].Id) || 0,
+            MIMEEncodedPicture: imageData.split(",")[1],
+            ImageTypes: myFilesType || "image/png",
+            Pictype: myFilesType.split("/")[1] || "png",
+          },
         };
+      } else {
+        companyLogoObj = {
+          type: "TCompLogo",
+          fields: {
+            MIMEEncodedPicture: imageData.split(",")[1],
+            SetupID: 1,
+            ImageTypes: myFilesType || "image/png",
+            Pictype: myFilesType.split("/")[1] || "png",
+          },
+        };
+      }
 
-        taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
-          sideBarService.getAccountantCategory().then(function(dataReload) {
-              addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
-                location.reload(true);
-              }).catch(function (err) {
-                location.reload(true);
-              });
-          }).catch(function(err) {
-              location.reload(true);
-          });
-        }).catch(function (err) {
+      organisationService
+        .saveCompanyLogo(companyLogoObj)
+        .then(function (companyLogoObj) { });
+    }
+  },
+
+  "change #fileInput": function (event) {
+    let templateObject = Template.instance();
+    let selectedFile = event.target.files[0];
+    let reader = new FileReader();
+    $(".Choose_file").text("");
+    reader.onload = function (event) {
+      $("#uploadImg").prop("disabled", false);
+      $("#uploadImg").addClass("on-upload-logo");
+      $(".Choose_file").text(selectedFile.name);
+      //$("#uploadImg").css("background-color","yellow");
+      templateObject.imageFileData.set(event.target.result);
+
+      //localStorage.setItem("Image",event.target.result);
+    };
+    reader.readAsDataURL(selectedFile);
+  },
+  "click #removeLogo": function (event) {
+    let templateObject = Template.instance();
+    templateObject.imageFileData.set(null);
+    localStorage.removeItem("Image");
+    // location.reload();
+    Meteor._reload.reload();
+    //window.open('/organisationsettings','_self');
+    //Router.current().render(Template.organisationSettings);
+  },
+  "click .btnBack": function (event) {
+    event.preventDefault();
+    history.back(1);
+
+    //FlowRouter.go('/settings');
+    //window.open('/invoicelist','_self');
+  },
+  "click .btnUploadFile": function (event) {
+    // $('#attachment-upload').val('');
+    // $('.file-name').text('');
+    //$(".btnImport").removeAttr("disabled");
+    $("#fileInput").trigger("click");
+  },
+  "click .btnAddVS1User": function (event) {
+    swal({
+      title: "Is this an existing Employee?",
+      text: "",
+      type: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.value) {
+        swal("Please select the employee from the list below.", "", "info");
+        $("#employeeListModal").modal("toggle");
+        // result.dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
+      } else if (result.dismiss === "cancel") {
+        FlowRouter.go("/employeescard?addvs1user=true");
+      }
+    });
+  },
+  "click .btnCancelSub": function (event) {
+    let loggeduserEmail = localStorage.getItem("mySession");
+    let currentURL = FlowRouter.current().queryParams;
+    swal({
+      title: "Are you sure you want to cancel this subscription?",
+      text: "",
+      type: "question",
+      showCancelButton: true,
+      // cancelButtonClass: "btn-success",
+      cancelButtonClass: "btn-danger",
+      confirmButtonText: "No",
+      cancelButtonText: "Yes",
+    }).then((result) => {
+      if (result.value) {
+      } else if (result.dismiss === "cancel") {
+        swal({
+          title: "Reason For Cancellation?",
+          text: "Sorry to see you go, please comment below the reason you want to go.",
+          input: "textarea",
+          inputAttributes: {
+            id: "edtFeedback",
+            name: "edtFeedback",
+          },
+          showCancelButton: true,
+          confirmButtonText: "OK",
+          showLoaderOnConfirm: true,
+        }).then((inputValue) => {
+          if (inputValue.value === "") {
             swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
+              title: "Successfully Cancel Your Subscription",
+              text: "",
+              type: "success",
+              showCancelButton: false,
+              confirmButtonText: "OK",
             }).then((result) => {
-                if (result.value) {
-                    Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {
-
-                }
+              if (result.value) {
+                window.open(
+                  "https://depot.vs1cloud.com/vs1subscription/cancelsubscription.php?email=" +
+                  loggeduserEmail +
+                  "&urlfrom=" +
+                  currentURL.url +
+                  "",
+                  "_self"
+                );
+              } else if (result.dismiss === "cancel") {
+              }
             });
-            $('.fullScreenSpin').css('display','none');
+          } else if (inputValue.value != "") {
+            Meteor.call(
+              "sendEmail",
+              {
+                from: "VS1 Cloud <info@vs1cloud.com>",
+                to: "info@vs1cloud.com",
+                subject: loggeduserEmail + ": Reason For Cancellation",
+                text: inputValue.value,
+                html: "",
+              },
+              function (error, result) { }
+            );
+
+            swal({
+              title: "Successfully Cancel Your Subscription",
+              text: "Thank you for the Feedback, We will work on solving the issue",
+              type: "success",
+              showCancelButton: false,
+              confirmButtonText: "OK",
+            }).then((result) => {
+              if (result.value) {
+                window.open(
+                  "https://depot.vs1cloud.com/vs1subscription/cancelsubscription.php?email=" +
+                  loggeduserEmail +
+                  "&urlfrom=" +
+                  currentURL.url +
+                  "",
+                  "_self"
+                );
+              } else if (result.dismiss === "cancel") {
+              }
+            });
+          } else {
+          }
         });
-    },
-    'click .btnSaveAccountant': function () {
-        $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
-        let accountantID = $('#edtAccountantID').val();
-        let firstName = $('#edtFirstName').val();
-        let lastName = $('#edtLastName').val();
-        let companyName = $('#edtCompanyName').val();
-        let address = $('#edtAddress').val();
-        let docName = $('#edtDocName').val();
-        let townCity = $('#edtTownCity').val();
-        let postalZip = $('#edtPostalZip').val();
-        let stateRegion = $('#edtStateRegion').val();
-        let country = $('#edtCountry').val();
-        
-        if (firstName === ''){
-            swal('First name cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-        else if(lastName === ''){
-            swal('Last name cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-        else if(companyName === ''){
-            swal('Company name cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-        else if(address === ''){
-            swal('Address cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-        else if(docName === ''){
-            swal('Document name cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-        else if(townCity === ''){
-            swal('Town / City cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-        else if(postalZip === ''){
-            swal('Postal / Zip cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-        else if(stateRegion === ''){
-            swal('State / Region cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-        else if(country === ''){
-            swal('Country cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
-        }
-
-        let objDetails = '';
-        let objStSDetails = null;
-
-        if (isModuleGreenTrack) {
-
-            let sltMainContact = $('#sltMainContact').val();
-            let stsMainContactNo = $('#stsMainContactNo').val();
-            let stsLicenseNo = $('#stsLicenseNo').val();
-            let sltDefaultRoomName = $('#sltDefaultRoom').val();
-            var newbinnum = $("#sltDefaultRoom").find('option:selected').attr('mytagroom');
-            objStSDetails = {
-                type: "TStSClass",
-                fields: {
-                    DefaultBinLocation: sltDefaultRoomName || '',
-                    DefaultBinNumber: newbinnum || '',
-                    LicenseNumber: stsLicenseNo || '',
-                    PrincipleContactName: sltMainContact || '',
-                    PrincipleContactPhone: stsMainContactNo || ''
-                }
-            }
-        }
-
-        if (firstName === ''){
-            Bert.alert('<strong>WARNING:</strong> First Name cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-        else if (lastName === ''){
-            Bert.alert('<strong>WARNING:</strong> Last Name cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-        else if (companyName === ''){
-            Bert.alert('<strong>WARNING:</strong> Company Name cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-        else if (address === ''){
-            Bert.alert('<strong>WARNING:</strong> Address cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-        else if (docName === ''){
-            Bert.alert('<strong>WARNING:</strong> Document Name cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-        else if (townCity === ''){
-            Bert.alert('<strong>WARNING:</strong> Town / City cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-        else if (postalZip === ''){
-            Bert.alert('<strong>WARNING:</strong> Postal / Zip cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-        else if (stateRegion === ''){
-            Bert.alert('<strong>WARNING:</strong> State / Region cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-        else if (country === ''){
-            Bert.alert('<strong>WARNING:</strong> Country cannot be blank!', 'warning');
-            e.preventDefault();
-        }
-
-        if(accountantID == ""){
-            // taxRateService.checkAccountantByName(docName).then(function (data) {
-            //     accountantID = data.tdeptclass[0].Id;
-            //     objDetails = {
-            //         type: "TReportsAccountantsCategory",
-            //         fields: {
-            //             ID: parseInt(accountantID)||0,
-            //             Active: true,
-            //             FirstName: firstName,
-            //             LastName: lastName,
-            //             CompanyName: companyName,
-            //             Address: address,
-            //             DocName: docName,
-            //             TownCity: townCity,
-            //             PostalZip: postalZip,
-            //             StateRegion: stateRegion,
-            //             Country: country,
-            //         }
-            //     };
-
-            //     taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
-            //       sideBarService.getAccountantCategory().then(function(dataReload) {
-            //           addVS1Data('TReportsAccountantsCategory',JSON.stringify(dataReload)).then(function (datareturn) {
-            //             location.reload(true);
-            //           }).catch(function (err) {
-            //             location.reload(true);
-            //           });
-            //       }).catch(function(err) {
-            //           location.reload(true);
-            //       });
-            //     }).catch(function (err) {
-            //         swal({
-            //             title: 'Oooops...',
-            //             text: err,
-            //             type: 'error',
-            //             showCancelButton: false,
-            //             confirmButtonText: 'Try Again'
-            //         }).then((result) => {
-            //             if (result.value) {
-            //                 // Meteor._reload.reload();
-            //             } else if (result.dismiss === 'cancel') {
-
-            //             }
-            //         });
-            //         $('.fullScreenSpin').css('display','none');
-            //     });
-
-            // })
-            // .catch(function (err) {
-                objDetails = {
-                    type: "TReportsAccountantsCategory",
-                    fields: {
-                        Active: true,
-                        FirstName: firstName,
-                        LastName: lastName,
-                        CompanyName: companyName,
-                        Address: address,
-                        DocName: docName,
-                        TownCity: townCity,
-                        PostalZip: postalZip,
-                        StateRegion: stateRegion,
-                        Country: country
-                    }
-                };
-
-                getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
-                    var obj = {
-                        "taccountantcategory": []
-                    }
-                    // if(dataObject.length == 0){
-                        obj.taccountantcategory.push(objDetails.fields);
-                    // }
-                    // else{
-                    //     let data = JSON.parse(dataObject[0].data);
-                    //     data.taccountantcategory.push(objDetails.fields);
-                    //     obj.taccountantcategory = data.taccountantcategory;
-                    // }
-
-                    addVS1Data('TReportsAccountantsCategory',JSON.stringify(obj)).then(function (datareturn) {
-                        location.reload(true);
-                    }).catch(function (err) {
-                        location.reload(true);
-                    });
-                });
-
-                // taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
-                //   sideBarService.getAccountantCategory().then(function(dataReload) {
-                    //   addVS1Data('TReportsAccountantsCategory',JSON.stringify(obj)).then(function (datareturn) {
-                    //     location.reload(true);
-                    //   }).catch(function (err) {
-                    //     location.reload(true);
-                    //   });
-                //   }).catch(function(err) {
-                //       location.reload(true);
-                //   });
-                // }).catch(function (err) {
-                //     swal({
-                //         title: 'Oooops...',
-                //         text: err,
-                //         type: 'error',
-                //         showCancelButton: false,
-                //         confirmButtonText: 'Try Again'
-                //     }).then((result) => {
-                //         if (result.value) {
-                //             // Meteor._reload.reload();
-                //         } else if (result.dismiss === 'cancel') {
-
-                //         }
-                //     });
-                //     $('.fullScreenSpin').css('display','none');
-                // });
-            // });
-
-        }else{
-            objDetails = {
-                type: "TReportsAccountantsCategory",
-                fields: {
-                    ID: parseInt(accountantID),
-                    Active: true,
-                    FirstName: firstName,
-                    LastName: lastName,
-                    CompanyName: companyName,
-                    Address: address,
-                    DocName: docName,
-                    TownCity: townCity,
-                    PostalZip: postalZip,
-                    StateRegion: stateRegion,
-                    Country: country
-                }
-            };
-
-            // taxRateService.saveAccountantCategory(objDetails).then(function (objDetails) {
-            //   sideBarService.getAccountantCategory().then(function(dataReload) {
-                  addVS1Data('TReportsAccountantsCategory',JSON.stringify(objDetails.fields)).then(function (datareturn) {
-                  location.reload(true);
-                  }).catch(function (err) {
-                    location.reload(true);
-                  });
-            //   }).catch(function(err) {
-            //       location.reload(true);
-            //   });
-            // }).catch(function (err) {
-            //     swal({
-            //         title: 'Oooops...',
-            //         text: err,
-            //         type: 'error',
-            //         showCancelButton: false,
-            //         confirmButtonText: 'Try Again'
-            //     }).then((result) => {
-            //         if (result.value) {
-            //             // Meteor._reload.reload();
-            //         } else if (result.dismiss === 'cancel') {
-
-            //         }
-            //     });
-            //     $('.fullScreenSpin').css('display','none');
-            // });
-        }
-    },
-    'click .btnAddAccountant': function () {
-        $('#add-accountant-title').text('Add New Accountant');
-        $('#edtAccountantID').val('');
-        
-        $('#edtFirstName').val('');
-        $('#edtLastName').val('');
-        $('#edtCompanyName').val('');
-        $('#edtAddress').val('');
-        $('#edtDocName').val('');
-        $('#edtTownCity').val('');
-        $('#edtPostalZip').val('');
-        $('#edtStateRegion').val('');
-        $('#edtCountry').val('');
-        // $('#edtDeptName').prop('readonly', false);
-    },
-    'click .btnBack':function(event){
-        event.preventDefault();
-        history.back(1);
-    },
-    'click .btnSaveRoom': function () {
-        $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
-
-        var parentdept = $('#sltDepartmentList').val();
-        var newroomname = $('#newRoomName').val();
-        var newroomnum = $('#newRoomNum').val();
-
-
-        let data = '';
-
-        data = {
-            type: "TProductBin",
-            fields: {
-                BinClassName: parentdept|| '',
-                BinLocation: newroomname|| '',
-                BinNumber: newroomnum|| ''
-            }
-        };
-
-        taxRateService.saveRoom(data).then(function (data) {
-            window.open('/reportsAccountantSettings','_self');
-        }).catch(function (err) {
-
-            $('.fullScreenSpin').css('display','none');
-        });
-    },
+      }
+    });
+  },
+  "change #edtCountry": function (event) {
+    if (event.target.value == "United States") {
+      $("#chkusregiontax").prop("checked", true);
+      $(".chkusregiontax-col").show();
+    }
+    else {
+      $("#chkusregiontax").prop("checked", false);
+      $(".chkusregiontax-col").hide();
+    }
+  },
 });
 
-Template.reportsAccountantSettings.helpers({
-    countryList: () => {
-        return Template.instance().countryData.get();
-    },
-    datatablerecords : () => {
-        return Template.instance().datatablerecords.get().sort(function(a, b){
-            if (a.headDept == 'NA') {
-                return 1;
-            }
-            else if (b.headDept == 'NA') {
-                return -1;
-            }
-            return (a.headDept.toUpperCase() > b.headDept.toUpperCase()) ? 1 : -1;
-            // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-        });
-    },
-    tableheaderrecords: () => {
-        return Template.instance().tableheaderrecords.get();
-    },
-    salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'accountantList'});
-    },
-    deptrecords: () => {
-        return Template.instance().deptrecords.get().sort(function(a, b){
-            if (a.department == 'NA') {
-                return 1;
-            }
-            else if (b.department == 'NA') {
-                return -1;
-            }
-            return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
-        });
-    },
-    isModuleGreenTrack: () => {
-        return isModuleGreenTrack;
-    },
-    listEmployees: () => {
-        return Template.instance().employeerecords.get().sort(function(a, b){
-            if (a.employeename == 'NA') {
-                return 1;
-            }
-            else if (b.employeename == 'NA') {
-                return -1;
-            }
-            return (a.employeename.toUpperCase() > b.employeename.toUpperCase()) ? 1 : -1;
-        });
-    },
-    listBins: () => {
-        return Template.instance().roomrecords.get().sort(function(a, b){
-            if (a.roomname == 'NA') {
-                return 1;
-            }
-            else if (b.roomname == 'NA') {
-                return -1;
-            }
-            return (a.roomname.toUpperCase() > b.roomname.toUpperCase()) ? 1 : -1;
-        });
-    },
-    listDept: () => {
-        return Template.instance().departlist.get().sort(function(a, b){
-            if (a.deptname == 'NA') {
-                return 1;
-            }
-            else if (b.deptname == 'NA') {
-                return -1;
-            }
-            return (a.deptname.toUpperCase() > b.deptname.toUpperCase()) ? 1 : -1;
-        });
-    },
-    loggedCompany: () => {
-        return localStorage.getItem('mySession') || '';
-    }
+Template.registerHelper("equals", function (a, b) {
+  return a === b;
 });
