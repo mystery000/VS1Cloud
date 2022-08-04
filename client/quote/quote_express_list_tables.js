@@ -2673,25 +2673,9 @@ Template.quoteslist.events({
                   addVS1Data('TQuote',JSON.stringify(data)).then(function (datareturn) {
                     sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
                       addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
-                          sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
-                              addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
-                                  window.open('/quoteslist','_self');
-                                }).catch(function (err) {
-                                  window.open('/quoteslist','_self');
-                                });
-                            }).catch(function (err) {
-                              window.open('/quoteslist','_self');
-                            });
+                          window.open('/quoteslist','_self');
                         }).catch(function (err) {
-                          sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
-                              addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
-                                  window.open('/quoteslist','_self');
-                                }).catch(function (err) {
-                                  window.open('/quoteslist','_self');
-                                });
-                            }).catch(function (err) {
-                              window.open('/quoteslist','_self');
-                            });
+                          window.open('/quoteslist','_self');
                         });
                     }).catch(function (err) {
                       window.open('/quoteslist','_self');
