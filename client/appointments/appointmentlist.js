@@ -594,6 +594,7 @@ Template.appointmentlist.onRendered(async function () {
                           dataTableList[p].finished || '',
                           confirmedColumn,
                           dataTableList[p].notes || '',
+                          dataTableList[p].product || '',
                       ];
                       splashArrayAppointmentList.push(dataListAppointmentList);
                   };
@@ -1093,6 +1094,7 @@ Template.appointmentlist.onRendered(async function () {
                         dataTableList[p].finished || '',
                         confirmedColumn,
                         dataTableList[p].notes || '',
+                        dataTableList[p].product || '',
                     ];
                     splashArrayAppointmentList.push(dataListAppointmentList);
                 };
@@ -1524,6 +1526,7 @@ Template.appointmentlist.onRendered(async function () {
                         dataTableList[p].finished || '',
                         confirmedColumn,
                         dataTableList[p].notes || '',
+                        dataTableList[p].product || '',
                     ];
                     splashArrayAppointmentList.push(dataListAppointmentList);
                 };
@@ -2023,6 +2026,7 @@ Template.appointmentlist.events({
                           useData[i].finished || '',
                           confirmedColumn,
                           useData[i].notes || '',
+                          useData[i].product || '',
                       ];
 
                       splashArrayAppointmentListDupp.push(dataListAppointmentList);
@@ -2101,6 +2105,7 @@ Template.appointmentlist.events({
                     useData[i].finished || '',
                     confirmedColumn,
                     useData[i].notes || '',
+                    useData[i].product || '',
                 ];
                 splashArrayAppointmentListDupp.push(dataListAppointmentList);
 
@@ -2639,6 +2644,7 @@ Template.appointmentlist.events({
                       dataTableList[p].finished || '',
                       confirmedColumn,
                       dataTableList[p].notes || '',
+                      dataTableList[p].product || '',
                   ];
                   splashArrayAppointmentList.push(dataListAppointmentList);
               };
@@ -2826,6 +2832,7 @@ Template.appointmentlist.events({
                     dataTableList[p].finished || '',
                     confirmedColumn,
                     dataTableList[p].notes || '',
+                    dataTableList[p].product || '',
                 ];
                 splashArrayAppointmentList.push(dataListAppointmentList);
             };
