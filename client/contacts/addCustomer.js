@@ -190,6 +190,11 @@ Template.customerscard.onRendered(function () {
         });
     }
 
+    templateObject.getReferenceLetters = () => {
+        let temp = localStorage.getItem('correspondence');
+        templateObject.correspondences.set(temp? JSON.parse(temp): [])
+    }
+
     templateObject.getAllJobsIds = function () {
         contactService.getJobIds().then(function (data) {
             let latestJobId;
@@ -3390,7 +3395,8 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?customerid=' + customerID);
+            $('#referenceLetterModal').modal('toggle');
+            $('.fullScreenSpin').css('display', 'none');
         } else {
           $('.fullScreenSpin').css('display', 'none');
         }
