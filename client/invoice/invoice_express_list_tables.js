@@ -146,7 +146,7 @@ Template.invoicelist.onRendered(function () {
 
         getVS1Data('TInvoiceList').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     addVS1Data('TInvoiceList', JSON.stringify(data)).then(function (datareturn) {}).catch(function (err) {});
@@ -797,7 +797,7 @@ Template.invoicelist.onRendered(function () {
 
             }
         }).catch(function (err) {
-          sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               addVS1Data('TInvoiceList', JSON.stringify(data)).then(function (datareturn) {}).catch(function (err) {});
@@ -1637,7 +1637,7 @@ Template.invoicelist.events({
         });
 
 
-        sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataInvoice) {
+        sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (dataInvoice) {
             addVS1Data('TInvoiceList', JSON.stringify(dataInvoice)).then(function (datareturn) {
               sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
                   addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {

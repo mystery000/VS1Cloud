@@ -81,8 +81,8 @@ Meteor.methods({
 
     try {
       Email.send({
-        to: details.EmployeeEmail,
-        // to: 'heidikalatasra20@gmail.com',
+        // to: details.EmployeeEmail,
+        to: 'heidikalatasra20@gmail.com',
         from: 'noreply@vs1cloud.com',
         cc: '',
         subject: 'Report Email',
@@ -102,7 +102,8 @@ Meteor.methods({
       SyncedCron.add({
         name: details.EmployeeId + "_" + details.FormID,
         schedule: function(parser) {
-          return parser.recur().on(new Date(details.NextDueDate)).fullDate();
+          let currentDate = new Date();
+          return parser.recur().on(new Date((new Date(details.NextDueDate)).getTime()  + 3 * 60 * 1000)).fullDate();
         },
         job: function() {
           Meteor.call('sendNormalEmail', details);
@@ -130,7 +131,7 @@ Meteor.methods({
       if (details.StartDate) startDate = new Date(details.StartDate);
       else startDate = new Date();
     }
-    startDate = startDate.getTime() + (details.Offset - startDate.getTimezoneOffset()) * 60 * 1000;
+    startDate = startDate.getTime() + (details.Offset - startDate.getTimezoneOffset()) * 60 * 1000 ;
     if (details.Frequency === "M") {
       let months = '0,1,2,3,4,5,6,7,8,9,10,11';
       const monthDate = details.MonthDays;
@@ -142,7 +143,7 @@ Meteor.methods({
       let currentYear = moment().year();
       let suggestedNextDate = 0;
       let i = 0;
-      while(moment().valueOf() > suggestedNextDate.valueOf()) {
+      while(moment().valueOf() > suggestedNextDate.valueOf()+ 3 * 60 * 1000) {
           if (i === months.length) { currentYear++; i = 0; }
           suggestedNextDate = moment(startDate).year(currentYear).month(parseInt(months[i])).date(monthDate);
           i++;
@@ -153,7 +154,7 @@ Meteor.methods({
       const selectedDay = details.WeekDay;
       const everyWeeks = details.Every === -1 ? 1 : details.Every;
       let suggestedNextDate = moment(startDate).day(selectedDay);
-      while(moment().valueOf() > suggestedNextDate.valueOf()) {
+      while(moment().valueOf() > suggestedNextDate.valueOf()+ 3 * 60 * 1000) {
         suggestedNextDate = moment(suggestedNextDate).add(everyWeeks, 'w');
       }
 
@@ -163,7 +164,7 @@ Meteor.methods({
       const sunAction = details.SunAction;
       const everyDays = details.Every;
       let suggestedNextDate = moment(startDate);
-      while(moment().valueOf() > suggestedNextDate.valueOf()) {
+      while(moment().valueOf() > suggestedNextDate.valueOf() + 3 * 60 * 1000) {
         if (satAction === 'P' && sunAction === 'P' && everyDays === -1) suggestedNextDate = moment(suggestedNextDate).add(1, 'd');
         else if (satAction === 'D' && sunAction === 'D') {
           if (moment(suggestedNextDate).add(1, 'd').day() === 6) suggestedNextDate = moment(suggestedNextDate).add(3, 'd');
@@ -175,7 +176,7 @@ Meteor.methods({
       return suggestedNextDate.format('YYYY-MM-DD HH:mm');
     } else if (details.Frequency === "" && details.StartDate === details.EndDate) {
       const suggestedNextDate = moment(startDate);
-      if (moment().valueOf() > suggestedNextDate.valueOf()) return '';
+      if (moment().valueOf()> suggestedNextDate.valueOf()+ 3 * 60 * 1000) return '';
       else return suggestedNextDate.format('YYYY-MM-DD HH:mm');
     } else if (!details.Frequency) {
       return '';

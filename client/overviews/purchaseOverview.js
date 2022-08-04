@@ -1590,17 +1590,6 @@ Template.purchasesoverview.events({
               window.open("/purchasesoverview", "_self");
             });
         });
-    /*
-    sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
-        addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
-            window.open("/purchasesoverview", "_self");
-          }).catch(function (err) {
-            window.open("/purchasesoverview", "_self");
-          });
-      }).catch(function (err) {
-        window.open("/purchasesoverview", "_self");
-      });
-*/
 
   },
   "change #dateTo": function () {

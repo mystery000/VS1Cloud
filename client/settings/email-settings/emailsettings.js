@@ -31,6 +31,7 @@ Template.emailsettings.onCreated(function () {
     templateObject.formsData = new ReactiveVar([]);
     templateObject.essentialReportSchedules = new ReactiveVar([]);
     templateObject.invoicerecords = new ReactiveVar([]);
+    templateObject.correspondences = new ReactiveVar([]);
     templateObject.formsData.set(
         [
             {
@@ -689,6 +690,12 @@ Template.emailsettings.onRendered(function () {
     }
 
     templateObject.getScheduleInfo();
+
+    templateObject.getCorrespondence = () => {
+        let temp = localStorage.getItem('correspondence');
+        templateObject.correspondences.set(temp? JSON.parse(temp): [])
+    }
+    templateObject.getCorrespondence();
 
     $('#tblContactlist tbody').on('click', 'td:not(.chkBox)', function () {
         //var tableCustomer = $(this);
@@ -1786,6 +1793,51 @@ Template.emailsettings.events({
 
         localStorage.setItem('emailsetting-send', radioBasedOn);
     },
+
+
+    'click .btnAddLetter': function(event) {
+        $('#addLetterTemplateModal').modal('toggle');
+    },
+
+    'click #save-correspondence': function() {
+        const templateObject = Template.instance()
+        let correspondenceData = localStorage.getItem('correspondence');
+        let correspondenceTemp = correspondenceData ? JSON.parse(correspondenceData) : [];
+        let tempLabel = $("#edtTemplateLbl").val();
+        let tempSubject = $('#edtTemplateSubject').val();
+        let tempContent = $("#edtTemplateContent").val();
+        if(correspondenceTemp.length > 0 ) {
+            let index = correspondenceTemp.findIndex(item=>{
+                return item.label == tempLabel
+            })
+            if(index > 0) {
+                correspondenceTemp[index] = {
+                    label: tempLabel,
+                    subject: tempSubject,
+                    memo: tempContent,
+                }
+            } else {
+                let temp = {
+                    label: tempLabel,
+                    subject: tempSubject,
+                    memo: tempContent,
+                }
+                correspondenceTemp = [...correspondenceTemp, temp]
+            }
+        } else {
+            let temp = {
+                label: tempLabel,
+                subject: tempSubject,
+                memo: tempContent,
+            }
+            correspondenceTemp = [...correspondenceTemp, temp]
+        }
+        localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
+        templateObject.correspondences.set(correspondenceTemp);
+        $('#addLetterTemplateModal').modal('toggle');
+    },
+
+
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         location.reload(true);
@@ -1808,6 +1860,10 @@ Template.emailsettings.helpers({
 
     invoicerecords: () => {
         return Template.instance().invoicerecords.get();
+    },
+
+    correspondences: () => {
+        return Template.instance().correspondences.get();
     },
 
     essentialReportSchedules: () => {

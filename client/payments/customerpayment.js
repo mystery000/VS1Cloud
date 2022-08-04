@@ -353,7 +353,7 @@ Template.customerpayment.onRendered(function() {
         }else{
         getVS1Data('TCustomerPaymentList').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllTCustomerPaymentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTCustomerPaymentListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
 
@@ -966,7 +966,7 @@ Template.customerpayment.onRendered(function() {
                 });
             }
         }).catch(function (err) {
-          sideBarService.getAllTCustomerPaymentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllTCustomerPaymentListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
 

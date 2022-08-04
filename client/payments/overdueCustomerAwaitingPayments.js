@@ -1464,7 +1464,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+        sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
             addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data)).then(function (datareturn) {
 
             }).catch(function (err) {

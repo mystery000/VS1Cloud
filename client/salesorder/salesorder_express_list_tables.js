@@ -138,7 +138,7 @@ Template.salesorderslist.onRendered(function() {
 
         getVS1Data('TSalesOrderList').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     addVS1Data('TSalesOrderList',JSON.stringify(data));
@@ -778,7 +778,7 @@ Template.salesorderslist.onRendered(function() {
             }
         }).catch(function (err) {
 
-          sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               addVS1Data('TSalesOrderList',JSON.stringify(data));
@@ -1120,7 +1120,7 @@ Template.salesorderslist.onRendered(function() {
 
         getVS1Data('TSalesOrderFilterList').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllTSalesOrderListFilterData(converted,prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTSalesOrderListFilterData(converted,prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     addVS1Data('TSalesOrderFilterList',JSON.stringify(data));
@@ -1767,7 +1767,7 @@ Template.salesorderslist.onRendered(function() {
           }
         }).catch(function (err) {
 
-          sideBarService.getAllTSalesOrderListFilterData(converted,prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllTSalesOrderListFilterData(converted,prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               addVS1Data('TSalesOrderFilterList',JSON.stringify(data));
