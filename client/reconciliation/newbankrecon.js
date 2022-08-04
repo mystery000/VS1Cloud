@@ -12,11 +12,13 @@ import { YodleeService } from '../js/yodlee-service';
 import { Random } from 'meteor/random';
 import { PaymentsService } from "../payments/payments-service";
 import { SalesBoardService } from "../js/sales-service";
+import { ContactService } from "../contacts/contact-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let yodleeService = new YodleeService();
 let reconService = new ReconService();
+let contactService = new ContactService();
 
 let selectedLineID = null;
 let selectedYodleeID = null;
@@ -88,6 +90,7 @@ Template.newbankrecon.onRendered(function() {
                 if (bankaccountid != '') {
                     $('#bankAccountID').val(bankaccountid);
                     $('#bankAccountName').val(bankaccountname);
+                    $('.fullScreenSpin').css('display', 'inline-block');
                     templateObject.getOpenBalance(bankaccountname);
                     templateObject.getBankTransactionData(bankaccountid, statementDate, true);
                     templateObject.getMatchTransactionData(bankaccountid, statementDate, true);
@@ -102,22 +105,20 @@ Template.newbankrecon.onRendered(function() {
     };
 
     templateObject.getAllTaxCodes = function () {
-        getVS1Data("TTaxcodeVS1")
-            .then(function (dataObject) {
-                if (dataObject.length == 0) {
-                    productService.getTaxCodesVS1().then(function (data) {
-                        setTaxCodeModal(data);
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    setTaxCodeModal(data);
-                }
-            })
-            .catch(function (err) {
+        getVS1Data("TTaxcodeVS1").then(function (dataObject) {
+            if (dataObject.length == 0) {
                 productService.getTaxCodesVS1().then(function (data) {
                     setTaxCodeModal(data);
                 });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                setTaxCodeModal(data);
+            }
+        }).catch(function (err) {
+            productService.getTaxCodesVS1().then(function (data) {
+                setTaxCodeModal(data);
             });
+        });
     };
     function setTaxCodeModal(data) {
         let useData = data.ttaxcodevs1;
@@ -343,6 +344,7 @@ Template.newbankrecon.onRendered(function() {
                             YodleeCategoryType: data.transaction[i].categoryType || '',
                             YodleeCheckNumber: data.transaction[i].checkNumber || '',
                             YodleeType: data.transaction[i].type || '',
+                            YodleeMerchant: data.transaction[i].merchant || null,
                             deporwith: deporwith,
                             matched: false,
                             spentYodleeAmount: utilityService.modifynegativeCurrencyFormat(spentYodleeAmount),
@@ -478,6 +480,7 @@ Template.newbankrecon.onRendered(function() {
                     YodleeCategoryType: yodleeData[k].YodleeCategoryType,
                     YodleeCheckNumber: yodleeData[k].YodleeCheckNumber,
                     YodleeType: yodleeData[k].YodleeType,
+                    YodleeMerchant: yodleeData[k].YodleeMerchant,
                     deporwith: yodleeData[k].deporwith,
                     matched: matched,
                     spentYodleeAmount: yodleeData[k].spentYodleeAmount,
@@ -823,7 +826,7 @@ Template.newbankrecon.onRendered(function() {
             $('#tblAccount_filter .form-control-sm').focus();
             $('#tblAccount_filter .form-control-sm').val('');
             $('#tblAccount_filter .form-control-sm').trigger("input");
-            var datatable = $('#tblAccountlist').DataTable();
+            const datatable = $('#tblAccountlist').DataTable();
             datatable.draw();
             $('#tblAccountlist_filter .form-control-sm').trigger("input");
         }, 500);
@@ -928,15 +931,51 @@ Template.newbankrecon.onRendered(function() {
                     }
                 }
             });
+            $('#who_'+item.YodleeLineID).editableSelect();
+            $('#who_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
+                selectedYodleeID = item.YodleeLineID;
+                editableWho(item, $(this), e);
+            });
+            $('#whoDetail_'+item.YodleeLineID).editableSelect();
+            $('#whoDetail_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
+                selectedYodleeID = item.YodleeLineID;
+                editableWho(item, $(this), e);
+            });
             $('#what_'+item.YodleeLineID).editableSelect();
             $('#what_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
+                const $each = $(this);
+                const offset = $each.offset();
+                let accountDataName = e.target.value ||'';
+                selectedAccountFlag = 'ForWhat';
                 selectedYodleeID = item.YodleeLineID;
-                editableWhat(item, $(this), e);
-            });
-            $('#whatDetail_'+item.YodleeLineID).editableSelect();
-            $('#whatDetail_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
-                selectedYodleeID = item.YodleeLineID;
-                editableWhat(item, $(this), e);
+                if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+                    openBankAccountListModal();
+                }else{
+                    if(accountDataName.replace(/\s/g, '') != ''){
+                        getVS1Data('TAccountVS1').then(function (dataObject) {
+                            if (dataObject.length == 0) {
+                                setOneAccountByName(accountDataName);
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                let added = false;
+                                for (let a = 0; a < data.taccountvs1.length; a++) {
+                                    if((data.taccountvs1[a].fields.AccountName) == accountDataName){
+                                        added = true;
+                                        setBankAccountData(data, a);
+                                    }
+                                }
+                                if(!added) {
+                                    setOneAccountByName(accountDataName);
+                                }
+                            }
+                        }).catch(function (err) {
+                            setOneAccountByName(accountDataName);
+                        });
+                        $('#addAccountModal').modal('toggle');
+                    }else{
+                        openBankAccountListModal();
+                    }
+                }
             });
             $('#transferAccount_'+item.YodleeLineID).editableSelect();
             $('#transferAccount_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
@@ -1001,20 +1040,157 @@ Template.newbankrecon.onRendered(function() {
                 }
                 if (paymentFields) {
                     $('#paymentID_' + item.YodleeLineID).val(paymentFields.PaymentID);
-                    $('#who_' + item.YodleeLineID).val(paymentFields.Notes);
-                    $('#what_' + item.YodleeLineID).val(paymentFields.ClientName);
-                    $('#whatID_' + item.YodleeLineID).val(paymentFields.ClientID);
+                    $('#what_' + item.YodleeLineID).val(paymentFields.AccountName);
+                    $('#who_' + item.YodleeLineID).val(paymentFields.ClientName);
+                    $('#whoID_' + item.YodleeLineID).val(paymentFields.ClientID);
+                }
+            } else {
+                $('#who_' + item.YodleeLineID).val(item.CompanyName);
+                $('#whoDetail_' + item.YodleeLineID).val(item.CompanyName);
+                if (item.deporwith == "spent") {
+                    let isExistCustomer = false;
+                    customerList.forEach(customer => {
+                        if (item.CompanyName == customer.customername) {
+                            $('#whoID_' + item.YodleeLineID).val(customer.customerid);
+                            isExistCustomer = true;
+                        }
+                    });
+                    if (!isExistCustomer) {
+                        contactService.getOneCustomerDataExByName(item.CompanyName).then(function (data) {
+                            if (data.tcustomer.length == 0) {
+                                let objDetails = {
+                                    type: "TCustomer",
+                                    fields: {
+                                        ClientName: item.CompanyName,
+                                        FirstName: item.CompanyName,
+                                        LastName: '(LastName)',
+                                        Phone: '',
+                                        Mobile: '',
+                                        Email: '',
+                                        SkypeName: '',
+                                        Street: item.YodleeMerchant.address.city || '',
+                                        Street2: '',
+                                        Suburb: '',
+                                        State: item.YodleeMerchant.address.state || '',
+                                        PostCode: '',
+                                        Country: item.YodleeMerchant.address.country || '',
+                                        BillStreet: '',
+                                        BillStreet2: '',
+                                        BillState: '',
+                                        BillPostCode: '',
+                                        Billcountry: '',
+                                        PublishOnVS1: true
+                                    }
+                                };
+                                contactService.saveCustomer(objDetails).then(function (customer) {
+                                    $('#whoID_' + item.YodleeLineID).val(customer.fields.ID);
+                                    let customerrecordObj = {
+                                        customerid: customer.fields.ID || '',
+                                        customername: item.CompanyName || '',
+                                        firstname: item.CompanyName || '',
+                                        lastname: '',
+                                        customeremail: '',
+                                        street: item.YodleeMerchant.address.city || '',
+                                        street2: '',
+                                        street3: '',
+                                        suburb: '',
+                                        state: item.YodleeMerchant.address.state || '',
+                                        country: item.YodleeMerchant.address.country || '',
+                                        billstreet: '',
+                                        billstree2: '',
+                                        billcountry: '',
+                                        billstatecode: '',
+                                        termsName: '',
+                                        taxCode: 'E',
+                                        clienttypename: 'Default',
+                                        discount: 0,
+                                    };
+                                    customerList.push(customerrecordObj);
+                                }).catch(function (err) {
+                                    //$('.fullScreenSpin').css('display','none');
+                                });
+                            } else {
+                                $('#whoID_' + item.YodleeLineID).val(data.tcustomer[0].fields.ID);
+                            }
+                        }).catch(function (err) {
+
+                        });
+                    }
+                } else {
+                    let isExistSupplier = false;
+                    supplierList.forEach(supplier => {
+                        if (item.CompanyName == supplier.suppliername) {
+                            $('#whoID_' + item.YodleeLineID).val(supplier.supplierid);
+                            isExistSupplier = true;
+                        }
+                    });
+                    if (!isExistSupplier) {
+                        contactService.getOneSupplierDataExByName(item.CompanyName).then(function (data) {
+                            if (data.tsupplier.length == 0) {
+                                let objDetails = {
+                                    type: "TSupplier",
+                                    fields: {
+                                        ClientName: item.CompanyName,
+                                        FirstName: item.CompanyName,
+                                        LastName: '',
+                                        Phone: '',
+                                        Mobile: '',
+                                        Email: '',
+                                        SkypeName: '',
+                                        Street: item.YodleeMerchant.address.city || '',
+                                        Street2: '',
+                                        Suburb: '',
+                                        State: item.YodleeMerchant.address.state || '',
+                                        PostCode: '',
+                                        Country: item.YodleeMerchant.address.country || '',
+                                        BillStreet: '',
+                                        BillStreet2: '',
+                                        BillState: '',
+                                        BillPostCode: '',
+                                        Billcountry: '',
+                                        PublishOnVS1: true
+                                    }
+                                };
+                                contactService.saveSupplier(objDetails).then(function (supplier) {
+                                    $('#whoID_' + item.YodleeLineID).val(supplier.fields.ID);
+                                    let supplierrecordObj = {
+                                        supplierid: supplier.fields.ID || '',
+                                        suppliername: item.CompanyName || '',
+                                        supplieremail: '',
+                                        street: item.YodleeMerchant.address.city || '',
+                                        street2: '',
+                                        street3: '',
+                                        suburb: '',
+                                        state: item.YodleeMerchant.address.state || '',
+                                        country: item.YodleeMerchant.address.country || '',
+                                        billstreet: '',
+                                        billstree2: '',
+                                        billcountry: '',
+                                        billstatecode: '',
+                                        termsName: ''
+                                    };
+                                    supplierList.push(supplierrecordObj);
+                                }).catch(function (err) {
+                                    //$('.fullScreenSpin').css('display','none');
+                                });
+                            } else {
+                                $('#whoID_' + item.YodleeLineID).val(data.tsupplier[0].fields.ID);
+                            }
+                        }).catch(function (err) {
+
+                        });
+                    }
                 }
             }
             if (item.VS1Notes.trim() != "") {
                 $('#discussNav_'+item.YodleeLineID+ ' a').text('Discuss*');
             }
             if (item.deporwith == "spent") {
-                $('#what_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
-                $('#whatDetail_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
+                $('#who_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
+                $('#whoDetail_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
             } else {
-                $('#what_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
-                $('#whatDetail_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
+                $('#who_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
+                $('#whoDetail_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
             }
 
             $('#btnAddDetail_'+item.YodleeLineID).on('click', function(e, li) {
@@ -1073,7 +1249,7 @@ Template.newbankrecon.onRendered(function() {
             });
         })
     }
-    function editableWhat(item, $each, e) {
+    function editableWho(item, $each, e) {
         const offset = $each.offset();
         if (item.deporwith == "spent") {
             selectedCustomerFlag = 'ForTab';
@@ -1141,6 +1317,9 @@ Template.newbankrecon.onRendered(function() {
             }
         }
     }
+    // function editableWhat() {
+    //
+    // }
     function initVS1Transaction() {
         templateObject.matchTransactionData.set(VS1TransactionList);
         templateObject.viewTransactionData.set([]);
@@ -1171,6 +1350,10 @@ Template.newbankrecon.onRendered(function() {
             if (accountId != "") {
                 $('#transferAccount_'+selectedYodleeID).val(accountname);
             }
+        } else if (selectedAccountFlag == 'ForWhat') {
+            if (accountId != "") {
+                $('#what_'+selectedYodleeID).val(accountname);
+            }
         }
         $('#tblAccount_filter .form-control-sm').val('');
     });
@@ -1178,9 +1361,9 @@ Template.newbankrecon.onRendered(function() {
         $('#customerListModal').modal('toggle');
         if (selectedCustomerFlag == "ForTab") {
             // $('#whatID_'+selectedYodleeID).val(parseInt($(this).find(".colID").text()));
-            $('#whatID_'+selectedYodleeID).val($(this).find(".colID").text());
-            $('#what_'+selectedYodleeID).val($(this).find(".colCompany").text());
-            $('#whatDetail_' + selectedYodleeID).val($(this).find(".colCompany").text());
+            $('#whoID_'+selectedYodleeID).val($(this).find(".colID").text());
+            $('#who_'+selectedYodleeID).val($(this).find(".colCompany").text());
+            $('#whoDetail_' + selectedYodleeID).val($(this).find(".colCompany").text());
         } else {
             if (selectedLineID) {
                 let lineAccountID = $(this).find(".colID").text();
@@ -1193,9 +1376,9 @@ Template.newbankrecon.onRendered(function() {
     });
     $(document).on("click", ".newbankrecon #tblSupplierlist tbody tr", function (e) {
         $('#supplierListModal').modal('toggle');
-        $('#whatID_'+selectedYodleeID).val($(this).find(".colID").text());
-        $('#what_'+selectedYodleeID).val($(this).find(".colCompany").text());
-        $('#whatDetail_' + selectedYodleeID).val($(this).find(".colCompany").text());
+        $('#whoID_'+selectedYodleeID).val($(this).find(".colID").text());
+        $('#who_'+selectedYodleeID).val($(this).find(".colCompany").text());
+        $('#whoDetail_' + selectedYodleeID).val($(this).find(".colCompany").text());
         setCalculated();
     });
     $(document).on("click", ".newbankrecon #tblTaxRate tbody tr", function (e) {
@@ -1526,8 +1709,8 @@ Template.newbankrecon.events({
             let employeeID = Session.get('mySessionEmployeeLoggedID');
             let employeename = Session.get('mySessionEmployee');
             let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
-            let clientID = $("#whatID_"+selectedYodleeID).val();
-            let clientName = $("#whatDetail_"+selectedYodleeID).val();
+            let clientID = $("#whoID_"+selectedYodleeID).val();
+            let clientName = $("#whoDetail_"+selectedYodleeID).val();
             let reconNote = $("#divLineDetail_"+selectedYodleeID+" #FromWho").val();
             let discussNote = $("#discussText_"+selectedYodleeID).val();
             let reconcileID = $("#reconID_"+selectedYodleeID).val();
@@ -1540,14 +1723,14 @@ Template.newbankrecon.events({
                 clientDetail = getClientDetail(clientName, 'customer');
                 if (!clientDetail) {
                     swal('Customer must be vaild.', '', 'error');
-                    $("#whatDetail_"+selectedYodleeID).focus();
+                    $("#whoDetail_"+selectedYodleeID).focus();
                     return false;
                 }
             } else if (DepOrWith == "received") {
                 clientDetail = getClientDetail(clientName, 'supplier');
                 if (!clientDetail) {
                     swal('Supplier must be vaild.', '', 'error');
-                    $("#whatDetail_"+selectedYodleeID).focus();
+                    $("#whoDetail_"+selectedYodleeID).focus();
                     return false;
                 }
             } else {
@@ -1992,6 +2175,14 @@ Template.newbankrecon.events({
 
         }
     },
+    'click #swtCompactView': function(event) {
+        let checked = $("#swtCompactView:checked").val();
+        if (checked == "on") {
+            $("#transactionDataBox").addClass('compactView');
+        } else {
+            $("#transactionDataBox").removeClass('compactView');
+        }
+    },
 });
 
 Template.newbankrecon.helpers({
@@ -2379,7 +2570,7 @@ function setCalculated() {
         let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
         let discountRate = 0;
         if (DepOrWith == "spent") {
-            let customerName = $('#whatDetail_' + selectedYodleeID).val();
+            let customerName = $('#whoDetail_' + selectedYodleeID).val();
             if (customerName != "") {
                 let customerDetail = customerList.filter(customer => {
                     return customer.customername == customerName
@@ -2466,13 +2657,13 @@ function getClientDetail(clientName, clientType) {
 function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
     if (selectedYodleeID != null) {
         let clientDetail;
-        let accountName = '';
+        let contactName = '';
         if (DepOrWith == "spent") {
-            clientDetail = getClientDetail($('#whatDetail_' + selectedYodleeID).val(), 'customer');
-            accountName = clientDetail? clientDetail.customername:'';
+            clientDetail = getClientDetail($('#whoDetail_' + selectedYodleeID).val(), 'customer');
+            contactName = clientDetail? clientDetail.customername:'';
         } else {
-            clientDetail = getClientDetail($('#whatDetail_' + selectedYodleeID).val(), 'supplier');
-            accountName = clientDetail? clientDetail.suppliername:'';
+            clientDetail = getClientDetail($('#whoDetail_' + selectedYodleeID).val(), 'supplier');
+            contactName = clientDetail? clientDetail.suppliername:'';
         }
         let discountAmount = 0;
         if (DepOrWith == "spent") {
@@ -2486,7 +2677,7 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         selectedLineID = 'firstLine';
         let taxrateName = (taxCodeDetail != undefined)? taxCodeDetail.codename:'';
 
-        $('#whatDetail_'+selectedYodleeID).val(accountName);
+        $('#whoDetail_'+selectedYodleeID).val(contactName);
         let dateIn_val = (DateIn !='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
         $('#DateIn_'+selectedYodleeID).val(dateIn_val);
 
@@ -2549,6 +2740,8 @@ function openTransactionDetail(item){
     $('#discuss_'+selectedYodleeID).removeClass('active');
     $('#match_'+selectedYodleeID+' .textFindMatch').show();
     $('#match_'+selectedYodleeID+' .btnFindMatch').hide();
+
+    $('#divItemBox_'+selectedYodleeID).addClass('itemBox');
     $('#divLineDetail_'+selectedYodleeID).show();
     setTransactionDetail(amount, dateIn, who, item.deporwith);
 }
@@ -2556,20 +2749,22 @@ function closeTransactionDetail() {
     if (selectedYodleeID) {
         $('#divLineDetail_' + selectedYodleeID).hide();
         $('#divLineFindMatch_' + selectedYodleeID).hide();
+        $('#divLineFindMatchTotal_'+selectedYodleeID).hide();
+        $('#divItemBox_'+selectedYodleeID).removeClass('itemBox');
 
-        $('#createNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
         $('#findMatchNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
         $('#transferNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
         $('#discussNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
+        $('#matchNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
         $('#createNav_' + selectedYodleeID).show();
         $('#transferNav_' + selectedYodleeID).show();
         $('#findMatchNav_' + selectedYodleeID).show();
-        $('#matchNav_' + selectedYodleeID + ' a.nav-link').addClass('active');
+        $('#createNav_' + selectedYodleeID + ' a.nav-link').addClass('active');
 
-        $('#match_' + selectedYodleeID).addClass('show');
-        $('#match_' + selectedYodleeID).addClass('active');
-        $('#create_' + selectedYodleeID).removeClass('show');
-        $('#create_' + selectedYodleeID).removeClass('active');
+        $('#match_' + selectedYodleeID).removeClass('show');
+        $('#match_' + selectedYodleeID).removeClass('active');
+        $('#create_' + selectedYodleeID).addClass('show');
+        $('#create_' + selectedYodleeID).addClass('active');
         $('#match_' + selectedYodleeID + ' .textFindMatch').hide();
         $('#match_' + selectedYodleeID + ' .btnFindMatch').show();
     }
@@ -2694,7 +2889,11 @@ function openFindMatch(item){
     }
     $('#divLineFindMatch_'+selectedYodleeID+ ' #matchTotal').text((utilityService.modifynegativeCurrencyFormat(item.YodleeAmount)));
     $('#divLineFindMatch_'+selectedYodleeID+ ' #matchTotal2').text((utilityService.modifynegativeCurrencyFormat(item.YodleeAmount)));
+    $('#divLineFindMatchTotal_'+selectedYodleeID+ ' #matchTotal3').text((utilityService.modifynegativeCurrencyFormat(item.YodleeAmount)));
+
+    $('#divItemBox_'+selectedYodleeID).addClass('itemBox');
     $('#divLineFindMatch_'+selectedYodleeID).show();
+    $('#divLineFindMatchTotal_'+selectedYodleeID).show();
     setCalculated2();
 }
 
