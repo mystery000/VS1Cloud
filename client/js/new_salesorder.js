@@ -4723,7 +4723,7 @@ Template.new_salesorder.onRendered(() => {
         $('#tblCustomerlist_filter .form-control-sm').val('');
         setTimeout(function() {
             //$('#tblCustomerlist_filter .form-control-sm').focus();
-            $('.btnRefreshCustomer').trigger('click');
+            // $('.btnRefreshCustomer').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
         // }
@@ -7915,8 +7915,8 @@ Template.new_salesorder.events({
 
                     },
                     "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRateDetail_filter");
-                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRateDetail_filter");
+                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxDetail_filter");
+                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxDetail_filter");
                     }
                 });
             }
@@ -7928,7 +7928,7 @@ Template.new_salesorder.events({
         }
 
         $('#tblSalesOrderLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
-        $('#tblSalesOrderLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+        $('#tblSalesOrderLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);

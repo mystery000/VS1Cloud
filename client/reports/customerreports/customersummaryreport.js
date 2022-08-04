@@ -18,6 +18,8 @@ Template.customersummaryreport.onCreated(() => {
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  templateObject.records = new ReactiveVar([]);
+
 });
 
 Template.customersummaryreport.onRendered(() => {
@@ -97,6 +99,45 @@ Template.customersummaryreport.onRendered(() => {
   templateObject.initDate();
   templateObject.initUploadedImage();
   LoadingOverlay.hide();
+
+  templateObject.getCustomerDetailsHistory = async function () {
+
+    let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
+    let dateTo = moment().format("YYYY-MM-DD");
+    let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, false);
+
+    let reportData = [];
+    if( data.tcustomersummaryreport.length > 0 ){
+        let reportSummary = data.tcustomersummaryreport.map(el => {
+          let resultobj = {};
+          Object.entries(el).map(([key, val]) => {      
+              resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+              return resultobj;
+          })
+          return resultobj;
+        })
+
+      let reportGroups = []; 
+      for (const item of reportSummary ) {   
+        let isExist = reportGroups.filter((subitem) => {
+          if( subitem.EMAIL == item.EMAIL ){
+              subitem.SubAccounts.push(item)
+              return subitem
+          }
+        });
+
+        if( isExist.length == 0 ){
+          reportData.push({
+              Margin: 0,
+              ...item
+          });
+        }
+      }
+      
+    }
+    templateObject.records.set(reportData);    
+  };
+  templateObject.getCustomerDetailsHistory();
 });
 
 Template.customersummaryreport.events({
@@ -422,6 +463,23 @@ Template.customersummaryreport.events({
 Template.customersummaryreport.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
+  },
+  getSpaceKeyData( array, key ){
+    return array[key] || ''
+  },
+  records: () => {
+    return Template.instance().records.get();
+  },
+  formatPrice( amount ){
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatDate: ( date ) => {
+      return ( date )? moment(date).format("DD/MM/YYYY") : '';
   },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory

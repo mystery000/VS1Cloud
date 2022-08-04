@@ -1281,22 +1281,33 @@ export class UtilityService {
      * @param {string} stringNumber 
      * @returns {float}
      */
-    removeCurrency(stringNumber = "$10.5") {
+    removeCurrency(stringNumber = "$10.5", _currency = false) {
         const isNegative = stringNumber.includes("-");
         if(isNegative) {
             stringNumber = stringNumber.replace('-', "");
         }
 
-        const currency = stringNumber.split('')[0];
-        stringNumber = stringNumber.replace(currency, "");
+        if(_currency) {
+            stringNumber = stringNumber.replace(_currency, '');
+        } else {
+            const currency = stringNumber.split('')[0];
+            stringNumber = stringNumber.replace(currency, '');
+        }
 
-        const value = parseFloat(stringNumber);
+        const value = parseFloat(stringNumber).toFixed(2);
         if(isNegative) value = value * -1;
+
 
         return value;
     }
 
-    extractCurrency(stringNumber) {
+    /**
+     * This function will get the currency
+     * 
+     * @param {*} stringNumber 
+     * @returns 
+     */
+    extractCurrency(stringNumber = "$15.5") {
         if(!isNaN(stringNumber)) {
             return '';
         }
@@ -1311,7 +1322,7 @@ export class UtilityService {
      * @param {string|number} number 
      * @returns {boolean}
      */
-    isNegative(number) {
+    isNegative(number = "1235") {
         if(isNaN(number)) {
             return number.includes("-");
         } else {

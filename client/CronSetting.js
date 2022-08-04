@@ -13,7 +13,7 @@ export default class CronSetting {
     days = [],
     months = [],
     dayNumberOfMonth = 1,
-    cronJob = () => {},
+    cronJob = () => {}
   }) {
     this.type = type;
     this.active = active;
@@ -43,13 +43,13 @@ export default class CronSetting {
         const minutes = this.convertToDate(this.startAt).getMinutes();
         const hours = this.convertToDate(this.startAt).getHours();
 
-        text +=
-          " at " +
-          (hours < 10 ? "0" : "") +
-          hours +
-          ":" +
-          (minutes < 10 ? "0" : "") +
-          minutes;
+        text += " at " + (
+          hours < 10
+          ? "0"
+          : "") + hours + ":" + (
+          minutes < 10
+          ? "0"
+          : "") + minutes;
 
         // text +=
         //   " starting on the " +
@@ -60,7 +60,6 @@ export default class CronSetting {
         //   date.toDateString().split(" ")[3];
       }
     } else if (this.type == "Weekly") {
-
       text += "every " + this.every + " week";
       text += " on " + this.days;
 
@@ -76,48 +75,92 @@ export default class CronSetting {
       //   " in " +
       //   date.toDateString().split(" ")[3];
     } else if (this.type == "Daily") {
-
       const date = this.convertToDate(this.startAt);
       const minutes = this.convertToDate(this.startAt).getMinutes();
       const hours = this.convertToDate(this.startAt).getHours();
 
-      if (this.days.length > 0) {
-        const lastDay = this.days.pop();
+ 
+      // this.days = this.days.filter(Boolean);
+    
+      if (this.days.length >= 1 && this.days.length < 7) {
+        const lastDay = this.days[this.days.length - 1];
 
-        this.days.length == 1
-          ? (text += " on " + lastDay)
-          : (text += " on " + this.days.join(",") + " and " + lastDay);
+        if (this.days.length == 1) {
+          text += " at " + (
+            hours < 10
+            ? "0"
+            : "") + hours + ":" + (
+            minutes < 10
+            ? "0"
+            : "") + minutes;
 
-        // text +=
-        //   " starting on the " +
-        //   this.convertDayNumberToString(date.getDay()) +
-        //   " day in " +
-        //   date.toDateString().split(" ")[1] +
-        //   " in " +
-        //   date.toDateString().split(" ")[3];
+          text += " every " + lastDay;
+
+          text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
+        } else {
+          //this.days.pop();  remove the last day
+          //text += " on " + this.days.join(",") + " and " + lastDay;
+          //text += " every week";
+          //text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
+
+          this.days.forEach((_day, index) => {
+            if (index > 0) {
+              text += " also ";
+            }
+            text += " at " + (
+              hours < 10
+              ? "0"
+              : "") + hours + ":" + (
+              minutes < 10
+              ? "0"
+              : "") + minutes;
+
+            text += ` every ${this.convertDayNumberToString(this.getDayIndexOfTheWeek(_day))} day of the week`;
+            text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
+          });
+        } // multiple days
+      } else if (this.days.length == 7) {
+        // This is for every day
+        // Works as expected
+
+        text += " at " + (
+          hours < 10
+          ? "0"
+          : "") + hours + ":" + (
+          minutes < 10
+          ? "0"
+          : "") + minutes;
+
+        text += " every day";
+
+        text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
       } else {
+        // TODO: We must shedule throught database, we cannot schedule by using the parser
         text += " every " + this.every + " day";
+        // text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
+
+        
       }
 
-      text +=
-        " at " +
-        (hours < 10 ? "0" : "") +
-        hours +
-        ":" +
-        (minutes < 10 ? "0" : "") +
-        minutes;
+      // text += " also at " + (
+      //   hours < 10
+      //   ? "0"
+      //   : "") + hours + ":" + (
+      //   minutes < 10
+      //   ? "0"
+      //   : "") + minutes;
     } else if (this.type == "OneTime") {
       const date = this.convertToDate(this.startAt);
       const minutes = this.convertToDate(this.startAt).getMinutes();
       const hours = this.convertToDate(this.startAt).getHours();
 
-      text +=
-        " at " +
-        (hours < 10 ? "0" : "") +
-        hours +
-        ":" +
-        (minutes < 10 ? "0" : "") +
-        minutes;
+      text += " at " + (
+        hours < 10
+        ? "0"
+        : "") + hours + ":" + (
+        minutes < 10
+        ? "0"
+        : "") + minutes;
 
       // text +=
       //   " starting on the " +
@@ -132,10 +175,10 @@ export default class CronSetting {
   }
 
   /**
-   *  this will convert string into Date if is convertible
-   * @param {string | Date} date
-   * @returns {Date}
-   */
+     *  this will convert string into Date if is convertible
+     * @param {string | Date} date
+     * @returns {Date}
+     */
   convertToDate(date) {
     if (date instanceof Date) {
       return date;
@@ -161,15 +204,38 @@ export default class CronSetting {
     return number + suffixe;
   }
 
-
   getStartAt() {
     return this.convertToDate(this.startAt);
   }
 
   isFuture() {
-    if(this.getStartAt() > new Date()) {
+    if (this.getStartAt() > new Date()) {
       return true;
     }
     return false;
+  }
+
+ 
+  /**
+   * This will find the index of the day
+   * @param {String} day 
+   * @returns 
+   */
+  getDayIndexOfTheWeek(day = "monday") {
+    if (day == "monday") {
+      return 1;
+    } else if (day == "tuesday") {
+      return 2;
+    } else if (day == "wednesday") {
+      return 3;
+    } else if (day == "thursday") {
+      return 4;
+    } else if (day == "friday") {
+      return 5;
+    } else if (day == "saturday") {
+      return 6;
+    } else if (day == "sunday") {
+      return 7;
+    }
   }
 }

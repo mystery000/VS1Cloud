@@ -54,19 +54,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{#if datatablerecords}}
-                            {{#each item in datatablerecords}}
-                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
-                                <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
-                                <td contenteditable="false" class="colDepartment text-start">{{item.salsedes}}</td>
-                                <td contenteditable="false" class="colDepartment text-start">{{item.barcode}}</td>
-                                <td contenteditable="false" class="colSerialNumber text-start" >{{item.serialnumber}}</td>
-                                <td contenteditable="false" class="colStatus {{ item.cssclass }} text-start">{{item.status}}</td>
-                                <td contenteditable="false" class="colDate text-start">{{item.date}}</td>
-                            </tr>
-                            {{/each}}
-                            {{/if}}
+                            
                         </tbody>
                     </table>
                 </div>

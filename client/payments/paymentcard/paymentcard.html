@@ -781,11 +781,32 @@
                                         <th class="th colTransNo" style="width: 100px;">Trans No.</th>
                                         <th class="th lineOrginalamount" style="width: 80px; text-align: left!important;">Original</th>
                                         <th class="th lineAmountdue" style="width: 80px; text-align: left!important;">Due</th>
-                                        <th class="th linePaymentamount pointer" style="width: 120px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
-                                        <th class="th lineOutstandingAmount" style="width: 80px; text-align: left!important;">Outstanding</th>
+                                        {{#if isForeignEnabled}}
+                                            <th colspan="2" class="th linePaymentamount pointer" style="width: 120px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
+                                            <th colspan="2" class="th lineOutstandingAmount" style="width: 80px; text-align: left!important;">Outstanding</th>
+                                        {{else}}
+                                            <th class="th linePaymentamount pointer" style="width: 120px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
+                                            <th class="th lineOutstandingAmount" style="width: 80px; text-align: left!important;">Outstanding</th>
+                                        {{/if}}
+                                       
                                         <th class="th colComments">Comments on Transaction form</th>
                                         <th class="th" style="width: 25px;"></th>
                                     </tr>
+                                    {{#if isForeignEnabled}}
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>{{ getDefaultCurrency }}</th>
+                                            <th>Foreign</th>
+                                            <th>{{ getDefaultCurrency }}</th>
+                                            <th>Foreign</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    {{/if}}
                                 </thead>
                                 <tbody>
                                     <!-- <tr class="dnd-moved tr">
@@ -797,20 +818,20 @@
 <td contenteditable="true" class="" style="text-align: right!important;">$ 0.00</td>
 <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
 </tr> -->
-                                    {{#each item in record.LineItems}}
+                                    <!-- {{#each item in record.LineItems}}
                                         <tr class="dnd-moved" id="{{item.transid}}" name="{{item.transid}}">
                                             <td contenteditable="false" class="colTransDate">{{item.invoicedate}}</td>
                                             <td contenteditable="false" class="colType" style="color:#00a3d3">{{item.transtype}}</td>
                                             <td contenteditable="false" class="colTransNo" style="color:#00a3d3">{{item.transid}}</td>
                                             <td contenteditable="false" class="lineOrginalamount" id="lineOrginalamount" style="text-align: right!important;">{{item.orginalamount}}</td>
                                             <td contenteditable="false" class="lineAmountdue" id="lineAmountdue" style="text-align: right!important;">{{item.amountdue}}</td>
-                                            <!--                                    <td contenteditable="true" class="linePaymentamount" id="linePaymentamount" style="text-align: right!important;">{{item.paymentamount}}</td>-->
+                                                 <td contenteditable="true" class="linePaymentamount" id="linePaymentamount" style="text-align: right!important;">{{item.paymentamount}}</td>
                                             <td><input class="linePaymentamount highlightInput" type="text" value="{{item.paymentamount}}"></td>
                                             <td contenteditable="false" class="lineOutstandingAmount" id="lineOutstandingAmount" style="text-align: right!important;">{{item.ouststandingamount}}</td>
                                             <td contenteditable="true" class="colComments">{{item.comments}}</td>
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
                                         </tr>
-                                    {{/each}}
+                                    {{/each}} -->
                                 </tbody>
                             </table>
                             <div class="flex-grow-1">

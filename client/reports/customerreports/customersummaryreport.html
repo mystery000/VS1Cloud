@@ -191,31 +191,23 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>4x4 World</td>
-                                                <td>055 555 5555</td>
-                                                <td>12 Mud Drive</td>
-                                                <td>New York</td>
-                                                <td>6161</td>
-                                                <td>NY</td>
-                                                <td class="text-right text-success">$ 7,611.16</td>
-                                                <td class="text-right text-success">$ 8,524.52</td>
-                                                <td class="text-right text-success">$ 7,245.07</td>
-                                                <td class="text-right text-success">83.21%</td>
-                                            </tr>
-
-                                            <tr class="departmentHeader">
-                                                <td>4x4 World</td>
-                                                <td>055 555 5555</td>
-                                                <td>12 Mud Drive</td>
-                                                <td>New York</td>
-                                                <td>6161</td>
-                                                <td>NY</td>
-                                                <td class="text-right text-success">$ 7,611.16</td>
-                                                <td class="text-right text-success">$ 8,524.52</td>
-                                                <td class="text-right text-success">$ 7,245.07</td>
-                                                <td class="text-right text-success">83.21%</td>
-                                            </tr>
+                                            {{#if records}}
+                                                {{#each arrayify records}}
+                                                <tr>
+                                                    <td>{{ value.Name }}</td>
+                                                    <td>{{ value.Phone }}</td>
+                                                    <td>{{ value.Address }}</td>
+                                                    <td>{{ value.Address_2 }}</td>
+                                                    <td>{{ value.Postcode }}</td>
+                                                    <td>{{ value.State }}</td>
+                                                    <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
+                                                    <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
+                                                    <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td>
+                                                    <td>{{ formatPrice value.Margin }}</td>
+                                                </tr>
+                                                {{/each}}
+                                            {{/if}}
+                                                        
                                             <!-- {{#if records}}
                                                 <tr>
                                                     <td></td>
