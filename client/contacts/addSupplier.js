@@ -4,6 +4,7 @@ import {UtilityService} from "../utility-service";
 import {CountryService} from '../js/country-service';
 import {PaymentsService} from '../payments/payments-service';
 import {SideBarService} from '../js/sidebar-service';
+import {CRMService} from "../crm/crm-service";
 import '../lib/global/indexdbstorage.js';
 
 let sideBarService = new SideBarService();
@@ -29,6 +30,8 @@ Template.supplierscard.onCreated(function(){
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
     templateObject.currentAttachLineID = new ReactiveVar();
+    templateObject.correspondences = new ReactiveVar([]);
+    templateObject.crmRecords = new ReactiveVar([]);
 });
 
 Template.supplierscard.onRendered(function () {
@@ -38,6 +41,7 @@ Template.supplierscard.onRendered(function () {
     const contactService = new ContactService();
     const countryService = new CountryService();
     const paymentService = new PaymentsService();
+    const crmService = new CRMService();
     let countries = [];
 
     let preferredPayments = [];
@@ -108,6 +112,11 @@ Template.supplierscard.onRendered(function () {
         $('td').each(function(){
             if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
         });
+    }
+
+    templateObject.getReferenceLetters = () => {
+        let temp = localStorage.getItem('correspondence');
+        templateObject.correspondences.set(temp? JSON.parse(temp): [])
     }
 
     templateObject.getOverviewAPData = function (supplierName,supplierID) {
@@ -586,6 +595,7 @@ Template.supplierscard.onRendered(function () {
         }
         templateObject.getOverviewAPData(data.fields.ClientName,data.fields.ID);
         templateObject.records.set(lineItemObj);
+        templateObject.getAllCrm(data.fields.ClientName);
         /* START attachment */
         templateObject.attachmentCount.set(0);
         if(data.fields.Attachments){
@@ -598,6 +608,213 @@ Template.supplierscard.onRendered(function () {
         /* END  attachment */
         //templateObject.getAllProductRecentTransactions(data.fields.ClientName);
         $('.fullScreenSpin').css('display','none');
+    }
+
+    templateObject.getAllCrm = function (supplierName) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+        var url = FlowRouter.current().path;
+        if (url.includes("/employeescard")) {
+            url = new URL(window.location.href);
+            employeeID = url.searchParams.get("id");
+        }
+        let dataTableList = [];
+        crmService.getAllTasksByTaskName(supplierName).then(function (data) {
+            if(data.tprojecttasks.length > 0) {
+                for (let i = 0; i < data.tprojecttasks.length; i++) {
+                    if (data.tprojecttasks[i].fields.TaskName === supplierName) {
+                        let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+                        let taskLabelArray = [];
+                        if (taskLabel !== null) {
+                            if (taskLabel.length === undefined || taskLabel.length === 0) {
+                                taskLabelArray.push(taskLabel.fields);
+                            } else {
+                                for (let j = 0; j < taskLabel.length; j++) {
+                                    taskLabelArray.push(taskLabel[j].fields);
+                                }
+                            }
+                        }
+                        let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+                        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+                        const dataList = {
+                            id: data.tprojecttasks[i].fields.ID || 0,
+                            priority: data.tprojecttasks[i].fields.priority || 0,
+                            date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                            taskName: 'Task',
+                            projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                            projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                            description: taskDescription,
+                            labels: taskLabelArray,
+                            category: 'task'
+                        };
+                        // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === supplierName) {
+                        dataTableList.push(dataList);
+                        // }
+                    }
+                }
+            }
+            crmService.getAllAppointments(supplierName).then(dataObj => {
+                if(dataObj.tappointmentex.length > 0) {
+                    dataObj.tappointmentex.map(data=>{
+                        let obj = {
+                            id: data.fields.ID,
+                            priority: 0,
+                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                            taskName: 'Appointment',
+                            projectID: data.fields.ProjectID || '',
+                            projectName: '',
+                            description: '',
+                            labels: '',
+                            category: 'appointment'
+                        }
+                        dataTableList.push(obj);
+                    })
+                }
+                templateObject.crmRecords.set(dataTableList);
+                setCrmProjectTasks()
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch((error)=>{
+                templateObject.crmRecords.set(dataTableList);
+                $('.fullScreenSpin').css('display', 'none');
+            })
+        }).catch(function (err) {
+            crmService.getAllAppointments(supplierName).then(dataObj => {
+                if(dataObj.tappointmentex.length > 0) {
+                    dataObj.tappointmentex.map(data=>{
+                        let obj = {
+                            id: data.fields.ID,
+                            priority: 0,
+                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                            taskName: 'Appointment',
+                            projectID: data.fields.ProjectID || '',
+                            projectName: '',
+                            description: '',
+                            labels: '',
+                            category: 'appointment'
+        
+                        }
+    
+                        dataTableList.push(obj);
+                    })
+                }
+                templateObject.crmRecords.set(dataTableList);
+                setCrmProjectTasks()
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function(error) {
+                templateObject.crmRecords.set(dataTableList);
+                $('.fullScreenSpin').css('display', 'none');
+            })
+        });
+
+        
+    };
+    function setCrmProjectTasks() {
+        let tableHeaderList = [];
+
+        if (templateObject.crmRecords.get()) {
+            setTimeout(function () {
+                MakeNegative();
+                $("#dtAsOf").datepicker({
+                    showOn: 'button',
+                    buttonText: 'Show Date',
+                    buttonImageOnly: true,
+                    buttonImage: '/img/imgCal2.png',
+                    dateFormat: 'dd/mm/yy',
+                    showOtherMonths: true,
+                    selectOtherMonths: true,
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-90:+10",
+                });
+            }, 100);
+        }
+        // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+        // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function () {
+            //$.fn.dataTable.moment('DD/MM/YY');
+            $('#tblCrmList').DataTable({
+                // dom: 'lBfrtip',
+                columnDefs: [
+                    { type: 'date', targets: 0 }
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Leads CRM List - " + moment().format(),
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Leads CRM',
+                        filename: "Leads CRM List - " + moment().format(),
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                action: function () {
+                    $('#tblCrmList').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.crmRecords.get();
+                templateObject.crmRecords.set(draftRecord);
+            }).on('column-reorder', function () {
+
+            });
+
+            $('.fullScreenSpin').css('display', 'none');
+        }, 0);
+
+        const columns = $('#tblCrmList th');
+        let sWidth = "";
+        let columVisible = false;
+        $.each(columns, function (i, v) {
+            if (v.hidden === false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || '',
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.crmTableheaderRecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
     async function setInitialForEmptyCurrentID() {
         let lineItemObj = {
@@ -648,6 +865,7 @@ Template.supplierscard.onRendered(function () {
         if(!isNaN(currentId.id)){
             supplierID = currentId.id;
             templateObject.getEmployeeData();
+            templateObject.getReferenceLetters();
         } else if((currentId.name)){
             supplierID = currentId.name.replace(/%20/g, " ");
             templateObject.getEmployeeDataByName();
@@ -993,6 +1211,44 @@ Template.supplierscard.onRendered(function () {
             }
 
  });
+
+ $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function (e) {
+    let email = $('#edtSupplierCompanyEmail').val();
+    if($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null ) {
+        swal({
+            title: 'Oooops...',
+            text: "No email template has been set",
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.value) {
+                $('#referenceLetterModal').modal('toggle');
+            } 
+        });
+    } else {
+        let dataLabel = $("input[name='refTemp']:checked").attr('value');
+        let dataSubject = $("input[name='refTemp']:checked").attr('data-subject') ? $("input[name='refTemp']:checked").attr('data-subject'): '';
+        let dataMemo = $("input[name='refTemp']:checked").attr('data-memo') ? $("input[name='refTemp']:checked").attr('data-memo'): '';
+        if(email && email != null && email != '') {
+            document.location =
+            "mailto:" + email + "?subject=" + dataSubject + "&body=" + dataMemo;
+            $('#referenceLetterModal').modal('toggle');
+        } else {
+            swal({
+                title: 'Oooops...',
+                text: "No user email has been set",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    $('#referenceLetterModal').modal('toggle');
+                } 
+            });
+        }
+    }
+});
 
  $(document).on("click", "#termsList tbody tr", function (e) {
      $('#sltTerms').val($(this).find(".colTermName").text());
@@ -1387,6 +1643,19 @@ Template.supplierscard.events({
         const suppLineID = $(event.target).attr('id');
         if(suppLineID){
             window.open('/supplierscard?id=' + suppLineID,'_self');
+        }
+    },
+
+    'click .tblCrmList tbody tr': function (event) {
+        const taskID = $(event.target).parent().attr('id');
+        const taskCategory = $(event.target).parent().attr('category');
+        if (taskID !== undefined) {
+            if(taskCategory == 'task'){
+                FlowRouter.go('/crmoverview?taskid=' + taskID);
+            } else if(taskCategory == 'appointment') {
+                FlowRouter.go('/appointments?id=' + taskID);
+
+            }
         }
     },
     'click .chkDatatable' : function(event){
@@ -1825,7 +2094,9 @@ Template.supplierscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let supplierID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?supplierid=' + supplierID);
+            // FlowRouter.go('/crmoverview?supplierid=' + supplierID);
+            $('#referenceLetterModal').modal('toggle');
+            $('.fullScreenSpin').css('display', 'none');
         } else {
 
         }
@@ -1909,6 +2180,25 @@ Template.supplierscard.helpers({
             }
             return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
         });
+    },
+
+    crmRecords: () => {
+        return Template.instance().crmRecords.get().sort(function (a, b) {
+            if (a.id === 'NA') {
+                return 1;
+            }
+            else if (b.id === 'NA') {
+                return -1;
+            }
+            return (a.id > b.id) ? 1 : -1;
+        });
+    },
+    crmTableheaderRecords: () => {
+        return Template.instance().crmTableheaderRecords.get();
+    },
+
+    correspondences: () => {
+        return Template.instance().correspondences.get();
     },
     datatablerecords : () => {
         return Template.instance().datatablerecords.get().sort(function(a, b){

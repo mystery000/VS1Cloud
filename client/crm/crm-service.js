@@ -12,7 +12,36 @@ export class CRMService extends BaseService {
         select: "[Active]=true and [EnteredBy]='" + EnteredByID + "'"
       };
     }
+    // return this.getList(this.ERPObjects.Tprojecttasks, options);
+    return this.getList(this.ERPObjects.TAppointment, options)
+  }
+
+  getAllTasksByTaskName(TaskName = '') {
+    let options = {
+      ListType: "Detail",
+      select: "[Active]=true"
+    };
+    if (TaskName) {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true and [TaskName]='" + TaskName + "'"
+      };
+    }
     return this.getList(this.ERPObjects.Tprojecttasks, options);
+  }
+
+  getAllAppointments(ClientName = '') {
+    let options = {
+      ListType: 'Detail',
+      select: "[Active]=true"
+    };
+    if(ClientName) {
+      options = {
+        ListType: 'Detail',
+      select: "[Active]=true and [ClientName]='" + ClientName + "'"
+      }
+    }
+    return this.getList(this.ERPObjects.TAppointment, options);
   }
 
   getTasksByNameOrID(dataSearchName) {
