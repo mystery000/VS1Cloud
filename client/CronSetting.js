@@ -79,10 +79,9 @@ export default class CronSetting {
       const minutes = this.convertToDate(this.startAt).getMinutes();
       const hours = this.convertToDate(this.startAt).getHours();
 
-      //console.log("days lenght", this.days.length);
-      //console.log(this.days);
+ 
       // this.days = this.days.filter(Boolean);
-      // console.log(this.days);
+    
       if (this.days.length >= 1 && this.days.length < 7) {
         const lastDay = this.days[this.days.length - 1];
 
@@ -173,8 +172,6 @@ export default class CronSetting {
     }
 
     this.toParse = text;
-
-    //console.log("Cron: ", this.toParse);
   }
 
   /**

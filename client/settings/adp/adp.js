@@ -65,8 +65,8 @@ Template.adp.events({
                     settingObject.push({
                         type: "TERPPreference",
                         fields: {
-                        Id: item.Id,
-                        Fieldvalue: FieldValue
+                            Id: item.Id,
+                            Fieldvalue: FieldValue
                         }
                     });
                 }
@@ -94,8 +94,9 @@ Template.adp.events({
             };
 
             try {
-                const ApiResponse = await settingService.savePreferenceSettings( settingJSON );
-                if (ApiResponse.ok == true) {
+                // Saving data
+                let ApiResponse = await settingService.savePreferenceSettings( settingJSON ); 
+                if( ApiResponse.result == 'Success' ){              
                     let data = await settingService.getPreferenceSettings( settingFields );
                     let dataObject = await getVS1Data('TERPPreference')
                     let details = [];
@@ -109,40 +110,35 @@ Template.adp.events({
                         templateObject.settingDetails.set( data.terppreference );
                         data.terppreference.push(...details);
                         await addVS1Data('TERPPreference', JSON.stringify(data))
+                        $('.fullScreenSpin').css('display','none');
                     }
-                    $('.fullScreenSpin').css('display','none');
                     swal({
                         title: 'ADP settings successfully updated!',
                         text: '',
                         type: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.value) {
-                            window.open('/settings','_self');
-                        } else if (result.dismiss === 'cancel') {}
                     });
                 }else{
+                    $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Oooops...',
-                        text: oPost.getResponseHeader('errormessage'),
+                        text: "Error in updation",
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
                     })
-                    $('.fullScreenSpin').css('display', 'none');
                 }
             } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
-                    text: oPost.getResponseHeader('errormessage'),
+                    text: error,
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
                 })
-                $('.fullScreenSpin').css('display', 'none');
             }
-
             
         }
     }

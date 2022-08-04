@@ -71,7 +71,7 @@ Template.currenciessettings.onRendered(function () {
     }
 
     data.tcurrency.forEach(_currency => {
-      //console.log(_currency);
+   
       currencies.push({
         id: _currency.Id || "",
         code: _currency.Code || "N/A",

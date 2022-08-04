@@ -2217,6 +2217,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TDeptClass, options);
   }
 
+  getAccountantCategory() {
+    let options = {
+      PropertyList:"ID,FirstName,LastName,CompanyName,Address,DocName,TownCity,PostalZip,StateRegion,Country,Active",
+      select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TReportsAccountantsCategory, options);
+  }
+
   getTermsVS1() {
     let options = {
       PropertyList:"ID,Days,IsEOM,IsEOMPlus,TermsName,Description,IsDays,Active,isPurchasedefault,isSalesdefault",

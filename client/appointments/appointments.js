@@ -9367,42 +9367,48 @@ Template.appointments.events({
             });
             return false;
         };*/
+        console.log("data1", 'error')
+
 
         if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-            sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone.replace('+', ''));
-            if (!sendSMSRes.success) {
-                swal({
-                    title: 'Oops...',
-                    text: sendSMSRes.message,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try again'
-                }).then((result) => {
-                    if (result.value) {
-                        $('#saveAppointmentModal').modal('hide');
-                    } else {
-                        // window.open('/appointments', '_self');
-                    }
-                });
-            } else {
-                localStorage.setItem('smsId', sendSMSRes.sid);
-                $('#saveAppointmentModal').modal('hide');
-                swal({
-                    title: 'SMS was sent successfully',
-                    text: "SMS was sent successfully",
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Ok'
-                }).then((result) => {
-                    if (result.value) {
-                        $('#event-modal').modal('hide');
-                    } else {
-                        // window.open('/appointments', '_self');
-                    }
-                });
+            // sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone.replace('+', ''));
+            // if (!sendSMSRes.success) {
+            //     swal({
+            //         title: 'Oops...',
+            //         text: sendSMSRes.message,
+            //         type: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Try again'
+            //     }).then((result) => {
+            //         if (result.value) {
+            //             $('#saveAppointmentModal').modal('hide');
+            //         } else {
+            //             // window.open('/appointments', '_self');
+            //         }
+            //     });
+            // } else {
+            //     localStorage.setItem('smsId', sendSMSRes.sid);
+            //     $('#saveAppointmentModal').modal('hide');
+            //     swal({
+            //         title: 'SMS was sent successfully',
+            //         text: "SMS was sent successfully",
+            //         type: 'success',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Ok'
+            //     }).then((result) => {
+            //         if (result.value) {
+            //             $('#event-modal').modal('hide');
+            //         } else {
+            //             // window.open('/appointments', '_self');
+            //         }
+            //     });
                 $('#frmAppointment').trigger('submit');
-            }
+                console.log("data2", 'error')
+
+            // }
         } else {
+            console.log("data3", 'error')
+
             $('#frmAppointment').trigger('submit');
         }
     },
@@ -10204,7 +10210,7 @@ Template.appointments.events({
 
     },
     'submit #frmAppointment': async function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         event.preventDefault();
         /*
         if (createAppointment == false) {
@@ -10264,6 +10270,36 @@ Template.appointments.events({
 
         let customerEmail=$('.customerEmail').is(':checked') ? true : false;
         let userEmail=$('.userEmail').is(':checked') ? true : false;
+
+        let subject="test";
+        let text="this is just a test";
+        let mailFromName = Session.get('vs1companyName');
+        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+        let details={
+            from: "" + mailFromName + " <" + mailFrom + ">",
+            to: '',
+            subject: subject,
+            text: '',
+            html: text,
+        };
+
+        if($("#userEmail").is(":checked")){
+            details.to=customerEmail;
+            Meteor.call("sendEmail", details, function(error, result){
+                console.log("mailErr", error)
+                // console.log("mailRst", result)
+            })
+        }
+        if($("#customerEmail").is(":checked")){
+            details.to=userEmail;
+            Meteor.call("sendEmail", details, function(error, result){
+                console.log("mailErr", error)
+                // console.log("mailRst", result)
+            })
+        }
+
+        return false;
+
         if (aStartTime != '') {
             aStartDate = savedStartDate + ' ' + aStartTime;
         } else {
@@ -10413,29 +10449,7 @@ Template.appointments.events({
                         });
                     }
                 });
-                let subject="test";
-                let text="this is just a test";
-                let mailFromName = Session.get('vs1companyName');
-                let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                let details={
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: '',
-                    subject: subject,
-                    text: '',
-                    html: text,
-                };
-
-                if($("#userEmail").is(":checked")){
-                    details.to=customerEmail;
-                    Meteor.call("sendEmail", details, function(error, result){
-
-                    })
-                }
-                if($("#customerEmail").is(":checked")){
-                    details.to=employeeEmail;
-                    Meteor.call("sendEmail", details, function(error, result){
-                    })
-                }
+                
 
 
               appointmentService.saveAppointment(objectData).then(function (data) {

@@ -55,55 +55,50 @@ Template.yoodledeveloper.events({
   'click #yoodleDeveloperSignUp': function() {
     window.open("https://developer.yodlee.com/user/login");
   },
-  'click #saveYoodleDeveloperSettings': function(){
-    swal({
-        title: 'Confirm saving',
-        text: "You're about to save Yoodle Developer, proceed?.",
-        showCancelButton: true,
-        confirmButtonText: 'Yes, proceed',
-    }).then( async (result) => {
-        if (result.value) {
-            $('.fullScreenSpin').css('display','block');
-
-            let settingObject = [];
-            const templateObject = Template.instance();
-            let settingDetails = templateObject.settingDetails.get();
-            if( settingDetails.length > 0 ){
-                for (const item of settingDetails) {
-                    if( settingFields.includes( item.PrefName ) == true ){
-                        let FieldValue = $('#' + item.PrefName).val();
-                        settingObject.push({
-                            type: "TERPPreference",
-                            fields: {
-                            Id: item.Id,
-                            Fieldvalue: FieldValue
-                            }
-                        });
-                    }
-                }
-            }else{
-                for (const PrefName of settingFields) {
-                    let FieldValue = $('#' + PrefName).val();
-                    settingObject.push({
-                        type: "TERPPreference",
-                        fields: {
-                            FieldType: "ftString",
-                            FieldValue: FieldValue,
-                            KeyValue: specialSearchKey,
-                            PrefName: PrefName,
-                            PrefType: "ptCompany",
-                            RefType: "None"
-                        }
-                    })
-                }
-            }
-            if( settingObject.length ){
-                let settingJSON = {
+  'click #saveYoodleDeveloperSettings': async function(){
+    $('.fullScreenSpin').css('display','block');
+    let settingObject = [];
+    const templateObject = Template.instance();
+    let settingDetails = templateObject.settingDetails.get();
+    if( settingDetails.length > 0 ){
+        for (const item of settingDetails) {
+            if( settingFields.includes( item.PrefName ) == true ){
+                let FieldValue = $('#' + item.PrefName).val();
+                settingObject.push({
                     type: "TERPPreference",
-                    objects:settingObject
-                };
+                    fields: {
+                        Id: item.Id,
+                        Fieldvalue: FieldValue
+                    }
+                });
+            }
+        }
+    }else{
+        for (const PrefName of settingFields) {
+            let FieldValue = $('#' + PrefName).val();
+            settingObject.push({
+                type: "TERPPreference",
+                fields: {
+                    FieldType: "ftString",
+                    FieldValue: FieldValue,
+                    KeyValue: specialSearchKey,
+                    PrefName: PrefName,
+                    PrefType: "ptCompany",
+                    RefType: "None"
+                }
+            })
+        }
+    }
+    if( settingObject.length ){
+        let settingJSON = {
+            type: "TERPPreference",
+            objects:settingObject
+        };
 
-                const ApiResponse = await settingService.savePreferenceSettings( settingJSON );
+        try {
+            // Saving data
+            let ApiResponse = await settingService.savePreferenceSettings( settingJSON ); 
+            if( ApiResponse.result == 'Success' ){              
                 let data = await settingService.getPreferenceSettings( settingFields );
                 let dataObject = await getVS1Data('TERPPreference')
                 let details = [];
@@ -117,15 +112,36 @@ Template.yoodledeveloper.events({
                     templateObject.settingDetails.set( data.terppreference );
                     data.terppreference.push(...details);
                     await addVS1Data('TERPPreference', JSON.stringify(data))
+                    $('.fullScreenSpin').css('display','none');
                 }
+                swal({
+                    title: 'Yodlee settings successfully updated!',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: "Error in updation",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                })
             }
-            $('.fullScreenSpin').css('display','none');
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: 'Yoodle developer successfully updated!',
-                text: '',
-                type: 'success',
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
             })
         }
-    })
+        
+    }
   }
 });

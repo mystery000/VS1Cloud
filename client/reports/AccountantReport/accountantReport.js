@@ -33,8 +33,6 @@ Template.accountant.onRendered(() => {
     const accountTypeList = [];
     const dataTableList = [];
 
-    let accountantID = FlowRouter.getParam("_id");
-
     templateObject.accountantPanList.set([
       {
         no: 2,
@@ -206,7 +204,6 @@ Template.accountant.onRendered(() => {
         };
         dataTableList.push(dataList);
       }
-
       
       templateObject.datatablerecords.set(dataTableList);
   
@@ -412,13 +409,81 @@ Template.accountant.onRendered(() => {
       var begunDate = moment(currentDate).format("DD/MM/YYYY");
       templateObject.dateAsAt.set(begunDate);
 
-      let headerHtml = "<span>First Name Last Name, CPA</span><br>";
-      // headerHtml += "<h4>OnPoint Advisory</h4>";
-      headerHtml += "<span>Address, Town / City, Postal / Zip Code, State / Region, Country</span>";
-      headerHtml += "<h3>Document Name</h3>";
-      headerHtml += "<span>Company Name<br>For the year ended "+(new Date())+"</span>";
+      let accountantID = FlowRouter.getParam("_id");
+
+      getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
+
+//         if(dataObject.length == 0){
+//           taxRateService.getAccountantCategory().then(function (data) {
+//               for(let i=0; i<data.tdeptclass.length; i++){
+//                   var dataList = {
+//                     id: data.tdeptclass[i].Id || ' ',
+//                     firstname: data.tdeptclass[i].FirstName || '-',
+//                     lastname: data.tdeptclass[i].LastName || '-',
+//                     companyname: data.tdeptclass[i].CompanyName || '-',
+//                     address: data.tdeptclass[i].Address || '-',
+//                     docname: data.tdeptclass[i].DocName || '-',
+//                     towncity: data.tdeptclass[i].TownCity || '-',
+//                     postalzip: data.tdeptclass[i].PostalZip || '-',
+//                     stateregion: data.tdeptclass[i].StateRegion || '-',
+//                     country: data.tdeptclass[i].Country || '-',
+//                     status:data.tdeptclass[i].Active || 'false',
+//                   };
+//               }
+//           }).catch(function (err) {
+//           });
+//         }
+//         else{
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.taccountantcategory;
+            for(let i=0; i<useData.length; i++){
+                var dataList = {
+                    id: useData[i].Id || '',
+                    firstname: useData[i].FirstName || '-',
+                    lastname: useData[i].LastName || '-',
+                    companyname: useData[i].CompanyName || '-',
+                    address: useData[i].Address || '-',
+                    docname: useData[i].DocName || '-',
+                    towncity: useData[i].TownCity || '-',
+                    postalzip: useData[i].PostalZip || '-',
+                    stateregion: useData[i].StateRegion || '-',
+                    country: useData[i].Country || '-',
+                    status: useData[i].Active || 'false',
+                };
+
+                if(dataList.docname == accountantID){
+                  let headerHtml = "<span>"+dataList.firstname+" "+dataList.lastname+", CPA</span><br>";
+                  // headerHtml += "<h4>OnPoint Advisory</h4>";
+                  headerHtml += "<span>"+dataList.address+", "+dataList.towncity+", "+dataList.postalzip+", "+dataList.stateregion+", "+dataList.country+"</span>";
+                  headerHtml += "<h3>"+dataList.docname+"</h3>";
+                  headerHtml += "<span>"+dataList.companyname+"<br>For the year ended "+(new Date())+"</span>";
+
+                  $("#reportsAccountantHeader").html(headerHtml);
+                }
+            }
+        // }
+      })
+      .catch(function (err) {
+        taxRateService.getAccountantCategory().then(function (data) {
+            for(let i=0; i<data.tdeptclass.length; i++){
+                var dataList = {
+                    id: data.tdeptclass[i].Id || '',
+                    firstname: data.tdeptclass[i].FirstName || '-',
+                    lastname: data.tdeptclass[i].LastName || '-',
+                    companyname: data.tdeptclass[i].CompanyName || '-',
+                    address: data.tdeptclass[i].Address || '-',
+                    docname: data.tdeptclass[i].DocName || '-',
+                    towncity: data.tdeptclass[i].TownCity || '-',
+                    postalzip: data.tdeptclass[i].PostalZip || '-',
+                    stateregion: data.tdeptclass[i].StateRegion || '-',
+                    country: data.tdeptclass[i].Country || '-',
+                    status:data.tdeptclass[i].Active || 'false',
+                };
+            }
+        }).catch(function (err) {
+        });
+      });
       
-      $("#reportsAccountantHeader").html(headerHtml);
     });
 
     templateObject.getBalanceSheetReports = async (dateAsOf) => {
@@ -1162,6 +1227,26 @@ Template.accountant.events({
     $("#balancedate").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
     templateObject.getBalanceSheetReports("", "", true);
+  },
+  "click .btnPrintReport": function (event) {
+    $("a").attr("href", "/");
+    document.title = "Balance Sheet Report";
+    $(".printReport").print({
+      title: document.title + " | Balance Sheet | " + loggedCompany,
+      noPrintSelector: ".addSummaryEditor",
+      mediaPrint: false,
+    });
+
+    setTimeout(function () {
+      $("a").attr("href", "#");
+    }, 100);
+  },
+  "click .btnExportReport": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    
+    const filename = loggedCompany + "-Balance Sheet" + ".csv";
+    utilityService.exportReportToCsvTable("tableExport", filename, "csv");
   },
 });
 
