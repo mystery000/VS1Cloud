@@ -1871,8 +1871,8 @@
                                                                                         <div class="form-group">
                                                                                             <label>On termination unused balance is:</label>
                                                                                             <select class="form-control" id="onTerminationUnusedBalance" name="onTerminationUnusedBalance" style="cursor: pointer;">
-                                                                                                <option value="Not Paid Out">Not Paid Out</option>
-                                                                                                <option value="Paid Out">Paid Out</option>
+                                                                                                <option value="0">Not Paid Out</option>
+                                                                                                <option value="1">Paid Out</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -2428,13 +2428,15 @@
                                                                                     <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
                                                                                         <div class="form-group">
                                                                                             <label>Period</label>
-                                                                                            <input type="number" class="form-control" id="period" name="period">
+                                                                                            <select type="search" class="form-control" id="period" name="period" style="cursor: pointer;"></select>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
-                                                                                        <div class="form-group date">
-                                                                                            <label>Payment date</label>
-                                                                                            <input type="text" class="form-control" id="paymentDate" name="paymentDate">
+                                                                                        <div class="input-group date" style="cursor: pointer;">
+                                                                                            <input type="text" class="form-control formClassDate paymentDate" id="paymentDate" name="paymentDate" value="">
+                                                                                            <div class="input-group-addon" style="">
+                                                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
@@ -3348,6 +3350,7 @@
                                                                                         <th class="th colEmpPayrollNotesDate" style="">Date</th>
                                                                                         <th class="th colEmpPayrollNotesUser" style="">User</th>
                                                                                         <th class="th colEmpPayrollNotes" style="">Note</th>
+                                                                                        <th class="th colEmpPayrollNotes" style="">Actions</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
@@ -3601,7 +3604,7 @@
         {{> newproductpop}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal" style="z-index: 9999999 !important;">
         {{> accountlistpop}}
     </div>
 

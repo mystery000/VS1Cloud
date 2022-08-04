@@ -2,7 +2,6 @@ import "../lib/global/indexdbstorage.js";
 
 import { CRMService } from "./crm-service";
 import { ContactService } from "../contacts/contact-service";
-import { MailchimpService } from "../js/mailchimp-service.js"
 let crmService = new CRMService();
 
 Template.crmoverview.onCreated(function () {
@@ -601,23 +600,38 @@ Template.crmoverview.events({
     Template.instance().currentTabID.set(e.target.id);
   },
 
-  "click .btnMailchimp": function (e) {
-    let maichimpService = new MailchimpService();
+  "click #btn_send_to_mailchimp": function (e) {
+    let isCustomer = "off";
+    let isSupplier = "off";
+    let isEmployee = "off";
+    if ($('#chk_customer').is(":checked")) {
+      isCustomer = "on";
+    }
+    if ($('#chk_supplier').is(":checked")) {
+      isSupplier = "on";
+    }
+    if ($('#chk_employee').is(":checked")) {
+      isEmployee = "on";
+    }
+    $(".fullScreenSpin").css("display", "inline-block");
     try {
-      // maichimpService.createNewUser("bitcoin.blog.ytb@gmail.com", "Bitc");
-      Meteor.call('MCNewUser', { 
-        email: 'bitcoin.blog.ytb@gmail.com',
-        firstname: 'Blogger test'
-      }, function (error, result) {
-        if (error && error.error === "error") {
-
+      var erpGet = erpDb();
+      Meteor.call('createListMembers', erpGet, isSupplier, isCustomer, isEmployee, function (error, result) {
+        if (error !== undefined) {
+          swal("Something went wrong!", "", "error");
         } else {
-
+          swal("Contacts are added to Mail Chimp successfully", "", "success");
         }
+        $(".fullScreenSpin").css("display", "none");
       });
     } catch (error) {
+      swal("Something went wrong!", "", "error");
+      $(".fullScreenSpin").css("display", "none");
     }
-    // swal("You are not set up yet, do you wish to create an account with Mail Chimp", "", "warning");
+  },
+
+  "click .btnMailchimp": function (e) {
+    $('#crmMailchimpModal').modal();
     return;
   },
 

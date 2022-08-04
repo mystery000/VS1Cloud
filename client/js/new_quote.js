@@ -154,6 +154,31 @@ Template.new_quote.onRendered(() => {
 
     templateObject.getTemplateInfo();
 
+    templateObject.getLastQuoteData = async function() {
+        let lastBankAccount = "Bank";
+        let lastDepartment = defaultDept || "";
+        salesService.getLastQuoteID().then(function(data) {
+          let latestQuoteId;
+            if (data.tquote.length > 0) {
+                lastQuote = data.tquote[data.tquote.length - 1]
+                latestQuoteId = (lastQuote.Id);
+            } else {
+              latestQuoteId = 0;
+            }
+            newQuoteId = (latestQuoteId + 1);
+            setTimeout(function() {
+                $('#sltDept').val(lastDepartment);
+                if (FlowRouter.current().queryParams.id) {
+
+                }else{
+                $(".heading").html("New Quote " +newQuoteId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+                };
+            }, 50);
+        }).catch(function(err) {
+            $('#sltDept').val(lastDepartment);
+        });
+    };
+
     function showQuotes1(template_title, number) {
         var array_data = [];
         let lineItems = [];
@@ -1197,42 +1222,43 @@ Template.new_quote.onRendered(() => {
     });
     $('.fullScreenSpin').css('display', 'inline-block');
 
-    templateObject.getAllClients = function() {
-        getVS1Data('TCustomerVS1').then(function(dataObject) {
+    templateObject.getAllClients = function () {
+        getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
-                clientsService.getClientVS1().then(function(data) {
-                    setClientVS1(data);
-                });
+            sideBarService.getAllCustomersDataVS1("All").then(function (data) {
+                setClientVS1(data);
+            });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 setClientVS1(data);
             }
-        }).catch(function(err) {
-            clientsService.getClientVS1().then(function(data) {
+        }).catch(function (err) {
+            sideBarService.getAllCustomersDataVS1("All").then(function (data) {
                 setClientVS1(data);
             });
         });
     };
+
     function setClientVS1(data){
         for (let i in data.tcustomervs1) {
             if (data.tcustomervs1.hasOwnProperty(i)) {
-                let customerrecordObj = {
-                    customerid: data.tcustomervs1[i].Id || ' ',
-                    firstname: data.tcustomervs1[i].FirstName || ' ',
-                    lastname: data.tcustomervs1[i].LastName || ' ',
-                    customername: data.tcustomervs1[i].ClientName || ' ',
-                    customeremail: data.tcustomervs1[i].Email || ' ',
-                    street: data.tcustomervs1[i].Street || ' ',
-                    street2: data.tcustomervs1[i].Street2 || ' ',
-                    street3: data.tcustomervs1[i].Street3 || ' ',
-                    suburb: data.tcustomervs1[i].Suburb || ' ',
-                    statecode: data.tcustomervs1[i].State + ' ' + data.tcustomervs1[i].Postcode || ' ',
-                    country: data.tcustomervs1[i].Country || ' ',
-                    termsName: data.tcustomervs1[i].TermsName || '',
-                    taxCode: data.tcustomervs1[i].TaxCodeName || 'E',
-                    clienttypename: data.tcustomervs1[i].ClientTypeName || 'Default',
-                    discount: data.tcustomervs1[i].Discount || 0
-                };
+              let customerrecordObj = {
+                  customerid: data.tcustomervs1[i].fields.ID || ' ',
+                  firstname: data.tcustomervs1[i].fields.FirstName || ' ',
+                  lastname: data.tcustomervs1[i].fields.LastName || ' ',
+                  customername: data.tcustomervs1[i].fields.ClientName || ' ',
+                  customeremail: data.tcustomervs1[i].fields.Email || ' ',
+                  street: data.tcustomervs1[i].fields.Street || ' ',
+                  street2: data.tcustomervs1[i].fields.Street2 || ' ',
+                  street3: data.tcustomervs1[i].fields.Street3 || ' ',
+                  suburb: data.tcustomervs1[i].fields.Suburb || ' ',
+                  statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
+                  country: data.tcustomervs1[i].fields.Country || ' ',
+                  termsName: data.tcustomervs1[i].fields.TermsName || '',
+                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                  clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
+                  discount: data.tcustomervs1[i].fields.Discount || 0
+              };
                 clientList.push(customerrecordObj);
             }
         }
@@ -4153,6 +4179,7 @@ Template.new_quote.onRendered(() => {
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
             $('#sltTerms').val(quoterecord.termsName|| templateObject.defaultsaleterm.get() ||'');
+            templateObject.getLastQuoteData();
         }, 200);
         templateObject.quoterecord.set(quoterecord);
         if (templateObject.quoterecord.get()) {
@@ -4286,11 +4313,11 @@ Template.new_quote.onRendered(() => {
 
     });
 
-    $(document).on("click", "#tblInventory tbody tr", function(e) {
+    $(document).on("click", "#tblInventory tbody tr", async function(e) {
         $(".colProductName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
-        let taxcodeList = templateObject.taxraterecords.get();
-        let customers = templateObject.clientrecords.get();
+        let taxcodeList = await templateObject.taxraterecords.get();
+        let customers = await templateObject.clientrecords.get();
         let productExtraSell = templateObject.productextrasellrecords.get();
         var $printrows = $(".quote_print tbody tr");
         var table = $(this);
@@ -5975,7 +6002,7 @@ Template.new_quote.onRendered(function() {
         { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-      ]; 
+      ];
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -6005,7 +6032,7 @@ Template.new_quote.onRendered(function() {
         };
         custFields.push(customData);
       }
-      
+
       if (custFields.length < customFieldCount) {
         let remainder = customFieldCount - custFields.length;
         let getRemCustomFields = parseInt(custFields.length);
@@ -7127,8 +7154,8 @@ Template.new_quote.events({
 
                     },
                     "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRateDetail_filter");
-                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRateDetail_filter");
+                        $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxDetail_filter");
+                        $("<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxDetail_filter");
                     }
                 });
             }
@@ -7140,7 +7167,7 @@ Template.new_quote.events({
         }
 
         $('#tblQuoteLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
-        $('#tblQuoteLine tbody tr .lineTaxAmount').attr("data-target", "#taxRateDetailModal");
+        $('#tblQuoteLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
        var $earch = $(event.currentTarget);

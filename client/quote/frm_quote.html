@@ -35,7 +35,7 @@
         {{#if quoterecord}}
         <form>
             <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-                <h2 style="margin: 16px;margin-bottom: 0px;">{{quoterecord.lid}}
+                <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">{{quoterecord.lid}}
                     <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o"  style="font-size: 20px;"></i></a>
                     <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
                 </h2>
@@ -256,7 +256,7 @@
                                                 <input class="form-control form-control" type="hidden"  id="lastname" value="{{quoterecord.lastname}}">
                                             </div>
                                         </div>
-                                      
+
                                     </div>
                                 </div>
                             </div>
@@ -296,7 +296,7 @@
 
                                 <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                     <div class="row">
-                                        
+
                                         <div class="col-6 col-md-12 col-lg-12">
                                              {{> CurrencyWidget rate="sell"}}
                                         </div>
@@ -560,7 +560,7 @@
                                                                 margin-top: 20px;
                                                             }
                                                         </style>
-                                                        
+
                                                         <div class="columnSettings displaySettings" custid="{{displayfields.[0].id}}">
                                                           <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                               <input class="custom-control-input chkProductName" type="checkbox" id="formCheck-01" checked="{{displayfields.[0].active}}">
@@ -712,7 +712,7 @@
                                                                 <input class="custom-control-input chkAmount" type="checkbox" id="formCheck-16" checked="{{displayfields.[8].active}}">
                                                                 <label class="custom-control-label" for="formCheck-16"></label>
                                                                 <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[8].custfieldlabel}}{{else}}Amount (Ex){{/if}}" valueupdate="th.colAmount">{{#if displayfields}}{{displayfields.[8].custfieldlabel}}{{else}}Amount (Ex){{/if}}</div>
-                                                            </div> 
+                                                            </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                 <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[8].width}}{{else}}0{{/if}}" min="0" max="1000">
@@ -724,7 +724,7 @@
                                                                 <input class="custom-control-input chkAmountInc" type="checkbox" id="formCheck-11" checked="{{displayfields.[11].active}}">
                                                                 <label class="custom-control-label" for="formCheck-11"></label>
                                                                 <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[11].custfieldlabel}}{{else}}Amount (Inc){{/if}}" valueupdate="th.colAmountInc">{{#if displayfields}}{{displayfields.[11].custfieldlabel}}{{else}}Amount (Inc){{/if}}</div>
-                                                            </div> 
+                                                            </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                 <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[11].width}}{{else}}0{{/if}}" min="0" max="1000">
@@ -890,7 +890,7 @@
                         {{#if displayfields}}
                         <table id="tblQuoteLine" style="width:100%" class="table table-striped table-bordered tblQuoteLine">
                             <thead>
-                                <tr class="dnd-moved"> 
+                                <tr class="dnd-moved">
                                     <th class="th colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}" style="width: 300px;">{{#if
                                       displayfields}}{{displayfields.[0].custfieldlabel}}{{else}}Product Name{{/if}}</th>
                                     <th class="th colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{#if
@@ -1067,7 +1067,7 @@
                                         <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox" style="cursor: pointer;">
                                         <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose Template</label>
                                     </div>
-                               
+
 
                                 </div>
 
@@ -1134,8 +1134,8 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="row justify-content-center mb-3">
-    
-    
+
+
                                         <div class="row">
                                             {{#each title in getTemplateList}}
                                                 <div class="col-12 ">
@@ -1148,19 +1148,19 @@
                                                                 {{#each index in getTemplateNumber}}
                                                                     <li class="list-group-item templateItem justify-content-between" data-id="{{title}}" data-template-id="{{index}}">
                                                                         <div class="custom-control custom-switch">
-    
+
                                                                             {{#if equals index '1'}}
                                                                                 <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
                                                                             {{else}}
                                                                                 <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" style="cursor: pointer;">
                                                                             {{/if}}
-    
+
                                                                             <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
                                                                             <label style="margin-right: 50px;" for="{{title}}_{{index}}"> Template {{index}}</label>
-    
-    
+
+
                                                                         </div>
-    
+
                                                                         <i id="btnPreviewTemplate" data-id="{{title}}" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
                                                                     </li>
                                                                 {{/each}}
@@ -1171,12 +1171,12 @@
                                                         <div class="custom-control custom-switch">
                                                             <input class="custom-control-input chkGlobalSettings" name="print_quote" checked type="checkbox" id="print_quote" autocomplete="off">
                                                             <label style="cursor: pointer;" class="custom-control-label" for="print_quote">Print Quote</label>
-                                                        </div> 
+                                                        </div>
                                                     </div>
                                                 </div>
                                             {{/each}}
                                         </div>
-    
+
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="padding: 6px;">
@@ -1184,7 +1184,7 @@
                                     <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                             </div>
                         </div>
-    
+
                     </div>
 
                     <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
@@ -1202,7 +1202,7 @@
                                     <div class="custom-control custom-checkbox">
                                         <input class="custom-control-input favCheckBox chkBankingReport" name="print_quote_second" checked type="checkbox" id="print_quote_second" autocomplete="off">
                                         <label style="cursor: pointer;" class="custom-control-label" for="print_quote_second">Print Quote</label>
-                                    </div>                      
+                                    </div>
 
                                 </div>
 
@@ -1678,7 +1678,7 @@
 
                             <div style="font-size: 10px; margin-right: 8px; float: right;">
                                 <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-                              
+
                             </div>
 
                             <p class="bottome-text-fix" style="font-size: 10px;
@@ -1749,8 +1749,8 @@
                         <!-- <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p> -->
                         <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</p>
                         <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
-                      
-                        <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>  
+
+                        <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>
 
                         <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
 
@@ -1897,7 +1897,7 @@
 
         <div style="font-size: 10px; margin-right: 8px; float: right;">
             <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-           
+
         </div>
         <p class="bottome-text-fix" style="font-size: 10px;
         margin-right: 18px;
@@ -2144,7 +2144,7 @@
         <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
             {{> newtaxratepop}}
         </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="taxRateDetailModal">
+        <div class="modal fade" role="dialog" tabindex="-1" id="taxDetailModal">
             {{> taxdetailpop}}
         </div>
         <!-- End Modal Tax Rate -->

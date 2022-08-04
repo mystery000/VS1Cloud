@@ -5,7 +5,7 @@
         </div>
 
         <style>
-         
+
             .templateItem {
                 display: inline-flex !important;
 
@@ -25,7 +25,7 @@
         {{#if purchaseorderrecord}}
             <form>
                 <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-                    <h1 style="margin: 12px;margin-bottom: 0px;">{{purchaseorderrecord.lid}}
+                    <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">{{purchaseorderrecord.lid}}
 
                         <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
 
@@ -73,7 +73,7 @@
 
                 {{> customfieldDroppop}}
                 {{> customfieldpop}}
-                
+
                 <!-- Start {{> optionCustomFiled}} -->
                 <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
                     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -131,7 +131,7 @@
                     </div>
                 </div> -->
                 <!-- END  -->
-            
+
                 <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
@@ -177,9 +177,9 @@
                                                     <div class="custom-control custom-switch">
                                                         <input class="custom-control-input chkGlobalSettings" name="print_purchase_order" checked type="checkbox" id="print_purchase_order" autocomplete="off">
                                                         <label style="cursor: pointer;" class="custom-control-label" for="print_purchase_order">Print Purchase Order</label>
-                                                    </div>    
+                                                    </div>
                                                 </div>
-                                               
+
                                             </div>
                                         {{/each}}
                                     </div>
@@ -243,10 +243,10 @@
                                                     <h4 class="print-header-value" style="font-weight: bold; font-size: 22.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                                     </h4>
                                                 </div>
-        
+
                                             </div>
-        
-        
+
+
                                             <div style="display: flex; width: 100%;">
                                                 <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                                     <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -254,18 +254,18 @@
                                                     <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
                                                     <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No :</p>
                                                     <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
-        
+
                                                     <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>
-        
+
                                                     <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
-        
+
                                                     <div class="mt-4" id="customfieldlable">
                                                         <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                                         <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                                         <p class="customfield3" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
-        
-        
+
+
                                                 </div>
                                                 <div style="width: 50%; padding-left: 16px;">
                                                     <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
@@ -280,18 +280,18 @@
                                                         <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                                             Now</a>
                                                     </p>
-        
+
                                                     <div class="mt-4" id="customfieldlabledata">
                                                         <p class="customfield1data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                                         <p class="customfield2data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                                         <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -326,30 +326,30 @@
                                                             <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                                         </div>
                                                         <!-- <div class="bankDetails" style="margin: 16px;">
-        
+
                                             </div> -->
                                                         <div class="col-12">
                                                             <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                                         </div>
-        
+
                                                         <div class="col-12">
-        
+
                                                             <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 BSB (Branch Number) :
                                                                 <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
+
                                                             <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
+
                                                             <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
-        
+
+
                                                         </div>
-        
+
                                                     </div>
                                                 </div>
                                                 <div class="col-6 field_amount">
@@ -405,23 +405,23 @@
 
 
                                     </div>
-        
+
                                     <div style="font-size: 10px; margin-right: 8px; float: right;">
                                         <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-                                       
+
                                     </div>
                                     <p class="bottome-text-fix" style="font-size: 10px;margin-right: 18px; position: absolute;bottom: 0;z-index: 1111; right: 0;  ">Page 1 of 1</p>
-        
+
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times" style="margin-right: 5px;"></i>Close</button>
                             </div>
                         </div>
-        
+
                     </div>
                 </div>
-        
+
                 <div style="display:none;width: 90%; position:relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;" id="html-2-pdfwrapper_new"
                 name="html-2-pdfwrapper_new">
                 <div class="d-flex flex-row d-sm-flex d-md-flex ">
@@ -461,10 +461,10 @@
                                 <h4 class="print-header-value" style="font-weight: bold; font-size: 15.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                 </h4>
                             </div>
-        
+
                         </div>
-        
-        
+
+
                         <div style="display: flex; width: 100%;">
                             <div style="width: 60%; padding-right: 16px;font-weight: bold;">
                                 <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -473,11 +473,11 @@
                                 <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
                                 <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</p>
                                 <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
-                              
-                                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>  
-        
+
+                                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>
+
                                 <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
-        
+
                                 <div class="mt-4" id="customfieldtablenew">
                                     <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                     <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
@@ -501,10 +501,10 @@
                                     <p class="customfield2data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                     <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                 </div>
-        
-        
-        
-        
+
+
+
+
                             </div>
                         </div>
                     </div>
@@ -539,30 +539,30 @@
                                         <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                     </div>
                                     <!-- <div class="bankDetails" style="margin: 16px;">
-        
+
                             </div> -->
                                     <div class="col-12">
                                         <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                     </div>
-        
+
                                     <div class="col-12">
-        
+
                                         <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             BSB (Branch Number) :
                                             <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
+
                                         <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
+
                                         <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
-        
+
+
                                     </div>
-        
+
                                 </div>
                             </div>
                             <div class="col-6 field_amount">
@@ -621,10 +621,10 @@
 
                 <div style="font-size: 10px; margin-right: 8px; float: right;">
                     <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-                
+
                 </div>
                 <p class="bottome-text-fix" style="font-size: 10px;margin-right: 18px; position: absolute;bottom: 0;z-index: 1111; right: 0;  ">Page 1 of 1</p>
-        
+
                 </div>
 
                 <!-- Start Attachemt -->
@@ -681,7 +681,7 @@
                     </div>
                 </div>
                 <!-- END Attachments -->
-                <!-- View File Attachemt -->               
+                <!-- View File Attachemt -->
                 <div id="files_view" class="modal fade" role="dialog">
                     <div class="modal-dialog">
                         <!-- Modal content-->
@@ -804,7 +804,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 col-md-12 col-lg-12">
-                                                
+
                                                 <div class="form-group" style="width: 90%; display: none;"><label>Due Date</label>
                                                     <div class="input-group date" style="width: 150px;cursor: pointer;">
                                                         <input type="text" class="form-control" id="dtDueDate" name="dtDueDate" value="{{purchaseorderrecord.duedate}}">
@@ -815,9 +815,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                           
 
-                                       
+
+
                                     </div>
                                 </div>
                             </div>
@@ -1796,7 +1796,7 @@
                                     <div class="custom-control custom-checkbox">
                                         <input class="custom-control-input favCheckBox chkBankingReport" name="print_purchase_order_second" checked type="checkbox" id="print_purchase_order_second" autocomplete="off">
                                         <label style="cursor: pointer;" class="custom-control-label" for="print_purchase_order_second">Print Purchase Order</label>
-                                    </div>                      
+                                    </div>
 
                                 </div>
 
@@ -2210,6 +2210,9 @@
             </div>
             <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
                 {{> newtaxratepop}}
+            </div>
+            <div class="modal fade" role="dialog" tabindex="-1" id="taxDetailModal">
+                {{> taxdetailpop}}
             </div>
         <!-- End Modal Tax Rate -->
 

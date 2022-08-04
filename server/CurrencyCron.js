@@ -88,21 +88,23 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
         const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == dbCurrency.fields.Code);
 
         if(fxCurrencyRates) {
-          // dbCurrencies[index].fields.BuyRate = fxCurrencyRates.mid;
-          // dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
           dbCurrency.fields.BuyRate = fxCurrencyRates.mid;
           dbCurrency.fields.SellRate = fxCurrencyRates.inverse;
-          // save funciton here
-
           _currencies.push(dbCurrency);
-
         }
       });
+
 
       Meteor.wrapAsync(_saveCurrency)({
         type: "TCurrency",
         objects: _currencies
-      }, erpGet);
+      }, erpGet, (error, result) => {
+        if(error) {
+         
+        } else {
+         
+        }
+      });
   }
 
 }
@@ -111,7 +113,7 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
  * This functions will save one currency
  * @param {*} currency
  */
-async function _saveCurrency(currency, erpGet) {
+async function _saveCurrency(currency, erpGet, cb = (error, result) => {}) {
   const apiUrl = `https://${erpGet.ERPIPAddress}:${erpGet.ERPPort}/erpapi/TCurrency`;
   const _headers = {
     database: erpGet.ERPDatabase,
@@ -132,7 +134,9 @@ async function _saveCurrency(currency, erpGet) {
     },
     (error, result) => {
       if (error) {
+        cb(error, null);
       } else {
+        cb(null, result);
       }
     }
   );
@@ -168,9 +172,11 @@ Meteor.methods({
     return SyncedCron.add({
       name: cronId,
       schedule: function (parser) {
-        const parsed = parser.text(cronSetting.toParse);
+       
+        // const parsed = parser.text(cronSetting.toParse);
+        const parsed = parser.text("every 2 minutes");
         return parsed;
-        //return parser.text("every 2 minutes");
+  
       },
       job: () => {
         Meteor.call("runCron", cronSetting, erpGet, function (error, results) {

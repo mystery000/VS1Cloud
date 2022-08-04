@@ -53,7 +53,6 @@
                                                     padding: 0.75rem !important;
                                                 }
                                             }
-
                                         </style>
 
                                         <div class="col">
@@ -210,7 +209,7 @@
                                                             <!-- SEED TO SALE END -->
                                                         </div>
                                                         <div class="modal-footer" style="background-color: #ededed;">
-                                                            <button class="btn btn-success btnSaveDept" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+                                                            <button class="btn btn-success btnSaveAccountant" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
                                                             <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
                                                         </div>
                                                     </div>
@@ -338,7 +337,7 @@
                                                     <div class="modal-body">
                                                         <p>Please click "Delete" to deactivate accountant</p>
 
-                                                        <button class="btn btn-danger float-right btnDeleteDepartment" type="button">
+                                                        <button class="btn btn-danger float-right btnDeleteAccountant" type="button">
                                                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
                                                         </button>
                                                     </div>
@@ -367,19 +366,19 @@
                                             <tbody>
                                                 {{#if datatablerecords}}
                                                 {{#each item in datatablerecords}}
-                                                <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
+                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: default;">
                                                     <!-- <td contenteditable="false" class="colDeptID">{{item.id}}</td> -->
                                                     <!-- <td contenteditable="false" class="colHeadDept">{{item.headDept}}</td> -->
-                                                    <td contenteditable="false" class="colFirstName">{{item.departmentName}}</td>
-                                                    <td contenteditable="false" class="colLastName">{{item.departmentName}}</td>
-                                                    <td contenteditable="false" class="colCompanyName">{{item.departmentName}}</td>
+                                                    <td contenteditable="false" class="colFirstName">{{item.firstname}}</td>
+                                                    <td contenteditable="false" class="colLastName">{{item.lastname}}</td>
+                                                    <td contenteditable="false" class="colCompanyName">{{item.companyname}}</td>
                                                     <!-- <td contenteditable="false" class="colStatus">{{item.status}}</td> -->
-                                                    <td contenteditable="false" class="colAddress">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colDocName">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colTownCity hiddenColumn">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colPostalZip hiddenColumn">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colStateRegion hiddenColumn">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colCountry hiddenColumn">{{item.description}}</td>
+                                                    <td contenteditable="false" class="colAddress">{{item.address}}</td>
+                                                    <td contenteditable="false" class="colDocName">{{item.docname}}</td>
+                                                    <td contenteditable="false" class="colTownCity hiddenColumn">{{item.towncity}}</td>
+                                                    <td contenteditable="false" class="colPostalZip hiddenColumn">{{item.postalzip}}</td>
+                                                    <td contenteditable="false" class="colStateRegion hiddenColumn">{{item.stateregion}}</td>
+                                                    <td contenteditable="false" class="colCountry hiddenColumn">{{item.country}}</td>
                                                     <td contenteditable="false" class="colDelete">
                                                         <span class="table-remove">
                                                             <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>

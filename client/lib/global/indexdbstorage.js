@@ -261,6 +261,7 @@ openDb = function (dbName) {
       db.createObjectStore('TTripGroup',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TLeaveData',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TEarningData',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TReportsAccountantsCategory',{ keyPath: "EmployeeEmail"});
 
       db.createObjectStore('TltSalesOverview',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TltSalesOrderList',{ keyPath: "EmployeeEmail"});
@@ -558,7 +559,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 52);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 54);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };

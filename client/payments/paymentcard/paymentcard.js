@@ -22,7 +22,7 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
-import { calculateApplied, onExchangeRateChange } from "./supplierPaymentcard";
+import { calculateApplied, convertToForeignAmount, onExchangeRateChange } from "./supplierPaymentcard";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -36,6 +36,9 @@ var template_list = [
 
 Template.paymentcard.onCreated(() => {
     const templateObject = Template.instance();
+    templateObject.isForeignEnabled = new ReactiveVar(false);
+    templateObject.customerPayments = new ReactiveVar([]);
+
     templateObject.records = new ReactiveVar();
     templateObject.record = new ReactiveVar({});
     templateObject.CleintName = new ReactiveVar();
@@ -153,12 +156,12 @@ Template.paymentcard.onRendered(() => {
         templateObject.getTemplateInfo = function() {
 
             getVS1Data('TemplateSettings').then(function(dataObject) {
-    
+
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data;
                 let lineItems = [];
                 let lineItemObj = {};
-      
+
                 if(data.fields)
                 {
                     var customer_payment = data.fields.customer_payment;
@@ -166,21 +169,21 @@ Template.paymentcard.onRendered(() => {
                     $('#choosetemplate').attr("checked", "checked");
 
                     if($('#choosetemplate').is(':checked'))
-                    {        
+                    {
                         //$('#templateselection').modal('show');
                     }
                     else
-                    {   
+                    {
                     $('#templateselection').modal('hide');
-                    }                
+                    }
                 }
-        
-    
+
+
             });
-    
+
        };
-    
-    
+
+
        templateObject.getTemplateInfo();
 
 
@@ -1200,7 +1203,7 @@ Template.paymentcard.onRendered(() => {
 
     templateObject.getLastPaymentData = async function() {
         let lastBankAccount = "Bank";
-        let lastDepartment = Session.get('department') || "";
+        let lastDepartment = Session.get('department') ||defaultDept|| "";
         paymentService.getAllCustomerPaymentData1().then(function(data) {
           let latestPaymentId;
             if (data.tcustomerpayment.length > 0) {
@@ -5034,6 +5037,80 @@ Template.paymentcard.onRendered(() => {
 
     });
 
+    templateObject.addExpenseToTable = (withForeignAmount = false) => {
+        $('#tblPaymentcard tbody tr').remove(); // first lets clean it
+    
+        /**
+         * Now we need to add right values depending on FX currency
+         */
+         let list = templateObject.customerPayments.get();
+    
+    
+         setTimeout(() => {
+            if (list.length > 0) {
+                let currentApplied = $('.lead').text().replace(/[^0-9.-]+/g, "");
+                currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0])
+                let total = currentApplied;
+                for (let x = 0; x < list.length; x++) {
+                    var rowData =   '<tr class="dnd-moved dynamic-converter-js" id="' + list[x].awaitingId + '" name="' + list[x].awaitingId + '">\n' +
+                                    '	<td contenteditable="false" class="colTransDate">' + list[x].date + '</td>\n' +
+                                    '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">Invoice</td>\n' +
+                                    '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' + list[x].awaitingId + '</td>\n' +
+                                    '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' + list[x].originalAmount + '</td>\n' +
+                                    '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' + list[x].outstandingAmount + '</td>\n' +
+                                    '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' + list[x].paymentAmount + '"></td>\n' +
+                                    (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' + convertToForeignAmount(list[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) + '"></td>\n' : "") +
+                                    '	<td contenteditable="false" class="lineOutstandingAmount convert-from" style="text-align: right!important;">' + list[x].outstandingAmount + '</td>\n' +
+                                    (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to" style="text-align: right!important;">' + convertToForeignAmount(list[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) + '</td>\n' : '') +
+                                    '	<td contenteditable="true" class="colComments">' + list[x].comments + '</td>\n' +
+                                    '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+                                    '</tr>';
+    
+                    //$('#tblPaymentcard tbody>tr:last').clone(true);
+                    // $(".colTransDate", rowData).text(selectedSupplierPayments[x].date);
+                    // $(".colType", rowData).text("Invoice");
+                    // $(".colTransNo", rowData).text(selectedSupplierPayments[x].awaitingId);
+                    // $(".lineOrginalamount", rowData).text(selectedSupplierPayments[x].originalAmount);
+                    // $(".lineAmountdue", rowData).text(selectedSupplierPayments[x].outstandingAmount);
+                    // $(".linePaymentamount", rowData).val(selectedSupplierPayments[x].paymentAmount);
+                    // $(".lineOutstandingAmount", rowData).text(selectedSupplierPayments[x].paymentAmount);
+                    // $(".colComments", rowData).text(selectedSupplierPayments[x].comments);
+                    // rowData.attr('id', selectedSupplierPayments[x].awaitingId);
+                    // rowData.attr('name', selectedSupplierPayments[x].awaitingId);
+                    let checkCompareID = list[x].awaitingId || '';
+                    let isCheckedTrue = true;
+                    $('.tblPaymentcard > tbody > tr').each(function() {
+                        var lineID = this.id;
+                        if (lineID == checkCompareID) {
+                            isCheckedTrue = false;
+                        }
+                    });
+                    if (isCheckedTrue) {
+                        $("#tblPaymentcard tbody").append(rowData);
+                        total = total + parseFloat(list[x].paymentAmount.replace(/[^0-9.-]+/g, "")) || 0;
+                    }
+                    //$('.appliedAmount').text(Currency + total.toFixed(2));
+                }
+                $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+                $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(total));
+            }
+         }, 300);
+       
+    
+        
+        setTimeout(function () {
+          $("td").each(function () {
+            if (
+              $(this)
+                .text()
+                .indexOf("-" + Currency) >= 0
+            )
+              $(this).addClass("text-danger");
+          });
+        }, 1000);
+    }
+    
+
 });
 
 Template.paymentcard.helpers({
@@ -5154,7 +5231,15 @@ Template.paymentcard.helpers({
     },
     organizationurl: () => {
         return Session.get('vs1companyURL');
-    }
+    },
+
+
+    getDefaultCurrency: () => {
+        return defaultCurrencyCode;
+    },
+    isForeignEnabled: () => {
+        return Template.instance().isForeignEnabled.get();
+    },
 });
 
 Template.paymentcard.events({
@@ -8115,51 +8200,58 @@ Template.paymentcard.events({
     'click .btnSelectCustomers': function(event) {
         const templateObject = Template.instance();
         let selectedSupplierPayments = templateObject.selectedAwaitingPayment.get();
-        if (selectedSupplierPayments.length > 0) {
-            let currentApplied = $('.lead').text().replace(/[^0-9.-]+/g, "");
-            currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0])
-            let total = currentApplied;
-            for (let x = 0; x < selectedSupplierPayments.length; x++) {
-                var rowData = '<tr class="dnd-moved" id="' + selectedSupplierPayments[x].awaitingId + '" name="' + selectedSupplierPayments[x].awaitingId + '">\n' +
-                    '	<td contenteditable="false" class="colTransDate">' + selectedSupplierPayments[x].date + '</td>\n' +
-                    '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">Invoice</td>\n' +
-                    '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' + selectedSupplierPayments[x].awaitingId + '</td>\n' +
-                    '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' + selectedSupplierPayments[x].originalAmount + '</td>\n' +
-                    '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' + selectedSupplierPayments[x].outstandingAmount + '</td>\n' +
-                    '	<td><input class="linePaymentamount highlightInput" type="text" value="' + selectedSupplierPayments[x].paymentAmount + '"></td>\n' +
-                    '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' + Currency+'0.00' + '</td>\n' +
-                    '	<td contenteditable="true" class="colComments">' + selectedSupplierPayments[x].comments + '</td>\n' +
-                    '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
-                    '</tr>';
+        // if (selectedSupplierPayments.length > 0) {
+        //     let currentApplied = $('.lead').text().replace(/[^0-9.-]+/g, "");
+        //     currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0])
+        //     let total = currentApplied;
+        //     for (let x = 0; x < selectedSupplierPayments.length; x++) {
+        //         var rowData = '<tr class="dnd-moved" id="' + selectedSupplierPayments[x].awaitingId + '" name="' + selectedSupplierPayments[x].awaitingId + '">\n' +
+        //             '	<td contenteditable="false" class="colTransDate">' + selectedSupplierPayments[x].date + '</td>\n' +
+        //             '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">Invoice</td>\n' +
+        //             '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' + selectedSupplierPayments[x].awaitingId + '</td>\n' +
+        //             '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' + selectedSupplierPayments[x].originalAmount + '</td>\n' +
+        //             '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' + selectedSupplierPayments[x].outstandingAmount + '</td>\n' +
+        //             '	<td><input class="linePaymentamount highlightInput" type="text" value="' + selectedSupplierPayments[x].paymentAmount + '"></td>\n' +
+        //             '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' + Currency+'0.00' + '</td>\n' +
+        //             '	<td contenteditable="true" class="colComments">' + selectedSupplierPayments[x].comments + '</td>\n' +
+        //             '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+        //             '</tr>';
 
-                //$('#tblPaymentcard tbody>tr:last').clone(true);
-                // $(".colTransDate", rowData).text(selectedSupplierPayments[x].date);
-                // $(".colType", rowData).text("Invoice");
-                // $(".colTransNo", rowData).text(selectedSupplierPayments[x].awaitingId);
-                // $(".lineOrginalamount", rowData).text(selectedSupplierPayments[x].originalAmount);
-                // $(".lineAmountdue", rowData).text(selectedSupplierPayments[x].outstandingAmount);
-                // $(".linePaymentamount", rowData).val(selectedSupplierPayments[x].paymentAmount);
-                // $(".lineOutstandingAmount", rowData).text(selectedSupplierPayments[x].paymentAmount);
-                // $(".colComments", rowData).text(selectedSupplierPayments[x].comments);
-                // rowData.attr('id', selectedSupplierPayments[x].awaitingId);
-                // rowData.attr('name', selectedSupplierPayments[x].awaitingId);
-                let checkCompareID = selectedSupplierPayments[x].awaitingId || '';
-                let isCheckedTrue = true;
-                $('.tblPaymentcard > tbody > tr').each(function() {
-                    var lineID = this.id;
-                    if (lineID == checkCompareID) {
-                        isCheckedTrue = false;
-                    }
-                });
-                if (isCheckedTrue) {
-                    $("#tblPaymentcard tbody").append(rowData);
-                    total = total + parseFloat(selectedSupplierPayments[x].paymentAmount.replace(/[^0-9.-]+/g, "")) || 0;
-                }
-                //$('.appliedAmount').text(Currency + total.toFixed(2));
-            }
-            $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-            $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(total));
-        }
+        //         //$('#tblPaymentcard tbody>tr:last').clone(true);
+        //         // $(".colTransDate", rowData).text(selectedSupplierPayments[x].date);
+        //         // $(".colType", rowData).text("Invoice");
+        //         // $(".colTransNo", rowData).text(selectedSupplierPayments[x].awaitingId);
+        //         // $(".lineOrginalamount", rowData).text(selectedSupplierPayments[x].originalAmount);
+        //         // $(".lineAmountdue", rowData).text(selectedSupplierPayments[x].outstandingAmount);
+        //         // $(".linePaymentamount", rowData).val(selectedSupplierPayments[x].paymentAmount);
+        //         // $(".lineOutstandingAmount", rowData).text(selectedSupplierPayments[x].paymentAmount);
+        //         // $(".colComments", rowData).text(selectedSupplierPayments[x].comments);
+        //         // rowData.attr('id', selectedSupplierPayments[x].awaitingId);
+        //         // rowData.attr('name', selectedSupplierPayments[x].awaitingId);
+        //         let checkCompareID = selectedSupplierPayments[x].awaitingId || '';
+        //         let isCheckedTrue = true;
+        //         $('.tblPaymentcard > tbody > tr').each(function() {
+        //             var lineID = this.id;
+        //             if (lineID == checkCompareID) {
+        //                 isCheckedTrue = false;
+        //             }
+        //         });
+        //         if (isCheckedTrue) {
+        //             $("#tblPaymentcard tbody").append(rowData);
+        //             total = total + parseFloat(selectedSupplierPayments[x].paymentAmount.replace(/[^0-9.-]+/g, "")) || 0;
+        //         }
+        //         //$('.appliedAmount').text(Currency + total.toFixed(2));
+        //     }
+        //     $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+        //     $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(total));
+        // }
+
+        let customerPayments = templateObject.customerPayments.get();
+        customerPayments.push(...selectedSupplierPayments);
+        templateObject.customerPayments.set(customerPayments);
+
+        templateObject.addExpenseToTable(templateObject.isForeignEnabled.get());
+
         templateObject.selectedAwaitingPayment.set([]);
         $('#customerPaymentListModal').modal('hide');
 
@@ -8822,30 +8914,53 @@ Template.paymentcard.events({
             }
         } else {}
     },
-    "change #sltCurrency": (e) => {
+    "change #sltCurrency": (e, ui) => {
+        // if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+        //   $(".foreign-currency-js").css("display", "block");
+        // } else {
+        //   $(".foreign-currency-js").css("display", "none");
+        // }
+
         if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
-          $(".foreign-currency-js").css("display", "block");
-        } else {
-          $(".foreign-currency-js").css("display", "none");
-        }
+            $(".foreign-currency-js").css("display", "block");
+      
+            ui.isForeignEnabled.set(true);
+           // ui.updateRecordsWithForeign(false);
+            ui.addExpenseToTable(true);
+          } else {
+            $(".foreign-currency-js").css("display", "none");
+            ui.isForeignEnabled.set(false);
+            //ui.updateRecordsWithForeign(true);
+            ui.addExpenseToTable(false);
+      
+          }
+          
       },
     "keyup #exchange_rate": (e) => {
         onExchangeRateChange(e);
       },
       "change #exchange_rate": (e) => {
-        onExchangeRateChange(e);
+       onExchangeRateChange(e);
       },
       "change #edtForeignAmount": (e) => {
-        calculateApplied();
+        setTimeout(() => {
+            calculateApplied();
+        }, 300);
       },
       "keyup #edtForeignAmount": (e) => {
-        calculateApplied();
+        setTimeout(() => {
+            calculateApplied();
+        }, 300);
       },
       "change #edtVariation": (e) => {
-        calculateApplied();
+        setTimeout(() => {
+            calculateApplied();
+        }, 300);
       },
       "keyup #edtVariation": (e) => {
-        calculateApplied();
+        setTimeout(() => {
+            calculateApplied();
+        }, 300);
       },
       "change #edtApplied": (e) => {
         const currency = getCurrentCurrencySymbol();
@@ -8854,5 +8969,23 @@ Template.paymentcard.events({
       "keyup #edtApplied": (e) => {
         const currency = getCurrentCurrencySymbol();
         $('.appliedAmount').text(currency + $(e.currentTarget).val());
+      },
+      "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
+   
+
+        setTimeout(() => {
+    
+          // convert to forign payment amount
+          const valueToConvert = $(e.currentTarget).val();
+          const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+        
+          $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
+    
+          // Convert oustanding to foriegn oustanding
+          const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
+          const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+          $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+        }, 500);
+    
       }
 });

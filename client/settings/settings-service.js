@@ -1,3 +1,4 @@
+import { functionsIn } from 'lodash';
 import {
     BaseService
 } from '../js/base-service.js';
@@ -320,6 +321,10 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TDeptClass, data);
     }
 
+    saveAccountantCategory(data) {
+        return this.POST(this.ERPObjects.TReportsAccountantsCategory, data);
+    }
+
     saveRateType(data){
         return this.POST(this.ERPObjects.TPayRateType, data);
     }
@@ -346,6 +351,14 @@ export class TaxRateService extends BaseService {
         };
         return this.getList(this.ERPObjects.TDeptClass, options);
     }
+    
+    checkAccountantByName(docName) {
+        let options = {
+            select: "[DocName]='" + docName + "'"
+        };
+        return this.getList(this.ERPObjects.TReportsAccountantsCategory, options);
+    }
+
     checkCurrency(Country) {
         let options = {
             PropertyList: "Code,CurrencyDesc,Currency,BuyRate,SellRate,Active,CurrencySymbol,ID",
@@ -357,13 +370,20 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TCurrency, data);
     }
 
-
     getDepartment() {
         let options = {
             PropertyList: "ID,GlobalRef,KeyValue,DeptClassGroup,DeptClassName,Description,SiteCode,Active",
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TDeptClass, options);
+    }
+
+    getAccountantCategory() {
+        let options = {
+            PropertyList: "ID,FirstName,LastName,CompanyName,Address,DocName,TownCity,PostalZip,StateRegion,Country,Active",
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TReportsAccountantsCategory, options);
     }
 
     getClientType() {
@@ -655,5 +675,27 @@ export class TaxRateService extends BaseService {
           return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
 
         }
+
+    savePreferenceSettings(data){
+        return this.POST(this.ERPObjects.TERPPreference, data);
+    }
+
+    getPreferenceSettings( customSelect = [] ){
+        let options = {};
+        if( customSelect.length > 0 ){
+            let select = customSelect.map(function(item){
+                return `[PrefName]='${item}'`
+            })
+            options = {
+                PropertyList: "PrefName,Fieldvalue",
+                select: select.join(' or ')
+            }
+        }else{
+            options = {
+                PropertyList: "PrefName,Fieldvalue"
+            }
+        }
+        return this.getList(this.ERPObjects.TERPPreference, options);
+    }
 
 }
