@@ -2837,7 +2837,6 @@ Template.paymentcard.onRendered(() => {
 
     
     if (url.indexOf('?id=') > 0) {
-        // console.log("id");
         $("#addRow").attr("disabled", true);
         var getsale_id = url.split('?id=');
         var currentSalesID = getsale_id[getsale_id.length - 1];
@@ -5132,7 +5131,6 @@ Template.paymentcard.helpers({
 
     record: () => {
         let record = Template.instance().record.get();
-        //console.log(record);
         return record;
     },
     deptrecords: () => {
