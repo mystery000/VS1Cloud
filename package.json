@@ -23,6 +23,7 @@
     "@fullcalendar/resource-timeline": "^5.5.0",
     "@fullcalendar/timegrid": "^5.5.1",
     "@fullcalendar/timeline": "^5.5.0",
+    "@mailchimp/mailchimp_marketing": "^3.0.78",
     "@stripe/stripe-js": "^1.7.0",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
