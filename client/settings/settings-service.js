@@ -370,6 +370,10 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TCurrency, data);
     }
 
+    saveCurrencies(data) {
+        return this.POST(this.ERPObjects.TCurrency, data);
+    }
+
     getDepartment() {
         let options = {
             PropertyList: "ID,GlobalRef,KeyValue,DeptClassGroup,DeptClassName,Description,SiteCode,Active",
