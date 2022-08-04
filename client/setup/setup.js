@@ -1718,6 +1718,10 @@ Template.setup.onRendered(function () {
                 }, 100);
               }
 
+              if ($.fn.dataTable.isDataTable("#termsList")) {
+                $("#termsList").DataTable().destroy();
+              }
+
               LoadingOverlay.hide();
               setTimeout(function () {
                 $("#termsList")
@@ -2291,7 +2295,11 @@ Template.setup.onRendered(function () {
   
 
     if (await templateObject.currentEmployees.get()) {
-      $("#employeeListTable").DataTable().destroy();
+
+      if ($.fn.dataTable.isDataTable("#employeeListTable")) {
+        $("#employeeListTable").DataTable().destroy();
+      }
+      
       setTimeout(() => {
         $("#employeeListTable")
           .DataTable({
