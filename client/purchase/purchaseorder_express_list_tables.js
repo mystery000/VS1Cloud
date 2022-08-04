@@ -1880,7 +1880,7 @@ Template.purchaseorderlist.events({
       currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
     let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
 
-    sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+    sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
         addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {}).catch(function (err) {});
       }).catch(function (err) {});
 
@@ -1894,7 +1894,7 @@ Template.purchaseorderlist.events({
           window.open("/purchaseorderlist", "_self");
         });
 
-    sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPO) {
+    sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPO) {
         addVS1Data("TPurchaseOrderList", JSON.stringify(dataPO)).then(function (datareturn) {
           sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
           addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {

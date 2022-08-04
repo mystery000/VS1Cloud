@@ -101,7 +101,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
 
         getVS1Data('TAwaitingSupplierPayment').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0,contactID).then(function (data) {
+                sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, true,initialReportLoad,0,contactID).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     let totalPaidCal = 0;
@@ -802,7 +802,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 });
             }
         }).catch(function (err) {
-            sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0,contactID).then(function (data) {
+            sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, true,initialReportLoad,0,contactID).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 let totalPaidCal = 0;
@@ -2794,7 +2794,7 @@ Template.supplierawaitingpurchaseorder.events({
         }
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-        sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0,'').then(function (data) {
+        sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, true,initialReportLoad,0,'').then(function (data) {
             addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data)).then(function (datareturn) {
 
             }).catch(function (err) {

@@ -119,7 +119,7 @@ Template.chequelist.onRendered(function() {
 
         getVS1Data('TChequeList').then(function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllChequeListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+                sideBarService.getAllChequeListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
                     addVS1Data('TChequeList',JSON.stringify(data));
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
@@ -716,7 +716,7 @@ Template.chequelist.onRendered(function() {
                 });
             }
         }).catch(function(err) {
-            sideBarService.getAllChequeListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+            sideBarService.getAllChequeListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
               addVS1Data('TChequeList',JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
@@ -1366,7 +1366,7 @@ Template.chequelist.events({
         const toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllPurchasesList(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllPurchasesList(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
             addVS1Data('TPurchasesList',JSON.stringify(data)).then(function (datareturn) {
 
             }).catch(function (err) {
@@ -1375,7 +1375,7 @@ Template.chequelist.events({
         }).catch(function(err) {
 
         });
-        sideBarService.getAllChequeListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataCheque) {
+        sideBarService.getAllChequeListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataCheque) {
             addVS1Data('TChequeList', JSON.stringify(dataCheque)).then(function(datareturn) {
               sideBarService.getAllChequeList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TCheque', JSON.stringify(data)).then(function(datareturn) {

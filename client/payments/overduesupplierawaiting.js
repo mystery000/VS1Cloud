@@ -1761,7 +1761,7 @@ Template.overduesupplierawaiting.events({
         }
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-        sideBarService.getAllOverDueAwaitingSupplierPaymentOver(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+        sideBarService.getAllOverDueAwaitingSupplierPaymentOver(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
             addVS1Data('TOverdueAwaitingSupplierPayment', JSON.stringify(data)).then(function (datareturn) {
             }).catch(function (err) {
 
