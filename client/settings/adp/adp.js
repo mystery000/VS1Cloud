@@ -53,7 +53,7 @@ Template.adp.events({
     'click #openLink': function() {
         window.open("https://in.adp.com");
     },
-    'click #saveAdpSetting': function(){
+    'click #saveAdpSetting': async function(){
         $('.fullScreenSpin').css('display','block');
         let settingObject = [];
         const templateObject = Template.instance();

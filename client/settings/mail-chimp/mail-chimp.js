@@ -52,7 +52,7 @@ Template.mailchimp.events({
   'click #openLink': function() {
     window.open("https://login.mailchimp.com/signup/");
   },
-  'click #saveMailChimpSetting': function(){
+  'click #saveMailChimpSetting': async function(){
         $('.fullScreenSpin').css('display','block');
 
         let settingObject = [];
