@@ -3192,7 +3192,7 @@ Template.supplierpaymentcard.onRendered(() => {
       }
     });
 
-  var url = FlowRouter.current().path;
+  let url = FlowRouter.current().path;
   if (url.indexOf("?id=") > 0) {
     var getsale_id = url.split("?id=");
     $("#addRow").attr("disabled", true);
@@ -8348,105 +8348,111 @@ Template.supplierpaymentcard.onRendered(() => {
   });
 
   templateObject.addExpenseToTable = (withForeignAmount = false) => {
-    $('#tblSupplierPaymentcard tbody tr').remove(); // first lets clean it
+    let url = window.location.href;
 
-    /**
-     * Now we need to add right values depending on FX currency
-     */
-     let selectedSupplierPayments = templateObject.outstandingExpenses.get();
+    if(!url.includes("?")) {
 
+      $('#tblSupplierPaymentcard tbody tr').remove(); // first lets clean it
 
-     setTimeout(() => {
-      if (selectedSupplierPayments.length > 0) {
-        let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
-        currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
-        let total = parseFloat(currentApplied);
+      /**
+       * Now we need to add right values depending on FX currency
+       */
+       let selectedSupplierPayments = templateObject.outstandingExpenses.get();
   
-        for (let x = 0; x < selectedSupplierPayments.length; x++) {
-          var rowData =
-            '<tr class="dnd-moved dynamic-converter-js" id="' +
-            selectedSupplierPayments[x].awaitingId +
-            '" name="' +
-            selectedSupplierPayments[x].awaitingId +
-            '">\n' +
-            '	<td contenteditable="false" class="colTransDate">' +
-            selectedSupplierPayments[x].date +
-            "</td>\n" +
-            '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
-            selectedSupplierPayments[x].type +
-            "</td>\n" +
-            '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
-            selectedSupplierPayments[x].awaitingId +
-            "</td>\n" +
-            '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].originalAmount +
-            "</td>\n" +
-            '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].outstandingAmount +
-            "</td>\n" +
-            '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
-            selectedSupplierPayments[x].paymentAmount +
-            '"></td>\n' +
   
-            (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
-            convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
-            '"></td>\n' : '') +
-  
-            '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].outstandingAmount +
-            "</td>\n" +
-  
-            (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
-            convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
-            "</td>\n" : '') +
-  
-            '	<td contenteditable="true" class="colComments">' +
-            selectedSupplierPayments[x].comments +
-            "</td>\n" +
-            '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
-            "</tr>";
-  
-          let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
-          let isCheckedTrue = true;
-          $(".tblSupplierPaymentcard > tbody > tr").each(function () {
-            var lineID = this.id;
-            if (lineID == checkCompareID) {
-              isCheckedTrue = false;
-            }
-          });
-          //setTimeout(function() {
-          if (isCheckedTrue) {
-            $("#tblSupplierPaymentcard tbody").append(rowData);
-            total =
-              total +
-              parseFloat(
-                selectedSupplierPayments[x].paymentAmount.replace(
-                  /[^0-9.-]+/g,
-                  ""
-                )
-              );
-          }
-          //}, 500);
-        }
-        $(".appliedAmount").text(
-          utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
-        );
-        localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-      }
-     }, 300)
-   
-
+       setTimeout(() => {
+        if (selectedSupplierPayments.length > 0) {
+          let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
+          currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
+          let total = parseFloat(currentApplied);
     
-    setTimeout(function () {
-      $("td").each(function () {
-        if (
-          $(this)
-            .text()
-            .indexOf("-" + Currency) >= 0
-        )
-          $(this).addClass("text-danger");
-      });
-    }, 1000);
+          for (let x = 0; x < selectedSupplierPayments.length; x++) {
+            var rowData =
+              '<tr class="dnd-moved dynamic-converter-js" id="' +
+              selectedSupplierPayments[x].awaitingId +
+              '" name="' +
+              selectedSupplierPayments[x].awaitingId +
+              '">\n' +
+              '	<td contenteditable="false" class="colTransDate">' +
+              selectedSupplierPayments[x].date +
+              "</td>\n" +
+              '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
+              selectedSupplierPayments[x].type +
+              "</td>\n" +
+              '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
+              selectedSupplierPayments[x].awaitingId +
+              "</td>\n" +
+              '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].originalAmount +
+              "</td>\n" +
+              '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].outstandingAmount +
+              "</td>\n" +
+              '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
+              selectedSupplierPayments[x].paymentAmount +
+              '"></td>\n' +
+    
+              (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
+              convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+              '"></td>\n' : '') +
+    
+              '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].outstandingAmount +
+              "</td>\n" +
+    
+              (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
+              convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+              "</td>\n" : '') +
+    
+              '	<td contenteditable="true" class="colComments">' +
+              selectedSupplierPayments[x].comments +
+              "</td>\n" +
+              '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+              "</tr>";
+    
+            let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
+            let isCheckedTrue = true;
+            $(".tblSupplierPaymentcard > tbody > tr").each(function () {
+              var lineID = this.id;
+              if (lineID == checkCompareID) {
+                isCheckedTrue = false;
+              }
+            });
+            //setTimeout(function() {
+            if (isCheckedTrue) {
+              $("#tblSupplierPaymentcard tbody").append(rowData);
+              total =
+                total +
+                parseFloat(
+                  selectedSupplierPayments[x].paymentAmount.replace(
+                    /[^0-9.-]+/g,
+                    ""
+                  )
+                );
+            }
+            //}, 500);
+          }
+          $(".appliedAmount").text(
+            utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+          );
+          localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+        }
+       }, 300)
+     
+  
+      
+      setTimeout(function () {
+        $("td").each(function () {
+          if (
+            $(this)
+              .text()
+              .indexOf("-" + Currency) >= 0
+          )
+            $(this).addClass("text-danger");
+        });
+      }, 1000);
+    }
+   
   }
 
   templateObject.updateRecordsWithForeign = (override = false) => {
@@ -8689,6 +8695,10 @@ Template.supplierpaymentcard.helpers({
   },
   organizationurl: () => {
     return Session.get("vs1companyURL");
+  },
+
+  convertToForeignAmount: (amount) => {
+    return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
   },
 });
 

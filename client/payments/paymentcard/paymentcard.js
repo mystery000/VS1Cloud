@@ -5040,11 +5040,14 @@ Template.paymentcard.onRendered(() => {
 
 
     templateObject.addExpenseToTable = (withForeignAmount = false) => {
-        /**
-         * Now we need to add right values depending on FX currency
-         */
-        let list = templateObject.customerPayments.get();
-        if(url.indexOf('?id=') < 0) {
+       
+        let url = window.location.href;
+
+        if(!url.includes("?")) {
+             /**
+             * Now we need to add right values depending on FX currency
+             */
+            let list = templateObject.customerPayments.get();
             $('#tblPaymentcard tbody tr').remove(); // first lets clean it
 
             setTimeout(() => {
