@@ -29,6 +29,7 @@ Template.leadscard.onCreated(function () {
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
     templateObject.currentAttachLineID = new ReactiveVar();
+    templateObject.correspondences = new ReactiveVar([]);
 });
 
 Template.leadscard.onRendered(function () {
@@ -359,12 +360,18 @@ Template.leadscard.onRendered(function () {
         });
     }
 
+    templateObject.getReferenceLetters = () => {
+        let temp = localStorage.getItem('correspondence');
+        templateObject.correspondences.set(temp? JSON.parse(temp): [])
+    }
+
     if (currentId.id === "undefined") {
         setInitialForEmptyCurrentID();
     } else {
         if (!isNaN(currentId.id)) {
             leadID = currentId.id;
             templateObject.getLeadData();
+            templateObject.getReferenceLetters();
         } else if((currentId.name)){
             leadID = currentId.name.replace(/%20/g, " ");
             templateObject.getLeadDataByName();
@@ -374,72 +381,105 @@ Template.leadscard.onRendered(function () {
     }
 
     templateObject.getAllCrm = function (leadName) {
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
             employeeID = url.searchParams.get("id");
         }
-
-        crmService.getAllTaskList(employeeID).then(function (dataObject) {
-            if (dataObject.tprojecttasks.length === 0) {
-                sideBarService.getTProjectTasks().then(function (data) {
-                    setCrmProjectTasks(data, leadName);
-                }).catch(function (err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display', 'none');
-                    // Meteor._reload.reload();
-                });
-            } else {
-                setCrmProjectTasks(dataObject, leadName);
-            }
-        }).catch(function (err) {
-            sideBarService.getTProjectTasks('').then(function (data) {
-                setCrmProjectTasks(data, leadName);
-            }).catch(function (err) {
-                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $('.fullScreenSpin').css('display', 'none');
-                // Meteor._reload.reload();
-            });
-        });
-    };
-    function setCrmProjectTasks(data, leadName) {
-        let lineItems = [];
-        let lineItemObj = {};
         let dataTableList = [];
-        let tableHeaderList = [];
-        for (let i = 0; i < data.tprojecttasks.length; i++) {
-            if (data.tprojecttasks[i].fields.TaskName === leadName) {
-                let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
-                let taskLabelArray = [];
-                if (taskLabel !== null) {
-                    if (taskLabel.length === undefined || taskLabel.length === 0) {
-                        taskLabelArray.push(taskLabel.fields);
-                    } else {
-                        for (let j = 0; j < taskLabel.length; j++) {
-                            taskLabelArray.push(taskLabel[j].fields);
+        crmService.getAllTasksByTaskName(leadName).then(function (data) {
+            if(data.tprojecttasks.length > 0) {
+                for (let i = 0; i < data.tprojecttasks.length; i++) {
+                    if (data.tprojecttasks[i].fields.TaskName === leadName) {
+                        let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+                        let taskLabelArray = [];
+                        if (taskLabel !== null) {
+                            if (taskLabel.length === undefined || taskLabel.length === 0) {
+                                taskLabelArray.push(taskLabel.fields);
+                            } else {
+                                for (let j = 0; j < taskLabel.length; j++) {
+                                    taskLabelArray.push(taskLabel[j].fields);
+                                }
+                            }
                         }
+                        let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+                        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+                        const dataList = {
+                            id: data.tprojecttasks[i].fields.ID || 0,
+                            priority: data.tprojecttasks[i].fields.priority || 0,
+                            date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                            taskName: 'Task',
+                            projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                            projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                            description: taskDescription,
+                            labels: taskLabelArray,
+                            category: 'task'
+                        };
+                        // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
+                        dataTableList.push(dataList);
+                        // }
                     }
                 }
-                let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
-                taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-                const dataList = {
-                    id: data.tprojecttasks[i].fields.ID || 0,
-                    priority: data.tprojecttasks[i].fields.priority || 0,
-                    date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                    taskName: data.tprojecttasks[i].fields.TaskName || '',
-                    projectID: data.tprojecttasks[i].fields.ProjectID || '',
-                    projectName: data.tprojecttasks[i].fields.ProjectName || '',
-                    description: taskDescription,
-                    labels: taskLabelArray
-                };
-                // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
-                dataTableList.push(dataList);
-                // }
             }
-        }
+            crmService.getAllAppointments(leadName).then(dataObj => {
+                if(dataObj.tappointmentex.length > 0) {
+                    dataObj.tappointmentex.map(data=>{
+                        let obj = {
+                            id: data.fields.ID,
+                            priority: 0,
+                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                            taskName: 'Appointment',
+                            projectID: data.fields.ProjectID || '',
+                            projectName: '',
+                            description: '',
+                            labels: '',
+                            category: 'appointment'
+                        }
+                        dataTableList.push(obj);
+                    })
+                }
+                templateObject.crmRecords.set(dataTableList);
+                setCrmProjectTasks()
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch((error)=>{
+                templateObject.crmRecords.set(dataTableList);
+                $('.fullScreenSpin').css('display', 'none');
+            })
+        }).catch(function (err) {
+            crmService.getAllAppointments(leadName).then(dataObj => {
+                if(dataObj.tappointmentex.length > 0) {
+                    dataObj.tappointmentex.map(data=>{
+                        let obj = {
+                            id: data.fields.ID,
+                            priority: 0,
+                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                            taskName: 'Appointment',
+                            projectID: data.fields.ProjectID || '',
+                            projectName: '',
+                            description: '',
+                            labels: '',
+                            category: 'appointment'
+        
+                        }
+    
+                        dataTableList.push(obj);
+                    })
+                }
+                templateObject.crmRecords.set(dataTableList);
+                setCrmProjectTasks()
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function(error) {
+                templateObject.crmRecords.set(dataTableList);
+                $('.fullScreenSpin').css('display', 'none');
+            })
+        });
 
-        templateObject.crmRecords.set(dataTableList);
+        
+    };
+    function setCrmProjectTasks() {
+        let tableHeaderList = [];
 
         if (templateObject.crmRecords.get()) {
             setTimeout(function () {
@@ -604,6 +644,44 @@ Template.leadscard.onRendered(function () {
             });
         });
     };
+
+    $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function (e) {
+        if($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null ) {
+            swal({
+                title: 'Oooops...',
+                text: "No email template has been set",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    $('#referenceLetterModal').modal('toggle');
+                } 
+            });
+        } else {
+            let email = $('#edtLeadEmail').val();
+            let dataLabel = $("input[name='refTemp']:checked").attr('value');
+            let dataSubject = $("input[name='refTemp']:checked").attr('data-subject');
+            let dataMemo = $("input[name='refTemp']:checked").attr('data-memo');
+            if(email && email != null && email != '') {
+                document.location =
+                "mailto:" + email + "?subject=" + dataSubject + "&body=" + dataMemo;
+                $('#referenceLetterModal').modal('toggle');
+            } else {
+                swal({
+                    title: 'Oooops...',
+                    text: "No user email has been set",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#referenceLetterModal').modal('toggle');
+                    } 
+                });
+            }
+        }
+    });
 });
 
 Template.leadscard.events({
@@ -863,8 +941,14 @@ Template.leadscard.events({
     },
     'click .tblCrmList tbody tr': function (event) {
         const taskID = $(event.target).parent().attr('id');
+        const taskCategory = $(event.target).parent().attr('category');
         if (taskID !== undefined) {
-            FlowRouter.go('/crmoverview?taskid=' + taskID);
+            if(taskCategory == 'task'){
+                FlowRouter.go('/crmoverview?taskid=' + taskID);
+            } else if(taskCategory == 'appointment') {
+                FlowRouter.go('/appointments?id=' + taskID);
+
+            }
         }
     },
     'click .chkDatatable': function (event) {
@@ -1291,7 +1375,9 @@ Template.leadscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?leadid=' + customerID);
+            // FlowRouter.go('/crmoverview?leadid=' + customerID);
+            $('#referenceLetterModal').modal('toggle');
+            $('.fullScreenSpin').css('display', 'none');
         } else {
           $('.fullScreenSpin').css('display', 'none');
         }
@@ -1383,6 +1469,10 @@ Template.leadscard.helpers({
     },
     uploadedFile: () => {
         return Template.instance().uploadedFile.get();
+    },
+
+    correspondences: () => {
+        return Template.instance().correspondences.get();
     },
     currentAttachLineID: () => {
         return Template.instance().currentAttachLineID.get();
