@@ -93,7 +93,17 @@ Template.customerdetailsreport.onRendered(() => {
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
         let reportGroups = []; 
-        for (const item of data.tcustomersummaryreport) {   
+        
+        let reportSummary = data.tcustomersummaryreport.map(el => {
+          let resultobj = {};
+          Object.entries(el).map(([key, val]) => {      
+              resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+              return resultobj;
+          })
+          return resultobj;
+        })
+
+        for (const item of reportSummary) {   
             let isExist = reportGroups.filter((subitem) => {
                 if( subitem.EMAIL == item.EMAIL ){
                     subitem.SubAccounts.push(item)
@@ -107,6 +117,7 @@ Template.customerdetailsreport.onRendered(() => {
                     TotalEx: 0,
                     TotalInc: 0,
                     TotalGrossProfit: 0,
+                    Margin: 0,
                     ...item
                 });
             }
@@ -117,9 +128,9 @@ Template.customerdetailsreport.onRendered(() => {
             let TotalInc = 0;
             let TotalGrossProfit = 0;
             item.SubAccounts.map((subitem) => {
-              TotalEx += subitem['Total Amount (Ex)'];
-              TotalInc += subitem['Total Amount (Inc)'];
-              TotalGrossProfit += subitem['Gross Profit'];
+              TotalEx += subitem['Total_Amount_Ex'];
+              TotalInc += subitem['Total_Amount_Inc'];
+              TotalGrossProfit += subitem['Gross_Profit'];
             });
             item.TotalEx = TotalEx;
             item.TotalInc = TotalInc;
@@ -523,15 +534,18 @@ Template.customerdetailsreport.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if (!amount || amount.trim() == "") {
-      return "";
+
+    if (!amount || amount.toString().trim() == "") {
+      return currencyData.symbol +"0.00";
     }
     if (currencyData.code == defaultCurrencyCode) {
       // default currency
       return amount;
     }
 
-    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+
+    amount = utilityService.convertSubstringParseFloat(amount.toString()); // This will remove all currency symbol
+
 
     // Lets remove the minus character
     const isMinus = amount < 0;
@@ -549,21 +563,26 @@ Template.customerdetailsreport.helpers({
     //     ? parseFloat(amount.substring(1))
     //     : parseFloat(amount);
 
+
+
     // Get the selected date
-    let dateTo = $("#balancedate").val();
+    let dateTo = $("#dateTo").val();
     const day = dateTo.split("/")[0];
     const m = dateTo.split("/")[1];
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
 
+
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+
 
     // if(currencyList.length == 0) {
     //   currencyList = Template.instance().currencyList.get();
     //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
     // }
+
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -592,6 +611,8 @@ Template.customerdetailsreport.helpers({
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
 
+
+
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     //amount = amount + 0.36;
     amount = parseFloat(amount * rate); // Multiply by the rate
@@ -600,12 +621,14 @@ Template.customerdetailsreport.helpers({
       maximumFractionDigits: 2,
     }); // Add commas
 
+
     // amount = amount.toLocaleString();
 
     let convertedAmount =
       isMinus == true
-        ? `- ${currencyData.symbol} ${amount}`
-        : `${currencyData.symbol} ${amount}`;
+        ? `-${currencyData.symbol}${amount}`
+        : `${currencyData.symbol}${amount}`;
+
 
     return convertedAmount;
   },
