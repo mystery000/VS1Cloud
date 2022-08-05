@@ -1,11 +1,11 @@
-<template name="accountant_partnershipnontrading">
+<template name="accountant_trustnontrading">
     <div style="margin-top: -24px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Accountant Details 
-                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help 
+            <h2 style="margin: 16px;">Accountant Details
+                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
                     <i class="fa fa-question-circle-o " style="font-size: 20px;"></i>
                 </a>
                 <!-- <button id="btndispAccountant" name="btndispAccountant" class="btn btn-primary float-right" type="button" style="width: 124px; text-align: center; padding: 6px;" autocomplete="off">
@@ -195,7 +195,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                         <div class="modal fade" role="dialog" tabindex="-1" id="accountantList_{{pan.no}}">
                             <div class="modal-dialog" role="document" style="max-width: 800px!important;">
                                 <div class="modal-content">
@@ -257,7 +257,7 @@
                                                             <td contenteditable="false" class="colExtra hiddenColumn">{{item.swiftcode}}</td>
                                                             <td contenteditable="false" class="colAPCANumber hiddenColumn" checkheader="{{item.isheader}}">{{item.apcanumber}}</td>
                                                             <td contenteditable="false" class="colUseReceiptClaim hiddenColumn" checkheader="{{item.useReceiptClaim}}">{{item.useReceiptClaim}}</td>
-                                                            <td contenteditable="false" class="colExpenseCategpry hiddenColumn" category="{{item.expenseCategory}}">{{item.expenseCategory}}</td>    
+                                                            <td contenteditable="false" class="colExpenseCategpry hiddenColumn" category="{{item.expenseCategory}}">{{item.expenseCategory}}</td>
                                                         </tr>
                                                     {{/each}}
                                                 {{/if}}

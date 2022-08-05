@@ -126,7 +126,7 @@ Template.invoicelistBO.onRendered(function() {
 
         getVS1Data('TSalesBackOrderReport').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                   addVS1Data('TSalesBackOrderReport',JSON.stringify(data));
                     let lineItems = [];
                     let lineItemObj = {};
@@ -767,7 +767,7 @@ Template.invoicelistBO.onRendered(function() {
 
             }
         }).catch(function (err) {
-              sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+              sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                 addVS1Data('TSalesBackOrderReport',JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
@@ -1419,12 +1419,12 @@ Template.invoicelistBO.events({
 
         let currenctTodayDate = currentDate.getFullYear() + "-" + month + "-" + days + " "+ hours+ ":"+ minutes+ ":"+ seconds;
         let templateObject = Template.instance();
-        sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataBO) {
+        sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (dataBO) {
           addVS1Data('TSalesBackOrderReport',JSON.stringify(dataBO)).then(function (datareturn) {
             sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
                 addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
 
-                    sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+                    sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
                         addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
                           window.open('/invoicelistBO', '_self');
                           }).catch(function (err) {

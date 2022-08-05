@@ -189,6 +189,7 @@ Template.leadlist.onRendered(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
             contactService.getOneLeadDataEx(listData).then(leadDetail => {
                 if(leadDetail.fields.IsCustomer == true) {
+                    $('.fullScreenSpin').css('display', 'none');
                     swal({ title: 'Notice', text: 'This lead has been converted to customer. Will open customer card', type: 'info', showCancelButton: false, confirmButtonText: 'OK' }).then((result) => { FlowRouter.go('/customerscard?id=' + listData); $('.fullScreenSpin').css('display', 'none');});
                 }else {
                     FlowRouter.go('/leadscard?id=' + listData);
