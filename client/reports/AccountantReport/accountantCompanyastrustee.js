@@ -399,32 +399,24 @@ Template.accountant_companyastrustee.onRendered(() => {
 
       getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
         let data = JSON.parse(dataObject[0].data);
-        let useData = data.taccountantcategory;
-        for(let i=0; i<useData.length; i++){
-            var dataList = {
-                id: useData[i].Id || '',
-                firstname: useData[i].FirstName || '-',
-                lastname: useData[i].LastName || '-',
-                companyname: useData[i].CompanyName || '-',
-                address: useData[i].Address || '-',
-                docname: useData[i].DocName || '-',
-                towncity: useData[i].TownCity || '-',
-                postalzip: useData[i].PostalZip || '-',
-                stateregion: useData[i].StateRegion || '-',
-                country: useData[i].Country || '-',
-                status: useData[i].Active || 'false',
-            };
+        var dataInfo = {
+            id: data.Id || '',
+            firstname: data.FirstName || '-',
+            lastname: data.LastName || '-',
+            companyname: data.CompanyName || '-',
+            address: data.Address || '-',
+            towncity: data.TownCity || '-',
+            postalzip: data.PostalZip || '-',
+            stateregion: data.StateRegion || '-',
+            country: data.Country || '-',
+        };
 
-            if(dataList.docname == accountantID){
-              let headerHtml = "<span>"+dataList.firstname+" "+dataList.lastname+", CPA</span><br>";
-              // headerHtml += "<h4>OnPoint Advisory</h4>";
-              headerHtml += "<span>"+dataList.address+", "+dataList.towncity+", "+dataList.postalzip+", "+dataList.stateregion+", "+dataList.country+"</span>";
-              headerHtml += "<h3>"+dataList.docname+"</h3>";
-              headerHtml += "<span>"+dataList.companyname+"<br>For the year ended "+(new Date())+"</span>";
+        let headerHtml = "<span>"+dataInfo.firstname+" "+dataInfo.lastname+", CPA</span><br>";
+        headerHtml += "<span>"+dataInfo.address+", "+dataInfo.towncity+", "+dataInfo.postalzip+", "+dataInfo.stateregion+", "+dataInfo.country+"</span>";
+        headerHtml += "<h3>Company as Trustee</h3>";
+        headerHtml += "<span>"+dataInfo.companyname+"<br>For the year ended "+(new Date())+"</span>";
 
-              $("#reportsAccountantHeader").html(headerHtml);
-            }
-        }
+        $("#reportsAccountantHeader").html(headerHtml);
       })
       .catch(function (err) {
         // taxRateService.getAccountantCategory().then(function (data) {
@@ -516,18 +508,7 @@ Template.accountant_companyastrustee.onRendered(() => {
           }
   
           let AccountTree = data.balancesheetreport[i]["Account Tree"];
-          // if (AccountTree !== 0) {
-          //   AccountTree = utilityService.modifynegativeCurrencyFormat(AccountTree);
-          // } else {
-          //   AccountTree = " ";
-          // }
           recordObj.selected = false;
-  
-          /**
-           * Add a title by default
-           */
-          // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
-          // recordObj.subTotal = SubAccountTotal || "";
   
           if (
             (i == 0 && AccountTree == "ASSETS") ||
@@ -537,12 +518,10 @@ Template.accountant_companyastrustee.onRendered(() => {
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
   
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else if (i == 1 || i == 2 || AccountTree == "") {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else if (AccountTree.replace(/\s/g, "") == "TotalChequeorSaving") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -561,10 +540,6 @@ Template.accountant_companyastrustee.onRendered(() => {
               },
             ];
   
-            // recordObj.type = "total";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
-            // recordObj.subTotal = SubAccountTotal || "";
-            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
           } else if (
             AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable"
           ) {
@@ -586,10 +561,6 @@ Template.accountant_companyastrustee.onRendered(() => {
               ,
             ];
   
-            // recordObj.type = "total";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
-            // recordObj.subTotal = SubAccountTotal || "";
-            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
           } else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -608,10 +579,6 @@ Template.accountant_companyastrustee.onRendered(() => {
               },
             ];
   
-            // recordObj.type = "total";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
-            // recordObj.subTotal = SubAccountTotal || "";
-            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
           } else if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -634,8 +601,6 @@ Template.accountant_companyastrustee.onRendered(() => {
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
   
-            // recordObj.type = "asset";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else if (AccountTree.replace(/\s/g, "") == "TotalFixedAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -797,7 +762,6 @@ Template.accountant_companyastrustee.onRendered(() => {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else {
             if (flag) {
               let accountCode = "";
@@ -852,9 +816,6 @@ Template.accountant_companyastrustee.onRendered(() => {
         let netAssets = {
           id: "",
           selected: false,
-          //   title: "Net Assets",
-          //   subTotal: Currency + "0.00",
-          //   total: utilityService.modifynegativeCurrencyFormat(totalNetAssets),
           dataTotal: [
             "Net Assets",
             {
@@ -875,8 +836,7 @@ Template.accountant_companyastrustee.onRendered(() => {
         templateObject.netAssetTotal.set(
           utilityService.modifynegativeCurrencyFormat(totalNetAssets)
         );
-      }
-  
+      }  
   
       templateObject.records.set(records);
       if (templateObject.records.get()) {
@@ -1251,8 +1211,6 @@ Template.accountant_companyastrustee.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-
-
     if (!amount || amount.trim() == "") {
       return "";
     }
@@ -1261,9 +1219,7 @@ Template.accountant_companyastrustee.helpers({
       return amount;
     }
 
-
     amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
-
 
     // Lets remove the minus character
     const isMinus = amount < 0;
@@ -1276,7 +1232,6 @@ Template.accountant_companyastrustee.helpers({
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-
 
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
@@ -1312,7 +1267,6 @@ Template.accountant_companyastrustee.helpers({
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-
 
     return convertedAmount;
   },

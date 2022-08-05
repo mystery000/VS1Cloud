@@ -2,7 +2,6 @@
 // import 'jQuery.print/jQuery.print.js';
 import { UtilityService } from "../../utility-service";
 
-// import { OrganisationService } from "../../js/organisation-service";
 import { CountryService } from "../../js/country-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { AccountService } from "../../accounts/account-service";
@@ -10,8 +9,6 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
 let sideBarService = new SideBarService();
-// let organisationService = new OrganisationService();
-
 
 // let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -59,8 +56,7 @@ Template.accountant_soletradernontrading.onRendered(() => {
         no: 9,
         name:"Payables",
       }
-    ]);
-    
+    ]);    
     
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
@@ -292,14 +288,8 @@ Template.accountant_soletradernontrading.onRendered(() => {
                   exportOptions: {
                     columns: ":visible",
                   },
-                  // ,
-                  // customize: function ( win ) {
-                  //   $(win.document.body).children("h1:first").remove();
-                  // }
                 },
               ],
-              // bStateSave: true,
-              // rowId: 0,
               pageLength: initialDatatableLoad,
               lengthMenu: [
                 [initialDatatableLoad, -1],
@@ -308,7 +298,6 @@ Template.accountant_soletradernontrading.onRendered(() => {
               info: true,
               responsive: true,
               order: [[0, "asc"]],
-              // "aaSorting": [[1,'desc']],
               action: function () {
                 $("#tblAccountOverview").DataTable().ajax.reload();
               },
@@ -391,10 +380,6 @@ Template.accountant_soletradernontrading.onRendered(() => {
             "setDate",
             new Date(year, inst.selectedMonth, inst.selectedDay)
           );
-          // Hide (close) the picker
-          // $(this).datepicker('hide');
-          // // Change ttrigger the on change function
-          // $(this).trigger('change');
         },
       });
   
@@ -409,59 +394,29 @@ Template.accountant_soletradernontrading.onRendered(() => {
       var begunDate = moment(currentDate).format("DD/MM/YYYY");
       templateObject.dateAsAt.set(begunDate);
 
-      let accountantID = FlowRouter.getParam("_id");
-
       getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
 
-//         if(dataObject.length == 0){
-//           taxRateService.getAccountantCategory().then(function (data) {
-//               for(let i=0; i<data.tdeptclass.length; i++){
-//                   var dataList = {
-//                     id: data.tdeptclass[i].Id || ' ',
-//                     firstname: data.tdeptclass[i].FirstName || '-',
-//                     lastname: data.tdeptclass[i].LastName || '-',
-//                     companyname: data.tdeptclass[i].CompanyName || '-',
-//                     address: data.tdeptclass[i].Address || '-',
-//                     docname: data.tdeptclass[i].DocName || '-',
-//                     towncity: data.tdeptclass[i].TownCity || '-',
-//                     postalzip: data.tdeptclass[i].PostalZip || '-',
-//                     stateregion: data.tdeptclass[i].StateRegion || '-',
-//                     country: data.tdeptclass[i].Country || '-',
-//                     status:data.tdeptclass[i].Active || 'false',
-//                   };
-//               }
-//           }).catch(function (err) {
-//           });
-//         }
-//         else{
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.taccountantcategory;
-            for(let i=0; i<useData.length; i++){
-                var dataList = {
-                    id: useData[i].Id || '',
-                    firstname: useData[i].FirstName || '-',
-                    lastname: useData[i].LastName || '-',
-                    companyname: useData[i].CompanyName || '-',
-                    address: useData[i].Address || '-',
-                    docname: useData[i].DocName || '-',
-                    towncity: useData[i].TownCity || '-',
-                    postalzip: useData[i].PostalZip || '-',
-                    stateregion: useData[i].StateRegion || '-',
-                    country: useData[i].Country || '-',
-                    status: useData[i].Active || 'false',
-                };
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.taccountantcategory;
+        var dataList = {
+            id: useData[i].Id || '',
+            firstname: useData[i].FirstName || '-',
+            lastname: useData[i].LastName || '-',
+            companyname: useData[i].CompanyName || '-',
+            address: useData[i].Address || '-',
+            towncity: useData[i].TownCity || '-',
+            postalzip: useData[i].PostalZip || '-',
+            stateregion: useData[i].StateRegion || '-',
+            country: useData[i].Country || '-',
+            status: useData[i].Active || 'false',
+        };
 
-                if(dataList.docname == accountantID){
-                  let headerHtml = "<span>"+dataList.firstname+" "+dataList.lastname+", CPA</span><br>";
-                  // headerHtml += "<h4>OnPoint Advisory</h4>";
-                  headerHtml += "<span>"+dataList.address+", "+dataList.towncity+", "+dataList.postalzip+", "+dataList.stateregion+", "+dataList.country+"</span>";
-                  headerHtml += "<h3>"+dataList.docname+"</h3>";
-                  headerHtml += "<span>"+dataList.companyname+"<br>For the year ended "+(new Date())+"</span>";
+        let headerHtml = "<span>"+dataList.firstname+" "+dataList.lastname+", CPA</span><br>";
+        headerHtml += "<span>"+dataList.address+", "+dataList.towncity+", "+dataList.postalzip+", "+dataList.stateregion+", "+dataList.country+"</span>";
+        headerHtml += "<h3>Sole Trader Non Trading</h3>";
+        headerHtml += "<span>"+dataList.companyname+"<br>For the year ended "+(new Date())+"</span>";
 
-                  $("#reportsAccountantHeader").html(headerHtml);
-                }
-            }
-        // }
+        $("#reportsAccountantHeader").html(headerHtml);
       })
       .catch(function (err) {
         taxRateService.getAccountantCategory().then(function (data) {
@@ -553,18 +508,7 @@ Template.accountant_soletradernontrading.onRendered(() => {
           }
   
           let AccountTree = data.balancesheetreport[i]["Account Tree"];
-          // if (AccountTree !== 0) {
-          //   AccountTree = utilityService.modifynegativeCurrencyFormat(AccountTree);
-          // } else {
-          //   AccountTree = " ";
-          // }
           recordObj.selected = false;
-  
-          /**
-           * Add a title by default
-           */
-          // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
-          // recordObj.subTotal = SubAccountTotal || "";
   
           if (
             (i == 0 && AccountTree == "ASSETS") ||
@@ -574,12 +518,10 @@ Template.accountant_soletradernontrading.onRendered(() => {
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
   
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else if (i == 1 || i == 2 || AccountTree == "") {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else if (AccountTree.replace(/\s/g, "") == "TotalChequeorSaving") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -598,10 +540,6 @@ Template.accountant_soletradernontrading.onRendered(() => {
               },
             ];
   
-            // recordObj.type = "total";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
-            // recordObj.subTotal = SubAccountTotal || "";
-            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
           } else if (
             AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable"
           ) {
@@ -623,10 +561,6 @@ Template.accountant_soletradernontrading.onRendered(() => {
               ,
             ];
   
-            // recordObj.type = "total";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
-            // recordObj.subTotal = SubAccountTotal || "";
-            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
           } else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -645,10 +579,6 @@ Template.accountant_soletradernontrading.onRendered(() => {
               },
             ];
   
-            // recordObj.type = "total";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || "-";
-            // recordObj.subTotal = SubAccountTotal || "";
-            // recordObj.total = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal) || "";
           } else if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -671,8 +601,6 @@ Template.accountant_soletradernontrading.onRendered(() => {
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
   
-            // recordObj.type = "asset";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else if (AccountTree.replace(/\s/g, "") == "TotalFixedAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -834,7 +762,6 @@ Template.accountant_soletradernontrading.onRendered(() => {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else {
             if (flag) {
               let accountCode = "";
@@ -889,9 +816,6 @@ Template.accountant_soletradernontrading.onRendered(() => {
         let netAssets = {
           id: "",
           selected: false,
-          //   title: "Net Assets",
-          //   subTotal: Currency + "0.00",
-          //   total: utilityService.modifynegativeCurrencyFormat(totalNetAssets),
           dataTotal: [
             "Net Assets",
             {
@@ -912,8 +836,7 @@ Template.accountant_soletradernontrading.onRendered(() => {
         templateObject.netAssetTotal.set(
           utilityService.modifynegativeCurrencyFormat(totalNetAssets)
         );
-      }
-  
+      }  
   
       templateObject.records.set(records);
       if (templateObject.records.get()) {
@@ -1301,24 +1224,9 @@ Template.accountant_soletradernontrading.helpers({
 
     amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
-
     // Lets remove the minus character
     const isMinus = amount < 0;
     if (isMinus == true) amount = amount * -1; // Make it positive
-
-    // get default currency symbol
-    // let _defaultCurrency = currencyList.filter(
-    //   (a) => a.Code == defaultCurrencyCode
-    // )[0];
-
-    //amount = amount.replace(_defaultCurrency.symbol, "");
-
-    // amount =
-    //   isNaN(amount) == true
-    //     ? parseFloat(amount.substring(1))
-    //     : parseFloat(amount);
-
-
 
     // Get the selected date
     let dateTo = $("#balancedate").val();
@@ -1328,16 +1236,8 @@ Template.accountant_soletradernontrading.helpers({
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
 
-
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-
-
-    // if(currencyList.length == 0) {
-    //   currencyList = Template.instance().currencyList.get();
-    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-    // }
-
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -1355,13 +1255,6 @@ Template.accountant_soletradernontrading.helpers({
       var distanceb = Math.abs(dateTo - b);
       return distancea - distanceb; // sort a before b when the distance is smaller
 
-      // const adate= new Date(a.MsTimeStamp);
-      // const bdate = new Date(b.MsTimeStamp);
-
-      // if(adate < bdate) {
-      //   return 1;
-      // }
-      // return -1;
     });
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
@@ -1376,8 +1269,6 @@ Template.accountant_soletradernontrading.helpers({
       maximumFractionDigits: 2,
     }); // Add commas
 
-
-    // amount = amount.toLocaleString();
 
     let convertedAmount =
       isMinus == true

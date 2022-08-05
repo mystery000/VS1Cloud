@@ -392,8 +392,6 @@ Template.accountant_company.onRendered(() => {
       var begunDate = moment(currentDate).format("DD/MM/YYYY");
       templateObject.dateAsAt.set(begunDate);
 
-      // let accountantID = FlowRouter.getParam("_id");
-
       getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
           let data = JSON.parse(dataObject[0].data);
           var dataInfo = {
@@ -1227,14 +1225,11 @@ Template.accountant_company.helpers({
       return amount;
     }
 
-
     amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
-
 
     // Lets remove the minus character
     const isMinus = amount < 0;
     if (isMinus == true) amount = amount * -1; // Make it positive
-
     
     // Get the selected date
     let dateTo = $("#balancedate").val();
@@ -1243,7 +1238,6 @@ Template.accountant_company.helpers({
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-
 
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
@@ -1266,7 +1260,6 @@ Template.accountant_company.helpers({
     });
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-
 
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     //amount = amount + 0.36;
