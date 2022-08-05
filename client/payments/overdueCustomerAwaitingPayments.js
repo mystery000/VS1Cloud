@@ -1464,7 +1464,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+        sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
             addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data)).then(function (datareturn) {
 
             }).catch(function (err) {
@@ -1475,11 +1475,11 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
         });
 
 
-        sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
-                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataSuppPay) {
+                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
-                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
+                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
                                 window.open("/overduecustomerawaitingpayments", "_self");
