@@ -1140,11 +1140,7 @@ Template.supplierpaymentcard.onRendered(() => {
         setTimeout(function () {
           if (FlowRouter.current().queryParams.id) {
           } else {
-            $(".heading").html(
-              "New Supplier Payment " +
-                newPaymentId +
-                '<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>'
-            );
+            //$(".heading").html("New Supplier Payment " +newPaymentId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
           }
           $("#edtSelectBankAccountName").val(lastBankAccount);
           $("#sltDepartment").val(lastDepartment);
@@ -1854,7 +1850,7 @@ Template.supplierpaymentcard.onRendered(() => {
       });
   };
 
-  
+
 
   templateObject.getAllClients();
   templateObject.getDepartments();
@@ -8460,7 +8456,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $('#tblSupplierPaymentcard tbody tr').remove();
 
     let selectedSupplierPayments = templateObject.outstandingExpenses.get();
-   
+
 
     if (selectedSupplierPayments.length > 0) {
       let currentApplied = $(".lead")
@@ -8541,7 +8537,7 @@ Template.supplierpaymentcard.onRendered(() => {
       );
       localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
     }
-    
+
     setTimeout(function () {
       $("td").each(function () {
         if (
@@ -9743,7 +9739,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -10164,7 +10160,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -10573,7 +10569,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -11000,7 +10996,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -11418,7 +11414,7 @@ Template.supplierpaymentcard.events({
                     .getAllAwaitingSupplierPayment(
                       prevMonth11Date,
                       toDate,
-                      false,
+                      true,
                       initialReportLoad,
                       0,
                       ""
@@ -11882,7 +11878,7 @@ Template.supplierpaymentcard.events({
                     .getAllAwaitingSupplierPayment(
                       prevMonth11Date,
                       toDate,
-                      false,
+                      true,
                       initialReportLoad,
                       0,
                       ""
@@ -12323,7 +12319,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -12632,7 +12628,7 @@ Template.supplierpaymentcard.events({
 
   "click .btnSelectSuppliers": function (event, ui) {
     const templateObject = Template.instance();
-  
+
     let selectedSupplierPayments = templateObject.selectedAwaitingPayment.get(); // tmp table
     // if (selectedSupplierPayments.length > 0) {
     //   let currentApplied = $(".lead")
@@ -13021,7 +13017,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -13088,7 +13084,7 @@ Template.supplierpaymentcard.events({
               .getAllAwaitingSupplierPayment(
                 prevMonth11Date,
                 toDate,
-                false,
+                true,
                 initialReportLoad,
                 0,
                 ""
@@ -13473,14 +13469,14 @@ Template.supplierpaymentcard.events({
     $('.appliedAmount').text(currency + $(e.currentTarget).val());
   },
   "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
-   
+
 
     setTimeout(() => {
 
       // convert to forign payment amount
       const valueToConvert = $(e.currentTarget).val();
       const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-    
+
       $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
 
       // Convert oustanding to foriegn oustanding
@@ -13532,7 +13528,7 @@ export function calculateApplied() {
 export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
   let utilityService = new UtilityService();
   const currency = utilityService.extractCurrency(amount);
- 
+
   amount = utilityService.removeCurrency(amount, currency);
 
   let convert = amount * rate;

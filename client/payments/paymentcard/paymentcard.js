@@ -1222,7 +1222,7 @@ Template.paymentcard.onRendered(() => {
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
-                $(".heading").html("New Customer Payment " +newPaymentId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
+                // $(".heading").html("New Customer Payment " +newPaymentId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                 };
             }, 50);
         }).catch(function(err) {
@@ -8932,7 +8932,7 @@ Template.paymentcard.events({
 
         if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
             $(".foreign-currency-js").css("display", "block");
-      
+
             ui.isForeignEnabled.set(true);
            // ui.updateRecordsWithForeign(false);
             ui.addExpenseToTable(true);
@@ -8941,9 +8941,9 @@ Template.paymentcard.events({
             ui.isForeignEnabled.set(false);
             //ui.updateRecordsWithForeign(true);
             ui.addExpenseToTable(false);
-      
+
           }
-          
+
       },
     "keyup #exchange_rate": (e) => {
         onExchangeRateChange(e);
@@ -8980,21 +8980,21 @@ Template.paymentcard.events({
         $('.appliedAmount').text(currency + $(e.currentTarget).val());
       },
       "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
-   
+
 
         setTimeout(() => {
-    
+
           // convert to forign payment amount
           const valueToConvert = $(e.currentTarget).val();
           const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-        
+
           $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
-    
+
           // Convert oustanding to foriegn oustanding
           const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
           const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
           $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
         }, 500);
-    
+
       }
 });

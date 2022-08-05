@@ -122,7 +122,7 @@ Template.journalentrylist.onRendered(function() {
 
     getVS1Data('TJournalEntryList').then(function (dataObject) {
         if(dataObject.length == 0){
-          sideBarService.getTJournalEntryListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+          sideBarService.getTJournalEntryListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
             let lineItems = [];
             let lineItemObj = {};
             addVS1Data('TJournalEntryList',JSON.stringify(data));
@@ -711,7 +711,7 @@ Template.journalentrylist.onRendered(function() {
 
         }
       }).catch(function (err) {
-        sideBarService.getTJournalEntryListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+        sideBarService.getTJournalEntryListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
           let lineItems = [];
           let lineItemObj = {};
           addVS1Data('TJournalEntryList',JSON.stringify(data));
@@ -1033,7 +1033,7 @@ Template.journalentrylist.events({
  var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
  let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-     sideBarService.getAllPurchasesList(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+     sideBarService.getAllPurchasesList(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
        addVS1Data('TPurchasesList',JSON.stringify(data)).then(function (datareturn) {
 
        }).catch(function (err) {
@@ -1043,7 +1043,7 @@ Template.journalentrylist.events({
 
      });
 
-     sideBarService.getTJournalEntryListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataJournal) {
+     sideBarService.getTJournalEntryListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataJournal) {
        addVS1Data('TJournalEntryList',JSON.stringify(dataJournal)).then(function (datareturn) {
          sideBarService.getAllJournalEnrtryLinesList(initialDataLoad,0).then(function(data) {
            addVS1Data('TJournalEntryLines',JSON.stringify(data)).then(function (datareturn) {

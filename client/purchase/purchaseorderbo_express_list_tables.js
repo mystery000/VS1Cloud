@@ -121,7 +121,7 @@ Template.purchaseorderlistBO.onRendered(function() {
 
         getVS1Data('TPurchasesBackOrderReport').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllTPurchasesBackOrderReportData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTPurchasesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                     addVS1Data('TPurchasesBackOrderReport',JSON.stringify(data));
                     let lineItems = [];
                     let lineItemObj = {};
@@ -718,7 +718,7 @@ Template.purchaseorderlistBO.onRendered(function() {
 
             }
         }).catch(function (err) {
-            sideBarService.getAllTPurchasesBackOrderReportData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+            sideBarService.getAllTPurchasesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                 addVS1Data('TPurchasesBackOrderReport',JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
@@ -1230,7 +1230,7 @@ Template.purchaseorderlistBO.events({
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllTPurchasesBackOrderReportData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataBO) {
+        sideBarService.getAllTPurchasesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataBO) {
             addVS1Data('TPurchasesBackOrderReport',JSON.stringify(dataBO)).then(function (datareturn) {
               sideBarService.getAllPurchaseOrderList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TPurchaseOrderEx',JSON.stringify(data)).then(function (datareturn) {
@@ -1256,7 +1256,7 @@ Template.purchaseorderlistBO.events({
             window.open('/purchaseorderlistBO','_self');
         });
 
-        sideBarService.getAllPurchasesList(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllPurchasesList(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
             addVS1Data('TPurchasesList',JSON.stringify(data)).then(function (datareturn) {
 
             }).catch(function (err) {

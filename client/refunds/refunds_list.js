@@ -132,8 +132,8 @@ Template.refundlist.onRendered(function () {
       let dispFields = [];
       let customData = {};
       let customFieldCount = 12;
-      let listType = "ltRefundList";   
- 
+      let listType = "ltRefundList";
+
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
         { label: 'Sales No.', class: 'colSalesNo', active: true },
@@ -146,7 +146,7 @@ Template.refundlist.onRendered(function () {
         { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
         { label: 'Status', class: 'colStatus', active: true },
         { label: 'Employee', class: 'colEmployee', active: true },
-        { label: 'Comments', class: 'colComments', active: false } 
+        { label: 'Comments', class: 'colComments', active: false }
       ];
 
       sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
@@ -244,7 +244,7 @@ Template.refundlist.onRendered(function () {
 
         getVS1Data('TRefundSaleList').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllTRefundSaleListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTRefundSaleListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     addVS1Data('TRefundSaleList', JSON.stringify(data)).then(function (datareturn) {}).catch(function (err) {});
@@ -877,7 +877,7 @@ Template.refundlist.onRendered(function () {
 
             }
         }).catch(function (err) {
-          sideBarService.getAllTRefundSaleListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllTRefundSaleListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               addVS1Data('TRefundSaleList', JSON.stringify(data)).then(function (datareturn) {}).catch(function (err) {});
@@ -1427,7 +1427,7 @@ Template.refundlist.events({
     'click .saveTable' : function(event){
       let lineItems = [];
       let organisationService = new OrganisationService();
-      let listType = "ltRefundList";    
+      let listType = "ltRefundList";
 
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1590,12 +1590,12 @@ Template.refundlist.events({
         var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllTRefundSaleListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataRefund) {
+        sideBarService.getAllTRefundSaleListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (dataRefund) {
             addVS1Data('TRefundSaleList', JSON.stringify(dataRefund)).then(function (datareturn) {
               sideBarService.getAllRefundList(initialDataLoad, 0).then(function (data) {
                   addVS1Data('TRefundSale', JSON.stringify(data)).then(function (datareturn) {
 
-                      sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
+                      sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
                           addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
                               window.open('/refundlist', '_self');
                             }).catch(function (err) {
