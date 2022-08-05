@@ -15,7 +15,7 @@ Template.supplierpayment.onCreated(function(){
 });
 
 export const _setTmpAppliedAmount = (amount = 0) => {
-    return localStorage.setItem('APPLIED_AMOUNT', 0);
+    return localStorage.setItem('APPLIED_AMOUNT', amount);
 }
 
 Template.supplierpayment.onRendered(function() {
