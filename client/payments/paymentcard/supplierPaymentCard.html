@@ -184,7 +184,7 @@
                                 <!-- <div class="input-group-prepend">
                                     <span class="input-group-text currency-symbol">N/A</span>
                                 </div> -->
-                                <input class="form-control form-control" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
+                                <input class="form-control appliedAmount" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
                            </div>
                         </div>
                     </div>
@@ -1436,7 +1436,7 @@
                                 <p class="lead" style="color: #696969; font-weight: 700; margin: 0px;">Applied</p>
                             </div>
                             <div class="col">
-                                <p class="lead appliedAmount float-right" style="color: #696969; font-weight: 700; padding-left: 20px; margin: 0px;">{{record.applied}}</p>
+                                <p id="finalAppliedAmount" class="lead appliedAmount float-right" style="color: #696969; font-weight: 700; padding-left: 20px; margin: 0px;">{{record.applied}}</p>
                             </div>
                         </div>
                         <hr style="border-top: 3px solid #696969;" />

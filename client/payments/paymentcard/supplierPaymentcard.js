@@ -317,6 +317,7 @@ Template.supplierpaymentcard.onRendered(() => {
 
             };
         }
+      
         object_invoce.push(item_supplier);
 
         $("#templatePreviewModal .field_payment").hide();
@@ -3335,6 +3336,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
                 //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
                 let getDepartmentVal =
                   Session.get("department") || data.fields.DeptClassName;
@@ -3618,6 +3620,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 //$('#edtSupplierName').editableSelect('add', useData[d].fields.CompanyName);
                 $("#edtSupplierName").val(useData[d].fields.CompanyName);
                 $("#sltDepartment").val(useData[d].fields.DeptClassName);
@@ -3901,6 +3905,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
                   $("#edtSupplierName").val(data.fields.CompanyName);
                   $("#sltDepartment").val(data.fields.DeptClassName);
@@ -4173,6 +4179,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
               $("#edtSupplierName").val(data.fields.CompanyName);
               $("#sltDepartment").val(data.fields.DeptClassName);
@@ -4400,6 +4408,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (data.fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -4585,6 +4595,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (useData[d].fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -4769,6 +4781,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   if (data.fields.SupplierInvoiceNumber == "") {
                     templateObject.isInvoiceNo.set(false);
                   }
@@ -4958,6 +4972,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -5141,6 +5157,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -5324,6 +5342,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (useData[d].fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -5506,6 +5526,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   if (data.fields.SupplierInvoiceNumber == "") {
                     templateObject.isInvoiceNo.set(false);
                   }
@@ -5693,6 +5715,8 @@ Template.supplierpaymentcard.onRendered(() => {
               }),
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             if (data.fields.SupplierInvoiceNumber == "") {
               templateObject.isInvoiceNo.set(false);
             }
@@ -5877,6 +5901,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 let getDepartmentVal =
                   Session.get("department") ||
                   data.fields.DeptClassName ||
@@ -6060,6 +6086,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
 
                 let getDepartmentVal =
                   Session.get("department") ||
@@ -6241,6 +6269,8 @@ Template.supplierpaymentcard.onRendered(() => {
               }),
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
             $("#edtSupplierName").val(data.fields.ClientName);
             let getDepartmentVal =
@@ -6490,6 +6520,8 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#sltPaymentMethod").val(paymentMethodData);
 
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (clientList) {
             for (var i = 0; i < clientList.length; i++) {
               if (clientList[i].customername == companyName) {
@@ -6811,6 +6843,8 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#sltPaymentMethod").val(paymentMethodData);
 
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (clientList) {
             for (var i = 0; i < clientList.length; i++) {
               if (clientList[i].customername == companyName) {
@@ -6970,6 +7004,8 @@ Template.supplierpaymentcard.onRendered(() => {
             }),
           };
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (data.fields.SupplierInvoiceNumber == "") {
             templateObject.isInvoiceNo.set(false);
           }
@@ -7147,6 +7183,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     ) || 0,
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
 
                 //
               });
@@ -7372,6 +7410,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -7551,6 +7591,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 utilityService.modifynegativeCurrencyFormat(amountData) || 0,
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             if (data.fields.SupplierInvoiceNumber == "") {
               templateObject.isInvoiceNo.set(false);
             }
@@ -7729,6 +7771,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
               let getDepartmentVal =
                 Session.get("department") ||
@@ -7905,6 +7949,8 @@ Template.supplierpaymentcard.onRendered(() => {
               utilityService.modifynegativeCurrencyFormat(amountData) || 0,
           };
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (data.fields.SupplierInvoiceNumber == "") {
             templateObject.isInvoiceNo.set(false);
           }
@@ -8101,6 +8147,8 @@ Template.supplierpaymentcard.onRendered(() => {
 
     // $("#form :input").prop("disabled", false);
     templateObject.record.set(paymentrecord);
+    localStorage.setItem('APPLIED_AMOUNT', paymentrecord.applied);
+
     let getDepartmentVal = Session.get("department") || defaultDept;
     let getPaymentMethodVal = "";
 
@@ -8343,6 +8391,15 @@ Template.supplierpaymentcard.onRendered(() => {
     // $("#tblPaymentcard tbody").append(rowData);
   });
 
+  // if(templateObject.record.get() && url.includes('?')) {
+  //  setTimeout(() => {
+  //   console.log("value", $('#finalAppliedAmount').text());
+  //   let _record = utilityService.removeCurrency($('#finalAppliedAmount').text(), $('#sltCurrency').attr('currency-symbol'));
+  //   localStorage.setItem('APPLIED_AMOUNT', _record);
+  //   console.log(_record);
+  //  }, 5000);
+  // }
+
   templateObject.addExpenseToTable = (withForeignAmount = false) => {
     let url = window.location.href;
 
@@ -8431,7 +8488,7 @@ Template.supplierpaymentcard.onRendered(() => {
           $(".appliedAmount").text(
             utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
           );
-          localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+          localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
         }
        }, 300)
      
@@ -8535,7 +8592,7 @@ Template.supplierpaymentcard.onRendered(() => {
       $(".appliedAmount").text(
         utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
       );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
     }
 
     setTimeout(function () {
@@ -8957,9 +9014,14 @@ Template.supplierpaymentcard.events({
      * TODO: Adding this into the saved object
      */
     let foreignCurrency = $("#edtForeignCurrency").val();
-    let foreignAmount = $("#foreignAmount").val();
-    let variation = $("#edtVariation").val();
-    let appliedAmount = $("#edtApplied").val();
+    let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount 
+    let variation = $("#edtVariation").val(); // this is the variation field
+    let appliedAmount = $("#edtApplied").val(); // this is the variation field
+    let exchangeRate = $('#exchange_rate').val();
+    let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
+      $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol') 
+      || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
+
 
     let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
     // if(checkSuppInvoiceNo){
@@ -9015,8 +9077,13 @@ Template.supplierpaymentcard.events({
           Deleted: false,
           Notes: notes,
           ReferenceNo: reference,
+
+          ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+          ForeignExchangeRate: parseFloat(exchangeRate),
+          //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
         },
       };
+
       paymentService
         .saveSuppDepositData(objDetails)
         .then(function (data) {
@@ -9383,6 +9450,10 @@ Template.supplierpaymentcard.events({
             Paid: true,
             Payment: parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) || 0,
             //ForeignPayment:parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g,"")) || 0,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
         if (parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) != 0) {
@@ -9429,6 +9500,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -9805,6 +9880,10 @@ Template.supplierpaymentcard.events({
             Paid: true,
             Payment: parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) || 0,
             //ForeignPayment:parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g,"")) || 0,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
         if (parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) != 0) {
@@ -9850,6 +9929,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -10259,6 +10342,10 @@ Template.supplierpaymentcard.events({
             PayMethodName: payMethod,
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -10682,6 +10769,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -11111,6 +11202,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -11560,6 +11655,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -11997,9 +12096,7 @@ Template.supplierpaymentcard.events({
             ClientPrintName: customer,
             CompanyName: customer,
             DeptClassName: department,
-            // ForeignExchangeCode: getCurrentCurrencySymbol(),
-            ForeignExchangeRate: parseFloat($('#exchange_rate').val()),
-            ForeignAmount: foreignAmount,
+           
             // EmployeeName: empName || ' ',
             GUILines: paymentData,
             Notes: notes,
@@ -12009,6 +12106,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -12817,7 +12918,7 @@ Template.supplierpaymentcard.events({
     $(".appliedAmount").text(
       utilityService.modifynegativeCurrencyFormat(appliedGrandTotal)
     );
-    localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(appliedGrandTotal));
+    localStorage.setItem('APPLIED_AMOUNT', appliedGrandTotal);
 
   },
   "click .btnBack": function (event) {
@@ -12867,7 +12968,7 @@ Template.supplierpaymentcard.events({
         $(".appliedAmount").text(
           utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
         );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
 
         return false;
       } else {
@@ -13155,7 +13256,7 @@ Template.supplierpaymentcard.events({
       $(".appliedAmount").text(
         utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
       );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
     } else {
       this.click;
     }
@@ -13532,6 +13633,7 @@ export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol 
   amount = utilityService.removeCurrency(amount, currency);
 
   let convert = amount * rate;
+  //convert = convert.toFixed(2);
 
   if(withSymbol) {
     return `${withSymbol}${convert}`;
