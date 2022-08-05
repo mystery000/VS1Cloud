@@ -106,20 +106,20 @@ Template.customerscard.onRendered(function () {
 
 
     templateObject.getOverviewARData = function (CustomerName, CustomerID) {
-        getVS1Data('TARReport1').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                paymentService.getOverviewARDetailsCust(CustomerID).then(function (data) {
-                    setOverviewARDetails(data, CustomerName);
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                setOverviewARDetails(data, CustomerName);
-            }
-        }).catch(function (err) {
-            paymentService.getOverviewARDetailsCust(CustomerID).then(function (data) {
-                setOverviewARDetails(data, CustomerName);
-            });
-        });
+        // getVS1Data('TARReport1').then(function (dataObject) {
+        //     if (dataObject.length == 0) {
+        //         paymentService.getOverviewARDetailsCust(CustomerID).then(function (data) {
+        //             setOverviewARDetails(data, CustomerName);
+        //         });
+        //     } else {
+        //         let data = JSON.parse(dataObject[0].data);
+        //         setOverviewARDetails(data, CustomerName);
+        //     }
+        // }).catch(function (err) {
+        //     paymentService.getOverviewARDetailsCust(CustomerID).then(function (data) {
+        //         setOverviewARDetails(data, CustomerName);
+        //     });
+        // });
     };
     function setOverviewARDetails(data, CustomerName) {
         let itemsAwaitingPaymentcount = [];
@@ -1825,7 +1825,7 @@ Template.customerscard.onRendered(function () {
             }).then((result) => {
                 if (result.value) {
                     $('#referenceLetterModal').modal('toggle');
-                } 
+                }
             });
         } else {
             let dataLabel = $("input[name='refTemp']:checked").attr('value');
@@ -1845,7 +1845,7 @@ Template.customerscard.onRendered(function () {
                 }).then((result) => {
                     if (result.value) {
                         $('#referenceLetterModal').modal('toggle');
-                    } 
+                    }
                 });
             }
         }
@@ -1863,7 +1863,7 @@ Template.customerscard.events({
            $(".btnRefreshCustomers").trigger("click");
         }
     },
-    'click .btnRefreshCustomers':function(event){
+    'click .btnRefreshCustomers':async function(event){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let tableProductList;
@@ -1873,6 +1873,7 @@ Template.customerscard.events({
         const self = this;
         let lineItems = [];
         let lineItemObj = {};
+        let currentId = FlowRouter.current().queryParams;
         $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('.txtSearchCustomers').val()||'';
         if (dataSearchName.replace(/\s/g, '') != '') {
@@ -1881,6 +1882,7 @@ Template.customerscard.events({
                 let lineItems = [];
                 let lineItemObj = {};
                 if (data.tcustomervs1.length > 0) {
+                  $("#tblCustomerSideList > tbody").empty();
                   for (let i = 0; i < data.tcustomervs1.length; i++) {
                       let classname = '';
                       if (!isNaN(currentId.id)) {
@@ -1899,14 +1901,16 @@ Template.customerscard.events({
                           isslectJob: data.tcustomervs1[i].fields.IsJob || false,
                           classname: classname
                       };
+                      $(".tblCustomerSideList > tbody").append(
+                      ' <tr class="' + dataList.isslectJob + '" id="' + dataList.id + '" style="cursor: pointer;">' +
+                      '<td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="' +dataList.company + '" id="' + dataList.id + '" class="' + dataList.isslectJob + ' ' + dataList.classname + '" >' + dataList.company + '</td>' +
+                      '</tr>');
                       lineItems.push(dataList);
                     }
-                   templateObject.customerrecords.set(lineItems);
-                    if (templateObject.customerrecords.get()) {
+
                       setTimeout(function () {
                           $('.counter').text(lineItems.length + ' items');
                       }, 100);
-                    }
                     $('.fullScreenSpin').css('display', 'none');
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
@@ -1915,6 +1919,7 @@ Template.customerscard.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
+          Meteor._reload.reload();
           $('.fullScreenSpin').css('display', 'none');
         }
     },

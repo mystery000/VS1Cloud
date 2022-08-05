@@ -81,8 +81,8 @@ Meteor.methods({
 
     try {
       Email.send({
-        // to: details.EmployeeEmail,
-        to: 'heidikalatasra20@gmail.com',
+        to: details.EmployeeEmail,
+        //to: 'heidikalatasra20@gmail.com',
         from: 'noreply@vs1cloud.com',
         cc: '',
         subject: 'Report Email',

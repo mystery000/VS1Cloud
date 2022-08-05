@@ -2689,15 +2689,7 @@ Template.salesorderslist.events({
                        addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
                           window.open('/salesorderslist','_self');
                          }).catch(function (err) {
-                           sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
-                               addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
-                                 window.open('/salesorderslist','_self');
-                                 }).catch(function (err) {
-                                   window.open('/salesorderslist','_self');
-                                 });
-                             }).catch(function (err) {
-                               window.open('/salesorderslist','_self');
-                             });
+                           window.open('/salesorderslist','_self');
                          });
                      }).catch(function (err) {
                        window.open('/salesorderslist','_self');

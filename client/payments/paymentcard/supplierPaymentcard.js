@@ -9729,7 +9729,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -10150,7 +10150,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -10559,7 +10559,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -10986,7 +10986,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -11404,7 +11404,7 @@ Template.supplierpaymentcard.events({
                     .getAllAwaitingSupplierPayment(
                       prevMonth11Date,
                       toDate,
-                      false,
+                      true,
                       initialReportLoad,
                       0,
                       ""
@@ -11868,7 +11868,7 @@ Template.supplierpaymentcard.events({
                     .getAllAwaitingSupplierPayment(
                       prevMonth11Date,
                       toDate,
-                      false,
+                      true,
                       initialReportLoad,
                       0,
                       ""
@@ -12307,7 +12307,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -13005,7 +13005,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -13072,7 +13072,7 @@ Template.supplierpaymentcard.events({
               .getAllAwaitingSupplierPayment(
                 prevMonth11Date,
                 toDate,
-                false,
+                true,
                 initialReportLoad,
                 0,
                 ""
