@@ -5,7 +5,7 @@ import { CountryService } from "../../js/country-service";
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 
-Template.reportsAccountantSettings.onCreated(function(){
+Template.reportsAccountantSettings123.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.countryData = new ReactiveVar();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -17,7 +17,7 @@ Template.reportsAccountantSettings.onCreated(function(){
     templateObject.accountantlist = new ReactiveVar([]);
 });
 
-Template.reportsAccountantSettings.onRendered(function() {
+Template.reportsAccountantSettings123.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
@@ -742,7 +742,7 @@ Template.reportsAccountantSettings.onRendered(function() {
 });
 
 
-Template.reportsAccountantSettings.events({
+Template.reportsAccountantSettings123.events({
     'click #btnNewInvoice':function(event){
         // FlowRouter.go('/invoicecard');
     },
@@ -1288,7 +1288,7 @@ Template.reportsAccountantSettings.events({
     },
 });
 
-Template.reportsAccountantSettings.helpers({
+Template.reportsAccountantSettings123.helpers({
     countryList: () => {
         return Template.instance().countryData.get();
     },
