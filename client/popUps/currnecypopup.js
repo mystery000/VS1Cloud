@@ -65,7 +65,7 @@ Template.currencypop.onRendered(function () {
     let data = await taxRateService.getCurrencies();
 
     data.tcurrency.forEach(_currency => {
-        //console.log(_currency);
+       
         currencies.push({
           id: _currency.Id || "",
           code: _currency.Code || "N/A",

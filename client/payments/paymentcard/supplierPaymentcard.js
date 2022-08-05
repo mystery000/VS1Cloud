@@ -1140,11 +1140,7 @@ Template.supplierpaymentcard.onRendered(() => {
         setTimeout(function () {
           if (FlowRouter.current().queryParams.id) {
           } else {
-            $(".heading").html(
-              "New Supplier Payment " +
-                newPaymentId +
-                '<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>'
-            );
+            //$(".heading").html("New Supplier Payment " +newPaymentId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
           }
           $("#edtSelectBankAccountName").val(lastBankAccount);
           $("#sltDepartment").val(lastDepartment);
@@ -1854,7 +1850,7 @@ Template.supplierpaymentcard.onRendered(() => {
       });
   };
 
-  
+
 
   templateObject.getAllClients();
   templateObject.getDepartments();
@@ -8361,7 +8357,7 @@ Template.supplierpaymentcard.onRendered(() => {
         let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
         currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
         let total = parseFloat(currentApplied);
-  
+
         for (let x = 0; x < selectedSupplierPayments.length; x++) {
           var rowData =
             '<tr class="dnd-moved dynamic-converter-js" id="' +
@@ -8387,25 +8383,25 @@ Template.supplierpaymentcard.onRendered(() => {
             '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
             selectedSupplierPayments[x].paymentAmount +
             '"></td>\n' +
-  
+
             (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
             convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
             '"></td>\n' : '') +
-  
+
             '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
             selectedSupplierPayments[x].outstandingAmount +
             "</td>\n" +
-  
+
             (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
             convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
             "</td>\n" : '') +
-  
+
             '	<td contenteditable="true" class="colComments">' +
             selectedSupplierPayments[x].comments +
             "</td>\n" +
             '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
             "</tr>";
-  
+
           let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
           let isCheckedTrue = true;
           $(".tblSupplierPaymentcard > tbody > tr").each(function () {
@@ -8434,9 +8430,9 @@ Template.supplierpaymentcard.onRendered(() => {
         localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
       }
      }, 300)
-   
 
-    
+
+
     setTimeout(function () {
       $("td").each(function () {
         if (
@@ -8454,7 +8450,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $('#tblSupplierPaymentcard tbody tr').remove();
 
     let selectedSupplierPayments = templateObject.outstandingExpenses.get();
-    //console.log(selectedSupplierPayments);
+
 
     if (selectedSupplierPayments.length > 0) {
       let currentApplied = $(".lead")
@@ -8535,7 +8531,7 @@ Template.supplierpaymentcard.onRendered(() => {
       );
       localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
     }
-    
+
     setTimeout(function () {
       $("td").each(function () {
         if (
@@ -9733,7 +9729,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -10154,7 +10150,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -10563,7 +10559,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -10990,7 +10986,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -11408,7 +11404,7 @@ Template.supplierpaymentcard.events({
                     .getAllAwaitingSupplierPayment(
                       prevMonth11Date,
                       toDate,
-                      false,
+                      true,
                       initialReportLoad,
                       0,
                       ""
@@ -11872,7 +11868,7 @@ Template.supplierpaymentcard.events({
                     .getAllAwaitingSupplierPayment(
                       prevMonth11Date,
                       toDate,
-                      false,
+                      true,
                       initialReportLoad,
                       0,
                       ""
@@ -12311,7 +12307,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -12620,7 +12616,7 @@ Template.supplierpaymentcard.events({
 
   "click .btnSelectSuppliers": function (event, ui) {
     const templateObject = Template.instance();
-  
+
     let selectedSupplierPayments = templateObject.selectedAwaitingPayment.get(); // tmp table
     // if (selectedSupplierPayments.length > 0) {
     //   let currentApplied = $(".lead")
@@ -13009,7 +13005,7 @@ Template.supplierpaymentcard.events({
             .getAllAwaitingSupplierPayment(
               prevMonth11Date,
               toDate,
-              false,
+              true,
               initialReportLoad,
               0,
               ""
@@ -13076,7 +13072,7 @@ Template.supplierpaymentcard.events({
               .getAllAwaitingSupplierPayment(
                 prevMonth11Date,
                 toDate,
-                false,
+                true,
                 initialReportLoad,
                 0,
                 ""
@@ -13461,14 +13457,14 @@ Template.supplierpaymentcard.events({
     $('.appliedAmount').text(currency + $(e.currentTarget).val());
   },
   "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
-    //console.log(e);
+
 
     setTimeout(() => {
 
       // convert to forign payment amount
       const valueToConvert = $(e.currentTarget).val();
       const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-      //console.log(valueToConvert, convertedValue, $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to'));
+
       $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
 
       // Convert oustanding to foriegn oustanding
@@ -13517,17 +13513,13 @@ export function calculateApplied() {
     $('.appliedAmount').text(calculatedApplied);
 }
 
-function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
+export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
   let utilityService = new UtilityService();
   const currency = utilityService.extractCurrency(amount);
-  //console.log("pre amount: ", amount);
+
   amount = utilityService.removeCurrency(amount, currency);
 
-  //console.log("amount to convert", amount);
-  //console.log('rate', rate);
   let convert = amount * rate;
-
-  //console.log("converted", convert);
 
   if(withSymbol) {
     return `${withSymbol}${convert}`;

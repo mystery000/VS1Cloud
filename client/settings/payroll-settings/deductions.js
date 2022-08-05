@@ -282,7 +282,6 @@ Template.deductionSettings.onRendered(function() {
                 }else{
                     data = JSON.parse(dataObject[0].data);
                 }
-                console.log("data", data);
                 if( data.tdeduction.length > 0 ){
                     let tDeduction = data.tdeduction.filter((item) => {
                         if( item.fields.Description == searchName ){

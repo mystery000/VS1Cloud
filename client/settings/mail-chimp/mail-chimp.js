@@ -36,7 +36,6 @@ Template.mailchimp.onRendered(function () {
       }
 
       if( details.length > 0 ){
-          console.log( details )
           templateObject.settingDetails.set( details );
           for (const item of details) {
               $('#' + item.PrefName).val( item.Fieldvalue );
@@ -50,61 +49,96 @@ Template.mailchimp.onRendered(function () {
 });
 
 Template.mailchimp.events({
-  'click #openLink': function() {
-    window.open("https://login.mailchimp.com/signup/");
-  },
-  'click #saveMailChimpSetting': async function(){
-    let settingObject = [];
-    const templateObject = Template.instance();
-    let settingDetails = templateObject.settingDetails.get();
-    if( settingDetails.length > 0 ){
-        for (const item of settingDetails) {
-            let FieldValue = $('#' + item.PrefName).val();
-            settingObject.push({
-                type: "TERPPreference",
-                fields: {
-                  Id: item.Id,
-                  Fieldvalue: FieldValue
+    'click #openLink': function() {
+        window.open("https://login.mailchimp.com/signup/");
+    },
+    'click #saveMailChimpSetting': async function(){
+        $('.fullScreenSpin').css('display','block');
+        let settingObject = [];
+        const templateObject = Template.instance();
+        let settingDetails = templateObject.settingDetails.get();
+        if( settingDetails.length > 0 ){
+            for (const item of settingDetails) {
+                if( settingFields.includes( item.PrefName ) == true ){
+                    let FieldValue = $('#' + item.PrefName).val();
+                    settingObject.push({
+                        type: "TERPPreference",
+                        fields: {
+                            Id: item.Id,
+                            Fieldvalue: FieldValue
+                        }
+                    });
                 }
-            });
+            }
+        }else{
+            for (const PrefName of settingFields) {
+                let FieldValue = $('#' + PrefName).val();
+                settingObject.push({
+                    type: "TERPPreference",
+                    fields: {
+                        FieldType: "ftString",
+                        FieldValue: FieldValue,
+                        KeyValue: specialSearchKey,
+                        PrefName: PrefName,
+                        PrefType: "ptCompany",
+                        RefType: "None"
+                    }
+                })
+            }
         }
-    }else{
-        for (const PrefName of settingFields) {
-            let FieldValue = $('#' + PrefName).val();
-            settingObject.push({
+        if( settingObject.length ){
+            let settingJSON = {
                 type: "TERPPreference",
-                fields: {
-                    FieldType: "ftString",
-                    FieldValue: FieldValue,
-                    KeyValue: specialSearchKey,
-                    PrefName: PrefName,
-                    PrefType: "ptCompany",
-                    RefType: "None"
+                objects:settingObject
+            };
+
+            try {
+                // Saving data
+                let ApiResponse = await settingService.savePreferenceSettings( settingJSON ); 
+                if( ApiResponse.result == 'Success' ){              
+                    let data = await settingService.getPreferenceSettings( settingFields );
+                    let dataObject = await getVS1Data('TERPPreference')
+                    let details = [];
+                    if ( dataObject.length > 0) {
+                        dataObj = JSON.parse(dataObject[0].data);
+                        details = dataObj.terppreference.filter(function( item ){
+                            if( settingFields.includes( item.PrefName ) == false ){
+                                return item;
+                            }
+                        }); 
+                        templateObject.settingDetails.set( data.terppreference );
+                        data.terppreference.push(...details);
+                        await addVS1Data('TERPPreference', JSON.stringify(data))
+                        $('.fullScreenSpin').css('display','none');
+                    }
+                    swal({
+                        title: 'MailChimp settings successfully updated!',
+                        text: '',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    });
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: "Error in updation",
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    })
                 }
-            })
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                })
+            }
+            
         }
     }
-    if( settingObject.length ){
-        let settingJSON = {
-            type: "TERPPreference",
-            objects:settingObject
-        };
-
-        const ApiResponse = await settingService.savePreferenceSettings( settingJSON );
-        let data = await settingService.getPreferenceSettings( settingFields );
-        let dataObject = await getVS1Data('TERPPreference')
-        let details = [];
-        if ( dataObject.length > 0) {
-            dataObj = JSON.parse(dataObject[0].data);
-            details = dataObj.terppreference.filter(function( item ){
-                if( settingFields.includes( item.PrefName ) == false ){
-                    return item;
-                }
-            }); 
-            data.terppreference.push(...details);
-            await addVS1Data('TERPPreference', JSON.stringify(data))
-        }
-    }
-
-}
 });

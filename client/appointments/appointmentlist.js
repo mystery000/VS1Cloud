@@ -427,7 +427,7 @@ Template.appointmentlist.onRendered(async function () {
 
         getVS1Data('TAppointmentList').then(async function (dataObject) {
             if (dataObject.length == 0) {
-              sideBarService.getTAppointmentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+              sideBarService.getTAppointmentListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                   // localStorage.setItem('VS1TReconcilationList', JSON.stringify(data)||'');
                   addVS1Data('TAppointmentList',JSON.stringify(data));
                   let lineItems = [];
@@ -594,6 +594,7 @@ Template.appointmentlist.onRendered(async function () {
                           dataTableList[p].finished || '',
                           confirmedColumn,
                           dataTableList[p].notes || '',
+                          dataTableList[p].product || '',
                       ];
                       splashArrayAppointmentList.push(dataListAppointmentList);
                   };
@@ -1093,6 +1094,7 @@ Template.appointmentlist.onRendered(async function () {
                         dataTableList[p].finished || '',
                         confirmedColumn,
                         dataTableList[p].notes || '',
+                        dataTableList[p].product || '',
                     ];
                     splashArrayAppointmentList.push(dataListAppointmentList);
                 };
@@ -1421,7 +1423,7 @@ Template.appointmentlist.onRendered(async function () {
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
             }
         }).catch(function (err) {
-            sideBarService.getTAppointmentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+            sideBarService.getTAppointmentListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                 // localStorage.setItem('VS1TReconcilationList', JSON.stringify(data)||'');
                 addVS1Data('TAppointmentList',JSON.stringify(data));
                 let lineItems = [];
@@ -1524,6 +1526,7 @@ Template.appointmentlist.onRendered(async function () {
                         dataTableList[p].finished || '',
                         confirmedColumn,
                         dataTableList[p].notes || '',
+                        dataTableList[p].product || '',
                     ];
                     splashArrayAppointmentList.push(dataListAppointmentList);
                 };
@@ -2023,6 +2026,7 @@ Template.appointmentlist.events({
                           useData[i].finished || '',
                           confirmedColumn,
                           useData[i].notes || '',
+                          useData[i].product || '',
                       ];
 
                       splashArrayAppointmentListDupp.push(dataListAppointmentList);
@@ -2101,6 +2105,7 @@ Template.appointmentlist.events({
                     useData[i].finished || '',
                     confirmedColumn,
                     useData[i].notes || '',
+                    useData[i].product || '',
                 ];
                 splashArrayAppointmentListDupp.push(dataListAppointmentList);
 
@@ -2134,7 +2139,7 @@ Template.appointmentlist.events({
         var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getTAppointmentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataApp) {
+        sideBarService.getTAppointmentListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (dataApp) {
 
           addVS1Data('TAppointmentList', JSON.stringify(dataApp)).then(function (datareturn) {
             sideBarService.getAllAppointmentList(initialDataLoad,0).then(function (data) {
@@ -2639,6 +2644,7 @@ Template.appointmentlist.events({
                       dataTableList[p].finished || '',
                       confirmedColumn,
                       dataTableList[p].notes || '',
+                      dataTableList[p].product || '',
                   ];
                   splashArrayAppointmentList.push(dataListAppointmentList);
               };
@@ -2672,7 +2678,7 @@ Template.appointmentlist.events({
                   $('.fullScreenSpin').css('display', 'none');
               });
           } else {
-              sideBarService.getTAppointmentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+              sideBarService.getTAppointmentListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
                 let lineItems = [];
               let lineItemObj = {};
               let color = "";
@@ -2826,6 +2832,7 @@ Template.appointmentlist.events({
                     dataTableList[p].finished || '',
                     confirmedColumn,
                     dataTableList[p].notes || '',
+                    dataTableList[p].product || '',
                 ];
                 splashArrayAppointmentList.push(dataListAppointmentList);
             };
@@ -3253,7 +3260,7 @@ Template.appointmentlist.events({
 
                           });
 
-                          sideBarService.getTAppointmentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataApp) {
+                          sideBarService.getTAppointmentListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (dataApp) {
                             addVS1Data('TAppointmentList', JSON.stringify(dataApp));
                           }).catch(function (err) {
 
@@ -3294,7 +3301,7 @@ Template.appointmentlist.events({
 
                           });
 
-                          sideBarService.getTAppointmentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataApp) {
+                          sideBarService.getTAppointmentListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (dataApp) {
                             addVS1Data('TAppointmentList', JSON.stringify(dataApp));
                           }).catch(function (err) {
 

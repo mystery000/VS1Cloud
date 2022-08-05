@@ -93,7 +93,17 @@ Template.customerdetailsreport.onRendered(() => {
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
         let reportGroups = []; 
-        for (const item of data.tcustomersummaryreport) {   
+        
+        let reportSummary = data.tcustomersummaryreport.map(el => {
+          let resultobj = {};
+          Object.entries(el).map(([key, val]) => {      
+              resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+              return resultobj;
+          })
+          return resultobj;
+        })
+
+        for (const item of reportSummary) {   
             let isExist = reportGroups.filter((subitem) => {
                 if( subitem.EMAIL == item.EMAIL ){
                     subitem.SubAccounts.push(item)
@@ -117,9 +127,9 @@ Template.customerdetailsreport.onRendered(() => {
             let TotalInc = 0;
             let TotalGrossProfit = 0;
             item.SubAccounts.map((subitem) => {
-              TotalEx += subitem['Total Amount (Ex)'];
-              TotalInc += subitem['Total Amount (Inc)'];
-              TotalGrossProfit += subitem['Gross Profit'];
+              TotalEx += subitem['Total_Amount_Ex'];
+              TotalInc += subitem['Total_Amount_Inc'];
+              TotalGrossProfit += subitem['Gross_Profit'];
             });
             item.TotalEx = TotalEx;
             item.TotalInc = TotalInc;
@@ -504,7 +514,7 @@ Template.customerdetailsreport.helpers({
     return Template.instance().dateAsAt.get() || "-";
   },
   getSpaceKeyData( array, key ){
-    return array['key'] || ''
+    return array[key] || ''
   },
   records: () => {
     return Template.instance().records.get();

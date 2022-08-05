@@ -88,19 +88,9 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
         const fxCurrencyRates = FxCurrencies.find((fxCurrency) => fxCurrency.quotecurrency == dbCurrency.fields.Code);
 
         if(fxCurrencyRates) {
-          // dbCurrencies[index].fields.BuyRate = fxCurrencyRates.mid;
-          // dbCurrencies[index].fields.SellRate = fxCurrencyRates.inverse;
           dbCurrency.fields.BuyRate = fxCurrencyRates.mid;
           dbCurrency.fields.SellRate = fxCurrencyRates.inverse;
-          console.log(dbCurrency.fields.CurrencySymbol);
-          // if(dbCurrency.fields.CurrencySymbol = "") {
-          //   console.log("-", "replaced");
-          //   dbCurrency.fields.CurrencySymbol = "N/A";
-          // }
-          // save funciton here
-
           _currencies.push(dbCurrency);
-
         }
       });
 
@@ -110,9 +100,9 @@ function _updateRates(dbCurrencies = [], FxCurrencies = [], erpGet, callback = (
         objects: _currencies
       }, erpGet, (error, result) => {
         if(error) {
-          //console.log("error", error);
+         
         } else {
-          //console.log("result", result);
+         
         }
       });
   }
@@ -182,7 +172,7 @@ Meteor.methods({
     return SyncedCron.add({
       name: cronId,
       schedule: function (parser) {
-        //console.log(cronSetting.toParse);
+       
         // const parsed = parser.text(cronSetting.toParse);
         const parsed = parser.text("every 2 minutes");
         return parsed;

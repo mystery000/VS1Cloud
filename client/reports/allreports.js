@@ -113,6 +113,8 @@ Template.allreports.onCreated(function() {
     templateObject.isPurchaseSummaryReport.set(false);
     templateObject.isPrintStatement = new ReactiveVar();
     templateObject.isPrintStatement.set(false);
+
+    templateObject.accountantList = new ReactiveVar([]);
 });
 Template.allreports.onRendered(() => {
     let templateObject = Template.instance();
@@ -171,6 +173,8 @@ Template.allreports.onRendered(() => {
     let isPurchaseReport = Session.get('cloudPurchaseReport');
     let isPurchaseSummaryReport = Session.get('cloudPurchaseSummaryReport');
     let isPrintStatement = Session.get('cloudPrintStatement');
+
+    const accountantList = [];
 
     if (isProfitLoss == true) {
         templateObject.isProfitLoss.set(true);
@@ -338,6 +342,232 @@ Template.allreports.onRendered(() => {
         templateObject.isPrintStatement.set(true);
     }
 
+    templateObject.getAccountantList = function () {
+        getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
+
+    //         if(dataObject.length == 0){
+    //           taxRateService.getAccountantCategory().then(function (data) {
+    //               let lineItems = [];
+    //               let lineItemObj = {};
+    //               for(let i=0; i<data.tdeptclass.length; i++){
+    //                   var dataList = {
+    //                     id: data.tdeptclass[i].Id || ' ',
+    //                     firstname: data.tdeptclass[i].FirstName || '-',
+    //                     lastname: data.tdeptclass[i].LastName || '-',
+    //                     companyname: data.tdeptclass[i].CompanyName || '-',
+    //                     address: data.tdeptclass[i].Address || '-',
+    //                     docname: data.tdeptclass[i].DocName || '-',
+    //                     towncity: data.tdeptclass[i].TownCity || '-',
+    //                     postalzip: data.tdeptclass[i].PostalZip || '-',
+    //                     stateregion: data.tdeptclass[i].StateRegion || '-',
+    //                     country: data.tdeptclass[i].Country || '-',
+    //                     status:data.tdeptclass[i].Active || 'false',
+    //                   };
+
+    //                   dataTableList.push(dataList);
+    //               }
+
+    //               templateObject.datatablerecords.set(dataTableList);
+
+    //               if(templateObject.datatablerecords.get()){
+
+    //                   Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'accountantList', function(error, result){
+    //                       if(error){
+
+    //                       }else{
+    //                           if(result){
+    //                               for (let i = 0; i < result.customFields.length; i++) {
+    //                                   let customcolumn = result.customFields;
+    //                                   let columData = customcolumn[i].label;
+    //                                   let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                   let hiddenColumn = customcolumn[i].hidden;
+    //                                   let columnClass = columHeaderUpdate.split('.')[1];
+    //                                   let columnWidth = customcolumn[i].width;
+    //                                   let columnindex = customcolumn[i].index + 1;
+
+    //                                   if(hiddenColumn == true){
+    //                                       $("."+columnClass+"").addClass('hiddenColumn');
+    //                                       $("."+columnClass+"").removeClass('showColumn');
+    //                                   }
+    //                                   else if(hiddenColumn == false){
+    //                                       $("."+columnClass+"").removeClass('hiddenColumn');
+    //                                       $("."+columnClass+"").addClass('showColumn');
+    //                                   }
+    //                               }
+    //                           }
+    //                       }
+    //                   });
+
+    //                   setTimeout(function () {
+    //                       MakeNegative();
+    //                   }, 100);
+    //               }
+
+    //               $('.fullScreenSpin').css('display','none');
+    //               setTimeout(function () {
+    //                   $('#accountantList').DataTable({
+    //                       columnDefs: [
+    //                           {type: 'date', targets: 0},
+    //                           { "orderable": false, "targets": -1 }
+    //                       ],
+    //                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                       buttons: [
+    //                           {
+    //                               extend: 'excelHtml5',
+    //                               text: '',
+    //                               download: 'open',
+    //                               className: "btntabletocsv hiddenColumn",
+    //                               filename: "departmentlist_"+ moment().format(),
+    //                               orientation:'portrait',
+    //                               exportOptions: {
+    //                                   columns: ':visible'
+    //                               }
+    //                           },{
+    //                               extend: 'print',
+    //                               download: 'open',
+    //                               className: "btntabletopdf hiddenColumn",
+    //                               text: '',
+    //                               title: 'Department List',
+    //                               filename: "departmentlist_"+ moment().format(),
+    //                               exportOptions: {
+    //                                   columns: ':visible'
+    //                               }
+    //                           }],
+    //                       select: true,
+    //                       destroy: true,
+    //                       colReorder: true,
+    //                       colReorder: {
+    //                           fixedColumnsRight: 1
+    //                       },
+    //                       // bStateSave: true,
+    //                       // rowId: 0,
+    //                       paging: false,
+    // //                      "scrollY": "400px",
+    // //                      "scrollCollapse": true,
+    //                       info: true,
+    //                       responsive: true,
+    //                       "order": [[ 0, "asc" ]],
+    //                       action: function () {
+    //                           $('#accountantList').DataTable().ajax.reload();
+    //                       },
+    //                       "fnDrawCallback": function (oSettings) {
+    //                           setTimeout(function () {
+    //                               MakeNegative();
+    //                           }, 100);
+    //                       },
+
+    //                   }).on('page', function () {
+    //                       setTimeout(function () {
+    //                           MakeNegative();
+    //                       }, 100);
+    //                       let draftRecord = templateObject.datatablerecords.get();
+    //                       templateObject.datatablerecords.set(draftRecord);
+    //                   }).on('column-reorder', function () {
+
+    //                   }).on( 'length.dt', function ( e, settings, len ) {
+    //                       setTimeout(function () {
+    //                           MakeNegative();
+    //                       }, 100);
+    //                   });
+
+    //                   // $('#accountantList').DataTable().column( 0 ).visible( true );
+    //                   $('.fullScreenSpin').css('display','none');
+    //               }, 0);
+
+    //               var columns = $('#accountantList th');
+    //               let sTible = "";
+    //               let sWidth = "";
+    //               let sIndex = "";
+    //               let sVisible = "";
+    //               let columVisible = false;
+    //               let sClass = "";
+    //               $.each(columns, function(i,v) {
+    //                   if(v.hidden == false){
+    //                       columVisible =  true;
+    //                   }
+    //                   if((v.className.includes("hiddenColumn"))){
+    //                       columVisible = false;
+    //                   }
+    //                   sWidth = v.style.width.replace('px', "");
+
+    //                   let datatablerecordObj = {
+    //                       sTitle: v.innerText || '',
+    //                       sWidth: sWidth || '',
+    //                       sIndex: v.cellIndex || '',
+    //                       sVisible: columVisible || false,
+    //                       sClass: v.className || ''
+    //                   };
+    //                   tableHeaderList.push(datatablerecordObj);
+    //               });
+    //               templateObject.tableheaderrecords.set(tableHeaderList);
+    //               $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+    //           }).catch(function (err) {
+    //               swal({
+    //                   title: 'Oooops...',
+    //                   text: err,
+    //                   type: 'error',
+    //                   showCancelButton: false,
+    //                   confirmButtonText: 'Try Again'
+    //               }).then((result) => {
+    //                   if (result.value) {
+    //                       Meteor._reload.reload();
+    //                   } else if (result.dismiss === 'cancel') {
+
+    //                   }
+    //               });
+    //               $('.fullScreenSpin').css('display','none');
+    //               // Meteor._reload.reload();
+    //           });
+    //         }
+    //         else{
+                let data = JSON.parse(dataObject[0].data);
+                
+                // for(let i=0; i<useData.length; i++){
+                    var dataInfo = {
+                        id: data.Id || '',
+                        firstname: data.FirstName || '-',
+                        lastname: data.LastName || '-',
+                        companyname: data.CompanyName || '-',
+                        address: data.Address || '-',
+                        towncity: data.TownCity || '-',
+                        postalzip: data.PostalZip || '-',
+                        stateregion: data.StateRegion || '-',
+                        country: data.Country || '-',
+                    };
+                    accountantList.push(dataInfo);
+                // }
+                templateObject.accountantList.set(accountantList);
+            // }
+        })
+        .catch(function (err) {
+            taxRateService.getAccountantCategory().then(function (data) {
+                for(let i=0; i<data.tdeptclass.length; i++){
+                    var dataList = {
+                        id: data.tdeptclass[i].Id || '',
+                        firstname: data.tdeptclass[i].FirstName || '-',
+                        lastname: data.tdeptclass[i].LastName || '-',
+                        companyname: data.tdeptclass[i].CompanyName || '-',
+                        address: data.tdeptclass[i].Address || '-',
+                        docname: data.tdeptclass[i].DocName || '-',
+                        towncity: data.tdeptclass[i].TownCity || '-',
+                        postalzip: data.tdeptclass[i].PostalZip || '-',
+                        stateregion: data.tdeptclass[i].StateRegion || '-',
+                        country: data.tdeptclass[i].Country || '-',
+                        status:data.tdeptclass[i].Active || 'false',
+                    };
+
+                    accountantList.push(dataList);
+                }
+
+                templateObject.accountantList.set(accountantList);
+
+            }).catch(function (err) {
+
+            });
+        });
+    }
+    templateObject.getAccountantList();
 
     $('.c-report-favourite-icon').on("click", function() {
         if (!$(this).hasClass('marked-star')) {
@@ -1183,7 +1413,19 @@ Template.allreports.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+    accountantList : () => {
+        return Template.instance().accountantList.get().sort(function(a, b){
+            if (a.headDept == 'NA') {
+                return 1;
+            }
+            else if (b.headDept == 'NA') {
+                return -1;
+            }
+            return (a.headDept.toUpperCase() > b.headDept.toUpperCase()) ? 1 : -1;
+            // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
+        });
+    },
 });
 
 Template.registerHelper('equals', function(a, b) {

@@ -21,7 +21,7 @@
                     }
 
                     .sideSearch {
-                        width: 200px;
+                        /*width: 200px;*/
                         overflow-x: hidden;
                         overflow-y: hidden;
                     }
@@ -82,6 +82,13 @@
                         background-color: #ededed99;
                         color: #00a3d3;
                     }
+
+                    @media screen and (max-width: 450px) {
+                        .sideSearch {
+                            height: 400px !important;
+                            overflow-y: scroll;
+                        }
+                    }
                 </style>
 
                 <div class="d-sm-flex justify-content-between align-items-center mb-4" style="margin-left: 8px;">
@@ -92,7 +99,7 @@
                     <div class="modal-dialog modal-sm" role="document">
                         <div class="modal-content">
                             <div class="modal-header" style="padding-bottom: 8px;">
-                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
                             </div>
                             <div class="modal-body">
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
@@ -119,93 +126,50 @@
                             </div>
                             <div class="card-body text-nowrap cardB supplierListCard" id="supplierListCard">
                                 <div class="sideSearch">
-                                    <div class="form-group pull-right">
-                                        <input type="text" class="search form-control" placeholder="Search...">
+                                    <div class="row">
+                                        <div class="col-12" style="display: inline-flex;">
+                                            <input type="text" class="search form-control txtSearchSupplier" placeholder="Search..." style="width: 80%;">
+                                            <button class="btn btn-primary btnRefreshSuppliers" type="button" id="btnRefreshSuppliers" style="padding: 4px 10px; font-size: 14px; margin-left: 8px !important;" autocomplete="off"><i
+                                                    class="fas fa-search-plus"></i></button>
+                                        </div>
+                                        <span class="counter pull-right"></span>
+                                        <table id="tblSupplierSideList" name="tblSupplierSideList" class="table table-hover table-bordered results tblSupplierSideList">
+                                            <thead>
+                                                <tr>
+                                                    <th>Supplier</th>
+                                                </tr>
+                                                <tr class="warning no-result">
+                                                    <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#if supplierrecords}}
+                                                    {{#each item in supplierrecords}}
+                                                        <tr id="{{item.id}}" style=" cursor: pointer;">
+                                                            <td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="{{item.company}}" id="{{item.id}}" class="{{item.classname}}">{{item.company}}</td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <span class="counter pull-right"></span>
-                                    <table id="tblSupplierSideList" name="tblSupplierSideList" class="table table-hover table-bordered results tblSupplierSideList">
-                                        <thead>
-                                            <tr>
-                                                <th>Supplier</th>
-                                            </tr>
-                                            <tr class="warning no-result">
-                                                <td colspan="4"><i class="fa fa-warning"></i> No result</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {{#if supplierrecords}}
-                                                {{#each item in supplierrecords}}
-                                                    <tr id="{{item.id}}" style=" cursor: pointer;">
-                                                        <td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="{{item.company}}" id="{{item.id}}" class="{{item.classname}}">{{item.company}}</td>
-                                                    </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-10 displayInfo" id="displayInfo">
-                        <div class="row">
-                            <div class="col-md-4 col-xl-4 mb-4 viewList btnsViewHide" id="btnsViewHide" style="margin: 0px;margin-bottom: 0px;">
-                                <div class="card shadow border-left-info py-2" style="margin: 8px;">
-                                    <div class="card-body" style="padding-bottom: .40rem;">
-                                        <div class="row align-items-center no-gutters">
-                                            <div class="col mr-2">
-                                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span class="text-info">View Customers</span></div>
-                                                <div class="text-dark font-weight-bold h5 mb-0">
-                                                    <button class="btn btn-primary btnView" id="btnView" type="button"><i class="fa fa-eye" style="margin-right: 5px;"></i>View</button>
-                                                    <button class="btn btn-primary btnView btnHide" id="btnHide" type="button"><i class="fa fa-eye" style="margin-right: 5px;"></i>Hide</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-xl-4 mb-4 openBalance" style="margin: 0px;margin-bottom: 0px;">
-                                <div class="card shadow border-left-warning py-2 pointer" style="margin: 8px;">
-                                    <div class="card-body">
-                                        <div class="row align-items-center no-gutters">
-                                            <div class="col mr-2">
-                                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span class="text-warning">Aged Payables</span></div>
-                                                <div class="text-dark font-weight-bold h5 mb-0"><a href="#"><span class="suppAwaitingAmt">0.00</span></a></div>
-                                            </div>
-                                            <div class="col-auto"><i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-xl-4 mb-4" style="margin: 0px;margin-bottom: 0px;">
-                                <div class="card shadow border-left-danger py-2 pointer openBalancesummary" style="margin: 8px;">
-                                    <div class="card-body">
-                                        <div class="row align-items-center no-gutters">
-                                            <div class="col mr-2">
-                                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span class="text-danger">Aged Payables Summary</span></div>
-                                                <div class="text-dark font-weight-bold h5 mb-0"><a href="#"><span class="suppOverdueAmt">0.00</span></a></div>
-                                            </div>
-                                            <div class="col-auto"><i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-3 mb-4" style="margin: 0;margin-bottom: 0;">
-                                <div class="card shadow border-left-success py-2" style="margin: 8px;">
-                                    <div class="card-body">
-                                        <div class="row align-items-center no-gutters">
-                                            <div class="col mr-2">
-                                                <button type="button" class="btn btn-success btnMakeSupplierPayment" id="btnMakeSupplierPayment" style="margin-bottom: 6px;"><i class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Make Payment</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card shadow mb-4 cardSizing" style="margin: 8px;">
+
+                        <!-- All Cards List -->
+                        {{> allCardsLists tabGroupID="8" chartGroup="PaymentOverviewSupplier"}}
+
+                        <div class="card shadow mb-4 cardSizing">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h6 class="text-primary font-weight-bold m-0">{{record.company}} - {{record.firstname}} {{record.lastname}} - {{record.phone}}</h6>
+                                <div>
+                                    <button type="button" class="btn btn-success btnMakeSupplierPayment" id="btnMakeSupplierPayment"><i class="fas fa-hand-holding-usd" style="margin-right: 5px;"></i>Make Payment</button>
 
-                                <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
+                                    <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
+                                </div>
                             </div>
 
                             <!-- Start {{> optionCustomFiled}} -->
@@ -216,7 +180,7 @@
                                 <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4>Field Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <h4>Field Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
                                         </div>
                                         <div class="modal-body">
                                             <div>
@@ -309,6 +273,7 @@
 
                                         <li class="nav-item" style="cursor: pointer;"><a class="nav-link active supplierTab" role="tab" data-toggle="tab" data-target="#tab-2">Supplier Details</a></li>
                                         <li class="nav-item" style="cursor: pointer;"><a class="nav-link transTab" role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-crm">CRM</a></li>
                                         <!-- <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-3">Jobs / Projects</a></li> -->
                                     </ul>
                                     <div class="tab-content">
@@ -377,90 +342,117 @@
                                         </style>
 
                                         <div class="tab-pane active border rounded-0 tab-2" role="tabpanel" id="tab-2" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                            <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
-                                                <div class="col">
-                                                    <div class="row">
-                                                        <div class="form-group flex-grow-1" style="margin: 4px;"><label>Supplier Name</label><input type="text" class="form-control" id="edtSupplierCompany" name="edtSupplierCompany"
-                                                                value="{{record.company}}"></div>
-                                                        <div class="form-group flex-grow-1" style="margin: 4px;"><label>Supplier Email</label><input type="text" class="form-control" id="edtSupplierCompanyEmail" name="edtSupplierCompanyEmail"
-                                                                value="{{record.email}}"></div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col d-xl-flex align-items-xl-start" style="padding: 0px;">
-                                                            <div class="form-group" style="margin: 4px;"><label class="text-nowrap">Title</label><input type="text" class="form-control" style="width: 50px;min-width: 50px;max-width: 50px;"
-                                                                    id="edtSupplierTitle" name="edtSupplierTitle" value="{{record.title}}"></div>
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">First Name</label><input type="text" class="form-control" id="edtSupplierFirstName"
-                                                                    name="edtSupplierFirstName" value="{{record.firstname}}"></div>
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Middle Name</label><input type="text" class="form-control" id="edtSupplierMiddleName"
-                                                                    name="edtSupplierMiddleName" value="{{record.middlename}}"></div>
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Last Name</label><input type="text" class="form-control" id="edtSupplierLastName"
-                                                                    name="edtSupplierLastName" value="{{record.lastname}}"></div>
-                                                            <!-- <div class="form-group" style="margin: 4px;"><label class="text-nowrap">Suffix</label><input type="text" class="form-control" style="width: 60px;min-width: 60px;max-width: 60px;" id="edtSupplierSuffix" name="edtSupplierSuffix" value="{{record.tfn}}"></div> -->
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Phone</label><input type="text" class="form-control" id="edtSupplierPhone" name="edtSupplierPhone"
-                                                                    value="{{record.phone}}"></div>
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Mobile</label><input type="text" class="form-control" id="edtSupplierMobile" name="edtSupplierMobile"
-                                                                    value="{{record.mobile}}"></div>
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Fax</label><input type="text" class="form-control" id="edtSupplierFax" name="edtSupplierFax"
-                                                                    value="{{record.fax}}"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0px;">
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Skype ID</label><input type="text" class="form-control" id="edtSupplierSkypeID" name="edtSupplierSkypeID"
-                                                                    value="{{record.skype}}"></div>
-                                                            <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">Website</label><input type="text" class="form-control" id="edtSupplierWebsite" name="edtSupplierWebsite"
-                                                                    value="{{record.website}}"></div>
-                                                            <style>
-                                                                @media (max-width: 420px) {
-                                                                    .chkSameCustomer {
-                                                                        margin-top: 20px !important;
-                                                                    }
-                                                                }
-                                                            </style>
-                                                            <div class="custom-control custom-switch chkSameCustomer" style="margin: 4px; margin-top: 41px;">
-                                                                <input class="custom-control-input" type="checkbox" id="chkSameAsCustomer" style=" cursor: pointer;" checked="{{#if record.iscustomer}}checked{{/if}}">
-                                                                <label class="custom-control-label" for="chkSameAsCustomer" style=" cursor: pointer;">Is Also Customer</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
 
-                                                    <div class="row">
-                                                      <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0;">
-                                                          <div class="form-group flex-grow-1" style="margin: 4px;">
-                                                            <div class="one box checkbox1div"
+                                            <div class="row no-gutters" style="padding: 8px;">
+                                                <div class="col-12 col-md-6" style="padding: 0px 8px;">
+                                                    <div class="form-group">
+                                                        <label>Supplier Name</label>
+                                                        <input type="text" class="form-control" id="edtSupplierCompany" name="edtSupplierCompany" value="{{record.company}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6" style="padding: 0px 8px;">
+                                                    <div class="form-group">
+                                                        <label>Supplier Email</label>
+                                                        <input type="text" class="form-control" id="edtSupplierCompanyEmail" name="edtSupplierCompanyEmail" value="{{record.email}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-2" style="padding: 0px 8px;">
+                                                    <div class="form-group">
+                                                        <label class="text-nowrap">Title</label>
+                                                        <input type="text" class="form-control" id="edtSupplierTitle" name="edtSupplierTitle" value="{{record.title}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-4" style="padding: 0px 8px;">
+                                                    <div class="form-group">
+                                                        <label class="text-nowrap">First Name</label>
+                                                        <input type="text" class="form-control" id="edtSupplierFirstName" name="edtSupplierFirstName" value="{{record.firstname}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-2">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <label class="text-nowrap">Middle Name</label>
+                                                        <input type="text" class="form-control" id="edtSupplierMiddleName" name="edtSupplierMiddleName" value="{{record.middlename}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-4">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <label class="text-nowrap">Last Name</label>
+                                                        <input type="text" class="form-control" id="edtSupplierLastName" name="edtSupplierLastName" value="{{record.lastname}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-4">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <label class="text-nowrap">Phone</label>
+                                                        <input type="text" class="form-control" id="edtSupplierPhone" name="edtSupplierPhone" value="{{record.phone}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-4">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <label class="text-nowrap">Mobile</label>
+                                                        <input type="text" class="form-control" id="edtSupplierMobile" name="edtSupplierMobile" value="{{record.mobile}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-4">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <label class="text-nowrap">Fax</label>
+                                                        <input type="text" class="form-control" id="edtSupplierFax" name="edtSupplierFax" value="{{record.fax}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-5">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <label class="text-nowrap">Skype ID</label>
+                                                        <input type="text" class="form-control" id="edtSupplierSkypeID" name="edtSupplierSkypeID" value="{{record.skype}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-5">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <label class="text-nowrap">Website</label>
+                                                        <input type="text" class="form-control" id="edtSupplierWebsite" name="edtSupplierWebsite" value="{{record.website}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-2">
+                                                    <div class="custom-control custom-switch chkSameCustomer" style="padding: 0px 8px; margin-top: 38px; padding-left: 2.25rem;">
+                                                        <input class="custom-control-input" type="checkbox" id="chkSameAsCustomer" style=" cursor: pointer;" checked="{{#if record.iscustomer}}checked{{/if}}">
+                                                        <label class="custom-control-label" for="chkSameAsCustomer" style=" cursor: pointer;">Is Also Customer</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-4">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <div class="one box checkbox1div"
                                                             style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
                                                             <div class="form-group">
                                                                 <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
                                                                 <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
                                                             </div>
                                                         </div>
-                                                          </div>
-                                                          <div class="form-group flex-grow-1" style="margin: 4px;">
-                                                            <div class="two box checkbox2div"
-                                                                style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                                                <div class="form-group">
-                                                                    <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br></label>
-                                                                    <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{invoicerecord.saleCustField2}}" custfieldid=''>
-                                                                </div>
-                                                            </div>
-                                                          </div>
-                                                          <div class="form-group flex-grow-1" style="margin: 4px;">
-                                                            <div class="two box checkbox3div"
-                                                                style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                                                <div class="form-group">
-                                                                    <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br></label>
-                                                                    <input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value="{{invoicerecord.saleCustField3}}" custfieldid=''>
-                                                                </div>
-                                                            </div>
-                                                          </div>
-                                                      </div>
                                                     </div>
-
                                                 </div>
+                                                <div class="col-6 col-md-4">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <div class="two box checkbox2div"
+                                                            style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                                            <div class="form-group">
+                                                                <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br></label>
+                                                                <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{invoicerecord.saleCustField2}}" custfieldid=''>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 col-md-4">
+                                                    <div class="form-group" style="padding: 0px 8px;">
+                                                        <div class="two box checkbox3div"
+                                                            style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                                            <div class="form-group">
+                                                                <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br></label>
+                                                                <input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value="{{invoicerecord.saleCustField3}}" custfieldid=''>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+
                                                 <div class="col" style="padding: 4px;margin-top: 16px;">
                                                     <div>
                                                         <ul class="nav nav-tabs nav-justified">
@@ -620,8 +612,8 @@
                                                                                             <input class="custom-control-input chkBox" type="checkbox" id="isformcontractor" name="isformcontractor" autocomplete="off" checked><label
                                                                                                 class="custom-control-label chkBox" for="isformcontractor" style="height: calc(1.5em + 0.75rem );"></label>
                                                                                         {{else}}
-                                                                                            <input class="custom-control-input chkBox" type="checkbox" id="isformcontractor" name="isformcontractor" autocomplete="off"><label class="custom-control-label chkBox"
-                                                                                                for="isformcontractor" style="height: calc(1.5em + 0.75rem );"></label>
+                                                                                            <input class="custom-control-input chkBox" type="checkbox" id="isformcontractor" name="isformcontractor" autocomplete="off"><label
+                                                                                                class="custom-control-label chkBox" for="isformcontractor" style="height: calc(1.5em + 0.75rem );"></label>
                                                                                         {{/if}}
                                                                                     </div>
                                                                                 </div>
@@ -1036,7 +1028,7 @@
                                                             <div class="modal-header">
                                                                 <h4>Delete</h4>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">×</span>
+                                                                    <span aria-hidden="true">�</span>
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
@@ -1074,7 +1066,7 @@
                                                                 <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
-                                                                            <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                            <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
                                                                         </div>
                                                                         <div class="modal-body">
                                                                             <div>
@@ -1142,11 +1134,19 @@
 
                                                                                                     {{#if equals item.sVisible true}}
                                                                                                         <script>
-                                                                                                            $("#" + {{item.sIndex}} + ".chkDatatable").attr("checked", "checked");
+                                                                                                            $("#" + {
+                                                                                                                {
+                                                                                                                    item.sIndex
+                                                                                                                }
+                                                                                                            } + ".chkDatatable").attr("checked", "checked");
                                                                                                         </script>
                                                                                                     {{else}}
                                                                                                         <script>
-                                                                                                            $("#" + {{item.sIndex}} + ".chkDatatable").removeAttr("checked");
+                                                                                                            $("#" + {
+                                                                                                                {
+                                                                                                                    item.sIndex
+                                                                                                                }
+                                                                                                            } + ".chkDatatable").removeAttr("checked");
                                                                                                         </script>
                                                                                                     {{/if}}
 
@@ -1264,8 +1264,265 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                            <div class="row d-xl-flex flex-row justify-content-xl-center">
+                                                <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0 !important;">
+                                                    <div class="btn-group float-left" style="margin: 16px; margin-bottom: 0;">
+                                                        <button class="btn btn-primary btnRefreshCrm" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"><i class="la la-lightbulb-o"
+                                                                style="background-color: #00A3D3; border-color: #00A3D3;"></i>Refresh</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <button class="btn btn-primary float-right printConfirm" type="button" style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
+                                                            style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
+                                                    <button class="btn btn-primary export float-right" type="button" style="margin: 16px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
+                                                            style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
+                                                </div>
+                                            </div>
+                                            <div class="row rowB" style="margin: 16px; margin-top: 0">
+                                                <div class="card-body rounded" style="padding: 0;">
+                                                    <div class="d-xl-flex justify-content-xl-end">
+                                                        <div>
+                                                            <a class="btn btnOpenSettingsCrm" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+                                                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                                                                <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div>
+                                                                                <style>
+                                                                                    .groove {
+                                                                                        border-style: solid;
+                                                                                        border-width: 1px;
+                                                                                        width: 200px;
+                                                                                        padding: 2px;
+                                                                                        border-radius: .35rem;
+                                                                                    }
+
+                                                                                    .custom-control-label {
+                                                                                        position: absolute;
+                                                                                    }
+
+                                                                                    .rngRange {
+                                                                                        position: relative;
+                                                                                        display: flex;
+                                                                                        flex-direction: column;
+                                                                                        width: 100%;
+                                                                                        pointer-events: auto;
+                                                                                        background-color: rgb(255, 255, 255);
+                                                                                        background-clip: padding-box;
+                                                                                        border: 1px solid rgb(133, 135, 150);
+                                                                                        padding: 2px;
+                                                                                        border-radius: .35rem;
+                                                                                        color: rgb(128, 128, 128);
+                                                                                        height: inherit !important;
+                                                                                    }
+
+                                                                                    @media only screen and (max-width: 480px) {
+                                                                                        .modal.show .modal-dialog {
+                                                                                            float: inherit !important;
+                                                                                            left: inherit !important;
+                                                                                            top: auto !important;
+
+                                                                                        }
+                                                                                    }
+                                                                                </style>
+                                                                                {{#if crmTableheaderRecords}}
+                                                                                    <form class="d-xl-flex align-items-xl-center">
+                                                                                        <div class="flex-grow-1">
+
+                                                                                            {{#each item in crmTableheaderRecords}}
+                                                                                                {{#if equals item.sTitle "id"}}
+                                                                                                {{else}}
+
+                                                                                                    <div id="{{item.sIndex}}" class="columnSettings">
+                                                                                                        <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                                                            <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}"
+                                                                                                                checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
+                                                                                                            <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
+                                                                                                            <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                                                                                                        </div>
+                                                                                                        <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                                                            <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:
+                                                                                                                <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
+                                                                                                            </label>
+                                                                                                            <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
+                                                                                                            <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                    {{#if equals item.sVisible true}}
+                                                                                                        <script>
+                                                                                                            $("#" + {
+                                                                                                                {
+                                                                                                                    item.sIndex
+                                                                                                                }
+                                                                                                            } + ".chkDatatable").attr("checked", "checked");
+                                                                                                        </script>
+                                                                                                    {{else}}
+                                                                                                        <script>
+                                                                                                            $("#" + {
+                                                                                                                {
+                                                                                                                    item.sIndex
+                                                                                                                }
+                                                                                                            } + ".chkDatatable").removeAttr("checked");
+                                                                                                        </script>
+                                                                                                    {{/if}}
+
+                                                                                                {{/if}}
+                                                                                            {{/each}}
+                                                                                        </div>
+                                                                                    </form>
+                                                                                {{/if}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button class="btn btn-success saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                            <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End -->
+                                                    <div class="table-responsive">
+                                                        <style>
+                                                            th {
+                                                                background-color: #ededed;
+                                                            }
+
+                                                            .table-striped tbody tr:nth-of-type(odd) {
+                                                                background-color: white !important;
+                                                            }
+
+                                                            .table-striped tbody tr:nth-of-type(even) {
+                                                                background-color: #0000000d !important;
+                                                            }
+
+                                                            .JColResizer>tbody>tr>td,
+                                                            .JColResizer>tbody>tr>th {
+                                                                padding: .75rem !important;
+                                                            }
+
+                                                            .hiddenColumn {
+                                                                display: none;
+                                                            }
+
+                                                            .showColumn {
+                                                                display: table-cell;
+                                                                padding: .75rem;
+                                                                vertical-align: top;
+                                                            }
+
+                                                            input[type=number]::-webkit-inner-spin-button,
+                                                            input[type=number]::-webkit-outer-spin-button {
+                                                                opacity: 1;
+                                                            }
+
+                                                            .task_priority_0 {
+                                                                color: #1cc88a;
+                                                                background: #1cc88a;
+                                                            }
+
+                                                            .task_priority_1 {
+                                                                color: #00a3d3;
+                                                                background: #00a3d3;
+                                                            }
+
+                                                            .task_priority_2 {
+                                                                color: #f6c23e;
+                                                                background: #f6c23e;
+                                                            }
+
+                                                            .task_priority_3 {
+                                                                color: #e74a3b;
+                                                                background: #e74a3b;
+                                                            }
+
+                                                            .taskTag {
+                                                                margin: 4px;
+                                                                /* font-size: 12px; */
+                                                            }
+
+                                                            .taganchor {
+                                                                color: #858796 !important;
+                                                                text-decoration: none;
+                                                            }
+                                                        </style>
+                                                        <table id="tblCrmList" style="width:100%" class="dataTable table table-striped table-bordered tblCrmList">
+                                                            <thead>
+                                                                <tr class="dnd-moved">
+                                                                    <th class="th colTaskId hiddenColumn"></th>
+                                                                    <!--                                                                <th class="th colCompleteTask" style="width: 2%;"></th>-->
+                                                                    <th class="th colDate">Date</th>
+                                                                    <th class="th colTaskName">Task</th>
+                                                                    <th class="th colTaskDesc">Description</th>
+                                                                    <th class="th colTaskLabels">Labels</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {{#if crmRecords}}
+                                                                    {{#each item in crmRecords}}
+                                                                        <tr class="dnd-moved" style="cursor: pointer;" id="{{item.id}}" category="{{item.category}}">
+                                                                            <td contenteditable="false" class="colTaskId hiddenColumn">{{item.id}}</td>
+                                                                            <!--                                                                        <td contenteditable="false" class="th colCompleteTask" style="width: 2%;">-->
+                                                                            <!--                                                                            <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}"-->
+                                                                            <!--                                                                                 style="width:15px;">-->
+                                                                            <!--                                                                            </div>-->
+                                                                            <!--                                                                        </td>-->
+                                                                            <td contenteditable="false" class="colDate">{{item.date}}</td>
+                                                                            <td contenteditable="false" class="colTaskName">{{item.taskName}}</td>
+                                                                            <td contenteditable="false" class="colTaskDesc">{{item.description}}</td>
+                                                                            <td contenteditable="false" class="colTaskLabels">
+                                                                                {{#if item.labels}}
+                                                                                    {{#each label in item.labels}}
+                                                                                        <span class="taskTag">
+                                                                                            <a class="taganchor filterByLabel" href="">
+                                                                                                <i class="fas fa-tag" style="margin-right: 5px;"></i>{{label.TaskLabelName}}
+                                                                                            </a>
+                                                                                        </span>
+                                                                                    {{/each}}
+                                                                                {{/if}}
+                                                                            </td>
+                                                                        </tr>
+                                                                    {{/each}}
+                                                                {{/if}}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" role="dialog" tabindex="-1" id="referenceLetterModal">
+                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="chooseLetterLabel">Choose a reference letter</h5>
+                        </div>
+                        <div class="modal-body p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
+                            {{#each correspondence in correspondences}}
+                                <div>
+                                    <input type="radio" name="refTemp" value="{{correspondence.label}}" id="{{correspondence.label}}" data-subject="{{correspondence.subject}}" data-memo="{{correspondence.memo}}">
+                                    <label for="{{correspondence.label}}">{{correspondence.label}}</label>
+                                </div>
+                            {{/each}}
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <button class="btn btn-success float-right btnSaveLetterTemp" id="save-correspondence" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                             </div>
                         </div>
                     </div>
@@ -1280,7 +1537,7 @@
                 <div class="modal-header">
 
                     <h4 class="title-header">Supplier</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
                 </div>
                 <div class="modal-body">
                     <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->

@@ -1,0 +1,48 @@
+<template name="crm_mailchimp_modal">
+  <a role="button" data-toggle="modal" href="#crmMailchimpModal" style="font-size: 20px;">Help <i
+      class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="crmMailchimpModal">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="padding-bottom: 8px;">
+          <h4>Mailchimp</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="custom-control custom-checkbox chkBox pointer"
+            style="width: 15px; margin: 4px; background: transparent;">
+            <input class="custom-control-input chkBox pointer" type="checkbox" id="chk_customer" value=""
+              style="background: transparent !important;">
+            <label class="custom-control-label chkBox pointer" for="chk_customer" data-id="edit">Customer</label>
+          </div>
+
+          <div class="custom-control custom-checkbox chkBox pointer"
+            style="width: 15px; margin: 4px; background: transparent;">
+            <input class="custom-control-input chkBox pointer" type="checkbox" id="chk_supplier" value=""
+              style="background: transparent !important;">
+            <label class="custom-control-label chkBox pointer" for="chk_supplier" data-id="edit">Supplier</label>
+          </div>
+
+          <div class="custom-control custom-checkbox chkBox pointer"
+            style="width: 15px; margin: 4px; background: transparent;">
+            <input class="custom-control-input chkBox pointer" type="checkbox" id="chk_employee" value=""
+              style="background: transparent !important;">
+            <label class="custom-control-label chkBox pointer" for="chk_employee" data-id="edit">Employee</label>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding: 6px;">
+          <button class="btn btn-success" type="button" id="btn_send_to_mailchimp"
+            data-dismiss="modal">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    modalDraggable();
+  </script>
+
+</template>
