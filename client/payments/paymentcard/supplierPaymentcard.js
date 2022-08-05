@@ -11,7 +11,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 import LoadingOverlay from "../../LoadingOverlay";
-import { _setTmpAppliedAmount } from "../supplierpayment";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -45,6 +45,12 @@ Template.supplierpaymentcard.onCreated(() => {
   templateObject.accountID = new ReactiveVar();
   templateObject.stripe_fee_method = new ReactiveVar();
 });
+
+
+
+export const _setTmpAppliedAmount = (amount = 0) => {
+  return localStorage.setItem('APPLIED_AMOUNT', amount);
+} 
 
 Template.supplierpaymentcard.onRendered(() => {
   _setTmpAppliedAmount();

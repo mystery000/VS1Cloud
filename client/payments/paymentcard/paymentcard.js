@@ -22,7 +22,7 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
-import { calculateApplied, convertToForeignAmount, onExchangeRateChange } from "./supplierPaymentcard";
+import { calculateApplied, convertToForeignAmount, onExchangeRateChange, _setTmpAppliedAmount } from "./supplierPaymentcard";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -59,6 +59,7 @@ Template.paymentcard.onCreated(() => {
 });
 
 Template.paymentcard.onRendered(() => {
+        _setTmpAppliedAmount();
         let url = FlowRouter.current().path;
         $('#choosetemplate').attr('checked', true);
         const dataTableList = [];

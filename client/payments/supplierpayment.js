@@ -14,13 +14,11 @@ Template.supplierpayment.onCreated(function(){
     templateObject.tableheaderrecords = new ReactiveVar([]);
 });
 
-export const _setTmpAppliedAmount = (amount = 0) => {
-    return localStorage.setItem('APPLIED_AMOUNT', amount);
-}
 
 Template.supplierpayment.onRendered(function() {
-    $('.fullScreenSpin').css('display','inline-block');
     _setTmpAppliedAmount();
+    $('.fullScreenSpin').css('display','inline-block');
+   
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];
