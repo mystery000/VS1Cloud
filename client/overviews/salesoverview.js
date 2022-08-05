@@ -127,12 +127,18 @@ Template.salesoverview.onRendered(function () {
               if (data.Params.IgnoreDates == true) {
                 $("#dateFrom").attr("readonly", true);
                 $("#dateTo").attr("readonly", true);
-                //FlowRouter.go("/salesoverview?ignoredate=true");
+                FlowRouter.go("/salesoverview?ignoredate=true");
               } else {
-                $('#dateFrom').attr('readonly', false);
-                $('#dateTo').attr('readonly', false);
-                $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-                $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+                $("#dateFrom").val(
+                  data.Params.DateFrom != ""
+                    ? moment(data.Params.DateFrom).format("DD/MM/YYYY")
+                    : data.Params.DateFrom
+                );
+                $("#dateTo").val(
+                  data.Params.DateTo != ""
+                    ? moment(data.Params.DateTo).format("DD/MM/YYYY")
+                    : data.Params.DateTo
+                );
               }
               for (let i = 0; i < data.tsaleslist.length; i++) {
                 let totalAmountEx =
@@ -522,16 +528,24 @@ Template.salesoverview.onRendered(function () {
           if (data.Params.IgnoreDates == true) {
             $("#dateFrom").attr("readonly", true);
             $("#dateTo").attr("readonly", true);
-            //FlowRouter.go("/salesoverview?ignoredate=true");
+            FlowRouter.go("/salesoverview?ignoredate=true");
           } else {
-            $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-            $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+            $("#dateFrom").val(
+              data.Params.DateFrom != ""
+                ? moment(data.Params.DateFrom).format("DD/MM/YYYY")
+                : data.Params.DateFrom
+            );
+            $("#dateTo").val(
+              data.Params.DateTo != ""
+                ? moment(data.Params.DateTo).format("DD/MM/YYYY")
+                : data.Params.DateTo
+            );
           }
 
           let useData = data.tsaleslist;
           let lineItems = [];
           let lineItemObj = {};
-s
+
           $(".fullScreenSpin").css("display", "none");
           for (let i = 0; i < useData.length; i++) {
 
@@ -931,12 +945,18 @@ s
             if (data.Params.IgnoreDates == true) {
               $("#dateFrom").attr("readonly", true);
               $("#dateTo").attr("readonly", true);
-              //FlowRouter.go("/salesoverview?ignoredate=true");
+              FlowRouter.go("/salesoverview?ignoredate=true");
             } else {
-              $('#dateFrom').attr('readonly', false);
-              $('#dateTo').attr('readonly', false);
-              $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-              $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+              $("#dateFrom").val(
+                data.Params.DateFrom != ""
+                  ? moment(data.Params.DateFrom).format("DD/MM/YYYY")
+                  : data.Params.DateFrom
+              );
+              $("#dateTo").val(
+                data.Params.DateTo != ""
+                  ? moment(data.Params.DateTo).format("DD/MM/YYYY")
+                  : data.Params.DateTo
+              );
             }
             for (let i = 0; i < data.tsaleslist.length; i++) {
               let totalAmountEx =
@@ -1371,14 +1391,31 @@ s
 
   templateObject.getAllSalesOrderData();
 
-  templateObject.getAllFilterSalesOrderData = function (fromDate,toDate,ignoreDate) {
-    sideBarService.getSalesListData(fromDate, toDate, ignoreDate, initialReportLoad, 0).then(function (data) {
-        addVS1Data("TSalesList", JSON.stringify(data)).then(function (datareturn) {
-            window.open("/salesoverview?toDate=" +toDate +"&fromDate=" +fromDate +"&ignoredate=" +ignoreDate,"_self");
-          }).catch(function (err) {
+  templateObject.getAllFilterSalesOrderData = function (
+    fromDate,
+    toDate,
+    ignoreDate
+  ) {
+    sideBarService
+      .getSalesListData(fromDate, toDate, ignoreDate, initialReportLoad, 0)
+      .then(function (data) {
+        addVS1Data("TSalesList", JSON.stringify(data))
+          .then(function (datareturn) {
+            window.open(
+              "/salesoverview?toDate=" +
+                toDate +
+                "&fromDate=" +
+                fromDate +
+                "&ignoredate=" +
+                ignoreDate,
+              "_self"
+            );
+          })
+          .catch(function (err) {
             location.reload();
           });
-      }).catch(function (err) {
+      })
+      .catch(function (err) {
         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
         templateObject.datatablerecords.set("");
         $(".fullScreenSpin").css("display", "none");
@@ -1394,8 +1431,16 @@ s
       $("#dateFrom").attr("readonly", true);
       $("#dateTo").attr("readonly", true);
     } else {
-      $("#dateFrom").val(urlParametersDateFrom != "" ? moment(urlParametersDateFrom).format("DD/MM/YYYY"): urlParametersDateFrom);
-      $("#dateTo").val(urlParametersDateTo != ""? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
+      $("#dateFrom").val(
+        urlParametersDateFrom != ""
+          ? moment(urlParametersDateFrom).format("DD/MM/YYYY")
+          : urlParametersDateFrom
+      );
+      $("#dateTo").val(
+        urlParametersDateTo != ""
+          ? moment(urlParametersDateTo).format("DD/MM/YYYY")
+          : urlParametersDateTo
+      );
     }
   }
 

@@ -1803,10 +1803,12 @@ Template.emailsettings.events({
         const templateObject = Template.instance()
         let correspondenceData = localStorage.getItem('correspondence');
         let correspondenceTemp = correspondenceData ? JSON.parse(correspondenceData) : [];
+        console.log('correspondence', correspondenceTemp);
         let tempLabel = $("#edtTemplateLbl").val();
         let tempSubject = $('#edtTemplateSubject').val();
         let tempContent = $("#edtTemplateContent").val();
         if(correspondenceTemp.length > 0 ) {
+            console.log("corresepondence type", typeof correspondenceTemp)
             let index = correspondenceTemp.findIndex(item=>{
                 return item.label == tempLabel
             })
@@ -1861,7 +1863,7 @@ Template.emailsettings.helpers({
     invoicerecords: () => {
         return Template.instance().invoicerecords.get();
     },
-
+    
     correspondences: () => {
         return Template.instance().correspondences.get();
     },

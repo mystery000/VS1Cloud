@@ -716,7 +716,7 @@ Template.reconciliationlist.onRendered(function() {
 
             }
         }).catch(function (err) {
-            sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+            sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
             //  addVS1Data('TReconciliationList',JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
@@ -1246,7 +1246,7 @@ Template.reconciliationlist.events({
 
         });
 
-        sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataRecon) {
+        sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataRecon) {
             addVS1Data('TReconciliationList', JSON.stringify(dataRecon)).then(function(datareturn) {
               sideBarService.getAllReconcilationList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TReconciliation',JSON.stringify(data)).then(function (datareturn) {

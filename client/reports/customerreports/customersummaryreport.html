@@ -184,11 +184,49 @@
                                                 <th>City</th>
                                                 <th>ZIP</th>
                                                 <th>State</th>
-                                                <th class="text-right">Total (Ex)</th>
-                                                <th class="text-right">Total (Inc)</th>
-                                                <th class="text-right">Gross Profit</th>
-                                                <th class="text-right">Margin</th>
+                                                <th colspan="{{countActive currencyList }}" class="text-right alighnMent{{countActive currencyList }}">Total (Ex)</th>
+                                                <th colspan="{{countActive currencyList }}" class="text-right alighnMent{{countActive currencyList }}">Total (Inc)</th>
+                                                <th colspan="{{countActive currencyList }}" class="text-right alighnMent{{countActive currencyList }}">Gross Profit</th>
+                                                <th colspan="{{countActive currencyList }}" class="text-right alighnMent{{countActive currencyList }}">Margin</th>
+                                                
                                             </tr>
+                                            {{#if isOnlyDefaultActive equal "false" }}
+                                            <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+
+                                                {{#if currencyList}}
+                                                    {{#each c in currencyList }}
+                                                        {{# if c.active}}
+                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.code }}</th>
+                                                        {{/if}}
+                                                    {{/each}}
+
+                                                    {{#each c in currencyList }}
+                                                        {{# if c.active}}
+                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
+                                                        {{/if}}
+                                                    {{/each}}
+
+                                                    {{#each c in currencyList }}
+                                                        {{# if c.active}}
+                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
+                                                        {{/if}}
+                                                    {{/each}}
+
+                                                    {{#each c in currencyList }}
+                                                        {{# if c.active}}
+                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
+                                                        {{/if}}
+                                                    {{/each}}
+                                                {{/if}}
+
+                                            </tr>
+                                        {{/if}}
                                         </thead>
                                         <tbody>
                                             {{#if records}}
@@ -200,10 +238,44 @@
                                                     <td>{{ value.Address_2 }}</td>
                                                     <td>{{ value.Postcode }}</td>
                                                     <td>{{ value.State }}</td>
-                                                    <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
-                                                    <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
-                                                    <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td>
-                                                    <td>{{ formatPrice value.Margin }}</td>
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Total_Amount_Ex c}} text-danger {{else}} text-success {{/if}}">
+                                                                    <span class="table-cells"><strong>{{convertAmount value.Total_Amount_Ex c}}</strong></span>
+                                                                </td>
+                                                            {{/if}}
+                                                        {{/each}}
+
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Total_Amount_Inc c}} text-danger {{else}} text-success  {{/if}}">
+                                                                    <span class="table-cells"><strong>{{convertAmount value.Total_Amount_Inc c}}</strong></span>
+                                                                </td>
+                                                            {{/if}}
+                                                        {{/each}}
+
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.Gross_Profit c}} text-danger {{else}} text-success  {{/if}}">
+                                                                    <span class="table-cells"><strong>{{convertAmount value.Gross_Profit c}}</strong></span>
+                                                                </td>
+                                                            {{/if}}
+                                                        {{/each}}
+
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">
+                                                                    <span class="table-cells"><strong>{{convertAmount value.Margin c}}</strong></span>
+                                                                </td>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{else}}
+                                                        <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
+                                                        <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
+                                                        <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td>
+                                                        <td>{{ formatPrice value.Margin }}</td>
+                                                    {{/if}}
                                                 </tr>
                                                 {{/each}}
                                             {{/if}}
