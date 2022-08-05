@@ -11,6 +11,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 import LoadingOverlay from "../../LoadingOverlay";
+import { _setTmpAppliedAmount } from "../supplierpayment";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -46,7 +47,7 @@ Template.supplierpaymentcard.onCreated(() => {
 });
 
 Template.supplierpaymentcard.onRendered(() => {
-  localStorage.setItem('APPLIED_AMOUNT', 0);
+  _setTmpAppliedAmount();
   const dataTableList = [];
   const tableHeaderList = [];
   LoadingOverlay.show();
