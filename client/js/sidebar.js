@@ -862,7 +862,7 @@ Template.sidenav.onRendered(function() {
       }
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-        sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
             //localStorage.setItem('VS1BankAccountReportList', JSON.stringify(data) || '');
             addVS1Data('TBankAccountReport',JSON.stringify(data));
         }).catch(function(err) {
@@ -947,7 +947,7 @@ Template.sidenav.onRendered(function() {
       }
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-        sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
             //localStorage.setItem('VS1TbillReport', JSON.stringify(data) || '');
             addVS1Data('TbillReport',JSON.stringify(data));
         }).catch(function(err) {
@@ -1091,7 +1091,7 @@ Template.sidenav.onRendered(function() {
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-      sideBarService.getSalesListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
+      sideBarService.getSalesListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
             //localStorage.setItem('VS1TSalesList', JSON.stringify(data) || '');
             addVS1Data('TSalesList',JSON.stringify(data));
         }).catch(function(err) {

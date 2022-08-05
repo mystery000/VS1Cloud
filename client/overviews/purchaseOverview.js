@@ -526,10 +526,8 @@ Template.purchasesoverview.onRendered(function () {
           if (data.Params.IgnoreDates == true) {
             $("#dateFrom").attr("readonly", true);
             $("#dateTo").attr("readonly", true);
-            //FlowRouter.go("/purchasesoverview?ignoredate=true");
+            FlowRouter.go("/purchasesoverview?ignoredate=true");
           } else {
-            $('#dateFrom').attr('readonly', false);
-            $('#dateTo').attr('readonly', false);
             $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
             $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
           }
@@ -1592,6 +1590,17 @@ Template.purchasesoverview.events({
               window.open("/purchasesoverview", "_self");
             });
         });
+    /*
+    sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+        addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+            window.open("/purchasesoverview", "_self");
+          }).catch(function (err) {
+            window.open("/purchasesoverview", "_self");
+          });
+      }).catch(function (err) {
+        window.open("/purchasesoverview", "_self");
+      });
+*/
 
   },
   "change #dateTo": function () {

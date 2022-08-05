@@ -39,10 +39,12 @@ Meteor.methods({
           // members: memberDetails,
           update_existing: true
         });
+        console.log('success...')
         return response;
 
       }
       catch (err) {
+        console.log(err)
         return err;
       }
     }

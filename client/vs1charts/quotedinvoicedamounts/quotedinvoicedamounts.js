@@ -28,7 +28,7 @@ Template.quotedinvoicedamounts.onRendered(() => {
     let topTenData1 = [];
     let topTenSuppData1 = [];
     let topData = this;
-
+ 
     function chartClickEvent(event, array) {
         if (array[0] != undefined) {
             FlowRouter.go('/quoteslist?converted=false');
@@ -115,7 +115,7 @@ Template.quotedinvoicedamounts.onRendered(() => {
             getVS1Data('TSalesList').then(function (dataObject) {
             if (dataObject.length == 0) {
 
-               sideBarService.getSalesListData(prevMonth11Date,toDate, true,initialReportLoad,0).then((data) => {
+               sideBarService.getSalesListData(prevMonth11Date,toDate, false,initialReportLoad,0).then((data) => {
                     setTimeout(function () {
                         let filterData = _.filter(data.tsaleslist, function (data) {
                             return data.CustomerName
@@ -532,10 +532,10 @@ Template.quotedinvoicedamounts.onRendered(() => {
                             }
                         }
                     });
-                }, 1000)
+                }, 1000)    
             }
         }).catch(function (err) {
-           sideBarService.getSalesListData(prevMonth11Date,toDate, true,initialReportLoad,0).then((data) => {
+           sideBarService.getSalesListData(prevMonth11Date,toDate, false,initialReportLoad,0).then((data) => {
                 setTimeout(function () {
                     let filterData = _.filter(data.tsaleslist, function (data) {
                         return data.CustomerName
@@ -741,7 +741,7 @@ Template.quotedinvoicedamounts.onRendered(() => {
                             }
                         }
                     });
-                }, 1000)
+                }, 1000)    
             });
         });
     } else {
