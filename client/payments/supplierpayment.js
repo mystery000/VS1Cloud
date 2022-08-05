@@ -16,6 +16,7 @@ Template.supplierpayment.onCreated(function(){
 
 Template.supplierpayment.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
+    localStorage.setItem('APPLIED_AMOUNT', 0);
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];

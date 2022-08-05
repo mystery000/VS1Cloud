@@ -46,6 +46,7 @@ Template.supplierpaymentcard.onCreated(() => {
 });
 
 Template.supplierpaymentcard.onRendered(() => {
+  localStorage.setItem('APPLIED_AMOUNT', 0);
   const dataTableList = [];
   const tableHeaderList = [];
   LoadingOverlay.show();
