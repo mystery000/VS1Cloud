@@ -522,24 +522,21 @@ Template.allreports.onRendered(() => {
     //         }
     //         else{
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.taccountantcategory;
                 
-                for(let i=0; i<useData.length; i++){
-                    var dataList = {
-                        id: useData[i].Id || '',
-                        firstname: useData[i].FirstName || '-',
-                        lastname: useData[i].LastName || '-',
-                        companyname: useData[i].CompanyName || '-',
-                        address: useData[i].Address || '-',
-                        docname: useData[i].DocName || '-',
-                        towncity: useData[i].TownCity || '-',
-                        postalzip: useData[i].PostalZip || '-',
-                        stateregion: useData[i].StateRegion || '-',
-                        country: useData[i].Country || '-',
-                        status: useData[i].Active || 'false',
+                // for(let i=0; i<useData.length; i++){
+                    var dataInfo = {
+                        id: data.Id || '',
+                        firstname: data.FirstName || '-',
+                        lastname: data.LastName || '-',
+                        companyname: data.CompanyName || '-',
+                        address: data.Address || '-',
+                        towncity: data.TownCity || '-',
+                        postalzip: data.PostalZip || '-',
+                        stateregion: data.StateRegion || '-',
+                        country: data.Country || '-',
                     };
-                    accountantList.push(dataList);
-                }
+                    accountantList.push(dataInfo);
+                // }
                 templateObject.accountantList.set(accountantList);
             // }
         })
