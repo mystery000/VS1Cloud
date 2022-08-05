@@ -651,7 +651,7 @@ Template.companyappsettingsdup.events({
                 lineItemsForm1[i] = lineItemObjForm;
             }
         }
-
+        console.log('getCurrenUserPack', getCurrenUserPack)
         console.log('lineItemsForm1', lineItemsForm1)
         return false
 
