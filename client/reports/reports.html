@@ -855,216 +855,212 @@
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
                                     </div>
                                     <div class="card-body" style="overflow-x: auto;">
-                                        {{#if accountantList}}
-                                        {{#each item in accountantList}}
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/accountant/1">Company</a></div>
-                                                <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox" type="checkbox" id="formCheck-Company">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Company"></label>
-                                                    </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/company">Company</a></div>
+                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox" type="checkbox" id="formCheck-Company">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Company"></label>
                                                 </div>
                                             </div>
-                                            {{#if isAccountsLists}}
+                                        </div>
+                                        {{#if isAccountsLists}}
+                                            <script>
+                                                $('#formCheck-Company').prop("checked", true);
+                                            </script>
+                                        {{else}}
+                                            <script>
+                                                $('#formCheck-Company').prop("checked", false);
+                                            </script>
+                                        {{/if}}
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/companyastrustee">Company as Trustee</a></div>
+                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkCompanyTrustee" type="checkbox" id="formCheck-CompanyTrustee">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-CompanyTrustee"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{#if isBalanceSheet}}
+                                            <script>
+                                                $('#formCheck-CompanyTrustee').prop("checked", true);
+                                            </script>
+                                        {{else}}
+                                            <script>
+                                                $('#formCheck-CompanyTrustee').prop("checked", false);
+                                            </script>
+                                        {{/if}}
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/financialstatement">Financial Statement</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkFinancialStatement" type="checkbox" id="formCheck-FinancialStatement">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-FinancialStatement"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{#if isGeneralLedger}}
+                                            <script>
+                                                $('#formCheck-FinancialStatement').prop("checked", true);
+                                            </script>
+                                        {{else}}
+                                            <script>
+                                                $('#formCheck-FinancialStatement').prop("checked", false);
+                                            </script>
+                                        {{/if}}
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col flex-grow-1"><a href="/accountant/individual">Individual</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkIndividual" type="checkbox" id="formCheck-Individual">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Individual"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{#if isJournalEntryList}}
+                                            <script>
+                                                $('#formCheck-Individual').prop("checked", true);
+                                            </script>
+                                        {{else}}
+                                            <script>
+                                                $('#formCheck-Individual').prop("checked", false);
+                                            </script>
+                                        {{/if}}
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/partnershipnontrading">Partnership Non Trading</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkPartnership" type="checkbox" id="formCheck-Partnership">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Partnership"></label>
+                                                </div>
+                                            </div>
+                                            {{#if isProfitLoss}}
                                                 <script>
-                                                    $('#formCheck-Company').prop("checked", true);
+                                                    $('#formCheck-Partnership').prop("checked", true);
                                                 </script>
                                             {{else}}
                                                 <script>
-                                                    $('#formCheck-Company').prop("checked", false);
+                                                    $('#formCheck-Partnership').prop("checked", false);
                                                 </script>
                                             {{/if}}
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/balancesheetreport">Company as Trustee</a></div>
-                                                <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkCompanyTrustee" type="checkbox" id="formCheck-CompanyTrustee">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-CompanyTrustee"></label>
-                                                    </div>
+                                        </div>
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/trustnontrading">Trust Non Trading</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkTrustNon" type="checkbox" id="formCheck-TrustNon">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-TrustNon"></label>
                                                 </div>
                                             </div>
-                                            {{#if isBalanceSheet}}
+                                            {{#if isPLMonthly}}
                                                 <script>
-                                                    $('#formCheck-CompanyTrustee').prop("checked", true);
+                                                    $('#formCheck-TrustNon').prop("checked", true);
                                                 </script>
                                             {{else}}
                                                 <script>
-                                                    $('#formCheck-CompanyTrustee').prop("checked", false);
+                                                    $('#formCheck-TrustNon').prop("checked", false);
                                                 </script>
                                             {{/if}}
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/generalledger">Financial Statement</a></div>
-                                                <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkFinancialStatement" type="checkbox" id="formCheck-FinancialStatement">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-FinancialStatement"></label>
-                                                    </div>
+                                        </div>
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/selfmanagedsuperfund">Self Managed Superfund</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkSuperfund" type="checkbox" id="formCheck-Superfund">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Superfund"></label>
                                                 </div>
                                             </div>
-                                            {{#if isGeneralLedger}}
+                                            {{#if isPLQuarterly}}
                                                 <script>
-                                                    $('#formCheck-FinancialStatement').prop("checked", true);
+                                                    $('#formCheck-Superfund').prop("checked", true);
                                                 </script>
                                             {{else}}
                                                 <script>
-                                                    $('#formCheck-FinancialStatement').prop("checked", false);
+                                                    $('#formCheck-Superfund').prop("checked", false);
                                                 </script>
                                             {{/if}}
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row ">
-                                                <div class="col flex-grow-1"><a href="/journalentrylist">Individual</a></div>
-                                                <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkIndividual" type="checkbox" id="formCheck-Individual">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Individual"></label>
-                                                    </div>
+                                        </div>
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/singledirector">Single Director</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkSingleDirector" type="checkbox" id="formCheck-SingleDirector">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SingleDirector"></label>
                                                 </div>
                                             </div>
-                                            {{#if isJournalEntryList}}
+                                            {{#if isPLYearly}}
                                                 <script>
-                                                    $('#formCheck-Individual').prop("checked", true);
+                                                    $('#formCheck-SingleDirector').prop("checked", true);
                                                 </script>
                                             {{else}}
                                                 <script>
-                                                    $('#formCheck-Individual').prop("checked", false);
+                                                    $('#formCheck-SingleDirector').prop("checked", false);
                                                 </script>
                                             {{/if}}
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/newprofitandloss">Partnership Non_Trading</a></div>
-                                                <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkPartnership" type="checkbox" id="formCheck-Partnership">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Partnership"></label>
-                                                    </div>
-                                                </div>
-                                                {{#if isProfitLoss}}
-                                                    <script>
-                                                        $('#formCheck-Partnership').prop("checked", true);
-                                                    </script>
-                                                {{else}}
-                                                    <script>
-                                                        $('#formCheck-Partnership').prop("checked", false);
-                                                    </script>
-                                                {{/if}}
-                                            </div>
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=monthly">Trust Non_Trading</a></div>
-                                                <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkTrustNon" type="checkbox" id="formCheck-TrustNon">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-TrustNon"></label>
-                                                    </div>
-                                                </div>
-                                                {{#if isPLMonthly}}
-                                                    <script>
-                                                        $('#formCheck-TrustNon').prop("checked", true);
-                                                    </script>
-                                                {{else}}
-                                                    <script>
-                                                        $('#formCheck-TrustNon').prop("checked", false);
-                                                    </script>
-                                                {{/if}}
-                                            </div>
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=quarterly">Self Managed Superfund</a></div>
-                                                <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkSuperfund" type="checkbox" id="formCheck-Superfund">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Superfund"></label>
-                                                    </div>
-                                                </div>
-                                                {{#if isPLQuarterly}}
-                                                    <script>
-                                                        $('#formCheck-Superfund').prop("checked", true);
-                                                    </script>
-                                                {{else}}
-                                                    <script>
-                                                        $('#formCheck-Superfund').prop("checked", false);
-                                                    </script>
-                                                {{/if}}
-                                            </div>
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=yearly">Single_Director</a></div>
-                                                <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkSingleDirector" type="checkbox" id="formCheck-SingleDirector">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SingleDirector"></label>
-                                                    </div>
-                                                </div>
-                                                {{#if isPLYearly}}
-                                                    <script>
-                                                        $('#formCheck-SingleDirector').prop("checked", true);
-                                                    </script>
-                                                {{else}}
-                                                    <script>
-                                                        $('#formCheck-SingleDirector').prop("checked", false);
-                                                    </script>
-                                                {{/if}}
-                                            </div>
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=ytd">Sole_Trader Non_Trading</a></div>
-                                                <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkSoleTrader" type="checkbox" id="formCheck-SoleTrader">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SoleTrader"></label>
-                                                    </div>
-                                                </div>
-                                                {{#if isPLYTD}}
-                                                    <script>
-                                                        $('#formCheck-SoleTrader').prop("checked", true);
-                                                    </script>
-                                                {{else}}
-                                                    <script>
-                                                        $('#formCheck-SoleTrader').prop("checked", false);
-                                                    </script>
-                                                {{/if}}
-                                            </div>
-                                            <div class="row">
-                                                <hr style="width: 100%;margin: 4px;">
-                                            </div>
-                                            <div class="row">
-                                                <div class="col flex-grow-1"><a href="/taxsummaryreport">Trust</a></div>
-                                                <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input favCheckBox chkTrust" type="checkbox" id="formCheck-Trust">
-                                                        <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Trust"></label>
-                                                    </div>
+                                        </div>
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/soletradernontrading">Sole Trader Non Trading</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkSoleTrader" type="checkbox" id="formCheck-SoleTrader">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SoleTrader"></label>
                                                 </div>
                                             </div>
-                                            {{#if isTaxSummaryReport}}
+                                            {{#if isPLYTD}}
                                                 <script>
-                                                    $('#formCheck-Trust').prop("checked", true);
+                                                    $('#formCheck-SoleTrader').prop("checked", true);
                                                 </script>
                                             {{else}}
                                                 <script>
-                                                    $('#formCheck-Trust').prop("checked", false);
+                                                    $('#formCheck-SoleTrader').prop("checked", false);
                                                 </script>
                                             {{/if}}
-                                        {{/each}}
+                                        </div>
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/accountant/trust">Trust</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkTrust" type="checkbox" id="formCheck-Trust">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Trust"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{#if isTaxSummaryReport}}
+                                            <script>
+                                                $('#formCheck-Trust').prop("checked", true);
+                                            </script>
+                                        {{else}}
+                                            <script>
+                                                $('#formCheck-Trust').prop("checked", false);
+                                            </script>
                                         {{/if}}
                                     </div>
                                 </div>

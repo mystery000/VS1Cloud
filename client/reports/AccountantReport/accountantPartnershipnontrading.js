@@ -16,7 +16,7 @@ let sideBarService = new SideBarService();
 // let reportService = new ReportService();
 let utilityService = new UtilityService();
 
-Template.accountant.onCreated(() => {
+Template.accountant_partnershipnontrading.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.countryList = new ReactiveVar([]);
     templateObject.countryData = new ReactiveVar();
@@ -25,7 +25,7 @@ Template.accountant.onCreated(() => {
     templateObject.dateAsAt = new ReactiveVar();
 });
 
-Template.accountant.onRendered(() => {
+Template.accountant_partnershipnontrading.onRendered(() => {
 
     const templateObject = Template.instance();
     let accountService = new AccountService();
@@ -1048,7 +1048,7 @@ Template.accountant.onRendered(() => {
     });
 });
 
-Template.accountant.events({
+Template.accountant_partnershipnontrading.events({
   'click .custom-control-input': function(event) {
     const templateObject = Template.instance();
     let accountantList = templateObject.datatablerecords.curValue;
@@ -1250,7 +1250,7 @@ Template.accountant.events({
   },
 });
 
-Template.accountant.helpers({
+Template.accountant_partnershipnontrading.helpers({
   countryList: () => {
       return Template.instance().countryData.get();
   },
@@ -1388,15 +1388,3 @@ Template.accountant.helpers({
     return convertedAmount;
   },
 });
-
-// Template.registerHelper('equals', function(a, b) {
-//     return a === b;
-// });
-
-// Template.registerHelper('notEquals', function(a, b) {
-//     return a != b;
-// });
-
-// Template.registerHelper('containsequals', function(a, b) {
-//     return (a.indexOf(b) >= 0);
-// });
