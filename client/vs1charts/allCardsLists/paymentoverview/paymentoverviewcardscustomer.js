@@ -75,7 +75,7 @@ Template.paymentoverviewcardscustomer.onRendered(function() {
     if ((!localStorage.getItem('VS1OverDueInvoiceQty_dash')) && (!localStorage.getItem('VS1OverDueInvoiceAmt_dash'))) {
     getVS1Data('TAwaitingCustomerPayment').then(function(dataObject) {
         if (dataObject.length == 0) {
-            sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, false, initialReportLoad, 0,'').then(function(data) {
+            sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(data) {
                 let itemsAwaitingPaymentcount = [];
                 let itemsOverduePaymentcount = [];
                 let dataListAwaitingCust = {};
@@ -136,7 +136,7 @@ Template.paymentoverviewcardscustomer.onRendered(function() {
             $('.invoiceOverDueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
         }
     }).catch(function(err) {
-        sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, false, initialReportLoad, 0,'').then(function(data) {
+        sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(data) {
             let itemsAwaitingPaymentcount = [];
             let itemsOverduePaymentcount = [];
             let dataListAwaitingCust = {};

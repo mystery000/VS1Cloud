@@ -92,7 +92,7 @@ Template.expensebreakdown.onRendered(function() {
         }
         var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
         let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
-        let data = await sideBarService.getAllPurchasesList(prevMonth11Date, toDate, false, initialReportLoad, 0 )
+        let data = await sideBarService.getAllPurchasesList(prevMonth11Date, toDate, false, initialReportLoad, 0 );
         useData = data.tbilllist;
       }else{
         let data = JSON.parse(billReportObj[0].data);

@@ -563,7 +563,16 @@ Template.appointments.onRendered(function () {
                 templateObject.attachmentCount.set('');
                 templateObject.uploadedFiles.set('');
                 templateObject.uploadedFile.set('');
-                $('#customerListModal').modal();
+                if(FlowRouter.current().queryParams.leadid) {
+                    openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                } else if (FlowRouter.current().queryParams.customerid){
+                    openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                } else if (FlowRouter.current().queryParams.supplierid) {
+                    openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                }
+                else {
+                    $('#customerListModal').modal();
+                }
             },
             eventClick: function (info) {
                 $('#frmAppointment')[0].reset();
@@ -870,7 +879,17 @@ Template.appointments.onRendered(function () {
 
                 var endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
                 var startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
-                $('#customerListModal').modal();
+                
+                if(FlowRouter.current().queryParams.leadid) {
+                    openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                } else if (FlowRouter.current().queryParams.customerid){
+                    openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                } else if (FlowRouter.current().queryParams.supplierid) {
+                    openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                }
+                else {
+                    $('#customerListModal').modal();
+                }
             },
 
             events: templateObject.eventdata.get(),
@@ -1005,7 +1024,16 @@ Template.appointments.onRendered(function () {
                 templateObject.attachmentCount.set('');
                 templateObject.uploadedFiles.set('');
                 templateObject.uploadedFile.set('');
-                $('#customerListModal').modal();
+                if(FlowRouter.current().queryParams.leadid) {
+                    openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                } else if (FlowRouter.current().queryParams.customerid){
+                    openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                } else if (FlowRouter.current().queryParams.supplierid) {
+                    openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                }
+                else {
+                    $('#customerListModal').modal();
+                }
             },
             eventClick: function (info) {
                 $('#frmAppointment')[0].reset();
@@ -1332,7 +1360,17 @@ Template.appointments.onRendered(function () {
                 templateObject.attachmentCount.set('');
                 templateObject.uploadedFiles.set('')
                 templateObject.uploadedFile.set('');
-                $('#customerListModal').modal();
+
+                if(FlowRouter.current().queryParams.leadid) {
+                    openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                } else if (FlowRouter.current().queryParams.customerid){
+                    openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                } else if (FlowRouter.current().queryParams.supplierid) {
+                    openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                }
+                else {
+                    $('#customerListModal').modal();
+                }
             },
 
             events: templateObject.eventdata.get(),
@@ -2956,7 +2994,16 @@ Template.appointments.onRendered(function () {
                             templateObject.attachmentCount.set('');
                             templateObject.uploadedFiles.set('');
                             templateObject.uploadedFile.set('');
-                            $('#customerListModal').modal();
+                            if(FlowRouter.current().queryParams.leadid) {
+                                openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                            } else if (FlowRouter.current().queryParams.customerid){
+                                openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                            } else if (FlowRouter.current().queryParams.supplierid) {
+                                openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                            }
+                            else {
+                                $('#customerListModal').modal();
+                            }
                         },
                         eventDrop: function (info) {
                             if (info.event._def.publicId != "") {
@@ -3116,7 +3163,16 @@ Template.appointments.onRendered(function () {
                 }
                             var endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
                             var startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
-                            $('#customerListModal').modal();
+                            if(FlowRouter.current().queryParams.leadid) {
+                                openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                            } else if (FlowRouter.current().queryParams.customerid){
+                                openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                            } else if (FlowRouter.current().queryParams.supplierid) {
+                                openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                            }
+                            else {
+                                $('#customerListModal').modal();
+                            }
                         },
 
                         events: [],
@@ -4555,7 +4611,16 @@ Template.appointments.onRendered(function () {
                         templateObject.attachmentCount.set('');
                         templateObject.uploadedFiles.set('');
                         templateObject.uploadedFile.set('');
-                        $('#customerListModal').modal();
+                        if(FlowRouter.current().queryParams.leadid) {
+                            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                        } else if (FlowRouter.current().queryParams.customerid){
+                            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                        } else if (FlowRouter.current().queryParams.supplierid) {
+                            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                        }
+                        else {
+                            $('#customerListModal').modal();
+                        }
                     },
                     eventDrop: function (info) {
                         if (info.event._def.publicId != "") {
@@ -4715,7 +4780,16 @@ Template.appointments.onRendered(function () {
 
                         var endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
                         var startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
-                        $('#customerListModal').modal();
+                        if(FlowRouter.current().queryParams.leadid) {
+                            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                        } else if (FlowRouter.current().queryParams.customerid){
+                            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                        } else if (FlowRouter.current().queryParams.supplierid) {
+                            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                        }
+                        else {
+                            $('#customerListModal').modal();
+                        }
                     },
 
                     events: [],
@@ -4882,7 +4956,16 @@ Template.appointments.onRendered(function () {
       //$('#edtCustomerCompany').attr('readonly', false);
       var customerDataName = e.target.value || '';
       if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-          $('#customerListModal').modal();
+        if(FlowRouter.current().queryParams.leadid) {
+            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+        } else if (FlowRouter.current().queryParams.customerid){
+            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+        } else if (FlowRouter.current().queryParams.supplierid) {
+            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+        }
+        else {
+            $('#customerListModal').modal();
+        }
           setTimeout(function () {
               $('#tblCustomerlist_filter .form-control-sm').focus();
               $('#tblCustomerlist_filter .form-control-sm').val('');
@@ -5279,7 +5362,16 @@ Template.appointments.onRendered(function () {
                   });
               });
           } else {
-              $('#customerListModal').modal();
+            if(FlowRouter.current().queryParams.leadid) {
+                openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+            } else if (FlowRouter.current().queryParams.customerid){
+                openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+            } else if (FlowRouter.current().queryParams.supplierid) {
+                openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+            }
+            else {
+                $('#customerListModal').modal();
+            }
               setTimeout(function () {
                   $('#tblCustomerlist_filter .form-control-sm').focus();
                   $('#tblCustomerlist_filter .form-control-sm').val('');
@@ -5979,7 +6071,16 @@ Template.appointments.onRendered(function () {
                         templateObject.attachmentCount.set('');
                         templateObject.uploadedFiles.set('');
                         templateObject.uploadedFile.set('');
-                        $('#customerListModal').modal();
+                        if(FlowRouter.current().queryParams.leadid) {
+                            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                        } else if (FlowRouter.current().queryParams.customerid){
+                            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                        } else if (FlowRouter.current().queryParams.supplierid) {
+                            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                        }
+                        else {
+                            $('#customerListModal').modal();
+                        }
                     },
                     eventClick: function (info) {
                         document.getElementById("frmAppointment").reset();
@@ -6248,7 +6349,16 @@ Template.appointments.onRendered(function () {
 
                         var endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
                         var startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
-                        $('#customerListModal').modal();
+                        if(FlowRouter.current().queryParams.leadid) {
+                            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+                        } else if (FlowRouter.current().queryParams.customerid){
+                            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+                        } else if (FlowRouter.current().queryParams.supplierid) {
+                            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+                        }
+                        else {
+                            $('#customerListModal').modal();
+                        }
                     },
 
                     events: eventData,
@@ -6985,7 +7095,16 @@ Template.appointments.events({
             $("#tActualStartTime").prop("disabled", false);
             $("#tActualEndTime").prop("disabled", false);
             $("#txtActualHoursSpent").prop("disabled", false);
-            $('#customerListModal').modal();
+            if(FlowRouter.current().queryParams.leadid) {
+                openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject, 'lead');
+            } else if (FlowRouter.current().queryParams.customerid){
+                openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject, 'customer');
+            } else if (FlowRouter.current().queryParams.supplierid) {
+                openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject, 'supplier');
+            }
+            else {
+                $('#customerListModal').modal();
+            }
         }
 
     },
@@ -11008,3 +11127,196 @@ Template.registerHelper('equals', function (a, b) {
 Template.registerHelper('and', (a, b) => {
     return a && b;
 });
+
+openAppointModalDirectly = (leadid, templateObject) => {
+    let contactService = new ContactService();
+    if(FlowRouter.current().queryParams.leadid) {
+        contactService.getOneLeadDataEx(leadid).then(function (data) {
+            // return;
+            //$("#updateID").val("");
+            let checkIncludeAllProducts = templateObject.includeAllProducts.get();
+            let getAllEmployeeData = templateObject.employeerecords.get() || '';
+            let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("customer").value = data.fields.ClientName;
+            document.getElementById("phone").value = data.fields.Phone;
+            document.getElementById("mobile").value = data.fields.Mobile;
+            document.getElementById("state").value = data.fields.State;
+            document.getElementById("country").value = data.fields.Country;
+            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
+            if (Session.get('CloudAppointmentNotes') == true) {
+                document.getElementById("txtNotes").value = data.fields.Notes;
+            }
+            document.getElementById("suburb").value = data.fields.Suburb;
+            document.getElementById("zip").value = data.fields.Postcode;
+            if($("#updateID").val() == ""){
+            let appointmentService = new AppointmentService();
+            appointmentService.getAllAppointmentListCount().then(function (dataObj) {
+                if (dataObj.tappointmentex.length > 0) {
+                    let max = 1;
+                    for (let i = 0; i < dataObj.tappointmentex.length; i++) {
+                        if (dataObj.tappointmentex[i].Id > max) {
+                            max = dataObj.tappointmentex[i].Id;
+                        }
+                    }
+                    document.getElementById("appID").value = max + 1;
+        
+                } else {
+                    document.getElementById("appID").value = 1;
+                }
+            });
+            if(getEmployeeID != ''){
+            var filterEmpData = getAllEmployeeData.filter(empdData => {
+                return empdData.id == getEmployeeID;
+            });
+            if(filterEmpData){
+            if(filterEmpData[0].custFld8 == "false"){
+                templateObject.getAllSelectedProducts(getEmployeeID);
+            }else{
+                templateObject.getAllProductData();
+            }
+            }else{
+            templateObject.getAllProductData();
+            }
+            }
+            // if(checkIncludeAllProducts ==  true){
+            // templateObject.getAllProductData();
+            // }else{
+            //   if(getEmployeeID != ''){
+            //     templateObject.getAllSelectedProducts(getEmployeeID);
+            //   }else{
+            //     templateObject.getAllProductData();
+            //   }
+            //
+            // }
+        
+            //templateObject.getAllProductData();
+            }
+            $('#customerListModal').modal('hide');
+            $('#event-modal').modal();
+        })
+    } else if (FlowRouter.current().queryParams.customerid) {
+        contactService.getOneCustomerDataEx(leadid).then((data)=>{
+            let checkIncludeAllProducts = templateObject.includeAllProducts.get();
+            let getAllEmployeeData = templateObject.employeerecords.get() || '';
+            let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("customer").value = data.fields.ClientName;
+            document.getElementById("phone").value = data.fields.Phone;
+            document.getElementById("mobile").value = data.fields.Mobile;
+            document.getElementById("state").value = data.fields.State;
+            document.getElementById("country").value = data.fields.Country;
+            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
+            if (Session.get('CloudAppointmentNotes') == true) {
+                document.getElementById("txtNotes").value = data.fields.Notes;
+            }
+            document.getElementById("suburb").value = data.fields.Suburb;
+            document.getElementById("zip").value = data.fields.Postcode;
+            if($("#updateID").val() == ""){
+            let appointmentService = new AppointmentService();
+            appointmentService.getAllAppointmentListCount().then(function (dataObj) {
+                if (dataObj.tappointmentex.length > 0) {
+                    let max = 1;
+                    for (let i = 0; i < dataObj.tappointmentex.length; i++) {
+                        if (dataObj.tappointmentex[i].Id > max) {
+                            max = dataObj.tappointmentex[i].Id;
+                        }
+                    }
+                    document.getElementById("appID").value = max + 1;
+        
+                } else {
+                    document.getElementById("appID").value = 1;
+                }
+            });
+            if(getEmployeeID != ''){
+            var filterEmpData = getAllEmployeeData.filter(empdData => {
+                return empdData.id == getEmployeeID;
+            });
+            if(filterEmpData){
+            if(filterEmpData[0].custFld8 == "false"){
+                templateObject.getAllSelectedProducts(getEmployeeID);
+            }else{
+                templateObject.getAllProductData();
+            }
+            }else{
+            templateObject.getAllProductData();
+            }
+            }
+            // if(checkIncludeAllProducts ==  true){
+            // templateObject.getAllProductData();
+            // }else{
+            //   if(getEmployeeID != ''){
+            //     templateObject.getAllSelectedProducts(getEmployeeID);
+            //   }else{
+            //     templateObject.getAllProductData();
+            //   }
+            //
+            // }
+        
+            //templateObject.getAllProductData();
+            }
+            $('#customerListModal').modal('hide');
+            $('#event-modal').modal();
+        })
+    } else if (FlowRouter.current().queryParams.supplierid) {
+        contactService.getOneSupplierDataEx(leadid).then((data)=>{
+            let checkIncludeAllProducts = templateObject.includeAllProducts.get();
+            let getAllEmployeeData = templateObject.employeerecords.get() || '';
+            let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("customer").value = data.fields.ClientName;
+            document.getElementById("phone").value = data.fields.Phone;
+            document.getElementById("mobile").value = data.fields.Mobile;
+            document.getElementById("state").value = data.fields.State;
+            document.getElementById("country").value = data.fields.Country;
+            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
+            if (Session.get('CloudAppointmentNotes') == true) {
+                document.getElementById("txtNotes").value = data.fields.Notes;
+            }
+            document.getElementById("suburb").value = data.fields.Suburb;
+            document.getElementById("zip").value = data.fields.Postcode;
+            if($("#updateID").val() == ""){
+            let appointmentService = new AppointmentService();
+            appointmentService.getAllAppointmentListCount().then(function (dataObj) {
+                if (dataObj.tappointmentex.length > 0) {
+                    let max = 1;
+                    for (let i = 0; i < dataObj.tappointmentex.length; i++) {
+                        if (dataObj.tappointmentex[i].Id > max) {
+                            max = dataObj.tappointmentex[i].Id;
+                        }
+                    }
+                    document.getElementById("appID").value = max + 1;
+        
+                } else {
+                    document.getElementById("appID").value = 1;
+                }
+            });
+            if(getEmployeeID != ''){
+            var filterEmpData = getAllEmployeeData.filter(empdData => {
+                return empdData.id == getEmployeeID;
+            });
+            if(filterEmpData){
+            if(filterEmpData[0].custFld8 == "false"){
+                templateObject.getAllSelectedProducts(getEmployeeID);
+            }else{
+                templateObject.getAllProductData();
+            }
+            }else{
+            templateObject.getAllProductData();
+            }
+            }
+            // if(checkIncludeAllProducts ==  true){
+            // templateObject.getAllProductData();
+            // }else{
+            //   if(getEmployeeID != ''){
+            //     templateObject.getAllSelectedProducts(getEmployeeID);
+            //   }else{
+            //     templateObject.getAllProductData();
+            //   }
+            //
+            // }
+        
+            //templateObject.getAllProductData();
+            }
+            $('#customerListModal').modal('hide');
+            $('#event-modal').modal();
+        })
+    }
+}
