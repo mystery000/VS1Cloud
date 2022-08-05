@@ -1459,6 +1459,7 @@ Template.employeescard.onRendered(function () {
                                 salesQuota: data.fields.CustFld12 || ''
                             };
                             templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
+
                             templateObject.records.set(lineItemObj);
                             setTimeout(function () {
                               if(data.fields.CustFld7 == "true"){
@@ -2172,6 +2173,7 @@ Template.employeescard.onRendered(function () {
                 dashboardOptions: '',
                 salesQuota: ''
             }
+
             templateObject.records.set(lineItemObj);
             let emplineItems = [];
             let emplineItemObj = {};
