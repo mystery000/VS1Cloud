@@ -126,7 +126,7 @@ Template.quoteslist.onRendered(function() {
       let dispFields = [];
       let customData = {};
       let customFieldCount = 11;
-      let listType = "ltQuoteList";
+      let listType = "ltQuoteList";   
 
       let reset_data = [
         { label: 'Sale Date', class: 'colSaleDate', active: true },
@@ -238,7 +238,7 @@ Template.quoteslist.onRendered(function() {
 
         getVS1Data('TQuoteList').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllTQuoteListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTQuoteListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     addVS1Data('TQuoteList',JSON.stringify(data));
@@ -870,7 +870,7 @@ Template.quoteslist.onRendered(function() {
                 templateObject.getCustomFieldData();
             }
         }).catch(function (err) {
-          sideBarService.getAllTQuoteListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllTQuoteListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               addVS1Data('TQuoteList',JSON.stringify(data));
@@ -1211,7 +1211,7 @@ Template.quoteslist.onRendered(function() {
 
       getVS1Data('TQuoteFilterList').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllTQuoteListFilterData(converted,prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllTQuoteListFilterData(converted,prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     addVS1Data('TQuoteFilterList',JSON.stringify(data));
@@ -1848,7 +1848,7 @@ Template.quoteslist.onRendered(function() {
                 });
             }
         }).catch(function (err) {
-          sideBarService.getAllTQuoteListFilterData(converted,prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllTQuoteListFilterData(converted,prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               addVS1Data('TQuoteFilterList',JSON.stringify(data));
@@ -2409,8 +2409,8 @@ Template.quoteslist.events({
         }
        // $(".btnRefresh").trigger("click");
     },
-
-
+    
+    
     // custom field displaysettings
     'click .resetTable' : function(event) {
 
@@ -2460,7 +2460,7 @@ Template.quoteslist.events({
     'click .saveTable' : function(event){
       let lineItems = [];
       let organisationService = new OrganisationService();
-      let listType = "ltQuoteList";
+      let listType = "ltQuoteList";    
 
       $(".fullScreenSpin").css("display", "inline-block");
 
@@ -2667,15 +2667,31 @@ Template.quoteslist.events({
         var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllTQuoteListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataQuote) {
+        sideBarService.getAllTQuoteListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataQuote) {
             addVS1Data('TQuoteList',JSON.stringify(dataQuote)).then(function (datareturn) {
               sideBarService.getAllQuoteList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TQuote',JSON.stringify(data)).then(function (datareturn) {
-                    sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
+                    sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
                       addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
-                          window.open('/quoteslist','_self');
+                          sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
+                              addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
+                                  window.open('/quoteslist','_self');
+                                }).catch(function (err) {
+                                  window.open('/quoteslist','_self');
+                                });
+                            }).catch(function (err) {
+                              window.open('/quoteslist','_self');
+                            });
                         }).catch(function (err) {
-                          window.open('/quoteslist','_self');
+                          sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (dataInvoice) {
+                              addVS1Data("TInvoiceEx", JSON.stringify(dataInvoice)).then(function (datareturn) {
+                                  window.open('/quoteslist','_self');
+                                }).catch(function (err) {
+                                  window.open('/quoteslist','_self');
+                                });
+                            }).catch(function (err) {
+                              window.open('/quoteslist','_self');
+                            });
                         });
                     }).catch(function (err) {
                       window.open('/quoteslist','_self');

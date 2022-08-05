@@ -120,20 +120,20 @@ Template.supplierscard.onRendered(function () {
     }
 
     templateObject.getOverviewAPData = function (supplierName,supplierID) {
-        // getVS1Data('TAPReport1').then(function (dataObject) {
-        //     if(dataObject.length === 0){
-        //         paymentService.getOverviewAPDetailsSupp(supplierID).then(function (data) {
-        //             setOverviewAPDetails(data, supplierName);
-        //         });
-        //     }else{
-        //         let data = JSON.parse(dataObject[0].data);
-        //         setOverviewAPDetails(data, supplierName);
-        //     }
-        // }).catch(function (err) {
-        //     paymentService.getOverviewAPDetailsSupp(supplierID).then(function (data) {
-        //         setOverviewAPDetails(data, supplierName);
-        //     });
-        // });
+        getVS1Data('TAPReport1').then(function (dataObject) {
+            if(dataObject.length === 0){
+                paymentService.getOverviewAPDetailsSupp(supplierID).then(function (data) {
+                    setOverviewAPDetails(data, supplierName);
+                });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
+                setOverviewAPDetails(data, supplierName);
+            }
+        }).catch(function (err) {
+            paymentService.getOverviewAPDetailsSupp(supplierID).then(function (data) {
+                setOverviewAPDetails(data, supplierName);
+            });
+        });
     };
     function setOverviewAPDetails(data, supplierName) {
         let itemsAwaitingPaymentcount = [];
@@ -612,7 +612,7 @@ Template.supplierscard.onRendered(function () {
 
     templateObject.getAllCrm = function (supplierName) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
@@ -691,9 +691,9 @@ Template.supplierscard.onRendered(function () {
                             description: '',
                             labels: '',
                             category: 'appointment'
-
+        
                         }
-
+    
                         dataTableList.push(obj);
                     })
                 }
@@ -706,7 +706,7 @@ Template.supplierscard.onRendered(function () {
             })
         });
 
-
+        
     };
     function setCrmProjectTasks() {
         let tableHeaderList = [];
@@ -1224,7 +1224,7 @@ Template.supplierscard.onRendered(function () {
         }).then((result) => {
             if (result.value) {
                 $('#referenceLetterModal').modal('toggle');
-            }
+            } 
         });
     } else {
         let dataLabel = $("input[name='refTemp']:checked").attr('value');
@@ -1244,7 +1244,7 @@ Template.supplierscard.onRendered(function () {
             }).then((result) => {
                 if (result.value) {
                     $('#referenceLetterModal').modal('toggle');
-                }
+                } 
             });
         }
     }
@@ -1260,70 +1260,6 @@ Template.supplierscard.onRendered(function () {
 });
 
 Template.supplierscard.events({
-  'keyup .txtSearchSupplier': function (event) {
-        if($(event.target).val() != ''){
-          $(".btnRefreshSuppliers").addClass('btnSearchAlert');
-        }else{
-          $(".btnRefreshSuppliers").removeClass('btnSearchAlert');
-        }
-        if (event.keyCode == 13) {
-           $(".btnRefreshSuppliers").trigger("click");
-        }
-    },
-    'click .btnRefreshSuppliers':async function(event){
-        let templateObject = Template.instance();
-        let utilityService = new UtilityService();
-        let tableProductList;
-        const dataTableList = [];
-        var splashArrayInvoiceList = new Array();
-        const lineExtaSellItems = [];
-        const self = this;
-        let lineItems = [];
-        let lineItemObj = {};
-        let currentId = FlowRouter.current().queryParams;
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let dataSearchName = $('.txtSearchSupplier').val()||'';
-        if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getNewSupplierByNameOrID(dataSearchName).then(async function (data) {
-                $(".btnRefreshSuppliers").removeClass('btnSearchAlert');
-                let lineItems = [];
-                let lineItemObj = {};
-                if (data.tsuppliervs1.length > 0) {
-                  $("#tblSupplierSideList > tbody").empty();
-                  for (let i = 0; i < data.tsuppliervs1.length; i++) {
-                      let classname = '';
-                      if (!isNaN(currentId.id)) {
-                          if (data.tsuppliervs1[i].fields.ID == parseInt(currentId.id)) {
-                              classname = 'currentSelect';
-                          }
-                      }
-                      const dataList = {
-                        id: data.tsuppliervs1[i].fields.ID || '',
-                        company: data.tsuppliervs1[i].fields.ClientName || '',
-                        classname: classname
-                      };
-                      $(".tblSupplierSideList > tbody").append(
-                        ' <tr id="' + dataList.id + '" style="cursor: pointer;">' +
-                        '<td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="' +dataList.company + '" id="' + dataList.id + '" class="' + dataList.classname + '" >' + dataList.company + '</td>' +
-                        '</tr>');
-                      lineItems.push(dataList);
-                    }
-
-                      setTimeout(function () {
-                          $('.counter').text(lineItems.length + ' items');
-                      }, 100);
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-          Meteor._reload.reload();
-          $('.fullScreenSpin').css('display', 'none');
-        }
-    },
     'click #supplierShipping-1': function (event) {
         if($(event.target).is(':checked')){
             $('.supplierShipping-2').css('display','none');

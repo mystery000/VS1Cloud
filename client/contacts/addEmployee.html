@@ -131,34 +131,29 @@
                             </div>
                             <div class="card-body text-nowrap cardB" id="cardB">
                                 <div class="sideSearch">
-                                    <div class="row">
-
-                                        <div class="col-12" style="display: inline-flex;">
-                                            <input type="text" class="search form-control txtSearchCustomer" placeholder="Search..." style="width: 80%;">
-                                            <button class="btn btn-primary btnRefreshEmployees" type="button" id="btnRefreshEmployees" style="padding: 4px 10px; font-size: 14px; margin-left: 8px !important;" autocomplete="off"><i
-                                                    class="fas fa-search-plus"></i></button>
-                                        </div>
-                                        <span class="counter pull-right"></span>
-                                        <table id="tblEmployeeSideList" name="tblEmployeeSideList" class="table table-hover table-bordered results tblEmployeeSideList">
-                                            <thead>
-                                                <tr>
-                                                    <th>Employee</th>
-                                                </tr>
-                                                <tr class="warning no-result">
-                                                    <td colspan="4"><i class="fa fa-warning"></i> No result</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#if employeerecords}}
-                                                    {{#each item in employeerecords}}
-                                                        <tr id="{{item.id}}" style="cursor: pointer;">
-                                                            <td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="{{item.company}}" id="{{item.id}}" class="{{item.classname}}">{{item.company}}</td>
-                                                        </tr>
-                                                    {{/each}}
-                                                {{/if}}
-                                            </tbody>
-                                        </table>
+                                    <div class="form-group pull-right">
+                                        <input type="text" class="search form-control" placeholder="Search...">
                                     </div>
+                                    <span class="counter pull-right"></span>
+                                    <table id="tblEmployeeSideList" name="tblEmployeeSideList" class="table table-hover table-bordered results tblEmployeeSideList">
+                                        <thead>
+                                            <tr>
+                                                <th>Employee</th>
+                                            </tr>
+                                            <tr class="warning no-result">
+                                                <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#if employeerecords}}
+                                                {{#each item in employeerecords}}
+                                                    <tr id="{{item.id}}" style="cursor: pointer;">
+                                                        <td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="{{item.company}}" id="{{item.id}}" class="{{item.classname}}">{{item.company}}</td>
+                                                    </tr>
+                                                {{/each}}
+                                            {{/if}}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -372,7 +367,7 @@
                                                                       {{else}}
                                                                           <option value="{{item}}">{{item}}</option>
                                                                       {{/if}}
-                                                                  {{/each}}
+                                                                  {{/each}} 
                                                               </select>
                                                             </div>
                                                         </div>
@@ -2418,7 +2413,7 @@
                                                                         <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#paySlipModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Payslip </button>
                                                                     </div>
                                                                 </div>
-
+                                                                
                                                                 <div class="modal fade" id="paySlipModal" role="dialog" aria-labelledby="paySlipModal" aria-hidden="true" style="z-index:9999;">
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                                         <div class="modal-content">

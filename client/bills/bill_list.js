@@ -127,7 +127,7 @@ Template.billlist.onRendered(function() {
 
         getVS1Data('TBillList').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+                sideBarService.getAllBillListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
                     addVS1Data('TBillList',JSON.stringify(data));
@@ -738,7 +738,7 @@ Template.billlist.onRendered(function() {
 
             }
         }).catch(function (err) {
-          sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+          sideBarService.getAllBillListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               addVS1Data('TBillList',JSON.stringify(data));
@@ -1405,7 +1405,7 @@ Template.billlist.events({
 
       });
 
-      sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
+      sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
         addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
 
           }).catch(function (err) {
@@ -1415,7 +1415,7 @@ Template.billlist.events({
 
       });
 
-      sideBarService.getAllPurchasesList(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPList) {
+      sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
           addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
 
             }).catch(function (err) {
@@ -1425,13 +1425,13 @@ Template.billlist.events({
 
         });
 
-      sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataBillList) {
+      sideBarService.getAllBillListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(dataBillList) {
           addVS1Data('TBillList',JSON.stringify(dataBillList)).then(function (datareturn) {
-            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
+            sideBarService.getTPaymentList(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
-                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
+                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
-                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
+                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
                                 window.open('/billlist', '_self');

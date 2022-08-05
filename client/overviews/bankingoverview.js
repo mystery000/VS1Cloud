@@ -707,10 +707,9 @@ Template.bankingoverview.onRendered(function() {
                 if(data.Params.IgnoreDates == true){
                   $('#dateFrom').attr('readonly', true);
                   $('#dateTo').attr('readonly', true);
-                  //FlowRouter.go('/bankingoverview?ignoredate=true');
+                  FlowRouter.go('/bankingoverview?ignoredate=true');
                 }else{
-                  $('#dateFrom').attr('readonly', false);
-                  $('#dateTo').attr('readonly', false);
+
                   $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
                   $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
                 }
@@ -793,6 +792,36 @@ Template.bankingoverview.onRendered(function() {
                 //awaitingpaymentCount
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
+
+                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblBankingOverview', function(error, result) {
+                        if (error) {
+
+                        } else {
+                            if (result) {
+                                for (let i = 0; i < result.customFields.length; i++) {
+                                    let customcolumn = result.customFields;
+                                    let columData = customcolumn[i].label;
+                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                                    let hiddenColumn = customcolumn[i].hidden;
+                                    let columnClass = columHeaderUpdate.split('.')[1];
+                                    let columnWidth = customcolumn[i].width;
+                                    let columnindex = customcolumn[i].index + 1;
+
+                                    if (hiddenColumn == true) {
+
+                                        $("." + columnClass + "").addClass('hiddenColumn');
+                                        $("." + columnClass + "").removeClass('showColumn');
+                                    } else if (hiddenColumn == false) {
+                                        $("." + columnClass + "").removeClass('hiddenColumn');
+                                        $("." + columnClass + "").addClass('showColumn');
+                                    }
+
+                                }
+                            }
+
+                        }
+                    });
+
 
                     setTimeout(function() {
                         MakeNegative();
@@ -1107,6 +1136,35 @@ Template.bankingoverview.onRendered(function() {
                 //awaitingpaymentCount
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
+
+                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblBankingOverview', function(error, result) {
+                        if (error) {
+
+                        } else {
+                            if (result) {
+                                for (let i = 0; i < result.customFields.length; i++) {
+                                    let customcolumn = result.customFields;
+                                    let columData = customcolumn[i].label;
+                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                                    let hiddenColumn = customcolumn[i].hidden;
+                                    let columnClass = columHeaderUpdate.split('.')[1];
+                                    let columnWidth = customcolumn[i].width;
+                                    let columnindex = customcolumn[i].index + 1;
+
+                                    if (hiddenColumn == true) {
+
+                                        $("." + columnClass + "").addClass('hiddenColumn');
+                                        $("." + columnClass + "").removeClass('showColumn');
+                                    } else if (hiddenColumn == false) {
+                                        $("." + columnClass + "").removeClass('hiddenColumn');
+                                        $("." + columnClass + "").addClass('showColumn');
+                                    }
+
+                                }
+                            }
+
+                        }
+                    });
 
 
                     setTimeout(function() {

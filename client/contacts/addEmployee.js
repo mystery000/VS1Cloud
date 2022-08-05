@@ -137,7 +137,7 @@ Template.employeescard.onRendered(function () {
     var erpGet = erpDb();
     $('.fullScreenSpin').css('display', 'inline-block');
     Session.setPersistent('cloudCurrentLogonName', '');
-
+    
     //var splashArrayRepServiceList = new Array();
     let templateObject = Template.instance();
     let contactService = new ContactService();
@@ -3299,9 +3299,9 @@ Template.employeescard.onRendered(function () {
                 });
             }
             return payTemplateDeductionLines;
-
+            
         }
-
+        
         if(type == "superannuationLines"){
             let payTemplateSuperannuationLines = [];
             let checkPayTemplateSuperannuationLine = templateObject.payTemplateSuperannuationLineInfo.get();
@@ -3818,7 +3818,7 @@ Template.employeescard.onRendered(function () {
                 }, 100);
             });
         }, 0);
-
+        
     };
 
     templateObject.getAssignLeaveTypes();
@@ -4099,7 +4099,7 @@ Template.employeescard.onRendered(function () {
             }
 
             // templateObject.datatablerecords.set(splashArrayPaySlipList);
-
+            
             setTimeout(function () {
                 $('#tblPayslipHistory').DataTable({
                     data: splashArrayPaySlipList,
@@ -4237,7 +4237,7 @@ Template.employeescard.onRendered(function () {
                     }, 100);
                 });
             }, 0);
-
+            
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
         }
@@ -4549,70 +4549,6 @@ Template.employeescard.onRendered(function () {
     });
 });
 Template.employeescard.events({
-  'keyup .txtSearchCustomer': function (event) {
-        if($(event.target).val() != ''){
-          $(".btnRefreshEmployees").addClass('btnSearchAlert');
-        }else{
-          $(".btnRefreshEmployees").removeClass('btnSearchAlert');
-        }
-        if (event.keyCode == 13) {
-           $(".btnRefreshEmployees").trigger("click");
-        }
-    },
-    'click .btnRefreshEmployees':async function(event){
-        let templateObject = Template.instance();
-        let utilityService = new UtilityService();
-        let tableProductList;
-        const dataTableList = [];
-        var splashArrayInvoiceList = new Array();
-        const lineExtaSellItems = [];
-        const self = this;
-        let lineItems = [];
-        let lineItemObj = {};
-        let currentId = FlowRouter.current().queryParams;
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let dataSearchName = $('.txtSearchCustomer').val()||'';
-        if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getNewEmployeeByNameOrID(dataSearchName).then(async function (data) {
-                $(".btnRefreshEmployees").removeClass('btnSearchAlert');
-                let lineItems = [];
-                let lineItemObj = {};
-                if (data.temployee.length > 0) {
-                  $("#tblEmployeeSideList > tbody").empty();
-                   for (let i = 0; i < data.temployee.length; i++) {
-                      let classname = '';
-                      if (!isNaN(currentId.id)) {
-                            if (useData[i].fields.ID == parseInt(currentId.id)) {
-                                classname = 'currentSelect';
-                            }
-                      }
-                      var dataList = {
-                            id: data.temployee[i].fields.ID || '',
-                            company: data.temployee[i].fields.EmployeeName || '',
-                            classname: classname
-                      };
-                      $(".tblEmployeeSideList > tbody").append(
-                      ' <tr id="' + dataList.id + '" style="cursor: pointer;">' +
-                      '<td data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="' +dataList.company + '" id="' + dataList.id + '" class="' + dataList.classname + '" >' + dataList.company + '</td>' +
-                      '</tr>');
-                      lineItems.push(dataList);
-                    }
-
-                      setTimeout(function () {
-                          $('.counter').text(lineItems.length + ' items');
-                      }, 100);
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-            }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-          Meteor._reload.reload();
-          $('.fullScreenSpin').css('display', 'none');
-        }
-    },
     'click .closeModel': function(e){
         $('.modal').modal('hide');
     },
@@ -7794,7 +7730,7 @@ Template.employeescard.events({
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(payTemplateEarningLineObj),
                 });
-
+                
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     // await templateObject.saveEarningLocalDB();
@@ -7820,7 +7756,7 @@ Template.employeescard.events({
                         });
                     }
                 }
-
+                
                 apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TPayTemplateDeductionLine
                 );
@@ -7856,10 +7792,10 @@ Template.employeescard.events({
                                 Active: true,
                             },
                         })
-
+                        
                     }
                 }
-
+                
                 apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
                 );
@@ -7899,7 +7835,7 @@ Template.employeescard.events({
                         });
                     }
                 }
-
+                
                 apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
                 );
@@ -7919,7 +7855,7 @@ Template.employeescard.events({
                     // await templateObject.getPayReiumbursementLines();
                 }
             }
-
+            
             // if (ApiResponse.ok == true) {
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
@@ -8036,7 +7972,7 @@ Template.employeescard.events({
                      }
                  }
             }
-
+            
             // Making bulk saving object
             let openingBalanceObj = {
                 type: "TOpeningBalances",
@@ -9536,7 +9472,7 @@ Template.employeescard.events({
             const apiEndpoint = employeePayrolApis.collection.findByName(
                 employeePayrolApis.collectionNames.TPaySlips
             );
-
+        
             let paySlipSettings =  new PaySlips({
                 type: "TPaySlips",
                 fields: new PaySlipsFields({
@@ -9552,7 +9488,7 @@ Template.employeescard.events({
             });
 
             let dataObject = await getVS1Data('TPaySlips')
-
+            
             if ( dataObject.length > 0) {
                 data = JSON.parse(dataObject[0].data);
                 let updatedLines = PaySlips.fromList(
@@ -9573,7 +9509,7 @@ Template.employeescard.events({
                         await templateObject.getPaySlips();
                         // await templateObject.paySlipInfos.set(updatedLines);
 
-                    }
+                    } 
                     $('.fullScreenSpin').hide();
 
                 }
@@ -9603,7 +9539,7 @@ Template.employeescard.events({
             const apiEndpoint = employeePayrolApis.collection.findByName(
                 employeePayrolApis.collectionNames.TAssignLeaveType
             );
-
+        
             let assignLeaveSettings =  new AssignLeaveType({
                 type: "TAssignLeaveType",
                 fields: new AssignLeaveTypeFields({
@@ -9619,7 +9555,7 @@ Template.employeescard.events({
             });
 
             let dataObject = await getVS1Data('TAssignLeaveType')
-
+            
             if ( dataObject.length > 0) {
                 data = JSON.parse(dataObject[0].data);
                 let updatedLines = AssignLeaveType.fromList(
@@ -9640,7 +9576,7 @@ Template.employeescard.events({
                         await addVS1Data('TAssignLeaveType', JSON.stringify(leaveTypeObj))
                         await templateObject.getAssignLeaveTypes();
 
-                    }
+                    } 
                     $('.fullScreenSpin').hide();
 
                 }
@@ -9670,7 +9606,7 @@ Template.employeescard.events({
             const apiEndpoint = employeePayrolApis.collection.findByName(
                 employeePayrolApis.collectionNames.TPayNotes
             );
-
+        
             let noteSettings =  new PayNotes({
                 type: "TPayNotes",
                 fields: new PayNotesFields({
@@ -9686,7 +9622,7 @@ Template.employeescard.events({
             });
 
             let dataObject = await getVS1Data('TPayNotes')
-
+            
             if ( dataObject.length > 0) {
                 data = JSON.parse(dataObject[0].data);
             let updatedLines = PayNotes.fromList(
@@ -9707,7 +9643,7 @@ Template.employeescard.events({
                         await addVS1Data('TPayNotes', JSON.stringify(payNoteObj))
                         await templateObject.getPayNotesTypes();
 
-                    }
+                    } 
                     $('.fullScreenSpin').hide();
 
                 }
