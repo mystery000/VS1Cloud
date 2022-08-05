@@ -11989,6 +11989,7 @@ Template.supplierpaymentcard.events({
 
         return false;
       } else {
+        debugger;
         objDetails = {
           type: "TSuppPayments",
           fields: {
@@ -12000,8 +12001,9 @@ Template.supplierpaymentcard.events({
             ClientPrintName: customer,
             CompanyName: customer,
             DeptClassName: department,
-            //ForeignExchangeCode: CountryAbbr,
-            //ForeignExchangeRate: 1,
+            // ForeignExchangeCode: getCurrentCurrencySymbol(),
+            ForeignExchangeRate: parseFloat($('#exchange_rate').val()),
+            ForeignAmount: foreignAmount,
             // EmployeeName: empName || ' ',
             GUILines: paymentData,
             Notes: notes,
