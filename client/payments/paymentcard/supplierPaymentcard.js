@@ -13934,6 +13934,11 @@ export function calculateApplied() {
     $('.appliedAmount').text(calculatedApplied);
 }
 
+/**
+ *  This function will calculate the final applied amount depending on list of foreign amounts
+ * @param {String} selector 
+ * @returns 
+ */
 export const onForeignTableInputChange = (selector = "#tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to") => {
   let _amounts = $(selector);
   let total = 0.0;
