@@ -35,6 +35,7 @@ Template.companyappsettingsdup.onRendered(function () {
         else {
             if (result) {
                 let valueData = result.items;
+                console.log(valueData)
                 let packages = [];
                 for (let j in valueData) {
                     packages.push( valueData[j].items[0].sku )
@@ -651,9 +652,6 @@ Template.companyappsettingsdup.events({
                 lineItemsForm1[i] = lineItemObjForm;
             }
         }
-        console.log('getCurrenUserPack', getCurrenUserPack)
-        console.log('lineItemsForm1', lineItemsForm1)
-        return false
 
         for (let l = 0; l < lineItemsForm1.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItemsForm1[l].ModuleName + "&price" + l + "=" + Currency + lineItemsForm1[l].Price + "&qty" + l + "=" + lineItemsForm1[l].RenewDiscountDesc + "&";
@@ -700,6 +698,8 @@ Template.companyappsettingsdup.events({
                                 method: 'post',
                                 success: function (response) {
                                     let response2 = JSON.parse(response);
+                                    console.log('response2', response2)
+                                    return false
                                     if (response2 != null) {
                                         $.ajax({
                                             url: stripeGlobalURL + 'update.php',
