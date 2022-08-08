@@ -1407,7 +1407,7 @@
                                            
                                                 <td><input class="linePaymentamount highlightInput  convert-from" type="text" value="{{item.paymentamount}}"></td>
                                                 {{#if isForeignEnabled}}
-                                                    <td><input class="linePaymentamount highlightInput convert-to foreign" type="text" value="{{ convertToForeignAmount item.paymentamount}}"></td>
+                                                    <td contenteditable="false" class="linePaymentamount  convert-to foreign" >{{ convertToForeignAmount item.paymentamount}}</td>
                                                 {{/if}}
 
                                                 <td contenteditable="false" class="lineOutstandingAmount convert-from">{{item.ouststandingamount}}</td>

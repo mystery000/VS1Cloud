@@ -22,7 +22,7 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
-import { calculateApplied, convertToForeignAmount, onExchangeRateChange, onForeignTableInputChange, _setTmpAppliedAmount } from "./supplierPaymentcard";
+import { calculateApplied, calculateAppliedWithForeign, convertToForeignAmount, onExchangeRateChange, onForeignTableInputChange, _setTmpAppliedAmount } from "./supplierPaymentcard";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -5189,7 +5189,7 @@ Template.paymentcard.onRendered(() => {
                                         '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' + list[x].originalAmount + '</td>\n' +
                                         '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' + list[x].outstandingAmount + '</td>\n' +
                                         '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' + list[x].paymentAmount + '"></td>\n' +
-                                        (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' + convertToForeignAmount(list[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) + '"></td>\n' : "") +
+                                        (withForeignAmount == true ? '	<td contenteditable="false" class="linePaymentamount foreign convert-to">' + convertToForeignAmount(list[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) + '</td>\n' : "") +
                                         '	<td contenteditable="false" class="lineOutstandingAmount convert-from" style="text-align: right!important;">' + list[x].outstandingAmount + '</td>\n' +
                                         (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to" style="text-align: right!important;">' + convertToForeignAmount(list[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) + '</td>\n' : '') +
                                         '	<td contenteditable="true" class="colComments">' + list[x].comments + '</td>\n' +
@@ -9222,12 +9222,17 @@ Template.paymentcard.events({
           const valueToConvert = $(e.currentTarget).val();
           const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
 
-          $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
+          $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
 
           // Convert oustanding to foriegn oustanding
           const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
           const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
           $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+
+          const appliedValue = calculateAppliedWithForeign("#tblPaymentcard .linePaymentamount.convert-to.foreign");
+          $('#edtApplied').val(appliedValue)
+          $('.appliedAmount').text(appliedValue);
+          $('#edtForeignAmount').val(appliedValue);
         }, 500);
 
       },

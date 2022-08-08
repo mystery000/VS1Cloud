@@ -8617,9 +8617,9 @@ Template.supplierpaymentcard.onRendered(() => {
               selectedSupplierPayments[x].paymentAmount +
               '"></td>\n' +
     
-              (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
+              (withForeignAmount == true ? '	<td contenteditable="false"  style="text-align: right!important;" class="linePaymentamount foreign convert-to" >' +
               convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
-              '"></td>\n' : '') +
+              '</td>\n' : '') +
     
               '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
               selectedSupplierPayments[x].outstandingAmount +
@@ -13875,12 +13875,18 @@ Template.supplierpaymentcard.events({
       const valueToConvert = $(e.currentTarget).val();
       const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
 
-      $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
+      $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
 
       // Convert oustanding to foriegn oustanding
       const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
       const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
       $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+    
+
+      const appliedValue = calculateAppliedWithForeign("#tblSupplierPaymentcard .linePaymentamount.convert-to.foreign");
+      $('#edtApplied').val(appliedValue)
+      $('.appliedAmount').text(appliedValue);
+      $('#edtForeignAmount').val(appliedValue);
     }, 500);
 
   },
@@ -13939,12 +13945,12 @@ export function calculateApplied() {
  * @param {String} selector 
  * @returns 
  */
-export const onForeignTableInputChange = (selector = "#tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to") => {
+export const calculateAppliedWithForeign = (selector = "#tblSupplierPaymentcard .linePaymentamount.foreign.convert-to") => {
   let _amounts = $(selector);
   let total = 0.0;
 
   _amounts.each((index, element) => {
-    let value = $(element).val();
+    let value = $(element).text();
 
     if (isNaN(value)) {
       value = parseFloat(value.replace(/[^0-9.-]+/g, ""));
@@ -13955,14 +13961,16 @@ export const onForeignTableInputChange = (selector = "#tblSupplierPaymentcard in
     total += value;
   });
 
-  return total;
+  return total.toFixed(2);
 };
 
 export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
   let utilityService = new UtilityService();
   const currency = utilityService.extractCurrency(amount);
  
-  amount = utilityService.removeCurrency(amount, currency);
+ //amount = utilityService.removeCurrency(amount, currency);
+
+  amount = amount.replace(/[^0-9.-]+/g, "");
 
   let convert = (amount * rate).toFixed(2);
   //convert = convert.toFixed(2);
