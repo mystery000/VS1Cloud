@@ -16,7 +16,7 @@ Template.supplierpayment.onCreated(function(){
 
 
 Template.supplierpayment.onRendered(function() {
-    _setTmpAppliedAmount();
+
     $('.fullScreenSpin').css('display','inline-block');
    
     let templateObject = Template.instance();
