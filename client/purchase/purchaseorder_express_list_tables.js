@@ -84,7 +84,7 @@ Template.purchaseorderlist.onRendered(function () {
   }
 
   templateObject.resetData = function (dataVal) {
-    window.open("/purchaseorderlist?page=last", "_self");
+    location.reload();
   };
 
   templateObject.getAllPurchaseOrderData = function () {
@@ -124,8 +124,10 @@ Template.purchaseorderlist.onRendered(function () {
               if (data.Params.IgnoreDates == true) {
                 $("#dateFrom").attr("readonly", true);
                 $("#dateTo").attr("readonly", true);
-                FlowRouter.go("/purchaseorderlist?ignoredate=true");
+
               } else {
+                $("#dateFrom").attr("readonly", false);
+                $("#dateTo").attr("readonly", false);
                 $("#dateFrom").val(
                   data.Params.DateFrom != ""
                     ? moment(data.Params.DateFrom).format("DD/MM/YYYY")
@@ -347,7 +349,7 @@ Template.purchaseorderlist.onRendered(function () {
                           "-" +
                           dateTo.getDate();
 
-                        if (checkurlIgnoreDate == "true") {
+                        if(data.Params.IgnoreDates == true){
                           sideBarService
                             .getAllTPurchaseOrderListData(
                               formatDateFrom,
@@ -467,14 +469,7 @@ Template.purchaseorderlist.onRendered(function () {
                       }, 100);
                     },
                     fnInitComplete: function () {
-                      let urlParametersPage =
-                        FlowRouter.current().queryParams.page;
-                      if (
-                        urlParametersPage ||
-                        FlowRouter.current().queryParams.ignoredate
-                      ) {
-                        this.fnPageChange("last");
-                      }
+                      this.fnPageChange("last");
                       $(
                         "<button class='btn btn-primary btnRefreshPOList' type='button' id='btnRefreshPOList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblpurchaseorderlist_filter");
@@ -575,8 +570,10 @@ Template.purchaseorderlist.onRendered(function () {
           if (data.Params.IgnoreDates == true) {
             $("#dateFrom").attr("readonly", true);
             $("#dateTo").attr("readonly", true);
-            FlowRouter.go("/purchaseorderlist?ignoredate=true");
+
           } else {
+            $("#dateFrom").attr("readonly", false);
+            $("#dateTo").attr("readonly", false);
             $("#dateFrom").val(
               data.Params.DateFrom != ""
                 ? moment(data.Params.DateFrom).format("DD/MM/YYYY")
@@ -791,7 +788,7 @@ Template.purchaseorderlist.onRendered(function () {
                       "-" +
                       dateTo.getDate();
 
-                    if (checkurlIgnoreDate == "true") {
+                  if(data.Params.IgnoreDates == true){
                       sideBarService
                         .getAllTPurchaseOrderListData(
                           formatDateFrom,
@@ -885,13 +882,7 @@ Template.purchaseorderlist.onRendered(function () {
                   }, 100);
                 },
                 fnInitComplete: function () {
-                  let urlParametersPage = FlowRouter.current().queryParams.page;
-                  if (
-                    urlParametersPage ||
-                    FlowRouter.current().queryParams.ignoredate
-                  ) {
-                    this.fnPageChange("last");
-                  }
+                  this.fnPageChange("last");
                   $(
                     "<button class='btn btn-primary btnRefreshPOList' type='button' id='btnRefreshPOList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblpurchaseorderlist_filter");
@@ -994,8 +985,9 @@ Template.purchaseorderlist.onRendered(function () {
             if (data.Params.IgnoreDates == true) {
               $("#dateFrom").attr("readonly", true);
               $("#dateTo").attr("readonly", true);
-              FlowRouter.go("/purchaseorderlist?ignoredate=true");
             } else {
+              $("#dateFrom").attr("readonly", false);
+              $("#dateTo").attr("readonly", false);
               $("#dateFrom").val(
                 data.Params.DateFrom != ""
                   ? moment(data.Params.DateFrom).format("DD/MM/YYYY")
@@ -1212,7 +1204,7 @@ Template.purchaseorderlist.onRendered(function () {
                         "-" +
                         dateTo.getDate();
 
-                      if (checkurlIgnoreDate == "true") {
+                      if(data.Params.IgnoreDates == true){
                         sideBarService
                           .getAllTPurchaseOrderListData(
                             formatDateFrom,
@@ -1328,14 +1320,7 @@ Template.purchaseorderlist.onRendered(function () {
                     }, 100);
                   },
                   fnInitComplete: function () {
-                    let urlParametersPage =
-                      FlowRouter.current().queryParams.page;
-                    if (
-                      urlParametersPage ||
-                      FlowRouter.current().queryParams.ignoredate
-                    ) {
-                      this.fnPageChange("last");
-                    }
+                    this.fnPageChange("last");
                     $(
                       "<button class='btn btn-primary btnRefreshPOList' type='button' id='btnRefreshPOList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                     ).insertAfter("#tblpurchaseorderlist_filter");
@@ -1434,7 +1419,7 @@ Template.purchaseorderlist.onRendered(function () {
   templateObject.getAllFilterPurchaseOrderData = function (fromDate,toDate,ignoreDate) {
     sideBarService.getAllTPurchaseOrderListData(fromDate,toDate,ignoreDate,initialReportLoad,0).then(function (data) {
         addVS1Data("TPurchaseOrderList", JSON.stringify(data)).then(function (datareturn) {
-            window.open("/purchaseorderlist?toDate=" +toDate +"&fromDate=" +fromDate +"&ignoredate=" +ignoreDate,"_self");
+            location.reload();
           }).catch(function (err) {
             $('.fullScreenSpin').css('display', 'none');
           });
@@ -1821,7 +1806,7 @@ Template.purchaseorderlist.events({
     jQuery("#tblpurchaseorderlist_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefresh": function () {
+  "click .btnRefresh":async function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let currentDate = new Date();
     let hours = currentDate.getHours(); //returns 0-23
@@ -1871,14 +1856,14 @@ Template.purchaseorderlist.events({
           window.open("/purchaseorderlist", "_self");
         });
 
-    sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (dataPO) {
-        addVS1Data("TPurchaseOrderList", JSON.stringify(dataPO)).then(function (datareturn) {
+    sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,true,initialReportLoad,0).then(async function (dataPO) {
+        addVS1Data("TPurchaseOrderList", JSON.stringify(dataPO)).then(async function (datareturn) {
           sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
-          addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
-              sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
-                  addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
-                      sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
-                          addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+          addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(async function(datareturn) {
+              sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataSuppPay) {
+                  addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(async function(datareturn) {
+                      sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataCustPay) {
+                          await addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                             setTimeout(function () {
                               window.open('/purchaseorderlist', '_self');
                             }, 2000);

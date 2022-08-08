@@ -116,7 +116,7 @@ Template.purchasesoverview.onRendered(function () {
   };
 
   templateObject.resetData = function (dataVal) {
-    window.open("/purchasesoverview?page=last", "_self");
+    location.reload();
   };
 
   templateObject.getAllPurchaseOrderAll = function () {
@@ -371,7 +371,7 @@ Template.purchasesoverview.onRendered(function () {
 
                         let formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
                         let formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
-                        if (checkurlIgnoreDate == "true") {
+                        if(data.Params.IgnoreDates == true){
                           sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,true,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                               getVS1Data("TPurchasesList").then(function (dataObjectold) {
                                   if (dataObjectold.length == 0) {
@@ -426,14 +426,7 @@ Template.purchasesoverview.onRendered(function () {
                       }, 100);
                     },
                     fnInitComplete: function () {
-                      let urlParametersPage =
-                        FlowRouter.current().queryParams.page;
-                      if (
-                        urlParametersPage ||
-                        FlowRouter.current().queryParams.ignoredate
-                      ) {
-                        this.fnPageChange("last");
-                      }
+                      this.fnPageChange("last");
                       $(
                         "<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblPurchaseOverview_filter");
@@ -762,7 +755,7 @@ Template.purchasesoverview.onRendered(function () {
 
                     let formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
                     let formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
-                    if (checkurlIgnoreDate == "true") {
+                    if(data.Params.IgnoreDates == true){
                       sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,true,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                           getVS1Data("TPurchasesList").then(function (dataObjectold) {
                               if (dataObjectold.length == 0) {
@@ -817,14 +810,7 @@ Template.purchasesoverview.onRendered(function () {
                   }, 100);
                 },
                 fnInitComplete: function () {
-                  let urlParametersPage =
-                    FlowRouter.current().queryParams.page;
-                  if (
-                    urlParametersPage ||
-                    FlowRouter.current().queryParams.ignoredate
-                  ) {
-                    this.fnPageChange("last");
-                  }
+                  this.fnPageChange("last");
                   $(
                     "<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblPurchaseOverview_filter");
@@ -1146,7 +1132,7 @@ Template.purchasesoverview.onRendered(function () {
 
                       let formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
                       let formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
-                      if (checkurlIgnoreDate == "true") {
+                      if(data.Params.IgnoreDates == true){
                         sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,true,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                             getVS1Data("TPurchasesList").then(function (dataObjectold) {
                                 if (dataObjectold.length == 0) {
@@ -1201,14 +1187,7 @@ Template.purchasesoverview.onRendered(function () {
                     }, 100);
                   },
                   fnInitComplete: function () {
-                    let urlParametersPage =
-                      FlowRouter.current().queryParams.page;
-                    if (
-                      urlParametersPage ||
-                      FlowRouter.current().queryParams.ignoredate
-                    ) {
-                      this.fnPageChange("last");
-                    }
+                    this.fnPageChange("last");
                     $(
                       "<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshPurchaseOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                     ).insertAfter("#tblPurchaseOverview_filter");
@@ -1329,7 +1308,7 @@ Template.purchasesoverview.onRendered(function () {
   templateObject.getAllFilterPurchasesData = function (fromDate,toDate,ignoreDate) {
     sideBarService.getAllPurchasesList(fromDate,toDate,ignoreDate,initialReportLoad,0).then(function (data) {
         addVS1Data("TPurchasesList", JSON.stringify(data)).then(function (datareturn) {
-            window.open("/purchasesoverview?toDate=" +toDate +"&fromDate=" +fromDate +"&ignoredate=" +ignoreDate,"_self");
+            location.reload();
           }).catch(function (err) {
             location.reload();
           });

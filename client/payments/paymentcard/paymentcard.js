@@ -159,20 +159,20 @@ Template.paymentcard.onRendered(() => {
               if (dataObject.length == 0) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));
-                      
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
                          {
-                               
+
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {       
+                                {
                                         $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                            $('#Customer_Payments_1').attr('checked','checked');
                                         }
-                                      
+
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -182,44 +182,44 @@ Template.paymentcard.onRendered(() => {
                                          $('#Customer_Payments_2').attr('checked','checked');
                                       }
                                 }
-    
+
                                 if(data.ttemplatesettings[i].fields.Template == 3)
-                                {     
-    
+                                {
+
                                       $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
                                       if(data.ttemplatesettings[i].fields.Active == true)
                                       {
                                         $('#Customer_Payments_3').attr('checked','checked');
                                       }
                                 }
-                            
-    
+
+
                          }
-                   
-    
+
+
                      }
-                      
-                          
+
+
                       $('.fullScreenSpin').css('display', 'none');
                   }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                   });
-              }else{ 
-                      let data = JSON.parse(dataObject[0].data);    
-                    
+              }else{
+                      let data = JSON.parse(dataObject[0].data);
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
                         {
-                              
+
                                if(data.ttemplatesettings[i].fields.Template == 1)
-                               {       
+                               {
                                        $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
                                        if(data.ttemplatesettings[i].fields.Active == true)
                                        {
                                           $('#Customer_Payments_1').attr('checked','checked');
                                        }
-                                     
+
                                }
                                if(data.ttemplatesettings[i].fields.Template == 2)
                                {
@@ -229,44 +229,44 @@ Template.paymentcard.onRendered(() => {
                                          $('#Customer_Payments_2').attr('checked','checked');
                                      }
                                }
-   
+
                                if(data.ttemplatesettings[i].fields.Template == 3)
-                               {     
-   
+                               {
+
                                      $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
                                      if(data.ttemplatesettings[i].fields.Active == true)
                                      {
                                        $('#Customer_Payments_3').attr('checked','checked');
                                      }
                                }
-                           
-   
+
+
                         }
-                   
-                   
-    
+
+
+
                      }
                       $('.fullScreenSpin').css('display', 'none');
               }
             }).catch(function(err) {
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                    
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
-                
-                  
+
+
+
                          if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
                          {
-                               
+
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {       
+                                {
                                         $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                            $('#Customer_Payments_1').attr('checked','checked');
                                         }
-                                      
+
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -276,31 +276,31 @@ Template.paymentcard.onRendered(() => {
                                         $('#Customer_Payments_2').attr('checked','checked');
                                       }
                                 }
-    
+
                                 if(data.ttemplatesettings[i].fields.Template == 3)
-                                {     
-    
+                                {
+
                                       $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
                                       if(data.ttemplatesettings[i].fields.Active == true)
                                       {
                                         $('#Customer_Payments_3').attr('checked','checked');
                                       }
                                 }
-                            
-    
+
+
                          }
-    
-                 
-    
+
+
+
                       }
                       $('.fullScreenSpin').css('display', 'none');
             }).catch(function (err) {
               $('.fullScreenSpin').css('display', 'none');
             });
           });
-    
+
           };
-    
+
           templateObject.getTemplateInfoNew();
 
 
@@ -320,7 +320,7 @@ Template.paymentcard.onRendered(() => {
             let customer = $('#edtCustomerName').val();
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
-            let dept = $('#sltDept').val();
+            let dept = $('#sltDepartment').val();
             var erpGet = erpDb();
             let fx = $('#sltCurrency').val();
 
@@ -557,7 +557,7 @@ Template.paymentcard.onRendered(() => {
             let customer = $('#edtCustomerName').val();
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
-            let dept = $('#sltDept').val();
+            let dept = $('#sltDepartment').val();
             var erpGet = erpDb();
             let fx = $('#sltCurrency').val();
 
@@ -1331,7 +1331,7 @@ Template.paymentcard.onRendered(() => {
             setTimeout(function() {
                 $('#edtEnrtyNo').val(newPaymentId);
                 $('#edtSelectBankAccountName').val(lastBankAccount);
-                $('#sltDept').val(lastDepartment);
+                $('#sltDepartment').val(lastDepartment);
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
@@ -1344,7 +1344,7 @@ Template.paymentcard.onRendered(() => {
             } else {
                 $('#edtSelectBankAccountName').val(lastBankAccount);
             };
-            $('#sltDept').val(lastDepartment);
+            $('#sltDepartment').val(lastDepartment);
         });
     };
 
@@ -1913,7 +1913,7 @@ Template.paymentcard.onRendered(() => {
     }, 500)
 
     $(document).on("click", "#departmentList tbody tr", function(e) {
-        $('#sltDept').val($(this).find(".colDeptName").text());
+        $('#sltDepartment').val($(this).find(".colDeptName").text());
         $('#departmentModal').modal('toggle');
     });
 
@@ -2084,8 +2084,8 @@ Template.paymentcard.onRendered(() => {
             }
         });
 
-    $('#sltDept').editableSelect();
-    $('#sltDept').editableSelect()
+    $('#sltDepartment').editableSelect();
+    $('#sltDepartment').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);
             var offset = $earch.offset();
@@ -2948,7 +2948,7 @@ Template.paymentcard.onRendered(() => {
 
         });
 
-    
+
     if (url.indexOf('?id=') > 0) {
         $("#addRow").attr("disabled", true);
         var getsale_id = url.split('?id=');
@@ -3232,7 +3232,7 @@ Template.paymentcard.onRendered(() => {
                             };
                             templateObject.record.set(record);
                             $('#edtCustomerName').val(useData[d].fields.CompanyName);
-                            $('#sltDept').val(useData[d].fields.DeptClassName);
+                            $('#sltDepartment').val(useData[d].fields.DeptClassName);
                             $('#edtSelectBankAccountName').val(useData[d].fields.AccountName);
                             $('#sltPaymentMethod').val(useData[d].fields.PaymentMethodName);
 
@@ -3751,7 +3751,7 @@ Template.paymentcard.onRendered(() => {
 
                 $('#edtCustomerName').val(data.fields.CustomerName);
                 $('#sltPaymentMethod').val(data.fields.PayMethod);
-                $('#sltDept').val(data.fields.DeptClassName);
+                $('#sltDepartment').val(data.fields.DeptClassName);
                 $('#edtSelectBankAccountName').val(data.fields.GLAccountName);
                 if (clientList) {
                     for (var i = 0; i < clientList.length; i++) {
@@ -3870,7 +3870,7 @@ Template.paymentcard.onRendered(() => {
                 templateObject.record.set(record);
                 $('#edtCustomerName').val(data.fields.CustomerName);
                 $('#sltPaymentMethod').val(data.fields.PayMethod);
-                $('#sltDept').val(data.fields.DeptClassName);
+                $('#sltDepartment').val(data.fields.DeptClassName);
                 $('#edtSelectBankAccountName').val(data.fields.GLAccountName);
                 if (clientList) {
                     for (var i = 0; i < clientList.length; i++) {
@@ -3997,7 +3997,7 @@ Template.paymentcard.onRendered(() => {
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                         templateObject.record.set(record);
                         $('#edtCustomerName').val(data.fields.CustomerName);
-                        $('#sltDept').val(getDepartmentVal);
+                        $('#sltDepartment').val(getDepartmentVal);
                         let bankAccountData = Session.get('bankaccount') || 'Bank';
                         $('#edtSelectBankAccountName').val(bankAccountData);
                         await templateObject.getLastPaymentData();
@@ -4120,7 +4120,7 @@ Template.paymentcard.onRendered(() => {
                             $('#edtCustomerName').val(useData[d].fields.CustomerName);
                             let getPaymentMethodVal = Session.get('paymentmethod') || useData[d].fields.PayMethod;
                             $('#sltPaymentMethod').val(getPaymentMethodVal);
-                            $('#sltDept').val(getDepartmentVal);
+                            $('#sltDepartment').val(getDepartmentVal);
                             let bankAccountData = Session.get('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
                             await templateObject.getLastPaymentData();
@@ -4236,7 +4236,7 @@ Template.paymentcard.onRendered(() => {
                             let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                             templateObject.record.set(record);
                             $('#edtCustomerName').val(data.fields.CustomerName);
-                            $('#sltDept').val(getDepartmentVal);
+                            $('#sltDepartment').val(getDepartmentVal);
                             let bankAccountData = Session.get('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
                             await templateObject.getLastPaymentData();
@@ -4352,7 +4352,7 @@ Template.paymentcard.onRendered(() => {
                     $('#edtCustomerName').val(data.fields.CustomerName);
                     let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                     $('#sltPaymentMethod').val(getPaymentMethodVal);
-                    $('#sltDept').val(getDepartmentVal);
+                    $('#sltDepartment').val(getDepartmentVal);
                     let bankAccountData = Session.get('bankaccount') || 'Bank';
                     $('#edtSelectBankAccountName').val(bankAccountData);
                     if (clientList) {
@@ -4683,7 +4683,7 @@ Template.paymentcard.onRendered(() => {
                 let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                 $('#sltPaymentMethod').val(getPaymentMethodVal);
 
-                $('#sltDept').val(getDepartmentVal);
+                $('#sltDepartment').val(getDepartmentVal);
                 let bankAccountData = Session.get('bankaccount') || 'Bank';
                 $('#edtSelectBankAccountName').val(bankAccountData);
                 if (clientList) {
@@ -4813,7 +4813,7 @@ Template.paymentcard.onRendered(() => {
                     $('#sltPaymentMethod').val(getPaymentMethodVal);
 
                     $('#edtCustomerName').val(data.fields.CustomerName);
-                    $('#sltDept').val(getDepartmentVal);
+                    $('#sltDepartment').val(getDepartmentVal);
                     let bankAccountData = Session.get('bankaccount') || 'Bank';
                     $('#edtSelectBankAccountName').val(bankAccountData);
                     if (clientList) {
@@ -4981,7 +4981,7 @@ Template.paymentcard.onRendered(() => {
 
         let getPaymentMethodVal = Session.get('paymentmethod') || '';
         $('#sltPaymentMethod').val(getPaymentMethodVal);
-        $('#sltDept').val(getDepartmentVal);
+        $('#sltDepartment').val(getDepartmentVal);
         let bankAccountData = Session.get('bankaccount') || 'Bank';
         $('#edtSelectBankAccountName').val(bankAccountData);
 
@@ -5153,7 +5153,7 @@ Template.paymentcard.onRendered(() => {
 
 
     templateObject.addExpenseToTable = (withForeignAmount = false) => {
-       
+
         let url = window.location.href;
 
         if(!url.includes("?")) {
@@ -5182,7 +5182,7 @@ Template.paymentcard.onRendered(() => {
                                         '	<td contenteditable="true" class="colComments">' + list[x].comments + '</td>\n' +
                                         '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
                                         '</tr>';
-        
+
                         //$('#tblPaymentcard tbody>tr:last').clone(true);
                         // $(".colTransDate", rowData).text(selectedSupplierPayments[x].date);
                         // $(".colType", rowData).text("Invoice");
@@ -5212,9 +5212,9 @@ Template.paymentcard.onRendered(() => {
                     $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(total));
                 }
              }, 300);
-           
-        
-            
+
+
+
             setTimeout(function () {
               $("td").each(function () {
                 if (
@@ -5226,9 +5226,9 @@ Template.paymentcard.onRendered(() => {
               });
             }, 1000);
         }
-     
+
     }
-    
+
 });
 
 Template.paymentcard.helpers({
@@ -8451,167 +8451,167 @@ Template.paymentcard.events({
          $('.fullScreenSpin').css('display', 'inline-block');
          var customer_payment = $('input[name="Customer Payments"]:checked').val();
          let emid = Session.get('mySessionEmployeeLoggedID');
-      
+
           sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                         ID:parseInt(id),                      
+            fields:{
+                         ID:parseInt(id),
                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                           SettingName:"Customer Payments",
                           GlobalRef:"Customer Payments",
                           Description:$('input[name="Customer Payments_1"]').val(),
                           Template:"1",
                           Active:customer_payment == 1 ? true:false,
-                    }            
+                    }
              }
-        
+
              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-            
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));          
-               
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-             }).catch(function (err) {      
+             }).catch(function (err) {
              });
-        
+
           }).catch(function (err) {
-                    
+
                   objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Customer Payments",
                                 Description:$('input[name="Customer Payments_1"]').val(),
                                 Template:"1",
                                 Active:customer_payment == 1 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                             
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                      
-                
+
+
                     }).catch(function (err) {
-                
-                      
-                  
-                    });  
-      
+
+
+
+                    });
+
           });
-    
+
           sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                            ID:parseInt(id),                      
+            fields:{
+                            ID:parseInt(id),
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"Customer Payments",
                             GlobalRef:"Customer Payments",
                             Description:$('input[name="Customer Payments_2"]').val(),
                             Template:"2",
                             Active:customer_payment == 2 ? true:false,
-                    }            
+                    }
              }
-        
+
              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));      
-                 
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-               
+
               }).catch(function (err) {
-              
+
               });
-        
+
           }).catch(function (err) {
-                    
+
                   objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                               EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                               SettingName:"Customer Payments",
                               Description:$('input[name="Customer Payments_2"]').val(),
                               Template:"2",
                               Active:customer_payment == 2 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                          
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                
+
                     }).catch(function (err) {
-                                 
-                  
-                    });  
-      
+
+
+                    });
+
           });
-    
+
           sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,3).then(function (data) {
           templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;    
+          var id = templateid[0].fields.ID;
           objDetails =  {
           type:"TTemplateSettings",
-          fields:{        
-                                ID:parseInt(id),                      
+          fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Customer Payments",
                                 GlobalRef:"Customer Payments",
                                 Description:$('input[name="Customer Payments_3"]').val(),
                                 Template:"3",
                                 Active:customer_payment == 3 ? true:false,
-                    }            
+                    }
              }
-        
+
           sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                   
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                });
-             
-        
+
+
             }).catch(function (err) {
-            
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                    objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Customer Payments",
                                 Description:$('input[name="Customer Payments_3"]').val(),
                                 Template:"3",
                                 Active:customer_payment == 3 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));      
-                           
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                     });
-                      
+
                     }).catch(function (err) {
-             
-                    });  
-      
+
+                    });
+
           });
 
         $('#html-2-pdfwrapper').css('display', 'block');

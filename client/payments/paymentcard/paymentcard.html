@@ -148,7 +148,7 @@
                                             </div>
                                             <div class="col-6 col-md-12 col-lg-12">
                                                 <div class="form-group"><label>Department</label>
-                                                    <select type="search" class="form-control" id="sltDept" name="sltDept" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                     </select>
                                                 </div>
                                             </div>
@@ -160,7 +160,7 @@
                                                 <div class="col-6 col-md-12 col-lg-12">
                                                     {{> CurrencyWidget rate="buy"}}
                                                 </div>
-                                             
+
                                             </div>
                                         </div>
                                     {{/if}}
@@ -172,7 +172,7 @@
                                     {{#if isCurrencyEnable}}
                                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="row">
-                
+
                                                 <div class="col-6 col-md-12 col-lg-12 foreign-currency-js" style="display:none">
                                                     <div class="form-group"><label>Foreign Amount</label>
                                                         <div class="input-group">
@@ -801,7 +801,7 @@
                                             <th class="th linePaymentamount pointer" style="width: 120px; text-align: left!important;">Payment <i class="fa fa-pencil-square-o"></i></th>
                                             <th class="th lineOutstandingAmount" style="width: 80px; text-align: left!important;">Outstanding</th>
                                         {{/if}}
-                                       
+
                                         <th class="th colComments">Comments on Transaction form</th>
                                         <th class="th" style="width: 25px;"></th>
                                     </tr>
@@ -952,20 +952,20 @@
                                                                     <div class="custom-control custom-switch">
 
                                                                         {{#if equals index '1'}}
-                                                                           
-                                                                                {{#if equals title 'Customer Payments'}}  
+
+                                                                                {{#if equals title 'Customer Payments'}}
                                                                                 <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Customer_Payments_{{index}}" value="{{index}}" checked style="cursor: pointer;">
                                                                                 {{/if}}
-                                                                      
+
                                                                         {{else}}
-                                                                        
-                                                                                {{#if equals title 'Customer Payments'}}  
+
+                                                                                {{#if equals title 'Customer Payments'}}
                                                                                 <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="Customer_Payments_{{index}}" value="{{index}}"  style="cursor: pointer;">
                                                                                 {{/if}}
 
                                                                         {{/if}}
 
-                                                                        {{#if equals title 'Customer Payments'}}  
+                                                                        {{#if equals title 'Customer Payments'}}
                                                                         <label class="custom-control-label" for="Customer_Payments_{{index}}" style="cursor: pointer; color: transparent;"></label>
                                                                         {{/if}}
                                                                         <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
@@ -1472,7 +1472,7 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-2">
                         <div class="row justify-content-center desktopButtons">
 
                             <div class="custom-control custom-switch">
