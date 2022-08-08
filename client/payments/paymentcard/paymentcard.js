@@ -153,43 +153,155 @@ Template.paymentcard.onRendered(() => {
         };
 
 
-
-        templateObject.getTemplateInfo = function() {
-
-            getVS1Data('TemplateSettings').then(function(dataObject) {
-
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data;
-                let lineItems = [];
-                let lineItemObj = {};
-
-                if(data.fields)
-                {
-                    var customer_payment = data.fields.customer_payment;
-                    $("[id='Customer Payments_"+customer_payment+"']").attr("checked", "checked");
-                    $('#choosetemplate').attr("checked", "checked");
-
-                    if($('#choosetemplate').is(':checked'))
-                    {
-                        //$('#templateselection').modal('show');
-                    }
-                    else
-                    {
-                    $('#templateselection').modal('hide');
-                    }
-                }
-
-
+        templateObject.getTemplateInfoNew = function(){
+            $('.fullScreenSpin').css('display', 'inline-block');
+            getVS1Data('TTemplateSettings').then(function(dataObject) {
+              if (dataObject.length == 0) {
+                  sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));
+                      
+                      for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                       
+                        if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
+                         {
+                               
+                                if(data.ttemplatesettings[i].fields.Template == 1)
+                                {       
+                                        $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                        if(data.ttemplatesettings[i].fields.Active == true)
+                                        {
+                                           $('#Customer_Payments_1').attr('checked','checked');
+                                        }
+                                      
+                                }
+                                if(data.ttemplatesettings[i].fields.Template == 2)
+                                {
+                                      $('input[name="Customer Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                         $('#Customer_Payments_2').attr('checked','checked');
+                                      }
+                                }
+    
+                                if(data.ttemplatesettings[i].fields.Template == 3)
+                                {     
+    
+                                      $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Customer_Payments_3').attr('checked','checked');
+                                      }
+                                }
+                            
+    
+                         }
+                   
+    
+                     }
+                      
+                          
+                      $('.fullScreenSpin').css('display', 'none');
+                  }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                  });
+              }else{ 
+                      let data = JSON.parse(dataObject[0].data);    
+                    
+                      for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                       
+                        if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
+                        {
+                              
+                               if(data.ttemplatesettings[i].fields.Template == 1)
+                               {       
+                                       $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                       if(data.ttemplatesettings[i].fields.Active == true)
+                                       {
+                                          $('#Customer_Payments_1').attr('checked','checked');
+                                       }
+                                     
+                               }
+                               if(data.ttemplatesettings[i].fields.Template == 2)
+                               {
+                                     $('input[name="Customer Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                         $('#Customer_Payments_2').attr('checked','checked');
+                                     }
+                               }
+   
+                               if(data.ttemplatesettings[i].fields.Template == 3)
+                               {     
+   
+                                     $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Customer_Payments_3').attr('checked','checked');
+                                     }
+                               }
+                           
+   
+                        }
+                   
+                   
+    
+                     }
+                      $('.fullScreenSpin').css('display', 'none');
+              }
+            }).catch(function(err) {
+            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                    
+                      for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                       
+                
+                  
+                         if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
+                         {
+                               
+                                if(data.ttemplatesettings[i].fields.Template == 1)
+                                {       
+                                        $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                        if(data.ttemplatesettings[i].fields.Active == true)
+                                        {
+                                           $('#Customer_Payments_1').attr('checked','checked');
+                                        }
+                                      
+                                }
+                                if(data.ttemplatesettings[i].fields.Template == 2)
+                                {
+                                      $('input[name="Customer Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Customer_Payments_2').attr('checked','checked');
+                                      }
+                                }
+    
+                                if(data.ttemplatesettings[i].fields.Template == 3)
+                                {     
+    
+                                      $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Customer_Payments_3').attr('checked','checked');
+                                      }
+                                }
+                            
+    
+                         }
+    
+                 
+    
+                      }
+                      $('.fullScreenSpin').css('display', 'none');
+            }).catch(function (err) {
+              $('.fullScreenSpin').css('display', 'none');
             });
-
-       };
-
-
-       templateObject.getTemplateInfo();
-
-
-
-
+          });
+    
+          };
+    
+          templateObject.getTemplateInfoNew();
 
 
 
@@ -8335,65 +8447,172 @@ Template.paymentcard.events({
     },
     'click .printConfirm':async function (event) {
 
-        var printTemplate = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
-
-        getVS1Data('TemplateSettings').then(function(dataObject) {
-
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data;
-            let lineItems = [];
-            let lineItemObj = {};
-
-
-            if(data.fields)
-            {
-
-                var bill =data.fields.bill;
-                var credits =  data.fields.credits;
-                var customer_payment =$('input[name="Customer Payments"]:checked').val();
-                var invoices = data.fields.invoices;
-                var invoices_back_order =  data.fields.invoices_back_order;
-                var purchase_orderbill = data.fields.purchase_order;
-                var quotes =   data.fields.quotes;
-                var refunds = data.fields.refunds;
-                var sales_orders =  data.fields.sales_orders;
-                var supplier_payments = data.fields.supplier_payments;
-                var statements = data.fields.statements;
-                var customer_statement =  data.fields.customer_statement;
-                var delivery_docket =  data.fields.delivery_docket;
-
-                var print_options  =  {
-                    type:"TemplateSettings",
-                    fields:{
-                               client_id:loggedCompany,
-                               bill:bill,
-                               credits:credits,
-                               customer_payment:customer_payment,
-                               customer_statement:customer_statement,
-                               invoices:invoices,
-                               invoices_back_order:invoices_back_order,
-                               purchase_order:purchase_orderbill,
-                               quotes:quotes,
-                               refunds:refunds,
-                               sales_orders:sales_orders,
-                               supplier_payments:supplier_payments,
-                               statements:statements,
-                               delivery_docket:delivery_docket,
-                          }
-
-
-
-                  }
-
-                  addVS1Data("TemplateSettings", JSON.stringify(print_options));
-
-            }
-
-
-        });
-
-
+         var printTemplate = [];
+         $('.fullScreenSpin').css('display', 'inline-block');
+         var customer_payment = $('input[name="Customer Payments"]:checked').val();
+         let emid = Session.get('mySessionEmployeeLoggedID');
+      
+          sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,1).then(function (data) {
+            templateid = data.ttemplatesettings;
+            var id = templateid[0].fields.ID;    
+            objDetails =  {
+            type:"TTemplateSettings",
+            fields:{        
+                         ID:parseInt(id),                      
+                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          SettingName:"Customer Payments",
+                          GlobalRef:"Customer Payments",
+                          Description:$('input[name="Customer Payments_1"]').val(),
+                          Template:"1",
+                          Active:customer_payment == 1 ? true:false,
+                    }            
+             }
+        
+             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+            
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data));          
+               
+              });
+             }).catch(function (err) {      
+             });
+        
+          }).catch(function (err) {
+                    
+                  objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{                                                                  
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Customer Payments",
+                                Description:$('input[name="Customer Payments_1"]').val(),
+                                Template:"1",
+                                Active:customer_payment == 1 ? true:false,
+                            }            
+                    }
+                
+                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                
+                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                             
+                      });
+                      
+                
+                    }).catch(function (err) {
+                
+                      
+                  
+                    });  
+      
+          });
+    
+          sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,2).then(function (data) {
+            templateid = data.ttemplatesettings;
+            var id = templateid[0].fields.ID;    
+            objDetails =  {
+            type:"TTemplateSettings",
+            fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"Customer Payments",
+                            GlobalRef:"Customer Payments",
+                            Description:$('input[name="Customer Payments_2"]').val(),
+                            Template:"2",
+                            Active:customer_payment == 2 ? true:false,
+                    }            
+             }
+        
+             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+        
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data));      
+                 
+              });
+               
+              }).catch(function (err) {
+              
+              });
+        
+          }).catch(function (err) {
+                    
+                  objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{                                                                  
+                              EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                              SettingName:"Customer Payments",
+                              Description:$('input[name="Customer Payments_2"]').val(),
+                              Template:"2",
+                              Active:customer_payment == 2 ? true:false,
+                            }            
+                    }
+                
+                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                
+                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                          
+                      });
+                
+                    }).catch(function (err) {
+                                 
+                  
+                    });  
+      
+          });
+    
+          sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,3).then(function (data) {
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;    
+          objDetails =  {
+          type:"TTemplateSettings",
+          fields:{        
+                                ID:parseInt(id),                      
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Customer Payments",
+                                GlobalRef:"Customer Payments",
+                                Description:$('input[name="Customer Payments_3"]').val(),
+                                Template:"3",
+                                Active:customer_payment == 3 ? true:false,
+                    }            
+             }
+        
+          sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+        
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                   
+               });
+             
+        
+            }).catch(function (err) {
+            
+            });
+        
+          }).catch(function (err) {
+                    
+                   objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{                                                                  
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Customer Payments",
+                                Description:$('input[name="Customer Payments_3"]').val(),
+                                Template:"3",
+                                Active:customer_payment == 3 ? true:false,
+                            }            
+                    }
+                
+                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));      
+                           
+                    });
+                      
+                    }).catch(function (err) {
+             
+                    });  
+      
+          });
 
         $('#html-2-pdfwrapper').css('display', 'block');
         if ($('.edtCustomerEmail').val() != "") {

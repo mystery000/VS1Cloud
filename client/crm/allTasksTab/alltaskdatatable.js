@@ -905,7 +905,7 @@ Template.alltaskdatatable.onRendered(function () {
       //       for="formCheck-${item.fields.ID}"></label>
       //   </div>`;
 
-      tflag = `<i class="far fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
+      tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
 
       if (item.fields.due_date == "" || item.fields.due_date == null) {
         td1 = "";
@@ -1043,7 +1043,7 @@ Template.alltaskdatatable.onRendered(function () {
                   <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_1"
                     data-toggle="tooltip" data-placement="bottom" title="Priority 3" data-priority="1"
                     data-id="${item.fields.ID}"></i>
-                  <i class="far fa-flag no-modal taskDropSecondFlag task_modal_priority_0" data-toggle="tooltip"
+                  <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_0" data-toggle="tooltip"
                     data-placement="bottom" title="Priority 4" data-priority="0"
                     data-id="${item.fields.ID}"></i>
                 </div>

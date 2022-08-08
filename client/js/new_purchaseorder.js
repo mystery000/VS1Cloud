@@ -99,43 +99,154 @@ Template.purchaseordercard.onRendered(() => {
     const clientsService = new PurchaseBoardService();
     const contactService = new ContactService();
 
+    templateObject.getTemplateInfoNew = function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        getVS1Data('TTemplateSettings').then(function(dataObject) {
+          if (dataObject.length == 0) {
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+                  
+                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                   
+                    if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
+                    {
+                           if(data.ttemplatesettings[i].fields.Template == 1)
+                           {       
+                                   $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                   if(data.ttemplatesettings[i].fields.Active == true)
+                                   {
+                                     $('#Purchase_Orders_1').attr('checked','checked');
+                                   }
+                                 
+                           }
+                           if(data.ttemplatesettings[i].fields.Template == 2)
+                           {
+                                 $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                 if(data.ttemplatesettings[i].fields.Active == true)
+                                 {
+                                   $('#Purchase_Orders_2').attr('checked','checked');
+                                 }
+                           }
 
-    templateObject.getTemplateInfo = function() {
-
-        getVS1Data('TemplateSettings').then(function(dataObject) {
-
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data;
-            let lineItems = [];
-            let lineItemObj = {};
-
-
-            if(data.fields)
-            {
-                var purchase_orderbill = data.fields.purchase_order;
-                $("[id='Purchase Orders_"+purchase_orderbill+"']").attr("checked", "checked");
-                $('#choosetemplate').attr("checked", "checked");
-
-                if($('#choosetemplate').is(':checked'))
-                {
-                  //  $('#templateselection').modal('show');
-                }
-                else
-                {
-                $('#templateselection').modal('hide');
-                }
-            }
+                           if(data.ttemplatesettings[i].fields.Template == 3)
+                           {
+                                 $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                 if(data.ttemplatesettings[i].fields.Active == true)
+                                 {
+                                   $('#Purchase_Orders_3').attr('checked','checked');
+                                 }
+                           }
 
 
+                    }
+
+               
+
+                 }
+                  
+                      
+                  $('.fullScreenSpin').css('display', 'none');
+              }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+              });
+          }else{ 
+                  let data = JSON.parse(dataObject[0].data);    
+                
+                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                   
+                    if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
+                    {
+                           if(data.ttemplatesettings[i].fields.Template == 1)
+                           {       
+                                   $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                   if(data.ttemplatesettings[i].fields.Active == true)
+                                   {
+                                     $('#Purchase_Orders_1').attr('checked','checked');
+                                   }
+                                 
+                           }
+                           if(data.ttemplatesettings[i].fields.Template == 2)
+                           {
+                                 $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                 if(data.ttemplatesettings[i].fields.Active == true)
+                                 {
+                                   $('#Purchase_Orders_2').attr('checked','checked');
+                                 }
+                           }
+
+                           if(data.ttemplatesettings[i].fields.Template == 3)
+                           {
+                                 $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                 if(data.ttemplatesettings[i].fields.Active == true)
+                                 {
+                                   $('#Purchase_Orders_3').attr('checked','checked');
+                                 }
+                           }
+
+
+                    }
+
+           
+               
+
+                 }
+                  $('.fullScreenSpin').css('display', 'none');
+          }
+        }).catch(function(err) {
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                
+                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                   
+                    
+
+                     if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
+                     {
+                            if(data.ttemplatesettings[i].fields.Template == 1)
+                            {       
+                                    $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                    if(data.ttemplatesettings[i].fields.Active == true)
+                                    {
+                                      $('#Purchase_Orders_1').attr('checked','checked');
+                                    }
+                                  
+                            }
+                            if(data.ttemplatesettings[i].fields.Template == 2)
+                            {
+                                  $('input[name="Purchase Orders_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                  if(data.ttemplatesettings[i].fields.Active == true)
+                                  {
+                                    $('#Purchase_Orders_2').attr('checked','checked');
+                                  }
+                            }
+
+                            if(data.ttemplatesettings[i].fields.Template == 3)
+                            {
+                                  $('input[name="Purchase Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                  if(data.ttemplatesettings[i].fields.Active == true)
+                                  {
+                                    $('#Purchase_Orders_3').attr('checked','checked');
+                                  }
+                            }
+
+
+                     }
+
+            
+                
+
+                  }
+                  $('.fullScreenSpin').css('display', 'none');
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display', 'none');
         });
+      });
 
-   };
+      };
 
-
-   templateObject.getTemplateInfo();
-
-
-   templateObject.getLastPOData = async function() {
+      templateObject.getTemplateInfoNew();
+   
+templateObject.getLastPOData = async function() {
        let lastBankAccount = "Bank";
        let lastDepartment = defaultDept || "";
        purchaseService.getLastPOID().then(function(data) {
@@ -159,6 +270,7 @@ Template.purchaseordercard.onRendered(() => {
            $('#sltDept').val(lastDepartment);
        });
    };
+
 
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
 
@@ -6321,65 +6433,182 @@ Template.purchaseordercard.events({
 
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
+        var purchase_order = $('input[name="Purchase Orders"]:checked').val();
+        let emid = Session.get('mySessionEmployeeLoggedID');
 
-        getVS1Data('TemplateSettings').then(function(dataObject) {
-
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data;
-            let lineItems = [];
-            let lineItemObj = {};
-
-
-            if(data.fields)
-            {
-
-                var bill =data.fields.bill;
-                var credits =  data.fields.credits;
-                var customer_payment = data.fields.customer_payment;
-                var invoices = data.fields.invoices;
-                var invoices_back_order =  data.fields.invoices_back_order;
-                var purchase_orderbill = $('input[name="Purchase Orders"]:checked').val();
-                var quotes = data.fields.quotes;
-                var refunds = data.fields.refunds;
-                var sales_orders = data.fields.sales_orders;
-                var supplier_payments = data.fields.supplier_payments;
-                var statements = data.fields.statements;
-                var customer_statement =  data.fields.customer_statement;
-                var delivery_docket =  data.fields.delivery_docket;
-
-                var print_options  =  {
-                    type:"TemplateSettings",
-                    fields:{
-                               client_id:loggedCompany,
-                               bill:bill,
-                               credits:credits,
-                               customer_payment:customer_payment,
-                               customer_statement:customer_statement,
-                               invoices:invoices,
-                               invoices_back_order:invoices_back_order,
-                               purchase_order:purchase_orderbill,
-                               quotes:quotes,
-                               refunds:refunds,
-                               sales_orders:sales_orders,
-                               supplier_payments:supplier_payments,
-                               statements:statements,
-                               delivery_docket:delivery_docket,
-                          }
-
-
-
-                  }
-
-                  addVS1Data("TemplateSettings", JSON.stringify(print_options));
-
+        sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,1).then(function (data) {
+            templateid = data.ttemplatesettings;
+            var id = templateid[0].fields.ID;    
+            objDetails =  {
+            type:"TTemplateSettings",
+            fields:{        
+                                ID:parseInt(id),                      
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Purchase Orders",
+                                GlobalRef:"Purchase Orders",
+                                Description:$('input[name="Purchase Orders_1"]').val(),
+                                Template:"1",
+                                Active:purchase_order == 1 ? true:false,
+                    }            
             }
-
-
-        });
-
-
-
-
+        
+            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+        
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    
+              });
+             
+        
+            }).catch(function (err) {
+        
+              
+          
+            });
+        
+            }).catch(function (err) {
+                    
+                    objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{                                                                  
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Purchase Orders",
+                                Description:$('input[name="Purchase Orders_1"]').val(),
+                                Template:"1",
+                                Active:purchase_order == 1 ? true:false,
+                            }            
+                    }
+                
+                      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                
+                        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));                                  
+                        });
+                      
+                      }).catch(function (err) {
+                      
+                      });  
+    
+            });
+    
+    
+          sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,2).then(function (data) {
+            templateid = data.ttemplatesettings;
+            var id = templateid[0].fields.ID;    
+            objDetails =  {
+            type:"TTemplateSettings",
+            fields:{        
+                                ID:parseInt(id),                      
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Purchase Orders",
+                                GlobalRef:"Purchase Orders",
+                                Description:$('input[name="Purchase Orders_2"]').val(),
+                                Template:"2",
+                                Active:purchase_order == 2 ? true:false,
+                    }            
+            }
+        
+            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+        
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                     
+              });
+              
+        
+            }).catch(function (err) {
+        
+              
+          
+            });
+        
+          }).catch(function (err) {
+                    
+                    objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{                                                                  
+                                  EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                  SettingName:"Purchase Orders",
+                                  Description:$('input[name="Purchase Orders_2"]').val(),
+                                  Template:"2",
+                                  Active:purchase_order == 2 ? true:false,
+                            }            
+                    }
+                
+                      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                
+                        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                              
+                        });
+                      
+                
+                      }).catch(function (err) {
+                
+                        
+                  
+                      });  
+    
+          });
+    
+    
+          sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,3).then(function (data) {
+            templateid = data.ttemplatesettings;
+            var id = templateid[0].fields.ID;    
+            objDetails =  {
+            type:"TTemplateSettings",
+            fields:{        
+                                ID:parseInt(id),                      
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Purchase Orders",
+                                GlobalRef:"Purchase Orders",
+                                Description:$('input[name="Purchase Orders_3"]').val(),
+                                Template:"3",
+                                Active:purchase_order == 3 ? true:false,
+                    }            
+            }
+        
+            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+        
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data));     
+                   
+              });
+        
+            }).catch(function (err) {
+        
+              
+          
+            });
+        
+          }).catch(function (err) {
+                    
+                    objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{                                                                  
+                                  EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                  SettingName:"Purchase Orders",
+                                  Description:$('input[name="Purchase Orders_3"]').val(),
+                                  Template:"3",
+                                  Active:purchase_order == 3 ? true:false,
+                            }            
+                    }
+                
+                      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                
+                        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                                   
+                        });
+                
+                      }).catch(function (err) {
+                
+                        
+                  
+                      });  
+    
+          });
+      
         $('#html-2-pdfwrapper-new').css('display', 'block');
         if ($('.edtCustomerEmail').val() != "") {
             $('.pdfCustomerName').html($('#edtCustomerName').val());
