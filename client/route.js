@@ -217,6 +217,16 @@ authenticatedRoutes.route('/dashboardexe', {
     }
 });
 
+
+authenticatedRoutes.route('/dashboardsales', {
+    name: 'dashboardsales',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'dashboardsales'
+        });
+    }
+});
+
 authenticatedRoutes.route('/appointments', {
     name: 'appointments',
     action() {

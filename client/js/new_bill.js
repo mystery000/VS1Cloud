@@ -74,40 +74,148 @@ Template.billcard.onRendered(() => {
     const templateObject = Template.instance();
     $('#choosetemplate').attr('checked', true);
 
-    templateObject.getTemplateInfo = function() {
+    templateObject.getTemplateInfoNew = function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        getVS1Data('TTemplateSettings').then(function(dataObject) {
+          if (dataObject.length == 0) {
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+                  
+                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                    
+                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
+                    {
+                        
+                         if(data.ttemplatesettings[i].fields.Template == 1)
+                         {       
+                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                 if(data.ttemplatesettings[i].fields.Active == true)
+                                 {
+                                    $('#Bills_1').attr('checked','checked');
+                                 }
+                                
+                         }
+                         if(data.ttemplatesettings[i].fields.Template == 2)
+                         {
+                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
+                               if(data.ttemplatesettings[i].fields.Active == true)
+                               {
+                                 $('#Bills_2').attr('checked','checked');
+                               }
+                         }
 
-        getVS1Data('TemplateSettings').then(function(dataObject) {
-
-             let data = JSON.parse(dataObject[0].data);
-             let useData = data;
-             let lineItems = [];
-             let lineItemObj = {};
-
-
-             if(data.fields)
-             {
-               var bill = data.fields.bill;
-
-               $('#Bills_'+bill).attr("checked", "checked");
-                $('#choosetemplate').attr("checked", "checked");
-
-                if($('#choosetemplate').is(':checked'))
-                {
-                   // $('#templateselection').modal('show');
-                }
-                else
-                {
-                $('#templateselection').modal('hide');
-                }
-             }
+                         if(data.ttemplatesettings[i].fields.Template == 3)
+                         {
+                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
+                               if(data.ttemplatesettings[i].fields.Active == true)
+                               {
+                                 $('#Bills_3').attr('checked','checked');
+                               }
+                         }
 
 
+                    }
+            
+
+                  }
+                  
+                      
+                  $('.fullScreenSpin').css('display', 'none');
+              }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+              });
+          }else{ 
+                  let data = JSON.parse(dataObject[0].data);    
+                
+                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                   
+                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
+                    {
+                        
+                         if(data.ttemplatesettings[i].fields.Template == 1)
+                         {       
+                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                 if(data.ttemplatesettings[i].fields.Active == true)
+                                 {
+                                    $('#Bills_1').attr('checked','checked');
+                                 }
+                                
+                         }
+                         if(data.ttemplatesettings[i].fields.Template == 2)
+                         {
+                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
+                               if(data.ttemplatesettings[i].fields.Active == true)
+                               {
+                                 $('#Bills_2').attr('checked','checked');
+                               }
+                         }
+
+                         if(data.ttemplatesettings[i].fields.Template == 3)
+                         {
+                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
+                               if(data.ttemplatesettings[i].fields.Active == true)
+                               {
+                                 $('#Bills_3').attr('checked','checked');
+                               }
+                         }
+
+
+                    }
+               
+               
+
+                 }
+                  $('.fullScreenSpin').css('display', 'none');
+          }
+        }).catch(function(err) {
+           sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));                 
+                  for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                                
+                    if(data.ttemplatesettings[i].fields.SettingName == 'bill')
+                    {
+                        
+                         if(data.ttemplatesettings[i].fields.Template == 1)
+                         {       
+                                 $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                 if(data.ttemplatesettings[i].fields.Active == true)
+                                 {
+                                    $('#Bills_1').attr('checked','checked');
+                                 }
+                                
+                         }
+                         if(data.ttemplatesettings[i].fields.Template == 2)
+                         {
+                               $('input[name="Bills_2"]').val(data.ttemplatesettings[i].fields.Description);
+                               if(data.ttemplatesettings[i].fields.Active == true)
+                               {
+                                 $('#Bills_2').attr('checked','checked');
+                               }
+                         }
+
+                         if(data.ttemplatesettings[i].fields.Template == 3)
+                         {
+                               $('input[name="Bills_3"]').val(data.ttemplatesettings[i].fields.Description);
+                               if(data.ttemplatesettings[i].fields.Active == true)
+                               {
+                                 $('#Bills_3').attr('checked','checked');
+                               }
+                         }
+
+
+                    }
+                
+
+                  }
+                  $('.fullScreenSpin').css('display', 'none');
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display', 'none');
+        });
         });
 
     };
 
-
-    templateObject.getTemplateInfo();
+    templateObject.getTemplateInfoNew();
 
     templateObject.getLastBillData = async function() {
         let lastBankAccount = "Bank";
@@ -3963,6 +4071,7 @@ Template.billcard.onRendered(() => {
                // $(".btnSave").trigger("click");
                $('#html-2-pdfwrapper').css('display', 'none');
                $('.fullScreenSpin').css('display', 'none');
+               document.getElementById('html-2-pdfwrapper_new').style.display="none";
             } else {
                 document.getElementById('html-2-pdfwrapper_new').style.display="none";
                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -6057,115 +6166,215 @@ Template.billcard.events({
 
     'click .printConfirm':async function (event) {
 
-        var printTemplate = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#html-2-pdfwrapper').css('display', 'block');
+                var printTemplate = [];
+                $('.fullScreenSpin').css('display', 'inline-block');
+                $('#html-2-pdfwrapper').css('display', 'block');
 
-        getVS1Data('TemplateSettings').then(function(dataObject) {
-
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data;
-            let lineItems = [];
-            let lineItemObj = {};
-
-
-            if(data.fields)
-            {
-
+                let emid = Session.get('mySessionEmployeeLoggedID');
                 var bill = $('input[name="Bills"]:checked').val();
-                var credits = data.fields.credits;
-                var customer_payment = data.fields.customer_payment;
-                var invoices = data.fields.invoices;
-                var invoices_back_order =  data.fields.invoices_back_order;
-                var purchase_orderbill = data.fields.purchase_order;
-                var quotes = data.fields.quotes;
-                var refunds = data.fields.refunds;
-                var sales_orders = data.fields.sales_orders;
-                var supplier_payments = data.fields.supplier_payments;
-                var statements = data.fields.statements;
-                var customer_statement =  data.fields.customer_statement;
-                var delivery_docket =  data.fields.delivery_docket;
+                sideBarService.getTemplateNameandEmployeId("bill",emid,1).then(function (data) {
+                templateid = data.ttemplatesettings;
+                var id = templateid[0].fields.ID;    
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{        
+                            ID:parseInt(id),                      
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"bill",
+                            GlobalRef:"bill",
+                            Description:$('input[name="Bills_1"]').val(),
+                            Template:"1",
+                            Active:bill == 1 ? true:false,
+                        }            
+                }
+            
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {                      
+        
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+            
+                });
+                        
+                }).catch(function (err) {
+                });
+            
+                }).catch(function (err) {
+                            
+                            objDetails =  {
+                            type:"TTemplateSettings",
+                            fields:{                                                                  
+                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                        SettingName:"bill",
+                                        Description:$('input[name="Bills_1"]').val(),
+                                        Template:"1",
+                                        Active:bill == 1 ? true:false,
+                                    }            
+                            }
+                        
+                            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                                                        
+                                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                                    
+                                });
+                                                    
+                                                
+                                }).catch(function (err) {
+                                                
+                                });  
 
-                var print_options  =  {
-                    type:"TemplateSettings",
-                    fields:{
-                               client_id:loggedCompany,
-                               bill:bill,
-                               credits:credits,
-                               customer_payment:customer_payment,
-                               customer_statement:customer_statement,
-                               invoices:invoices,
-                               invoices_back_order:invoices_back_order,
-                               purchase_order:purchase_orderbill,
-                               quotes:quotes,
-                               refunds:refunds,
-                               sales_orders:sales_orders,
-                               supplier_payments:supplier_payments,
-                               statements:statements,
-                               delivery_docket:delivery_docket,
-                          }
+                });
 
+                sideBarService.getTemplateNameandEmployeId("bill",emid,2).then(function (data) {
+                        templateid = data.ttemplatesettings;
+                        var id = templateid[0].fields.ID;                        
+                        objDetails =  {
+                        type:"TTemplateSettings",
+                        fields:{        
+                                    ID:parseInt(id),                      
+                                    EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                    SettingName:"bill",
+                                    GlobalRef:"bill",
+                                    Description:$('input[name="Bills_2"]').val(),
+                                    Template:"2",
+                                    Active:bill == 2 ? true:false,
+                                }            
+                        }
+        
+                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                            
+                    });                 
+           
+        
+                    }).catch(function (err) { });
+                            
+                 }).catch(function (err) {
+                                
+                                objDetails =  {
+                                type:"TTemplateSettings",
+                                fields:{                                                                  
+                                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                            SettingName:"bill",
+                                            Description:$('input[name="Bills_2"]').val(),
+                                            Template:"2",
+                                            Active:bill == 2 ? true:false,
+                                        }            
+                                }
+                            
+                                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                            
+                                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                                        
+                                });
+                            
+                                }).catch(function (err) {  });  
 
+                 });
 
-                  }
+                sideBarService.getTemplateNameandEmployeId("bill",emid,3).then(function (data) {
+                    templateid = data.ttemplatesettings;
+                    var id = templateid[0].fields.ID;
 
-                  addVS1Data("TemplateSettings", JSON.stringify(print_options));
-
-            }
-
-
-        });
-
-
-
-        if ($('.edtCustomerEmail').val() != "") {
-            $('.pdfCustomerName').html($('#edtCustomerName').val());
-            $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            var ponumber = $('#ponumber').val() || '.';
-            $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;
-
-            if($('#print_bill').is(':checked') || $('#print_bill_second').is(':checked')) {
-                printTemplate.push('Bills');
-            }
-
-            if(printTemplate.length > 0) {
-
-                  for(var i = 0; i < printTemplate.length; i++)
-                  {
-
-                    if(printTemplate[i] == 'Bills')
-                    {
-
-                        var template_number = $('input[name="Bills"]:checked').val();
+                    objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{        
+                    ID:parseInt(id),                      
+                    EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                    SettingName:"bill",
+                    GlobalRef:"bill",
+                    Description:$('input[name="Bills_3"]').val(),
+                    Template:"3",
+                    Active:bill == 3 ? true:false,
+                    }            
                     }
 
-                    let result = await exportSalesToPdf(printTemplate[i],template_number);
-                    if(result == true)
-                    {
-
-                    }
-
-                  }
-
-            }
-
-
-
-        } else {
-                    swal({
-                        title: 'Customer Email Required',
-                        text: 'Please enter customer email',
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.value) {}
-                        else if (result.dismiss === 'cancel') {}
+                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));     
+                        
                     });
-        }
-    },
+
+
+                    }).catch(function (err) {   
+                    });
+
+                }).catch(function (err) {
+
+                objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{                                                                  
+                            EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                            SettingName:"bill",
+                            Description:$('input[name="Bills_3"]').val(),
+                            Template:"3",
+                            Active:bill == 3 ? true:false,
+                        }            
+                }
+
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data));           
+                });        
+
+                }).catch(function (err) {
+                        
+                });  
+
+                });
+
+
+                if ($('.edtCustomerEmail').val() != "") {
+                        $('.pdfCustomerName').html($('#edtCustomerName').val());
+                        $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                        $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+                        var ponumber = $('#ponumber').val() || '.';
+                        $('.po').text(ponumber);
+                        var rowCount = $('.tblInvoiceLine tbody tr').length;
+
+                        if($('#print_bill').is(':checked') || $('#print_bill_second').is(':checked')) {
+                            printTemplate.push('Bills');
+                        }
+
+                        if(printTemplate.length > 0) {
+
+                            for(var i = 0; i < printTemplate.length; i++)
+                            {
+
+                                if(printTemplate[i] == 'Bills')
+                                {
+
+                                    var template_number = $('input[name="Bills"]:checked').val();
+                                }
+
+                                let result = await exportSalesToPdf(printTemplate[i],template_number);
+                                if(result == true)
+                                {
+
+                                }
+
+                            }
+
+                        }
+
+
+
+                    } else {
+                                swal({
+                                    title: 'Customer Email Required',
+                                    text: 'Please enter customer email',
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.value) {}
+                                    else if (result.dismiss === 'cancel') {}
+                                });
+                    }
+         },
 
     'click  #open_print_confirm':function(event)
     {

@@ -107,16 +107,7 @@ Template.quoteslist.onRendered(function() {
     };
 
     templateObject.resetData = function (dataVal) {
-      if(FlowRouter.current().queryParams.converted){
-        if(FlowRouter.current().queryParams.converted === true) {
-          window.open('/quoteslist?converted=true&page=last','_self');
-        }else{
-          window.open('/quoteslist?converted=false&page=last','_self');
-        }
-      }else {
-        window.open('/quoteslist?page=last', '_self');
-      }
-
+      location.reload();
     }
 
     // custom field displaysettings
@@ -245,8 +236,9 @@ Template.quoteslist.onRendered(function() {
                     if (data.Params.IgnoreDates == true) {
                         $('#dateFrom').attr('readonly', true);
                         $('#dateTo').attr('readonly', true);
-                        FlowRouter.go('/quoteslist?ignoredate=true');
                     } else {
+                      $('#dateFrom').attr('readonly', false);
+                      $('#dateTo').attr('readonly', false);
                         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                     }
@@ -407,7 +399,7 @@ Template.quoteslist.onRendered(function() {
 
                                  let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                  let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                 if(checkurlIgnoreDate == 'true'){
+                                 if(data.Params.IgnoreDates == true){
                                    sideBarService.getAllTQuoteListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                      getVS1Data('TQuoteList').then(function (dataObjectold) {
                                        if(dataObjectold.length == 0){
@@ -476,10 +468,7 @@ Template.quoteslist.onRendered(function() {
                             },
                              "fnInitComplete": function () {
 
-                               let urlParametersPage = FlowRouter.current().queryParams.page;
-                               if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                                   this.fnPageChange('last');
-                               }
+                               this.fnPageChange('last');
                              $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
                              $('.myvarFilterForm').appendTo(".colDateFilter");
                          },
@@ -564,8 +553,9 @@ Template.quoteslist.onRendered(function() {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    FlowRouter.go('/quoteslist?ignoredate=true');
                 } else {
+                  $('#dateFrom').attr('readonly', false);
+                  $('#dateTo').attr('readonly', false);
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
@@ -726,7 +716,7 @@ Template.quoteslist.onRendered(function() {
 
                              let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                             if(checkurlIgnoreDate == 'true'){
+                             if(data.Params.IgnoreDates == true){
                                sideBarService.getAllTQuoteListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TQuoteList').then(function (dataObjectold) {
                                    if(dataObjectold.length == 0){
@@ -795,10 +785,7 @@ Template.quoteslist.onRendered(function() {
                         },
                          "fnInitComplete": function () {
 
-                           let urlParametersPage = FlowRouter.current().queryParams.page;
-                           if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                               this.fnPageChange('last');
-                           }
+                           this.fnPageChange('last');
                          $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
                          $('.myvarFilterForm').appendTo(".colDateFilter");
                      },
@@ -877,8 +864,9 @@ Template.quoteslist.onRendered(function() {
               if (data.Params.IgnoreDates == true) {
                   $('#dateFrom').attr('readonly', true);
                   $('#dateTo').attr('readonly', true);
-                  FlowRouter.go('/quoteslist?ignoredate=true');
               } else {
+                $('#dateFrom').attr('readonly', false);
+                $('#dateTo').attr('readonly', false);
                   $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                   $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
               }
@@ -1039,7 +1027,7 @@ Template.quoteslist.onRendered(function() {
 
                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                           if(checkurlIgnoreDate == 'true'){
+                           if(data.Params.IgnoreDates == true){
                              sideBarService.getAllTQuoteListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                getVS1Data('TQuoteList').then(function (dataObjectold) {
                                  if(dataObjectold.length == 0){
@@ -1108,10 +1096,7 @@ Template.quoteslist.onRendered(function() {
                       },
                        "fnInitComplete": function () {
 
-                         let urlParametersPage = FlowRouter.current().queryParams.page;
-                         if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                             this.fnPageChange('last');
-                         }
+                         this.fnPageChange('last');
                        $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
                        $('.myvarFilterForm').appendTo(".colDateFilter");
                    },
@@ -1384,7 +1369,7 @@ Template.quoteslist.onRendered(function() {
 
                                  let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                  let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                 if(checkurlIgnoreDate == 'true'){
+                                 if(data.Params.IgnoreDates == true){
                                    sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                      getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
                                        if(dataObjectold.length == 0){
@@ -1453,10 +1438,7 @@ Template.quoteslist.onRendered(function() {
                             },
                              "fnInitComplete": function () {
 
-                               let urlParametersPage = FlowRouter.current().queryParams.page;
-                               if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                                   this.fnPageChange('last');
-                               }
+                               this.fnPageChange('last');
                              $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
                              $('.myvarFilterForm').appendTo(".colDateFilter");
                          },
@@ -1705,7 +1687,7 @@ Template.quoteslist.onRendered(function() {
 
                              let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                             if(checkurlIgnoreDate == 'true'){
+                             if(data.Params.IgnoreDates == true){
                                sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
                                    if(dataObjectold.length == 0){
@@ -1774,10 +1756,7 @@ Template.quoteslist.onRendered(function() {
                         },
                          "fnInitComplete": function () {
 
-                           let urlParametersPage = FlowRouter.current().queryParams.page;
-                           if (urlParametersPage || FlowRouter.current().queryParams.ignoredate||FlowRouter.current().queryParams.converted) {
-                               this.fnPageChange('last');
-                           }
+                           this.fnPageChange('last');
                          $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
                          $('.myvarFilterForm').appendTo(".colDateFilter");
                      },
@@ -2020,7 +1999,7 @@ Template.quoteslist.onRendered(function() {
 
                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                           if(checkurlIgnoreDate == 'true'){
+                           if(data.Params.IgnoreDates == true){
                              sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
                                  if(dataObjectold.length == 0){
@@ -2089,10 +2068,7 @@ Template.quoteslist.onRendered(function() {
                       },
                        "fnInitComplete": function () {
 
-                         let urlParametersPage = FlowRouter.current().queryParams.page;
-                         if (urlParametersPage || FlowRouter.current().queryParams.ignoredate||FlowRouter.current().queryParams.converted) {
-                             this.fnPageChange('last');
-                         }
+                         this.fnPageChange('last');
                        $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
                        $('.myvarFilterForm').appendTo(".colDateFilter");
                    },
@@ -2189,7 +2165,7 @@ Template.quoteslist.onRendered(function() {
     templateObject.getAllFilterQuoteData = function(fromDate, toDate, ignoreDate) {
         sideBarService.getAllTQuoteListData(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
             addVS1Data('TQuoteList', JSON.stringify(data)).then(function(datareturn) {
-                window.open('/quoteslist?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate=' + ignoreDate, '_self');
+                location.reload();
             }).catch(function(err) {
                 location.reload();
             });

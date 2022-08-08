@@ -223,6 +223,14 @@ Template.bankingoverviewcards.onRendered(function() {
     });
 });
 
+Template.bankingoverviewcards.events({
+  'click .opentransBank': async function(event) {
+      let bankAccountName = $(event.target).closest('.openaccountreceivable').attr('id');
+      // FlowRouter.go('/accounttransactions?id=' + id);
+      await clearData('TAccountRunningBalanceReport');
+      FlowRouter.go("/balancetransactionlist?accountName=" +bankAccountName +"&isTabItem=" +false);
+  }
+});
 Template.bankingoverviewcards.helpers({
     bankaccountdatarecord: () => {
         return Template.instance().bankaccountdatarecord.get();
