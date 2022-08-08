@@ -13883,11 +13883,10 @@ export function onExchangeRateChange(e) {
   const rate = parseFloat($("#exchange_rate").val());
   const currency = getCurrentCurrencySymbol();
 
-  let foreignAmount = rate * utilityService.removeCurrency(mainValue);
-  let appliedAmount = rate * utilityService.removeCurrency(mainValue);
+  let foreignAmount = (rate * utilityService.removeCurrency(mainValue)).toFixed(2);
+  let appliedAmount = (rate * utilityService.removeCurrency(mainValue)).toFixed(2);
   // data.applied = rate * applied;
   // data.foreignAmount = rate * applied;
-
 
   $('.appliedAmount').text(currency + appliedAmount);
   $('#edtForeignAmount').val(currency + foreignAmount);
@@ -13906,7 +13905,7 @@ export function calculateApplied() {
     const variation  = isNaN(_variation) ? utilityService.removeCurrency(_variation) : _variation;
     const isNegative = utilityService.isNegative(foreignAmount);
 
-    const cal = foreignAmount - variation;
+    const cal = (foreignAmount - variation).toFixed(2);
     const calculatedApplied = isNegative ? `-${currency}${cal}` : `${currency}${cal}`;
 
     $('#edtApplied').val(calculatedApplied);
@@ -13919,7 +13918,7 @@ export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol 
  
   amount = utilityService.removeCurrency(amount, currency);
 
-  let convert = amount * rate;
+  let convert = (amount * rate).toFixed(2);
   //convert = convert.toFixed(2);
 
   if(withSymbol) {
