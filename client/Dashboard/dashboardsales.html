@@ -1,0 +1,116 @@
+<template name="dashboardsales">
+    <div class="container-fluid">
+        {{#if includeDashboard}}
+            <div class="row mb-2">
+                <div class="col-12 col-md-12">
+                    <header class="pt-2 pb-3 d-flex justify-content-center">
+                        <h2>Dashboard Sales Performance</h2>
+                    </header>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-auto col-md-2 sortable-chart-widget-js" data-default-class="col-md-2">
+                    <h3>48</h3>
+                    <br>
+                    <h6>New Leads this month</h6>
+
+                </div>
+                <div class="col-auto col-md-2 sortable-chart-widget-js" data-default-class="col-md-2">
+                    <h3>8</h3>
+                    <br>
+                    <h6>New Deals this month</h6>
+
+                </div>
+                <div class="col-auto col-md-2 sortable-chart-widget-js" data-default-class="col-md-2">
+                    <h3>$6480</h3>
+                    <br>
+                    <h6>Closed Deals this month</h6>
+
+                </div>
+                <div class="col-auto col-md-2 sortable-chart-widget-js" data-default-class="col-md-2">
+                    <h3>$7897984</h3>
+                    <br>
+                    <h6>Closed Deals Total</h6>
+
+                </div>
+                <div class="col-auto col-md-2 sortable-chart-widget-js" data-default-class="col-md-2">
+                    <h3>67% </h3>
+                    <br>
+                    <h6>Win Rate</h6>
+
+                </div>
+                <div class="col-auto col-md-2 sortable-chart-widget-js" data-default-class="col-md-2">
+                    <h3>69</h3>
+                    <br>
+                    <h6>60 days Average Sales Cycle</h6>
+
+                </div>
+
+
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-auto col-md-6 sortable-chart-widget-js" data-default-class="col-md-6">
+                    <h3>Chart here</h3>
+                    {{> charts}}
+                   
+                </div>
+
+                <div class="col-auto col-md-6 sortable-chart-widget-js" data-default-class="col-md-6">
+                    <h3>Tasks Here</h3>
+                    {{> calendar}}
+                   
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-auto col-md-6 sortable-chart-widget-js" data-default-class="col-md-6">
+                    <h3>Speedometers here</h3>
+                   
+                </div>
+
+                <div class="col-auto col-md-6 sortable-chart-widget-js" data-default-class="col-md-6">
+                    <h3>Calendar here</h3>
+                   
+                </div>
+            </div> 
+
+
+
+
+            
+
+
+
+            <!-- <div class="row">
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> cashchart}}
+                </div>
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> profitabilitychart}}
+                </div>
+                <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                    {{> incomechart}}
+                </div>
+            </div> -->
+            <!-- <div class="row" style="margin-top: 20px;">
+                    <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                        {{> performancechart}}
+                    </div>
+                    <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                        {{> balancesheetchart}}
+                    </div>
+                    <div class="col-auto col-md-4 sortable-chart-widget-js" data-default-class="col-md-6">
+                        {{> positionchart}}
+                    </div>
+            </div>-->
+        {{/if}}
+    </div>
+</template>
+
+
