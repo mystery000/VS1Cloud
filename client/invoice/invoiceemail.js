@@ -103,7 +103,7 @@ Template.invoiceemail.onRendered(function() {
     };
 
     templateObject.resetData = function (dataVal) {
-        window.open('/invoiceemail?page=last','_self');
+        location.reload();
     }
 
     templateObject.getAllSalesOrderData = function () {
@@ -133,8 +133,9 @@ Template.invoiceemail.onRendered(function() {
             if (data.Params.IgnoreDates == true) {
                 $('#dateFrom').attr('readonly', true);
                 $('#dateTo').attr('readonly', true);
-                FlowRouter.go('/invoiceemail?ignoredate=true');
             } else {
+              $('#dateFrom').attr('readonly', false);
+              $('#dateTo').attr('readonly', false);
                 $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                 $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
             }
@@ -261,10 +262,7 @@ Template.invoiceemail.onRendered(function() {
                         }, 100);
                       },
                       "fnInitComplete": function () {
-                        let urlParametersPage = FlowRouter.current().queryParams.page;
-                        if (urlParametersPage) {
-                            this.fnPageChange('last');
-                        }
+                        this.fnPageChange('last');
                           $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
                           $('.myvarFilterForm').appendTo(".colDateFilter");
                       }
@@ -454,10 +452,7 @@ setTimeout(function () {
             }, 100);
           },
           "fnInitComplete": function () {
-            let urlParametersPage = FlowRouter.current().queryParams.page;
-            if (urlParametersPage) {
-                this.fnPageChange('last');
-            }
+            this.fnPageChange('last');
               $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
               $('.myvarFilterForm').appendTo(".colDateFilter");
           }
@@ -642,10 +637,7 @@ templateObject.tableheaderrecords.set(tableHeaderList);
                         }, 100);
                       },
                       "fnInitComplete": function () {
-                        let urlParametersPage = FlowRouter.current().queryParams.page;
-                        if (urlParametersPage) {
-                            this.fnPageChange('last');
-                        }
+                        this.fnPageChange('last');
                           $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistemail_filter");
                           $('.myvarFilterForm').appendTo(".colDateFilter");
                       }
@@ -723,7 +715,7 @@ templateObject.tableheaderrecords.set(tableHeaderList);
   templateObject.getAllFilterInvoiceEmailData = function(fromDate, toDate, ignoreDate) {
       sideBarService.getAllInvoiceList(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
           addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function(datareturn) {
-              window.open('/invoiceemail?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate=' + ignoreDate, '_self');
+              location.reload();
           }).catch(function(err) {
               location.reload();
           });

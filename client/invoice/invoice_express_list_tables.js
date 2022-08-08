@@ -123,7 +123,7 @@ Template.invoicelist.onRendered(function () {
     };
 
     templateObject.resetData = function (dataVal) {
-        window.open('/invoicelist?page=last', '_self');
+        location.reload();
     }
 
     templateObject.getAllInvoiceData = function () {
@@ -153,8 +153,9 @@ Template.invoicelist.onRendered(function () {
                     if (data.Params.IgnoreDates == true) {
                         $('#dateFrom').attr('readonly', true);
                         $('#dateTo').attr('readonly', true);
-                        FlowRouter.go('/invoicelist?ignoredate=true');
                     } else {
+                        $('#dateFrom').attr('readonly', false);
+                        $('#dateTo').attr('readonly', false);
                         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                     }
@@ -319,7 +320,7 @@ Template.invoicelist.onRendered(function () {
 
                                  let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                  let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                 if(checkurlIgnoreDate == 'true'){
+                                 if(data.Params.IgnoreDates == true){
                                    sideBarService.getAllTInvoiceListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                      getVS1Data('TInvoiceList').then(function (dataObjectold) {
                                        if(dataObjectold.length == 0){
@@ -387,10 +388,7 @@ Template.invoicelist.onRendered(function () {
                                 }, 100);
                             },
                             "fnInitComplete": function () {
-                              let urlParametersPage = FlowRouter.current().queryParams.page;
-                              if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                                  this.fnPageChange('last');
-                              }
+                              this.fnPageChange('last');
                                 $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
                                 $('.myvarFilterForm').appendTo(".colDateFilter");
                             },
@@ -480,8 +478,9 @@ Template.invoicelist.onRendered(function () {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    FlowRouter.go('/invoicelist?ignoredate=true');
                 } else {
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
@@ -647,7 +646,7 @@ Template.invoicelist.onRendered(function () {
 
                              let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                             if(checkurlIgnoreDate == 'true'){
+                             if(data.Params.IgnoreDates == true){
                                sideBarService.getAllTInvoiceListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TInvoiceList').then(function (dataObjectold) {
                                    if(dataObjectold.length == 0){
@@ -715,10 +714,7 @@ Template.invoicelist.onRendered(function () {
                             }, 100);
                         },
                         "fnInitComplete": function () {
-                          let urlParametersPage = FlowRouter.current().queryParams.page;
-                          if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                              this.fnPageChange('last');
-                          }
+                          this.fnPageChange('last');
                             $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
@@ -804,8 +800,9 @@ Template.invoicelist.onRendered(function () {
               if (data.Params.IgnoreDates == true) {
                   $('#dateFrom').attr('readonly', true);
                   $('#dateTo').attr('readonly', true);
-                  FlowRouter.go('/invoicelist?ignoredate=true');
               } else {
+                  $('#dateFrom').attr('readonly', false);
+                  $('#dateTo').attr('readonly', false);
                   $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                   $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
               }
@@ -943,7 +940,7 @@ Template.invoicelist.onRendered(function () {
 
                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                           if(checkurlIgnoreDate == 'true'){
+                           if(data.Params.IgnoreDates == true){
                              sideBarService.getAllTInvoiceListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                getVS1Data('TInvoiceList').then(function (dataObjectold) {
                                  if(dataObjectold.length == 0){
@@ -1011,10 +1008,7 @@ Template.invoicelist.onRendered(function () {
                           }, 100);
                       },
                       "fnInitComplete": function () {
-                        let urlParametersPage = FlowRouter.current().queryParams.page;
-                        if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                            this.fnPageChange('last');
-                        }
+                        this.fnPageChange('last');
                           $("<button class='btn btn-primary btnRefreshInvoiceList' type='button' id='btnRefreshInvoiceList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelist_filter");
                           $('.myvarFilterForm').appendTo(".colDateFilter");
                       },
@@ -1216,7 +1210,7 @@ Template.invoicelist.onRendered(function () {
     templateObject.getAllFilterInvoiceData = function(fromDate, toDate, ignoreDate) {
         sideBarService.getAllTInvoiceListData(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
             addVS1Data('TInvoiceList', JSON.stringify(data)).then(function(datareturn) {
-                window.open('/invoicelist?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate=' + ignoreDate, '_self');
+                location.reload();
             }).catch(function(err) {
                 location.reload();
             });
