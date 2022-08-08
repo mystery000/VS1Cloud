@@ -273,7 +273,7 @@ Template.newsidenav.onRendered(function() {
               $('#sidenavshipping').removeClass('active');
               $('#sidenavreceipt').removeClass('active');
               $('.collapse').collapse('hide');
-          }         
+          }
             else if ((currentLoc == "/appointments") || (currentLoc == "/appointmentlist") || (currentLoc == "/appointmenttimelist")) {
                 $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');
@@ -1933,7 +1933,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -1971,7 +1971,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getAllBankAccountReportData = function() {
 
-        sideBarService.getAllBankAccountDetails(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllBankAccountDetails(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2051,7 +2051,7 @@ Template.newsidenav.onRendered(function() {
         //
         // });
 
-        sideBarService.getAllTInvoiceListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTInvoiceListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2125,7 +2125,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTRefundSaleListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTRefundSaleListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2199,7 +2199,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2328,7 +2328,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTPurchaseOrderListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTPurchaseOrderListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2403,7 +2403,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTReconcilationListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTReconcilationListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2444,7 +2444,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getAllTbillReportData = function() {
 
-        sideBarService.getAllPurchaseOrderListAll(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllPurchaseOrderListAll(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2484,7 +2484,7 @@ Template.newsidenav.onRendered(function() {
     templateObject.getAllPurchasesData = function() {
 
 
-        sideBarService.getAllPurchasesList(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllPurchasesList(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2522,7 +2522,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getAllAwaitingSupplierPaymentData = function() {
 
-        sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0,'').then(function(data) {
+        sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, true,initialReportLoad,0,'').then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2560,7 +2560,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getAllAwaitingCustomerPaymentData = function() {
 
-        sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, false,initialReportLoad,0,'').then(function(data) {
+        sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, true,initialReportLoad,0,'').then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2632,7 +2632,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllChequeListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllChequeListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2914,7 +2914,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTQuoteListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTQuoteListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3006,7 +3006,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllBillListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllBillListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3080,7 +3080,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getTCreditListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getTCreditListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3132,7 +3132,7 @@ Template.newsidenav.onRendered(function() {
         //
         // });
 
-        sideBarService.getAllTPurchasesBackOrderReportData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTPurchasesBackOrderReportData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3174,7 +3174,7 @@ Template.newsidenav.onRendered(function() {
     templateObject.getAllTSalesListData = function() {
 
 
-        sideBarService.getSalesListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getSalesListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3209,7 +3209,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTSalesOrderListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTSalesOrderListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3283,7 +3283,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getTAppointmentListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3320,7 +3320,7 @@ Template.newsidenav.onRendered(function() {
 
     }
     templateObject.getAllAppointmentListData = function() {
-      sideBarService.getTAppointmentListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+      sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
         countObjectTimes++;
         progressPercentage = (countObjectTimes * 100) / allDataToLoad;
         $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3469,7 +3469,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getTPaymentListData = function() {
 
-        sideBarService.getTPaymentList(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3613,7 +3613,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3688,7 +3688,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3802,7 +3802,7 @@ Template.newsidenav.onRendered(function() {
 
         });
 
-        sideBarService.getAllTBankDepositListData(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+        sideBarService.getAllTBankDepositListData(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
