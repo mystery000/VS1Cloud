@@ -22,7 +22,7 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
-import { calculateApplied, convertToForeignAmount, onExchangeRateChange, _setTmpAppliedAmount } from "./supplierPaymentcard";
+import { calculateApplied, convertToForeignAmount, onExchangeRateChange, onForeignTableInputChange, _setTmpAppliedAmount } from "./supplierPaymentcard";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -3045,6 +3045,7 @@ Template.paymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
+                        _setTmpAppliedAmount(record.applied);
                         $('#edtCustomerName').val(data.fields.CompanyName);
                         $('#edtSelectBankAccountName').val(data.fields.AccountName);
                         $('#sltPaymentMethod').val(data.fields.PaymentMethodName);
@@ -3748,7 +3749,7 @@ Template.paymentcard.onRendered(() => {
 
                 };
                 templateObject.record.set(record);
-
+                _setTmpAppliedAmount(record.applied);
                 $('#edtCustomerName').val(data.fields.CustomerName);
                 $('#sltPaymentMethod').val(data.fields.PayMethod);
                 $('#sltDept').val(data.fields.DeptClassName);
@@ -3868,6 +3869,7 @@ Template.paymentcard.onRendered(() => {
 
                 };
                 templateObject.record.set(record);
+                _setTmpAppliedAmount(record.applied);
                 $('#edtCustomerName').val(data.fields.CustomerName);
                 $('#sltPaymentMethod').val(data.fields.PayMethod);
                 $('#sltDept').val(data.fields.DeptClassName);
@@ -3991,6 +3993,7 @@ Template.paymentcard.onRendered(() => {
 
                         };
 
+                        _setTmpAppliedAmount(record.applied);
                         let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                         $('#sltPaymentMethod').val(getPaymentMethodVal);
 
@@ -4114,7 +4117,7 @@ Template.paymentcard.onRendered(() => {
 
 
                             templateObject.record.set(record);
-
+                            _setTmpAppliedAmount(record.applied);
                             let getDepartmentVal = Session.get('department') || useData[d].fields.DeptClassName || defaultDept;
 
                             $('#edtCustomerName').val(useData[d].fields.CustomerName);
@@ -4229,6 +4232,7 @@ Template.paymentcard.onRendered(() => {
                                 })
 
                             };
+                            _setTmpAppliedAmount(record.applied);
 
                             let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                             $('#sltPaymentMethod').val(getPaymentMethodVal);
@@ -4346,7 +4350,7 @@ Template.paymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
-
+                    _setTmpAppliedAmount(record.applied);
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                     await templateObject.getLastPaymentData();
                     $('#edtCustomerName').val(data.fields.CustomerName);
@@ -4502,6 +4506,7 @@ Template.paymentcard.onRendered(() => {
                     }) || 0
 
                 };
+                _setTmpAppliedAmount(record.applied);
 
                 let getPaymentMethodVal = Session.get('paymentmethod') || checkpayment || 'Cash';
                 $('#sltPaymentMethod').val(getPaymentMethodVal);
@@ -4675,6 +4680,7 @@ Template.paymentcard.onRendered(() => {
 
                 };
                 templateObject.record.set(record);
+                _setTmpAppliedAmount(record.applied);
 
                 let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
 
@@ -4807,6 +4813,7 @@ Template.paymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
+                    _setTmpAppliedAmount(record.applied);
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
 
                     let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
@@ -4977,6 +4984,7 @@ Template.paymentcard.onRendered(() => {
 
         $("#form :input").prop("disabled", false);
         templateObject.record.set(paymentrecord);
+        _setTmpAppliedAmount(paymentrecord.applied);
         let getDepartmentVal = Session.get('department') || defaultDept;
 
         let getPaymentMethodVal = Session.get('paymentmethod') || '';
@@ -5165,9 +5173,14 @@ Template.paymentcard.onRendered(() => {
 
             setTimeout(() => {
                 if (list.length > 0) {
-                    let currentApplied = $('.lead').text().replace(/[^0-9.-]+/g, "");
-                    currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0])
-                    let total = currentApplied;
+                    // let currentApplied = $('.lead').text().replace(/[^0-9.-]+/g, "");
+                    // currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0])
+                    // let total = currentApplied;
+
+                    let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
+                    currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
+                    let total = parseFloat(currentApplied);
+
                     for (let x = 0; x < list.length; x++) {
                         var rowData =   '<tr class="dnd-moved dynamic-converter-js" id="' + list[x].awaitingId + '" name="' + list[x].awaitingId + '">\n' +
                                         '	<td contenteditable="false" class="colTransDate">' + list[x].date + '</td>\n' +
@@ -5208,8 +5221,9 @@ Template.paymentcard.onRendered(() => {
                         }
                         //$('.appliedAmount').text(Currency + total.toFixed(2));
                     }
-                    $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-                    $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(total));
+                    console.log("total", total);
+                    $('.appliedAmount').text(total.toFixed(2));
+                    $('#edtPaymentAmount').val(total.toFixed(2));
                 }
              }, 300);
            
@@ -9216,5 +9230,17 @@ Template.paymentcard.events({
           $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
         }, 500);
 
-      }
+      },
+      "change #tblPaymentcard input.linePaymentamount.convert-to.foreign": (e, ui) => {
+
+        setTimeout(() => {
+            const calculatedAppliedAmount = onForeignTableInputChange("#tblPaymentcard input.linePaymentamount.convert-to.foreign");
+            const currency = $('#sltCurrency').attr("currency-symbol");
+
+            $(e.currentTarget).val(currency + $(e.currentTarget).val().replace(/[^0-9.-]+/g, ""));
+    
+            $('#edtApplied').val(currency + calculatedAppliedAmount);
+            $('.appliedAmount').text(currency + calculatedAppliedAmount);  
+        }, 500)
+    }
 });

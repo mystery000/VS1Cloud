@@ -49,8 +49,17 @@ Template.supplierpaymentcard.onCreated(() => {
 
 
 export const _setTmpAppliedAmount = (amount = 0) => {
+  
+  if(isNaN(amount)) {
+    // this will convert the string into a number / float
+    amount = parseFloat(amount.replace(/[^0-9.-]+/g, ""));
+  }
   return localStorage.setItem('APPLIED_AMOUNT', amount);
 } 
+
+export const _getTmpAppliedAmount = () => {
+  return localStorage.getItem('APPLIED_AMOUNT');
+}
 
 Template.supplierpaymentcard.onRendered(() => {
   _setTmpAppliedAmount();
@@ -3507,7 +3516,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
-                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+                //localStorage.setItem('APPLIED_AMOUNT', record.applied);
+                _setTmpAppliedAmount(record.applied);
                 //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
                 let getDepartmentVal =
                   Session.get("department") || data.fields.DeptClassName;
@@ -13873,18 +13883,30 @@ Template.supplierpaymentcard.events({
       $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
     }, 500);
 
-  }
+  },
+  "change #tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to": (e, ui) => {
+   setTimeout(() => {
+    const calculatedAppliedAmount = onForeignTableInputChange();
+    const currency = $('#sltCurrency').attr("currency-symbol");
+
+    $(e.currentTarget).val(currency + $(e.currentTarget).val().replace(/[^0-9.-]+/g, ""));
+
+  
+    $('#edtApplied').val(currency + calculatedAppliedAmount);
+    $('.appliedAmount').text(currency + calculatedAppliedAmount);
+   }, 500);
+  },
 });
 
 
 export function onExchangeRateChange(e) {
  const templateObject = Template.instance();
-  const mainValue = localStorage.getItem('APPLIED_AMOUNT') || 0.0;
+  const mainValue = parseFloat($('#edtPaymentAmount').val().replace(/[^0-9.-]+/g, "")) ;
   const rate = parseFloat($("#exchange_rate").val());
   const currency = getCurrentCurrencySymbol();
 
-  let foreignAmount = (rate * utilityService.removeCurrency(mainValue)).toFixed(2);
-  let appliedAmount = (rate * utilityService.removeCurrency(mainValue)).toFixed(2);
+  let foreignAmount = (rate * mainValue).toFixed(2);
+  let appliedAmount = (rate * mainValue).toFixed(2);
   // data.applied = rate * applied;
   // data.foreignAmount = rate * applied;
 
@@ -13911,6 +13933,25 @@ export function calculateApplied() {
     $('#edtApplied').val(calculatedApplied);
     $('.appliedAmount').text(calculatedApplied);
 }
+
+export const onForeignTableInputChange = (selector = "#tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to") => {
+  let _amounts = $(selector);
+  let total = 0.0;
+
+  _amounts.each((index, element) => {
+    let value = $(element).val();
+
+    if (isNaN(value)) {
+      value = parseFloat(value.replace(/[^0-9.-]+/g, ""));
+    } else {
+      value = parseFloat(value);
+    }
+
+    total += value;
+  });
+
+  return total;
+};
 
 export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol = false) {
   let utilityService = new UtilityService();
