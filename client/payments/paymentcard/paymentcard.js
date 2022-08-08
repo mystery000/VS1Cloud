@@ -9231,16 +9231,16 @@ Template.paymentcard.events({
         }, 500);
 
       },
-      "change #tblPaymentcard input.linePaymentamount.convert-to.foreign": (e, ui) => {
+    //   "change #tblPaymentcard input.linePaymentamount.convert-to.foreign": (e, ui) => {
 
-        setTimeout(() => {
-            const calculatedAppliedAmount = onForeignTableInputChange("#tblPaymentcard input.linePaymentamount.convert-to.foreign");
-            const currency = $('#sltCurrency').attr("currency-symbol");
+    //     setTimeout(() => {
+    //         const calculatedAppliedAmount = onForeignTableInputChange("#tblPaymentcard input.linePaymentamount.convert-to.foreign");
+    //         const currency = $('#sltCurrency').attr("currency-symbol");
 
-            $(e.currentTarget).val(currency + $(e.currentTarget).val().replace(/[^0-9.-]+/g, ""));
+    //         $(e.currentTarget).val(currency + $(e.currentTarget).val().replace(/[^0-9.-]+/g, ""));
     
-            $('#edtApplied').val(currency + calculatedAppliedAmount);
-            $('.appliedAmount').text(currency + calculatedAppliedAmount);  
-        }, 500)
-    }
+    //         $('#edtApplied').val(currency + calculatedAppliedAmount);
+    //         $('.appliedAmount').text(currency + calculatedAppliedAmount);  
+    //     }, 500)
+    // }
 });
