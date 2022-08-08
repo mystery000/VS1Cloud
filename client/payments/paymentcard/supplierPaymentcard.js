@@ -604,8 +604,149 @@ Template.supplierpaymentcard.onRendered(() => {
         });
 
 
-
-    templateObject.getTemplateInfoNew();
+        templateObject.getTemplateInfoNew = function(){
+          $('.fullScreenSpin').css('display', 'inline-block');
+          getVS1Data('TTemplateSettings').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+                    
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                     
+                      if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                      {
+                               if(data.ttemplatesettings[i].fields.Template == 1)
+                               {       
+                                       $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                       if(data.ttemplatesettings[i].fields.Active == true)
+                                       {
+                                         $('#Supplier_Payments_1').attr('checked','checked');
+                                       }
+                                     
+                               }
+                               if(data.ttemplatesettings[i].fields.Template == 2)
+                               {
+                                     $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_2').attr('checked','checked');
+                                     }
+                               }
+    
+                               if(data.ttemplatesettings[i].fields.Template == 3)
+                               {
+                                     $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_3').attr('checked','checked');
+                                     }
+                               } 
+    
+    
+                      }
+              
+                 
+    
+                    }
+                    
+                        
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function (err) {
+                  $('.fullScreenSpin').css('display', 'none');
+                });
+            }else{ 
+                    let data = JSON.parse(dataObject[0].data);    
+                  
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                     
+                      if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                      {
+                               if(data.ttemplatesettings[i].fields.Template == 1)
+                               {       
+                                       $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                       if(data.ttemplatesettings[i].fields.Active == true)
+                                       {
+                                         $('#Supplier_Payments_1').attr('checked','checked');
+                                       }
+                                     
+                               }
+                               if(data.ttemplatesettings[i].fields.Template == 2)
+                               {
+                                     $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_2').attr('checked','checked');
+                                     }
+                               }
+    
+                               if(data.ttemplatesettings[i].fields.Template == 3)
+                               {
+                                     $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_3').attr('checked','checked');
+                                     }
+                               } 
+    
+    
+                      }
+                 
+                 
+    
+                   }
+                    $('.fullScreenSpin').css('display', 'none');
+            }
+          }).catch(function(err) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                  
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                     
+      
+                         
+                       if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                       {
+                                if(data.ttemplatesettings[i].fields.Template == 1)
+                                {       
+                                        $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                        if(data.ttemplatesettings[i].fields.Active == true)
+                                        {
+                                          $('#Supplier_Payments_1').attr('checked','checked');
+                                        }
+                                      
+                                }
+                                if(data.ttemplatesettings[i].fields.Template == 2)
+                                {
+                                      $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Supplier_Payments_2').attr('checked','checked');
+                                      }
+                                }
+    
+                                if(data.ttemplatesettings[i].fields.Template == 3)
+                                {
+                                      $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Supplier_Payments_3').attr('checked','checked');
+                                      }
+                                } 
+    
+    
+                       }
+                 
+    
+                    }
+                    $('.fullScreenSpin').css('display', 'none');
+          }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+          });
+        });
+    
+        };
+    
+        templateObject.getTemplateInfoNew();
 
 
     function updateTemplate1(object_invoce) {
