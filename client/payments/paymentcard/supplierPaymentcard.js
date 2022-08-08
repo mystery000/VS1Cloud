@@ -11,6 +11,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 import LoadingOverlay from "../../LoadingOverlay";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -45,7 +46,14 @@ Template.supplierpaymentcard.onCreated(() => {
   templateObject.stripe_fee_method = new ReactiveVar();
 });
 
+
+
+export const _setTmpAppliedAmount = (amount = 0) => {
+  return localStorage.setItem('APPLIED_AMOUNT', amount);
+} 
+
 Template.supplierpaymentcard.onRendered(() => {
+  _setTmpAppliedAmount();
   const dataTableList = [];
   const tableHeaderList = [];
   LoadingOverlay.show();
@@ -326,6 +334,7 @@ Template.supplierpaymentcard.onRendered(() => {
 
             };
         }
+      
         object_invoce.push(item_supplier);
 
         $("#templatePreviewModal .field_payment").hide();
@@ -567,149 +576,177 @@ Template.supplierpaymentcard.onRendered(() => {
      };
 
 
-     templateObject.getTemplateInfoNew = function(){
-      $('.fullScreenSpin').css('display', 'inline-block');
-      getVS1Data('TTemplateSettings').then(function(dataObject) {
-        if (dataObject.length == 0) {
-            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-                
-                for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                 
-                  if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
-                  {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {       
-                                   $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Supplier_Payments_1').attr('checked','checked');
-                                   }
-                                 
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Supplier_Payments_2').attr('checked','checked');
-                                 }
-                           }
+        getVS1Data('TemplateSettings').then(function(dataObject) {
 
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Supplier_Payments_3').attr('checked','checked');
-                                 }
-                           } 
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+            if(data.fields)
+            {
+                var supplier_payments = data.fields.supplier_payments;
 
+                $("[id='Supplier Payments_"+supplier_payments+"']").attr("checked", "checked");
+                $('#choosetemplate').attr("checked", "checked");
 
-                  }
-          
-             
-
+                if($('#choosetemplate').is(':checked'))
+                {
+                   // $('#templateselection').modal('show');
                 }
-                
+                else
+                {
+                $('#templateselection').modal('hide');
+                }
+
+            }
+
+
+        });
+
+
+        templateObject.getTemplateInfoNew = function(){
+          $('.fullScreenSpin').css('display', 'inline-block');
+          getVS1Data('TTemplateSettings').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
                     
-                $('.fullScreenSpin').css('display', 'none');
-            }).catch(function (err) {
-              $('.fullScreenSpin').css('display', 'none');
-            });
-        }else{ 
-                let data = JSON.parse(dataObject[0].data);    
-              
-                for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                 
-                  if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
-                  {
-                           if(data.ttemplatesettings[i].fields.Template == 1)
-                           {       
-                                   $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                   if(data.ttemplatesettings[i].fields.Active == true)
-                                   {
-                                     $('#Supplier_Payments_1').attr('checked','checked');
-                                   }
-                                 
-                           }
-                           if(data.ttemplatesettings[i].fields.Template == 2)
-                           {
-                                 $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Supplier_Payments_2').attr('checked','checked');
-                                 }
-                           }
-
-                           if(data.ttemplatesettings[i].fields.Template == 3)
-                           {
-                                 $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                 if(data.ttemplatesettings[i].fields.Active == true)
-                                 {
-                                   $('#Supplier_Payments_3').attr('checked','checked');
-                                 }
-                           } 
-
-
-                  }
-             
-             
-
-               }
-                $('.fullScreenSpin').css('display', 'none');
-        }
-      }).catch(function(err) {
-      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-              
-                for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                 
-  
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
                      
-                   if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
-                   {
-                            if(data.ttemplatesettings[i].fields.Template == 1)
-                            {       
-                                    $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
-                                    if(data.ttemplatesettings[i].fields.Active == true)
-                                    {
-                                      $('#Supplier_Payments_1').attr('checked','checked');
-                                    }
-                                  
-                            }
-                            if(data.ttemplatesettings[i].fields.Template == 2)
-                            {
-                                  $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Supplier_Payments_2').attr('checked','checked');
-                                  }
-                            }
-
-                            if(data.ttemplatesettings[i].fields.Template == 3)
-                            {
-                                  $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
-                                  if(data.ttemplatesettings[i].fields.Active == true)
-                                  {
-                                    $('#Supplier_Payments_3').attr('checked','checked');
-                                  }
-                            } 
-
-
+                      if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                      {
+                               if(data.ttemplatesettings[i].fields.Template == 1)
+                               {       
+                                       $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                       if(data.ttemplatesettings[i].fields.Active == true)
+                                       {
+                                         $('#Supplier_Payments_1').attr('checked','checked');
+                                       }
+                                     
+                               }
+                               if(data.ttemplatesettings[i].fields.Template == 2)
+                               {
+                                     $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_2').attr('checked','checked');
+                                     }
+                               }
+    
+                               if(data.ttemplatesettings[i].fields.Template == 3)
+                               {
+                                     $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_3').attr('checked','checked');
+                                     }
+                               } 
+    
+    
+                      }
+              
+                 
+    
+                    }
+                    
+                        
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function (err) {
+                  $('.fullScreenSpin').css('display', 'none');
+                });
+            }else{ 
+                    let data = JSON.parse(dataObject[0].data);    
+                  
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                     
+                      if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                      {
+                               if(data.ttemplatesettings[i].fields.Template == 1)
+                               {       
+                                       $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                       if(data.ttemplatesettings[i].fields.Active == true)
+                                       {
+                                         $('#Supplier_Payments_1').attr('checked','checked');
+                                       }
+                                     
+                               }
+                               if(data.ttemplatesettings[i].fields.Template == 2)
+                               {
+                                     $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_2').attr('checked','checked');
+                                     }
+                               }
+    
+                               if(data.ttemplatesettings[i].fields.Template == 3)
+                               {
+                                     $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_3').attr('checked','checked');
+                                     }
+                               } 
+    
+    
+                      }
+                 
+                 
+    
                    }
-             
-
-                }
-                $('.fullScreenSpin').css('display', 'none');
-      }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
-      });
-    });
-
-    };
-
-    templateObject.getTemplateInfoNew();
+                    $('.fullScreenSpin').css('display', 'none');
+            }
+          }).catch(function(err) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                  
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
+                     
+      
+                         
+                       if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                       {
+                                if(data.ttemplatesettings[i].fields.Template == 1)
+                                {       
+                                        $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                        if(data.ttemplatesettings[i].fields.Active == true)
+                                        {
+                                          $('#Supplier_Payments_1').attr('checked','checked');
+                                        }
+                                      
+                                }
+                                if(data.ttemplatesettings[i].fields.Template == 2)
+                                {
+                                      $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Supplier_Payments_2').attr('checked','checked');
+                                      }
+                                }
+    
+                                if(data.ttemplatesettings[i].fields.Template == 3)
+                                {
+                                      $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Supplier_Payments_3').attr('checked','checked');
+                                      }
+                                } 
+    
+    
+                       }
+                 
+    
+                    }
+                    $('.fullScreenSpin').css('display', 'none');
+          }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+          });
+        });
+    
+        };
+    
+        templateObject.getTemplateInfoNew();
 
 
     function updateTemplate1(object_invoce) {
@@ -3323,7 +3360,7 @@ Template.supplierpaymentcard.onRendered(() => {
       }
     });
 
-  var url = FlowRouter.current().path;
+  let url = FlowRouter.current().path;
   if (url.indexOf("?id=") > 0) {
     var getsale_id = url.split("?id=");
     $("#addRow").attr("disabled", true);
@@ -3470,6 +3507,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
                 //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
                 let getDepartmentVal =
                   Session.get("department") || data.fields.DeptClassName;
@@ -3753,6 +3791,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 //$('#edtSupplierName').editableSelect('add', useData[d].fields.CompanyName);
                 $("#edtSupplierName").val(useData[d].fields.CompanyName);
                 $("#sltDepartment").val(useData[d].fields.DeptClassName);
@@ -4036,6 +4076,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
                   $("#edtSupplierName").val(data.fields.CompanyName);
                   $("#sltDepartment").val(data.fields.DeptClassName);
@@ -4308,6 +4350,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
               $("#edtSupplierName").val(data.fields.CompanyName);
               $("#sltDepartment").val(data.fields.DeptClassName);
@@ -4535,6 +4579,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (data.fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -4720,6 +4766,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (useData[d].fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -4904,6 +4952,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   if (data.fields.SupplierInvoiceNumber == "") {
                     templateObject.isInvoiceNo.set(false);
                   }
@@ -5093,6 +5143,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -5276,6 +5328,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -5459,6 +5513,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (useData[d].fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -5641,6 +5697,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   if (data.fields.SupplierInvoiceNumber == "") {
                     templateObject.isInvoiceNo.set(false);
                   }
@@ -5828,6 +5886,8 @@ Template.supplierpaymentcard.onRendered(() => {
               }),
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             if (data.fields.SupplierInvoiceNumber == "") {
               templateObject.isInvoiceNo.set(false);
             }
@@ -6012,6 +6072,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 let getDepartmentVal =
                   Session.get("department") ||
                   data.fields.DeptClassName ||
@@ -6195,6 +6257,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
 
                 let getDepartmentVal =
                   Session.get("department") ||
@@ -6376,6 +6440,8 @@ Template.supplierpaymentcard.onRendered(() => {
               }),
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
             $("#edtSupplierName").val(data.fields.ClientName);
             let getDepartmentVal =
@@ -6625,6 +6691,8 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#sltPaymentMethod").val(paymentMethodData);
 
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (clientList) {
             for (var i = 0; i < clientList.length; i++) {
               if (clientList[i].customername == companyName) {
@@ -6946,6 +7014,8 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#sltPaymentMethod").val(paymentMethodData);
 
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (clientList) {
             for (var i = 0; i < clientList.length; i++) {
               if (clientList[i].customername == companyName) {
@@ -7105,6 +7175,8 @@ Template.supplierpaymentcard.onRendered(() => {
             }),
           };
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (data.fields.SupplierInvoiceNumber == "") {
             templateObject.isInvoiceNo.set(false);
           }
@@ -7282,6 +7354,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     ) || 0,
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
 
                 //
               });
@@ -7507,6 +7581,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -7686,6 +7762,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 utilityService.modifynegativeCurrencyFormat(amountData) || 0,
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             if (data.fields.SupplierInvoiceNumber == "") {
               templateObject.isInvoiceNo.set(false);
             }
@@ -7864,6 +7942,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
               let getDepartmentVal =
                 Session.get("department") ||
@@ -8040,6 +8120,8 @@ Template.supplierpaymentcard.onRendered(() => {
               utilityService.modifynegativeCurrencyFormat(amountData) || 0,
           };
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (data.fields.SupplierInvoiceNumber == "") {
             templateObject.isInvoiceNo.set(false);
           }
@@ -8236,6 +8318,8 @@ Template.supplierpaymentcard.onRendered(() => {
 
     // $("#form :input").prop("disabled", false);
     templateObject.record.set(paymentrecord);
+    localStorage.setItem('APPLIED_AMOUNT', paymentrecord.applied);
+
     let getDepartmentVal = Session.get("department") || defaultDept;
     let getPaymentMethodVal = "";
 
@@ -8479,105 +8563,111 @@ Template.supplierpaymentcard.onRendered(() => {
   });
 
   templateObject.addExpenseToTable = (withForeignAmount = false) => {
-    $('#tblSupplierPaymentcard tbody tr').remove(); // first lets clean it
+    let url = window.location.href;
 
-    /**
-     * Now we need to add right values depending on FX currency
-     */
-     let selectedSupplierPayments = templateObject.outstandingExpenses.get();
+    if(!url.includes("?")) {
 
+      $('#tblSupplierPaymentcard tbody tr').remove(); // first lets clean it
 
-     setTimeout(() => {
-      if (selectedSupplierPayments.length > 0) {
-        let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
-        currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
-        let total = parseFloat(currentApplied);
+      /**
+       * Now we need to add right values depending on FX currency
+       */
+       let selectedSupplierPayments = templateObject.outstandingExpenses.get();
   
-        for (let x = 0; x < selectedSupplierPayments.length; x++) {
-          var rowData =
-            '<tr class="dnd-moved dynamic-converter-js" id="' +
-            selectedSupplierPayments[x].awaitingId +
-            '" name="' +
-            selectedSupplierPayments[x].awaitingId +
-            '">\n' +
-            '	<td contenteditable="false" class="colTransDate">' +
-            selectedSupplierPayments[x].date +
-            "</td>\n" +
-            '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
-            selectedSupplierPayments[x].type +
-            "</td>\n" +
-            '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
-            selectedSupplierPayments[x].awaitingId +
-            "</td>\n" +
-            '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].originalAmount +
-            "</td>\n" +
-            '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].outstandingAmount +
-            "</td>\n" +
-            '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
-            selectedSupplierPayments[x].paymentAmount +
-            '"></td>\n' +
   
-            (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
-            convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
-            '"></td>\n' : '') +
-  
-            '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].outstandingAmount +
-            "</td>\n" +
-  
-            (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
-            convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
-            "</td>\n" : '') +
-  
-            '	<td contenteditable="true" class="colComments">' +
-            selectedSupplierPayments[x].comments +
-            "</td>\n" +
-            '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
-            "</tr>";
-  
-          let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
-          let isCheckedTrue = true;
-          $(".tblSupplierPaymentcard > tbody > tr").each(function () {
-            var lineID = this.id;
-            if (lineID == checkCompareID) {
-              isCheckedTrue = false;
-            }
-          });
-          //setTimeout(function() {
-          if (isCheckedTrue) {
-            $("#tblSupplierPaymentcard tbody").append(rowData);
-            total =
-              total +
-              parseFloat(
-                selectedSupplierPayments[x].paymentAmount.replace(
-                  /[^0-9.-]+/g,
-                  ""
-                )
-              );
-          }
-          //}, 500);
-        }
-        $(".appliedAmount").text(
-          utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
-        );
-        localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-      }
-     }, 300)
-   
-
+       setTimeout(() => {
+        if (selectedSupplierPayments.length > 0) {
+          let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
+          currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
+          let total = parseFloat(currentApplied);
     
-    setTimeout(function () {
-      $("td").each(function () {
-        if (
-          $(this)
-            .text()
-            .indexOf("-" + Currency) >= 0
-        )
-          $(this).addClass("text-danger");
-      });
-    }, 1000);
+          for (let x = 0; x < selectedSupplierPayments.length; x++) {
+            var rowData =
+              '<tr class="dnd-moved dynamic-converter-js" id="' +
+              selectedSupplierPayments[x].awaitingId +
+              '" name="' +
+              selectedSupplierPayments[x].awaitingId +
+              '">\n' +
+              '	<td contenteditable="false" class="colTransDate">' +
+              selectedSupplierPayments[x].date +
+              "</td>\n" +
+              '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
+              selectedSupplierPayments[x].type +
+              "</td>\n" +
+              '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
+              selectedSupplierPayments[x].awaitingId +
+              "</td>\n" +
+              '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].originalAmount +
+              "</td>\n" +
+              '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].outstandingAmount +
+              "</td>\n" +
+              '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
+              selectedSupplierPayments[x].paymentAmount +
+              '"></td>\n' +
+    
+              (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
+              convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+              '"></td>\n' : '') +
+    
+              '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].outstandingAmount +
+              "</td>\n" +
+    
+              (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
+              convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+              "</td>\n" : '') +
+    
+              '	<td contenteditable="true" class="colComments">' +
+              selectedSupplierPayments[x].comments +
+              "</td>\n" +
+              '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+              "</tr>";
+    
+            let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
+            let isCheckedTrue = true;
+            $(".tblSupplierPaymentcard > tbody > tr").each(function () {
+              var lineID = this.id;
+              if (lineID == checkCompareID) {
+                isCheckedTrue = false;
+              }
+            });
+            //setTimeout(function() {
+            if (isCheckedTrue) {
+              $("#tblSupplierPaymentcard tbody").append(rowData);
+              total =
+                total +
+                parseFloat(
+                  selectedSupplierPayments[x].paymentAmount.replace(
+                    /[^0-9.-]+/g,
+                    ""
+                  )
+                );
+            }
+            //}, 500);
+          }
+          $(".appliedAmount").text(
+            utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+          );
+          localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
+        }
+       }, 300)
+     
+  
+      
+      setTimeout(function () {
+        $("td").each(function () {
+          if (
+            $(this)
+              .text()
+              .indexOf("-" + Currency) >= 0
+          )
+            $(this).addClass("text-danger");
+        });
+      }, 1000);
+    }
+   
   }
 
   templateObject.updateRecordsWithForeign = (override = false) => {
@@ -8664,7 +8754,7 @@ Template.supplierpaymentcard.onRendered(() => {
       $(".appliedAmount").text(
         utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
       );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
     }
     
     setTimeout(function () {
@@ -8820,6 +8910,10 @@ Template.supplierpaymentcard.helpers({
   },
   organizationurl: () => {
     return Session.get("vs1companyURL");
+  },
+
+  convertToForeignAmount: (amount) => {
+    return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
   },
 });
 
@@ -9207,9 +9301,14 @@ Template.supplierpaymentcard.events({
      * TODO: Adding this into the saved object
      */
     let foreignCurrency = $("#edtForeignCurrency").val();
-    let foreignAmount = $("#foreignAmount").val();
-    let variation = $("#edtVariation").val();
-    let appliedAmount = $("#edtApplied").val();
+    let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount 
+    let variation = $("#edtVariation").val(); // this is the variation field
+    let appliedAmount = $("#edtApplied").val(); // this is the variation field
+    let exchangeRate = $('#exchange_rate').val();
+    let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
+      $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol') 
+      || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
+
 
     let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
     // if(checkSuppInvoiceNo){
@@ -9265,8 +9364,13 @@ Template.supplierpaymentcard.events({
           Deleted: false,
           Notes: notes,
           ReferenceNo: reference,
+
+          ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+          ForeignExchangeRate: parseFloat(exchangeRate),
+          //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
         },
       };
+
       paymentService
         .saveSuppDepositData(objDetails)
         .then(function (data) {
@@ -9633,6 +9737,10 @@ Template.supplierpaymentcard.events({
             Paid: true,
             Payment: parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) || 0,
             //ForeignPayment:parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g,"")) || 0,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
         if (parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) != 0) {
@@ -9679,6 +9787,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -10055,6 +10167,10 @@ Template.supplierpaymentcard.events({
             Paid: true,
             Payment: parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) || 0,
             //ForeignPayment:parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g,"")) || 0,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
         if (parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) != 0) {
@@ -10100,6 +10216,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -10509,6 +10629,10 @@ Template.supplierpaymentcard.events({
             PayMethodName: payMethod,
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -10932,6 +11056,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -11361,6 +11489,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -11810,6 +11942,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -12235,6 +12371,7 @@ Template.supplierpaymentcard.events({
 
         return false;
       } else {
+        debugger;
         objDetails = {
           type: "TSuppPayments",
           fields: {
@@ -12246,8 +12383,7 @@ Template.supplierpaymentcard.events({
             ClientPrintName: customer,
             CompanyName: customer,
             DeptClassName: department,
-            //ForeignExchangeCode: CountryAbbr,
-            //ForeignExchangeRate: 1,
+           
             // EmployeeName: empName || ' ',
             GUILines: paymentData,
             Notes: notes,
@@ -12257,6 +12393,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -13065,7 +13205,7 @@ Template.supplierpaymentcard.events({
     $(".appliedAmount").text(
       utilityService.modifynegativeCurrencyFormat(appliedGrandTotal)
     );
-    localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(appliedGrandTotal));
+    localStorage.setItem('APPLIED_AMOUNT', appliedGrandTotal);
 
   },
   "click .btnBack": function (event) {
@@ -13115,7 +13255,7 @@ Template.supplierpaymentcard.events({
         $(".appliedAmount").text(
           utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
         );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
 
         return false;
       } else {
@@ -13403,7 +13543,7 @@ Template.supplierpaymentcard.events({
       $(".appliedAmount").text(
         utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
       );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
     } else {
       this.click;
     }
@@ -13780,6 +13920,7 @@ export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol 
   amount = utilityService.removeCurrency(amount, currency);
 
   let convert = amount * rate;
+  //convert = convert.toFixed(2);
 
   if(withSymbol) {
     return `${withSymbol}${convert}`;

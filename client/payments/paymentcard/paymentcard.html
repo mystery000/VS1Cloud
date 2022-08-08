@@ -160,6 +160,19 @@
                                                 <div class="col-6 col-md-12 col-lg-12">
                                                     {{> CurrencyWidget rate="buy"}}
                                                 </div>
+                                             
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="row">
+                                    {{#if isCurrencyEnable}}
+                                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="row">
+                
                                                 <div class="col-6 col-md-12 col-lg-12 foreign-currency-js" style="display:none">
                                                     <div class="form-group"><label>Foreign Amount</label>
                                                         <div class="input-group">
@@ -167,7 +180,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group"><label>Variation</label>
-                                                        <input class="form-control form-control" type="text" value="$0.00" data-value="0.00" id="edtVariation" name='variation'>
+                                                        <input class="form-control form-control" type="text" value="0.00" data-value="0.00" id="edtVariation" name='variation'>
                                                     </div>
                                                     <div class="form-group ">
                                                         <label>Applied</label>
@@ -818,20 +831,26 @@
 <td contenteditable="true" class="" style="text-align: right!important;">$ 0.00</td>
 <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
 </tr> -->
-                                    <!-- {{#each item in record.LineItems}}
-                                        <tr class="dnd-moved" id="{{item.transid}}" name="{{item.transid}}">
+                                    {{#each item in record.LineItems}}
+                                        <tr class="dnd-moved  dynamic-converter-js" id="{{item.transid}}" name="{{item.transid}}">
                                             <td contenteditable="false" class="colTransDate">{{item.invoicedate}}</td>
                                             <td contenteditable="false" class="colType" style="color:#00a3d3">{{item.transtype}}</td>
                                             <td contenteditable="false" class="colTransNo" style="color:#00a3d3">{{item.transid}}</td>
                                             <td contenteditable="false" class="lineOrginalamount" id="lineOrginalamount" style="text-align: right!important;">{{item.orginalamount}}</td>
                                             <td contenteditable="false" class="lineAmountdue" id="lineAmountdue" style="text-align: right!important;">{{item.amountdue}}</td>
-                                                 <td contenteditable="true" class="linePaymentamount" id="linePaymentamount" style="text-align: right!important;">{{item.paymentamount}}</td>
-                                            <td><input class="linePaymentamount highlightInput" type="text" value="{{item.paymentamount}}"></td>
-                                            <td contenteditable="false" class="lineOutstandingAmount" id="lineOutstandingAmount" style="text-align: right!important;">{{item.ouststandingamount}}</td>
+                                                 <!-- <td contenteditable="true" class="linePaymentamount" id="linePaymentamount" style="text-align: right!important;">{{item.paymentamount}}</td> -->
+                                            <td><input class="linePaymentamount highlightInput convert-from" type="text" value="{{item.paymentamount}}"></td>
+                                            {{#if isForeignEnabled}}
+                                                <td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="{{ convertToForeignAmount item.paymentamount}}"></td>
+                                            {{/if}}
+                                            <td contenteditable="false" class="lineOutstandingAmount convert-from" id="lineOutstandingAmount" style="text-align: right!important;">{{item.ouststandingamount}}</td>
+                                            {{#if isForeignEnabled}}
+                                                <td contenteditable="false" class="lineOutstandingAmount foreign convert-to" id="lineOutstandingAmount" style="text-align: right!important;">{{ convertToForeignAmount item.ouststandingamount}}</td>
+                                            {{/if}}
                                             <td contenteditable="true" class="colComments">{{item.comments}}</td>
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
                                         </tr>
-                                    {{/each}} -->
+                                    {{/each}}
                                 </tbody>
                             </table>
                             <div class="flex-grow-1">

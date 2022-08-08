@@ -1279,6 +1279,7 @@ export class UtilityService {
      * This function will convert a string to a float number
      * 
      * @param {string} stringNumber 
+     * @param {string | false} _currency
      * @returns {float}
      */
     removeCurrency(stringNumber = "$10.5", _currency = false) {

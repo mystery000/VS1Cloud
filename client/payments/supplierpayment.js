@@ -14,8 +14,11 @@ Template.supplierpayment.onCreated(function(){
     templateObject.tableheaderrecords = new ReactiveVar([]);
 });
 
+
 Template.supplierpayment.onRendered(function() {
+
     $('.fullScreenSpin').css('display','inline-block');
+   
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];
