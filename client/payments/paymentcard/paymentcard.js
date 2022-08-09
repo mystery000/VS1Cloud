@@ -5236,7 +5236,7 @@ Template.paymentcard.onRendered(() => {
                         }
                         //$('.appliedAmount').text(Currency + total.toFixed(2));
                     }
-                    console.log("total", total);
+                    
                     $('.appliedAmount').text(total.toFixed(2));
                     $('#edtPaymentAmount').val(total.toFixed(2));
                 }
