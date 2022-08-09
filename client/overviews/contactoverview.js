@@ -1733,15 +1733,7 @@ Template.contactoverview.onRendered(function () {
       .then(function (data) {
         addVS1Data("TERPCombinedContactsVS1", JSON.stringify(data))
           .then(function (datareturn) {
-            window.open(
-              "/contactoverview?toDate=" +
-                toDate +
-                "&fromDate=" +
-                fromDate +
-                "&ignoredate=" +
-                ignoreDate,
-              "_self"
-            );
+            location.reload();
           })
           .catch(function (err) {
             location.reload();

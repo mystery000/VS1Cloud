@@ -80,20 +80,20 @@ Template.billcard.onRendered(() => {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-                  
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                    
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'bill')
                     {
-                        
+
                          if(data.ttemplatesettings[i].fields.Template == 1)
-                         {       
+                         {
                                  $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
                                  if(data.ttemplatesettings[i].fields.Active == true)
                                  {
                                     $('#Bills_1').attr('checked','checked');
                                  }
-                                
+
                          }
                          if(data.ttemplatesettings[i].fields.Template == 2)
                          {
@@ -115,31 +115,31 @@ Template.billcard.onRendered(() => {
 
 
                     }
-            
+
 
                   }
-                  
-                      
+
+
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{ 
-                  let data = JSON.parse(dataObject[0].data);    
-                
+          }else{
+                  let data = JSON.parse(dataObject[0].data);
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'bill')
                     {
-                        
+
                          if(data.ttemplatesettings[i].fields.Template == 1)
-                         {       
+                         {
                                  $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
                                  if(data.ttemplatesettings[i].fields.Active == true)
                                  {
                                     $('#Bills_1').attr('checked','checked');
                                  }
-                                
+
                          }
                          if(data.ttemplatesettings[i].fields.Template == 2)
                          {
@@ -161,28 +161,28 @@ Template.billcard.onRendered(() => {
 
 
                     }
-               
-               
+
+
 
                  }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));                 
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                                
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'bill')
                     {
-                        
+
                          if(data.ttemplatesettings[i].fields.Template == 1)
-                         {       
+                         {
                                  $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
                                  if(data.ttemplatesettings[i].fields.Active == true)
                                  {
                                     $('#Bills_1').attr('checked','checked');
                                  }
-                                
+
                          }
                          if(data.ttemplatesettings[i].fields.Template == 2)
                          {
@@ -204,7 +204,7 @@ Template.billcard.onRendered(() => {
 
 
                     }
-                
+
 
                   }
                   $('.fullScreenSpin').css('display', 'none');
@@ -6174,103 +6174,103 @@ Template.billcard.events({
                 var bill = $('input[name="Bills"]:checked').val();
                 sideBarService.getTemplateNameandEmployeId("bill",emid,1).then(function (data) {
                 templateid = data.ttemplatesettings;
-                var id = templateid[0].fields.ID;    
+                var id = templateid[0].fields.ID;
                 objDetails =  {
                 type:"TTemplateSettings",
-                fields:{        
-                            ID:parseInt(id),                      
+                fields:{
+                            ID:parseInt(id),
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"bill",
                             GlobalRef:"bill",
                             Description:$('input[name="Bills_1"]').val(),
                             Template:"1",
                             Active:bill == 1 ? true:false,
-                        }            
+                        }
                 }
-            
-                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {                      
-        
+
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-            
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                 });
-                        
+
                 }).catch(function (err) {
                 });
-            
+
                 }).catch(function (err) {
-                            
+
                             objDetails =  {
                             type:"TTemplateSettings",
-                            fields:{                                                                  
+                            fields:{
                                         EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                         SettingName:"bill",
                                         Description:$('input[name="Bills_1"]').val(),
                                         Template:"1",
                                         Active:bill == 1 ? true:false,
-                                    }            
+                                    }
                             }
-                        
+
                             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                                                        
+
                                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                                    
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                                 });
-                                                    
-                                                
+
+
                                 }).catch(function (err) {
-                                                
-                                });  
+
+                                });
 
                 });
 
                 sideBarService.getTemplateNameandEmployeId("bill",emid,2).then(function (data) {
                         templateid = data.ttemplatesettings;
-                        var id = templateid[0].fields.ID;                        
+                        var id = templateid[0].fields.ID;
                         objDetails =  {
                         type:"TTemplateSettings",
-                        fields:{        
-                                    ID:parseInt(id),                      
+                        fields:{
+                                    ID:parseInt(id),
                                     EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                     SettingName:"bill",
                                     GlobalRef:"bill",
                                     Description:$('input[name="Bills_2"]').val(),
                                     Template:"2",
                                     Active:bill == 2 ? true:false,
-                                }            
+                                }
                         }
-        
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                            
-                    });                 
-           
-        
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+                    });
+
+
                     }).catch(function (err) { });
-                            
+
                  }).catch(function (err) {
-                                
+
                                 objDetails =  {
                                 type:"TTemplateSettings",
-                                fields:{                                                                  
+                                fields:{
                                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                             SettingName:"bill",
                                             Description:$('input[name="Bills_2"]').val(),
                                             Template:"2",
                                             Active:bill == 2 ? true:false,
-                                        }            
+                                        }
                                 }
-                            
+
                                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                            
+
                                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                                        
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                                 });
-                            
-                                }).catch(function (err) {  });  
+
+                                }).catch(function (err) {  });
 
                  });
 
@@ -6280,49 +6280,49 @@ Template.billcard.events({
 
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{        
-                    ID:parseInt(id),                      
+                    fields:{
+                    ID:parseInt(id),
                     EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                     SettingName:"bill",
                     GlobalRef:"bill",
                     Description:$('input[name="Bills_3"]').val(),
                     Template:"3",
                     Active:bill == 3 ? true:false,
-                    }            
+                    }
                     }
 
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TTemplateSettings', JSON.stringify(data));     
-                        
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                     });
 
 
-                    }).catch(function (err) {   
+                    }).catch(function (err) {
                     });
 
                 }).catch(function (err) {
 
                 objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"bill",
                             Description:$('input[name="Bills_3"]').val(),
                             Template:"3",
                             Active:bill == 3 ? true:false,
-                        }            
+                        }
                 }
 
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
 
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));           
-                });        
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
 
                 }).catch(function (err) {
-                        
-                });  
+
+                });
 
                 });
 
@@ -6782,7 +6782,7 @@ Template.billcard.events({
                 let tdamount = $('#' + lineID + " .lineAmount").val();
                 let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||"NT";
 
                 if (tdaccount != "") {
 
@@ -7782,7 +7782,7 @@ Template.billcard.events({
                     let tdamount = $('#' + lineID + " .lineAmount").val();
                     let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||"NT";
 
                     if (tdaccount != "") {
 
