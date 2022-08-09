@@ -575,7 +575,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         Search: "Deleted != true",
-        OrderBy: "PaymentDate desc",
+        OrderBy: "PaymentID desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -585,7 +585,7 @@ export class SideBarService extends BaseService {
         ListType: "Detail",
         IgnoreDates: false,
         Search: "Deleted != true",
-        OrderBy: "PaymentDate desc",
+        // OrderBy: "PaymentDate desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -640,14 +640,14 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "PaymentDate desc",
+        OrderBy: "PaymentID desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
         IgnoreDates: false,
-        OrderBy: "PaymentDate desc",
+        OrderBy: "PaymentID desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -662,7 +662,7 @@ export class SideBarService extends BaseService {
 
     options = {
       IgnoreDates: true,
-      OrderBy: "PaymentDate desc",
+      OrderBy: "PaymentID desc",
       Search: 'CompanyName = "' + customername + '"',
     };
 
@@ -693,7 +693,7 @@ export class SideBarService extends BaseService {
 
     options = {
       IgnoreDates: true,
-      OrderBy: "PaymentDate desc",
+      OrderBy: "PaymentID desc",
       Search: 'CompanyName = "' + suppliername + '"',
     };
 
@@ -712,14 +712,14 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "PaymentDate desc",
+        OrderBy: "PaymentID desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
         IgnoreDates: false,
-        OrderBy: "PaymentDate desc",
+        OrderBy: "PaymentID desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',

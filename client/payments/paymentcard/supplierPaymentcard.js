@@ -11,6 +11,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
 import LoadingOverlay from "../../LoadingOverlay";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -45,7 +46,14 @@ Template.supplierpaymentcard.onCreated(() => {
   templateObject.stripe_fee_method = new ReactiveVar();
 });
 
+
+
+export const _setTmpAppliedAmount = (amount = 0) => {
+  return localStorage.setItem('APPLIED_AMOUNT', amount);
+}
+
 Template.supplierpaymentcard.onRendered(() => {
+  _setTmpAppliedAmount();
   const dataTableList = [];
   const tableHeaderList = [];
   LoadingOverlay.show();
@@ -133,7 +141,7 @@ Template.supplierpaymentcard.onRendered(() => {
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
-        let dept = $('#sltDept').val();
+        let dept = $('#sltDepartment').val();
         var erpGet = erpDb();
 
         var customfield1 = $('#edtSaleCustField1').val() || '-';
@@ -145,6 +153,10 @@ Template.supplierpaymentcard.onRendered(() => {
         var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
 
         let fx = $('#sltCurrency').val();
+        if(fx == '')
+        {
+          fx = '-';
+        }
         var ref_daa = $('#edtReference').val() || '.';
         var txaNotes = $('#txaNotes').val();
 
@@ -179,6 +191,11 @@ Template.supplierpaymentcard.onRendered(() => {
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
         let item_supplier = '';
 
+        if(ref_daa==" ")
+        {
+          ref_daa = '-';
+        }
+
         if(number == 1)
         {
                 item_supplier = {
@@ -317,13 +334,14 @@ Template.supplierpaymentcard.onRendered(() => {
 
             };
         }
+
         object_invoce.push(item_supplier);
 
         $("#templatePreviewModal .field_payment").hide();
         $("#templatePreviewModal .field_amount").hide();
         updateTemplate(object_invoce);
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-     }
+   }
 
 
 
@@ -341,7 +359,7 @@ Template.supplierpaymentcard.onRendered(() => {
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
-        let dept = $('#sltDept').val();
+        let dept = $('#sltDepartment').val();
         var erpGet = erpDb();
         var customfield1 = $('#edtSaleCustField1').val() || '-';
         var customfield2 = $('#edtSaleCustField2').val() || '-';
@@ -350,9 +368,15 @@ Template.supplierpaymentcard.onRendered(() => {
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
         var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-        let fx = $('#sltCurrency').val();
+        let fx = $('#sltCurrency').val() || '-';
         var ref_daa = $('#edtReference').val() || '-';
         var txaNotes = $('#txaNotes').val();
+
+
+        if(ref_daa==" ")
+        {
+          ref_daa = '-';
+        }
 
         var applied  = $('.appliedAmount').text();
 
@@ -387,6 +411,7 @@ Template.supplierpaymentcard.onRendered(() => {
 
         if(number == 1)
         {
+
                 item_supplier = {
                     o_url: Session.get('vs1companyURL'),
                     o_name: Session.get('vs1companyName'),
@@ -400,7 +425,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     value: invoice_data.lid,
                     date: dtPaymentDate,
                     invoicenumber: '',
-                    refnumber: ref_daa,
+                    refnumber: ref_daa == ''?'-':ref_daa,
                     pqnumber: "",
                     duedate: '',
                     paylink: "",
@@ -431,6 +456,7 @@ Template.supplierpaymentcard.onRendered(() => {
         else if(number == 2)
         {
 
+
                 item_supplier = {
                     o_url: Session.get('vs1companyURL'),
                     o_name: Session.get('vs1companyName'),
@@ -444,7 +470,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     value: invoice_data.lid,
                     date: dtPaymentDate,
                     invoicenumber: '',
-                    refnumber: ref_daa,
+                    refnumber: ref_daa == ''?'-':ref_daa,
                     pqnumber: "",
                     duedate: '',
                     paylink: "",
@@ -480,6 +506,8 @@ Template.supplierpaymentcard.onRendered(() => {
             {
                 fx = '-';
             }
+
+
 
             item_supplier = {
                 o_url: Session.get('vs1companyURL'),
@@ -523,7 +551,12 @@ Template.supplierpaymentcard.onRendered(() => {
 
             };
         }
+
+
+
         object_invoce.push(item_supplier);
+
+
         $("#templatePreviewModal .field_payment").hide();
         $("#templatePreviewModal .field_amount").hide();
         updateTemplate1(object_invoce);
@@ -542,7 +575,6 @@ Template.supplierpaymentcard.onRendered(() => {
 
      };
 
-    templateObject.getTemplateInfo = function() {
 
         getVS1Data('TemplateSettings').then(function(dataObject) {
 
@@ -571,10 +603,150 @@ Template.supplierpaymentcard.onRendered(() => {
 
         });
 
-   };
 
-   templateObject.getTemplateInfo();
+        templateObject.getTemplateInfoNew = function(){
+          $('.fullScreenSpin').css('display', 'inline-block');
+          getVS1Data('TTemplateSettings').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
 
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
+
+                      if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                      {
+                               if(data.ttemplatesettings[i].fields.Template == 1)
+                               {
+                                       $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                       if(data.ttemplatesettings[i].fields.Active == true)
+                                       {
+                                         $('#Supplier_Payments_1').attr('checked','checked');
+                                       }
+
+                               }
+                               if(data.ttemplatesettings[i].fields.Template == 2)
+                               {
+                                     $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_2').attr('checked','checked');
+                                     }
+                               }
+
+                               if(data.ttemplatesettings[i].fields.Template == 3)
+                               {
+                                     $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_3').attr('checked','checked');
+                                     }
+                               }
+
+
+                      }
+
+
+
+                    }
+
+
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function (err) {
+                  $('.fullScreenSpin').css('display', 'none');
+                });
+            }else{
+                    let data = JSON.parse(dataObject[0].data);
+
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
+
+                      if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                      {
+                               if(data.ttemplatesettings[i].fields.Template == 1)
+                               {
+                                       $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                       if(data.ttemplatesettings[i].fields.Active == true)
+                                       {
+                                         $('#Supplier_Payments_1').attr('checked','checked');
+                                       }
+
+                               }
+                               if(data.ttemplatesettings[i].fields.Template == 2)
+                               {
+                                     $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_2').attr('checked','checked');
+                                     }
+                               }
+
+                               if(data.ttemplatesettings[i].fields.Template == 3)
+                               {
+                                     $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                     if(data.ttemplatesettings[i].fields.Active == true)
+                                     {
+                                       $('#Supplier_Payments_3').attr('checked','checked');
+                                     }
+                               }
+
+
+                      }
+
+
+
+                   }
+                    $('.fullScreenSpin').css('display', 'none');
+            }
+          }).catch(function(err) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+                    for (let i = 0; i < data.ttemplatesettings.length; i++) {
+
+
+
+                       if(data.ttemplatesettings[i].fields.SettingName == 'Supplier Payments')
+                       {
+                                if(data.ttemplatesettings[i].fields.Template == 1)
+                                {
+                                        $('input[name="Supplier Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
+                                        if(data.ttemplatesettings[i].fields.Active == true)
+                                        {
+                                          $('#Supplier_Payments_1').attr('checked','checked');
+                                        }
+
+                                }
+                                if(data.ttemplatesettings[i].fields.Template == 2)
+                                {
+                                      $('input[name="Supplier Payments_2"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Supplier_Payments_2').attr('checked','checked');
+                                      }
+                                }
+
+                                if(data.ttemplatesettings[i].fields.Template == 3)
+                                {
+                                      $('input[name="Supplier Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
+                                      if(data.ttemplatesettings[i].fields.Active == true)
+                                      {
+                                        $('#Supplier_Payments_3').attr('checked','checked');
+                                      }
+                                }
+
+
+                       }
+
+
+                    }
+                    $('.fullScreenSpin').css('display', 'none');
+          }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+          });
+        });
+
+        };
+
+        templateObject.getTemplateInfoNew();
 
 
     function updateTemplate1(object_invoce) {
@@ -685,7 +857,7 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
           if(object_invoce[0]["refnumber"] == ""){
-            $("#templatePreviewModal .refNumber").hide();
+             $("#templatePreviewModal .refNumber").hide();
           }else{
             $("#templatePreviewModal .refNumber").show();
           }
@@ -3188,7 +3360,7 @@ Template.supplierpaymentcard.onRendered(() => {
       }
     });
 
-  var url = FlowRouter.current().path;
+  let url = FlowRouter.current().path;
   if (url.indexOf("?id=") > 0) {
     var getsale_id = url.split("?id=");
     $("#addRow").attr("disabled", true);
@@ -3335,6 +3507,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
                 //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
                 let getDepartmentVal =
                   Session.get("department") || data.fields.DeptClassName;
@@ -3618,6 +3791,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 //$('#edtSupplierName').editableSelect('add', useData[d].fields.CompanyName);
                 $("#edtSupplierName").val(useData[d].fields.CompanyName);
                 $("#sltDepartment").val(useData[d].fields.DeptClassName);
@@ -3901,6 +4076,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
                   $("#edtSupplierName").val(data.fields.CompanyName);
                   $("#sltDepartment").val(data.fields.DeptClassName);
@@ -4173,6 +4350,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               //$('#edtSupplierName').editableSelect('add', data.fields.CompanyName);
               $("#edtSupplierName").val(data.fields.CompanyName);
               $("#sltDepartment").val(data.fields.DeptClassName);
@@ -4400,6 +4579,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (data.fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -4585,6 +4766,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (useData[d].fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -4769,6 +4952,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   if (data.fields.SupplierInvoiceNumber == "") {
                     templateObject.isInvoiceNo.set(false);
                   }
@@ -4958,6 +5143,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -5141,6 +5328,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 }),
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -5324,6 +5513,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 if (useData[d].fields.SupplierInvoiceNumber == "") {
                   templateObject.isInvoiceNo.set(false);
                 }
@@ -5506,6 +5697,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     }),
                   };
                   templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                   if (data.fields.SupplierInvoiceNumber == "") {
                     templateObject.isInvoiceNo.set(false);
                   }
@@ -5693,6 +5886,8 @@ Template.supplierpaymentcard.onRendered(() => {
               }),
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             if (data.fields.SupplierInvoiceNumber == "") {
               templateObject.isInvoiceNo.set(false);
             }
@@ -5877,6 +6072,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
                 let getDepartmentVal =
                   Session.get("department") ||
                   data.fields.DeptClassName ||
@@ -6060,6 +6257,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   }),
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
 
                 let getDepartmentVal =
                   Session.get("department") ||
@@ -6241,6 +6440,8 @@ Template.supplierpaymentcard.onRendered(() => {
               }),
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
             $("#edtSupplierName").val(data.fields.ClientName);
             let getDepartmentVal =
@@ -6490,6 +6691,8 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#sltPaymentMethod").val(paymentMethodData);
 
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (clientList) {
             for (var i = 0; i < clientList.length; i++) {
               if (clientList[i].customername == companyName) {
@@ -6811,6 +7014,8 @@ Template.supplierpaymentcard.onRendered(() => {
           $("#sltPaymentMethod").val(paymentMethodData);
 
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (clientList) {
             for (var i = 0; i < clientList.length; i++) {
               if (clientList[i].customername == companyName) {
@@ -6970,6 +7175,8 @@ Template.supplierpaymentcard.onRendered(() => {
             }),
           };
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (data.fields.SupplierInvoiceNumber == "") {
             templateObject.isInvoiceNo.set(false);
           }
@@ -7147,6 +7354,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     ) || 0,
                 };
                 templateObject.record.set(record);
+                localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
 
                 //
               });
@@ -7372,6 +7581,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               if (data.fields.SupplierInvoiceNumber == "") {
                 templateObject.isInvoiceNo.set(false);
               }
@@ -7551,6 +7762,8 @@ Template.supplierpaymentcard.onRendered(() => {
                 utilityService.modifynegativeCurrencyFormat(amountData) || 0,
             };
             templateObject.record.set(record);
+            localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
             if (data.fields.SupplierInvoiceNumber == "") {
               templateObject.isInvoiceNo.set(false);
             }
@@ -7729,6 +7942,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
               };
               templateObject.record.set(record);
+              localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
               //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
               let getDepartmentVal =
                 Session.get("department") ||
@@ -7905,6 +8120,8 @@ Template.supplierpaymentcard.onRendered(() => {
               utilityService.modifynegativeCurrencyFormat(amountData) || 0,
           };
           templateObject.record.set(record);
+          localStorage.setItem('APPLIED_AMOUNT', record.applied);
+
           if (data.fields.SupplierInvoiceNumber == "") {
             templateObject.isInvoiceNo.set(false);
           }
@@ -8101,6 +8318,8 @@ Template.supplierpaymentcard.onRendered(() => {
 
     // $("#form :input").prop("disabled", false);
     templateObject.record.set(paymentrecord);
+    localStorage.setItem('APPLIED_AMOUNT', paymentrecord.applied);
+
     let getDepartmentVal = Session.get("department") || defaultDept;
     let getPaymentMethodVal = "";
 
@@ -8344,105 +8563,111 @@ Template.supplierpaymentcard.onRendered(() => {
   });
 
   templateObject.addExpenseToTable = (withForeignAmount = false) => {
-    $('#tblSupplierPaymentcard tbody tr').remove(); // first lets clean it
+    let url = window.location.href;
 
-    /**
-     * Now we need to add right values depending on FX currency
-     */
-     let selectedSupplierPayments = templateObject.outstandingExpenses.get();
+    if(!url.includes("?")) {
+
+      $('#tblSupplierPaymentcard tbody tr').remove(); // first lets clean it
+
+      /**
+       * Now we need to add right values depending on FX currency
+       */
+       let selectedSupplierPayments = templateObject.outstandingExpenses.get();
 
 
-     setTimeout(() => {
-      if (selectedSupplierPayments.length > 0) {
-        let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
-        currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
-        let total = parseFloat(currentApplied);
+       setTimeout(() => {
+        if (selectedSupplierPayments.length > 0) {
+          let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
+          currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
+          let total = parseFloat(currentApplied);
 
-        for (let x = 0; x < selectedSupplierPayments.length; x++) {
-          var rowData =
-            '<tr class="dnd-moved dynamic-converter-js" id="' +
-            selectedSupplierPayments[x].awaitingId +
-            '" name="' +
-            selectedSupplierPayments[x].awaitingId +
-            '">\n' +
-            '	<td contenteditable="false" class="colTransDate">' +
-            selectedSupplierPayments[x].date +
-            "</td>\n" +
-            '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
-            selectedSupplierPayments[x].type +
-            "</td>\n" +
-            '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
-            selectedSupplierPayments[x].awaitingId +
-            "</td>\n" +
-            '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].originalAmount +
-            "</td>\n" +
-            '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].outstandingAmount +
-            "</td>\n" +
-            '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
-            selectedSupplierPayments[x].paymentAmount +
-            '"></td>\n' +
+          for (let x = 0; x < selectedSupplierPayments.length; x++) {
+            var rowData =
+              '<tr class="dnd-moved dynamic-converter-js" id="' +
+              selectedSupplierPayments[x].awaitingId +
+              '" name="' +
+              selectedSupplierPayments[x].awaitingId +
+              '">\n' +
+              '	<td contenteditable="false" class="colTransDate">' +
+              selectedSupplierPayments[x].date +
+              "</td>\n" +
+              '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">' +
+              selectedSupplierPayments[x].type +
+              "</td>\n" +
+              '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' +
+              selectedSupplierPayments[x].awaitingId +
+              "</td>\n" +
+              '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].originalAmount +
+              "</td>\n" +
+              '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].outstandingAmount +
+              "</td>\n" +
+              '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' +
+              selectedSupplierPayments[x].paymentAmount +
+              '"></td>\n' +
 
-            (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
-            convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
-            '"></td>\n' : '') +
+              (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' +
+              convertToForeignAmount(selectedSupplierPayments[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+              '"></td>\n' : '') +
 
-            '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
-            selectedSupplierPayments[x].outstandingAmount +
-            "</td>\n" +
+              '	<td contenteditable="false" class="lineOutstandingAmount  convert-from" style="text-align: right!important;">' +
+              selectedSupplierPayments[x].outstandingAmount +
+              "</td>\n" +
 
-            (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
-            convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
-            "</td>\n" : '') +
+              (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to " style="text-align: right!important;">' +
+              convertToForeignAmount(selectedSupplierPayments[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) +
+              "</td>\n" : '') +
 
-            '	<td contenteditable="true" class="colComments">' +
-            selectedSupplierPayments[x].comments +
-            "</td>\n" +
-            '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
-            "</tr>";
+              '	<td contenteditable="true" class="colComments">' +
+              selectedSupplierPayments[x].comments +
+              "</td>\n" +
+              '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+              "</tr>";
 
-          let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
-          let isCheckedTrue = true;
-          $(".tblSupplierPaymentcard > tbody > tr").each(function () {
-            var lineID = this.id;
-            if (lineID == checkCompareID) {
-              isCheckedTrue = false;
+            let checkCompareID = selectedSupplierPayments[x].awaitingId || "";
+            let isCheckedTrue = true;
+            $(".tblSupplierPaymentcard > tbody > tr").each(function () {
+              var lineID = this.id;
+              if (lineID == checkCompareID) {
+                isCheckedTrue = false;
+              }
+            });
+            //setTimeout(function() {
+            if (isCheckedTrue) {
+              $("#tblSupplierPaymentcard tbody").append(rowData);
+              total =
+                total +
+                parseFloat(
+                  selectedSupplierPayments[x].paymentAmount.replace(
+                    /[^0-9.-]+/g,
+                    ""
+                  )
+                );
             }
-          });
-          //setTimeout(function() {
-          if (isCheckedTrue) {
-            $("#tblSupplierPaymentcard tbody").append(rowData);
-            total =
-              total +
-              parseFloat(
-                selectedSupplierPayments[x].paymentAmount.replace(
-                  /[^0-9.-]+/g,
-                  ""
-                )
-              );
+            //}, 500);
           }
-          //}, 500);
+          $(".appliedAmount").text(
+            utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
+          );
+          localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
         }
-        $(".appliedAmount").text(
-          utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
-        );
-        localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-      }
-     }, 300)
+       }, 300)
 
 
 
-    setTimeout(function () {
-      $("td").each(function () {
-        if (
-          $(this)
-            .text()
-            .indexOf("-" + Currency) >= 0
-        )
-          $(this).addClass("text-danger");
-      });
-    }, 1000);
+      setTimeout(function () {
+        $("td").each(function () {
+          if (
+            $(this)
+              .text()
+              .indexOf("-" + Currency) >= 0
+          )
+            $(this).addClass("text-danger");
+        });
+      }, 1000);
+    }
+
   }
 
   templateObject.updateRecordsWithForeign = (override = false) => {
@@ -8529,7 +8754,7 @@ Template.supplierpaymentcard.onRendered(() => {
       $(".appliedAmount").text(
         utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
       );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
     }
 
     setTimeout(function () {
@@ -8686,6 +8911,10 @@ Template.supplierpaymentcard.helpers({
   organizationurl: () => {
     return Session.get("vs1companyURL");
   },
+
+  convertToForeignAmount: (amount) => {
+    return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+  },
 });
 
 // function calulateApplied() {
@@ -8713,51 +8942,176 @@ Template.supplierpaymentcard.events({
     var printTemplate = [];
     LoadingOverlay.show();
 
-    getVS1Data("TemplateSettings").then(function (dataObject) {
-      let data = JSON.parse(dataObject[0].data);
-      let useData = data;
-      let lineItems = [];
-      let lineItemObj = {};
+    var supplier_payments = $('input[name="Supplier Payments"]:checked').val();
+    let emid = Session.get('mySessionEmployeeLoggedID');
 
-      if (data.fields) {
-        var bill = data.fields.bill;
-        var credits = data.fields.credits;
-        var customer_payment = data.fields.customer_payment;
-        var invoices = data.fields.invoices;
-        var invoices_back_order = data.fields.invoices_back_order;
-        var purchase_orderbill = data.fields.purchase_order;
-        var quotes = data.fields.quotes;
-        var refunds = data.fields.refunds;
-        var sales_orders = data.fields.sales_orders;
-        var supplier_payments = $(
-          'input[name="Supplier Payments"]:checked'
-        ).val();
-        var statements = data.fields.statements;
-        var customer_statement = data.fields.customer_statement;
-        var delivery_docket = data.fields.delivery_docket;
-
-        var print_options = {
-          type: "TemplateSettings",
-          fields: {
-            client_id: loggedCompany,
-            bill: bill,
-            credits: credits,
-            customer_payment: customer_payment,
-            customer_statement: customer_statement,
-            invoices: invoices,
-            invoices_back_order: invoices_back_order,
-            purchase_order: purchase_orderbill,
-            quotes: quotes,
-            refunds: refunds,
-            sales_orders: sales_orders,
-            supplier_payments: supplier_payments,
-            statements: statements,
-            delivery_docket: delivery_docket,
-          },
-        };
-        addVS1Data("TemplateSettings", JSON.stringify(print_options));
+    sideBarService.getTemplateNameandEmployeId("Supplier Payments",emid,1).then(function (data) {
+      templateid = data.ttemplatesettings;
+      var id = templateid[0].fields.ID;
+      objDetails =  {
+      type:"TTemplateSettings",
+      fields:{
+                          ID:parseInt(id),
+                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          SettingName:"Supplier Payments",
+                          GlobalRef:"Supplier Payments",
+                          Description:$('input[name="Supplier Payments_1"]').val(),
+                          Template:"1",
+                          Active:supplier_payments == 1 ? true:false,
+              }
       }
-    });
+
+      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+        });
+
+
+      }).catch(function (err) {
+
+
+
+      });
+
+     }).catch(function (err) {
+
+              objDetails =  {
+              type:"TTemplateSettings",
+              fields:{
+                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          SettingName:"Supplier Payments",
+                          Description:$('input[name="Supplier Payments_1"]').val(),
+                          Template:"1",
+                          Active:supplier_payments == 1 ? true:false,
+                      }
+              }
+
+              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+                });
+
+
+              }).catch(function (err) {
+
+
+
+              });
+
+     });
+
+
+     sideBarService.getTemplateNameandEmployeId("Supplier Payments",emid,2).then(function (data) {
+      templateid = data.ttemplatesettings;
+      var id = templateid[0].fields.ID;
+      objDetails =  {
+      type:"TTemplateSettings",
+      fields:{
+                          ID:parseInt(id),
+                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          SettingName:"Supplier Payments",
+                          GlobalRef:"Supplier Payments",
+                          Description:$('input[name="Supplier Payments_2"]').val(),
+                          Template:"2",
+                          Active:supplier_payments == 2 ? true:false,
+              }
+      }
+
+      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));
+        });
+
+
+      }).catch(function (err) {
+
+
+      });
+
+     }).catch(function (err) {
+
+              objDetails =  {
+              type:"TTemplateSettings",
+              fields:{
+                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          SettingName:"Supplier Payments",
+                          Description:$('input[name="Supplier Payments_2"]').val(),
+                          Template:"2",
+                          Active:supplier_payments == 2 ? true:false,
+                      }
+              }
+
+              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
+
+              }).catch(function (err) {
+
+
+
+              });
+
+     });
+
+     sideBarService.getTemplateNameandEmployeId("Supplier Payments",emid,3).then(function (data) {
+      templateid = data.ttemplatesettings;
+      var id = templateid[0].fields.ID;
+      objDetails =  {
+      type:"TTemplateSettings",
+      fields:{
+                          ID:parseInt(id),
+                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          SettingName:"Supplier Payments",
+                          GlobalRef:"Supplier Payments",
+                          Description:$('input[name="Supplier Payments_3"]').val(),
+                          Template:"3",
+                          Active:supplier_payments == 3 ? true:false,
+              }
+      }
+
+      sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+
+        sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+          addVS1Data('TTemplateSettings', JSON.stringify(data));
+        });
+
+
+      }).catch(function (err) {
+
+
+
+      });
+
+     }).catch(function (err) {
+
+              objDetails =  {
+              type:"TTemplateSettings",
+              fields:{
+                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                          SettingName:"Supplier Payments",
+                          Description:$('input[name="Supplier Payments_3"]').val(),
+                          Template:"3",
+                          Active:supplier_payments == 3 ? true:false,
+                      }
+              }
+
+              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+
+                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+                 });
+
+              }).catch(function (err) {
+
+
+
+              });
+
+     });
 
     $("#html-2-pdfwrapper").css("display", "block");
     if ($(".edtCustomerEmail").val() != "") {
@@ -8902,12 +9256,7 @@ Template.supplierpaymentcard.events({
     let customer = $("#edtSupplierName").val();
     let paymentAmt = $("#edtPaymentAmount").val();
     var paymentDateTime = new Date($("#dtPaymentDate").datepicker("getDate"));
-    let paymentDate =
-      paymentDateTime.getFullYear() +
-      "-" +
-      (paymentDateTime.getMonth() + 1) +
-      "-" +
-      paymentDateTime.getDate();
+    let paymentDate = paymentDateTime.getFullYear() +"-" +(paymentDateTime.getMonth() + 1) +"-" +paymentDateTime.getDate();
 
     let bankAccount = $("#edtSelectBankAccountName").val() || "Bank";
     let reference = $("#edtReference").val();
@@ -8947,9 +9296,14 @@ Template.supplierpaymentcard.events({
      * TODO: Adding this into the saved object
      */
     let foreignCurrency = $("#edtForeignCurrency").val();
-    let foreignAmount = $("#foreignAmount").val();
-    let variation = $("#edtVariation").val();
-    let appliedAmount = $("#edtApplied").val();
+    let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount
+    let variation = $("#edtVariation").val(); // this is the variation field
+    let appliedAmount = $("#edtApplied").val(); // this is the variation field
+    let exchangeRate = $('#exchange_rate').val();
+    let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
+      $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol')
+      || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
+
 
     let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
     // if(checkSuppInvoiceNo){
@@ -9005,8 +9359,13 @@ Template.supplierpaymentcard.events({
           Deleted: false,
           Notes: notes,
           ReferenceNo: reference,
+
+          ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+          ForeignExchangeRate: parseFloat(exchangeRate),
+          //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
         },
       };
+
       paymentService
         .saveSuppDepositData(objDetails)
         .then(function (data) {
@@ -9373,6 +9732,10 @@ Template.supplierpaymentcard.events({
             Paid: true,
             Payment: parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) || 0,
             //ForeignPayment:parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g,"")) || 0,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
         if (parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) != 0) {
@@ -9419,6 +9782,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -9795,6 +10162,10 @@ Template.supplierpaymentcard.events({
             Paid: true,
             Payment: parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) || 0,
             //ForeignPayment:parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g,"")) || 0,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
         if (parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) != 0) {
@@ -9840,6 +10211,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -10249,6 +10624,10 @@ Template.supplierpaymentcard.events({
             PayMethodName: payMethod,
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -10672,6 +11051,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -11101,6 +11484,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -11550,6 +11937,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -11975,6 +12366,7 @@ Template.supplierpaymentcard.events({
 
         return false;
       } else {
+        debugger;
         objDetails = {
           type: "TSuppPayments",
           fields: {
@@ -11986,8 +12378,7 @@ Template.supplierpaymentcard.events({
             ClientPrintName: customer,
             CompanyName: customer,
             DeptClassName: department,
-            //ForeignExchangeCode: CountryAbbr,
-            //ForeignExchangeRate: 1,
+
             // EmployeeName: empName || ' ',
             GUILines: paymentData,
             Notes: notes,
@@ -11997,6 +12388,10 @@ Template.supplierpaymentcard.events({
 
             ReferenceNo: reference,
             AccountName: bankAccount,
+
+            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+            ForeignExchangeRate: parseFloat(exchangeRate),
+            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
           },
         };
       }
@@ -12805,7 +13200,7 @@ Template.supplierpaymentcard.events({
     $(".appliedAmount").text(
       utilityService.modifynegativeCurrencyFormat(appliedGrandTotal)
     );
-    localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(appliedGrandTotal));
+    localStorage.setItem('APPLIED_AMOUNT', appliedGrandTotal);
 
   },
   "click .btnBack": function (event) {
@@ -12855,7 +13250,7 @@ Template.supplierpaymentcard.events({
         $(".appliedAmount").text(
           utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
         );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
 
         return false;
       } else {
@@ -13143,7 +13538,7 @@ Template.supplierpaymentcard.events({
       $(".appliedAmount").text(
         utilityService.modifynegativeCurrencyFormat(total.toFixed(2))
       );
-      localStorage.setItem('APPLIED_AMOUNT', utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
+      localStorage.setItem('APPLIED_AMOUNT', total.toFixed(2));
     } else {
       this.click;
     }
@@ -13520,6 +13915,7 @@ export function convertToForeignAmount(amount = "$1.5", rate = 1.87, withSymbol 
   amount = utilityService.removeCurrency(amount, currency);
 
   let convert = amount * rate;
+  //convert = convert.toFixed(2);
 
   if(withSymbol) {
     return `${withSymbol}${convert}`;

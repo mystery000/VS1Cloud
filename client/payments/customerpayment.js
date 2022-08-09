@@ -96,7 +96,7 @@ Template.customerpayment.onRendered(function() {
     };
 
     templateObject.resetData = function (dataVal) {
-      window.open('/customerpayment?page=last','_self');
+      location.reload();
     }
     // $('#tblCustomerPayment').DataTable();
     templateObject.getAllCustomerPaymentData = function () {
@@ -124,8 +124,9 @@ Template.customerpayment.onRendered(function() {
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
                       $('#dateTo').attr('readonly', true);
-                      // FlowRouter.go('/customerpayment?ignoredate=true');
                   } else {
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
                       $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                       $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                   }
@@ -274,10 +275,7 @@ Template.customerpayment.onRendered(function() {
                           $('#tblCustomerPayment').DataTable().ajax.reload();
                       },
                       "fnInitComplete": function () {
-                        let urlParametersPage = FlowRouter.current().queryParams.page;
-                        if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                            this.fnPageChange('last');
-                        }
+                        this.fnPageChange('last');
                          $("<button class='btn btn-primary btnRefreshCustomerPayment' type='button' id='btnRefreshCustomerPayment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCustomerPayment_filter");
                          $('.myvarFilterForm').appendTo(".colDateFilter");
                       },
@@ -362,8 +360,9 @@ Template.customerpayment.onRendered(function() {
                         if (data.Params.IgnoreDates == true) {
                             $('#dateFrom').attr('readonly', true);
                             $('#dateTo').attr('readonly', true);
-                            FlowRouter.go('/customerpayment?ignoredate=true');
                         } else {
+                          $('#dateFrom').attr('readonly', false);
+                          $('#dateTo').attr('readonly', false);
                             $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                             $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                         }
@@ -529,7 +528,7 @@ Template.customerpayment.onRendered(function() {
 
                                     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                    if(checkurlIgnoreDate == 'true'){
+                                    if(data.Params.IgnoreDates == true){
                                       sideBarService.getAllTCustomerPaymentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                           getVS1Data('TCustomerPaymentList').then(function (dataObjectold) {
                                               if (dataObjectold.length == 0) {}
@@ -587,10 +586,7 @@ Template.customerpayment.onRendered(function() {
                                 }, 100);
                             },
                             "fnInitComplete": function () {
-                              let urlParametersPage = FlowRouter.current().queryParams.page;
-                              if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                                  this.fnPageChange('last');
-                              }
+                              this.fnPageChange('last');
                                $("<button class='btn btn-primary btnRefreshCustomerPayment' type='button' id='btnRefreshCustomerPayment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCustomerPayment_filter");
                                $('.myvarFilterForm').appendTo(".colDateFilter");
                             },
@@ -670,8 +666,9 @@ Template.customerpayment.onRendered(function() {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    FlowRouter.go('/customerpayment?ignoredate=true');
                 } else {
+                  $('#dateFrom').attr('readonly', false);
+                  $('#dateTo').attr('readonly', false);
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
@@ -836,7 +833,7 @@ Template.customerpayment.onRendered(function() {
 
                             let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                             let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                            if(checkurlIgnoreDate == 'true'){
+                            if(data.Params.IgnoreDates == true){
                               sideBarService.getAllTCustomerPaymentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                   getVS1Data('TCustomerPaymentList').then(function (dataObjectold) {
                                       if (dataObjectold.length == 0) {}
@@ -894,10 +891,7 @@ Template.customerpayment.onRendered(function() {
                         }, 100);
                     },
                     "fnInitComplete": function () {
-                      let urlParametersPage = FlowRouter.current().queryParams.page;
-                      if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                          this.fnPageChange('last');
-                      }
+                      this.fnPageChange('last');
                        $("<button class='btn btn-primary btnRefreshCustomerPayment' type='button' id='btnRefreshCustomerPayment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCustomerPayment_filter");
                        $('.myvarFilterForm').appendTo(".colDateFilter");
                     },
@@ -974,8 +968,9 @@ Template.customerpayment.onRendered(function() {
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
                       $('#dateTo').attr('readonly', true);
-                      FlowRouter.go('/customerpayment?ignoredate=true');
                   } else {
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
                       $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                       $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                   }
@@ -1141,7 +1136,7 @@ Template.customerpayment.onRendered(function() {
 
                               let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                               let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                              if(checkurlIgnoreDate == 'true'){
+                              if(data.Params.IgnoreDates == true){
                                 sideBarService.getAllTCustomerPaymentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                     getVS1Data('TCustomerPaymentList').then(function (dataObjectold) {
                                         if (dataObjectold.length == 0) {}
@@ -1199,10 +1194,7 @@ Template.customerpayment.onRendered(function() {
                           }, 100);
                       },
                       "fnInitComplete": function () {
-                        let urlParametersPage = FlowRouter.current().queryParams.page;
-                        if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                            this.fnPageChange('last');
-                        }
+                        this.fnPageChange('last');
                          $("<button class='btn btn-primary btnRefreshCustomerPayment' type='button' id='btnRefreshCustomerPayment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCustomerPayment_filter");
                          $('.myvarFilterForm').appendTo(".colDateFilter");
                       },
@@ -1283,7 +1275,7 @@ Template.customerpayment.onRendered(function() {
     templateObject.getAllFilterCustPaymentData = function(fromDate, toDate, ignoreDate) {
         sideBarService.getAllTCustomerPaymentListData(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
             addVS1Data('TCustomerPaymentList', JSON.stringify(data)).then(function(datareturn) {
-                window.open('/customerpayment?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate=' + ignoreDate, '_self');
+                location.reload();
             }).catch(function(err) {
                 location.reload();
             });

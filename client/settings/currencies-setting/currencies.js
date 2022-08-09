@@ -64,14 +64,12 @@ Template.currenciessettings.onRendered(function () {
       // await addVS1Data("TCurrency", data);
     } else {
       let dataObject = await getVS1Data("TCurrency");
-      data = dataObject.length == 0 == refresh == true
+      data = ((dataObject.length == 0) == refresh) == true
         ? await taxRateService.getCurrencies()
         : JSON.parse(dataObject[0].data);
-    
     }
 
     data.tcurrency.forEach(_currency => {
-   
       currencies.push({
         id: _currency.Id || "",
         code: _currency.Code || "N/A",
@@ -81,7 +79,7 @@ Template.currenciessettings.onRendered(function () {
         sellrate: _currency.SellRate || "N/A",
         country: _currency.Country || "N/A",
         description: _currency.CurrencyDesc || "N/A",
-        ratelastmodified: _currency.RateLastModified || "N/A",
+        ratelastmodified: _currency.RateLastModified || "N/A"
       });
     });
 
@@ -115,6 +113,8 @@ Template.currenciessettings.onRendered(function () {
       setTimeout(function () {
         MakeNegative();
       }, 100);
+
+      if(refresh == true) $("#currencyLists").DataTable().destroy();
 
       setTimeout(() => {
         $("#currencyLists").DataTable({
@@ -993,17 +993,19 @@ Template.currenciessettings.events({
     jQuery("#currencyLists_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefresh": function () {
-    LoadingOverlay.show();
-    sideBarService.getCurrencies().then(function (dataReload) {
-      addVS1Data("TCurrency", JSON.stringify(dataReload)).then(function (datareturn) {
-        location.reload(true);
-      }).catch(function (err) {
-        location.reload(true);
-      });
-    }).catch(function (err) {
-      location.reload(true);
-    });
+  "click .btnRefresh":  (e, ui) => {
+    // LoadingOverlay.show();
+    // sideBarService.getCurrencies().then(function (dataReload) {
+    //   addVS1Data("TCurrency", JSON.stringify(dataReload)).then(function (datareturn) {
+    //     location.reload(true);
+    //   }).catch(function (err) {
+    //     location.reload(true);
+    //   });
+    // }).catch(function (err) {
+    //   location.reload(true);
+    // });
+
+    ui.getCurrencies(true, true);
   },
   "click .btnAddNewDepart": function () {
     $("#newTaxRate").css("display", "block");
@@ -1406,26 +1408,80 @@ Template.currenciessettings.helpers({
 /**
  * This function will update all currencies
  */
-export const updateAllCurrencies = employeeId => {
-  let completeCount = 0;
-  let completeCountEnd = 1;
+export const updateAllCurrencies = (employeeId, 
+  onSuccess = () => {}, 
+  onError = () => {}) => {
+  // let completeCount = 0;
+  // let completeCountEnd = 1;
   LoadingOverlay.show();
   // we need to get all currencies and update them all
   const taxRateService = new TaxRateService();
-  taxRateService.getCurrencies().then(data => {
-    completeCountEnd = data.tcurrency.length;
-    if (data.tcurrency.length > 0) 
-      data = data.tcurrency;
-    
-    data.forEach(currencyData => {
-      updateCurrency(currencyData, () => {
-        if (completeCount == 0) {
-          LoadingOverlay.show();
-        } else if (completeCount == completeCountEnd) {
-          LoadingOverlay.hide();
-        }
-        completeCount++;
-      });
+  // taxRateService.getCurrencies().then(data => {
+  //   completeCountEnd = data.tcurrency.length;
+  //   if (data.tcurrency.length > 0)
+  //     data = data.tcurrency;
+
+  //   data.forEach(currencyData => {
+  //     updateCurrency(currencyData, () => {
+  //       if (completeCount == 0) {
+  //         LoadingOverlay.show();
+  //       } else if (completeCount == completeCountEnd) {
+  //         LoadingOverlay.hide();
+  //       }
+  //       completeCount++;
+  //     });
+  //   });
+  // });
+
+  // Get all currencies from remote database
+  taxRateService.getCurrencies().then(result => {
+    /**
+     * Db currencies
+     */
+    let currencies = result.tcurrency;
+   
+
+    // get all rates from xe currency
+    FxApi.getAllRates({
+      from: defaultCurrencyCode,
+      callback: response => {
+        /**
+         * List of Xe currencies
+         */
+        const xeCurrencies = response.to;
+
+        currencies.forEach((currency, index) => {
+         currencies[index].BuyRate = FxApi.findBuyRate(currency.Currency, xeCurrencies);
+         currencies[index].SellRate = FxApi.findSellRate(currency.Currency, xeCurrencies);
+        });
+
+        let formatedList = [];
+
+        currencies.forEach((currency) => {
+          formatedList.push({
+            type: "TCurrency",
+            fields: currency
+          });
+        });
+
+        // Now we need to save this
+        FxApi.saveCurrencies(formatedList, (response, error) => {
+          if(response) {
+            LoadingOverlay.hide();
+            onSuccess();
+            $('.btnRefresh').trigger('click');
+          } else if(error) {
+            LoadingOverlay.hide();
+            onError();
+
+            swal({title: "Oooops...", text: "Couldn't update currencies", type: "error", showCancelButton: true, confirmButtonText: "Try Again"}).then(result => {
+              if (result.value) {
+                $('.synbutton').trigger('click');
+              } else if (result.dismiss === "cancel") {}
+            });
+          }
+        });
+      }
     });
   });
 };

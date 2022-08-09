@@ -591,6 +591,10 @@ Template.setup.onRendered(function () {
         }, 100);
       }
 
+      if ($.fn.dataTable.isDataTable("#taxRatesTable")) {
+        $("#taxRatesTable").DataTable().destroy();
+      }
+
       setTimeout(() => {
         $("#taxRatesTable")
           .DataTable({
@@ -749,7 +753,14 @@ Template.setup.onRendered(function () {
                 }, 100);
               }
 
-              $(".fullScreenSpin").css("display", "none");
+              
+
+              if ($.fn.dataTable.isDataTable("#paymentmethodList")) {
+                $("#paymentmethodList").DataTable().destroy();
+              }
+
+              LoadingOverlay.hide();
+
               setTimeout(function () {
                 $("#paymentmethodList")
                   .DataTable({
@@ -838,7 +849,7 @@ Template.setup.onRendered(function () {
                       MakeNegative();
                     }, 100);
                   });
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               }, 10);
 
               var columns = $("#paymentmethodList th");
@@ -875,7 +886,7 @@ Template.setup.onRendered(function () {
             })
             .catch(function (err) {
               // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
               // Meteor._reload.reload();
             });
         } else {
@@ -938,7 +949,11 @@ Template.setup.onRendered(function () {
             }, 100);
           }
 
-          $(".fullScreenSpin").css("display", "none");
+          if ($.fn.dataTable.isDataTable("#paymentmethodList")) {
+            $("#paymentmethodList").DataTable().destroy();
+          }
+
+          LoadingOverlay.hide();
           setTimeout(function () {
             $("#paymentmethodList")
               .DataTable({
@@ -1024,7 +1039,7 @@ Template.setup.onRendered(function () {
                   MakeNegative();
                 }, 100);
               });
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           }, 10);
 
           var columns = $("#paymentmethodList th");
@@ -1122,7 +1137,7 @@ Template.setup.onRendered(function () {
               }, 100);
             }
 
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             setTimeout(function () {
               $("#paymentmethodList")
                 .DataTable({
@@ -1207,7 +1222,7 @@ Template.setup.onRendered(function () {
                     MakeNegative();
                   }, 100);
                 });
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             }, 10);
 
             var columns = $("#paymentmethodList th");
@@ -1244,7 +1259,7 @@ Template.setup.onRendered(function () {
           })
           .catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             // Meteor._reload.reload();
           });
       });
@@ -1279,7 +1294,7 @@ Template.setup.onRendered(function () {
             organisationService
               .saveOrganisationSetting(objDetails)
               .then(function (data) {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
                 swal({
                   title: "Stripe Connection Successful",
                   text: "Your stripe account connection is successful",
@@ -1297,7 +1312,7 @@ Template.setup.onRendered(function () {
                 });
               })
               .catch(function (err) {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
                 swal({
                   title: "Stripe Connection Successful",
                   text: err,
@@ -1312,7 +1327,7 @@ Template.setup.onRendered(function () {
                 });
               });
           } else {
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             swal({
               title: "Oooops...",
               text: response,
@@ -1349,7 +1364,7 @@ Template.setup.onRendered(function () {
         .saveOrganisationSetting(objDetails)
         .then(function (data) {
           Session.setPersistent("vs1companyStripeFeeMethod", feeMethod);
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
           swal({
             title: "Default Payment Method Setting Successfully Changed",
             text: "",
@@ -1372,7 +1387,7 @@ Template.setup.onRendered(function () {
           });
         })
         .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
           swal({
             title: "Default Payment Method Setting Successfully Changed",
             text: "",
@@ -1506,7 +1521,10 @@ Template.setup.onRendered(function () {
         MakeNegative();
       }, 100);
 
-      if (refresh == true) $("#termsList").DataTable().destroy();
+      if ($.fn.dataTable.isDataTable("#termsList")) {
+        $("#termsList").DataTable().destroy();
+      }
+     
 
       setTimeout(function () {
         $("#termsList")
@@ -1586,7 +1604,7 @@ Template.setup.onRendered(function () {
               MakeNegative();
             }, 100);
           });
-        // $(".fullScreenSpin").css("display", "none");
+        // LoadingOverlay.hide();
       }, 300);
     }
 
@@ -1700,7 +1718,11 @@ Template.setup.onRendered(function () {
                 }, 100);
               }
 
-              $(".fullScreenSpin").css("display", "none");
+              if ($.fn.dataTable.isDataTable("#termsList")) {
+                $("#termsList").DataTable().destroy();
+              }
+
+              LoadingOverlay.hide();
               setTimeout(function () {
                 $("#termsList")
                   .DataTable({
@@ -1785,7 +1807,7 @@ Template.setup.onRendered(function () {
                       MakeNegative();
                     }, 100);
                   });
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               }, 10);
 
               var columns = $("#termsList th");
@@ -1820,7 +1842,7 @@ Template.setup.onRendered(function () {
             })
             .catch(function (err) {
               // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
               // Meteor._reload.reload();
             });
         } else {
@@ -1893,7 +1915,7 @@ Template.setup.onRendered(function () {
             }, 100);
           }
 
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
           setTimeout(function () {
             $("#termsList")
               .DataTable({
@@ -1978,7 +2000,7 @@ Template.setup.onRendered(function () {
                   MakeNegative();
                 }, 100);
               });
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           }, 10);
 
           var columns = $("#termsList th");
@@ -2087,7 +2109,7 @@ Template.setup.onRendered(function () {
               }, 100);
             }
 
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             setTimeout(function () {
               $("#termsList")
                 .DataTable({
@@ -2171,7 +2193,7 @@ Template.setup.onRendered(function () {
                     MakeNegative();
                   }, 100);
                 });
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             }, 10);
 
             var columns = $("#termsList th");
@@ -2206,7 +2228,7 @@ Template.setup.onRendered(function () {
           })
           .catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             // Meteor._reload.reload();
           });
       });
@@ -2270,11 +2292,14 @@ Template.setup.onRendered(function () {
 
     await templateObject.currentEmployees.set(employeeList);
 
-    if (refresh == true) {
-      $("#employeeListTable").DataTable().destroy();
-    }
+  
 
     if (await templateObject.currentEmployees.get()) {
+
+      if ($.fn.dataTable.isDataTable("#employeeListTable")) {
+        $("#employeeListTable").DataTable().destroy();
+      }
+      
       setTimeout(() => {
         $("#employeeListTable")
           .DataTable({
@@ -2989,6 +3014,11 @@ Template.setup.onRendered(function () {
     templateObject.taxraterecords.set(taxCodesList);
 
     if (splashArrayTaxRateList) {
+
+      if ($.fn.dataTable.isDataTable("#tblTaxRate")) {
+        $("#tblTaxRate").DataTable().destroy();
+      }
+      
       $("#tblTaxRate").DataTable({
         data: splashArrayTaxRateList,
         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -3332,7 +3362,7 @@ Template.setup.onRendered(function () {
           });
 
         // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }, 300);
     }
 
@@ -3602,17 +3632,17 @@ Template.setup.onRendered(function () {
               //             )
               //               .then(function (datareturn) {
               //                 templateObject.resetData(objCombineData);
-              //                 $(".fullScreenSpin").css("display", "none");
+              //                 LoadingOverlay.hide();
               //               })
               //               .catch(function (err) {
-              //                 $(".fullScreenSpin").css("display", "none");
+              //                 LoadingOverlay.hide();
               //               });
               //           }
               //         })
               //         .catch(function (err) {});
               //     })
               //     .catch(function (err) {
-              //       $(".fullScreenSpin").css("display", "none");
+              //       LoadingOverlay.hide();
               //     });
               // });
               setTimeout(function () {
@@ -3639,7 +3669,7 @@ Template.setup.onRendered(function () {
             let dataLenght = settings._iDisplayLength;
             if (dataLenght == -1) {
               if (settings.fnRecordsDisplay() > initialDatatableLoad) {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               } else {
                 sideBarService
                   .getAllSuppliersDataVS1("All", 1)
@@ -3647,19 +3677,19 @@ Template.setup.onRendered(function () {
                     addVS1Data("TSupplierVS1", JSON.stringify(dataNonBo))
                       .then(function (datareturn) {
                         templateObject.resetData(dataNonBo);
-                        $(".fullScreenSpin").css("display", "none");
+                        LoadingOverlay.hide();
                       })
                       .catch(function (err) {
-                        $(".fullScreenSpin").css("display", "none");
+                        LoadingOverlay.hide();
                       });
                   })
                   .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
+                    LoadingOverlay.hide();
                   });
               }
             } else {
               if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               } else {
                 sideBarService
                   .getAllSuppliersDataVS1(dataLenght, 0)
@@ -3667,14 +3697,14 @@ Template.setup.onRendered(function () {
                     addVS1Data("TSupplierVS1", JSON.stringify(dataNonBo))
                       .then(function (datareturn) {
                         templateObject.resetData(dataNonBo);
-                        $(".fullScreenSpin").css("display", "none");
+                        LoadingOverlay.hide();
                       })
                       .catch(function (err) {
-                        $(".fullScreenSpin").css("display", "none");
+                        LoadingOverlay.hide();
                       });
                   })
                   .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
+                    LoadingOverlay.hide();
                   });
               }
             }
@@ -3684,7 +3714,7 @@ Template.setup.onRendered(function () {
           });
 
         // $('#tblSupplierlist').DataTable().column( 0 ).visible( true );
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }, 300);
 
       LoadingOverlay.hide();
@@ -3930,7 +3960,7 @@ Template.setup.onRendered(function () {
             //     }
             //     $(".fullScreenSpin").css("display", "inline-block");
             //     setTimeout(function () {
-            //       $(".fullScreenSpin").css("display", "none");
+            //       LoadingOverlay.hide();
             //     }, 100);
             //   } else {
             //   }
@@ -4043,10 +4073,10 @@ Template.setup.onRendered(function () {
             //           $("#InventoryTable").dataTable().fnPageChange("last");
             //         }, 400);
 
-            //         $(".fullScreenSpin").css("display", "none");
+            //         LoadingOverlay.hide();
             //       })
             //       .catch(function (err) {
-            //         $(".fullScreenSpin").css("display", "none");
+            //         LoadingOverlay.hide();
             //       });
             //   });
             //   setTimeout(function () {
@@ -4064,17 +4094,17 @@ Template.setup.onRendered(function () {
             let dataLenght = settings._iDisplayLength;
             // splashArrayProductList = [];
             if (dataLenght == -1) {
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             } else {
               if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               } else {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               }
             }
           });
 
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         $("div.dataTables_filter input").addClass(
           "form-control form-control-sm"
         );
@@ -4378,7 +4408,7 @@ Template.setup.events({
           );
         }
 
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Organisation details successfully saved!",
           text: "",
@@ -4401,7 +4431,7 @@ Template.setup.events({
         });
       })
       .catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Oooops...",
           text: "All fields are required.",
@@ -4766,7 +4796,7 @@ Template.setup.events({
               salestaxcode;
             addLoginData(loginDataArray)
               .then(function (datareturnCheck) {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
                 swal({
                   title: "Default Tax Rate Successfully Changed",
                   text: "",
@@ -4790,7 +4820,7 @@ Template.setup.events({
                 });
               })
               .catch(function (err) {
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
                 swal({
                   title: "Default Tax Rate Successfully Changed",
                   text: "",
@@ -4814,7 +4844,7 @@ Template.setup.events({
                 });
               });
           } else {
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             swal({
               title: "Default Tax Rate Successfully Changed",
               text: "",
@@ -4839,7 +4869,7 @@ Template.setup.events({
         }
       })
       .catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         swal({
           title: "Default Tax Rate Successfully Changed",
           text: "",
@@ -4906,7 +4936,7 @@ Template.setup.events({
         "<strong>WARNING:</strong> Tax Rate cannot be blank!",
         "warning"
       );
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
       e.preventDefault();
     }
 
@@ -4957,7 +4987,7 @@ Template.setup.events({
                 } else if (result.dismiss === "cancel") {
                 }
               });
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         })
         .catch(function (err) {
@@ -5004,7 +5034,7 @@ Template.setup.events({
                 } else if (result.dismiss === "cancel") {
                 }
               });
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         });
     } else {
@@ -5050,7 +5080,7 @@ Template.setup.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     }
   },
@@ -5105,7 +5135,7 @@ Template.setup.events({
           } else if (result.dismiss === "cancel") {
           }
         });
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       });
   },
   "click #taxRatesTable tbody td.clickable": (e) => {
@@ -5395,7 +5425,7 @@ Template.setup.events({
           } else if (result.dismiss === "cancel") {
           }
         });
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       });
   },
   "click .btnSavePaymentMethod": function () {
@@ -5415,7 +5445,7 @@ Template.setup.events({
 
     let objDetails = "";
     if (paymentName === "") {
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
       Bert.alert(
         "<strong>WARNING:</strong> Payment Method Name cannot be blank!",
         "warning"
@@ -5470,7 +5500,7 @@ Template.setup.events({
                 } else if (result.dismiss === "cancel") {
                 }
               });
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         })
         .catch(function (err) {
@@ -5515,7 +5545,7 @@ Template.setup.events({
                 } else if (result.dismiss === "cancel") {
                 }
               });
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         });
     } else {
@@ -5561,7 +5591,7 @@ Template.setup.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     }
   },
@@ -5883,7 +5913,7 @@ Template.setup.events({
           } else if (result.dismiss === "cancel") {
           }
         });
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       });
   },
   "click .btnSaveTerms": function () {
@@ -5934,7 +5964,7 @@ Template.setup.events({
 
     let objDetails = "";
     if (termsName === "") {
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
       Bert.alert(
         "<strong>WARNING:</strong> Term Name cannot be blank!",
         "warning"
@@ -5995,7 +6025,7 @@ Template.setup.events({
                 } else if (result.dismiss === "cancel") {
                 }
               });
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         })
         .catch(function (err) {
@@ -6044,7 +6074,7 @@ Template.setup.events({
                 } else if (result.dismiss === "cancel") {
                 }
               });
-              $(".fullScreenSpin").css("display", "none");
+              LoadingOverlay.hide();
             });
         });
     } else {
@@ -6095,7 +6125,7 @@ Template.setup.events({
             } else if (result.dismiss === "cancel") {
             }
           });
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     }
   },
@@ -6476,7 +6506,7 @@ Template.setup.events({
     //         templateObject.datatablerecords.set(dataTableList);
 
     //         let item = templateObject.datatablerecords.get();
-    //         $(".fullScreenSpin").css("display", "none");
+    //         LoadingOverlay.hide();
     //         if (dataTableList) {
     //           var datatable = $("#tblEmployeelist").DataTable();
     //           $("#tblEmployeelist > tbody").empty();
@@ -6533,7 +6563,7 @@ Template.setup.events({
     //           );
     //         }
     //       } else {
-    //         $(".fullScreenSpin").css("display", "none");
+    //         LoadingOverlay.hide();
     //         swal({
     //           title: "Question",
     //           text: "Employee does not exist, would you like to create it?",
@@ -6551,7 +6581,7 @@ Template.setup.events({
     //       }
     //     })
     //     .catch(function (err) {
-    //       $(".fullScreenSpin").css("display", "none");
+    //       LoadingOverlay.hide();
     //     });
     // } else {
     //   $(".btnRefreshEmployee").trigger("click");
@@ -6743,12 +6773,12 @@ Template.setup.events({
   "click .exportbtnEmployee": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletocsv").click();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   },
   "click .exportbtnExcelEmployee": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletoexcel").click();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   },
   // "click .btnRefreshEmployee": function () {
   //   $(".fullScreenSpin").css("display", "inline-block");
@@ -6779,7 +6809,7 @@ Template.setup.events({
   "click .printConfirmEmployee": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletopdf").click();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   },
   "click .templateDownload-employee": (e, templateObject) => {
     let utilityService = new UtilityService();
@@ -7011,7 +7041,7 @@ Template.setup.events({
               }
             }
           } else {
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             swal(
               "Invalid Data Mapping fields ",
               "Please check that you are importing the correct file with the correct column headers.",
@@ -7019,7 +7049,7 @@ Template.setup.events({
             );
           }
         } else {
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
           swal(
             "Invalid Data Mapping fields ",
             "Please check that you are importing the correct file with the correct column headers.",
@@ -7153,9 +7183,9 @@ Template.setup.events({
             datatable.rows.add(splashArrayAccountList);
             datatable.draw(false);
 
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           } else {
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
             $("#accountListModal").modal("toggle");
             swal({
               title: "Question",
@@ -7175,7 +7205,7 @@ Template.setup.events({
           }
         })
         .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else {
       sideBarService
@@ -7203,10 +7233,10 @@ Template.setup.events({
           datatable.rows.add(splashArrayAccountList);
           datatable.draw(false);
 
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         })
         .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     }
   },
@@ -7242,7 +7272,7 @@ Template.setup.events({
             .then(function (dataUpdate) {
               addVS1Data("TLeadStatusType", JSON.stringify(dataUpdate))
                 .then(function (datareturn) {
-                  $(".fullScreenSpin").css("display", "none");
+                  LoadingOverlay.hide();
                   let id = $(".printID").attr("id");
                   if (id !== "") {
                     window.open("/creditcard?id=" + id);
@@ -7257,7 +7287,7 @@ Template.setup.events({
             });
         })
         .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
 
           swal({
             title: "Oooops...",
@@ -7271,10 +7301,10 @@ Template.setup.events({
             }
           });
 
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else {
-      $(".fullScreenSpin").css("display", "none");
+      LoadingOverlay.hide();
       swal({
         title: "Please Enter Status",
         text: "Status field cannot be empty",
@@ -7858,7 +7888,7 @@ Template.setup.events({
   //                       }
   //                     });
 
-  //                     $(".fullScreenSpin").css("display", "none");
+  //                     LoadingOverlay.hide();
   //                   }
   //                 }
   //               );
@@ -7891,7 +7921,7 @@ Template.setup.events({
   //                       }
   //                     });
 
-  //                     $(".fullScreenSpin").css("display", "none");
+  //                     LoadingOverlay.hide();
   //                   }
   //                 }
   //               );
@@ -7924,7 +7954,7 @@ Template.setup.events({
   //                       }
   //                     });
 
-  //                     $(".fullScreenSpin").css("display", "none");
+  //                     LoadingOverlay.hide();
   //                   }
   //                 }
   //               );
@@ -8053,7 +8083,7 @@ Template.setup.events({
   //           }
   //         });
 
-  //         $(".fullScreenSpin").css("display", "none");
+  //         LoadingOverlay.hide();
   //       });
   //   }
   // },
@@ -8700,7 +8730,7 @@ Template.setup.events({
             }
           });
 
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     }
   },
