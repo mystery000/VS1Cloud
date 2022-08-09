@@ -60,8 +60,6 @@ Template.assignLeaveTypePop.onCreated(function () {
                             }
                         });
 
-
-
                         if( tAssignteavetype.length > 0 ){
 
                             let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
@@ -95,27 +93,7 @@ Template.assignLeaveTypePop.onCreated(function () {
 
                             $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
                             $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
-                            let HoursLeave = '';
-                            let HoursAccruedAnnuallyFullTimeEmp = '';
-                            let HoursFullTimeEmpFortnightlyPay = '';
-                            let HoursAccruedAnnually = '';
-
-                            // switch(leaveCalcMethod){
-                            //     case 'Manually Recorded Rate':
-                            //         $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
-                            //     break;
-                            //     case 'No Calculation Required':
-
-                            //     break;
-                            //     case 'Based on Ordinary Earnings':
-                            //         $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
-                            //         $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
-                            //     break;
-                            //     default:
-                            //        $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
-                            //     break;
-                            // }
-
+                            
                             $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
                             $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
                             $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)

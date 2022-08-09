@@ -5,8 +5,8 @@ export default class PayTemplateEarningLineFields {
         EarningRate,
         CalculationType,
         ExpenseAccount,
-        Active
-        // HoursPerWeek,
+        Active,
+        Amount
         // AnnualSalary,
         // FixedAmount,
         // Hours,
@@ -19,7 +19,7 @@ export default class PayTemplateEarningLineFields {
         this.CalculationType = CalculationType;
         this.ExpenseAccount = ExpenseAccount;
         this.Active = Active;
-        // this.HoursPerWeek = HoursPerWeek;
+        this.Amount = Amount;
         // this.AnnualSalary = AnnualSalary;
         // this.FixedAmount = FixedAmount;
         // this.Hours = Hours;

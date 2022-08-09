@@ -11,6 +11,8 @@ export default class PayTemplateSuperannuationLineFields {
         LiabilityAccount,
         PaymentFrequency,
         PeriodPaymentDate,
+        Amount,
+        Percentage,
         Active
     }){
         this.ID = ID;
@@ -24,6 +26,8 @@ export default class PayTemplateSuperannuationLineFields {
         this.LiabilityAccount = LiabilityAccount;
         this.PaymentFrequency = PaymentFrequency;
         this.PeriodPaymentDate = PeriodPaymentDate;
+        this.Amount = Amount;
+        this.Percentage = Percentage,
         this.Active = Active;
     }
 }

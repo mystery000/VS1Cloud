@@ -3379,10 +3379,8 @@ Template.employeescard.onRendered(function () {
         if( useData.length ){
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
-                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
                     $(`#ptEarningRate${item.fields.ID}`).val( item.fields.EarningRate );
-                    $(`#ptEarningAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
+                    $(`#ptEarningAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.fields.Amount)|| 0.00 );
                 })
             }, 500);
         }
@@ -3498,13 +3496,9 @@ Template.employeescard.onRendered(function () {
         if( useData.length ){
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
-                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
                     $(`#ptSuperannuationFund${item.fields.ID}`).val( item.fields.Fund );
-                    $(`#ptSuperannuationAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
-                    let percentage = ( item.fields.Percentage === undefined || item.fields.Percentage === null || item.fields.Percentage.length === 0) ? 0 : item.fields.Percentage;
-                    let percentVal = ( percentage )? Number(percentage.replace(/[^0-9.-]+/g,"")): 0;
-                    $(`#ptSuperannuationPercentage${item.fields.ID}`).val( `${parseFloat(percentVal).toFixed(2)}%` );
+                    $(`#ptSuperannuationAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.fields.Amount)|| 0.00 );
+                    $(`#ptSuperannuationPercentage${item.fields.ID}`).val( `${parseFloat(item.fields.Percentage).toFixed(2)}%` );
                 })
             }, 500);
         }
@@ -3552,18 +3546,16 @@ Template.employeescard.onRendered(function () {
                 return item;
             }
         });
-
         await templateObject.payTemplateReiumbursementLineInfo.set(useData);
         await templateObject.setReiumbursementDropDown();
         if( useData.length ){
             setTimeout(function () {
                 Array.prototype.forEach.call(useData, (item) => {
-                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
                     $(`#ptReimbursementType${item.fields.ID}`).val( item.fields.ReiumbursementType );
-                    $(`#ptReimbursementAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(amount)|| 0.00 );
+                    $(`#ptReimbursementAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.fields.Amount)|| 0.00 );
                 });
             }, 500);
+            
         }
 
     };
@@ -4084,13 +4076,13 @@ Template.employeescard.onRendered(function () {
             });
             templateObject.paySlipInfos.set(useData);
 
-
+            let utilityService = new UtilityService();
             for (let i = 0; i < useData.length; i++) {
                 dataListAllowance = [
                     useData[i].fields.ID || '',
                     useData[i].fields.Period || '',
-                    useData[i].fields.PaymentDate || '',
-                    useData[i].fields.TotalPay || '',
+                    (useData[i].fields.PaymentDate == 0) ? '' : moment(useData[i].fields.PaymentDate).format("DD/MM/YYYY") || '',
+                    utilityService.modifynegativeCurrencyFormat( useData[i].fields.TotalPay ) || '',
                     `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
                     <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>
                     `,
@@ -4161,17 +4153,15 @@ Template.employeescard.onRendered(function () {
                                 sideBarService.getPaySlip(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
                                     for (let i = 0; i < useData.length; i++) {
-
-                                        let dataListAllowance = [
+                                        dataListAllowance = [
                                             useData[i].fields.ID || '',
                                             useData[i].fields.Period || '',
-                                            useData[i].fields.PaymentDate || '',
-                                            useData[i].fields.TotalPay || '',
+                                            (useData[i].fields.PaymentDate == 0) ? '' : moment(useData[i].fields.PaymentDate).format("DD/MM/YYYY") || '',
+                                            utilityService.modifynegativeCurrencyFormat( useData[i].fields.TotalPay ) || '',
                                             `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
                                             <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>
                                             `,
                                         ];
-
                                         splashArrayPaySlipList.push(dataListAllowance);
                                     }
 
@@ -4549,6 +4539,168 @@ Template.employeescard.onRendered(function () {
     });
 });
 Template.employeescard.events({
+    'keyup #tblLeaveRequests_filter input': function (event) {
+        if($(event.target).val() != ''){
+          $(".btnRefreshLeaveRequest").addClass('btnSearchAlert');
+        }else{
+          $(".btnRefreshLeaveRequest").removeClass('btnSearchAlert');
+        }
+        if (event.keyCode == 13) {
+           $(".btnRefreshLeaveRequest").trigger("click");
+        }
+    },
+    'click .btnRefreshLeaveRequest':function(event){      
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        var splashArrayLeaveList = new Array();
+        const lineExtaSellItems = [];
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let dataSearchName = $('#tblLeaveRequests_filter input').val();
+        if (dataSearchName.replace(/\s/g, '') != '') {
+            employeePayrollServices.getLeaveRequestByName(dataSearchName).then(function (data) {
+                $(".btnRefreshLeaveRequest").removeClass('btnSearchAlert');
+                let lineItems = []; 
+                let splashArrayList = [];
+                let useData = LeaveRequest.fromList(
+                    data.tleavrequest
+                ).filter((item) => {
+                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                        return item;
+                    }
+                });            
+                if (useData.length > 0) {
+                    for (let i = 0; i < useData.length; i++) {
+                        let dataListAllowance = [
+                            useData[i].fields.ID || '',
+                            useData[i].fields.Description || '',
+                            useData[i].fields.PayPeriod || '',
+                            useData[i].fields.LeaveMethod || '',
+                            useData[i].fields.Status || '',
+                        ];
+                        splashArrayList.push(dataListAllowance);
+                    }
+                    let uniqueChars = [...new Set(splashArrayLeaveList)];
+                    var datatable = $('#tblLeaveRequests').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(uniqueChars);
+                    datatable.draw(false);
+                    setTimeout(function () {
+                        $("#tblLeaveRequests").dataTable().fnPageChange('last');
+                    }, 400);
+
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                    swal({
+                        title: 'Question',
+                        text: "Leave Request does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#leaveRequestForm')[0].reset();
+                            $('#edtLeaveTypeofRequest').val(dataSearchName);
+                            $('#tblLeaveRequests').modal('hide');
+                            $('#newLeaveRequestModal').modal('show');
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+          $(".btnSearchAlert").trigger("click");
+        }
+    },
+    'keyup #tblAssignLeaveTypes_filter input': function (event) {
+        if($(event.target).val() != ''){
+          $(".btnRefreshAssignLeave").addClass('btnSearchAlert');
+        }else{
+          $(".btnRefreshAssignLeave").removeClass('btnSearchAlert');
+        }
+        if (event.keyCode == 13) {
+           $(".btnRefreshAssignLeave").trigger("click");
+        }
+    },
+    'click .btnRefreshAssignLeave':function(event){      
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        var splashArrayLeaveList = new Array();
+        const lineExtaSellItems = [];
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let dataSearchName = $('#tblAssignLeaveTypes_filter input').val();
+        if (dataSearchName.replace(/\s/g, '') != '') {
+            employeePayrollServices.getAssignLeaveTypeByName(dataSearchName).then(function (data) {
+                $(".btnRefreshAssignLeave").removeClass('btnSearchAlert');
+                let lineItems = [];    
+                let useData = AssignLeaveType.fromList(
+                    data.tassignleavetype
+                ).filter((item) => {
+                    if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
+                        return item;
+                    }
+                });            
+                if (useData.length > 0) {
+                    for (let i = 0; i < useData.length; i++) {
+                        let dataListAllowance = [
+                            useData[i].fields.ID || '',
+                            useData[i].fields.LeaveType || '',
+                            useData[i].fields.LeaveCalcMethod || '',
+                            useData[i].fields.HoursAccruedAnnually || '',
+                            useData[i].fields.HoursAccruedAnnuallyFullTimeEmp || '',
+                            useData[i].fields.HoursFullTimeEmpFortnightlyPay || '',
+                            useData[i].fields.HoursLeave || '',
+                            useData[i].fields.OpeningBalance || '',
+                            ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
+                            `<button type="button" class="btn btn-success btnEditAssignLeaveType" id="btnEditAssignLeaveType"><i class="fas fa-edit"></i></button>
+                            <button type="button" class="btn btn-danger btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                        ];
+                        splashArrayAssignLeaveList.push(dataListAllowance);
+                    }
+                    let uniqueChars = [...new Set(splashArrayLeaveList)];
+                    var datatable = $('#tblAssignLeaveTypes').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(uniqueChars);
+                    datatable.draw(false);
+                    setTimeout(function () {
+                        $("#tblAssignLeaveTypes").dataTable().fnPageChange('last');
+                    }, 400);
+
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                    swal({
+                        title: 'Question',
+                        text: "Assign Leave does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#assignLeaveTypeForm')[0].reset();
+                            $('#leaveTypeSelect').val(dataSearchName);
+                            $('#assignLeaveTypeSettingsModal').modal('hide');
+                            $('#assignLeaveTypeModal').modal('show');
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+          $(".btnSearchAlert").trigger("click");
+        }
+
+    },
   'keyup .txtSearchCustomer': function (event) {
         if($(event.target).val() != ''){
           $(".btnRefreshEmployees").addClass('btnSearchAlert');
@@ -7797,7 +7949,7 @@ Template.employeescard.events({
 
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
-                    // await templateObject.saveEarningLocalDB();
+                    await templateObject.saveEarningLocalDB();
                     // await templateObject.getPayEarningLines();
                 }
             }
@@ -7807,6 +7959,9 @@ Template.employeescard.events({
                     if( item.fields.Active == true ){
                         let DeductionType = $(`#ptDeductionType${item.fields.ID}`).val();
                         let amount = $(`#ptDeductionAmount${item.fields.ID}`).val();
+                        let percentVal = $(`#ptDeductionPercentage${item.fields.ID}`).val();
+                        percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
+                        percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
                         tPayTemplateDeductionLine.push({
@@ -7815,6 +7970,7 @@ Template.employeescard.events({
                                 ID: item.fields.ID,
                                 DeductionType: DeductionType,
                                 Amount: parseFloat( amount ),
+                                // Percent: percentVal,
                                 Active: true,
                             },
                         });
@@ -7836,7 +7992,7 @@ Template.employeescard.events({
                 });
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
-                    // await templateObject.saveDeductionLocalDB();
+                    await templateObject.saveDeductionLocalDB();
                 }
             }
             // Fetch superannuation funds values
@@ -7845,14 +8001,18 @@ Template.employeescard.events({
                     if( item.fields.Active == true ){
                         let SuperannuationFund = $(`#ptSuperannuationFund${item.fields.ID}`).val();
                         let amount = $(`#ptSuperannuationAmount${item.fields.ID}`).val();
+                        let percentVal = $(`#ptSuperannuationPercentage${item.fields.ID}`).val();
                         amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
                         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                        percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
+                        percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
                         tPayTemplateSuperannuationLine.push({
                             type: "TPayTemplateSuperannuationLine",
                             fields: {
                                 ID: item.fields.ID,
                                 Fund: SuperannuationFund,
                                 Amount: parseFloat( amount ),
+                                Percentage: percentVal,
                                 Active: true,
                             },
                         })
@@ -8042,6 +8202,12 @@ Template.employeescard.events({
                 type: "TOpeningBalances",
                 objects:tOpeningBalance
             };
+
+            const employeePayrolApis = new EmployeePayrollApi();
+
+            apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TOpeningBalances
+            );
 
             const ApiResponse = await apiEndpoint.fetch(null, {
                 method: "POST",

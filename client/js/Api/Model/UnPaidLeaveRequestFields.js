@@ -1,4 +1,4 @@
-export default class LeaveRequestFields {
+export default class UnPaidLeaveRequestFields {
     constructor({
         GlobalRef,
         ID,

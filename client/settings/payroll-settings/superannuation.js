@@ -3,9 +3,11 @@ import {SideBarService} from '../../js/sidebar-service';
 import { UtilityService } from "../../utility-service";
 import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
 import ApiService from "../../js/Api/Module/ApiService";
+import { EmployeePayrollService } from '../../js/employeepayroll-service';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let employeePayrollService = new EmployeePayrollService();
 
 Template.superannuationSettings.onCreated(function() {
   const templateObject = Template.instance();
@@ -342,14 +344,14 @@ Template.superannuationSettings.events({
         $('#superannuationRateForm')[0].reset();
         $('#newSuperannuationFundModal').modal('hide');
     },
-    'click .btnSearchAlert':function(event){
+    'click .btnRefreshSuperannuation':function(event){
         let templateObject = Template.instance();
         var splashArraySuperannuationList = new Array();
         const lineExtaSellItems = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblSuperannuation_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getSuperannuation(dataSearchName).then(function (data) {
+            employeePayrollService.getSuperAnnuationByName(dataSearchName).then(function (data) {
                 $(".btnRefreshSuperannuation").removeClass('btnSearchAlert');
                 let lineItems = [];
                 if (data.tsuperannuation.length > 0) {

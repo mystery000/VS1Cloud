@@ -35,7 +35,6 @@ Template.companyappsettingsdup.onRendered(function () {
         else {
             if (result) {
                 let valueData = result.items;
-                console.log(valueData)
                 let packages = [];
                 for (let j in valueData) {
                     packages.push( valueData[j].items[0].sku )
@@ -698,8 +697,6 @@ Template.companyappsettingsdup.events({
                                 method: 'post',
                                 success: function (response) {
                                     let response2 = JSON.parse(response);
-                                    console.log('response2', response2)
-                                    return false
                                     if (response2 != null) {
                                         $.ajax({
                                             url: stripeGlobalURL + 'update.php',
