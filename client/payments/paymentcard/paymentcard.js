@@ -2964,7 +2964,6 @@ Template.paymentcard.onRendered(() => {
 
         });
 
-    var url = FlowRouter.current().path;
     if (url.indexOf('?id=') > 0) {
         $("#addRow").attr("disabled", true);
         var getsale_id = url.split('?id=');
