@@ -1616,7 +1616,7 @@ Template.vs1login.onRendered(function () {
                                     Session.setPersistent('mainEPort', checkSSLPorts);
 
                                     var dataReturnRes = JSON.parse(oReq.responseText);
-
+                                    console.log("dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId", dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId)
                                     if (dataReturnRes.ProcessLog.ResponseStatus != "OK") {
                                         pausevideo();
                                         $('.myVS1Video').css('display', 'none');
@@ -1981,7 +1981,8 @@ Template.vs1login.onRendered(function () {
                                                     let basedOnTypeStorages = Object.keys(localStorage);
                                                     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                                         let employeeId = storage.split('_')[2];
-                                                        return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                                        return storage.includes('BasedOnType_');
+                                                        // return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
                                                     });
                                                     let i = basedOnTypeStorages.length;
                                                     if (i > 0) {
@@ -2653,7 +2654,8 @@ Template.vs1login.onRendered(function () {
                                 let basedOnTypeStorages = Object.keys(localStorage);
                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                     let employeeId = storage.split('_')[2];
-                                    return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                    return storage.includes('BasedOnType_')
+                                    // return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
                                 });
                                 let i = basedOnTypeStorages.length;
                                 if (i > 0) {
@@ -3188,7 +3190,8 @@ Template.vs1login.onRendered(function () {
                                                 let basedOnTypeStorages = Object.keys(localStorage);
                                                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                                     let employeeId = storage.split('_')[2];
-                                                    return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                                    return storage.includes('BasedOnType_');
+                                                    // return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
                                                 });
                                                 let i = basedOnTypeStorages.length;
                                                 if (i > 0) {
@@ -3924,7 +3927,8 @@ Template.vs1login.onRendered(function () {
                                             let basedOnTypeStorages = Object.keys(localStorage);
                                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                                 let employeeId = storage.split('_')[2];
-                                                return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                                return storage.includes('BasedOnType_');
+                                                // return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
                                             });
                                             let i = basedOnTypeStorages.length;
                                             if (i > 0) {
@@ -4622,7 +4626,8 @@ Template.vs1login.onRendered(function () {
                                         let basedOnTypeStorages = Object.keys(localStorage);
                                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                             let employeeId = storage.split('_')[2];
-                                            return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                            return storage.includes('BasedOnType_');
+                                            // return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
                                         });
                                         let i = basedOnTypeStorages.length;
                                         if (i > 0) {

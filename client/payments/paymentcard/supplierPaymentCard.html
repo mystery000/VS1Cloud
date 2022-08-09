@@ -7,7 +7,7 @@
         <style>
             .templateItem {
                  display: inline-flex !important;
- 
+
              }
              .btnPreviewTemplate {
                  padding: 6px;
@@ -15,7 +15,7 @@
              }
              .btnPreviewTemplate:hover {
                  background-color: #f8f9fc;
-             }                      
+             }
          </style>
 
 
@@ -55,13 +55,13 @@
                 <div class="row" style="background-color: #ededed; padding: 16px 32px;">
                     <div class="col-12 col-lg-6">
                         <div class="row">
-                            <div class="col-12 col-lg-6">
+                            <div class="col-12 col-lg-5">
                                 <div class="form-group"><label>Supplier</label>
                                     <select type="search" class="form-control" id="edtSupplierName" name="edtSupplierName" style="cursor: pointer;">
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6">
+                            <div class="col-12 col-lg-5">
                                 <div class="form-group"><label>Supplier Email</label>
                                     <input class="form-control form-control" type="text" id="edtSupplierEmail" name="edtSupplierEmail" customerid=" ">
                                 </div>
@@ -80,122 +80,118 @@
                     </div>
                 </div>
                 <div class="row" style="background-color: #ededed; padding: 16px 32px;">
-                    <div class="col-12 col-lg-6">
-                        <div class="row">
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Payment Amount</label>
-                                    <input class="form-control form-control" type="text" value="{{record.paymentAmount}}" id="edtPaymentAmount" name='edtPaymentAmount' readonly>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Bank Account</label>
-                                    <select type="search" class="form-control" id="edtSelectBankAccountName" name="edtSelectBankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    </select>
-
-                                    <!-- <select class="form-control" id="edtBankAccountName" name="edtBankAccountName" style="cursor: pointer;">
-                                        {{#each item in accountnamerecords}}
-                                            {{#if equals item.accountname record.bankAccount }}
-                                                <option value="{{item.accountname}}" selected="">{{item.accountname}}</option>
-                                            {{else}}
-                                                <option value="{{item.accountname}}">{{item.accountname}}</option>
-                                            {{/if}}
-                                        {{/each}}
-                                    </select> -->
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Reference No.</label>
-                                    <input class="form-control form-control" type="text" value="{{record.reference}}" id="edtReference" name="edtReference">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Payment Date</label>
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control" value="{{record.paymentDate}}" id="dtPaymentDate" name="dtPaymentDate" style="cursor: pointer;">
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                  <div class="col-12 col-xl-10">
+                      <div class="row">
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label style="color: #858796;">Comments</label><textarea class="form-control" rows="4" id="txaNotes" name="txaNotes" style="height: 125px;">{{record.notes}}</textarea></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Payment Method</label>
-                                    <select type="search" class="form-control" id="sltPaymentMethod" name="sltPaymentMethod" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    </select>
-                                    <!-- <select class="form-control" style="cursor: pointer;" id="sltPaymentMethod" name="sltPaymentMethod">
-                                        {{#each item in paymentmethodrecords}}
-                                            {{#if equals item.paymentmethod record.checkpayment }}
-                                                <option value="{{item.paymentmethod}}" selected="">{{item.paymentmethod}}</option>
-                                            {{else}}
-                                                <option value="{{item.paymentmethod}}">{{item.paymentmethod}}</option>
-                                            {{/if}}
-                                        {{/each}}
-                                    </select> -->
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Payment Amount</label>
+                                                    <input class="form-control form-control" type="text" value="{{record.paymentAmount}}" id="edtPaymentAmount" name='edtPaymentAmount' readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Payment Date</label>
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control" value="{{record.paymentDate}}" id="dtPaymentDate" name="dtPaymentDate" style="cursor: pointer;">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Bank Account</label>
+                                                    <select type="search" class="form-control" id="edtSelectBankAccountName" name="edtSelectBankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Payment Method</label>
+                                                    <select type="search" class="form-control" id="sltPaymentMethod" name="sltPaymentMethod" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Department</label>
-                                    <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    </select>
-                                    <!-- <select class="form-control" style="cursor: pointer;" id="sltDepartment" name="sltDepartment">
-                                        {{#each item in deptrecords}}
-                                            {{#if equals item.department record.department }}
-                                                <option value="{{record.department}}" selected="">{{record.department}}</option>
-                                            {{else}}
-                                                <option value="{{item.department}}">{{item.department}}</option>
-                                            {{/if}}
-                                        {{/each}}
-                                    </select> -->
+
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Reference No.</label>
+                                                    <input class="form-control form-control" type="text" value="{{record.reference}}" id="edtReference" name="edtReference">
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Department</label>
+                                                    <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{#if isCurrencyEnable}}
+                                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="row">
+                                                <div class="col-6 col-md-12 col-lg-12">
+                                                    {{> CurrencyWidget rate="buy"}}
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    {{/if}}
                                 </div>
                             </div>
-                        </div>
 
-                    </div>
-                    
-                
-                    {{#if isCurrencyEnable}}
-                    <div class="col-12 col-lg-2">
-                        {{> CurrencyWidget rate="buy"}}
-                    </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="row">
+                                    {{#if isCurrencyEnable}}
+                                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="row">
 
-                    <div class="col-12 col-lg-2 foreign-currency-js" style="display:none">
-                        <!-- <div class="form-group"><label>Foreign Currency</label>
-                            <input class="form-control form-control" type="text" value="{{record.foreignAmount}}" id="edtForeignCurrency" name='ForeignCurrency'>
-                        </div> -->
-                        <div class="form-group"><label>Foreign Amount</label>
-
-                            <div class="input-group">
-                                <!-- <div class="input-group-prepend">
-                                    <span class="input-group-text currency-symbol">N/A</span>
-                                </div> -->
-                                <input class="form-control form-control" type="text" value="$0.00" data-value="0.00" id="edtForeignAmount" name='foreignAmount'>
-
-                           </div>
-        
-                        </div>
-                        <div class="form-group"><label>Variation</label>
-                            <input class="form-control form-control" type="text" value="0.00" data-value="0.00"  id="edtVariation" name='variation'>
-                        </div>
-                        <div class="form-group ">
-                            <label>Applied</label>
-                           <div class="input-group">
-                                <!-- <div class="input-group-prepend">
-                                    <span class="input-group-text currency-symbol">N/A</span>
-                                </div> -->
-                                <input class="form-control appliedAmount" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
-                           </div>
-                        </div>
-                    </div>
-                
-                
-                    {{/if}}
-                
-                    <div class="col-12 col-lg-2">
-                        <div class="form-group"><label style="color: #858796;">Comments</label><textarea class="form-control" rows="4" id="txaNotes" name="txaNotes" style="height: 125px;">{{record.notes}}</textarea></div>
-                    </div>
-                 
+                                                <div class="col-6 col-md-12 col-lg-12 foreign-currency-js" style="display:none">
+                                                    <div class="form-group"><label>Foreign Amount</label>
+                                                        <div class="input-group">
+                                                            <input class="form-control form-control" type="text" value="$0.00" data-value="0.00" id="edtForeignAmount" name='foreignAmount'>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group"><label>Variation</label>
+                                                        <input class="form-control form-control" type="text" value="0.00" data-value="0.00" id="edtVariation" name='variation'>
+                                                    </div>
+                                                    <div class="form-group ">
+                                                        <label>Applied</label>
+                                                        <div class="input-group">
+                                                            <input class="form-control form-control" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                  </div>
+                  </div>
                 </div>
 
 
@@ -235,7 +231,7 @@
                                                                         {{#if equals title 'Supplier Payments'}}
                                                                         <label class="custom-control-label" for="Supplier_Payments_{{index}}" style="cursor: pointer; color: transparent;"></label>
                                                                         {{/if}}
-                                                                       
+
                                                                         <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
 
 
@@ -251,9 +247,9 @@
                                                     <div class="custom-control custom-switch">
                                                         <input class="custom-control-input chkGlobalSettings" name="print_supplier_payment" checked type="checkbox" id="print_supplier_payment" autocomplete="off">
                                                         <label style="cursor: pointer;" class="custom-control-label" for="print_supplier_payment">Print Supplier Payment</label>
-                                                    </div>   
+                                                    </div>
                                                 </div>
-                                              
+
                                             </div>
                                         {{/each}}
                                     </div>
@@ -283,7 +279,7 @@
                                 <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input favCheckBox chkBankingReport" name="print_supplier_payment_second" checked type="checkbox" id="print_supplier_payment_second" autocomplete="off">
                                     <label style="cursor: pointer;" class="custom-control-label" for="print_supplier_payment_second">Print Supplier Payment</label>
-                                </div>                      
+                                </div>
 
                             </div>
 
@@ -344,10 +340,10 @@
                                                     <h4 class="print-header-value" style="font-weight: bold; font-size: 22.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                                     </h4>
                                                 </div>
-        
+
                                             </div>
-        
-        
+
+
                                             <div style="display: flex; width: 100%;">
                                                 <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                                     <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -356,18 +352,18 @@
                                                     <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
                                                     <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No :</p>
                                                     <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
-        
+
                                                     <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>
-        
+
                                                     <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
-        
+
                                                     <div class="mt-4" id="customfieldlable">
                                                         <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                                         <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                                         <p class="customfield3" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
-        
-        
+
+
                                                 </div>
                                                 <div style="width: 50%; padding-left: 16px;">
                                                     <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
@@ -382,18 +378,18 @@
                                                         <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                                             Now</a>
                                                     </p>
-        
+
                                                     <div class="mt-4" id="customfieldlabledata">
                                                         <p class="customfield1data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                                         <p class="customfield2data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                                         <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -428,30 +424,30 @@
                                                             <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                                         </div>
                                                         <!-- <div class="bankDetails" style="margin: 16px;">
-        
+
                                             </div> -->
                                                         <div class="col-12">
                                                             <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                                         </div>
-        
+
                                                         <div class="col-12">
-        
+
                                                             <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 BSB (Branch Number) :
                                                                 <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
+
                                                             <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
+
                                                             <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
-        
+
+
                                                         </div>
-        
+
                                                     </div>
                                                 </div>
                                                 <div class="col-6 field_amount">
@@ -504,13 +500,13 @@
                                                 </div>
                                             </div>
                                         </div>
-        
-        
+
+
                                     </div>
-        
+
                                     <div style="font-size: 10px; margin-right: 8px; float: right;">
                                         <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-                                       
+
                                     </div>
                                     <p class="bottome-text-fix" style="font-size: 10px;
                                     margin-right: 18px;
@@ -519,17 +515,17 @@
                                     z-index: 1111;
                                     right: 0;
                                 ">Page 1 of 1</p>
-        
+
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times" style="margin-right: 5px;"></i>Close</button>
                             </div>
                         </div>
-        
+
                     </div>
                 </div>
-        
+
                 <div style="display:none;width: 90%;position:relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;" id="html-2-pdfwrapper_new"
                 name="html-2-pdfwrapper_new">
                 <div class="d-flex flex-row d-sm-flex d-md-flex ">
@@ -569,10 +565,10 @@
                                 <h4 class="print-header-value" style="font-weight: bold; font-size: 15.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                 </h4>
                             </div>
-        
+
                         </div>
-        
-        
+
+
                         <div style="display: flex; width: 100%;">
                             <div style="width: 60%; padding-right: 16px;font-weight: bold;">
                                 <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -581,11 +577,11 @@
                                 <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
                                 <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</p>
                                 <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
-                              
-                                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>  
-        
+
+                                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>
+
                                 <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
-        
+
                                 <div class="mt-4" id="customfieldtablenew">
                                     <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                     <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
@@ -608,10 +604,10 @@
                                     <p class="customfield2data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                     <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                 </div>
-        
-        
-        
-        
+
+
+
+
                             </div>
                         </div>
                     </div>
@@ -639,37 +635,37 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="display:none;"> 
+                        <div class="row" style="display:none;">
                             <div class="col-6 ">
                                 <div class="row field_payment" style="border: 1px solid;">
                                     <div class="col-12">
                                         <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                     </div>
                                     <!-- <div class="bankDetails" style="margin: 16px;">
-        
+
                             </div> -->
                                     <div class="col-12">
                                         <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                     </div>
-        
+
                                     <div class="col-12">
-        
+
                                         <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             BSB (Branch Number) :
                                             <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
+
                                         <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
+
                                         <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
-        
+
+
                                     </div>
-        
+
                                 </div>
                             </div>
                             <div class="col-6 field_amount">
@@ -722,21 +718,21 @@
                             </div>
                         </div>
                     </div>
-        
-        
+
+
                 </div>
-        
+
                 <div style="font-size: 10px; margin-right: 8px; float: right;">
                     <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-                 
+
                 </div>
                 <p class="bottome-text-fix" style="font-size: 10px; margin-right: 18px;position: absolute; bottom: 0;
                 z-index: 1111;
                 right: 0;
             ">Page 1 of 1</p>
-        
+
                 </div>
-           
+
 
                 <!-- <div class="row" style="background-color: #ededed; padding: 0px 32px;">
                     <div class="col-12 col-lg-6">
@@ -1393,9 +1389,9 @@
                                         </tr>
                                     {{/if}}
                                 </thead>
-                            
+
                                 <tbody>
-                                    
+
                                     {{#each item in record.LineItems}}
                                         <tr class="dnd-moved dynamic-converter-js" id="{{item.poid}}" name="{{item.poid}}">
                                             <td contenteditable="false" class="colTransDate">{{item.invoicedate}}</td>
@@ -1404,26 +1400,26 @@
                                             <td contenteditable="false" class="lineOrginalamount">{{item.orginalamount}}</td>
                                             <td contenteditable="false" class="lineAmountdue">{{item.amountdue}}</td>
                                                                     <!-- <td contenteditable="true" class="linePaymentamount">{{item.paymentamount}}</td> -->
-                                           
+
                                                 <td><input class="linePaymentamount highlightInput  convert-from" type="text" value="{{item.paymentamount}}"></td>
                                                 {{#if isForeignEnabled}}
-                                                    <td><input class="linePaymentamount highlightInput convert-to foreign" type="text" value="{{ convertToForeignAmount item.paymentamount}}"></td>
+                                                    <td contenteditable="false" class="linePaymentamount  convert-to foreign" >{{ convertToForeignAmount item.paymentamount}}</td>
                                                 {{/if}}
 
                                                 <td contenteditable="false" class="lineOutstandingAmount convert-from">{{item.ouststandingamount}}</td>
                                                 {{#if isForeignEnabled}}
                                                     <td contenteditable="false" class="lineOutstandingAmount foreign convert-to">{{ convertToForeignAmount item.ouststandingamount}}</td>
                                                 {{/if}}
-                                         
+
                                             <td contenteditable="true" class="colComments">{{item.comments}}</td>
-                                          
+
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
                                         </tr>
                                     {{/each}}
-                                  
+
                                 </tbody>
-                                  
-                               
+
+
                             </table>
                             <div class="d-xl-flex justify-content-xl-center">
                                 <div align="left" style="width:100%;">
@@ -1457,14 +1453,14 @@
 
 
                 <div class="row">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-2">
                         <div class="row justify-content-center desktopButtons">
 
                             <div class="custom-control custom-switch">
                                 <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox" style="cursor: pointer;">
                                 <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose Template</label>
                             </div>
-                    
+
 
                         </div>
 

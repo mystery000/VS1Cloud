@@ -22,7 +22,7 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
-import { calculateApplied, convertToForeignAmount, onExchangeRateChange, _setTmpAppliedAmount } from "./supplierPaymentcard";
+import { calculateApplied, calculateAppliedWithForeign, convertToForeignAmount, onExchangeRateChange, onForeignTableInputChange, _setTmpAppliedAmount } from "./supplierPaymentcard";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -60,6 +60,7 @@ Template.paymentcard.onCreated(() => {
 
 Template.paymentcard.onRendered(() => {
         _setTmpAppliedAmount();
+        const templateObject = Template.instance();
         let url = FlowRouter.current().path;
         $('#choosetemplate').attr('checked', true);
         const dataTableList = [];
@@ -69,6 +70,21 @@ Template.paymentcard.onRendered(() => {
         if (imageData) {
             $('.uploadedImage').attr('src', imageData);
         };
+
+        /**
+         * Lets load the default currency
+         */
+        templateObject.loadDefaultCurrency = () => {
+            const currencyCode = defaultCurrencyCode;
+            const currencySymbol = "$";
+            const currencyRate = 1; // We can make this dynamic
+
+            $('#sltCurrency').val(currencyCode);
+            $('#sltCurrency').attr('currency-symbol', currencySymbol);
+            $('#exchange_rate').val(currencyRate);
+        }
+
+        templateObject.loadDefaultCurrency();
 
 
         $('#edtCustomerName').attr('readonly', true);
@@ -121,7 +137,7 @@ Template.paymentcard.onRendered(() => {
             changeYear: true,
             yearRange: "-90:+10",
         });
-        const templateObject = Template.instance();
+      
         const record = [];
         let paymentService = new PaymentsService();
         let clientsService = new PaymentsService();
@@ -159,20 +175,20 @@ Template.paymentcard.onRendered(() => {
               if (dataObject.length == 0) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));
-                      
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
                          {
-                               
+
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {       
+                                {
                                         $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                            $('#Customer_Payments_1').attr('checked','checked');
                                         }
-                                      
+
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -182,44 +198,44 @@ Template.paymentcard.onRendered(() => {
                                          $('#Customer_Payments_2').attr('checked','checked');
                                       }
                                 }
-    
+
                                 if(data.ttemplatesettings[i].fields.Template == 3)
-                                {     
-    
+                                {
+
                                       $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
                                       if(data.ttemplatesettings[i].fields.Active == true)
                                       {
                                         $('#Customer_Payments_3').attr('checked','checked');
                                       }
                                 }
-                            
-    
+
+
                          }
-                   
-    
+
+
                      }
-                      
-                          
+
+
                       $('.fullScreenSpin').css('display', 'none');
                   }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                   });
-              }else{ 
-                      let data = JSON.parse(dataObject[0].data);    
-                    
+              }else{
+                      let data = JSON.parse(dataObject[0].data);
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
                         {
-                              
+
                                if(data.ttemplatesettings[i].fields.Template == 1)
-                               {       
+                               {
                                        $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
                                        if(data.ttemplatesettings[i].fields.Active == true)
                                        {
                                           $('#Customer_Payments_1').attr('checked','checked');
                                        }
-                                     
+
                                }
                                if(data.ttemplatesettings[i].fields.Template == 2)
                                {
@@ -229,44 +245,44 @@ Template.paymentcard.onRendered(() => {
                                          $('#Customer_Payments_2').attr('checked','checked');
                                      }
                                }
-   
+
                                if(data.ttemplatesettings[i].fields.Template == 3)
-                               {     
-   
+                               {
+
                                      $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
                                      if(data.ttemplatesettings[i].fields.Active == true)
                                      {
                                        $('#Customer_Payments_3').attr('checked','checked');
                                      }
                                }
-                           
-   
+
+
                         }
-                   
-                   
-    
+
+
+
                      }
                       $('.fullScreenSpin').css('display', 'none');
               }
             }).catch(function(err) {
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                    
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
-                
-                  
+
+
+
                          if(data.ttemplatesettings[i].fields.SettingName == 'Customer Payments')
                          {
-                               
+
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {       
+                                {
                                         $('input[name="Customer Payments_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                            $('#Customer_Payments_1').attr('checked','checked');
                                         }
-                                      
+
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -276,31 +292,31 @@ Template.paymentcard.onRendered(() => {
                                         $('#Customer_Payments_2').attr('checked','checked');
                                       }
                                 }
-    
+
                                 if(data.ttemplatesettings[i].fields.Template == 3)
-                                {     
-    
+                                {
+
                                       $('input[name="Customer Payments_3"]').val(data.ttemplatesettings[i].fields.Description);
                                       if(data.ttemplatesettings[i].fields.Active == true)
                                       {
                                         $('#Customer_Payments_3').attr('checked','checked');
                                       }
                                 }
-                            
-    
+
+
                          }
-    
-                 
-    
+
+
+
                       }
                       $('.fullScreenSpin').css('display', 'none');
             }).catch(function (err) {
               $('.fullScreenSpin').css('display', 'none');
             });
           });
-    
+
           };
-    
+
           templateObject.getTemplateInfoNew();
 
 
@@ -320,7 +336,7 @@ Template.paymentcard.onRendered(() => {
             let customer = $('#edtCustomerName').val();
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
-            let dept = $('#sltDept').val();
+            let dept = $('#sltDepartment').val();
             var erpGet = erpDb();
             let fx = $('#sltCurrency').val();
 
@@ -557,7 +573,7 @@ Template.paymentcard.onRendered(() => {
             let customer = $('#edtCustomerName').val();
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
-            let dept = $('#sltDept').val();
+            let dept = $('#sltDepartment').val();
             var erpGet = erpDb();
             let fx = $('#sltCurrency').val();
 
@@ -1331,7 +1347,7 @@ Template.paymentcard.onRendered(() => {
             setTimeout(function() {
                 $('#edtEnrtyNo').val(newPaymentId);
                 $('#edtSelectBankAccountName').val(lastBankAccount);
-                $('#sltDept').val(lastDepartment);
+                $('#sltDepartment').val(lastDepartment);
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
@@ -1344,7 +1360,7 @@ Template.paymentcard.onRendered(() => {
             } else {
                 $('#edtSelectBankAccountName').val(lastBankAccount);
             };
-            $('#sltDept').val(lastDepartment);
+            $('#sltDepartment').val(lastDepartment);
         });
     };
 
@@ -1913,7 +1929,7 @@ Template.paymentcard.onRendered(() => {
     }, 500)
 
     $(document).on("click", "#departmentList tbody tr", function(e) {
-        $('#sltDept').val($(this).find(".colDeptName").text());
+        $('#sltDepartment').val($(this).find(".colDeptName").text());
         $('#departmentModal').modal('toggle');
     });
 
@@ -2084,8 +2100,8 @@ Template.paymentcard.onRendered(() => {
             }
         });
 
-    $('#sltDept').editableSelect();
-    $('#sltDept').editableSelect()
+    $('#sltDepartment').editableSelect();
+    $('#sltDepartment').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);
             var offset = $earch.offset();
@@ -2948,7 +2964,6 @@ Template.paymentcard.onRendered(() => {
 
         });
 
-    
     if (url.indexOf('?id=') > 0) {
         $("#addRow").attr("disabled", true);
         var getsale_id = url.split('?id=');
@@ -3045,6 +3060,7 @@ Template.paymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
+                        _setTmpAppliedAmount(record.applied);
                         $('#edtCustomerName').val(data.fields.CompanyName);
                         $('#edtSelectBankAccountName').val(data.fields.AccountName);
                         $('#sltPaymentMethod').val(data.fields.PaymentMethodName);
@@ -3232,7 +3248,7 @@ Template.paymentcard.onRendered(() => {
                             };
                             templateObject.record.set(record);
                             $('#edtCustomerName').val(useData[d].fields.CompanyName);
-                            $('#sltDept').val(useData[d].fields.DeptClassName);
+                            $('#sltDepartment').val(useData[d].fields.DeptClassName);
                             $('#edtSelectBankAccountName').val(useData[d].fields.AccountName);
                             $('#sltPaymentMethod').val(useData[d].fields.PaymentMethodName);
 
@@ -3748,10 +3764,10 @@ Template.paymentcard.onRendered(() => {
 
                 };
                 templateObject.record.set(record);
-
+                _setTmpAppliedAmount(record.applied);
                 $('#edtCustomerName').val(data.fields.CustomerName);
                 $('#sltPaymentMethod').val(data.fields.PayMethod);
-                $('#sltDept').val(data.fields.DeptClassName);
+                $('#sltDepartment').val(data.fields.DeptClassName);
                 $('#edtSelectBankAccountName').val(data.fields.GLAccountName);
                 if (clientList) {
                     for (var i = 0; i < clientList.length; i++) {
@@ -3868,9 +3884,10 @@ Template.paymentcard.onRendered(() => {
 
                 };
                 templateObject.record.set(record);
+                _setTmpAppliedAmount(record.applied);
                 $('#edtCustomerName').val(data.fields.CustomerName);
                 $('#sltPaymentMethod').val(data.fields.PayMethod);
-                $('#sltDept').val(data.fields.DeptClassName);
+                $('#sltDepartment').val(data.fields.DeptClassName);
                 $('#edtSelectBankAccountName').val(data.fields.GLAccountName);
                 if (clientList) {
                     for (var i = 0; i < clientList.length; i++) {
@@ -3991,13 +4008,14 @@ Template.paymentcard.onRendered(() => {
 
                         };
 
+                        _setTmpAppliedAmount(record.applied);
                         let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                         $('#sltPaymentMethod').val(getPaymentMethodVal);
 
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                         templateObject.record.set(record);
                         $('#edtCustomerName').val(data.fields.CustomerName);
-                        $('#sltDept').val(getDepartmentVal);
+                        $('#sltDepartment').val(getDepartmentVal);
                         let bankAccountData = Session.get('bankaccount') || 'Bank';
                         $('#edtSelectBankAccountName').val(bankAccountData);
                         await templateObject.getLastPaymentData();
@@ -4114,13 +4132,13 @@ Template.paymentcard.onRendered(() => {
 
 
                             templateObject.record.set(record);
-
+                            _setTmpAppliedAmount(record.applied);
                             let getDepartmentVal = Session.get('department') || useData[d].fields.DeptClassName || defaultDept;
 
                             $('#edtCustomerName').val(useData[d].fields.CustomerName);
                             let getPaymentMethodVal = Session.get('paymentmethod') || useData[d].fields.PayMethod;
                             $('#sltPaymentMethod').val(getPaymentMethodVal);
-                            $('#sltDept').val(getDepartmentVal);
+                            $('#sltDepartment').val(getDepartmentVal);
                             let bankAccountData = Session.get('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
                             await templateObject.getLastPaymentData();
@@ -4229,6 +4247,7 @@ Template.paymentcard.onRendered(() => {
                                 })
 
                             };
+                            _setTmpAppliedAmount(record.applied);
 
                             let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                             $('#sltPaymentMethod').val(getPaymentMethodVal);
@@ -4236,7 +4255,7 @@ Template.paymentcard.onRendered(() => {
                             let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                             templateObject.record.set(record);
                             $('#edtCustomerName').val(data.fields.CustomerName);
-                            $('#sltDept').val(getDepartmentVal);
+                            $('#sltDepartment').val(getDepartmentVal);
                             let bankAccountData = Session.get('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
                             await templateObject.getLastPaymentData();
@@ -4346,13 +4365,13 @@ Template.paymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
-
+                    _setTmpAppliedAmount(record.applied);
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                     await templateObject.getLastPaymentData();
                     $('#edtCustomerName').val(data.fields.CustomerName);
                     let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                     $('#sltPaymentMethod').val(getPaymentMethodVal);
-                    $('#sltDept').val(getDepartmentVal);
+                    $('#sltDepartment').val(getDepartmentVal);
                     let bankAccountData = Session.get('bankaccount') || 'Bank';
                     $('#edtSelectBankAccountName').val(bankAccountData);
                     if (clientList) {
@@ -4502,6 +4521,7 @@ Template.paymentcard.onRendered(() => {
                     }) || 0
 
                 };
+                _setTmpAppliedAmount(record.applied);
 
                 let getPaymentMethodVal = Session.get('paymentmethod') || checkpayment || 'Cash';
                 $('#sltPaymentMethod').val(getPaymentMethodVal);
@@ -4675,6 +4695,7 @@ Template.paymentcard.onRendered(() => {
 
                 };
                 templateObject.record.set(record);
+                _setTmpAppliedAmount(record.applied);
 
                 let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
 
@@ -4683,7 +4704,7 @@ Template.paymentcard.onRendered(() => {
                 let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                 $('#sltPaymentMethod').val(getPaymentMethodVal);
 
-                $('#sltDept').val(getDepartmentVal);
+                $('#sltDepartment').val(getDepartmentVal);
                 let bankAccountData = Session.get('bankaccount') || 'Bank';
                 $('#edtSelectBankAccountName').val(bankAccountData);
                 if (clientList) {
@@ -4807,13 +4828,14 @@ Template.paymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
+                    _setTmpAppliedAmount(record.applied);
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
 
                     let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                     $('#sltPaymentMethod').val(getPaymentMethodVal);
 
                     $('#edtCustomerName').val(data.fields.CustomerName);
-                    $('#sltDept').val(getDepartmentVal);
+                    $('#sltDepartment').val(getDepartmentVal);
                     let bankAccountData = Session.get('bankaccount') || 'Bank';
                     $('#edtSelectBankAccountName').val(bankAccountData);
                     if (clientList) {
@@ -4977,11 +4999,12 @@ Template.paymentcard.onRendered(() => {
 
         $("#form :input").prop("disabled", false);
         templateObject.record.set(paymentrecord);
+        _setTmpAppliedAmount(paymentrecord.applied);
         let getDepartmentVal = Session.get('department') || defaultDept;
 
         let getPaymentMethodVal = Session.get('paymentmethod') || '';
         $('#sltPaymentMethod').val(getPaymentMethodVal);
-        $('#sltDept').val(getDepartmentVal);
+        $('#sltDepartment').val(getDepartmentVal);
         let bankAccountData = Session.get('bankaccount') || 'Bank';
         $('#edtSelectBankAccountName').val(bankAccountData);
 
@@ -5076,20 +5099,73 @@ Template.paymentcard.onRendered(() => {
         };
 
 
-        html2pdf().set(opt).from(source).save().then(function (dataObject) {
-            if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                //$(".btnSave").trigger("click");
-                $('#html-2-pdfwrapper').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
-            } else {
-                document.getElementById('html-2-pdfwrapper_new').style.display="none";
-                $('#html-2-pdfwrapper').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
+        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
+
+            let attachment = [];
+
+            let paymentId = FlowRouter.current().queryParams.id? FlowRouter.current().queryParams.id : '';
+            let pdfObject = "";
+
+            let base64data = data.split(',')[1];
+            pdfObject = {
+                filename: 'Customer Payment-' + paymentId + '.pdf',
+                content: base64data,
+                encoding: 'base64'
+            };
+            attachment.push(pdfObject);
+
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                return storage.includes('BasedOnType_');
+            });
+            let j = basedOnTypeStorages.length;
+            if (j > 0) {
+                while (j--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                }
             }
-        });
+
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                let temp = {... reportData};
+                
+                temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                temp.attachments = attachment;
+                if (temp.BasedOnType.includes("P")) {
+                    if (temp.FormID == 1) {
+                        let formIds = temp.FormIDs.split(',');
+                        if (formIds.includes("61")) {
+                            temp.FormID = 61;
+                            Meteor.call('sendNormalEmail', temp);
+                        }
+                    } else {
+                        if (temp.FormID == 61)
+                            Meteor.call('sendNormalEmail', temp);
+                    }
+                }
+            });
+
+            html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                    //$(".btnSave").trigger("click");
+                    $('#html-2-pdfwrapper').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                    $('#html-2-pdfwrapper').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+    
+    
+            return true;
+        })
 
 
-        return true;
         // pdf.addHTML(source, function () {
         //     pdf.save('Customer Payment-'+id+'.pdf');
         //     $('#html-2-pdfwrapper').css('display','none');
@@ -5153,7 +5229,7 @@ Template.paymentcard.onRendered(() => {
 
 
     templateObject.addExpenseToTable = (withForeignAmount = false) => {
-       
+
         let url = window.location.href;
 
         if(!url.includes("?")) {
@@ -5165,9 +5241,14 @@ Template.paymentcard.onRendered(() => {
 
             setTimeout(() => {
                 if (list.length > 0) {
-                    let currentApplied = $('.lead').text().replace(/[^0-9.-]+/g, "");
-                    currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0])
-                    let total = currentApplied;
+                    // let currentApplied = $('.lead').text().replace(/[^0-9.-]+/g, "");
+                    // currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0])
+                    // let total = currentApplied;
+
+                    let currentApplied = $(".lead").text().replace(/[^0-9.-]+/g, "");
+                    currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0]);
+                    let total = parseFloat(currentApplied);
+
                     for (let x = 0; x < list.length; x++) {
                         var rowData =   '<tr class="dnd-moved dynamic-converter-js" id="' + list[x].awaitingId + '" name="' + list[x].awaitingId + '">\n' +
                                         '	<td contenteditable="false" class="colTransDate">' + list[x].date + '</td>\n' +
@@ -5176,13 +5257,13 @@ Template.paymentcard.onRendered(() => {
                                         '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' + list[x].originalAmount + '</td>\n' +
                                         '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' + list[x].outstandingAmount + '</td>\n' +
                                         '	<td><input class="linePaymentamount highlightInput convert-from" type="text" value="' + list[x].paymentAmount + '"></td>\n' +
-                                        (withForeignAmount == true ? '	<td><input class="linePaymentamount highlightInput foreign convert-to" type="text" value="' + convertToForeignAmount(list[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) + '"></td>\n' : "") +
+                                        (withForeignAmount == true ? '	<td contenteditable="false" class="linePaymentamount foreign convert-to">' + convertToForeignAmount(list[x].paymentAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) + '</td>\n' : "") +
                                         '	<td contenteditable="false" class="lineOutstandingAmount convert-from" style="text-align: right!important;">' + list[x].outstandingAmount + '</td>\n' +
                                         (withForeignAmount == true ? '	<td contenteditable="false" class="lineOutstandingAmount foreign convert-to" style="text-align: right!important;">' + convertToForeignAmount(list[x].outstandingAmount, $('#exchange_rate').val(), getCurrentCurrencySymbol()) + '</td>\n' : '') +
                                         '	<td contenteditable="true" class="colComments">' + list[x].comments + '</td>\n' +
                                         '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
                                         '</tr>';
-        
+
                         //$('#tblPaymentcard tbody>tr:last').clone(true);
                         // $(".colTransDate", rowData).text(selectedSupplierPayments[x].date);
                         // $(".colType", rowData).text("Invoice");
@@ -5208,13 +5289,14 @@ Template.paymentcard.onRendered(() => {
                         }
                         //$('.appliedAmount').text(Currency + total.toFixed(2));
                     }
-                    $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
-                    $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(total));
+                    
+                    $('.appliedAmount').text(total.toFixed(2));
+                    $('#edtPaymentAmount').val(total.toFixed(2));
                 }
              }, 300);
-           
-        
-            
+
+
+
             setTimeout(function () {
               $("td").each(function () {
                 if (
@@ -5226,9 +5308,9 @@ Template.paymentcard.onRendered(() => {
               });
             }, 1000);
         }
-     
+
     }
-    
+
 });
 
 Template.paymentcard.helpers({
@@ -5392,8 +5474,19 @@ Template.paymentcard.events({
         let paymentData = [];
 
 
-        const exchangeRate = $('#exchange_rate').val();
+         /**
+         * Currency module data
+         * TODO: Adding this into the saved object
+         */
         const currency = $('#sltCurrency').val();
+        let foreignCurrency = $("#edtForeignCurrency").val();
+        let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount 
+        let variation = $("#edtVariation").val(); // this is the variation field
+        let appliedAmount = $("#edtApplied").val(); // this is the variation field
+        let exchangeRate = $('#exchange_rate').val();
+        let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
+        $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol') 
+        || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
 
         Session.setPersistent('paymentmethod', payMethod);
         Session.setPersistent('bankaccount', bankAccount);
@@ -5442,7 +5535,11 @@ Template.paymentcard.events({
                         ReferenceNo: reference,
                         Notes: notes,
                         exchangeRate: exchangeRate,
-                        currency: currency
+                        currency: currency,
+
+                        ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                        ForeignExchangeRate: parseFloat(exchangeRate),
+                        //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                     }
                 };
 
@@ -5575,6 +5672,37 @@ Template.paymentcard.events({
                                     }
                                 });
 
+                                let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
+
                             } else if (($('.chkEmailCopy').is(':checked'))) {
                                 Meteor.call('sendEmail', {
                                     from: "" + mailFromName + " <" + mailFrom + ">",
@@ -5602,6 +5730,37 @@ Template.paymentcard.events({
                                         });
 
                                         $('.fullScreenSpin').css('display', 'none');
+                                    }
+                                });
+
+                                let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
                                     }
                                 });
 
@@ -5634,8 +5793,70 @@ Template.paymentcard.events({
                                     }
                                 });
 
+                                let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
+
                             } else {
                                 //window.open('/salesorderslist','_self');
+
+                                let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
                             };
                         };
 
@@ -5731,8 +5952,11 @@ Template.paymentcard.events({
                             PaymentDate: paymentDate,
                             PayMethodName: payMethod,
 
-                            ReferenceNo: reference
+                            ReferenceNo: reference,
 
+                            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                            ForeignExchangeRate: parseFloat(exchangeRate),
+                            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                         }
                     };
 
@@ -5869,6 +6093,37 @@ Template.paymentcard.events({
                                         }
                                     });
 
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
+
                                 } else if (($('.chkEmailCopy').is(':checked'))) {
                                     Meteor.call('sendEmail', {
                                         from: "" + mailFromName + " <" + mailFrom + ">",
@@ -5900,6 +6155,37 @@ Template.paymentcard.events({
                                             });
 
                                             $('.fullScreenSpin').css('display', 'none');
+                                        }
+                                    });
+
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
                                         }
                                     });
 
@@ -5936,7 +6222,69 @@ Template.paymentcard.events({
                                         }
                                     });
 
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
+
                                 } else {
+
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
                                   if(FlowRouter.current().queryParams.trans){
                                     FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                   }else{
@@ -6012,7 +6360,11 @@ Template.paymentcard.events({
                             PaymentDate: paymentDate,
                             PayMethodName: payMethod,
 
-                            ReferenceNo: reference
+                            ReferenceNo: reference,
+
+                            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                            ForeignExchangeRate: parseFloat(exchangeRate),
+                            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
                     };
@@ -6154,6 +6506,37 @@ Template.paymentcard.events({
                                         }
                                     });
 
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
+
                                 } else if (($('.chkEmailCopy').is(':checked'))) {
                                     Meteor.call('sendEmail', {
                                         from: "" + mailFromName + " <" + mailFrom + ">",
@@ -6185,6 +6568,37 @@ Template.paymentcard.events({
                                             });
 
                                             $('.fullScreenSpin').css('display', 'none');
+                                        }
+                                    });
+
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
                                         }
                                     });
 
@@ -6221,7 +6635,69 @@ Template.paymentcard.events({
                                         }
                                     });
 
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                });
+
                                 } else {
+
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
                                   if(FlowRouter.current().queryParams.trans){
                                     FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                   }else{
@@ -6322,7 +6798,11 @@ Template.paymentcard.events({
                         PayMethodName: payMethod,
                         Payment: true,
                         ReferenceNo: reference,
-                        Notes: notes
+                        Notes: notes,
+
+                        ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                        ForeignExchangeRate: parseFloat(exchangeRate),
+                        //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                     }
                 };
 
@@ -6455,6 +6935,37 @@ Template.paymentcard.events({
                                     }
                                 });
 
+                                let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
+
                             } else if (($('.chkEmailCopy').is(':checked'))) {
                                 Meteor.call('sendEmail', {
                                     from: "" + mailFromName + " <" + mailFrom + ">",
@@ -6485,6 +6996,37 @@ Template.paymentcard.events({
                                     }
                                 });
 
+                                let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
+
                             } else if (($('.chkEmailRep').is(':checked'))) {
                                 Meteor.call('sendEmail', {
                                     from: "" + mailFromName + " <" + mailFrom + ">",
@@ -6511,6 +7053,37 @@ Template.paymentcard.events({
                                         });
 
                                         $('.fullScreenSpin').css('display', 'none');
+                                    }
+                                });
+
+                                let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
                                     }
                                 });
 
@@ -6608,7 +7181,11 @@ Template.paymentcard.events({
                     PaymentDate: paymentDate,
                     PayMethodName: payMethod,
 
-                    ReferenceNo: reference
+                    ReferenceNo: reference,
+
+                    ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                    ForeignExchangeRate: parseFloat(exchangeRate),
+                    //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                 }
             };
 
@@ -6753,6 +7330,37 @@ Template.paymentcard.events({
                                 }
                             });
 
+                            let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
+
                         } else if (($('.chkEmailCopy').is(':checked'))) {
                             Meteor.call('sendEmail', {
                                 from: "" + mailFromName + " <" + mailFrom + ">",
@@ -6787,6 +7395,37 @@ Template.paymentcard.events({
                                 }
                             });
 
+                            let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
+
                         } else if (($('.chkEmailRep').is(':checked'))) {
                             Meteor.call('sendEmail', {
                                 from: "" + mailFromName + " <" + mailFrom + ">",
@@ -6820,7 +7459,70 @@ Template.paymentcard.events({
                                 }
                             });
 
+                            let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
+
                         } else {
+
+
+                            let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
                           if(FlowRouter.current().queryParams.trans){
                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                           }else{
@@ -7014,6 +7716,37 @@ Template.paymentcard.events({
                             }
                         });
 
+                        let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                    return storage.includes('BasedOnType_');
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    reportData.attachments = attachment;
+                                    if (reportData.BasedOnType.includes("S")) {
+                                        if (reportData.FormID == 1) {
+                                            let formIds = reportData.FormIDs.split(',');
+                                            if (formIds.includes("61")) {
+                                                reportData.FormID = 61;
+                                                Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        } else {
+                                            if (reportData.FormID == 61)
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    }
+                                });
+
                     } else if (($('.chkEmailCopy').is(':checked'))) {
                         Meteor.call('sendEmail', {
                             from: "" + mailFromName + " <" + mailFrom + ">",
@@ -7045,6 +7778,37 @@ Template.paymentcard.events({
                                 });
 
                                 $('.fullScreenSpin').css('display', 'none');
+                            }
+                        });
+
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_');
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("61")) {
+                                        reportData.FormID = 61;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 61)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
                             }
                         });
 
@@ -7081,7 +7845,69 @@ Template.paymentcard.events({
                             }
                         });
 
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_');
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("61")) {
+                                        reportData.FormID = 61;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 61)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
+
                     } else {
+
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_');
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("61")) {
+                                        reportData.FormID = 61;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 61)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
                       if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{
@@ -7236,7 +8062,11 @@ Template.paymentcard.events({
                             PaymentDate: paymentDate,
                             PayMethodName: payMethod,
 
-                            ReferenceNo: reference
+                            ReferenceNo: reference,
+
+                            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                            ForeignExchangeRate: parseFloat(exchangeRate),
+                            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
                     };
@@ -7383,6 +8213,37 @@ Template.paymentcard.events({
                                         }
                                     });
 
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
+
                                 } else if (($('.chkEmailCopy').is(':checked'))) {
                                     Meteor.call('sendEmail', {
                                         from: "" + mailFromName + " <" + mailFrom + ">",
@@ -7412,6 +8273,37 @@ Template.paymentcard.events({
                                             });
 
                                             $('.fullScreenSpin').css('display', 'none');
+                                        }
+                                    });
+
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
                                         }
                                     });
 
@@ -7445,8 +8337,68 @@ Template.paymentcard.events({
                                             $('.fullScreenSpin').css('display', 'none');
                                         }
                                     });
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
 
                                 } else {
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
                                     window.open(url, '_self');
                                 };
                             };
@@ -7530,7 +8482,11 @@ Template.paymentcard.events({
                             PaymentDate: paymentDate,
                             PayMethodName: payMethod,
 
-                            ReferenceNo: reference
+                            ReferenceNo: reference,
+
+                            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                            ForeignExchangeRate: parseFloat(exchangeRate),
+                            //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
                     };
@@ -7684,6 +8640,37 @@ Template.paymentcard.events({
                                         }
                                     });
 
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
+
                                 } else if (($('.chkEmailCopy').is(':checked'))) {
                                     Meteor.call('sendEmail', {
                                         from: "" + mailFromName + " <" + mailFrom + ">",
@@ -7721,6 +8708,37 @@ Template.paymentcard.events({
                                             });
 
                                             $('.fullScreenSpin').css('display', 'none');
+                                        }
+                                    });
+
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
                                         }
                                     });
 
@@ -7763,7 +8781,69 @@ Template.paymentcard.events({
                                         }
                                     });
 
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
+
                                 } else {
+
+                                    let values = [];
+                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                        let employeeId = storage.split('_')[2];
+                                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                        return storage.includes('BasedOnType_');
+                                    });
+                                    let i = basedOnTypeStorages.length;
+                                    if (i > 0) {
+                                        while (i--) {
+                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                        }
+                                    }
+                                    values.forEach(value => {
+                                        let reportData = JSON.parse(value);
+                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                        reportData.attachments = attachment;
+                                        if (reportData.BasedOnType.includes("S")) {
+                                            if (reportData.FormID == 1) {
+                                                let formIds = reportData.FormIDs.split(',');
+                                                if (formIds.includes("61")) {
+                                                    reportData.FormID = 61;
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                                }
+                                            } else {
+                                                if (reportData.FormID == 61)
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            }
+                                        }
+                                    });
                                   if(FlowRouter.current().queryParams.trans){
                                     FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                                   }else{
@@ -7871,7 +8951,11 @@ Template.paymentcard.events({
                     Payment: true,
                     PaymentDate: paymentDate,
                     PayMethodName: payMethod,
-                    ReferenceNo: reference
+                    ReferenceNo: reference,
+
+                    ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                    ForeignExchangeRate: parseFloat(exchangeRate),
+                    //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                 }
             };
 
@@ -8004,6 +9088,37 @@ Template.paymentcard.events({
                                 }
                             });
 
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                return storage.includes('BasedOnType_');
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment;
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("61")) {
+                                            reportData.FormID = 61;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 61)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+
                         } else if (($('.chkEmailCopy').is(':checked'))) {
                             Meteor.call('sendEmail', {
                                 from: "" + mailFromName + " <" + mailFrom + ">",
@@ -8031,6 +9146,37 @@ Template.paymentcard.events({
                                     });
 
                                     $('.fullScreenSpin').css('display', 'none');
+                                }
+                            });
+
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                return storage.includes('BasedOnType_');
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment;
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("61")) {
+                                            reportData.FormID = 61;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 61)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
                                 }
                             });
 
@@ -8063,7 +9209,68 @@ Template.paymentcard.events({
                                 }
                             });
 
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                return storage.includes('BasedOnType_');
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment;
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("61")) {
+                                            reportData.FormID = 61;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 61)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+
                         } else {
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                return storage.includes('BasedOnType_');
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment;
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("61")) {
+                                            reportData.FormID = 61;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 61)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                                    });
                             FlowRouter.go('/paymentoverview?success=true');
                         };
                     };
@@ -8451,167 +9658,167 @@ Template.paymentcard.events({
          $('.fullScreenSpin').css('display', 'inline-block');
          var customer_payment = $('input[name="Customer Payments"]:checked').val();
          let emid = Session.get('mySessionEmployeeLoggedID');
-      
+
           sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                         ID:parseInt(id),                      
+            fields:{
+                         ID:parseInt(id),
                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                           SettingName:"Customer Payments",
                           GlobalRef:"Customer Payments",
                           Description:$('input[name="Customer Payments_1"]').val(),
                           Template:"1",
                           Active:customer_payment == 1 ? true:false,
-                    }            
+                    }
              }
-        
+
              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-            
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));          
-               
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-             }).catch(function (err) {      
+             }).catch(function (err) {
              });
-        
+
           }).catch(function (err) {
-                    
+
                   objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Customer Payments",
                                 Description:$('input[name="Customer Payments_1"]').val(),
                                 Template:"1",
                                 Active:customer_payment == 1 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                             
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                      
-                
+
+
                     }).catch(function (err) {
-                
-                      
-                  
-                    });  
-      
+
+
+
+                    });
+
           });
-    
+
           sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                            ID:parseInt(id),                      
+            fields:{
+                            ID:parseInt(id),
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"Customer Payments",
                             GlobalRef:"Customer Payments",
                             Description:$('input[name="Customer Payments_2"]').val(),
                             Template:"2",
                             Active:customer_payment == 2 ? true:false,
-                    }            
+                    }
              }
-        
+
              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));      
-                 
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-               
+
               }).catch(function (err) {
-              
+
               });
-        
+
           }).catch(function (err) {
-                    
+
                   objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                               EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                               SettingName:"Customer Payments",
                               Description:$('input[name="Customer Payments_2"]').val(),
                               Template:"2",
                               Active:customer_payment == 2 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                          
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                
+
                     }).catch(function (err) {
-                                 
-                  
-                    });  
-      
+
+
+                    });
+
           });
-    
+
           sideBarService.getTemplateNameandEmployeId("Customer Payments",emid,3).then(function (data) {
           templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;    
+          var id = templateid[0].fields.ID;
           objDetails =  {
           type:"TTemplateSettings",
-          fields:{        
-                                ID:parseInt(id),                      
+          fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Customer Payments",
                                 GlobalRef:"Customer Payments",
                                 Description:$('input[name="Customer Payments_3"]').val(),
                                 Template:"3",
                                 Active:customer_payment == 3 ? true:false,
-                    }            
+                    }
              }
-        
+
           sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                   
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                });
-             
-        
+
+
             }).catch(function (err) {
-            
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                    objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Customer Payments",
                                 Description:$('input[name="Customer Payments_3"]').val(),
                                 Template:"3",
                                 Active:customer_payment == 3 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));      
-                           
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                     });
-                      
+
                     }).catch(function (err) {
-             
-                    });  
-      
+
+                    });
+
           });
 
         $('#html-2-pdfwrapper').css('display', 'block');
@@ -9201,20 +10408,42 @@ Template.paymentcard.events({
       },
       "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
 
+        if(ui.isForeignEnabled.get() == true) {
+            setTimeout(() => {
 
-        setTimeout(() => {
+                const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
+                // convert to forign payment amount
+                const valueToConvert = $(e.currentTarget).val();
+                const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+      
+                $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
+      
+                // Convert oustanding to foriegn oustanding
+                const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
+                const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+                $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+      
+                const appliedValue = calculateAppliedWithForeign("#tblPaymentcard .linePaymentamount.convert-to.foreign");
+                $('#edtApplied').val(targetCurrency +  appliedValue)
+                $('.appliedAmount').text(targetCurrency + appliedValue);
+                $('#edtForeignAmount').val(targetCurrency + appliedValue);
+              }, 500);
 
-          // convert to forign payment amount
-          const valueToConvert = $(e.currentTarget).val();
-          const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+        }
 
-          $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').val(convertedValue);
+       
 
-          // Convert oustanding to foriegn oustanding
-          const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
-          const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-          $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
-        }, 500);
+      },
+    //   "change #tblPaymentcard input.linePaymentamount.convert-to.foreign": (e, ui) => {
 
-      }
+    //     setTimeout(() => {
+    //         const calculatedAppliedAmount = onForeignTableInputChange("#tblPaymentcard input.linePaymentamount.convert-to.foreign");
+    //         const currency = $('#sltCurrency').attr("currency-symbol");
+
+    //         $(e.currentTarget).val(currency + $(e.currentTarget).val().replace(/[^0-9.-]+/g, ""));
+    
+    //         $('#edtApplied').val(currency + calculatedAppliedAmount);
+    //         $('.appliedAmount').text(currency + calculatedAppliedAmount);  
+    //     }, 500)
+    // }
 });

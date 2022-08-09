@@ -1589,7 +1589,7 @@ Template.invoicelist.events({
         $('.fullScreenSpin').css('display', 'none');
 
     },
-    'click .btnRefresh': function () {
+    'click .btnRefresh': async function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentDate = new Date();
         let hours = currentDate.getHours(); //returns 0-23
@@ -1631,16 +1631,16 @@ Template.invoicelist.events({
         });
 
 
-        sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (dataInvoice) {
+        sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(async function (dataInvoice) {
             addVS1Data('TInvoiceList', JSON.stringify(dataInvoice)).then(function (datareturn) {
               sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
                   addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
-                    sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
+                    sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
-                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
+                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
-                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
-                            addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataCustPay) {
+                            await addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
                                 window.open('/invoicelist', '_self');
                               }, 2000);

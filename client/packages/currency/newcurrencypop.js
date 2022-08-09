@@ -5,6 +5,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import FxApi from "../../settings/currencies-setting/FxApi";
 import { currencySymbolEmpty } from "./CurrencyGlobals";
+import LoadingOverlay from "../../LoadingOverlay";
 let sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
@@ -17,7 +18,7 @@ Template.newcurrencypop.onCreated(function () {
 });
 
 Template.newcurrencypop.onRendered(function () {
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
   const dataTableList = [];
@@ -661,7 +662,7 @@ Template.newcurrencypop.onRendered(function () {
 
 Template.newcurrencypop.events({
   "change #sedtCountry": async (e) => {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
 
     let taxRateService = new TaxRateService();
     let selectCountry = $("#sedtCountry").val();
@@ -681,7 +682,7 @@ Template.newcurrencypop.events({
         /**
          * Let's call the Fx APis here
          */
-        const fxApi = new FxApi();
+        
         for (let i = 0; i < data.tcurrency.length; i++) {
           if (data.tcurrency[i].Country === selectCountry) {
             var currencyid = data.tcurrency[i].Id || "";
@@ -693,7 +694,7 @@ Template.newcurrencypop.events({
             var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
             var currencySellRate = data.tcurrency[i].SellRate || 0;
 
-            let currencyRates = await fxApi.getExchangeRate(
+            let currencyRates = await FxApi.getExchangeRate(
               currencyName,
               defaultCurrencyCode
             ); // we were using currencyCode instead...
@@ -932,12 +933,12 @@ Template.newcurrencypop.events({
     templateObject.tableheaderrecords.set(tableHeaderList);
   },
   "click #exportbtn": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     jQuery("#tblCurrencyPopList_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
   "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     sideBarService
       .getCurrencies()
       .then(function (dataReload) {
@@ -1019,9 +1020,9 @@ Template.newcurrencypop.events({
     $("#edtSellRate").val(1);
   },
 
-  "click .btnSaveCurrency": function () {
+  "click .newcurrencypop .btnSaveCurrency": function () {
     let taxRateService = new TaxRateService();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     var currencyid = $("#edtCurrencyID").val();
     var country = $("#sedtCountry").val();
     var currencyCode = $("#currencyCode").val();

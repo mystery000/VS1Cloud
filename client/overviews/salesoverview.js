@@ -86,7 +86,7 @@ Template.salesoverview.onRendered(function () {
   };
 
   templateObject.resetData = function (dataVal) {
-    window.open("/salesoverview?page=last", "_self");
+    location.reload();
   };
 
   templateObject.getAllSalesOrderData = function () {
@@ -321,7 +321,7 @@ Template.salesoverview.onRendered(function () {
                           (dateTo.getMonth() + 1) +
                           "-" +
                           dateTo.getDate();
-                        if (checkurlIgnoreDate == "true") {
+                        if(data.Params.IgnoreDates == true){
                           sideBarService
                             .getSalesListData(
                               formatDateFrom,
@@ -433,14 +433,7 @@ Template.salesoverview.onRendered(function () {
                       }, 100);
                     },
                     fnInitComplete: function () {
-                      let urlParametersPage =
-                        FlowRouter.current().queryParams.page;
-                      if (
-                        urlParametersPage ||
-                        FlowRouter.current().queryParams.ignoredate
-                      ) {
-                        this.fnPageChange("last");
-                      }
+                      this.fnPageChange("last");
                       $(
                         "<button class='btn btn-primary btnRefreshSalesOverview' type='button' id='btnRefreshSalesOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblSalesOverview_filter");
@@ -745,7 +738,7 @@ s
                       (dateTo.getMonth() + 1) +
                       "-" +
                       dateTo.getDate();
-                    if (checkurlIgnoreDate == "true") {
+                  if(data.Params.IgnoreDates == true){
                       sideBarService
                         .getSalesListData(
                           formatDateFrom,
@@ -837,13 +830,7 @@ s
                   }, 100);
                 },
                 fnInitComplete: function () {
-                  let urlParametersPage = FlowRouter.current().queryParams.page;
-                  if (
-                    urlParametersPage ||
-                    FlowRouter.current().queryParams.ignoredate
-                  ) {
-                    this.fnPageChange("last");
-                  }
+                  this.fnPageChange("last");
                   $(
                     "<button class='btn btn-primary btnRefreshSalesOverview' type='button' id='btnRefreshSalesOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                   ).insertAfter("#tblSalesOverview_filter");
@@ -1152,7 +1139,7 @@ s
                         (dateTo.getMonth() + 1) +
                         "-" +
                         dateTo.getDate();
-                      if (checkurlIgnoreDate == "true") {
+                    if(data.Params.IgnoreDates == true){
                         sideBarService
                           .getSalesListData(
                             formatDateFrom,
@@ -1260,14 +1247,7 @@ s
                     }, 100);
                   },
                   fnInitComplete: function () {
-                    let urlParametersPage =
-                      FlowRouter.current().queryParams.page;
-                    if (
-                      urlParametersPage ||
-                      FlowRouter.current().queryParams.ignoredate
-                    ) {
-                      this.fnPageChange("last");
-                    }
+                    this.fnPageChange("last");
                     $(
                       "<button class='btn btn-primary btnRefreshSalesOverview' type='button' id='btnRefreshSalesOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                     ).insertAfter("#tblSalesOverview_filter");
@@ -1374,7 +1354,7 @@ s
   templateObject.getAllFilterSalesOrderData = function (fromDate,toDate,ignoreDate) {
     sideBarService.getSalesListData(fromDate, toDate, ignoreDate, initialReportLoad, 0).then(function (data) {
         addVS1Data("TSalesList", JSON.stringify(data)).then(function (datareturn) {
-            window.open("/salesoverview?toDate=" +toDate +"&fromDate=" +fromDate +"&ignoredate=" +ignoreDate,"_self");
+            location.reload();
           }).catch(function (err) {
             location.reload();
           });

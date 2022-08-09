@@ -12,7 +12,7 @@ class FxApi {
      * @param {String} to
      * @param {String} from
      * @param {float} amount
-     * @returns {{buy: float, sell: float}}
+     * @returns {Promise<{buy: float, sell: float}>}
      */
   async getExchangeRate(to = "EUR", from = "AUD", amount = 1) {
     try {

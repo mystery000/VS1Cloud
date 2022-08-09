@@ -4286,17 +4286,67 @@ templateObject.getLastPOData = async function() {
         };
 
 
-        html2pdf().set(opt).from(source).save().then(function (dataObject) {
-            if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                //$(".btnSave").trigger("click");
-                $('#html-2-pdfwrapper_new').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
-            } else {
-                document.getElementById('html-2-pdfwrapper_new').style.display="none";
-                $('#html-2-pdfwrapper_new').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
+
+        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data=>{
+            let attachment = [];
+            let templateObject = Template.instance();
+
+            let purchaseOrderId = FlowRouter.current().queryParams.id? parseInt(FlowRouter.current().queryParams.id) : 0;
+            let pdfObject = "";
+
+            let base64data = data.split(',')[1];
+            pdfObject = {
+                filename: 'Purchase Order-' + purchaseOrderId + '.pdf',
+                content: base64data,
+                encoding: 'base64'
+            };
+            attachment.push(pdfObject);
+
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                return storage.includes('BasedOnType_');
+            });
+            let j = basedOnTypeStorages.length;
+            if (j > 0) {
+                while (j--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                }
             }
-        });
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                let temp = {... reportData};
+                
+                temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                temp.attachments = attachment;
+                if (temp.BasedOnType.includes("P")) {
+                    if (temp.FormID == 1) {
+                        let formIds = temp.FormIDs.split(',');
+                        if (formIds.includes("69")) {
+                            temp.FormID = 69;
+                            Meteor.call('sendNormalEmail', temp);
+                        }
+                    } else {
+                        if (temp.FormID == 69)
+                            Meteor.call('sendNormalEmail', temp);
+                    }
+                }
+            });
+            html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                    //$(".btnSave").trigger("click");
+                    $('#html-2-pdfwrapper_new').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                    $('#html-2-pdfwrapper_new').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+        })
 
         return true;
 
@@ -7387,7 +7437,8 @@ Template.purchaseordercard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                return storage.includes('BasedOnType_')
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;
                             if (i > 0) {
@@ -7398,6 +7449,7 @@ Template.purchaseordercard.events({
                             values.forEach(value => {
                                 let reportData = JSON.parse(value);
                                 reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment;
                                 if (reportData.BasedOnType.includes("S")) {
                                     if (reportData.FormID == 1) {
                                         let formIds = reportData.FormIDs.split(',');
@@ -7452,7 +7504,8 @@ Template.purchaseordercard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                return storage.includes('BasedOnType_')
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;
                             if (i > 0) {
@@ -7463,6 +7516,7 @@ Template.purchaseordercard.events({
                             values.forEach(value => {
                                 let reportData = JSON.parse(value);
                                 reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment;
                                 if (reportData.BasedOnType.includes("S")) {
                                     if (reportData.FormID == 1) {
                                         let formIds = reportData.FormIDs.split(',');
@@ -7516,7 +7570,8 @@ Template.purchaseordercard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                                return storage.includes('BasedOnType_')
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;
                             if (i > 0) {
@@ -7527,6 +7582,7 @@ Template.purchaseordercard.events({
                             values.forEach(value => {
                                 let reportData = JSON.parse(value);
                                 reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment;
                                 if (reportData.BasedOnType.includes("S")) {
                                     if (reportData.FormID == 1) {
                                         let formIds = reportData.FormIDs.split(',');
@@ -7542,6 +7598,39 @@ Template.purchaseordercard.events({
                             });
 
                         } else {
+
+
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_')
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment;
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("69")) {
+                                            reportData.FormID = 69;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 69)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+
                           if(FlowRouter.current().queryParams.trans){
                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                           }else{

@@ -4666,17 +4666,65 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         };
 
 
-        html2pdf().set(opt).from(source).save().then(function (dataObject) {
-            if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                $('#html-2-pdfwrapper_new').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
-                //$(".btnSave").trigger("click");
-            } else {
-                document.getElementById('html-2-pdfwrapper_new').style.display="none";
-                $('#html-2-pdfwrapper_new').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
+        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
+            let attachment = [];
+            let base64data = data.split(',')[1];
+            let refundId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
+            pdfObject = {
+                filename: 'Refund-' + refundId + '.pdf',
+                content: base64data,
+                encoding: 'base64'
+            };
+            attachment.push(pdfObject);
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                return storage.includes('BasedOnType_');
+            });
+            let j = basedOnTypeStorages.length;
+            if (j > 0) {
+                while (j--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                }
             }
-        });
+            if(values.length > 0) {
+              values.forEach(value => {
+                  let reportData = JSON.parse(value);
+                  let temp = {... reportData};
+                  
+                  temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                  reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                  temp.attachments = attachment;
+                  if (temp.BasedOnType.includes("P")) {
+                      if (temp.FormID == 1) {
+                          let formIds = temp.FormIDs.split(',');
+                          if (formIds.includes("74")) {
+                              temp.FormID = 74;
+                              Meteor.call('sendNormalEmail', temp);
+                          }
+                      } else {
+                          if (temp.FormID == 74)
+                              Meteor.call('sendNormalEmail', temp);
+                      }
+                  }
+              });
+            }
+            html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                    $('#html-2-pdfwrapper_new').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                    //$(".btnSave").trigger("click");
+                } else {
+                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                    $('#html-2-pdfwrapper_new').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+        })
+
+
 
        // $('.fullScreenSpin').css('display', 'none');
 
@@ -7389,6 +7437,37 @@ Template.refundcard.events({
                                 }
                             });
 
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("74")) {
+                                            reportData.FormID = 74;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 74)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+
                         } else if (($('.chkEmailCopy').is(':checked'))) {
                             Meteor.call('sendEmail', {
                                 from: "" + mailFromName + " <" + mailFrom + ">",
@@ -7422,6 +7501,37 @@ Template.refundcard.events({
                                     });
 
                                     $('.fullScreenSpin').css('display', 'none');
+                                }
+                            });
+
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("74")) {
+                                            reportData.FormID = 74;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 74)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
                                 }
                             });
 
@@ -7460,7 +7570,69 @@ Template.refundcard.events({
                                 }
                             });
 
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("74")) {
+                                            reportData.FormID = 74;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 74)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+
                         } else {
+
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("74")) {
+                                            reportData.FormID = 74;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 74)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
                           if(FlowRouter.current().queryParams.trans){
                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                           }else{

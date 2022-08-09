@@ -2228,9 +2228,9 @@ Template.customerscard.events({
         }
         let notes = $('#txaNotes').val()||'';
         // add to custom field
-        let custField1 = $('#edtSaleCustField1').val()||'';
-        let custField2 = $('#edtSaleCustField2').val()||'';
-        let custField3 = $('#edtSaleCustField3').val()||'';
+        let custField1 = $('#edtCustomField1').val()||'';
+        let custField2 = $('#edtCustomField2').val()||'';
+        let custField3 = $('#edtCustomField3').val()||'';
         let custField4 = $('#edtCustomField4').val()||'';
         let customerType = $('#sltCustomerType').val()||'';
         let uploadedItems = templateObject.uploadedFiles.get();

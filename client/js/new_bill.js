@@ -80,20 +80,20 @@ Template.billcard.onRendered(() => {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-                  
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                    
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'bill')
                     {
-                        
+
                          if(data.ttemplatesettings[i].fields.Template == 1)
-                         {       
+                         {
                                  $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
                                  if(data.ttemplatesettings[i].fields.Active == true)
                                  {
                                     $('#Bills_1').attr('checked','checked');
                                  }
-                                
+
                          }
                          if(data.ttemplatesettings[i].fields.Template == 2)
                          {
@@ -115,31 +115,31 @@ Template.billcard.onRendered(() => {
 
 
                     }
-            
+
 
                   }
-                  
-                      
+
+
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{ 
-                  let data = JSON.parse(dataObject[0].data);    
-                
+          }else{
+                  let data = JSON.parse(dataObject[0].data);
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'bill')
                     {
-                        
+
                          if(data.ttemplatesettings[i].fields.Template == 1)
-                         {       
+                         {
                                  $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
                                  if(data.ttemplatesettings[i].fields.Active == true)
                                  {
                                     $('#Bills_1').attr('checked','checked');
                                  }
-                                
+
                          }
                          if(data.ttemplatesettings[i].fields.Template == 2)
                          {
@@ -161,28 +161,28 @@ Template.billcard.onRendered(() => {
 
 
                     }
-               
-               
+
+
 
                  }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
            sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));                 
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                                
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'bill')
                     {
-                        
+
                          if(data.ttemplatesettings[i].fields.Template == 1)
-                         {       
+                         {
                                  $('input[name="Bills_1"]').val(data.ttemplatesettings[i].fields.Description);
                                  if(data.ttemplatesettings[i].fields.Active == true)
                                  {
                                     $('#Bills_1').attr('checked','checked');
                                  }
-                                
+
                          }
                          if(data.ttemplatesettings[i].fields.Template == 2)
                          {
@@ -204,7 +204,7 @@ Template.billcard.onRendered(() => {
 
 
                     }
-                
+
 
                   }
                   $('.fullScreenSpin').css('display', 'none');
@@ -6174,103 +6174,103 @@ Template.billcard.events({
                 var bill = $('input[name="Bills"]:checked').val();
                 sideBarService.getTemplateNameandEmployeId("bill",emid,1).then(function (data) {
                 templateid = data.ttemplatesettings;
-                var id = templateid[0].fields.ID;    
+                var id = templateid[0].fields.ID;
                 objDetails =  {
                 type:"TTemplateSettings",
-                fields:{        
-                            ID:parseInt(id),                      
+                fields:{
+                            ID:parseInt(id),
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"bill",
                             GlobalRef:"bill",
                             Description:$('input[name="Bills_1"]').val(),
                             Template:"1",
                             Active:bill == 1 ? true:false,
-                        }            
+                        }
                 }
-            
-                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {                      
-        
+
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-            
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                 });
-                        
+
                 }).catch(function (err) {
                 });
-            
+
                 }).catch(function (err) {
-                            
+
                             objDetails =  {
                             type:"TTemplateSettings",
-                            fields:{                                                                  
+                            fields:{
                                         EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                         SettingName:"bill",
                                         Description:$('input[name="Bills_1"]').val(),
                                         Template:"1",
                                         Active:bill == 1 ? true:false,
-                                    }            
+                                    }
                             }
-                        
+
                             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                                                        
+
                                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                                    
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                                 });
-                                                    
-                                                
+
+
                                 }).catch(function (err) {
-                                                
-                                });  
+
+                                });
 
                 });
 
                 sideBarService.getTemplateNameandEmployeId("bill",emid,2).then(function (data) {
                         templateid = data.ttemplatesettings;
-                        var id = templateid[0].fields.ID;                        
+                        var id = templateid[0].fields.ID;
                         objDetails =  {
                         type:"TTemplateSettings",
-                        fields:{        
-                                    ID:parseInt(id),                      
+                        fields:{
+                                    ID:parseInt(id),
                                     EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                     SettingName:"bill",
                                     GlobalRef:"bill",
                                     Description:$('input[name="Bills_2"]').val(),
                                     Template:"2",
                                     Active:bill == 2 ? true:false,
-                                }            
+                                }
                         }
-        
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                            
-                    });                 
-           
-        
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+                    });
+
+
                     }).catch(function (err) { });
-                            
+
                  }).catch(function (err) {
-                                
+
                                 objDetails =  {
                                 type:"TTemplateSettings",
-                                fields:{                                                                  
+                                fields:{
                                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                             SettingName:"bill",
                                             Description:$('input[name="Bills_2"]').val(),
                                             Template:"2",
                                             Active:bill == 2 ? true:false,
-                                        }            
+                                        }
                                 }
-                            
+
                                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                            
+
                                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                                        
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                                 });
-                            
-                                }).catch(function (err) {  });  
+
+                                }).catch(function (err) {  });
 
                  });
 
@@ -6280,49 +6280,49 @@ Template.billcard.events({
 
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{        
-                    ID:parseInt(id),                      
+                    fields:{
+                    ID:parseInt(id),
                     EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                     SettingName:"bill",
                     GlobalRef:"bill",
                     Description:$('input[name="Bills_3"]').val(),
                     Template:"3",
                     Active:bill == 3 ? true:false,
-                    }            
+                    }
                     }
 
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TTemplateSettings', JSON.stringify(data));     
-                        
+                    addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                     });
 
 
-                    }).catch(function (err) {   
+                    }).catch(function (err) {
                     });
 
                 }).catch(function (err) {
 
                 objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                             EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                             SettingName:"bill",
                             Description:$('input[name="Bills_3"]').val(),
                             Template:"3",
                             Active:bill == 3 ? true:false,
-                        }            
+                        }
                 }
 
                 sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
 
                 sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));           
-                });        
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+                });
 
                 }).catch(function (err) {
-                        
-                });  
+
+                });
 
                 });
 
@@ -6362,19 +6362,99 @@ Template.billcard.events({
 
 
 
-                    } else {
-                                swal({
-                                    title: 'Customer Email Required',
-                                    text: 'Please enter customer email',
-                                    type: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {}
-                                    else if (result.dismiss === 'cancel') {}
-                                });
+        } else {
+                    swal({
+                        title: 'Customer Email Required',
+                        text: 'Please enter customer email',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {}
+                        else if (result.dismiss === 'cancel') {}
+                    });
+        }
+
+        function generatePdfForMail(invoiceId) {
+            let file = "Bill-" + invoiceId + ".pdf"
+            return new Promise((resolve, reject) => {
+                let templateObject = Template.instance();
+                let completeTabRecord;
+                let doc = new jsPDF('p', 'pt', 'a4');
+                var source = document.getElementById('html-2-pdfwrapper');
+                var opt = {
+                    margin: 0,
+                    filename: file,
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'a4',
+                        orientation: 'portrait'
                     }
-         },
+                }
+                resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+
+            });
+        }
+
+        let attachment = [];
+        let templateObject = Template.instance();
+
+        let billId = FlowRouter.current().queryParams.id? parseInt(FlowRouter.current().queryParams.id) : 0;
+        let encodedPdf = await generatePdfForMail(billId);
+        let pdfObject = "";
+
+        let base64data = encodedPdf.split(',')[1];
+        pdfObject = {
+            filename: 'Bill-' + billId + '.pdf',
+            content: base64data,
+            encoding: 'base64'
+        };
+        attachment.push(pdfObject);
+
+
+        let values = [];
+        let basedOnTypeStorages = Object.keys(localStorage);
+        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split('_')[2];
+            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_');
+        });
+        let j = basedOnTypeStorages.length;
+        if (j > 0) {
+            while (j--) {
+                values.push(localStorage.getItem(basedOnTypeStorages[j]));
+            }
+        }
+        values.forEach(value => {
+            let reportData = JSON.parse(value);
+            let temp = {... reportData};
+            
+            temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+            temp.attachments = attachment;
+            if (temp.BasedOnType.includes("P")) {
+                if (temp.FormID == 1) {
+                    let formIds = temp.FormIDs.split(',');
+                    if (formIds.includes("12")) {
+                        temp.FormID = 12;
+                        Meteor.call('sendNormalEmail', temp);
+                    }
+                } else {
+                    if (temp.FormID == 12)
+                        Meteor.call('sendNormalEmail', temp);
+                }
+            }
+        });
+
+        
+    },
 
     'click  #open_print_confirm':function(event)
     {
@@ -6782,7 +6862,7 @@ Template.billcard.events({
                 let tdamount = $('#' + lineID + " .lineAmount").val();
                 let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||"NT";
 
                 if (tdaccount != "") {
 
@@ -6928,7 +7008,7 @@ Template.billcard.events({
 
                     let base64data = encodedPdf.split(',')[1];
                     pdfObject = {
-                        filename: 'invoice-' + invoiceId + '.pdf',
+                        filename: 'Bill-' + invoiceId + '.pdf',
                         content: base64data,
                         encoding: 'base64'
                     };
@@ -7054,7 +7134,8 @@ Template.billcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_');
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -7064,17 +7145,21 @@ Template.billcard.events({
                         }
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
+                            let temp = {... reportData};
+                            
+                            temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                            if (reportData.BasedOnType.includes("S")) {
-                                if (reportData.FormID == 1) {
-                                    let formIds = reportData.FormIDs.split(',');
+                            temp.attachments = attachment;
+                            if (temp.BasedOnType.includes("S")) {
+                                if (temp.FormID == 1) {
+                                    let formIds = temp.FormIDs.split(',');
                                     if (formIds.includes("12")) {
-                                        reportData.FormID = 12;
-                                        Meteor.call('sendNormalEmail', reportData);
+                                        temp.FormID = 12;
+                                        Meteor.call('sendNormalEmail', temp);
                                     }
                                 } else {
-                                    if (reportData.FormID == 12)
-                                        Meteor.call('sendNormalEmail', reportData);
+                                    if (temp.FormID == 12)
+                                        Meteor.call('sendNormalEmail', temp);
                                 }
                             }
                         });
@@ -7118,7 +7203,8 @@ Template.billcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -7129,6 +7215,7 @@ Template.billcard.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
                             if (reportData.BasedOnType.includes("S")) {
                                 if (reportData.FormID == 1) {
                                     let formIds = reportData.FormIDs.split(',');
@@ -7182,7 +7269,8 @@ Template.billcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_');
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -7193,6 +7281,7 @@ Template.billcard.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
                             if (reportData.BasedOnType.includes("S")) {
                                 if (reportData.FormID == 1) {
                                     let formIds = reportData.FormIDs.split(',');
@@ -7208,6 +7297,38 @@ Template.billcard.events({
                         });
 
                     } else {
+
+
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_');
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("12")) {
+                                        reportData.FormID = 12;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 12)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        }); 
                       if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{
@@ -7782,7 +7903,7 @@ Template.billcard.events({
                     let tdamount = $('#' + lineID + " .lineAmount").val();
                     let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||"NT";
 
                     if (tdaccount != "") {
 
