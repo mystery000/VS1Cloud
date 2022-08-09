@@ -60,6 +60,7 @@ Template.paymentcard.onCreated(() => {
 
 Template.paymentcard.onRendered(() => {
         _setTmpAppliedAmount();
+        const templateObject = Template.instance();
         let url = FlowRouter.current().path;
         $('#choosetemplate').attr('checked', true);
         const dataTableList = [];
@@ -136,7 +137,7 @@ Template.paymentcard.onRendered(() => {
             changeYear: true,
             yearRange: "-90:+10",
         });
-        const templateObject = Template.instance();
+      
         const record = [];
         let paymentService = new PaymentsService();
         let clientsService = new PaymentsService();

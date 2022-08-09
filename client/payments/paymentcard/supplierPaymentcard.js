@@ -63,6 +63,7 @@ export const _getTmpAppliedAmount = () => {
 
 Template.supplierpaymentcard.onRendered(() => {
   _setTmpAppliedAmount();
+  const templateObject = Template.instance();
   const dataTableList = [];
   const tableHeaderList = [];
   LoadingOverlay.show();
@@ -129,7 +130,7 @@ Template.supplierpaymentcard.onRendered(() => {
     changeYear: true,
     yearRange: "-90:+10",
   });
-  const templateObject = Template.instance();
+  
 
   /**
    * Lets load the default currency
