@@ -816,7 +816,20 @@ Template.emailsettings.onRendered(function () {
                             targetElement = parentElement.getElementsByClassName('printReport');
                         } else {
                             targetElement = [];
-                            const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
+                            // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
+                            let groupedReportsModal  = document.getElementById('groupedReportsModal');
+                            console.log("grouped report modal", groupedReportsModal);
+                            let groupedReports = groupedReportsModal.getElementsByClassName('star');
+                            let temp = [];
+                            for(let i = 0; i< groupedReports.length; i ++) {
+                                if(groupedReports[i].checked) {
+                                    temp.push(groupedReports[i])
+                                }
+                            }
+                            groupedReports = temp;
+
+                            console.log("groupedReports", temp);
+                            // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
                             let formIDs = [];
                             groupedReports.map(async (groupedReport) => {
                                 formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
@@ -824,22 +837,26 @@ Template.emailsettings.onRendered(function () {
                             let printwrappers = document.getElementsByClassName('print-wrapper');
                             let parenetElements = [];
                             formIDs.map(id=>{
-                                parenetElements.push(printwrappers.getElementsByClassName('print-wrapper-' + id)[0]);
+                                parenetElements.push(document.getElementsByClassName('print-wrapper-' + id)[0]);
                             })
                             parenetElements.map(parentelement=>{
                                 let children = parentelement.getElementsByClassName('printReport');
-                                children.map(childelement => {
-                                    targetElement.push(childelement);
-                                })
+
+
+                                for (let j = 0; j< children.length; j++) {
+                                    console.log("child element", children[j]);
+                                    targetElement.push(children[j]);
+                                }
                             })
 
                         }
 
                         function getAttachments() {
-                            return new Promise((resolve, reject)=>{
-                                if (targetElement && targetElement != null && targetElement != "" && targetElement != []) {
-                                    let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94']
-                                    for (let i = 0; i < targetElement.length; i++) {
+                            return new Promise(async (resolve, reject)=>{
+                                if (targetElement && targetElement != null && targetElement != "" && targetElement.length != 0) {
+                                    let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
+                                    // for ( let i = 0;  i< 10; i++ ) {
+                                    for ( let i = 0;  i< targetElement.length; i++ ) {
                                         if(transIDs.includes(formID.toString()) == false) {
                                             targetElement[i].style.display = "block";
                                             targetElement[i].style.width = "210mm";
@@ -849,6 +866,7 @@ Template.emailsettings.onRendered(function () {
                                             targetElement[i].style.fontSize = "13.33px";
                                             targetElement[i].style.color = "#000000";
                                             targetElement[i].style.overflowX = "visible";
+                                        } else {
                                         }
 
                                         var opt = {
@@ -868,23 +886,26 @@ Template.emailsettings.onRendered(function () {
                                             }
                                         };
                                         let source = targetElement[i];
-                                        setTimeout(() => {
-                                            html2pdf().set(opt).from(source).toPdf().output('datauristring').then((dataObject) => {
-                                                let pdfObject = "";
-                                                let base64data = dataObject.split(',')[1];
-                                                pdfObject = {
-                                                    filename: 'vs1cloud report.pdf',
-                                                    content: base64data,
-                                                    encoding: 'base64'
-                                                };
-                                                attachments.push(pdfObject)
-                                                if(i == targetElement.length -1) {
-                                                    resolve();
-                                                }
-                                            });
-                                        }, 100);
+                                        await (async () => {
+                                            return new Promise((resolve, reject) => {
+                                                html2pdf().set(opt).from(source).toPdf().output('datauristring').then((dataObject) => {
+                                                    let pdfObject = "";
+                                                    let base64data = dataObject.split(',')[1];
+                                                    pdfObject = {
+                                                        filename: 'vs1cloud report.pdf',
+                                                        content: base64data,
+                                                        encoding: 'base64'
+                                                    };
+                                                    attachments.push(pdfObject);
+                                                    resolve()
+                                                });
+                                            })
+                                        })()
                                     }
+                                    resolve()
 
+                                } else if(targetElement.length == 0) {
+                                    resolve();
                                 }
                             })
                         }

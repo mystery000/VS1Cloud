@@ -1042,8 +1042,8 @@ Template.newprofitandloss.events({
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
       let employeeId = storage.split("_")[2];
       return (
-        storage.includes("BasedOnType_") &&
-        employeeId == Session.get("mySessionEmployeeLoggedID")
+        storage.includes("BasedOnType_")
+        // storage.includes("BasedOnType_") && employeeId == Session.get("mySessionEmployeeLoggedID")
       );
     });
     let i = basedOnTypeStorages.length;
