@@ -15,6 +15,16 @@ export function getCurrentCurrencySymbol() {
   return localStorage.getItem("_SELECTED_CURRENCY_SYMBOL") || "N/A";
 }
 
+export function getUserCurrency() {
+  return localStorage.getItem("_USER_CURRENCY");
+}
+
+export function setUserCurrency(currencyObject) {
+  return localStorage.setItem("_USER_CURRENCY", currencyObject);
+}
+
+const defaultCurrencyCode = CountryAbbr;
+
 Template.currencypop.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecordscurrencypop = new ReactiveVar([]);
@@ -77,6 +87,12 @@ Template.currencypop.onRendered(function () {
           description: _currency.CurrencyDesc || "N/A",
           ratelastmodified: _currency.RateLastModified ||"N/A",
         });
+
+        if(_currency.currency == defaultCurrencyCode) {
+          setUserCurrency(_currency);
+        }
+
+
       });
 
     templateObject.datatablerecordscurrencypop.set(currencies);

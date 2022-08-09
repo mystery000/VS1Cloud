@@ -70,6 +70,21 @@ Template.paymentcard.onRendered(() => {
             $('.uploadedImage').attr('src', imageData);
         };
 
+        /**
+         * Lets load the default currency
+         */
+        templateObject.loadDefaultCurrency = () => {
+            const currencyCode = defaultCurrencyCode;
+            const currencySymbol = "$";
+            const currencyRate = 1; // We can make this dynamic
+
+            $('#sltCurrency').val(currencyCode);
+            $('#sltCurrency').attr('currency-symbol', currencySymbol);
+            $('#exchange_rate').val(currencyRate);
+        }
+
+        templateObject.loadDefaultCurrency();
+
 
         $('#edtCustomerName').attr('readonly', true);
         $('#edtCustomerName').css('background-color', '#eaecf4');
@@ -9257,25 +9272,30 @@ Template.paymentcard.events({
       },
       "change .dynamic-converter-js input.linePaymentamount.convert-from": (e, ui) => {
 
+        if(ui.isForeignEnabled.get() == true) {
+            setTimeout(() => {
 
-        setTimeout(() => {
+                const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
+                // convert to forign payment amount
+                const valueToConvert = $(e.currentTarget).val();
+                const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+      
+                $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
+      
+                // Convert oustanding to foriegn oustanding
+                const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
+                const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+                $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
+      
+                const appliedValue = calculateAppliedWithForeign("#tblPaymentcard .linePaymentamount.convert-to.foreign");
+                $('#edtApplied').val(targetCurrency +  appliedValue)
+                $('.appliedAmount').text(targetCurrency + appliedValue);
+                $('#edtForeignAmount').val(targetCurrency + appliedValue);
+              }, 500);
 
-          // convert to forign payment amount
-          const valueToConvert = $(e.currentTarget).val();
-          const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
+        }
 
-          $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
-
-          // Convert oustanding to foriegn oustanding
-          const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
-          const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-          $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
-
-          const appliedValue = calculateAppliedWithForeign("#tblPaymentcard .linePaymentamount.convert-to.foreign");
-          $('#edtApplied').val(appliedValue)
-          $('.appliedAmount').text(appliedValue);
-          $('#edtForeignAmount').val(appliedValue);
-        }, 500);
+       
 
       },
     //   "change #tblPaymentcard input.linePaymentamount.convert-to.foreign": (e, ui) => {
