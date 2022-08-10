@@ -4555,9 +4555,9 @@ Template.employeescard.events({
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         var splashArrayLeaveList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblLeaveRequests_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
+            $('.fullScreenSpin').css('display', 'inline-block');
             employeePayrollServices.getLeaveRequestByName(dataSearchName).then(function (data) {
                 $(".btnRefreshLeaveRequest").removeClass('btnSearchAlert');
                 let lineItems = []; 
@@ -4633,9 +4633,9 @@ Template.employeescard.events({
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         var splashArrayLeaveList = new Array();
         const lineExtaSellItems = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblAssignLeaveTypes_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
+            $('.fullScreenSpin').css('display', 'inline-block');
             employeePayrollServices.getAssignLeaveTypeByName(dataSearchName).then(function (data) {
                 $(".btnRefreshAssignLeave").removeClass('btnSearchAlert');
                 let lineItems = [];    
