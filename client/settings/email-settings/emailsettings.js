@@ -818,7 +818,6 @@ Template.emailsettings.onRendered(function () {
                             targetElement = [];
                             // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
                             let groupedReportsModal  = document.getElementById('groupedReportsModal');
-                            console.log("grouped report modal", groupedReportsModal);
                             let groupedReports = groupedReportsModal.getElementsByClassName('star');
                             let temp = [];
                             for(let i = 0; i< groupedReports.length; i ++) {
@@ -827,8 +826,6 @@ Template.emailsettings.onRendered(function () {
                                 }
                             }
                             groupedReports = temp;
-
-                            console.log("groupedReports", temp);
                             // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
                             let formIDs = [];
                             groupedReports.map(async (groupedReport) => {
@@ -844,7 +841,6 @@ Template.emailsettings.onRendered(function () {
 
 
                                 for (let j = 0; j< children.length; j++) {
-                                    console.log("child element", children[j]);
                                     targetElement.push(children[j]);
                                 }
                             })

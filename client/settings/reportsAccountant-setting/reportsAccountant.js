@@ -50,7 +50,7 @@ Template.reportsAccountantSettings.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
   let countries = [];
-  
+
   var countryService = new CountryService();
   templateObject.getCountryData = function () {
     getVS1Data("TCountries")
@@ -103,7 +103,6 @@ Template.reportsAccountantSettings.onRendered(function () {
     LoadingOverlay.show();
 
     getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
-      console.log("====", dataObject);
       let data = JSON.parse(dataObject[0].data);
       var dataInfo = {
           id: data.Id || '',
@@ -135,7 +134,7 @@ Template.reportsAccountantSettings.onRendered(function () {
 Template.reportsAccountantSettings.helpers({
   countryList: () => {
     return Template.instance().countryData.get();
-  },  
+  },
 });
 
 Template.reportsAccountantSettings.events({
@@ -171,7 +170,7 @@ Template.reportsAccountantSettings.events({
         location.reload(true);
     }).catch(function (err) {
         location.reload(true);
-    });    
+    });
   },
   "click .btnBack": function (event) {
     event.preventDefault();

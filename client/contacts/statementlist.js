@@ -119,7 +119,7 @@ Template.statementlist.onRendered(function () {
             let lineItemObj = {};
             let lineItemsTable = [];
             let lineItemTableObj = {};
-    
+
             if (data.tstatementforcustomer.length) {
                 let lineItems = [];
                 let balance = data.tstatementforcustomer[0].closingBalance;
@@ -129,7 +129,7 @@ Template.statementlist.onRendered(function () {
                 let company = Session.get('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let dept = "Head Office";
-    
+
                 let customerName = data.tstatementforcustomer[0].CustomerName;
                 let openingbalance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].OpeningBalance);
                 let closingbalance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].closingBalance);
@@ -163,7 +163,7 @@ Template.statementlist.onRendered(function () {
                     let balance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     });
-    
+
                     lineItemObj = {
                         lineID: id,
                         id: id || '',
@@ -173,21 +173,21 @@ Template.statementlist.onRendered(function () {
                         total: total || 0,
                         paidamt:paidAmt || 0,
                         totalPaid: totalPaid || 0,
-    
+
                         balance: balance || 0
-    
+
                     };
-    
+
                     lineItems.push(lineItemObj);
                 }
-    
+
                 if (balance > 0) {
                     for (let l = 0; l < lineItems.length; l++) {
                         stringQuery = stringQuery + "product" + l + "=" + lineItems[l].type + "&price" + l + "=" + lineItems[l].balance + "&qty" + l + "=" + 1 + "&"; ;
                     }
                     stringQuery = stringQuery + "tax=0" + "&total=" + closingbalance + "&customer=" + customerName + "&name=" + customerName + "&surname=" + customerName + "&quoteid=" + invoiceId + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + email + "&type=Statement&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept;
                 }
-    
+
                 var currentDate = new Date();
                 var begunDate = moment(currentDate).format("DD/MM/YYYY");
                 let statmentrecord = {
@@ -204,13 +204,13 @@ Template.statementlist.onRendered(function () {
                     openingBalance: openingbalance,
                     closingBalance: closingbalance
                 };
-    
+
                 templateObject.statmentprintrecords.set(statmentrecord);
-    
+
                 $(".linkText").text('Pay Now');
                 $(".linkText").attr("href", stripeGlobalURL + stringQuery);
                 var source = document.getElementById('printstatmentdesign');
-    
+
                 let file = "Customer Statement.pdf";
                 var opt = {
                     margin: 0,
@@ -236,11 +236,11 @@ Template.statementlist.onRendered(function () {
                             $('#printstatmentdesign').css('display', 'none');
                         });
                     })
-    
+
                 }, 100);
-    
+
             }
-    
+
             //});
         })
     };
@@ -378,7 +378,7 @@ Template.statementlist.onRendered(function () {
                                 email: email,
                                 link: stringQuery
                             };
-                            
+
                             resolve(html2pdf().set(opt1).from(source).toPdf().output('datauristring'))
                         }, 2000);
                         $('#printstatmentdesign').css('display', 'none');
@@ -1661,7 +1661,7 @@ Template.statementlist.onRendered(function () {
             await templateObject.getStatePrintData(listIds[j]);
         }
     }
-    
+
 
     templateObject.emailMultipleStatementPdf = async function (listIds) {
         let multiPDF = [];
@@ -2336,7 +2336,6 @@ Template.statementlist.events({
             for (let j = 0; j < listIds.length; j++) {
                 let encodedPdf = await templateObject.getStatePrintData(listIds[j]);
                 let base64data = encodedPdf.split(',')[1];
-                console.log("base 64 data", base64data);
                 pdfObject = {
                     filename: 'Statement-' + listIds[j] + '.pdf',
                     content: base64data,
@@ -2375,7 +2374,6 @@ Template.statementlist.events({
             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
             if (reportData.BasedOnType.includes("P")) {
                 reportData.attachments = attachment;
-                console.log("report data", reportData);
                 if (reportData.FormID == 1) {
                     let formIds = reportData.FormIDs.split(',');
                     if (formIds.includes("177") || formIds.includes("17544")) {
