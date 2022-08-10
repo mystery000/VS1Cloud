@@ -564,9 +564,14 @@ Template.leaveTypeSettings.events({
             swal({
                 title: "Success",
                 text: "Leave has been saved",
-                type: 'success',
-                
-            })
+                type: 'success',   
+                showCancelButton: false,
+                confirmButtonText: 'Done'             
+            }).then((result) => {
+                if (result.value) {                    
+                    window.location.reload();
+                }
+            });
         }else{
             $('.fullScreenSpin').css('display', 'none');
             swal({
