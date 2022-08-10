@@ -1616,7 +1616,7 @@ Template.vs1login.onRendered(function () {
                                     Session.setPersistent('mainEPort', checkSSLPorts);
 
                                     var dataReturnRes = JSON.parse(oReq.responseText);
-                                    console.log("dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId", dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId)
+
                                     if (dataReturnRes.ProcessLog.ResponseStatus != "OK") {
                                         pausevideo();
                                         $('.myVS1Video').css('display', 'none');

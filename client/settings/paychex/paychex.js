@@ -53,8 +53,7 @@ Template.paychex.onRendered(function () {
 Template.paychex.events({
 
   'click #openLink': function() {
-
-    window.open("https://www.paychex.com/contact/sales");
+    window.open("https://www.paychex.com");
   },
   'click #savePaychexSettings': async function(){
     $('.fullScreenSpin').css('display','block');

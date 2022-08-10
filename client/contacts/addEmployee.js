@@ -6234,111 +6234,102 @@ Template.employeescard.events({
             case 'Based on Ordinary Earnings':
                 HoursAccruedAnnuallyFullTimeEmp = $('#hoursAccruedAnnuallyFullTimeEmp').val();
                 HoursFullTimeEmpFortnightlyPay = $('#hoursFullTimeEmpFortnightlyPay').val();
+                if(isNaN(HoursAccruedAnnuallyFullTimeEmp)){
+                    swal({
+                        title: "Warning",
+                        text: "Hours Accrued Annually Full Time Emp is required",
+                        type: 'warning',
+                    })
+                    return false;
+                }
+                if(isNaN(HoursFullTimeEmpFortnightlyPay)){
+                    swal({
+                        title: "Warning",
+                        text: "Hours Accrued Annually Full Time Emp is required",
+                        type: 'warning',
+                    })
+                    return false;
+                }
             break;
             default:
                 HoursAccruedAnnually = $('#hoursAccruedAnnually').val();
+                if(isNaN(HoursAccruedAnnually)){
+                    swal({
+                        title: "Warning",
+                        text: "Hours accrued annually is required",
+                        type: 'warning',
+                    })
+                    return false;
+                }
             break;
         }
 
-        if(HoursAccruedAnnually == ''){
+        if(isNaN(OpeningBalance)){
             swal({
                 title: "Warning",
-                text: "Hours accrued annually is required",
+                text: "Opening balance is required",
                 type: 'warning',
             })
-        }else if(isNaN(HoursAccruedAnnually)){
-            swal({
-                title: "Warning",
-                text: "Hour must be a number",
-                type: 'warning',
-            })
-        }else if(isNaN(HoursAccruedAnnually)){
-            swal({
-                title: "Warning",
-                text: "Hour must be a number",
-                type: 'warning',
-            })
-        }else if(OpeningBalance == ''){
-            swal({
-                title: "Warning",
-                text: "Opening balance must not be empty",
-                type: 'warning',
-            })
-        }else if(isNaN(OpeningBalance)){
-            swal({
-                title: "Warning",
-                text: "Opening balance be a number",
-                type: 'warning',
-            })
-        }else{
-            $('.fullScreenSpin').css('display', 'block');
+        }
+        $('.fullScreenSpin').css('display', 'block');
 
-            let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
-            let OnTerminationBalance = 0;
-            if( OnTerminationUnusedBalance == "Paid Out" ){
-                OnTerminationBalance = 1;
-            }
-            let EFTLeaveType = $("#eftLeaveType").is(':checked') ? true : false;
-            let SuperannuationGuarantee = ( EFTLeaveType )? $("#superannuationGuarantee").is(':checked') ? true : false : false;
+        let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
+        let OnTerminationBalance = 0;
+        if( OnTerminationUnusedBalance == "Paid Out" ){
+            OnTerminationBalance = 1;
+        }
+        let EFTLeaveType = $("#eftLeaveType").is(':checked') ? true : false;
+        let SuperannuationGuarantee = ( EFTLeaveType )? $("#superannuationGuarantee").is(':checked') ? true : false : false;
 
-            // const assignLeaveTypes = [];
-            // let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
-            // if( TAssignLeaveTypes.length ){
-            //     let TAssignLeaveTypesData = JSON.parse(TAssignLeaveTypes[0].data);
-            //     assignLeaveTypes = AssignLeaveType.fromList(
-            //         TAssignLeaveTypesData.tassignteavetype
-            //     );
-            // }
+        // const assignLeaveTypes = [];
+        // let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
+        // if( TAssignLeaveTypes.length ){
+        //     let TAssignLeaveTypesData = JSON.parse(TAssignLeaveTypes[0].data);
+        //     assignLeaveTypes = AssignLeaveType.fromList(
+        //         TAssignLeaveTypesData.tassignteavetype
+        //     );
+        // }
 
-            // assignLeaveTypes.push(
-            let assignLeaveTypes = new AssignLeaveType({
-                    type: "TAssignLeaveType",
-                    fields: new AssignLeaveTypeFields({
-                        LeaveType: LeaveType,
-                        EmployeeID: parseInt(employeeID),
-                        LeaveCalcMethod: LeaveCalcMethod,
-                        HoursAccruedAnnually: parseInt(HoursAccruedAnnually),
-                        HoursAccruedAnnuallyFullTimeEmp: parseInt(HoursAccruedAnnuallyFullTimeEmp),
-                        HoursFullTimeEmpFortnightlyPay: parseInt(HoursAccruedAnnuallyFullTimeEmp),
-                        HoursLeave: parseInt(HoursLeave),
-                        OpeningBalance: parseInt(OpeningBalance),
-                        OnTerminationUnusedBalance: OnTerminationBalance,
-                        EFTLeaveType: EFTLeaveType,
-                        SuperannuationGuarantee: SuperannuationGuarantee,
-                        Active: true
-                    }),
+        // assignLeaveTypes.push(
+        let assignLeaveTypes = new AssignLeaveType({
+                type: "TAssignLeaveType",
+                fields: new AssignLeaveTypeFields({
+                    LeaveType: LeaveType,
+                    EmployeeID: parseInt(employeeID),
+                    LeaveCalcMethod: LeaveCalcMethod,
+                    HoursAccruedAnnually: parseInt(HoursAccruedAnnually),
+                    HoursAccruedAnnuallyFullTimeEmp: parseInt(HoursAccruedAnnuallyFullTimeEmp),
+                    HoursFullTimeEmpFortnightlyPay: parseInt(HoursAccruedAnnuallyFullTimeEmp),
+                    HoursLeave: parseInt(HoursLeave),
+                    OpeningBalance: parseInt(OpeningBalance),
+                    OnTerminationUnusedBalance: OnTerminationBalance,
+                    EFTLeaveType: EFTLeaveType,
+                    SuperannuationGuarantee: SuperannuationGuarantee,
+                    Active: true
+                }),
+            })
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(assignLeaveTypes),
+            });
+
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                // $('#deductionRateForm')[0].reset();
+                await templateObject.saveAssignLeaveLocalDB();
+                await templateObject.getAssignLeaveTypes();
+                $('#assignLeaveTypeModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: "Success",
+                    text: "Leave type has been assigned",
+                    type: 'success',
+
                 })
-
-            try {
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(assignLeaveTypes),
-                });
-
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // $('#deductionRateForm')[0].reset();
-                    await templateObject.saveAssignLeaveLocalDB();
-                    await templateObject.getAssignLeaveTypes();
-                    $('#assignLeaveTypeModal').modal('hide');
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Success",
-                        text: "Leave type has been assigned",
-                        type: 'success',
-
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to assigned leave type",
-                        type: 'error',
-
-                    })
-                }
-            } catch (error) {
+            }else{
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: "Error",
@@ -6347,6 +6338,14 @@ Template.employeescard.events({
 
                 })
             }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to assigned leave type",
+                type: 'error',
+
+            })
         }
     },
 
@@ -9652,7 +9651,7 @@ Template.employeescard.events({
 
     'change #onTerminationUnusedBalance': function(e){
         let onTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
-        if( onTerminationUnusedBalance == 'Paid Out' ){
+        if( onTerminationUnusedBalance == '0' ){
             $('.eftLeaveTypeCont').removeClass('hideelement')
             $("#eftLeaveType").attr('checked', false)
         }else{
