@@ -781,7 +781,6 @@ Template.newbankrecon.onRendered(function() {
         // templateObject.getAllReconListData();
     }, 100);
 
-
     $('#bankAccountName').editableSelect();
     $('#bankAccountName').editableSelect().on('click.editable-select', function (e, li) {
         const $each = $(this);
@@ -2580,6 +2579,7 @@ function setCalculated() {
                 discountRate = customerDetail.discount;
             }
         }
+        let taxOption = $('#divLineDetail_' + selectedYodleeID + " #taxOption").val();
         if (selectedLineID) {
             let lineQty = parseInt($('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + ' .lineQty').val());
             let lineUnitPrice = $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + ' .lineUnitPrice').val();
@@ -2603,10 +2603,15 @@ function setCalculated() {
             if (DepOrWith == "spent") {
                 $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
             }
-            lineAmount = lineQty * lineUnitPrice + lineTaxAmount - lineDiscount;
+            if (taxOption == 'tax_exclusive') {
+                lineAmount = lineQty * lineUnitPrice + lineTaxAmount - lineDiscount;
+            } else if (taxOption == 'tax_inclusive') {
+                lineAmount = lineQty * lineUnitPrice - lineDiscount;
+            } else {
+                lineAmount = lineQty * lineUnitPrice - lineDiscount;
+            }
             $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineAmount").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
         }
-        let taxOption = $('#divLineDetail_' + selectedYodleeID + " #taxOption").val();
         $tblrows.each(function (index) {
             const $tblrow = $(this);
             let lineSubTotal = $tblrow.find(".lineSubTotal").text();
@@ -2621,14 +2626,15 @@ function setCalculated() {
             subTotal += lineSubTotal;
             taxTotal += lineTaxAmount;
             discountTotal += lineDiscount;
+            grandTotal += lineAmount;
             if (taxOption == 'tax_exclusive') {
-                grandTotal += lineAmount;
+                // grandTotal += lineAmount;
                 $('#divLineDetail_' + selectedYodleeID + " #taxTotalDiv").show();
             } else if (taxOption == 'tax_inclusive') {
-                grandTotal += (lineAmount - lineTaxAmount);
+                // grandTotal += (lineAmount - lineTaxAmount);
                 $('#divLineDetail_' + selectedYodleeID + " #taxTotalDiv").show();
             } else {
-                grandTotal += (lineAmount - lineTaxAmount);
+                // grandTotal += (lineAmount - lineTaxAmount);
                 $('#divLineDetail_' + selectedYodleeID + " #taxTotalDiv").hide();
             }
         });
