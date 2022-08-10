@@ -46,11 +46,9 @@
                         <div class="form-group" style="margin: 4px;">
                             <label>Category</label>
                             <select class="form-control" id="expenseCategory">
-                                <option>Materials</option>
-                                <option>Meals & Entertainment</option>
-                                <option>Office Supplies</option>
-                                <option>Travel</option>
-                                <option>Vehicle</option>
+                                {{#each item in expenseCategories}}
+                                    <option value="{{item}}">{{item}}</option>
+                                {{/each}}
                             </select>
                         </div>
                     </div>
@@ -272,26 +270,6 @@
                         </div> -->
                     </div>
                     <!-- {{/if}} -->
-                    <!-- <div class="d-xl-flex align-items-xl-center">
-                        <div class="flex-grow-1">
-                            <div class="custom-control custom-switch" >
-                                <input type="checkbox" class = "custom-control-input useReceiptClaim" id="useReceiptClaim"/>
-                                <label class="custom-control-label" for="useReceiptClaim" >Use Receipt Claim</label>
-                            </div >
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="form-group">
-                                <label>Category</label>
-                                <select class="form-control" id="expenseCategory">
-                                    <option>Materials</option>
-                                    <option>Meals & Entertainment</option>
-                                    <option>Office Supplies</option>
-                                    <option>Travel</option>
-                                    <option>Vehicle</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
             <form></form>

@@ -509,6 +509,35 @@ Template.earningRateSettings.events({
         let ExemptPAYG = ( $('#formCheck-ExemptPAYG').is(':checked') )? true: false;
         let ExemptSuperannuation = ( $('#formCheck-ExemptSuperannuation').is(':checked') )? true: false;
         let ExemptReportable = ( $('#formCheck-ExemptReportable').is(':checked') )? true: false;
+
+        if(EarningsName == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Earning Name",
+                type: 'warning',
+            })
+            return false;
+        }
+
+        if(EarningsRateType == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter Earning Rate Type",
+                type: 'warning',
+            })
+            return false;
+        }
+
+        if(ExpenseAccount == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter Expense Account",
+                type: 'warning',
+            })
+            return false;
+        }
+        
+
         /**
          * Saving Earning Object in localDB
         */

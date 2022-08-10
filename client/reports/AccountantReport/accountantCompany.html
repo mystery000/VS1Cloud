@@ -88,7 +88,7 @@
                         <div class="col" id="reportsAccountantHeader">
                         </div>
                     </div><br>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col" style="margin-bottom:15px">
                             <label><b>1. Statement of Significant Accounting Policies</b></label>
                             <div class="row">
@@ -269,10 +269,29 @@
                             </div>
                         </div>
                     {{/each}}
-                    </div>
+                    </div> -->
                 </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="javascript:go_page('prev')" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="javascript:go_page(1)">1</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:go_page(2)">2</a></li>
+                        <li class="page-item"><a class="page-link" href="javascript:go_page(3)">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:go_page('next')">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
             {{> poweredby}}
         </div>
     </div>
+    
+    <script>
+        function go_page(action){
+            alert(action);
+        }
+    </script>
 </template>

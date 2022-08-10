@@ -27,6 +27,7 @@ Template.addAccountModal.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.accountList = new ReactiveVar([]);
   templateObject.accountTypes = new ReactiveVar([]);
+  templateObject.expenseCategories = new ReactiveVar([]);
   templateObject.taxRates = new ReactiveVar([]);
 });
 
@@ -79,7 +80,6 @@ Template.addAccountModal.onRendered(function () {
         });
       });
   };
-
   templateObject.loadAccountTypes();
 
   templateObject.getTaxRates = function () {
@@ -837,6 +837,7 @@ Template.addAccountModal.onRendered(function () {
             }
           }
         });
+
     }, 1000);
 
     $(document).on("click", "#tblTaxRate tbody tr", (e) => {
@@ -846,6 +847,42 @@ Template.addAccountModal.onRendered(function () {
       $("#taxRateListModal").modal("toggle");
     });
   });
+
+    templateObject.getAllAccounts = function() {
+        getVS1Data('TAccountVS1').then(function(dataObject) {
+            if (dataObject.length === 0) {
+                sideBarService.getAccountListVS1().then(function(data) {
+                    getExpenseCategories(data);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                getExpenseCategories(data);
+            }
+        }).catch(function(err) {
+            sideBarService.getAccountListVS1().then(function(data) {
+                getExpenseCategories(data);
+            });
+        });
+    };
+    function getExpenseCategories(data) {
+        //'Materials', 'Meals & Entertainment', 'Office Supplies', 'Travel', 'Vehicle'
+        let categories = [];
+        categories.push('Materials');
+        categories.push('Meals & Entertainment');
+        categories.push('Office Supplies');
+        categories.push('Travel');
+        categories.push('Vehicle');
+        let usedCategories = [];
+        for (let i = 0; i < data.taccountvs1.length; i++) {
+            if(data.taccountvs1[i].fields.AccountGroup && data.taccountvs1[i].fields.AccountGroup != ''){
+                usedCategories.push(data.taccountvs1[i].fields.AccountGroup);
+            }
+        }
+        usedCategories = [...new Set(usedCategories)];
+        let result = categories.filter((item) => !usedCategories.includes(item));
+        templateObject.expenseCategories.set(result);
+    }
+    templateObject.getAllAccounts();
 });
 
 Template.addAccountModal.events({
@@ -1321,5 +1358,8 @@ Template.addAccountModal.helpers({
       bsbname = "BSB";
     }
     return bsbname;
+  },
+  expenseCategories: () => {
+    return Template.instance().expenseCategories.get();
   },
 });
