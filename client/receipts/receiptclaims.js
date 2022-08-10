@@ -90,7 +90,7 @@ Template.receiptsoverview.onRendered(function() {
         templateObject.setCategoryAccountList();
     });
 
-    templateObject.getAllAccountss = function() {
+    templateObject.getAllAccounts = function() {
         getVS1Data('TAccountVS1').then(function(dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getAccountListVS1().then(function(data) {
@@ -108,15 +108,7 @@ Template.receiptsoverview.onRendered(function() {
     };
     function setAccountListVS1(data) {
         let categoryAccountList = [];
-        let inventoryData = [];
-        addVS1Data('TAccountVS1',JSON.stringify(data));
         for (let i = 0; i < data.taccountvs1.length; i++) {
-            let accBalance;
-            if (!isNaN(data.taccountvs1[i].fields.Balance)) {
-                accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1[i].fields.Balance) || 0.00;
-            } else {
-                accBalance = Currency + "0.00";
-            }
             const dataList = [
                 data.taccountvs1[i].fields.AccountGroup|| '',
                 data.taccountvs1[i].fields.AccountName || '',
@@ -125,11 +117,9 @@ Template.receiptsoverview.onRendered(function() {
                 data.taccountvs1[i].fields.TaxCode || '',
                 data.taccountvs1[i].fields.ID || ''
             ];
-
             if(data.taccountvs1[i].fields.AllowExpenseClaim && data.taccountvs1[i].fields.AccountGroup != ''){
                 categoryAccountList.push(dataList);
             }
-
         }
         templateObject.categoryAccounts.set(categoryAccountList);
         //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
@@ -162,7 +152,7 @@ Template.receiptsoverview.onRendered(function() {
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
         }
     }
-    templateObject.getAllAccountss();
+    templateObject.getAllAccounts();
     templateObject.setCategoryAccountList = function() {
         $('#categoryListModal').modal('toggle');
         setTimeout(function() {
@@ -1233,6 +1223,7 @@ Template.receiptsoverview.onRendered(function() {
     templateObject.getOCRResultFromImage = function(imageData, fileName) {
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
+            console.log(data);
             $('.fullScreenSpin').css('display', 'none');
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
@@ -1258,59 +1249,126 @@ Template.receiptsoverview.onRendered(function() {
             }
 
             let objDetails;
-            if (!data.vendor.name) {
+            let supplier_name = data.vendor.name? data.vendor.name:"";
+            if (supplier_name == "") {
+                let keyword = "Store:";
+                let start_pos = data.ocr_text.indexOf(keyword);
+                if (start_pos > 0) {
+                    start_pos += keyword.length;
+                    let subtext = data.ocr_text.substring(start_pos, data.ocr_text.length-1);
+                    let end_pos = subtext.trim().indexOf("\n");
+                    let subtext2 = subtext.substring(0, end_pos+1);
+                    let end_pos2 = subtext2.trim().indexOf("\t");
+                    if (end_pos2 != -1) {
+                        supplier_name = subtext2.substring(0, end_pos2+1);
+                    } else {
+                        supplier_name = subtext2;
+                    }
+                    supplier_name = supplier_name.trim();
+                } else if (data.vendor.address && data.vendor.address != "") {
+                    let pos = data.ocr_text.indexOf(data.vendor.address);
+                    supplier_name = data.ocr_text.substring(0, pos-1);
+                    supplier_name = supplier_name.replace("\n", " ");
+                    supplier_name = supplier_name.trim();
+                }
+            }
+            if (supplier_name != "") {
                 let isExistSupplier = false;
                 templateObject.suppliers.get().forEach(supplier => {
-                    if (data.vendor.name == supplier.suppliername) {
+                    if (supplier_name == supplier.suppliername) {
                         isExistSupplier = true;
-                        $(parentElement + ' .merchants').val(data.vendor.name);
+                        $(parentElement + ' .merchants').val(supplier_name);
                         $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
                     }
                 });
 
                 if (!isExistSupplier) {
-                    // create supplier with vendor data
-                    objDetails = {
-                        type: "TSupplier",
-                        fields: {
-                            ClientName: data.vendor.name,
-                            FirstName: data.vendor.name,
-                            LastName: '',
-                            Phone: data.vendor.phone_number,
-                            Mobile: '',
-                            Email: data.vendor.email,
-                            SkypeName: '',
-                            Street: '',
-                            Street2: '',
-                            Suburb: '',
-                            State: '',
-                            PostCode: '',
-                            Country: '',
-                            BillStreet: '',
-                            BillStreet2: '',
-                            BillState: '',
-                            BillPostCode: '',
-                            Billcountry: '',
-                            PublishOnVS1: true
+                    contactService.getOneSupplierDataExByName(supplier_name).then(function (data) {
+                        if (data.tsupplier.length == 0) {
+                            // create supplier with vendor data
+                            objDetails = {
+                                type: "TSupplier",
+                                fields: {
+                                    ClientName: supplier_name,
+                                    FirstName: supplier_name,
+                                    LastName: '',
+                                    Phone: data.vendor.phone_number || '',
+                                    Mobile: '',
+                                    Email: data.vendor.email || '',
+                                    SkypeName: '',
+                                    Street: '',
+                                    Street2: '',
+                                    Suburb: '',
+                                    State: '',
+                                    PostCode: '',
+                                    Country: '',
+                                    BillStreet: '',
+                                    BillStreet2: '',
+                                    BillState: '',
+                                    BillPostCode: '',
+                                    Billcountry: '',
+                                    PublishOnVS1: true
+                                }
+                            };
+
+                            contactService.saveSupplier(objDetails).then(function (supplier) {
+                                $('.fullScreenSpin').css('display','none');
+                                //  Meteor._reload.reload();
+                                $(parentElement + ' .merchants').val(supplier_name);
+                                $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
+                                const suppliers = templateObject.suppliers.get();
+                                suppliers.push({
+                                    supplierid: supplier.fields.ID,
+                                    suppliername: supplier_name,
+                                });
+                                templateObject.suppliers.set(suppliers);
+
+                            }).catch(function (err) {
+                                swal({
+                                    title: 'Oooops...',
+                                    text: err,
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Try Again'
+                                }).then((result) => {
+                                    if (result.value) {
+
+                                    } else if (result.dismiss == 'cancel') {
+
+                                    }
+                                });
+                                $('.fullScreenSpin').css('display','none');
+                            });
+                        } else {
+                            $(parentElement + ' .merchants').val(supplier_name);
+                            $(parentElement + ' .merchants').attr('data-id', data.tsupplier[0].fields.ID);
+                            const suppliers = templateObject.suppliers.get();
+                            suppliers.push({
+                                supplierid: data.tsupplier[0].fields.ID,
+                                suppliername: supplier_name,
+                            });
+                            templateObject.suppliers.set(suppliers);
+                            $('.fullScreenSpin').css('display','none');
                         }
-                    };
-
-                    contactService.saveSupplier(objDetails).then(function (supplier) {
-                        //$('.fullScreenSpin').css('display','none');
-                        //  Meteor._reload.reload();
-                        $(parentElement + ' .merchants').val(data.vendor.name);
-                        $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
-                        const suppliers = templateObject.suppliers.get();
-                        suppliers.push({
-                            supplierid: supplier.fields.ID,
-                            suppliername: data.vendor.name,
-                        });
-                        templateObject.suppliers.set(suppliers);
-
                     }).catch(function (err) {
-                        //$('.fullScreenSpin').css('display','none');
+
                     });
                 }
+            } else {
+                swal({
+                    title: 'Oooops...',
+                    text: "Failed to get information from the Receipt. Please use other valid receipt.",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
             }
             $(parentElement + ' .employees').attr('data-id', loggedUserId);
             $(parentElement + ' .employees').val(loggedUserName);
@@ -2661,7 +2719,6 @@ Template.receiptsoverview.events({
         }
     },
     'click .btnCheque': function(e) {
-        $('.fullScreenSpin').css('display', 'inline-block');
         let purchaseService = new PurchaseBoardService();
         let template = Template.instance();
         let supplierList = template.suppliers.get();
@@ -2676,7 +2733,8 @@ Template.receiptsoverview.events({
             $('#tblReceiptList tbody tr').each( function() {
                 let checked = $(this).find("input:checked").val();
                 let supplierName = $(this).find(".colReceiptMerchant").text();
-                if (checked == "on" && supplierName != "") {
+                let taxCode = $(this).find(".colTaxCode").text();
+                if (checked == "on" && supplierName != "" && taxCode != "") {
                     let amount = $(this).find(".colReceiptAmount").text();
                     let accountName = $(this).find(".colReceiptAccount").text();
                     let description = $(this).find(".colReceiptDesc").text();
@@ -2685,7 +2743,6 @@ Template.receiptsoverview.events({
                     let accountID = $(this).find(".colAccountID").text();
                     let employeeID = $(this).find(".colEmployeeID").text();
                     let employeeName = $(this).find(".colEmployeeName").text();
-                    let taxCode = $(this).find(".colTaxCode").text();
                     let taxAmount = $(this).find(".colTaxAmount").text();
                     let amountEx = $(this).find(".colAmountEx").text();
                     let amountInc = $(this).find(".colAmountInc").text();
@@ -2729,8 +2786,7 @@ Template.receiptsoverview.events({
                             Chequetotal: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
                         },
                     };
-
-
+                    $('.fullScreenSpin').css('display', 'inline-block');
                     purchaseService.saveChequeEx(objDetails).then(function (result) {
                         if (result.fields.ID) {
                             swal({
@@ -2767,8 +2823,13 @@ Template.receiptsoverview.events({
                         $('.fullScreenSpin').css('display', 'none');
                     })
                 } else {
+                    let errText = "";
                     if (checked == "on" && supplierName == "") {
-                        let errText = "Merchant is empty.";
+                        errText = "Merchant is empty.";
+                    } else if (checked == "on" && taxCode == "") {
+                        errText = "Tax Code is empty.";
+                    }
+                    if (errText != "") {
                         swal({
                             title: 'Oooops...',
                             text: errText,
@@ -2783,7 +2844,6 @@ Template.receiptsoverview.events({
                             }
                         });
                     }
-                    $('.fullScreenSpin').css('display', 'none');
                 }
             });
         } else {
@@ -2801,7 +2861,6 @@ Template.receiptsoverview.events({
 
                 }
             });
-            $('.fullScreenSpin').css('display', 'none');
         }
     },
 });
