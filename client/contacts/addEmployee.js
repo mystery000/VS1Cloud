@@ -9651,7 +9651,7 @@ Template.employeescard.events({
 
     'change #onTerminationUnusedBalance': function(e){
         let onTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
-        if( onTerminationUnusedBalance == '0' ){
+        if( onTerminationUnusedBalance == '1' ){
             $('.eftLeaveTypeCont').removeClass('hideelement')
             $("#eftLeaveType").attr('checked', false)
         }else{
