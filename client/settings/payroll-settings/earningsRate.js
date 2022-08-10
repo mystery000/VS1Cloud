@@ -5,11 +5,13 @@ import Earning from '../../js/Api/Model/Earning'
 import EarningFields from '../../js/Api/Model/EarningFields'
 import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
 import ApiService from "../../js/Api/Module/ApiService";
+import { EmployeePayrollService } from '../../js/employeepayroll-service';
 import '../../lib/global/indexdbstorage.js';
 import 'jquery-editable-select';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let employeePayrollService = new EmployeePayrollService();
 
 Template.earningRateSettings.onCreated(function() {
   const templateObject = Template.instance();
@@ -423,14 +425,14 @@ Template.earningRateSettings.events({
         $('#earningRateForm')[0].reset();
         $('#addEarningsLineModal').modal('hide');
     },
-    'click .btnSearchAlert':function(event){      
+    'click .btnRefreshEarnings':function(event){      
         let templateObject = Template.instance();
         var splashArrayEarningList = new Array();
         const lineExtaSellItems = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblEarnings_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getEarnings(dataSearchName).then(function (data) {
+            employeePayrollService.getEarningByName(dataSearchName).then(function (data) {
                 $(".btnRefreshEarnings").removeClass('btnSearchAlert');
                 let lineItems = [];
                 if (data.tearnings.length > 0) {
@@ -474,6 +476,7 @@ Template.earningRateSettings.events({
                             $('#earningRateForm')[0].reset();
                             $('#edtEarningsName').val(dataSearchName)
                             $('#earningRateSettingsModal').modal('hide');
+                            $('#addEarningsLineModal').modal('hide');
                             $('#ordinaryTimeEarningsModal').modal('show');
                         }
                     });

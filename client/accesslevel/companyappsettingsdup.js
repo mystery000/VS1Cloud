@@ -1,12 +1,7 @@
-import {
-    ReactiveVar
-}
-from 'meteor/reactive-var';
-import {
-    UtilityService
-}
-from "../utility-service";
+import {ReactiveVar} from 'meteor/reactive-var';
+import {UtilityService} from "../utility-service";
 let utilityService = new UtilityService();
+
 Template.companyappsettingsdup.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.recordscomp = new ReactiveVar();
@@ -17,9 +12,8 @@ Template.companyappsettingsdup.onCreated(() => {
     templateObject.plusArr = new ReactiveVar();
     templateObject.extraArr = new ReactiveVar();
     templateObject.monthArr = new ReactiveVar();
-
+    templateObject.purchasedPackages = new ReactiveVar();
     templateObject.recordpackType = new ReactiveVar();
-
     templateObject.employeecompaccess = new ReactiveVar();
 
 });
@@ -41,7 +35,9 @@ Template.companyappsettingsdup.onRendered(function () {
         else {
             if (result) {
                 let valueData = result.items;
+                let packages = [];
                 for (let j in valueData) {
+                    packages.push( valueData[j].items[0].sku )
                     if (valueData[j].items[0].sku == "vs1_simplestart_trial") {
                         getPackType = "trialPack";
                         templateObject.recordpackType.set(getPackType);
@@ -62,6 +58,7 @@ Template.companyappsettingsdup.onRendered(function () {
                         templateObject.recordpackType.set(getPackType);
                     }
                 }
+                templateObject.purchasedPackages.set( packages );
             }
         }
     });
@@ -299,13 +296,17 @@ Template.companyappsettingsdup.onRendered(function () {
                  */
 
                 if (cloudPackage === "Simple Start") {
-                    //$('.simplediv #SimpleStart').prop( "checked", false );
+                    // Hide Simple Start
+                    $('#settingsCard1').hide();
                 } else if (cloudPackage === "Essentials") {
-                    $('.essentialsdiv .custom-control-input').prop("checked", true);
-                    $('.plusdiv .custom-control-input').prop("checked", false);
+                    // Hide Essentials
+                    $('#settingsCard1').hide();
+                    $('#settingsCard2').hide();
                 } else if (cloudPackage === "PLUS") {
-                    $('.essentialsdiv .custom-control-input').prop("checked", true);
-                    $('.plusdiv .custom-control-input').prop("checked", true);
+                    // Hide PLUS
+                    $('#settingsCard1').hide();
+                    $('#settingsCard2').hide();
+                    $('#settingsCard3').hide();
                 }
                 // $('.fullScreenSpin').css('display','none');
             }, 500);
@@ -314,13 +315,17 @@ Template.companyappsettingsdup.onRendered(function () {
 
         setTimeout(function () {
             if (cloudPackage === "Simple Start") {
-                //$('.simplediv #SimpleStart').prop( "checked", false );
+                // Hide Simple Start
+                $('#settingsCard1').hide();
             } else if (cloudPackage === "Essentials") {
-                $('.essentialsdiv .custom-control-input').prop("checked", true);
-                $('.plusdiv .custom-control-input').prop("checked", false);
+                // Hide Essentials
+                $('#settingsCard1').hide();
+                $('#settingsCard2').hide();
             } else if (cloudPackage === "PLUS") {
-                $('.essentialsdiv .custom-control-input').prop("checked", true);
-                $('.plusdiv .custom-control-input').prop("checked", true);
+                // Hide PLUS
+                $('#settingsCard1').hide();
+                $('#settingsCard2').hide();
+                $('#settingsCard3').hide();
             }
             // $('.fullScreenSpin').css('display','none');
         }, 1000);
