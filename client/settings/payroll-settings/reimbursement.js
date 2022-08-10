@@ -360,6 +360,24 @@ Template.reimbursementSettings.events({
         let oldres_id = $('#res_id').val() || 0 ;
         let reimbursementname = $('#edtReimbursementName').val() || '';
         let account = $('#edtReimbursementAccount').val() || '';
+
+        if(reimbursementname == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Reimbursement Name",
+                type: 'warning',
+            })
+            return false;
+        }
+
+        if(account == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Account",
+                type: 'warning',
+            })
+            return false;
+        }
         /**
          * Saving Earning Object in localDB
         */

@@ -428,6 +428,16 @@ Template.superannuationSettings.events({
         let edtaccountnumber = $('#edtaccountnumber').val() || '';
         let edtaccountname = $('#edtaccountname').val() || '';
         let fundtypeid = $('#fundtypeid').val();
+
+        if(fundName == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Superannuation Name",
+                type: 'warning',
+            })
+            return false;
+        }
+
         /**
          * Saving Earning Object in localDB
         */

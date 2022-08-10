@@ -450,6 +450,34 @@ Template.deductionSettings.events({
         let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
         let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
         let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
+        
+        if(deductionDesctiption == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Deduction Name",
+                type: 'warning',
+            })
+            return false;
+        }
+
+        if(deductionAmount == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter Amount",
+                type: 'warning',
+            })
+            return false;
+        }
+
+        if(deductionAccount == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter Account",
+                type: 'warning',
+            })
+            return false;
+        }
+        
         /**
          * Saving Earning Object in localDB
         */
