@@ -156,7 +156,7 @@ Template.timesheetsummary.events({
 
     const filename = loggedCompany + "- Timesheet Summary Report" + ".csv";
     utilityService.exportReportToCsvTable("tableExport", filename, "csv");
-    let rows = [];
+    let rows = []; 
   },
   "click .btnPrintReport": function (event) {
     let values = [];

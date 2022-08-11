@@ -3,9 +3,11 @@ import {SideBarService} from '../../js/sidebar-service';
 import { UtilityService } from "../../utility-service";
 import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
 import ApiService from "../../js/Api/Module/ApiService";
+import { EmployeePayrollService } from '../../js/employeepayroll-service';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let employeePayrollService = new EmployeePayrollService();
 
 Template.reimbursementSettings.onCreated(function() {
   const templateObject = Template.instance();
@@ -286,14 +288,14 @@ Template.reimbursementSettings.events({
         $('#reimbursementRateForm')[0].reset();
         $('#newReimbursementModal').modal('hide');
     },
-    'click .btnSearchAlert':function(event){      
+    'click .btnRefreshReimbursement':function(event){      
         let templateObject = Template.instance();
         var splashArrayReisument = new Array();
         const lineExtaSellItems = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblReimbursements_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getReimbursement(dataSearchName).then(function (data) {
+            employeePayrollService.getReimbursementByName(dataSearchName).then(function (data) {
                 $(".btnRefreshReimbursement").removeClass('btnSearchAlert');
                 let lineItems = [];
                 if (data.treimbursement.length > 0) {
@@ -358,6 +360,24 @@ Template.reimbursementSettings.events({
         let oldres_id = $('#res_id').val() || 0 ;
         let reimbursementname = $('#edtReimbursementName').val() || '';
         let account = $('#edtReimbursementAccount').val() || '';
+
+        if(reimbursementname == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Reimbursement Name",
+                type: 'warning',
+            })
+            return false;
+        }
+
+        if(account == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Account",
+                type: 'warning',
+            })
+            return false;
+        }
         /**
          * Saving Earning Object in localDB
         */
