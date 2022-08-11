@@ -2,6 +2,7 @@
 Template.mailchimpList.onRendered(function () {
   const templateObject = Template.instance();
   function getCampaignOpenReports() {
+    $(".fullScreenSpin").css("display", "inline-block");
     try {
       var erpGet = erpDb();
       Meteor.call('getCampaignOpenReports', erpGet, function (error, result) {
