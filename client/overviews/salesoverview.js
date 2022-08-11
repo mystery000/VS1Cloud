@@ -1535,15 +1535,12 @@ Template.salesoverview.events({
               .then(function (data) {
                 addVS1Data("TInvoiceEx", JSON.stringify(data))
                   .then(function (datareturn) {
-
-                    batchUpdateCall('/salesoverview');
-                  })
-                  .catch(function (err) {
-                    batchUpdateCall('/salesoverview');
+                    window.open('/salesoverview', '_self');
+                  }).catch(function (err) {
+                    window.open('/salesoverview', '_self');
                   });
-              })
-              .catch(function (err) {
-                batchUpdateCall('/salesoverview');
+              }).catch(function (err) {
+                window.open('/salesoverview', '_self');
               });
           })
           .catch(function (err) {
@@ -1552,7 +1549,7 @@ Template.salesoverview.events({
               .then(function (data) {
                 addVS1Data("TInvoiceEx", JSON.stringify(data))
                   .then(function (datareturn) {
-                    batchUpdateCall('/salesoverview');
+                    window.open('/salesoverview', '_self');
                   })
                   .catch(function (err) {
                     window.open("/salesoverview", "_self");

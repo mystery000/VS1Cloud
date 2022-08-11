@@ -35,7 +35,7 @@ Template.paymentoverview.onCreated(function() {
     templateObject.overduecustpaymentCount = new ReactiveVar();
     templateObject.overduesupppaymentCount = new ReactiveVar();
 
-
+    templateObject.view_deleted = new ReactiveVar("YES");
     setTimeout(function() {
 
         var x = window.matchMedia("(max-width: 1024px)")
@@ -180,226 +180,6 @@ Template.paymentoverview.onRendered(function() {
             if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
         });
     };
-    if ((!localStorage.getItem('VS1OutstandingInvoiceAmt_dash')) && (!localStorage.getItem('VS1OutstandingInvoiceQty_dash'))) {
-        getVS1Data('TSalesList').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
-                    let itemsAwaitingPaymentcount = [];
-                    let itemsOverduePaymentcount = [];
-                    let dataListAwaitingCust = {};
-                    let totAmount = 0;
-                    let totAmountOverDue = 0;
-                    let customerawaitingpaymentCount = '';
-                    for (let i = 0; i < data.tsaleslist.length; i++) {
-                        if (data.tsaleslist[i].Type == "Invoice") {
-                            dataListAwaitingCust = {
-                                id: data.tsaleslist[i].SaleId || '',
-                            };
-                            if (data.tsaleslist[i].Balance != 0) {
-                                itemsAwaitingPaymentcount.push(dataListAwaitingCust);
-                                totAmount += Number(data.tsaleslist[i].Balance);
-                                let date = new Date(data.tsaleslist[i].dueDate);
-                                if (date < new Date()) {
-                                    itemsOverduePaymentcount.push(dataListAwaitingCust);
-                                    totAmountOverDue += Number(data.tsaleslist[i].Balance);
-                                }
-                            }
-                        }
-                    }
-                    // $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
-                    // $('#custOverdue').text(itemsOverduePaymentcount.length);
-                    // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
-                    // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsaleslist;
-                let itemsAwaitingPaymentcount = [];
-                let itemsOverduePaymentcount = [];
-                let dataListAwaitingCust = {};
-                let totAmount = 0;
-                let totAmountOverDue = 0;
-                let customerawaitingpaymentCount = '';
-                for (let i = 0; i < data.tsaleslist.length; i++) {
-                    if (data.tsaleslist[i].Type == "Invoice") {
-                        dataListAwaitingCust = {
-                            id: data.tsaleslist[i].SaleId || '',
-                        };
-                        if (data.tsaleslist[i].Balance != 0) {
-                            itemsAwaitingPaymentcount.push(dataListAwaitingCust);
-
-                            totAmount += Number(data.tsaleslist[i].Balance);
-                            let date = new Date(data.tsaleslist[i].dueDate);
-                            if (date < new Date()) {
-                                itemsOverduePaymentcount.push(dataListAwaitingCust);
-                                totAmountOverDue += Number(data.tsaleslist[i].Balance);
-
-                            }
-                        }
-                    }
-                }
-                // $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
-                // $('#custOverdue').text(itemsOverduePaymentcount.length);
-                // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
-                // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
-            }
-        }).catch(function(err) {
-            sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
-                let itemsAwaitingPaymentcount = [];
-                let itemsOverduePaymentcount = [];
-                let dataListAwaitingCust = {};
-                let totAmount = 0;
-                let totAmountOverDue = 0;
-                let customerawaitingpaymentCount = '';
-                for (let i = 0; i < data.tsaleslist.length; i++) {
-                    if (data.tsaleslist[i].Type == "Invoice") {
-                        dataListAwaitingCust = {
-                            id: data.tsaleslist[i].SaleId || '',
-                        };
-                        if (data.tsaleslist[i].Balance != 0) {
-                            itemsAwaitingPaymentcount.push(dataListAwaitingCust);
-                            totAmount += Number(data.tsaleslist[i].Balance);
-                            let date = new Date(data.tsaleslist[i].dueDate);
-                            if (date < new Date()) {
-                                itemsOverduePaymentcount.push(dataListAwaitingCust);
-                                totAmountOverDue += Number(data.tsaleslist[i].Balance);
-                            }
-                        }
-                    }
-                }
-                // $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
-                // $('#custOverdue').text(itemsOverduePaymentcount.length);
-                // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
-                // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
-            });
-        });
-    } else {
-        let itemsOverduePaymentcount = localStorage.getItem('VS1OverDueInvoiceQty_dash') || 0;
-        let totAmountOverDue = localStorage.getItem('VS1OverDueInvoiceAmt_dash') || 0;
-
-        let itemsAwaitingPaymentcount = localStorage.getItem('VS1OutstandingInvoiceQty_dash') || 0;
-        let totAmount = localStorage.getItem('VS1OutstandingInvoiceAmt_dash') || 0;
-
-
-        // $('#custAwaiting').text(itemsAwaitingPaymentcount);
-        // $('#custOverdue').text(itemsOverduePaymentcount);
-        // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
-        // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
-
-    }
-
-    if ((!localStorage.getItem('VS1OverDuePayablesAmt_dash')) && (!localStorage.getItem('VS1OverDuePayablesQty_dash'))) {
-        getVS1Data('TAPReport').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                paymentService.getOverviewAPDetails().then(function(data) {
-                    let itemsSuppAwaitingPaymentcount = [];
-                    let itemsSuppOverduePaymentcount = [];
-                    let dataListAwaitingSupp = {};
-                    let customerawaitingpaymentCount = '';
-                    let supptotAmount = 0;
-                    let supptotAmountOverDue = 0;
-                    for (let i = 0; i < data.tapreport.length; i++) {
-                        dataListAwaitingSupp = {
-                            id: data.tapreport[i].ClientID || '',
-                        };
-                        if (data.tapreport[i].AmountDue != 0) {
-                            // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                            supptotAmount += Number(data.tapreport[i].AmountDue);
-                            itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                            let date = new Date(data.tapreport[i].DueDate);
-                            if (date < new Date()) {
-                                supptotAmountOverDue += Number(data.tapreport[i].AmountDue);
-                                itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                            }
-                        }
-
-                    }
-                    // $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-                    // $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
-
-                    // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-                    // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
-                    // templateObject.awaitingpaymentCount.set(itemsAwaitingPaymentcount.length);
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tapreport;
-                let itemsSuppAwaitingPaymentcount = [];
-                let itemsSuppOverduePaymentcount = [];
-                let dataListAwaitingSupp = {};
-                let customerawaitingpaymentCount = '';
-                let supptotAmount = 0;
-                let supptotAmountOverDue = 0;
-                for (let i = 0; i < useData.length; i++) {
-                    dataListAwaitingSupp = {
-                        id: useData[i].ClientID || '',
-                    };
-                    if (useData[i].AmountDue != 0) {
-                        // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                        supptotAmount += Number(useData[i].AmountDue);
-                        itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                        let date = new Date(useData[i].DueDate);
-                        if (date < new Date()) {
-                            supptotAmountOverDue += Number(useData[i].AmountDue);
-                            itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                        }
-                    }
-
-                }
-                // $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-                // $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
-
-                // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-                // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
-            }
-        }).catch(function(err) {
-            paymentService.getOverviewAPDetails().then(function(data) {
-                let itemsSuppAwaitingPaymentcount = [];
-                let itemsSuppOverduePaymentcount = [];
-                let dataListAwaitingSupp = {};
-                let customerawaitingpaymentCount = '';
-                let supptotAmount = 0;
-                let supptotAmountOverDue = 0;
-                for (let i = 0; i < data.tapreport.length; i++) {
-                    dataListAwaitingSupp = {
-                        id: data.tapreport[i].ClientID || '',
-                    };
-                    if (data.tapreport[i].AmountDue != 0) {
-                        // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                        supptotAmount += Number(data.tapreport[i].AmountDue);
-                        itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                        let date = new Date(data.tapreport[i].DueDate);
-                        if (date < new Date()) {
-                            supptotAmountOverDue += Number(data.tapreport[i].AmountDue);
-                            itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                        }
-                    }
-
-                }
-                // $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-                // $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
-
-                // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-                // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
-                // templateObject.awaitingpaymentCount.set(itemsAwaitingPaymentcount.length);
-            });
-        });
-
-    } else {
-
-        let itemsSuppOverduePaymentcount = localStorage.getItem('VS1OverDuePayablesQty_dash') || 0;
-        let supptotAmountOverDue = localStorage.getItem('VS1OverDuePayablesAmt_dash') || 0;
-
-        let itemsSuppAwaitingPaymentcount = localStorage.getItem('VS1OutstandingPayablesQty_dash') || 0;
-        let supptotAmount = localStorage.getItem('VS1OutstandingPayablesAmt_dash') || 0;
-
-        // $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount);
-        // $('#suppOverdue').text(itemsSuppOverduePaymentcount);
-
-        // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-        // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
-
-    }
 
 
     templateObject.resetData = function(dataVal) {
@@ -670,7 +450,10 @@ Template.paymentoverview.onRendered(function() {
                             },
                             "fnInitComplete": function() {
                                 this.fnPageChange('last');
+                                $("<button class='btn btn-danger btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                                $("<button class='btn btn-primary btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                                 $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
+
 
                                 $('.myvarFilterForm').appendTo(".colDateFilter");
                             },
@@ -804,35 +587,6 @@ Template.paymentoverview.onRendered(function() {
                 //awaitingpaymentCount
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentOverview', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
 
 
                     setTimeout(function() {
@@ -988,6 +742,8 @@ Template.paymentoverview.onRendered(function() {
                         },
                         "fnInitComplete": function() {
                             this.fnPageChange('last');
+                            $("<button class='btn btn-danger btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-primary btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                             $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
@@ -1306,6 +1062,8 @@ Template.paymentoverview.onRendered(function() {
                         },
                         "fnInitComplete": function() {
                             this.fnPageChange('last');
+                            $("<button class='btn btn-danger btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-primary btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                             $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
@@ -1440,6 +1198,38 @@ Template.paymentoverview.onRendered(function() {
 });
 
 Template.paymentoverview.events({
+    "click .btnViewDeletedPayments": async function (e) {
+      e.stopImmediatePropagation();
+      let templateObject = Template.instance();
+      let view_deleted = templateObject.view_deleted.get();
+      if (view_deleted == "NO") {
+        $('.btnViewDeletedPayments').css('display','inline-block');
+        $('.btnHideDeletedPayments').css('display','none');
+        await templateObject.view_deleted.set("YES");
+        $('#tblPaymentOverview_filter input').val("").trigger('search');
+      } else {
+        $('.btnViewDeletedPayments').css('display','none');
+        $('.btnHideDeletedPayments').css('display','inline-block');
+        await templateObject.view_deleted.set("NO");
+        $('#tblPaymentOverview_filter input').val("Deleted").trigger('search');
+      }
+     },
+     "click .btnHideDeletedPayments": async function (e) {
+       e.stopImmediatePropagation();
+       let templateObject = Template.instance();
+       let view_deleted = templateObject.view_deleted.get();
+       if (view_deleted == "NO") {
+         $('.btnViewDeletedPayments').css('display','inline-block');
+         $('.btnHideDeletedPayments').css('display','none');
+         await templateObject.view_deleted.set("YES");
+         $('#tblPaymentOverview_filter input').val("").trigger('search');
+       } else {
+         $('.btnViewDeletedPayments').css('display','none');
+         $('.btnHideDeletedPayments').css('display','inline-block');
+         await templateObject.view_deleted.set("NO");
+         $('#tblPaymentOverview_filter input').val("Deleted").trigger('search');
+       }
+      },
     'click #newSalesOrder': function(event) {
         FlowRouter.go('/salesordercard');
     },
@@ -1828,32 +1618,32 @@ Template.paymentoverview.events({
                         sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
-                                batchUpdateCall('/paymentoverview');
+                                window.open('/paymentoverview', '_self');
                               }, 2000);
                             }).catch(function(err) {
                               setTimeout(function () {
-                              batchUpdateCall('/paymentoverview');
+                              window.open('/paymentoverview', '_self');
                               }, 2000);
                             });
                         }).catch(function(err) {
                           setTimeout(function () {
-                            batchUpdateCall('/paymentoverview');
+                            window.open('/paymentoverview', '_self');
                           }, 2000);
                         });
                     }).catch(function(err) {
                         sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
-                                batchUpdateCall('/paymentoverview');
+                                window.open('/paymentoverview', '_self');
                               }, 2000);
                             }).catch(function(err) {
                               setTimeout(function () {
-                                batchUpdateCall('/paymentoverview');
+                                window.open('/paymentoverview', '_self');
                               }, 2000);
                             });
                         }).catch(function(err) {
                           setTimeout(function () {
-                          batchUpdateCall('/paymentoverview');
+                          window.open('/paymentoverview', '_self');
                           }, 2000);
                         });
                     });
@@ -1869,7 +1659,7 @@ Template.paymentoverview.events({
             });
         }).catch(function(err) {
           setTimeout(function () {
-            batchUpdateCall('/paymentoverview');
+            window.open('/paymentoverview', '_self');
           }, 2000);
 
         });
