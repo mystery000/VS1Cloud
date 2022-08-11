@@ -1223,7 +1223,6 @@ Template.receiptsoverview.onRendered(function() {
     templateObject.getOCRResultFromImage = function(imageData, fileName) {
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
-            console.log(data);
             $('.fullScreenSpin').css('display', 'none');
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
@@ -2732,117 +2731,80 @@ Template.receiptsoverview.events({
         if (hasSelected) {
             $('#tblReceiptList tbody tr').each( function() {
                 let checked = $(this).find("input:checked").val();
-                let supplierName = $(this).find(".colReceiptMerchant").text();
-                let taxCode = $(this).find(".colTaxCode").text();
-                if (checked == "on" && supplierName != "" && taxCode != "") {
-                    let amount = $(this).find(".colReceiptAmount").text();
-                    let accountName = $(this).find(".colReceiptAccount").text();
-                    let description = $(this).find(".colReceiptDesc").text();
-                    let date = moment($(this).find(".colReceiptDate").text(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                if (checked == "on") {
+                    let tr = $(this);
                     let supplierID = $(this).find(".colSupplierID").text();
-                    let accountID = $(this).find(".colAccountID").text();
+                    let supplierName = $(this).find(".colReceiptMerchant").text();
+                    let taxCode = $(this).find(".colTaxCode").text();
                     let employeeID = $(this).find(".colEmployeeID").text();
                     let employeeName = $(this).find(".colEmployeeName").text();
-                    let taxAmount = $(this).find(".colTaxAmount").text();
-                    let amountEx = $(this).find(".colAmountEx").text();
-                    let amountInc = $(this).find(".colAmountInc").text();
-                    let lineItemsForm = [];
-                    let lineItemObjForm = {};
-                    lineItemObjForm = {
-                        type: "TChequeLine",
-                        fields: {
-                            // ID: parseInt(erpLineID) || 0,
-                            AccountName: accountName || "",
-                            ProductDescription: description || "",
-                            LineCost: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
-                            LineTaxCode: taxCode || "",
-                            TotalLineAmount: Number(amountEx.replace(/[^0-9.-]+/g, "")) || 0,
-                            TotalLineAmountInc: Number(amountInc.replace(/[^0-9.-]+/g, "")) || 0,
-                        },
-                    };
-                    lineItemsForm.push(lineItemObjForm);
-                    let objDetails = {
-                        type: "TChequeEx",
-                        fields: {
-                            // ID: 0,
-                            SupplierID: supplierID || 0,
-                            SupplierName: supplierName,
-                            // ClientName: employeeName || "",
-                            ClientName: supplierName || "",
-                            // ForeignExchangeCode: currencyCode,
-                            Lines: lineItemsForm,
-                            // OrderTo: billingAddress,
-                            // GLAccountName: bankAccount,
-                            OrderDate: date,
-                            // SupplierInvoiceNumber: poNumber,
-                            // ConNote: reference,
-                            // Shipping: shipviaData,
-                            // ShipTo: shippingAddress,
-                            // Comments: comments,
-                            // RefNo: reference,
-                            // SalesComments: pickingInfrmation,
-                            // Attachments: uploadedItems,
-                            // OrderStatus: $("#sltStatus").val(),
-                            Chequetotal: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
-                        },
-                    };
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    purchaseService.saveChequeEx(objDetails).then(function (result) {
-                        if (result.fields.ID) {
-                            swal({
-                                title: 'Success',
-                                text: 'Make new cheque Successfully',
-                                type: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Done'
-                            }).then((result) => {
-                                if (result.value) {
+                    let reimbursement = $(this).find(".colReimbursement").text();
+                    if (reimbursement == "true" && employeeName != "") {
+                        supplierName = "";
+                        contactService.getOneSupplierDataExByName(employeeName).then(function (data) {
+                            if (data.tsupplier.length == 0) {
+                                contactService.getOneEmployeeData(employeeID).then(function(data) {
+                                    if (data.fields.ID) {
+                                        let objDetails = {
+                                            type: "TSupplier",
+                                            fields: {
+                                                ClientName: employeeName,
+                                                FirstName: data.fields.FirstName || '',
+                                                LastName: data.fields.LastName || '',
+                                                Phone: data.fields.Phone || '',
+                                                Mobile: data.fields.Mobile || '',
+                                                Email: data.fields.Email || '',
+                                                SkypeName: data.fields.SkypeName || '',
+                                                Street: data.fields.Street || '',
+                                                Street2: data.fields.Street2 || '',
+                                                Suburb: data.fields.Suburb || '',
+                                                State: data.fields.State || '',
+                                                PostCode: data.fields.PostCode || '',
+                                                Country: data.fields.Country || '',
+                                                BillStreet: '',
+                                                BillStreet2: '',
+                                                BillState: '',
+                                                BillPostCode: '',
+                                                Billcountry: '',
+                                                PublishOnVS1: true
+                                            }
+                                        };
+                                        $('.fullScreenSpin').css('display', 'inline-block');
+                                        contactService.saveSupplier(objDetails).then(function (supplier) {
+                                            supplierID = supplier.fields.ID;
+                                            supplierName = employeeName;
+                                            saveCheque(supplierID, supplierName, tr);
+                                        }).catch(function (err) {
+                                            swal({
+                                                title: 'Oooops...',
+                                                text: err,
+                                                type: 'error',
+                                                showCancelButton: false,
+                                                confirmButtonText: 'Try Again'
+                                            }).then((result) => {
+                                                if (result.value) {
 
-                                } else if (result.dismiss == 'cancel') {
+                                                } else if (result.dismiss == 'cancel') {
 
-                                }
-                            });
-                        } else {
+                                                }
+                                            });
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+                                    }
+                                }).catch(function(err) {
 
-                        }
-                        $('.fullScreenSpin').css('display', 'none');
-                    }).catch(function (err) {
-                        swal({
-                            title: 'Oooops...',
-                            text: err,
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Try Again'
-                        }).then((result) => {
-                            if (result.value) {
+                                });
 
-                            } else if (result.dismiss == 'cancel') {
-
+                            } else {
+                                supplierID = data.tsupplier[0].fields.ID;
+                                supplierName = data.tsupplier[0].fields.ClientName;
+                                saveCheque(supplierID, supplierName, tr);
                             }
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    })
-                } else {
-                    let errText = "";
-                    if (checked == "on" && supplierName == "") {
-                        errText = "Merchant is empty.";
-                    } else if (checked == "on" && taxCode == "") {
-                        errText = "Tax Code is empty.";
-                    }
-                    if (errText != "") {
-                        swal({
-                            title: 'Oooops...',
-                            text: errText,
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Try Again'
-                        }).then((result) => {
-                            if (result.value) {
+                        }).catch(function (err) {
 
-                            } else if (result.dismiss == 'cancel') {
-
-                            }
                         });
+                    } else {
+                        saveCheque(supplierID, supplierName, tr);
                     }
                 }
             });
@@ -2861,6 +2823,118 @@ Template.receiptsoverview.events({
 
                 }
             });
+        }
+
+        function saveCheque(supplierID, supplierName, tr) {
+            let taxCode = tr.find(".colTaxCode").text();
+            if (supplierName != "" && taxCode != "") {
+                let amount = tr.find(".colReceiptAmount").text();
+                let accountName = tr.find(".colReceiptAccount").text();
+                let description = tr.find(".colReceiptDesc").text();
+                let date = moment(tr.find(".colReceiptDate").text(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                let accountID = tr.find(".colAccountID").text();
+                let taxAmount = tr.find(".colTaxAmount").text();
+                let amountEx = tr.find(".colAmountEx").text();
+                let amountInc = tr.find(".colAmountInc").text();
+                let lineItemsForm = [];
+                let lineItemObjForm = {};
+                lineItemObjForm = {
+                    type: "TChequeLine",
+                    fields: {
+                        // ID: parseInt(erpLineID) || 0,
+                        AccountName: accountName || "",
+                        ProductDescription: description || "",
+                        LineCost: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
+                        LineTaxCode: taxCode || "",
+                        TotalLineAmount: Number(amountEx.replace(/[^0-9.-]+/g, "")) || 0,
+                        TotalLineAmountInc: Number(amountInc.replace(/[^0-9.-]+/g, "")) || 0,
+                    },
+                };
+                lineItemsForm.push(lineItemObjForm);
+                let objDetails = {
+                    type: "TChequeEx",
+                    fields: {
+                        // ID: 0,
+                        SupplierID: supplierID || 0,
+                        SupplierName: supplierName,
+                        // ClientName: employeeName || "",
+                        ClientName: supplierName || "",
+                        // ForeignExchangeCode: currencyCode,
+                        Lines: lineItemsForm,
+                        // OrderTo: billingAddress,
+                        // GLAccountName: bankAccount,
+                        OrderDate: date,
+                        // SupplierInvoiceNumber: poNumber,
+                        // ConNote: reference,
+                        // Shipping: shipviaData,
+                        // ShipTo: shippingAddress,
+                        // Comments: comments,
+                        // RefNo: reference,
+                        // SalesComments: pickingInfrmation,
+                        // Attachments: uploadedItems,
+                        // OrderStatus: $("#sltStatus").val(),
+                        Chequetotal: Number(amount.replace(/[^0-9.-]+/g, "")) || 0,
+                    },
+                };
+                $('.fullScreenSpin').css('display', 'inline-block');
+                purchaseService.saveChequeEx(objDetails).then(function (result) {
+                    if (result.fields.ID) {
+                        swal({
+                            title: 'Success',
+                            text: 'Make new cheque successfully.',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Done'
+                        }).then((result) => {
+                            if (result.value) {
+
+                            } else if (result.dismiss == 'cancel') {
+
+                            }
+                        });
+                    } else {
+
+                    }
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function (err) {
+                    swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+
+                        } else if (result.dismiss == 'cancel') {
+
+                        }
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
+                })
+            } else {
+                let errText = "";
+                if (supplierName == "") {
+                    errText = "Merchant is empty.";
+                } else if (taxCode == "") {
+                    errText = "Tax Code is empty.";
+                }
+                if (errText != "") {
+                    swal({
+                        title: 'Oooops...',
+                        text: errText,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+
+                        } else if (result.dismiss == 'cancel') {
+
+                        }
+                    });
+                }
+            }
         }
     },
 });
