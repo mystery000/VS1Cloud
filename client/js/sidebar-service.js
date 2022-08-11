@@ -574,8 +574,8 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        Search: "Deleted != true",
         OrderBy: "PaymentID desc",
+        Search: "Deleted <> true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -584,7 +584,7 @@ export class SideBarService extends BaseService {
         orderby: '"PaymentID desc"',
         ListType: "Detail",
         IgnoreDates: false,
-        Search: "Deleted != true",
+        Search: "Deleted <> true",
         // OrderBy: "PaymentDate desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -628,19 +628,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCustomerPayment, options);
   }
 
-  getAllTCustomerPaymentListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTCustomerPaymentListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
         OrderBy: "PaymentID desc",
+        Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -648,6 +643,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: false,
         OrderBy: "PaymentID desc",
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -700,19 +696,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSupplierPaymentList, options);
   }
 
-  getAllTSupplierPaymentListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTSupplierPaymentListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
         OrderBy: "PaymentID desc",
+        Search: 'Deleted != true',
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -720,6 +711,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: false,
         OrderBy: "PaymentID desc",
+        Search: 'Deleted != true',
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1160,6 +1152,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1167,6 +1160,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: false,
         OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1215,7 +1209,7 @@ export class SideBarService extends BaseService {
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "Deleted != true and SupplierName != ''",
+        Search: "Deleted != true and SupplierName != '' and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1227,7 +1221,7 @@ export class SideBarService extends BaseService {
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "Deleted != true and SupplierName != ''",
+        Search: "Deleted != true and SupplierName != '' and IsCheque != true",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -1570,7 +1564,7 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         IsBill: true,
         OrderBy: "PurchaseOrderID desc",
-        Search: "IsBill = true",
+        Search: "IsBill = true and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1578,7 +1572,7 @@ export class SideBarService extends BaseService {
       options = {
         OrderBy: "PurchaseOrderID desc",
         IsBill: true,
-        Search: "IsBill = true",
+        Search: "IsBill = true and IsCheque != true",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',

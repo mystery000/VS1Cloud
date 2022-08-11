@@ -89,42 +89,6 @@ Template.paymentcard.onRendered(() => {
 
         $('#edtCustomerName').attr('readonly', true);
         $('#edtCustomerName').css('background-color', '#eaecf4');
-        setTimeout(function() {
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                if (error) {
-
-                    //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                } else {
-                    if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columData = customcolumn[i].label;
-                            let columHeaderUpdate = customcolumn[i].thclass;
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                            let columnWidth = customcolumn[i].width;
-
-                            $("" + columHeaderUpdate + "").html(columData);
-                            if (columnWidth != 0) {
-                                $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                            }
-
-                            if (hiddenColumn == true) {
-                                $("." + columnClass + "").addClass('hiddenColumn');
-                                $("." + columnClass + "").removeClass('showColumn');
-                                $(".chk" + columnClass + "").removeAttr('checked');
-                            } else if (hiddenColumn == false) {
-                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                $("." + columnClass + "").addClass('showColumn');
-                                $(".chk" + columnClass + "").attr('checked', 'checked');
-                            }
-
-                        }
-                    }
-
-                }
-            });
-        }, 500);
         $("#date-input,#dtPaymentDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
@@ -137,7 +101,7 @@ Template.paymentcard.onRendered(() => {
             changeYear: true,
             yearRange: "-90:+10",
         });
-      
+
         const record = [];
         let paymentService = new PaymentsService();
         let clientsService = new PaymentsService();
@@ -1351,7 +1315,7 @@ Template.paymentcard.onRendered(() => {
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
-                // $(".heading").html("New Customer Payment " +newPaymentId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
+                $(".heading").html("New Customer Payment " +''+'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                 };
             }, 50);
         }).catch(function(err) {
@@ -3076,50 +3040,14 @@ Template.paymentcard.onRendered(() => {
                         $('#edtSelectBankAccountName').attr('disabled', 'disabled');
                         $('#edtSelectBankAccountName').attr('readonly', true);
 
-                        $('.ui-datepicker-trigger').css('pointer-events', 'none');
-                        $('#dtPaymentDate').attr('readonly', true);
+                        //$('.ui-datepicker-trigger').css('pointer-events', 'none');
+                        //$('#dtPaymentDate').attr('readonly', true);
 
                         $('#sltPaymentMethod').attr('disabled', 'disabled');
                         $('#sltPaymentMethod').attr('readonly', true);
 
                         $('#sltDepartment').attr('disabled', 'disabled');
                         $('#sltDepartment').attr('readonly', true);
-                        //setTimeout(function () {
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                            if (error) {
-
-                                //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass;
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                        let columnWidth = customcolumn[i].width;
-
-                                        $("" + columHeaderUpdate + "").html(columData);
-                                        if (columnWidth != 0) {
-                                            $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                        }
-
-                                        if (hiddenColumn == true) {
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                            $(".chk" + columnClass + "").removeAttr('checked');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                            $(".chk" + columnClass + "").attr('checked', 'checked');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-                        //}, 500);
                         setTimeout(function() {
                             $('.tblPaymentcard > tbody > tr > td').attr('contenteditable', 'false');
                         }, 1000);
@@ -3263,50 +3191,15 @@ Template.paymentcard.onRendered(() => {
                             $('#edtSelectBankAccountName').attr('disabled', 'disabled');
                             $('#edtSelectBankAccountName').attr('readonly', true);
 
-                            $('.ui-datepicker-trigger').css('pointer-events', 'none');
-                            $('#dtPaymentDate').attr('readonly', true);
+                            //$('.ui-datepicker-trigger').css('pointer-events', 'none');
+                            //$('#dtPaymentDate').attr('readonly', true);
 
                             $('#sltPaymentMethod').attr('disabled', 'disabled');
                             $('#sltPaymentMethod').attr('readonly', true);
 
                             $('#sltDepartment').attr('disabled', 'disabled');
                             $('#sltDepartment').attr('readonly', true);
-                            //setTimeout(function () {
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                                if (error) {
 
-                                    //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                                } else {
-                                    if (result) {
-                                        for (let i = 0; i < result.customFields.length; i++) {
-                                            let customcolumn = result.customFields;
-                                            let columData = customcolumn[i].label;
-                                            let columHeaderUpdate = customcolumn[i].thclass;
-                                            let hiddenColumn = customcolumn[i].hidden;
-                                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                            let columnWidth = customcolumn[i].width;
-
-                                            $("" + columHeaderUpdate + "").html(columData);
-                                            if (columnWidth != 0) {
-                                                $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                            }
-
-                                            if (hiddenColumn == true) {
-                                                $("." + columnClass + "").addClass('hiddenColumn');
-                                                $("." + columnClass + "").removeClass('showColumn');
-                                                $(".chk" + columnClass + "").removeAttr('checked');
-                                            } else if (hiddenColumn == false) {
-                                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                                $("." + columnClass + "").addClass('showColumn');
-                                                $(".chk" + columnClass + "").attr('checked', 'checked');
-                                            }
-
-                                        }
-                                    }
-
-                                }
-                            });
-                            //}, 500);
                             setTimeout(function() {
                                 $('.tblPaymentcard > tbody > tr > td').attr('contenteditable', 'false');
                             }, 1000);
@@ -3441,50 +3334,15 @@ Template.paymentcard.onRendered(() => {
                             $('#edtSelectBankAccountName').attr('disabled', 'disabled');
                             $('#edtSelectBankAccountName').attr('readonly', true);
 
-                            $('.ui-datepicker-trigger').css('pointer-events', 'none');
-                            $('#dtPaymentDate').attr('readonly', true);
+                            //$('.ui-datepicker-trigger').css('pointer-events', 'none');
+                            //$('#dtPaymentDate').attr('readonly', true);
 
                             $('#sltPaymentMethod').attr('disabled', 'disabled');
                             $('#sltPaymentMethod').attr('readonly', true);
 
                             $('#sltDepartment').attr('disabled', 'disabled');
                             $('#sltDepartment').attr('readonly', true);
-                            //setTimeout(function () {
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                                if (error) {
 
-                                    //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                                } else {
-                                    if (result) {
-                                        for (let i = 0; i < result.customFields.length; i++) {
-                                            let customcolumn = result.customFields;
-                                            let columData = customcolumn[i].label;
-                                            let columHeaderUpdate = customcolumn[i].thclass;
-                                            let hiddenColumn = customcolumn[i].hidden;
-                                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                            let columnWidth = customcolumn[i].width;
-
-                                            $("" + columHeaderUpdate + "").html(columData);
-                                            if (columnWidth != 0) {
-                                                $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                            }
-
-                                            if (hiddenColumn == true) {
-                                                $("." + columnClass + "").addClass('hiddenColumn');
-                                                $("." + columnClass + "").removeClass('showColumn');
-                                                $(".chk" + columnClass + "").removeAttr('checked');
-                                            } else if (hiddenColumn == false) {
-                                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                                $("." + columnClass + "").addClass('showColumn');
-                                                $(".chk" + columnClass + "").attr('checked', 'checked');
-                                            }
-
-                                        }
-                                    }
-
-                                }
-                            });
-                            //}, 500);
                             setTimeout(function() {
                                 $('.tblPaymentcard > tbody > tr > td').attr('contenteditable', 'false');
                             }, 1000);
@@ -3620,50 +3478,15 @@ Template.paymentcard.onRendered(() => {
                     $('#edtSelectBankAccountName').attr('disabled', 'disabled');
                     $('#edtSelectBankAccountName').attr('readonly', true);
 
-                    $('.ui-datepicker-trigger').css('pointer-events', 'none');
-                    $('#dtPaymentDate').attr('readonly', true);
+                    //$('.ui-datepicker-trigger').css('pointer-events', 'none');
+                    //$('#dtPaymentDate').attr('readonly', true);
 
                     $('#sltPaymentMethod').attr('disabled', 'disabled');
                     $('#sltPaymentMethod').attr('readonly', true);
 
                     $('#sltDepartment').attr('disabled', 'disabled');
                     $('#sltDepartment').attr('readonly', true);
-                    //setTimeout(function () {
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                        if (error) {
 
-                            //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass;
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                    let columnWidth = customcolumn[i].width;
-
-                                    $("" + columHeaderUpdate + "").html(columData);
-                                    if (columnWidth != 0) {
-                                        $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                    }
-
-                                    if (hiddenColumn == true) {
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                        $(".chk" + columnClass + "").removeAttr('checked');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                        $(".chk" + columnClass + "").attr('checked', 'checked');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-                    //}, 500);
                     setTimeout(function() {
                         $('.tblPaymentcard > tbody > tr > td').attr('contenteditable', 'false');
                     }, 1000);
@@ -3779,40 +3602,6 @@ Template.paymentcard.onRendered(() => {
                         }
                     }
                 }
-                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                    if (error) {
-
-                        //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                    } else {
-                        if (result) {
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass;
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                let columnWidth = customcolumn[i].width;
-
-                                $("" + columHeaderUpdate + "").html(columData);
-                                if (columnWidth != 0) {
-                                    $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                }
-
-                                if (hiddenColumn == true) {
-                                    $("." + columnClass + "").addClass('hiddenColumn');
-                                    $("." + columnClass + "").removeClass('showColumn');
-                                    $(".chk" + columnClass + "").removeAttr('checked');
-                                } else if (hiddenColumn == false) {
-                                    $("." + columnClass + "").removeClass('hiddenColumn');
-                                    $("." + columnClass + "").addClass('showColumn');
-                                    $(".chk" + columnClass + "").attr('checked', 'checked');
-                                }
-
-                            }
-                        }
-
-                    }
-                });
 
                 $('.fullScreenSpin').css('display', 'none');
             });
@@ -3899,40 +3688,6 @@ Template.paymentcard.onRendered(() => {
                         }
                     }
                 }
-                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                    if (error) {
-
-                        //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                    } else {
-                        if (result) {
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass;
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                let columnWidth = customcolumn[i].width;
-
-                                $("" + columHeaderUpdate + "").html(columData);
-                                if (columnWidth != 0) {
-                                    $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                }
-
-                                if (hiddenColumn == true) {
-                                    $("." + columnClass + "").addClass('hiddenColumn');
-                                    $("." + columnClass + "").removeClass('showColumn');
-                                    $(".chk" + columnClass + "").removeAttr('checked');
-                                } else if (hiddenColumn == false) {
-                                    $("." + columnClass + "").removeClass('hiddenColumn');
-                                    $("." + columnClass + "").addClass('showColumn');
-                                    $(".chk" + columnClass + "").attr('checked', 'checked');
-                                }
-
-                            }
-                        }
-
-                    }
-                });
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
@@ -4029,40 +3784,6 @@ Template.paymentcard.onRendered(() => {
                                 }
                             }
                         }
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                            if (error) {
-
-                                //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass;
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                        let columnWidth = customcolumn[i].width;
-
-                                        $("" + columHeaderUpdate + "").html(columData);
-                                        if (columnWidth != 0) {
-                                            $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                        }
-
-                                        if (hiddenColumn == true) {
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                            $(".chk" + columnClass + "").removeAttr('checked');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                            $(".chk" + columnClass + "").attr('checked', 'checked');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
                         $('.fullScreenSpin').css('display', 'none');
                     });
                 } else {
@@ -4152,40 +3873,6 @@ Template.paymentcard.onRendered(() => {
                                     }
                                 }
                             }
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                                if (error) {
-
-                                    //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                                } else {
-                                    if (result) {
-                                        for (let i = 0; i < result.customFields.length; i++) {
-                                            let customcolumn = result.customFields;
-                                            let columData = customcolumn[i].label;
-                                            let columHeaderUpdate = customcolumn[i].thclass;
-                                            let hiddenColumn = customcolumn[i].hidden;
-                                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                            let columnWidth = customcolumn[i].width;
-
-                                            $("" + columHeaderUpdate + "").html(columData);
-                                            if (columnWidth != 0) {
-                                                $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                            }
-
-                                            if (hiddenColumn == true) {
-                                                $("." + columnClass + "").addClass('hiddenColumn');
-                                                $("." + columnClass + "").removeClass('showColumn');
-                                                $(".chk" + columnClass + "").removeAttr('checked');
-                                            } else if (hiddenColumn == false) {
-                                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                                $("." + columnClass + "").addClass('showColumn');
-                                                $(".chk" + columnClass + "").attr('checked', 'checked');
-                                            }
-
-                                        }
-                                    }
-
-                                }
-                            });
                             $('.fullScreenSpin').css('display', 'none');
                         }
                     }
@@ -4269,40 +3956,6 @@ Template.paymentcard.onRendered(() => {
                                     }
                                 }
                             }
-                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                                if (error) {
-
-                                    //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                                } else {
-                                    if (result) {
-                                        for (let i = 0; i < result.customFields.length; i++) {
-                                            let customcolumn = result.customFields;
-                                            let columData = customcolumn[i].label;
-                                            let columHeaderUpdate = customcolumn[i].thclass;
-                                            let hiddenColumn = customcolumn[i].hidden;
-                                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                            let columnWidth = customcolumn[i].width;
-
-                                            $("" + columHeaderUpdate + "").html(columData);
-                                            if (columnWidth != 0) {
-                                                $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                            }
-
-                                            if (hiddenColumn == true) {
-                                                $("." + columnClass + "").addClass('hiddenColumn');
-                                                $("." + columnClass + "").removeClass('showColumn');
-                                                $(".chk" + columnClass + "").removeAttr('checked');
-                                            } else if (hiddenColumn == false) {
-                                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                                $("." + columnClass + "").addClass('showColumn');
-                                                $(".chk" + columnClass + "").attr('checked', 'checked');
-                                            }
-
-                                        }
-                                    }
-
-                                }
-                            });
                             $('.fullScreenSpin').css('display', 'none');
                         });
                     }
@@ -4384,40 +4037,6 @@ Template.paymentcard.onRendered(() => {
                             }
                         }
                     }
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                        if (error) {
-
-                            //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass;
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                    let columnWidth = customcolumn[i].width;
-
-                                    $("" + columHeaderUpdate + "").html(columData);
-                                    if (columnWidth != 0) {
-                                        $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                    }
-
-                                    if (hiddenColumn == true) {
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                        $(".chk" + columnClass + "").removeAttr('checked');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                        $(".chk" + columnClass + "").attr('checked', 'checked');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
                     $('.fullScreenSpin').css('display', 'none');
                 });
             });
@@ -4595,40 +4214,6 @@ Template.paymentcard.onRendered(() => {
                 }
                  */
 
-                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                    if (error) {
-
-                        //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                    } else {
-                        if (result) {
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass;
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                let columnWidth = customcolumn[i].width;
-
-                                $("" + columHeaderUpdate + "").html(columData);
-                                if (columnWidth != 0) {
-                                    $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                }
-
-                                if (hiddenColumn == true) {
-                                    $("." + columnClass + "").addClass('hiddenColumn');
-                                    $("." + columnClass + "").removeClass('showColumn');
-                                    $(".chk" + columnClass + "").removeAttr('checked');
-                                } else if (hiddenColumn == false) {
-                                    $("." + columnClass + "").removeClass('hiddenColumn');
-                                    $("." + columnClass + "").addClass('showColumn');
-                                    $(".chk" + columnClass + "").attr('checked', 'checked');
-                                }
-
-                            }
-                        }
-
-                    }
-                });
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
@@ -4717,40 +4302,6 @@ Template.paymentcard.onRendered(() => {
                         }
                     }
                 }
-                Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                    if (error) {
-
-                        //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                    } else {
-                        if (result) {
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass;
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                let columnWidth = customcolumn[i].width;
-
-                                $("" + columHeaderUpdate + "").html(columData);
-                                if (columnWidth != 0) {
-                                    $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                }
-
-                                if (hiddenColumn == true) {
-                                    $("." + columnClass + "").addClass('hiddenColumn');
-                                    $("." + columnClass + "").removeClass('showColumn');
-                                    $(".chk" + columnClass + "").removeAttr('checked');
-                                } else if (hiddenColumn == false) {
-                                    $("." + columnClass + "").removeClass('hiddenColumn');
-                                    $("." + columnClass + "").addClass('showColumn');
-                                    $(".chk" + columnClass + "").attr('checked', 'checked');
-                                }
-
-                            }
-                        }
-
-                    }
-                });
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
@@ -4848,40 +4399,6 @@ Template.paymentcard.onRendered(() => {
                             }
                         }
                     }
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                        if (error) {
-
-                            //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass;
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                    let columnWidth = customcolumn[i].width;
-
-                                    $("" + columHeaderUpdate + "").html(columData);
-                                    if (columnWidth != 0) {
-                                        $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                    }
-
-                                    if (hiddenColumn == true) {
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                        $(".chk" + columnClass + "").removeAttr('checked');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                        $(".chk" + columnClass + "").attr('checked', 'checked');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
                     $('.fullScreenSpin').css('display', 'none');
                 });
 
@@ -5131,7 +4648,7 @@ Template.paymentcard.onRendered(() => {
             values.forEach(value => {
                 let reportData = JSON.parse(value);
                 let temp = {... reportData};
-                
+
                 temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                 reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                 temp.attachments = attachment;
@@ -5160,8 +4677,8 @@ Template.paymentcard.onRendered(() => {
                     $('.fullScreenSpin').css('display', 'none');
                 }
             });
-    
-    
+
+
             return true;
         })
 
@@ -5289,7 +4806,7 @@ Template.paymentcard.onRendered(() => {
                         }
                         //$('.appliedAmount').text(Currency + total.toFixed(2));
                     }
-                    
+
                     $('.appliedAmount').text(total.toFixed(2));
                     $('#edtPaymentAmount').val(total.toFixed(2));
                 }
@@ -5480,12 +4997,12 @@ Template.paymentcard.events({
          */
         const currency = $('#sltCurrency').val();
         let foreignCurrency = $("#edtForeignCurrency").val();
-        let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount 
+        let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount
         let variation = $("#edtVariation").val(); // this is the variation field
         let appliedAmount = $("#edtApplied").val(); // this is the variation field
         let exchangeRate = $('#exchange_rate').val();
         let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
-        $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol') 
+        $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol')
         || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
 
         Session.setPersistent('paymentmethod', payMethod);
@@ -5537,8 +5054,8 @@ Template.paymentcard.events({
                         exchangeRate: exchangeRate,
                         currency: currency,
 
-                        ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-                        ForeignExchangeRate: parseFloat(exchangeRate),
+                        // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                        // ForeignExchangeRate: parseFloat(exchangeRate),
                         //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                     }
                 };
@@ -5954,8 +5471,8 @@ Template.paymentcard.events({
 
                             ReferenceNo: reference,
 
-                            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-                            ForeignExchangeRate: parseFloat(exchangeRate),
+                            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                            // ForeignExchangeRate: parseFloat(exchangeRate),
                             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                         }
                     };
@@ -6362,8 +5879,8 @@ Template.paymentcard.events({
 
                             ReferenceNo: reference,
 
-                            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-                            ForeignExchangeRate: parseFloat(exchangeRate),
+                            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                            // ForeignExchangeRate: parseFloat(exchangeRate),
                             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
@@ -6800,8 +6317,8 @@ Template.paymentcard.events({
                         ReferenceNo: reference,
                         Notes: notes,
 
-                        ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-                        ForeignExchangeRate: parseFloat(exchangeRate),
+                        // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                        // ForeignExchangeRate: parseFloat(exchangeRate),
                         //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                     }
                 };
@@ -7183,8 +6700,8 @@ Template.paymentcard.events({
 
                     ReferenceNo: reference,
 
-                    ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-                    ForeignExchangeRate: parseFloat(exchangeRate),
+                    // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                    // ForeignExchangeRate: parseFloat(exchangeRate),
                     //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                 }
             };
@@ -7965,6 +7482,7 @@ Template.paymentcard.events({
                     // ClientPrintName:customer,
                     // CompanyName:customer,
                     // DeptClassName: department,
+                    PaymentDate: paymentDate,
                     Notes: notes,
                     // Payment:true,
                     // PayMethodName: payMethod,
@@ -8064,8 +7582,8 @@ Template.paymentcard.events({
 
                             ReferenceNo: reference,
 
-                            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-                            ForeignExchangeRate: parseFloat(exchangeRate),
+                            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                            // ForeignExchangeRate: parseFloat(exchangeRate),
                             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
@@ -8484,8 +8002,8 @@ Template.paymentcard.events({
 
                             ReferenceNo: reference,
 
-                            ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-                            ForeignExchangeRate: parseFloat(exchangeRate),
+                            // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                            // ForeignExchangeRate: parseFloat(exchangeRate),
                             //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
 
                         }
@@ -8953,8 +8471,8 @@ Template.paymentcard.events({
                     PayMethodName: payMethod,
                     ReferenceNo: reference,
 
-                    ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
-                    ForeignExchangeRate: parseFloat(exchangeRate),
+                    // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
+                    // ForeignExchangeRate: parseFloat(exchangeRate),
                     //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
                 }
             };
@@ -9963,7 +9481,7 @@ Template.paymentcard.events({
 
         }
     },
-    'click .btnDeletePayment': function(event) {
+    'click .btnDeletePayment': async function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
@@ -9981,7 +9499,7 @@ Template.paymentcard.events({
                 }
             };
 
-            paymentService.deleteDepositData(objDetails).then(function(objDetails) {
+            await paymentService.deleteDepositData(objDetails).then(function(objDetails) {
                 $('.modal-backdrop').css('display', 'none');
                 FlowRouter.go('/paymentoverview?success=true');
             }).catch(function(err) {
@@ -9999,6 +9517,7 @@ Template.paymentcard.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
+          $('.modal-backdrop').css('display', 'none');
             FlowRouter.go('/paymentoverview?success=true');
         }
 
@@ -10415,14 +9934,14 @@ Template.paymentcard.events({
                 // convert to forign payment amount
                 const valueToConvert = $(e.currentTarget).val();
                 const convertedValue = convertToForeignAmount(valueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
-      
+
                 $(e.currentTarget).parents(".dynamic-converter-js").find('.linePaymentamount.convert-to').text(convertedValue);
-      
+
                 // Convert oustanding to foriegn oustanding
                 const oustandingValueToConvert = $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-from').text();
                 const oustandingConvertedValue = convertToForeignAmount(oustandingValueToConvert, $('#exchange_rate').val(), getCurrentCurrencySymbol());
                 $(e.currentTarget).parents(".dynamic-converter-js").find('.lineOutstandingAmount.convert-to').text(oustandingConvertedValue);
-      
+
                 const appliedValue = calculateAppliedWithForeign("#tblPaymentcard .linePaymentamount.convert-to.foreign");
                 $('#edtApplied').val(targetCurrency +  appliedValue)
                 $('.appliedAmount').text(targetCurrency + appliedValue);
@@ -10431,7 +9950,7 @@ Template.paymentcard.events({
 
         }
 
-       
+
 
       },
     //   "change #tblPaymentcard input.linePaymentamount.convert-to.foreign": (e, ui) => {
@@ -10441,9 +9960,9 @@ Template.paymentcard.events({
     //         const currency = $('#sltCurrency').attr("currency-symbol");
 
     //         $(e.currentTarget).val(currency + $(e.currentTarget).val().replace(/[^0-9.-]+/g, ""));
-    
+
     //         $('#edtApplied').val(currency + calculatedAppliedAmount);
-    //         $('.appliedAmount').text(currency + calculatedAppliedAmount);  
+    //         $('.appliedAmount').text(currency + calculatedAppliedAmount);
     //     }, 500)
     // }
 });

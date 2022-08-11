@@ -145,7 +145,9 @@ Template.purchaseOrderPrintTemp.onRendered(()=>{
                             totalPaid: totalPaidAmount,
                             ispaid: useData[d].fields.IsPaid,
                             isPartialPaid: isPartialPaid,
-                            department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept
+                            department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept,
+                            unformattedSaleDate: useData[d].fields.OrderDate?useData[d].fields.OrderDate: '',
+                            unformattedDueDate: useData[d].fields.DueDate?useData[d].fields.DueDate:''
                         };
                         purchaseOrderData.push(purchaseorderrecord);
                         templateObject.purchaseorderrecords.set(purchaseOrderData);

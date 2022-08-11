@@ -2,6 +2,7 @@
 Template.mailchimpList.onRendered(function () {
   const templateObject = Template.instance();
   function getCampaignOpenReports() {
+    $(".fullScreenSpin").css("display", "inline-block");
     try {
       var erpGet = erpDb();
       Meteor.call('getCampaignOpenReports', erpGet, function (error, result) {
@@ -114,11 +115,11 @@ Template.mailchimpList.onRendered(function () {
     let td0 = (td1 = td2 = "");
 
     data.forEach((item) => {
-      td0 = item.opens.length ? moment(item.opens[item.opens.length - 1].timestamp).format("DD/MM/YYYY") : '-';
+      td0 = item.opens.length ? moment(item.opens[item.opens.length - 1].timestamp).format("YYYY-MM-DD HH:mm'") : '-';
       td1 = item.contact_status;
 
       td2 = item.opens_count;
-      taskRows.push([td0, td1, td2, item.fields.email_address]);
+      taskRows.push([item.email_address, td0, td1, td2]);
     });
     return taskRows;
   };
