@@ -39,7 +39,7 @@ Meteor.methods({
     })
   },
   sendEmail: function (details) {
-    check([mailFields.to, mailFields.from, mailFields.subject, mailFields.text, mailFields.html], [String]);
+    check([details.to, details.from, details.subject, details.text, details.html], [String]);
     this.unblock();
     if(details.attachments === undefined){
         details.attachments = [];
@@ -53,7 +53,7 @@ Meteor.methods({
         cc: details.cc,
         subject: details.subject,
         text: details.text,
-        html: html,
+        html: details.html,
         attachments: details.attachments
       });
     } catch(e) {
