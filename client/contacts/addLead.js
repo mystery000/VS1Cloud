@@ -269,6 +269,9 @@ Template.leadscard.onRendered(function () {
             custfield2: data.fields.CUSTFLD2 || '',
             custfield3: data.fields.CUSTFLD3 || '',
             custfield4: data.fields.CUSTFLD4 || '',
+            status: data.fields.CUSTFLD4 || '',
+            rep: data.fields.RepName || '',
+            source: data.fields.SourceName || '',
         };
 
         if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2)
@@ -682,6 +685,107 @@ Template.leadscard.onRendered(function () {
             }
         }
     });
+
+    
+
+   
+
+    $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
+        $('#leadStatus').val($(this).find(".colStatusName").text());
+        $('#statusPopModal').modal('toggle');
+
+        $('#tblStatusPopList_filter .form-control-sm').val('');
+        setTimeout(function () {
+            $('.btnRefreshStatus').trigger('click');
+            $('.fullScreenSpin').css('display', 'none');
+        }, 1000);
+    });
+
+    $(document).on('click', '#tblEmployeelist tbody tr', function (event) {
+        let value = $(this).find('.colEmployeeName').text();
+            $('#leadRep').val(value);
+            $('#employeeListPOPModal').modal('hide');
+            $('#leadRep').val($('#leadRep').val().replace(/\s/g, ''));
+    })
+    $(document).on('click', '#leadStatus', function(e, li) {
+            var $earch = $(this);
+            var offset = $earch.offset();
+            $('#statusId').val('');
+            var statusDataName = e.target.value || '';
+            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                $('#statusPopModal').modal('toggle');
+            } else {
+                if (statusDataName.replace(/\s/g, '') != '') {
+                    $('#newStatusHeader').text('Edit Status');
+                    $('#newStatus').val(statusDataName);
+
+                    getVS1Data('TLeadStatusType').then(function(dataObject) {
+                        if (dataObject.length == 0) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getAllLeadStatus().then(function(data) {
+                                for (let i in data.tleadstatustype) {
+                                    if (data.tleadstatustype[i].TypeName === statusDataName) {
+                                        $('#statusId').val(data.tleadstatustype[i].Id);
+                                    }
+                                }
+                                setTimeout(function() {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                    $('#newStatusPopModal').modal('toggle');
+                                }, 200);
+                            });
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.tleadstatustype;
+                            for (let i in useData) {
+                                if (useData[i].TypeName === statusDataName) {
+                                    $('#statusId').val(useData[i].Id);
+
+                                }
+                            }
+                            setTimeout(function() {
+                                $('.fullScreenSpin').css('display', 'none');
+                                $('#newStatusPopModal').modal('toggle');
+                            }, 200);
+                        }
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getAllLeadStatus().then(function(data) {
+                            for (let i in data.tleadstatustype) {
+                                if (data.tleadstatustype[i].TypeName === statusDataName) {
+                                    $('#statusId').val(data.tleadstatustype[i].Id);
+
+                                }
+                            }
+                            setTimeout(function() {
+                                $('.fullScreenSpin').css('display', 'none');
+                                $('#newStatusPopModal').modal('toggle');
+                            }, 200);
+                        });
+                    });
+                    setTimeout(function() {
+                        $('.fullScreenSpin').css('display', 'none');
+                        $('#newStatusPopModal').modal('toggle');
+                    }, 200);
+
+                } else {
+                    $('#statusPopModal').modal();
+                    setTimeout(function() {
+                        $('#tblStatusPopList_filter .form-control-sm').focus();
+                        $('#tblStatusPopList_filter .form-control-sm').val('');
+                        $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+                        var datatable = $('#tblStatusPopList').DataTable();
+
+                        datatable.draw();
+                        $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+
+                    }, 500);
+                }
+            }
+        });
+
+    $(document).on('click', '#leadRep', function(e, li){
+        $('#employeeListPOPModal').modal('show');
+    })
 });
 
 Template.leadscard.events({
@@ -695,6 +799,15 @@ Template.leadscard.events({
         } else {
             window.open('/agedreceivables','_self');
         }
+    },
+    'click #leadStatus': function(event) {
+        $('#leadStatus').select();
+        $('#leadStatus').editableSelect();
+    },
+
+    'click #leadRep': function(event) {
+        $('#leadRep').select();
+        $('#leadRep').editableSelect();
     },
     'click .btnReceiveLeadPayment':async function (event) {
         let currentId = FlowRouter.current().queryParams.id||'';
@@ -763,6 +876,9 @@ Template.leadscard.events({
         let bcountry = '';
         let bsuburb = '';
         let isSupplier = !!$('#chkSameAsSupplier').is(':checked');
+        let sourceName = $('#leadSource').val();
+        let repName = $('#leadRep').val();
+        let status = $('#leadStatus').val();
 
         if (employeeName == '') {
             swal('Please provide the lead name !', '', 'warning');
@@ -864,7 +980,9 @@ Template.leadscard.events({
                 CUSTFLD1: custField1,
                 CUSTFLD2: custField2,
                 CUSTFLD3: custField3,
-                CUSTFLD4: custField4
+                CUSTFLD4: status,
+                SourceName: sourceName,
+                RepName: repName,
             }
         };
         contactService.saveProspectEx(objDetails).then(function (objDetails) {

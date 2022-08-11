@@ -158,7 +158,9 @@ Template.quotesPrintTemp.onRendered(()=>{
                             saleCustField1: useData[d].fields.SaleCustField1,
                             saleCustField2: useData[d].fields.SaleCustField2,
                             totalPaid: totalPaidAmount,
-                            isConverted: useData[d].fields.Converted
+                            isConverted: useData[d].fields.Converted,
+                            unformattedSaleDate: useData[d].fields.SaleDate?useData[d].fields.SaleDate:'',
+                            unformattedDueDate: useData[d].fields.DueDate? useData[d].fields.DueDate: '',
                         };
                   
                     

@@ -693,7 +693,7 @@ Template.emailsettings.onRendered(function () {
 
     templateObject.getCorrespondence = () => {
         let temp = localStorage.getItem('correspondence');
-        templateObject.correspondences.set(temp? JSON.parse(temp): [])
+        templateObject.correspondences.set(temp ? JSON.parse(temp) : [])
     }
     templateObject.getCorrespondence();
 
@@ -716,9 +716,9 @@ Template.emailsettings.onRendered(function () {
         return new Promise(async (resolve, reject) => {
 
             //TODO: Remove all BasedOnType localstorage variables(No need this part in production mode)
-            let basedOnTypeStorages = Object.keys(localStorage);
-            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => storage.includes('BasedOnType_'));
-            basedOnTypeStorages.forEach(storage => localStorage.removeItem(storage));
+            // let basedOnTypeStorages = Object.keys(localStorage);
+            // basedOnTypeStorages = basedOnTypeStorages.filter((storage) => storage.includes('BasedOnType_'));
+            // basedOnTypeStorages.forEach(storage => localStorage.removeItem(storage));
 
             const oldSettings = templateObject.originScheduleData.get();
             // Filter old settings according to the types of email setting(Essential one or Automated one)
@@ -812,16 +812,16 @@ Template.emailsettings.onRendered(function () {
                             parentElement = document.getElementById('supplierpaymentPDFTemp')
                         }
 
-                        if(formID != 1) {
+                        if (formID != 1) {
                             targetElement = parentElement.getElementsByClassName('printReport');
                         } else {
                             targetElement = [];
                             // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
-                            let groupedReportsModal  = document.getElementById('groupedReportsModal');
+                            let groupedReportsModal = document.getElementById('groupedReportsModal');
                             let groupedReports = groupedReportsModal.getElementsByClassName('star');
                             let temp = [];
-                            for(let i = 0; i< groupedReports.length; i ++) {
-                                if(groupedReports[i].checked) {
+                            for (let i = 0; i < groupedReports.length; i++) {
+                                if (groupedReports[i].checked) {
                                     temp.push(groupedReports[i])
                                 }
                             }
@@ -833,14 +833,14 @@ Template.emailsettings.onRendered(function () {
                             });
                             let printwrappers = document.getElementsByClassName('print-wrapper');
                             let parenetElements = [];
-                            formIDs.map(id=>{
+                            formIDs.map(id => {
                                 parenetElements.push(document.getElementsByClassName('print-wrapper-' + id)[0]);
                             })
-                            parenetElements.map(parentelement=>{
+                            parenetElements.map(parentelement => {
                                 let children = parentelement.getElementsByClassName('printReport');
 
 
-                                for (let j = 0; j< children.length; j++) {
+                                for (let j = 0; j < children.length; j++) {
                                     targetElement.push(children[j]);
                                 }
                             })
@@ -848,12 +848,418 @@ Template.emailsettings.onRendered(function () {
                         }
 
                         function getAttachments() {
-                            return new Promise(async (resolve, reject)=>{
+                            return new Promise(async (resolve, reject) => {
                                 if (targetElement && targetElement != null && targetElement != "" && targetElement.length != 0) {
                                     let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
                                     // for ( let i = 0;  i< 10; i++ ) {
-                                    for ( let i = 0;  i< targetElement.length; i++ ) {
-                                        if(transIDs.includes(formID.toString()) == false) {
+                                    for (let i = 0; i < targetElement.length; i++) {
+                                        if (transIDs.includes(formID.toString()) == false) {
+                                            targetElement[i].style.display = "block";
+                                            targetElement[i].style.width = "210mm";
+                                            targetElement[i].style.backgroundColor = "#ffffff";
+                                            targetElement[i].style.padding = "8px";
+                                            targetElement[i].style.height = "297mm";
+                                            targetElement[i].style.fontSize = "13.33px";
+                                            targetElement[i].style.color = "#000000";
+                                            targetElement[i].style.overflowX = "visible";
+                                        } else {
+                                        }
+
+                                        var opt = {
+                                            margin: 0,
+                                            filename: docTitle,
+                                            image: {
+                                                type: 'jpeg',
+                                                quality: 0.98
+                                            },
+                                            html2canvas: {
+                                                scale: 2
+                                            },
+                                            jsPDF: {
+                                                unit: 'in',
+                                                format: 'a4',
+                                                orientation: 'portrait'
+                                            }
+                                        };
+                                        let source = targetElement[i];
+                                       
+
+                                        await (async () => {
+                                            return new Promise((resolve, reject) => {
+                                                html2pdf().set(opt).from(source).toPdf().output('datauristring').then((dataObject) => {
+                                                    let pdfObject = "";
+                                                    let base64data = dataObject.split(',')[1];
+                                                    pdfObject = {
+                                                        filename: 'vs1cloud report.pdf',
+                                                        content: base64data,
+                                                        encoding: 'base64'
+                                                    };
+                                                    let tDate = '';
+                                                    let dDate = '';
+                                                    if (transIDs.includes(formID.toString()) == true) {
+                                                        tDate = source.querySelector('#saleDate').innerHTML;
+                                                        dDate = source.querySelector('#duedate').innerHTML;
+                                                    }
+                                                    // attachments.push(pdfObject);
+                                                    attachments.push({
+                                                        tDate: tDate,
+                                                        dDate: dDate,
+                                                        pdfObject:pdfObject
+                                                    })
+                                                    resolve()
+                                                });
+                                            })
+                                        })()
+                                    }
+                                    resolve()
+
+                                } else if (targetElement.length == 0) {
+                                    resolve();
+                                }
+                            })
+                        }
+                        await getAttachments()
+                        if (typeof recipientIds == 'string') {
+                            recipientIds = recipientIds.split('; ');
+                        }
+
+                        if (typeof recipients == 'string') {
+                            recipients = recipients.split('; ');
+                        }
+                        let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
+                            const starttime = frequencyEl.attr('data-starttime');
+
+                            const startdate = frequencyEl.attr('data-startdate');
+
+                            const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
+
+                            const sDate = startdate ? moment(convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
+
+                            const frequencyName = frequencyEl.text() != '' ? frequencyEl.text().split(',')[0] : '';
+
+                            let documents = [];
+                            attachments.map(attachment =>{
+                                documents.push(attachment.pdfObject)
+                            })
+
+                            let objDetail = {
+                                type: "TReportSchedules",
+                                fields: {
+                                    Active: true,
+                                    BeginFromOption: "",
+                                    ContinueIndefinitely: true,
+                                    EmployeeId: parseInt(recipientId),
+                                    Every: 1,
+                                    EndDate: "",
+                                    FormID: parseInt(formID),
+                                    LastEmaileddate: "",
+                                    MonthDays: 0,
+                                    StartDate: sDate,
+                                    WeekDay: 1,
+                                    NextDueDate: '',
+                                    // attachments: attachments,
+                                }
+                            };
+
+                            let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
+                            if(transIDs.includes(formID.toString()) == true) {
+                                attachments.map (attachment => {
+                                    async function checkBasedOnType() {
+                                    let currentTime = new Date()
+                                    let transTime = new Date(attachment.tDate)
+                                    let dueTime = new Date(attachment.dDate)
+    
+                                    let attaches = [];
+                                    attaches.push(attachment.pdfObject)
+                                    
+                                    let object = {
+                                        type: "TReportSchedules",
+                                        fields: {
+                                            Active: true,
+                                            BeginFromOption: "",
+                                            ContinueIndefinitely: true,
+                                            EmployeeId: parseInt(recipientId),
+                                            Every: 1,
+                                            EndDate: "",
+                                            FormID: parseInt(formID),
+                                            LastEmaileddate: "",
+                                            MonthDays: 0,
+                                            StartDate: sDate,
+                                            WeekDay: 1,
+                                            NextDueDate: '',
+                                            attachments: attaches,
+                                            FormName: formName,
+                                            EmployeeEmail: recipients[index],
+                                            HostURL: $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname'),
+                                            Offset: new Date().getTimezoneOffset()
+                                        }
+                                    }
+    
+                                    if(basedOnType.includes('T') == true && attachment.tDate != '') {
+                                        object.fields.StartDate = transTime;
+                                        const nextDueDate = await new Promise((resolve, reject) => {
+                                            Meteor.call('calculateNextDate', object.fields, (error, result) => {
+                                                if (error) return reject(error);
+                                                resolve(result);
+                                            });
+                                        });
+                                        object.fields.NextDueDate = nextDueDate;
+                                        Meteor.call('addTask', object.fields);
+                                    }
+    
+                                    if(basedOnType.includes('D') == true && attachment.dDate != '') {
+                                        object.fields.StartDate = dueTime;
+                                        const nextDueDate = await new Promise((resolve, reject) => {
+                                            Meteor.call('calculateNextDate', object.fields, (error, result) => {
+                                                if (error) return reject(error);
+                                                resolve(result);
+                                            });
+                                        });
+                                        object.fields.NextDueDate = nextDueDate;
+                                        Meteor.call('addTask', object.fields);
+                                    }
+    
+                                    if(basedOnType.includes('O') && attachment.dDate != '' && currentTime.getTime() > dueTime.getTime()) {
+                                        object.fields.StartDate = transTime;
+                                        Meteor.call('sendNormalEmail', object.fields);
+                                    }
+                                    }
+
+                                    checkBasedOnType();
+                                    
+                                   
+                                })
+                            }
+
+
+                            if (frequencyName === "Monthly") {
+                                const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
+                                const ofMonths = frequencyEl.attr('data-ofMonths');
+                                // objDetail.fields.ExtraOption = ofMonths;
+                                objDetail.fields.MonthDays = monthDate;
+                                objDetail.fields.Frequency = "M";
+                            } else if (frequencyName === "Weekly") {
+                                const selectdays = frequencyEl.attr("data-selectdays");
+                                const everyweeks = frequencyEl.attr("data-everyweeks");
+                                objDetail.fields.Frequency = "W";
+                                objDetail.fields.WeekDay = parseInt(selectdays);
+                                if (everyweeks) objDetail.fields.Every = parseInt(everyweeks);
+                            } else if (frequencyName === "Daily") {
+                                objDetail.fields.Frequency = "D";
+                                const dailyradiooption = frequencyEl.attr("data-dailyradiooption");
+                                const everydays = frequencyEl.attr("data-everydays");
+                                // objDetail.fields.ExtraOption = dailyradiooption;
+                                objDetail.fields.SatAction = "P";
+                                objDetail.fields.SunAction = "P";
+                                objDetail.fields.Every = -1;
+                                if (dailyradiooption === 'dailyWeekdays') {
+                                    objDetail.fields.SatAction = "D";
+                                    objDetail.fields.SunAction = "D";
+                                }
+                                if (dailyradiooption === 'dailyEvery' && everydays) objDetail.fields.Every = parseInt(everydays);
+                            } else if (frequencyName === "One Time Only") {
+                                objDetail.fields.EndDate = sDate;
+                                objDetail.fields.Frequency = "";
+                            } else {
+                                objDetail.fields.Active = false;
+                            }
+
+                            if (formID == '1') {
+                                // if report type is Grouped Reports....
+                                const groupedReports = $('#groupedReportsModal .star:checked').map(() => { return $(this) }).get();
+                                let formIDs = [];
+                                groupedReports.map(async (groupedReport) => {
+                                    formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
+                                    oldSettings = oldSettings.filter(oldSetting => {
+                                        return oldSetting.fields.FormID != parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''))
+                                            || oldSetting.fields.EmployeeId != parseInt(recipientId);
+                                    });
+                                });
+
+                                // Add synced cron job here
+                                objDetail.fields.FormIDs = formIDs.join(',');
+                                objDetail.fields.FormID = 1;
+                                objDetail.fields.FormName = formName;
+                                objDetail.fields.EmployeeEmail = recipients[index];
+                                objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
+
+                                //TODO: Set basedon type here
+                                localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                    ...objDetail.fields,
+                                    BasedOnType: basedOnType,
+                                }));
+
+                                objDetail.fields.Offset = new Date().getTimezoneOffset();
+                                const nextDueDate = await new Promise((resolve, reject) => {
+                                    Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
+                                        if (error) return reject(error);
+                                        resolve(result);
+                                    });
+                                });
+                                objDetail.fields.NextDueDate = nextDueDate;
+                                objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                Meteor.call('addTask', objDetail.fields);
+                            } else {
+                                const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
+                                oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
+                                if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
+                                try {
+                                    // Save email settings
+                                    await taxRateService.saveScheduleSettings(objDetail);
+                                } catch (e) {
+                                }
+                                objDetail.fields.attachments = documents;
+                                objDetail.fields.Offset = new Date().getTimezoneOffset();
+
+                                const nextDueDate = await new Promise((resolve, reject) => {
+                                    Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
+                                        if (error) return reject(error);
+                                        resolve(result);
+                                    });
+                                });
+                                objDetail.fields.NextDueDate = nextDueDate;
+
+                                //TODO: Set basedon type here
+                                localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                    ...objDetail.fields,
+                                    BasedOnType: basedOnType,
+                                }));
+
+                                // Add synced cron job here
+                                objDetail.fields.FormName = formName;
+                                objDetail.fields.EmployeeEmail = recipients[index];
+                                objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                Meteor.call('addTask', objDetail.fields);
+                            }
+                        });
+                        await Promise.all(saveSettingPromises);
+                    }
+                });
+                await Promise.all(promise);
+
+                let promise1 = oldSettings.map(async setting => {
+                    if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 54
+                        || setting.fields.FormID == 177 || setting.fields.FormID == 129)) || (!isEssential
+                            && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
+                            && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
+                        // Remove all
+                        setting.fields.Active = false;
+                        let attachments = [];
+
+                        let targetElement;
+                        let docTitle = 'vs1cloud report.pdf';
+                        let parentElement;
+                        if (setting.fields.FormID == 129) {
+                            parentElement = document.getElementById('profitTemp');
+                        }
+                        if (setting.fields.FormID == 6) {
+                            parentElement = document.getElementById('agedPayablesTemp');
+                        }
+                        if (setting.fields.FormID == 134) {
+                            parentElement = document.getElementById('agedReceivableTemp');
+                        }
+                        if (setting.fields.FormID == 225) {
+                            parentElement = document.getElementById('generalLedgerTemp');
+                        }
+                        if (setting.fields.FormID == 1464) {
+                            parentElement = document.getElementById('productSalesReportTemp');
+                        }
+                        if (setting.fields.FormID == 70) {
+                            parentElement = document.getElementById('purchaseReportTemp');
+                        }
+                        if (setting.fields.FormID == 1364) {
+                            parentElement = document.getElementById('purchaseSummaryTemp');
+                        }
+                        if (setting.fields.FormID == 68) {
+                            parentElement = document.getElementById('salesReportTemp');
+                        }
+                        if (setting.fields.FormID == 278) {
+                            parentElement = document.getElementById('taxSummaryReportTemp');
+                        }
+                        if (setting.fields.FormID == 140) {
+                            parentElement = document.getElementById('trialBalanceTemp');
+                        }
+                        if (setting.fields.FormID == 54) {
+                            parentElement = document.getElementById('invoicePDFTemp');
+                        }
+                        if (setting.fields.FormID == 177 || setting.fields.FormID == 17544) {
+                            parentElement = document.getElementById('statementPDFTemp');
+                        }
+                        if (setting.fields.FormID == 12) {
+                            parentElement = document.getElementById('billPDFTemp');
+                        }
+                        if (setting.fields.FormID == 18) {
+                            parentElement = document.getElementById('chequePDFTemp');
+                        }
+                        if (setting.fields.FormID == 21) {
+                            parentElement = document.getElementById('creditPDFTemp');
+                        }
+
+                        if (setting.fields.FormID == 61) {
+                            parentElement = document.getElementById('paymentsPDFTemp');
+                        }
+                        if (setting.fields.FormID == 69) {
+                            parentElement = document.getElementById('purchaseOrderPDFTemp');
+                        }
+
+                        if (setting.fields.FormID == 71) {
+                            parentElement = document.getElementById('quotePDFTemp');
+                        }
+
+                        if (setting.fields.FormID == 74) {
+                            parentElement = document.getElementById('refundPDFTemp')
+                        }
+
+                        if (setting.fields.FormID == 77) {
+                            parentElement = document.getElementById('salesorderPDFTemp')
+                        }
+
+                        if (setting.fields.FormID == 94) {
+                            parentElement = document.getElementById('supplierpaymentPDFTemp')
+                        }
+
+                        if (setting.fields.FormID != 1) {
+                            targetElement = parentElement.getElementsByClassName('printReport');
+                        } else {
+                            targetElement = [];
+                            // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
+                            let groupedReportsModal = document.getElementById('groupedReportsModal');
+                            let groupedReports = groupedReportsModal.getElementsByClassName('star');
+                            let temp = [];
+                            for (let i = 0; i < groupedReports.length; i++) {
+                                if (groupedReports[i].checked) {
+                                    temp.push(groupedReports[i])
+                                }
+                            }
+                            groupedReports = temp;
+                            // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
+                            let formIDs = [];
+                            groupedReports.map(async (groupedReport) => {
+                                formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
+                            });
+                            let printwrappers = document.getElementsByClassName('print-wrapper');
+                            let parenetElements = [];
+                            formIDs.map(id => {
+                                parenetElements.push(document.getElementsByClassName('print-wrapper-' + id)[0]);
+                            })
+                            parenetElements.map(parentelement => {
+                                let children = parentelement.getElementsByClassName('printReport');
+
+
+                                for (let j = 0; j < children.length; j++) {
+                                    targetElement.push(children[j]);
+                                }
+                            })
+
+                        }
+
+                        function getAttachments() {
+                            return new Promise(async (resolve, reject) => {
+                                if (targetElement && targetElement != null && targetElement != "" && targetElement.length != 0) {
+                                    let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
+                                    // for ( let i = 0;  i< 10; i++ ) {
+                                    for (let i = 0; i < targetElement.length; i++) {
+                                        if (transIDs.includes(setting.fields.FormID.toString()) == false) {
                                             targetElement[i].style.display = "block";
                                             targetElement[i].style.width = "210mm";
                                             targetElement[i].style.backgroundColor = "#ffffff";
@@ -900,265 +1306,33 @@ Template.emailsettings.onRendered(function () {
                                     }
                                     resolve()
 
-                                } else if(targetElement.length == 0) {
+                                } else if (targetElement.length == 0) {
                                     resolve();
                                 }
                             })
                         }
-                        getAttachments().then(async () => {
 
-                            if(typeof recipientIds == 'string') {
-                                recipientIds = recipientIds.split('; ');
+                        await getAttachments()
+
+                        setting.fields.attachments = attachments;
+                        Meteor.call('addTask', setting.fields);
+                        const saveResult = await taxRateService.saveScheduleSettings({
+                            type: "TReportSchedules",
+                            fields: {
+                                Active: false,
+                                ID: setting.fields.ID
                             }
-
-                            if(typeof recipients == 'string') {
-                                recipients = recipients.split('; ');
-                            }
-                            let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
-                                const starttime = frequencyEl.attr('data-starttime');
-
-                                const startdate = frequencyEl.attr('data-startdate');
-
-                                const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
-
-                                const sDate = startdate ? moment(convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-
-                                const frequencyName = frequencyEl.text() != '' ? frequencyEl.text().split(',')[0] : '';
-
-                                let objDetail = {
-                                    type: "TReportSchedules",
-                                    fields: {
-                                        Active: true,
-                                        BeginFromOption: "",
-                                        ContinueIndefinitely: true,
-                                        EmployeeId: parseInt(recipientId),
-                                        Every: 1,
-                                        EndDate: "",
-                                        FormID: parseInt(formID),
-                                        LastEmaileddate: "",
-                                        MonthDays: 0,
-                                        StartDate: sDate,
-                                        WeekDay: 1,
-                                        NextDueDate: '',
-                                        attachments: attachments,
-                                    }
-                                };
-
-
-                                if (frequencyName === "Monthly") {
-                                    const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
-                                    const ofMonths = frequencyEl.attr('data-ofMonths');
-                                    // objDetail.fields.ExtraOption = ofMonths;
-                                    objDetail.fields.MonthDays = monthDate;
-                                    objDetail.fields.Frequency = "M";
-                                } else if (frequencyName === "Weekly") {
-                                    const selectdays = frequencyEl.attr("data-selectdays");
-                                    const everyweeks = frequencyEl.attr("data-everyweeks");
-                                    objDetail.fields.Frequency = "W";
-                                    objDetail.fields.WeekDay = parseInt(selectdays);
-                                    if (everyweeks) objDetail.fields.Every = parseInt(everyweeks);
-                                } else if (frequencyName === "Daily") {
-                                    objDetail.fields.Frequency = "D";
-                                    const dailyradiooption = frequencyEl.attr("data-dailyradiooption");
-                                    const everydays = frequencyEl.attr("data-everydays");
-                                    // objDetail.fields.ExtraOption = dailyradiooption;
-                                    objDetail.fields.SatAction = "P";
-                                    objDetail.fields.SunAction = "P";
-                                    objDetail.fields.Every = -1;
-                                    if (dailyradiooption === 'dailyWeekdays') {
-                                        objDetail.fields.SatAction = "D";
-                                        objDetail.fields.SunAction = "D";
-                                    }
-                                    if (dailyradiooption === 'dailyEvery' && everydays) objDetail.fields.Every = parseInt(everydays);
-                                } else if (frequencyName === "One Time Only") {
-                                    objDetail.fields.EndDate = sDate;
-                                    objDetail.fields.Frequency = "";
-                                } else {
-                                    objDetail.fields.Active = false;
-                                }
-
-                                if (formID == '1') {
-                                    // if report type is Grouped Reports....
-                                    const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
-                                    let formIDs = [];
-                                    groupedReports.map(async (groupedReport) => {
-                                        formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
-                                        oldSettings = oldSettings.filter(oldSetting => {
-                                            return oldSetting.fields.FormID != parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''))
-                                                || oldSetting.fields.EmployeeId != parseInt(recipientId);
-                                        });
-                                    });
-                                    // Add synced cron job here
-                                    objDetail.fields.FormIDs = formIDs.join(',');
-                                    objDetail.fields.FormID = 1;
-                                    objDetail.fields.FormName = formName;
-                                    objDetail.fields.EmployeeEmail = recipients[index];
-                                    objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
-
-                                    //TODO: Set basedon type here
-                                    localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
-                                        ...objDetail.fields,
-                                        BasedOnType: basedOnType,
-                                    }));
-
-                                    objDetail.fields.Offset = new Date().getTimezoneOffset();
-                                    const nextDueDate = await new Promise((resolve, reject) => {
-                                        Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
-                                            if (error) return reject(error);
-                                            resolve(result);
-                                        });
-                                    });
-                                    objDetail.fields.NextDueDate = nextDueDate;
-                                    objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                    Meteor.call('addTask', objDetail.fields);
-                                } else {
-                                    const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
-                                    oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
-                                    if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
-                                    try {
-                                        // Save email settings
-                                        await taxRateService.saveScheduleSettings(objDetail);
-                                    } catch (e) {
-
-                                    }
-
-                                    objDetail.fields.Offset = new Date().getTimezoneOffset();
-
-                                    const nextDueDate = await new Promise((resolve, reject) => {
-                                        Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
-                                            if (error) return reject(error);
-                                            resolve(result);
-                                        });
-                                    });
-                                    objDetail.fields.NextDueDate = nextDueDate;
-
-                                    //TODO: Set basedon type here
-                                    localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
-                                        ...objDetail.fields,
-                                        BasedOnType: basedOnType,
-                                    }));
-
-                                    // Add synced cron job here
-                                    objDetail.fields.FormName = formName;
-                                    objDetail.fields.EmployeeEmail = recipients[index];
-                                    objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                    Meteor.call('addTask', objDetail.fields);
-                                }
-                            });
-                            await Promise.all(saveSettingPromises);
                         });
-                    }
-                });
-                savedSchedules = await Promise.all(promise);
-
-                let promise1 = oldSettings.map(async setting => {
-                    if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 54
-                        || setting.fields.FormID == 177 || setting.fields.FormID == 129)) || (!isEssential
-                            && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
-                            && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
-                        // Remove all
-                        setting.fields.Active = false;
-                        let attachments = [];
-
-                        let targetElement;
-                        let docTitle = 'vs1cloud report.pdf';
-
-                        if (setting.formID == 6) {
-                            let parentElement = document.getElementById('agedPayablesTemp');
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-
-                        if (setting.formID == 134) {
-                            let parentElement = document.getElementById('agedReceivableTemp');
-                            parentElement.style.display = "block !important";
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-                        if (setting.formID == 225) {
-                            let parentElement = document.getElementById('generalLedgerTemp');
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-                        if (setting.formID == 1464) {
-                            let parentElement = document.getElementById('productSalesReportTemp');
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-                        if (setting.formID == 70) {
-                            let parentElement = document.getElementById('purchaseReportTemp');
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-                        if (setting.formID == 1364) {
-                            let parentElement = document.getElementById('purchaseSummaryTemp');
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-                        if (setting.formID == 68) {
-                            let parentElement = document.getElementById('salesReportTemp');
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-                        if (setting.formID == 278) {
-                            let parentElement = document.getElementById('taxSummaryReportTemp');
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-                        if (setting.formID == 140) {
-                            let parentElement = document.getElementById('trialBalanceTemp');
-                            targetElement = parentElement.getElementsByClassName('printReport')[0];
-                        }
-
-                        getAttachments =()=> {
-                            return new Promise((resolve, reject) => {
-                                if (targetElement && targetElement != null && targetElement != '') {
-                                    var opt = {
-                                        margin: 0,
-                                        filename: docTitle,
-                                        image: {
-                                            type: 'jpeg',
-                                            quality: 0.98
-                                        },
-                                        html2canvas: {
-                                            scale: 2
-                                        },
-                                        jsPDF: {
-                                            unit: 'in',
-                                            format: 'a4',
-                                            orientation: 'portrait'
-                                        }
-                                    };
-                                    setTimeout(function () {
-                                        html2pdf().set(opt).from(targetElement).toPdf().output('datauristring').then((dataObject) => {
-                                            let pdfObject = "";
-                                            let base64data = dataObject.split(',')[1];
-                                            pdfObject = {
-                                                filename: 'vs1cloud report.pdf',
-                                                content: base64data,
-                                                encoding: 'base64'
-                                            };
-                                            attachments.push(pdfObject)
-                                            resolve()
-                                        });
-
-                                    }, 100);
-                                }
-                            })
-                        }
-
-                        getAttachments().then(async () => {
-                            setting.fields.attachments = attachments;
-                            Meteor.call('addTask', setting.fields);
-                            const saveResult = await taxRateService.saveScheduleSettings({
-                                type: "TReportSchedules",
-                                fields: {
-                                    Active: false,
-                                    ID: setting.fields.ID
-                                }
-                            });
-                            //TODO: Set basedon type here
-                            localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
-                        })
+                        //TODO: Set basedon type here
+                        localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
                     }
                 });
                 await Promise.all(promise1);
                 resolve({ success: true, message: '' });
             } catch (error) {
-                if (typeof error !== 'string') error = error.message;
                 resolve({ success: false, message: 'Something went wrong. Please try again later.' });
+                if (typeof error !== 'string') error = error.message;
+
             }
         });
     }
@@ -1455,36 +1629,7 @@ Template.emailsettings.events({
             }).then(() => {
                 window.open('/emailsettings', '_self');
             });
-        else
-            swal({
-                title: 'Oooops...',
-                text: 'Something went wrong! Please try again later.',
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.open('/emailsettings', '_self');
-            });
-        $('.fullScreenSpin').css('display', 'none');
-    },
-    'click #emailsetting-normal': async function () {
-        const templateObject = Template.instance();
-        const normalSettings = $('#tblAutomatedEmails tbody tr').map(function () { return $(this) }).get();
-        $('.fullScreenSpin').css('display', 'inline-block');
-
-        const saveResult = await templateObject.saveSchedules(normalSettings, false);
-
-        if (saveResult.success) {
-            swal({
-                title: 'Success',
-                text: 'Normal Email Settings were scheduled successfully',
-                type: 'success',
-                showCancelButton: false,
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.open('/emailsettings', '_self');
-            });
-        } else {
+        else {
             swal({
                 title: 'Oooops...',
                 text: 'Something went wrong! Please try again later.',
@@ -1495,8 +1640,40 @@ Template.emailsettings.events({
                 window.open('/emailsettings', '_self');
             });
         }
-
         $('.fullScreenSpin').css('display', 'none');
+    },
+    'click #emailsetting-normal': async function () {
+        const templateObject = Template.instance();
+        const normalSettings = $('#tblAutomatedEmails tbody tr').map(function () { return $(this) }).get();
+        $('.fullScreenSpin').css('display', 'inline-block');
+
+        const saveResult = await templateObject.saveSchedules(normalSettings, false);
+
+        if (saveResult.success) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Success',
+                text: 'Normal Email Settings were scheduled successfully',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.open('/emailsettings', '_self');
+            });
+        } else {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: 'Something went wrong! Please try again later.----1',
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.open('/emailsettings', '_self');
+            });
+        }
+
+       
     },
     'click .chkBoxDays': function (event) {
         var checkboxes = document.querySelectorAll('.chkBoxDays');
@@ -1812,22 +1989,22 @@ Template.emailsettings.events({
     },
 
 
-    'click .btnAddLetter': function(event) {
+    'click .btnAddLetter': function (event) {
         $('#addLetterTemplateModal').modal('toggle');
     },
 
-    'click #save-correspondence': function() {
+    'click #save-correspondence': function () {
         const templateObject = Template.instance()
         let correspondenceData = localStorage.getItem('correspondence');
         let correspondenceTemp = correspondenceData ? JSON.parse(correspondenceData) : [];
         let tempLabel = $("#edtTemplateLbl").val();
         let tempSubject = $('#edtTemplateSubject').val();
         let tempContent = $("#edtTemplateContent").val();
-        if(correspondenceTemp.length > 0 ) {
-            let index = correspondenceTemp.findIndex(item=>{
+        if (correspondenceTemp.length > 0) {
+            let index = correspondenceTemp.findIndex(item => {
                 return item.label == tempLabel
             })
-            if(index > 0) {
+            if (index > 0) {
                 correspondenceTemp[index] = {
                     label: tempLabel,
                     subject: tempSubject,

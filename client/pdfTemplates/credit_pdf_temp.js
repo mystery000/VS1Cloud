@@ -149,7 +149,9 @@ Template.creditPrintTemp.onRendered(function() {
                             saleCustField2: useData[d].fields.SalesComments,
                             totalPaid: totalPaidAmount,
                             ispaid: useData[d].fields.IsPaid,
-                            department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept
+                            department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept,
+                            unformattedSaleDate : useData[d].fields.OrderDate? useData[d].fields.OrderDate : '',
+                            unformattedDueDate: useData[d].fields.DueDate?useData[d].fields.DueDate: ''
                         };
                         let getDepartmentVal = useData[d].fields.Lines[0].fields.LineClassName || defaultDept;
                         creditTemp.push(creditrecord);
