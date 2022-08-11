@@ -56,7 +56,8 @@ Template.accountant_individual.onRendered(() => {
         no: 9,
         name:"Payables",
       }
-    ]);    
+    ]);
+    
     
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
@@ -288,14 +289,8 @@ Template.accountant_individual.onRendered(() => {
                   exportOptions: {
                     columns: ":visible",
                   },
-                  // ,
-                  // customize: function ( win ) {
-                  //   $(win.document.body).children("h1:first").remove();
-                  // }
                 },
               ],
-              // bStateSave: true,
-              // rowId: 0,
               pageLength: initialDatatableLoad,
               lengthMenu: [
                 [initialDatatableLoad, -1],
@@ -304,7 +299,6 @@ Template.accountant_individual.onRendered(() => {
               info: true,
               responsive: true,
               order: [[0, "asc"]],
-              // "aaSorting": [[1,'desc']],
               action: function () {
                 $("#tblAccountOverview").DataTable().ajax.reload();
               },
@@ -386,7 +380,7 @@ Template.accountant_individual.onRendered(() => {
           $(this).datepicker(
             "setDate",
             new Date(year, inst.selectedMonth, inst.selectedDay)
-          );
+          );          
         },
       });
   
@@ -400,6 +394,8 @@ Template.accountant_individual.onRendered(() => {
       var currentDate = new Date();
       var begunDate = moment(currentDate).format("DD/MM/YYYY");
       templateObject.dateAsAt.set(begunDate);
+
+      let accountantID = FlowRouter.getParam("_id");
 
       getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
         let data = JSON.parse(dataObject[0].data);
@@ -415,17 +411,18 @@ Template.accountant_individual.onRendered(() => {
             country: data.Country || '-',
         };
 
-        let headerHtml = "<span>"+dataInfo.firstname+" "+dataInfo.lastname+", CPA</span><br>";
-        headerHtml += "<span>"+dataInfo.address+", "+dataInfo.towncity+", "+dataInfo.postalzip+", "+dataInfo.stateregion+", "+dataInfo.country+"</span>";
-        headerHtml += "<h3>Individual</h3>";
-        headerHtml += "<span>"+dataInfo.companyname+"<br>For the year ended "+(new Date())+"</span>";
+        let headerHtml = "<div style='border-top:1px solid #858796; width:172px; margin-bottom:12px'></div>";
+        headerHtml += "<span style='float:left; padding-bottom:8px'>"+dataInfo.firstname+" "+dataInfo.lastname+", CPA</span>";
+        headerHtml += "<span style='float:left; padding-bottom:8px'><b>OnPoint Advisory</b></span>";
+        headerHtml += "<span style='float:left; padding-bottom:20px'>"+dataInfo.address+"<br/>"+dataInfo.towncity+", "+dataInfo.postalzip+", "+dataInfo.stateregion+", "+dataInfo.country+"</span>";
+        headerHtml += "<span style='float:left;'>Dated: 31 August 2021</span>";
 
         $("#reportsAccountantHeader").html(headerHtml);
       })
       .catch(function (err) {
         // taxRateService.getAccountantCategory().then(function (data) {
         //     for(let i=0; i<data.tdeptclass.length; i++){
-        //         var dataInfo = {
+        //         var dataList = {
         //             id: data.tdeptclass[i].Id || '',
         //             firstname: data.tdeptclass[i].FirstName || '-',
         //             lastname: data.tdeptclass[i].LastName || '-',
@@ -521,6 +518,7 @@ Template.accountant_individual.onRendered(() => {
             recordObj.dataArrHeader = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
+  
           } else if (i == 1 || i == 2 || AccountTree == "") {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
@@ -542,6 +540,7 @@ Template.accountant_individual.onRendered(() => {
                   utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
+  
           } else if (
             AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable"
           ) {
@@ -562,7 +561,7 @@ Template.accountant_individual.onRendered(() => {
               },
               ,
             ];
-
+  
           } else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -580,7 +579,7 @@ Template.accountant_individual.onRendered(() => {
                   utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
-
+  
           } else if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -598,7 +597,6 @@ Template.accountant_individual.onRendered(() => {
                   utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
               },
             ];
-
           } else if (AccountTree.replace(/\s/g, "") == "FixedAsset") {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
@@ -765,7 +763,6 @@ Template.accountant_individual.onRendered(() => {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else {
             if (flag) {
               let accountCode = "";
@@ -840,8 +837,7 @@ Template.accountant_individual.onRendered(() => {
         templateObject.netAssetTotal.set(
           utilityService.modifynegativeCurrencyFormat(totalNetAssets)
         );
-      }
-  
+      }  
   
       templateObject.records.set(records);
       if (templateObject.records.get()) {
@@ -977,6 +973,10 @@ Template.accountant_individual.onRendered(() => {
 });
 
 Template.accountant_individual.events({
+  "click #btnaddAccountant": function () {
+    FlowRouter.go("/reportsAccountantSettings");
+  },
+
   'click .custom-control-input': function(event) {
     const templateObject = Template.instance();
     let accountantList = templateObject.datatablerecords.curValue;
@@ -988,9 +988,10 @@ Template.accountant_individual.events({
     for(var i=0; i<accountantList.length; i++){
       if(accountantList[i].id == accountantItemID){
         if($("#"+$(event.target).attr('id')).prop('checked') == true){    
-          innerHtml += "<div class='col-6 col-md-12' id='row-"+accountantPanID+"-"+accountantList[i].id+"' style='border-bottom: 1px solid #ccc;'>";
-          innerHtml += "<div style='width:80%; float:left; padding-left:6px; padding-top:6px'><label>"+accountantList[i].accountname+"</label></div>";
-          innerHtml += "<div style='float:left; padding-top:6px'><label>"+accountantList[i].balance+"</label></div>";
+          innerHtml += "<div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0' id='row-"+accountantPanID+"-"+accountantList[i].id+"'>";
+          innerHtml += "<div style='width:calc(100% - 180px); float:left; padding-top:4px'>"+accountantList[i].accountname+"</div>";
+          innerHtml += "<div style='float:left; padding-top:4px; width:90px'>"+accountantList[i].balance+"</div>";
+          innerHtml += "<div style='float:left; padding-top:4px; width:90px'>"+accountantList[i].balance+"</div>";
           innerHtml += "</div>";
 
           $("#reportAccPan"+accountantPanID).append(innerHtml);
@@ -1179,6 +1180,14 @@ Template.accountant_individual.events({
 });
 
 Template.accountant_individual.helpers({
+  accountantPanList1: (no) => {
+    return no < 6;
+  },
+
+  accountantPanList2: (no) => {
+    return no >= 6;
+  },
+
   countryList: () => {
       return Template.instance().countryData.get();
   },
@@ -1205,6 +1214,11 @@ Template.accountant_individual.helpers({
     return loggedCompany;
   },
 
+  fiscalYearEnding: () => {
+    let date = new Date(dateAsOf);
+    return date.getFullYear() - 1;
+  },
+
   dateAsAt: () => {
     //var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];;
     //var date = new Date();
@@ -1215,8 +1229,6 @@ Template.accountant_individual.helpers({
 
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-
-
 
     if (!amount || amount.trim() == "") {
       return "";
@@ -1258,7 +1270,6 @@ Template.accountant_individual.helpers({
       var distancea = Math.abs(dateTo - a);
       var distanceb = Math.abs(dateTo - b);
       return distancea - distanceb; // sort a before b when the distance is smaller
-
     });
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
