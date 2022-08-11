@@ -35,7 +35,7 @@
                                 <div class="card-body" style="cursor: pointer;">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col mr-2">
-                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="new-leads-month">000</span></div>
                                             <div class="text-dark h6 small-heading font-weight-bold mb-0" data-toggle="tooltip" data-bs-tooltip="" title="Close Deals"><span>New Leads this month</span></div>
                                         </div>
                                     </div>
@@ -47,7 +47,7 @@
                                 <div class="card-body" style="cursor: pointer;">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col mr-2">
-                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="new-deals-month">000</span></div>
                                             <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center" data-toggle="tooltip" data-bs-tooltip="" title="Close Deals"><span>New Deals this month</span></div>
                                         </div>
                                     </div>
@@ -59,7 +59,7 @@
                                 <div class="card-body" style="cursor: pointer;">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col mr-2">
-                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="closed-deals-month">000</span></div>
                                             <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center" data-toggle="tooltip" data-bs-tooltip="" title="some text on hover"><span>Closed Deals this month</span></div>
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@
                                 <div class="card-body" style="cursor: pointer;">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col mr-2">
-                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="closed-deals-year">000</span></div>
                                             <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center"  data-toggle="tooltip" data-bs-tooltip="" title="some text on hover"><span>Closed Deals Total</span></div>
                                         </div>
                                     </div>
@@ -83,7 +83,7 @@
                                 <div class="card-body" style="cursor: pointer;">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col mr-2">
-                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="sales-winrate">000</span></div>
                                             <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center" data-toggle="tooltip" data-bs-tooltip="" title="Close Deals"><span>Win Rate</span></div>
                                         </div>
                                     </div>
@@ -95,7 +95,7 @@
                                 <div class="card-body" style="cursor: pointer;">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col mr-2">
-                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="avg-sales-cycle">000</span></div>
                                             <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center" data-toggle="tooltip" data-bs-tooltip="" title="Close Deals"><span>Avg. Sales Cycle</span></div>
                                         </div>
                                     </div>
@@ -170,7 +170,7 @@
             <hr>
             <div class="row align-items-center pt-3 pb-3">
                 <div class="col-md-5 no-gutters">
-                    <div id='calendar'></div>
+                    {{> appointmentsWidget}}
                 </div>
                 <div class="col-md-6 no-gutters">
                    <div class="row no-gutters">
@@ -191,10 +191,8 @@
                 </div>
             </div>
             <hr>
-            <div class="row pt-3 pb-3">
-                <div class="col-md-12">
-                    <h2>Leads Section</h2>
-                </div>
+            <div class="pt-3 pb-3" style="overflow: hidden;">
+                    {{> leadlist}}
             </div>
         {{/if}}
     </div>
