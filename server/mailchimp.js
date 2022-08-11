@@ -237,8 +237,8 @@ Meteor.methods({
       const apiKyes = await getApikeyFromVS1(erpGet, _headers);
 
       const apikey = apiKyes.mailchimpApiKey;
-      // tempcode
-      // const campaignId = 'mailchimpCampaignID';
+      // tempcode until backend add mailchimpCampaignID
+      // const campaignId = 'b28d9f0a1a';
       const campaignId = apiKyes.mailchimpCampaignID;
 
 
@@ -248,8 +248,16 @@ Meteor.methods({
         server: apiregion,
       });
 
+      email = email ? email : erpGet.ERPUsername;
+
+      // this is fetching first campaign id from all campaign list
+      // const campaigns = await mailchimp.campaigns.list();
+      // const campaignId = campaigns.campaigns[0].id;
+
       let response = await mailchimp.reports.getCampaignOpenDetails(campaignId);
-      response = response.filter(member => member.email_address === email);
+
+      // response = response.members.filter(member => member.email_address === email);
+      response = response.members;
 
       // // tempcode this can be used if backend install crypto-js
       // const subscriber_hash = CryptoJS.MD5(email.toLowerCase());

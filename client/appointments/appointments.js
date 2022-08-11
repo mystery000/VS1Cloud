@@ -887,7 +887,7 @@ Template.appointments.onRendered(function () {
 
                 var endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
                 var startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
-                
+
                 if(FlowRouter.current().queryParams.leadid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
                 } else if (FlowRouter.current().queryParams.customerid){
@@ -11124,13 +11124,18 @@ Template.registerHelper('and', (a, b) => {
 
 openAppointModalDirectly = (leadid, templateObject, auto = false) => {
     let contactService = new ContactService();
+    $('#frmAppointment')[0].reset();
+    // templateObject.getAllProductData();
+    $(".paused").hide();
     if(FlowRouter.current().queryParams.leadid) {
+
         contactService.getOneLeadDataEx(leadid).then(function (data) {
             // return;
             //$("#updateID").val("");
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || '';
             let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("employee_name").value = Session.get('mySessionEmployee');
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -11161,7 +11166,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -11190,7 +11195,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');
@@ -11201,6 +11206,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || '';
             let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("employee_name").value = Session.get('mySessionEmployee');
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -11231,7 +11237,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -11260,7 +11266,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');
@@ -11271,6 +11277,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || '';
             let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("employee_name").value = Session.get('mySessionEmployee');
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -11301,7 +11308,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -11330,7 +11337,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');
