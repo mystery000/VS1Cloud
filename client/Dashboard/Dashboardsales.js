@@ -2,9 +2,6 @@ import { ReactiveVar } from "meteor/reactive-var";
 const highCharts = require('highcharts');
 require('highcharts/modules/exporting')(highCharts);
 require('highcharts/highcharts-more')(highCharts);
-const GaugeChart = require('gauge-chart');
-
-import "gauge-chart";
 
 Template.dashboardsales.onCreated(function () {
   this.loggedDb = new ReactiveVar("");
@@ -19,26 +16,90 @@ Template.dashboardsales.onRendered(function () {
   if (isDashboard) {
     templateObject.includeDashboard.set(true);
   }
-  
-  function renderSPMEmployeeChart(employeeNames, employeeSalesQuota) {
-    highCharts.chart('spd-employee-chart', {
+
+  function renderCharts() {
+    renderComparisonChart();
+    renderOppertunitiesChart();
+  };
+
+  function renderComparisonChart() {
+    const series = [{
+        name: 'Quota Amount',
+        data: [10000, 15000, 20000]
+    }, {
+        name: 'Expected Amount',
+        data: [2800, 18000, 30000]
+    }, {
+        name: 'Closed/Won',
+        data: [5100, 12000, 15000]
+    }];
+    const categories =  ['April 2014', 'July 2014', 'Oct 2014'];
+
+    highCharts.chart('sd-comparison-chart', {
+        title: {
+            text: 'Sales Performance VS Quota'
+        },
+        yAxis: {
+            title: {
+                text: ''
+            }
+        },
+        xAxis: {
+            categories
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                }
+            }
+        },
+        series,
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+    });
+  }
+
+  function renderOppertunitiesChart() {
+    const amount = [1000, 2000, 3000, 4000, 5000];
+    const expectedAmount = [1500, 2500, 2500, 4500, 5000];
+    const categories = ['Qualification', 'Process Analysis', 'Negotiation Review', 'Needs Analysis', 'Proposal Price Quote'];
+    highCharts.chart('opens-oppertunities-chart', {
       series: [{
-          name: 'Employees',
-          data: employeeSalesQuota
+          name: 'Amount',
+          data: amount
           
-      }],
+      }, {
+        name: 'Expected Amount',
+        data: expectedAmount
+        
+    }],
       chart: {
           type: 'column'
       },
-      title: {
-          text: ''
-      },
       subtitle: {
           text:
-              'Discount Given By Employees'
+              'Open Oppertunities by Stage'
       },
       xAxis: {
-          categories: employeeNames
+          categories
       },
       yAxis: {
           allowDecimals: false,
@@ -55,112 +116,8 @@ Template.dashboardsales.onRendered(function () {
     });
   }
 
-  function renderSPDCharts() {
-    // Properties of the gauge
-    let gaugeOptions = {
-      hasNeedle: true,
-      needleValue: 20,
-      needleColor: 'gray',
-      needleUpdateSpeed: 1000,
-      arcColors: ['#FE4619', '#F6961D', '#ECDB21', '#AEE12B', '#69D72D', 'lightgray'],
-      arcLabels: ['200k', '400k', '600k', '800k'],
-      arcDelimiters: [20, 40, 60, 80],
-      rangeLabel: ['0', '100'],
-      centralLabel: '',
-    }
-    // Drawing and updating the chart
-    GaugeChart.gaugeChart(document.querySelector('#spd-gauge-area1'), 400, gaugeOptions).updateNeedle(50);
-    GaugeChart.gaugeChart(document.querySelector('#spd-gauge-area2'), 400, gaugeOptions).updateNeedle(50);
-    GaugeChart.gaugeChart(document.querySelector('#spd-gauge-area3'), 400, gaugeOptions).updateNeedle(50);
-    GaugeChart.gaugeChart(document.querySelector('#spd-gauge-area4'), 400, gaugeOptions).updateNeedle(50);
-    GaugeChart.gaugeChart(document.querySelector('#spd-gauge-area5'), 400, gaugeOptions).updateNeedle(50);
-    GaugeChart.gaugeChart(document.querySelector('#spd-gauge-area6'), 400, gaugeOptions).updateNeedle(50);
-  }
-  setTimeout(() => renderSPDCharts(), 500);
-  templateObject.getDashboardData = function () {
-    getVS1Data('TProspectEx').then(function (dataObject) {
-        if(dataObject.length) {
-            let {tprospect = []} = JSON.parse(dataObject[0].data);
-            let leadsThisMonthCount = 0;
-            const currentMonth = new Date().getMonth();
-            tprospect.forEach(prospect  =>  {
-                if(currentMonth === new Date(prospect.fields.CreationDate).getMonth() && prospect.fields.SourceName) {
-                    leadsThisMonthCount += 1;
-                }
-            });
-            $('#new-leads-month').text(leadsThisMonthCount);
-        }
-    }).catch(function (err) {
-        console.log('$$err', err);
-    });
+  setTimeout(() => renderCharts(), 500);
 
-    getVS1Data('TQuoteList').then(function (dataObject) {
-        if(dataObject.length) {
-            let {tquotelist = []} = JSON.parse(dataObject[0].data);
-            let dealsThisMonthCount = 0;
-            let convertedQuotesCount = 0;
-            let nonConvertedQuotesCount = 0;
-            let convertedQuotesAmount = 0;
-            const currentMonth = new Date().getMonth();
-            console.log('$$tquotelist', tquotelist);
-            tquotelist.forEach(tquote  =>  {
-                if(currentMonth === new Date(tquote.SaleDate).getMonth()) {
-                    dealsThisMonthCount += 1;
-                    if(tquote.Converted) {
-                        convertedQuotesCount +=1;
-                        convertedQuotesAmount += tquote.Balance;
-                    } else {
-                        nonConvertedQuotesCount += 1;
-                    }
-                }
-            });
-            const winRate = convertedQuotesCount ? parseInt((convertedQuotesCount/convertedQuotesCount+nonConvertedQuotesCount) * 100) : 0;
-            const avgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount/30 : convertedQuotesAmount;
-            $('#sales-winrate').text(winRate);
-            $('#new-deals-month').text(dealsThisMonthCount);
-            $('#avg-sales-cycle').text(avgSalesCycle);
-        }
-    }).catch(function (err) {
-        console.log('$$err', err);
-    });
-
-    getVS1Data('TInvoiceList').then(function (dataObject) {
-        if(dataObject.length) {
-            let {tinvoicelist} = JSON.parse(dataObject[0].data);
-            let closedDealsThisMonth = 0;
-            let closedDealsThisYear = 0;
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            tinvoicelist.forEach(tinvoice  =>  {
-                if(currentMonth === new Date(tinvoice.SaleDate).getMonth()) {
-                    closedDealsThisMonth += tinvoice.Balance;
-                }
-
-                if(currentYear === new Date(tinvoice.SaleDate).getFullYear()) {
-                    closedDealsThisYear += tinvoice.Balance;
-                }
-            });
-            $('#closed-deals-month').text(closedDealsThisMonth);
-            $('#closed-deals-year').text(closedDealsThisYear);
-        }
-    }).catch(function (err) {
-        console.log('$$err', err);
-    });
-
-    getVS1Data('TEmployee').then(function (dataObject) {
-        let employeeNames = [];
-        let employeeSalesQuota = [];
-        if(dataObject.length) {
-            let {temployee = []} = JSON.parse(dataObject[0].data);
-            temployee.forEach(employee => {
-                employeeNames.push(employee.fields.EmployeeName);
-                employeeSalesQuota.push(isNaN(parseInt(employee.fields.CustFld12)) ? 0 : parseInt(employee.fields.CustFld12));
-            });
-        }
-        renderSPMEmployeeChart(employeeNames, employeeSalesQuota);
-    });
-  }
-  templateObject.getDashboardData();
 });
 
 Template.dashboardsales.helpers({
@@ -180,6 +137,3 @@ Template.dashboardsales.helpers({
 Template.dashboardsales.events({
   
 });
-
-
-
