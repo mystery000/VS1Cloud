@@ -238,8 +238,8 @@ Meteor.methods({
 
       const apikey = apiKyes.mailchimpApiKey;
       // tempcode until backend add mailchimpCampaignID
-      const campaignId = 'b28d9f0a1a';
-      // const campaignId = apiKyes.mailchimpCampaignID;
+      // const campaignId = 'b28d9f0a1a';
+      const campaignId = apiKyes.mailchimpCampaignID;
 
 
       const apiregion = apikey.split('-')[1];
