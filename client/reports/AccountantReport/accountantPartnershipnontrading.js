@@ -395,7 +395,6 @@ Template.accountant_partnershipnontrading.onRendered(() => {
       templateObject.dateAsAt.set(begunDate);
 
       getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
-
         let data = JSON.parse(dataObject[0].data);
         var dataInfo = {
             id: data.Id || '',
@@ -411,32 +410,31 @@ Template.accountant_partnershipnontrading.onRendered(() => {
 
         let headerHtml = "<span>"+dataInfo.firstname+" "+dataInfo.lastname+", CPA</span><br>";
         headerHtml += "<span>"+dataInfo.address+", "+dataInfo.towncity+", "+dataInfo.postalzip+", "+dataInfo.stateregion+", "+dataInfo.country+"</span>";
-        headerHtml += "<h3>Partnership Non Trading</h3>";
+        headerHtml += "<h3>Financial Statement</h3>";
         headerHtml += "<span>"+dataInfo.companyname+"<br>For the year ended "+(new Date())+"</span>";
 
         $("#reportsAccountantHeader").html(headerHtml);
       })
       .catch(function (err) {
         // taxRateService.getAccountantCategory().then(function (data) {
-        //     for(let i=0; i<data.tdeptclass.length; i++){
-        //         var dataInfo = {
-        //             id: data.tdeptclass[i].Id || '',
-        //             firstname: data.tdeptclass[i].FirstName || '-',
-        //             lastname: data.tdeptclass[i].LastName || '-',
-        //             companyname: data.tdeptclass[i].CompanyName || '-',
-        //             address: data.tdeptclass[i].Address || '-',
-        //             docname: data.tdeptclass[i].DocName || '-',
-        //             towncity: data.tdeptclass[i].TownCity || '-',
-        //             postalzip: data.tdeptclass[i].PostalZip || '-',
-        //             stateregion: data.tdeptclass[i].StateRegion || '-',
-        //             country: data.tdeptclass[i].Country || '-',
-        //             status:data.tdeptclass[i].Active || 'false',
-        //         };
-        //     }
+        //   for(let i=0; i<data.tdeptclass.length; i++){
+        //       var dataList = {
+        //           id: data.tdeptclass[i].Id || '',
+        //           firstname: data.tdeptclass[i].FirstName || '-',
+        //           lastname: data.tdeptclass[i].LastName || '-',
+        //           companyname: data.tdeptclass[i].CompanyName || '-',
+        //           address: data.tdeptclass[i].Address || '-',
+        //           docname: data.tdeptclass[i].DocName || '-',
+        //           towncity: data.tdeptclass[i].TownCity || '-',
+        //           postalzip: data.tdeptclass[i].PostalZip || '-',
+        //           stateregion: data.tdeptclass[i].StateRegion || '-',
+        //           country: data.tdeptclass[i].Country || '-',
+        //           status:data.tdeptclass[i].Active || 'false',
+        //       };
+        //   }
         // }).catch(function (err) {
         // });
-      });
-      
+      });      
     });
 
     templateObject.getBalanceSheetReports = async (dateAsOf) => {
@@ -515,12 +513,13 @@ Template.accountant_partnershipnontrading.onRendered(() => {
             recordObj.dataArrHeader = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-  
-          } else if (i == 1 || i == 2 || AccountTree == "") {
+          } 
+          else if (i == 1 || i == 2 || AccountTree == "") {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-          } else if (AccountTree.replace(/\s/g, "") == "TotalChequeorSaving") {
+          } 
+          else if (AccountTree.replace(/\s/g, "") == "TotalChequeorSaving") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -537,8 +536,8 @@ Template.accountant_partnershipnontrading.onRendered(() => {
                   utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
-  
-          } else if (
+          } 
+          else if (
             AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable"
           ) {
             recordObj.dataArrTotal = [
@@ -558,8 +557,8 @@ Template.accountant_partnershipnontrading.onRendered(() => {
               },
               ,
             ];
-  
-          } else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
+          } 
+          else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -576,8 +575,8 @@ Template.accountant_partnershipnontrading.onRendered(() => {
                   utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
-  
-          } else if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
+          }
+          else if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -594,12 +593,13 @@ Template.accountant_partnershipnontrading.onRendered(() => {
                   utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
               },
             ];
-          } else if (AccountTree.replace(/\s/g, "") == "FixedAsset") {
+          } 
+          else if (AccountTree.replace(/\s/g, "") == "FixedAsset") {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-  
-          } else if (AccountTree.replace(/\s/g, "") == "TotalFixedAsset") {
+          } 
+          else if (AccountTree.replace(/\s/g, "") == "TotalFixedAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -616,7 +616,8 @@ Template.accountant_partnershipnontrading.onRendered(() => {
                   utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
               },
             ];
-          } else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
+          } 
+          else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -635,14 +636,16 @@ Template.accountant_partnershipnontrading.onRendered(() => {
             ];
   
             GrandTotalAsset = TotalAsset_Liability;
-          } else if (
+          } 
+          else if (
             AccountTree.replace(/\s/g, "") == "Liabilities" ||
             AccountTree.replace(/\s/g, "") == "CurrentLiabilities"
           ) {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-          } else if (AccountTree.replace(/\s/g, "") == "TotalCreditCardAccount") {
+          } 
+          else if (AccountTree.replace(/\s/g, "") == "TotalCreditCardAccount") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -659,7 +662,8 @@ Template.accountant_partnershipnontrading.onRendered(() => {
                   utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
-          } else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
+          } 
+          else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -676,7 +680,8 @@ Template.accountant_partnershipnontrading.onRendered(() => {
                   utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
-          } else if (
+          } 
+          else if (
             AccountTree.replace(/\s/g, "") == "TotalOtherCurrentLiability"
           ) {
             recordObj.dataArrTotal = [
@@ -694,7 +699,8 @@ Template.accountant_partnershipnontrading.onRendered(() => {
                 amount: utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
-          } else if (
+          } 
+          else if (
             AccountTree.replace(/\s/g, "") == "TotalCurrentLiabilities"
           ) {
             recordObj.dataArrTotal = [
@@ -713,7 +719,8 @@ Template.accountant_partnershipnontrading.onRendered(() => {
                   utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
               },
             ];
-          } else if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
+          } 
+          else if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -760,6 +767,7 @@ Template.accountant_partnershipnontrading.onRendered(() => {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
+            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else {
             if (flag) {
               let accountCode = "";
@@ -834,7 +842,7 @@ Template.accountant_partnershipnontrading.onRendered(() => {
         templateObject.netAssetTotal.set(
           utilityService.modifynegativeCurrencyFormat(totalNetAssets)
         );
-      }  
+      }
   
       templateObject.records.set(records);
       if (templateObject.records.get()) {
@@ -930,8 +938,7 @@ Template.accountant_partnershipnontrading.onRendered(() => {
           break;
         case "May":
           monthCase = 5;
-          break;
-  
+          break;  
         case "June":
           monthCase = 6;
           break;
@@ -970,6 +977,10 @@ Template.accountant_partnershipnontrading.onRendered(() => {
 });
 
 Template.accountant_partnershipnontrading.events({
+  "click #btnaddAccountant": function () {
+    FlowRouter.go("/reportsAccountantSettings");
+  },
+
   'click .custom-control-input': function(event) {
     const templateObject = Template.instance();
     let accountantList = templateObject.datatablerecords.curValue;
@@ -981,9 +992,10 @@ Template.accountant_partnershipnontrading.events({
     for(var i=0; i<accountantList.length; i++){
       if(accountantList[i].id == accountantItemID){
         if($("#"+$(event.target).attr('id')).prop('checked') == true){    
-          innerHtml += "<div class='col-6 col-md-12' id='row-"+accountantPanID+"-"+accountantList[i].id+"' style='border-bottom: 1px solid #ccc;'>";
-          innerHtml += "<div style='width:80%; float:left; padding-left:6px; padding-top:6px'><label>"+accountantList[i].accountname+"</label></div>";
-          innerHtml += "<div style='float:left; padding-top:6px'><label>"+accountantList[i].balance+"</label></div>";
+          innerHtml += "<div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0' id='row-"+accountantPanID+"-"+accountantList[i].id+"'>";
+          innerHtml += "<div style='width:calc(100% - 180px); float:left; padding-top:4px'>"+accountantList[i].accountname+"</div>";
+          innerHtml += "<div style='float:left; padding-top:4px; width:90px'>"+accountantList[i].balance+"</div>";
+          innerHtml += "<div style='float:left; padding-top:4px; width:90px'>"+accountantList[i].balance+"</div>";
           innerHtml += "</div>";
 
           $("#reportAccPan"+accountantPanID).append(innerHtml);
@@ -1172,6 +1184,14 @@ Template.accountant_partnershipnontrading.events({
 });
 
 Template.accountant_partnershipnontrading.helpers({
+  accountantPanList1: (no) => {
+    return no < 6;
+  },
+
+  accountantPanList2: (no) => {
+    return no >= 6;
+  },
+
   countryList: () => {
       return Template.instance().countryData.get();
   },
@@ -1198,6 +1218,11 @@ Template.accountant_partnershipnontrading.helpers({
     return loggedCompany;
   },
 
+  fiscalYearEnding: () => {
+    let date = new Date(dateAsOf);
+    return date.getFullYear() - 1;
+  },
+
   dateAsAt: () => {
     //var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];;
     //var date = new Date();
@@ -1208,7 +1233,7 @@ Template.accountant_partnershipnontrading.helpers({
 
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-
+    
     if (!amount || amount.trim() == "") {
       return "";
     }
@@ -1219,6 +1244,7 @@ Template.accountant_partnershipnontrading.helpers({
 
     amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
+    // Lets remove the minus character
     const isMinus = amount < 0;
     if (isMinus == true) amount = amount * -1; // Make it positive
 
@@ -1248,7 +1274,6 @@ Template.accountant_partnershipnontrading.helpers({
       var distancea = Math.abs(dateTo - a);
       var distanceb = Math.abs(dateTo - b);
       return distancea - distanceb; // sort a before b when the distance is smaller
-
     });
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
@@ -1265,6 +1290,7 @@ Template.accountant_partnershipnontrading.helpers({
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
+
 
     return convertedAmount;
   },

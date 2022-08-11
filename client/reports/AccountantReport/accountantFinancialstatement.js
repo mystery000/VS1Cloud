@@ -977,6 +977,10 @@ Template.accountant_financialstatement.onRendered(() => {
 });
 
 Template.accountant_financialstatement.events({
+  "click #btnaddAccountant": function () {
+    FlowRouter.go("/reportsAccountantSettings");
+  },
+
   'click .custom-control-input': function(event) {
     const templateObject = Template.instance();
     let accountantList = templateObject.datatablerecords.curValue;

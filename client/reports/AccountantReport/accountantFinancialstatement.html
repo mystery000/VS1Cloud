@@ -8,10 +8,10 @@
                 <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help 
                     <i class="fa fa-question-circle-o " style="font-size: 20px;"></i>
                 </a>
-                <!-- <button id="btndispAccountant" name="btndispAccountant" class="btn btn-primary float-right" type="button" style="width: 124px; text-align: center; padding: 6px;" autocomplete="off">
+                <button id="btnaddAccountant" name="btnaddAccountant" class="btn btn-primary float-right" type="button" style="width: 160px; text-align: center; padding: 6px;" autocomplete="off">
                     <i class="icon ion-plus"></i>
-                    Create Report
-                </button>&nbsp; -->
+                    Add Accountant
+                </button>&nbsp;
             </h2>
         </header>
     </div>
@@ -103,20 +103,19 @@
                                     <div class="col">
                                         <ul class="list-group">
                                             <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">3</span>Compilation Report</li>
-                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">4</span>Trustee Declaration</li>
+                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">4</span>Directors Declaration</li>
                                             <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">5</span>Income Statement</li>
-                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">6</span>Trust Income Distribution</li>
-                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">7</span>Balance Sheet</li>
-                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">8</span>Beneficiary Accounts</li>
-                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">9</span>Notes to the Financial Statements</li>
-                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">13</span>Depreciation Schedule</li>
+                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">6</span>Appropriation Statement</li>
+                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">7</span>Balance Sheet - Summarised</li>
+                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">8</span>Notes to the Financial Statements</li>
+                                            <li class="list-group-item" style="border:0; padding:8px"><span style="width:30px; float:left">12</span>Depreciation Schedule</li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 2 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 2 of 12</span>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +136,7 @@
                                         <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
                                         <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at 30 June {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1. </span>
                                         <span style="float:left; padding-bottom:10px"><b>The Responsibility of the Director</b></span>
-                                        <span style="float:left; padding-bottom:12px">The director of Trustee 1 is solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
+                                        <span style="float:left; padding-bottom:12px">The director of {{companyname}} is solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
                                         <span style="float:left; padding-bottom:10px"><b>Our Responsibility</b></span>
                                         <span style="float:left; padding-bottom:12px">On the basis of information provided by the director we have compiled the accompanying special purpose financial statements in accordance with the basis of accounting as described in Note 1 to the financial statements and APES 315 Compilation of Financial Information.</span>
                                         <span style="float:left; padding-bottom:12px">We have applied our expertise in accounting and financial reporting to compile these financial statements in accordance with the basis of accounting described in Note 1 to the financial statements. We have complied with the relevant ethical requirements of APES 110 Code of Ethics for Professional Accountants.</span>
@@ -156,8 +155,8 @@
                                 </div>
                                 <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 3 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 3 of 12</span>
                                     </div>
                                 </div>
                             </div>
@@ -168,17 +167,18 @@
                             <div class="card-body">
                                 <div class="row" style="margin-top:20px; margin-bottom:15px">
                                     <div class="col">
-                                        <h3><b>Trustee Declaration</b></h3>
+                                        <h3><b>Directors Declaration</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
                                         <h6><b>For the year ended 30 June {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <span style="float:left; padding-bottom:12px">The director of Trustee 1 declares that {{companyname}} is not a reporting entity and that this special purpose financial report should be prepared in accordance with the accounting policies outlined in Note 1 of the financial statements.</span>
-                                        <span style="float:left; padding-bottom:12px">In accordance with a resolution of the Board of Directors, the director of Trustee 1 declares that:</span>
-                                        <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes present fairly {{companyname}}'s financial position as at 30 June {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 of the financial statements.</span>
-                                        <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the directors' opinion there are reasonable grounds to believe that {{companyname}} will be able to pay its debts as and when they become due and payable.</span>
+                                        <span style="float:left; padding-bottom:12px">The director has determined that the company is not a reporting entity and that this special purpose financial report should be prepared in accordance with the accounting policies outlined in Note 1 to the financial statements.</span>
+                                        <span style="float:left; padding-bottom:12px">The director of the company declares that:</span>
+                                        <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes, present fairly the company’s financial position as at 30 June {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 to the financial statements; and</span>
+                                        <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the directors’ opinion there are reasonable grounds to believe that the company will be able to pay its debts as and when they become due and payable.</span>
+                                        <span style="float:left; padding-bottom:12px">This declaration is made in accordance with a resolution of the Board of Directors.</span>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top:40px; width:300px">
@@ -188,13 +188,12 @@
                                             <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
                                         </div>
                                         <span style="float:left; padding-left:65px; padding-bottom:20px; width:100%">Director 1</span>
-                                        <span style="float:left;">Dated: 31 August 2021</span>
                                     </div>
                                 </div>
                                 <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 4 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 4 of 12</span>
                                     </div>
                                 </div>
                             </div>
@@ -255,22 +254,6 @@
                                             </div>
                                             <div class="row" style="margin-left:10px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Entertainment</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>27.20</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-left:10px">
-                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Motor Vehicle</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>175.91</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-left:10px">
-                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Travel and Accommodation</div>
                                                     <div style='float:left; padding-top:4px; width:90px'></div>
                                                     <div style='float:left; padding-top:4px; width:90px'>462.14</div>
@@ -311,9 +294,25 @@
                                             </div>
                                             <div class="row" style="margin-left:10px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Entertainment</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'></div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>27.20</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-left:10px">
+                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Light, Power, Heating</div>
                                                     <div style='float:left; padding-top:4px; width:90px'></div>
                                                     <div style='float:left; padding-top:4px; width:90px'>350.00</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-left:10px">
+                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Motor Vehicle Expenses</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'></div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>175.91</div>
                                                     <div style='float:left; padding-top:4px; width:90px'>-</div>
                                                 </div>
                                             </div>
@@ -367,7 +366,7 @@
                                             </div>
                                             <div style="border-top: 1px solid #858796; float:left; width:100%;">
                                                 <div style='width: 100%; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px; font-size:15px'><b>Profit / (Loss) Before Distribution</b></div>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px; font-size:15px'><b>Profit / (Loss) Before Taxation</b></div>
                                                     <div style='float:left; padding-top:4px; width:90px'></div>
                                                     <div style='float:left; padding-top:4px; width:90px'><b>(10,186.24)</b></div>
                                                     <div style='float:left; padding-top:4px; width:90px'><b>(1,856.00)</b></div>
@@ -375,7 +374,15 @@
                                             </div>
                                             <div style="border-top: 1px solid #858796; float:left; width:100%;">
                                                 <div style='width: 100%; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px; font-size:15px'><b>Undistributed Income</b></div>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px; font-size:15px'><b>Net Profit After Tax</b></div>
+                                                    <div style='float:left; padding-top:4px; width:90px'></div>
+                                                    <div style='float:left; padding-top:4px; width:90px'><b>(10,186.24)</b></div>
+                                                    <div style='float:left; padding-top:4px; width:90px'><b>(1,856.00)</b></div>
+                                                </div>
+                                            </div>
+                                            <div style="border-top: 1px solid #858796; float:left; width:100%;">
+                                                <div style='width: 100%; padding:0'>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px; font-size:15px'><b>Net Profit After Dividends Paid</b></div>
                                                     <div style='float:left; padding-top:4px; width:90px'></div>
                                                     <div style='float:left; padding-top:4px; width:90px'><b>(10,186.24)</b></div>
                                                     <div style='float:left; padding-top:4px; width:90px'><b>(1,856.00)</b></div>
@@ -389,8 +396,8 @@
                                         The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
                                     </div>
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 5 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 5 of 12</span>
                                     </div>
                                 </div>
                             </div>
@@ -401,68 +408,9 @@
                             <div class="card-body">
                                 <div class="row" style="margin-top:20px; margin-bottom:15px">
                                     <div class="col">
-                                        <h3><b>Trust Income Distribution</b></h3>
+                                        <h3><b>Appropriation Statement</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
                                         <h6><b>For the year ended 30 June {{fiscalYearEnding}}</b></h6>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col" style="margin-bottom:20px">
-                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
-                                            <div style='width: 100%; padding:0'>
-                                                <div style='width:calc(100% - 180px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>2021</b></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>2020</b></div>
-                                            </div>
-                                        </div>
-                                        <div style="margin-top:10px; float:left; width:100%">
-                                            <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
-                                                <b>Trust Income Distribution</b>
-                                            </div>
-                                            <div class="row" style="margin-left:10px">
-                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Current Year Earnings</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(10,186.24)</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-left:10px">
-                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Net Trust Income for Distribution</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(10,186.24)</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-left:10px">
-                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Undistributed Trust Income</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(10,186.24)</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
-                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
-                                        The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
-                                    </div>
-                                    <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 6 of 13</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="page-7" style="display:none; font-size:13px">
-                        <div class="card shadow mb-4" style="width:800px; height:1150px; padding:30px; margin:auto">
-                            <div class="card-body">
-                                <div class="row" style="margin-top:20px; margin-bottom:15px">
-                                    <div class="col">
-                                        <h3><b>Balance Sheet</b></h3>
-                                        <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>As at 30 June {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -476,6 +424,69 @@
                                             </div>
                                         </div>
                                         <div style="margin-top:10px; float:left; width:100%">
+                                            <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
+                                                <b>Retained Earnings after Appropriation</b>
+                                            </div>
+                                            <div class="row" style="margin-left:10px">
+                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Retained Earnings at Start of Year</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'></div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-left:10px">
+                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Profit/(Loss) Before Taxation</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'></div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>(10,186.24)</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-left:10px">
+                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Retained Earnings After Appropriation</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'></div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>(12,042.24)</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
+                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
+                                        The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
+                                    </div>
+                                    <div class="col" style="font-size:12px">
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 6 of 12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="page-7" style="display:none; font-size:13px">
+                        <div class="card shadow mb-4" style="width:800px; height:1150px; padding:30px; margin:auto">
+                            <div class="card-body">
+                                <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                    <div class="col">
+                                        <h3><b>Balance Sheet - Summarised</b></h3>
+                                        <h6><b>{{companyname}}</b></h6>
+                                        <h6><b>As at 30 June {{fiscalYearEnding}}</b></h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col" style="margin-bottom:20px">
+                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
+                                            <div style='width: 100%; padding:0'>
+                                                <div style='width:calc(100% - 270px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
+                                                <div style='float:left; padding-top:4px; width:90px'><b>NOTES</b></div>
+                                                <div style='float:left; padding-top:4px; width:90px'><b>30 JUN 2021</b></div>
+                                                <div style='float:left; padding-top:4px; width:90px'><b>30 JUN 2020</b></div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:10px; float:left; width:100%">
                                             <div style="border-bottom: 1px solid #858796; font-size:15px">
                                                 <b>Assets</b>
                                             </div>
@@ -484,18 +495,18 @@
                                             </div>
                                             <div class="row" style="margin-left:20px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>GST</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>185.60</div>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Receivables</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>3</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>2,379.60</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>4,620.00</div>
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-left:20px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Accounts Receivable</div>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>GST</div>
                                                     <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>2,379.60</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>4,620.00</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>185.60</div>
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-left:20px">
@@ -557,6 +568,14 @@
                                             </div>
                                             <div class="row" style="margin-left:20px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Payables</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>9</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>3,489.65</div>
+                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-left:20px">
+                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 270px); float:left; padding-top:4px'>GST</div>
                                                     <div style='float:left; padding-top:4px; width:90px'></div>
                                                     <div style='float:left; padding-top:4px; width:90px'>64.54</div>
@@ -565,33 +584,9 @@
                                             </div>
                                             <div class="row" style="margin-left:20px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Accounts Payable</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>170.50</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-left:20px">
-                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Historical Adjustment</div>
                                                     <div style='float:left; padding-top:4px; width:90px'></div>
                                                     <div style='float:left; padding-top:4px; width:90px'>19,212.21</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-left:20px">
-                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>PAYG Withholdings Payable</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>3,014.00</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>-</div>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-left:20px">
-                                                <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Unpaid Expense Claims</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>305.15</div>
                                                     <div style='float:left; padding-top:4px; width:90px'>-</div>
                                                 </div>
                                             </div>
@@ -624,7 +619,7 @@
                                             </div>
                                             <div class="row" style="margin-left:10px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
-                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Undistributed Income</div>
+                                                    <div style='width:calc(100% - 270px); float:left; padding-top:4px'>Retained Earnings</div>
                                                     <div style='float:left; padding-top:4px; width:90px'></div>
                                                     <div style='float:left; padding-top:4px; width:90px'>(12,042.24)</div>
                                                     <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
@@ -646,52 +641,14 @@
                                         The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
                                     </div>
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 7 of 13</span>
+                                        <span>Financial Statements  | {{companyname}}</span>
+                                        <span style="float:right">page 7 of 12</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div id="page-8" style="display:none; font-size:13px">
-                        <div class="card shadow mb-4" style="width:800px; height:1150px; padding:30px; margin:auto">
-                            <div class="card-body">
-                                <div class="row" style="margin-top:20px; margin-bottom:15px">
-                                    <div class="col">
-                                        <h3><b>Beneficiary Accounts</b></h3>
-                                        <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>For the year ended 30 June {{fiscalYearEnding}}</b></h6>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col" style="margin-bottom:20px">
-                                        <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
-                                            <div style='width: 100%; padding:0'>
-                                                <div style='width:calc(100% - 180px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>2021</b></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>2020</b></div>
-                                            </div>
-                                        </div>
-                                        <div style="margin-top:10px; float:left; width:100%">
-                                            <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
-                                                <b>Beneficiary Accounts</b>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
-                                    <div style="width: calc(100% - 25px); padding:8px 0; font-size:12px; border-top:2px solid #858796; margin:auto">
-                                        The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
-                                    </div>
-                                    <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 8 of 13</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="page-9" style="display:none; font-size:13px">
                         <div class="card shadow mb-4" style="width:800px; height:1150px; padding:30px; margin:auto">
                             <div class="card-body">
                                 <div class="row" style="margin-top:20px; margin-bottom:15px">
@@ -704,29 +661,27 @@
                                 <div class="row">
                                     <div class="col" style="margin-bottom:20px">
                                         <label><b>1. Statement of Significant Accounting Policies</b></label>
-                                        <span style="float:left; padding-bottom:12px">The directors of the trustee company have prepared the financial statements of the trust on the basis that the trust is a non-reporting entity because there are no users dependent on general purpose financial statements. The financial statements are therefore special purpose financial statements that have been prepared in order to meet the requirements of the trust deed, the information needs of stakeholders and for the basis of preparation of the income tax return. The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the directors have determined are appropriate to meet the purposes of preparation. Such accounting policies are consistent with the previous period unless stated otherwise. The financial statements have been prepared on an accruals basis and are based on historical costs unless otherwise stated in the notes. The financial statements were authorised for issue on 31 August {{fiscalYearEnding}} by the directors of the trustee company.</span>
+                                        <span style="float:left; padding-bottom:8px">The directors have determined that the company is not a reporting entity and accordingly, this financial report is a special purpose report prepared for the sole purpose of distributing a financial report to members and must not be used for any other purpose. The directors have determined that the accounting policies adopted are appropriate to meet the needs of the members.</span>
+                                        <span style="float:left; padding-bottom:8px">The financial report has been prepared on an accrual basis and under the historical cost convention, except for certain assets, which, as noted, have been written down to fair value as a result of impairment. Unless otherwise stated, the accounting policies adopted are consistent with those of the prior year.</span>
+                                        <span style="float:left; padding-bottom:12px">The accounting policies that have been adopted in the preparation of the statements are as follows:</span>
                                         <span style="float:left; padding-bottom:8px"><b>Income Tax</b></span>
-                                        <span style="float:left; padding-bottom:12px">The income tax expense for the year comprises current income tax expense. The trust does not apply deferred tax.
-                                            Current income tax expense charged to the profit or loss is the tax payable on taxable income calculated using applicable
-                                            income tax rates enacted, or substantially enacted, as at the end of the reporting period. Current tax liabilities are therefore
-                                            measured at the amounts expected to be paid to / recovered from the relevant taxation authority</span>
+                                        <span style="float:left; padding-bottom:12px">The income tax expense for the year comprises current income tax expense. The company does not apply deferred tax. Current
+                                            income tax expense charged to the profit or loss is the tax payable on taxable income calculated using applicable income tax
+                                            rates enacted, or substantially enacted, as at 30 June {{fiscalYearEnding}}. Current tax liabilities are therefore measured at the amounts
+                                            expected to be paid to the relevant taxation authority.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Inventories</b></span>
                                         <span style="float:left; padding-bottom:12px">Inventories are carried at the lower of cost or net realisable value. Cost is based on the first-in, first out method and includes
                                             expenditure incurred in acquiring the inventories and bringing them to the existing condition and location.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Property, Plant and Equipment</b></span>
-                                        <span style="float:left; padding-bottom:12px">Property, plant and equipment is initially recorded at the cost of acquisition or fair value less, if applicable, any accumulated
-                                            depreciation and impairment losses. Plant and equipment that has been contributed at no cost, or for nominal cost, is valued
-                                            and recognised at the fair value of the asset at the date it is acquired. The plant and equipment is reviewed annually by directors
-                                            to ensure that the carrying amount is not in excess of the recoverable amount from these assets. The recoverable amount is
-                                            assessed on the basis of the expected net cash flows that will be received from the utilisation of the assets and the subsequent
-                                            disposal. The expected net cash flows have been discounted to their present values in estimating recoverable amounts.
-                                            Freehold land and buildings are measured at their fair value, based on periodic, but at least triennial, valuations by independent
-                                            external valuers, less subsequent depreciation for buildings.
-                                            Increases in the carrying amount of land and buildings arising on revaluation are credited in equity to a revaluation surplus.
-                                            Decreases against previous increases of the same asset are charged against fair value reserves in equity. All other decreases are
-                                            charged to profit or loss.
-                                            Any accumulated depreciation at the date of revaluation is offset against the gross carrying amount of the asset and the net
-                                            amount is restated to the revalued amount of the asset.</span>
+                                        <span style="float:left; padding-bottom:12px">Property, plant and equipment is initially recorded at the cost of acquisition or fair value less, if applicable, any accumulated depreciation and impairment losses.<br>
+                                            Plant and equipment that has been contributed at no cost, or for nominal cost, is valued and recognised at the fair value of the asset at the date it is acquired.<br>
+                                            The plant and equipment is reviewed annually by directors to ensure that the carrying amount is not in excess of the recoverable amount from these assets.<br>
+                                            The recoverable amount is assessed on the basis of the expected net cash flows that will be received from the utilisation of the assets and the subsequent disposal.<br>
+                                            The expected net cash flows have been discounted to their present values in estimating recoverable amounts.<br>
+                                            Freehold land and buildings are measured at their fair value, based on periodic, but at least triennial, valuations by independent external valuers, less subsequent depreciation for buildings.<br>
+                                            Increases in the carrying amount of land and buildings arising on revaluation are credited in equity to a revaluation surplus.<br>
+                                            Decreases against previous increases of the same asset are charged against fair value reserves in equity. All other decreases are charged to profit or loss.<br>
+                                            Any accumulated depreciation at the date of revaluation is offset against the gross carrying amount of the asset and the net amount is restated to the revalued amount of the asset.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Intangibles</b></span>
                                         <span style="float:left; padding-bottom:12px">Goodwill is recognised as the excess of the purchase price for a business acquired over the fair value of the net assets at the date
                                             of acquisition. Goodwill is assessed for impairment annually and is carried at cost less accumulated impairment losses</span>
@@ -740,14 +695,14 @@
                                         These notes should be read in conjunction with the attached compilation report.
                                     </div>
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 9 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 8 of 12</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="page-10" style="display:none; font-size:13px">
+                    <div id="page-9" style="display:none; font-size:13px">
                         <div class="card shadow mb-4" style="width:800px; height:1150px; padding:30px; margin:auto">
                             <div class="card-body">
                                 <div class="row" style="margin-bottom:40px">
@@ -765,7 +720,7 @@
                                         <span style="float:left; padding-bottom:12px">Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at 30 June
                                             {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Employee Benefits</b></span>
-                                        <span style="float:left; padding-bottom:12px">Provision is made for the liability for employee entitlements arising from services rendered by employees to balance date.
+                                        <span style="float:left; padding-bottom:12px">Provision is made for the liability for employee entitlements arising from services rendered by employees to 30 June {{fiscalYearEnding}}.
                                             Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Provisions</b></span>
                                         <span style="float:left; padding-bottom:12px">Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
@@ -775,25 +730,21 @@
                                         <span style="float:left; padding-bottom:12px">Cash and cash equivalents include cash on hand, deposits held on call with banks, other short-term highly liquid investments
                                             with original maturities of three months or less, and bank overdrafts.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Revenue Recognition</b></span>
-                                        <span style="float:left; padding-bottom:12px">Revenue from the sale of goods is recognised upon the delivery of goods to customers.
-                                            Revenue from the rendering of services is recognised upon the delivery of the services to customers.
-                                            Revenue from commissions is recognised upon delivery of services to customers.
-                                            Revenue from interest is recognised using the effective interest rate method.
-                                            Revenue from dividends is recognised when the entity has a right to receive the dividend.
+                                        <span style="float:left; padding-bottom:12px">Revenue from the sale of goods is recognised upon the delivery of goods to customers.<br>
+                                            Revenue from the rendering of services is recognised upon the delivery of the services to customers.<br>
+                                            Revenue from commissions is recognised upon delivery of services to customers.<br>
+                                            Revenue from interest is recognised using the effective interest rate method.<br>
+                                            Revenue from dividends is recognised when the entity has a right to receive the dividend.<br>
                                             All revenue is stated net of the amount of goods and services tax (GST).</span>
                                         <span style="float:left; padding-bottom:8px"><b>Goods and Services Tax</b></span>
-                                        <span style="float:left; padding-bottom:12px">Transactions are recognised net of GST, except where the amount of GST incurred is not recoverable from the Australian
-                                            Taxation Office (ATO).
-                                            Receivables and payables are stated inclusive of the amount of GST receivable or payable. The net amount of GST recoverable
-                                            from, or payable to, the ATO is included with other receivables or payables in the balance sheet.</span>
+                                        <span style="float:left; padding-bottom:12px">Transactions are recognised net of GST, except where the amount of GST incurred is not recoverable from the Australian Taxation Office (ATO).<br>
+                                            Receivables and payables are stated inclusive of the amount of GST receivable or payable. The net amount of GST recoverable from, or payable to, the ATO is included with other receivables or payables in the balance sheet.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Leases</b></span>
-                                        <span style="float:left; padding-bottom:12px;">Finance leases are leases of fixed assets where substantially all of the risks and benefits incidental to the ownership of the asset
-                                            are transferred to the entity, but the legal ownership is not transferred to the entity.
-                                            Finance leases are capitalised by recording an asset and a corresponding liability at the lower of the amounts equal to the fair
-                                            value of the leased asset, or the minimum lease payments measured at present value including any residual values.
-                                            Leased assets are depreciated on a straight-line basis over the shorter of their estimated useful lives or the lease term.
-                                            Operating lease payments are charged in the profit and loss on a straight-line basis over the term of the lease.
-                                            Lease incentives are deferred and amortised over the period of the lease.
+                                        <span style="float:left; padding-bottom:12px;">Finance leases are leases of fixed assets where substantially all of the risks and benefits incidental to the ownership of the asset are transferred to the entity, but the legal ownership is not transferred to the entity.<br>
+                                            Finance leases are capitalised by recording an asset and a corresponding liability at the lower of the amounts equal to the fair value of the leased asset, or the minimum lease payments measured at present value including any residual values.<br>
+                                            Leased assets are depreciated on a straight-line basis over the shorter of their estimated useful lives or the lease term.<br>
+                                            Operating lease payments are charged in the profit and loss on a straight-line basis over the term of the lease.<br>
+                                            Lease incentives are deferred and amortised over the period of the lease.<br>
                                             Profits and losses on sale and leaseback transactions are recognised in the reporting period in which they occur.</span>
                                     </div>
                                 </div>
@@ -802,14 +753,14 @@
                                         These notes should be read in conjunction with the attached compilation report.
                                     </div>
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 10 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 9 of 12</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="page-11" style="display:none; font-size:13px">
+                    <div id="page-10" style="display:none; font-size:13px">
                         <div class="card shadow mb-4" style="width:800px; height:1150px; padding:30px; margin:auto">
                             <div class="card-body">
                                 <div class="row" style="margin-bottom:40px">
@@ -820,17 +771,15 @@
                                 <div class="row">
                                     <div class="col" style="margin-bottom:20px">
                                         <span style="float:left; padding-bottom:8px"><b>Grants</b></span>
-                                        <span style="float:left; font-size:14px; padding-bottom:12px">Grant revenue is recognised in the income statement when the entity receives the grant, when it is probable that the entity will
-                                            receive the economic benefits of the grant and the amount can be reliably measured.
-                                            If the grant has conditions attached which must be satisfied before the entity is eligible to receive the grant, the recognition of
-                                            the revenue will be deferred until those conditions are satisfied.
-                                            Where the entity incurs an obligation to deliver economic value back to the grant contributor, the transaction is considered a
-                                            reciprocal transaction and the revenue is recognised as a liability in the balance sheet until the required service has been
-                                            completed, otherwise the income is recognised on receipt.
-                                            {{companyname}} receives non-reciprocal contributions of assets from the government and other parties for a nominal or
-                                            zero value. These assets are recognised at their fair value on the date of acquisition in the balance sheet, with an equivalent
-                                            amount of income recognised in the income statement.
+                                        <span style="float:left; font-size:14px; padding-bottom:12px">Grant revenue is recognised in the income statement when the entity receives the grant, when it is probable that the entity will receive the economic benefits of the grant and the amount can be reliably measured.<br>
+                                            If the grant has conditions attached which must be satisfied before the entity is eligible to receive the grant, the recognition of the revenue will be deferred until those conditions are satisfied.<br>
+                                            Where the entity incurs an obligation to deliver economic value back to the grant contributor, the transaction is considered a reciprocal transaction and the revenue is recognised as a liability in the balance sheet until the required service has been completed, otherwise the income is recognised on receipt.<br>
+                                            {{companyname}} receives non-reciprocal contributions of assets from the government and other parties for a nominal or zero value. These assets are recognised at their fair value on the date of acquisition in the balance sheet, with an equivalent amount of income recognised in the income statement.<br>
                                             Donations and bequests are recognised as revenue when received.</span>
+                                        <span style="float:left; padding-bottom:8px"><b>Government Grants</b></span>
+                                        <span style="float:left; font-size:14px; padding-bottom:12px">Government grants received are recognised as revenue on a basis to match the recognition of revenue with costs incurred in the
+                                            project. The design, development and trials extend over a [Insert number of years] year period and revenue from the
+                                            government grant has been recognised on a straight line basis over that period.</span>
                                     </div>
                                 </div>
                                 {{#each pan in accountantPanList}}
@@ -940,14 +889,14 @@
                                         These notes should be read in conjunction with the attached compilation report.
                                     </div>
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 11 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 10 of 12</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="page-12" style="display:none; font-size:13px">
+                    <div id="page-11" style="display:none; font-size:13px">
                         <div class="card shadow mb-4" style="width:800px; height:1150px; padding:30px; margin:auto">
                             <div class="card-body">
                                 <div class="row" style="margin-bottom:40px">
@@ -1076,14 +1025,14 @@
                                         These notes should be read in conjunction with the attached compilation report.
                                     </div>
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 12 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 11 of 12</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="page-13" style="display:none; font-size:13px">
+                    <div id="page-12" style="display:none; font-size:13px">
                         <div class="card shadow mb-4" style="width:800px; height:1150px; padding:30px; margin:auto">
                             <div class="card-body">
                                 <div class="row" style="margin-top:20px; margin-bottom:15px">
@@ -1098,8 +1047,8 @@
                                         The accompanying notes form part of these financial statements. These statements should be read in conjunction with the attached compilation report.
                                     </div>
                                     <div class="col" style="font-size:12px">
-                                        <span>Trust - Non-Trading - Co as Trustee (Single Dir) | {{companyname}}</span>
-                                        <span style="float:right">page 13 of 13</span>
+                                        <span>Financial Statements | {{companyname}}</span>
+                                        <span style="float:right">page 12 of 12</span>
                                     </div>
                                 </div>
                             </div>
@@ -1123,7 +1072,6 @@
                         <li id="pageNum-10" class="page-item"><a class="page-link" href="javascript:go_page(10)">10</a></li>
                         <li id="pageNum-11" class="page-item"><a class="page-link" href="javascript:go_page(11)">11</a></li>
                         <li id="pageNum-12" class="page-item"><a class="page-link" href="javascript:go_page(12)">12</a></li>
-                        <li id="pageNum-13" class="page-item"><a class="page-link" href="javascript:go_page(13)">13</a></li>
                         <li id="nextPage" class="page-item">
                             <a class="page-link" href="javascript:go_page('next')">Next</a>
                         </li>
@@ -1139,7 +1087,7 @@
         function go_page(action){
             if(action == "prev"){
                 if(pageNum > 1){
-                    for(var i=1; i<=13; i++){
+                    for(var i=1; i<=12; i++){
                         $("#pageNum-"+pageNum).removeClass("active"); 
                         $("#page-"+pageNum).css("display", "none"); 
                     }
@@ -1155,8 +1103,8 @@
                 }
             }
             else if(action == "next"){
-                if(pageNum < 13){
-                    for(var i=1; i<=13; i++){
+                if(pageNum < 12){
+                    for(var i=1; i<=12; i++){
                         $("#pageNum-"+pageNum).removeClass("active"); 
                         $("#page-"+pageNum).css("display", "none"); 
                     }
@@ -1166,13 +1114,13 @@
     
                     pageNum = pageNum + 1;
     
-                    if(pageNum == 13){
+                    if(pageNum == 12){
                         $("#nextPage").addClass("disabled");
                     }
                 }
             }
             else{
-                for(var i=1; i<=13; i++){
+                for(var i=1; i<=12; i++){
                     $("#pageNum-"+i).removeClass("active"); 
                     $("#page-"+i).css("display", "none"); 
                 }
@@ -1188,7 +1136,7 @@
                     $("#prevPage").removeClass("disabled");
                 }
 
-                if(action == 13){
+                if(action == 12){
                     $("#nextPage").addClass("disabled");
                 }
                 else{

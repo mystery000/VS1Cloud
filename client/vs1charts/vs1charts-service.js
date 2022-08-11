@@ -20,6 +20,17 @@ export class VS1ChartService extends BaseService {
       };
       return this.getList(this.ERPObjects.TARReport, options);
   }
+
+  getExecutiveSummaryReport(dateAsOf) {
+    let options = {
+        //select: "[Active]=true",
+        //ListType:"Detail",
+        DateTo: '"'+dateAsOf+'"',
+        LimitCount:'"'+initialReportLoad+'"'
+    };
+    return this.getList(this.ERPObjects.BalanceSheetReport, options);
+  }
+  
     getBalanceSheetReport(dateAsOf) {
         let options = {
             //select: "[Active]=true",
