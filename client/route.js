@@ -1070,6 +1070,15 @@ authenticatedRoutes.route('/trialbalance', {
     }
 });
 
+authenticatedRoutes.route('/executivesummaryreport', {
+    name: 'executivesummaryreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'executivesummaryreport'
+        });
+    }
+});
+
 // authenticatedRoutes.route('/settings/currencies', {
 //     name: 'currenciesSettings',
 //     action() {
