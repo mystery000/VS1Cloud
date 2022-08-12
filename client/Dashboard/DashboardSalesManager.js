@@ -19,13 +19,13 @@ Template.dashboardsalesmanager.onRendered(function () {
   if (isDashboard) {
     templateObject.includeDashboard.set(true);
   }
-  
+
   function renderSPMEmployeeChart(employeeNames, employeeSalesQuota) {
     highCharts.chart('spd-employee-chart', {
       series: [{
           name: 'Employees',
           data: employeeSalesQuota
-          
+
       }],
       chart: {
           type: 'column'
@@ -91,7 +91,6 @@ Template.dashboardsalesmanager.onRendered(function () {
             $('#new-leads-month').text(leadsThisMonthCount);
         }
     }).catch(function (err) {
-        console.log('$$err', err);
     });
 
     getVS1Data('TQuoteList').then(function (dataObject) {
@@ -102,7 +101,6 @@ Template.dashboardsalesmanager.onRendered(function () {
             let nonConvertedQuotesCount = 0;
             let convertedQuotesAmount = 0;
             const currentMonth = new Date().getMonth();
-            console.log('$$tquotelist', tquotelist);
             tquotelist.forEach(tquote  =>  {
                 if(currentMonth === new Date(tquote.SaleDate).getMonth()) {
                     dealsThisMonthCount += 1;
@@ -121,7 +119,6 @@ Template.dashboardsalesmanager.onRendered(function () {
             $('#avg-sales-cycle').text(avgSalesCycle);
         }
     }).catch(function (err) {
-        console.log('$$err', err);
     });
 
     getVS1Data('TInvoiceList').then(function (dataObject) {
@@ -144,7 +141,6 @@ Template.dashboardsalesmanager.onRendered(function () {
             $('#closed-deals-year').text(closedDealsThisYear);
         }
     }).catch(function (err) {
-        console.log('$$err', err);
     });
 
     getVS1Data('TEmployee').then(function (dataObject) {
@@ -178,5 +174,5 @@ Template.dashboardsalesmanager.helpers({
 
 // Listen to event to update reactive variable
 Template.dashboardsalesmanager.events({
-  
+
 });

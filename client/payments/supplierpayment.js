@@ -18,7 +18,7 @@ Template.supplierpayment.onCreated(function(){
 Template.supplierpayment.onRendered(function() {
 
     $('.fullScreenSpin').css('display','inline-block');
-   
+
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];
@@ -1591,7 +1591,7 @@ Template.supplierpayment.events({
 
         });
 
-        sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
                 sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
