@@ -1248,7 +1248,6 @@ Template.receiptsoverview.onRendered(function() {
             }
 
             let objDetails;
-            console.log(data);
             let supplier_name = data.vendor.name? data.vendor.name:"";
             let phone_number = data.vendor.phone_number? data.vendor.phone_number:"";
             let email = data.vendor.email? data.vendor.email:"";

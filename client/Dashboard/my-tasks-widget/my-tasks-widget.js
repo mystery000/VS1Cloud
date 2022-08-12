@@ -33,7 +33,6 @@ Template.myTasksWidget.onRendered(function () {
         templateObject.todayTasks.set(today_records);
       }
     }).catch(function (err) {
-        console.log('$$err', err);
       templateObject.getAllTaskList();
     });
   };
@@ -70,5 +69,5 @@ Template.myTasksWidget.helpers({
 
 // Listen to event to update reactive variable
 Template.myTasksWidget.events({
-  
+
 });

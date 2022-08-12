@@ -1108,7 +1108,7 @@ Template.billlist.onRendered(function() {
 
   // custom field displaysettings
   templateObject.setCustomFieldDataCheckIndexDB = function(data) {
-    console.log('data...........', data)
+
 
     let custFields = [];
     let dispFields = [];
@@ -1345,7 +1345,6 @@ Template.billlist.events({
       let templateObject = Template.instance();
       let custFields = templateObject.custfields.get();
 
-      console.log('resetTable...', custFields)
 
       let reset_data = [
         { label: 'Order Date', class: 'colOrderDate', active: true },
