@@ -3152,4 +3152,18 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.Tprojectlist, options);
   }
 
+  getCorrespondences() {
+    let options = "";
+    options = {
+     ListType: "Detail",
+     select: "[Active]=true"
+   };
+  return this.getList(this.ERPObjects.TCorrespondence, options);
+  }
+
+  saveCorrespondence(data)
+  {
+      return this.POST(this.ERPObjects.TCorrespondence,data);
+  }
+
 }

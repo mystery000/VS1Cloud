@@ -11347,6 +11347,6 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
 }
 
 getRegalTime = (date = new Date()) => {
-    var coeff = 1000 * 60 * 30;
+    var coeff = 1000 * 60 * 60;
     return new Date(Math.round(date.getTime() / coeff) * coeff)
 }
