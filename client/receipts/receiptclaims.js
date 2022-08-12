@@ -1248,7 +1248,14 @@ Template.receiptsoverview.onRendered(function() {
             }
 
             let objDetails;
+            console.log(data);
             let supplier_name = data.vendor.name? data.vendor.name:"";
+            let phone_number = data.vendor.phone_number? data.vendor.phone_number:"";
+            let email = data.vendor.email? data.vendor.email:"";
+            let currency_code = data.currency_code? data.currency_code:"";
+            let note = data.note? data.note:"";
+            let address = data.vendor.address? data.vendor.address:"";
+            let vendor_type = data.vendor.vendor_type? data.vendor.vendor_type:"";
             if (supplier_name == "") {
                 let keyword = "Store:";
                 let start_pos = data.ocr_text.indexOf(keyword);
@@ -1291,11 +1298,11 @@ Template.receiptsoverview.onRendered(function() {
                                     ClientName: supplier_name,
                                     FirstName: supplier_name,
                                     LastName: '',
-                                    Phone: data.vendor.phone_number || '',
+                                    Phone: phone_number,
                                     Mobile: '',
-                                    Email: data.vendor.email || '',
+                                    Email: email,
                                     SkypeName: '',
-                                    Street: '',
+                                    Street: address,
                                     Street2: '',
                                     Suburb: '',
                                     State: '',
@@ -1306,10 +1313,10 @@ Template.receiptsoverview.onRendered(function() {
                                     BillState: '',
                                     BillPostCode: '',
                                     Billcountry: '',
-                                    PublishOnVS1: true
+                                    PublishOnVS1: true,
+                                    Notes: vendor_type
                                 }
                             };
-
                             contactService.saveSupplier(objDetails).then(function (supplier) {
                                 $('.fullScreenSpin').css('display','none');
                                 //  Meteor._reload.reload();
@@ -1321,7 +1328,6 @@ Template.receiptsoverview.onRendered(function() {
                                     suppliername: supplier_name,
                                 });
                                 templateObject.suppliers.set(suppliers);
-
                             }).catch(function (err) {
                                 swal({
                                     title: 'Oooops...',
@@ -1371,10 +1377,13 @@ Template.receiptsoverview.onRendered(function() {
             }
             $(parentElement + ' .employees').attr('data-id', loggedUserId);
             $(parentElement + ' .employees').val(loggedUserName);
-            $(parentElement + ' .currencies').val(currency);
+            // $(parentElement + ' .currencies').val(currency);
+            $(parentElement + ' .currencies').val(currency_code);
             $(parentElement + ' .dtReceiptDate').datepicker('setDate', new Date(data.date));
-            $(parentElement + ' .edtTotal').val('$' + data.total);
+            // $(parentElement + ' .edtTotal').val('$' + data.total);
+            $(parentElement + ' .edtTotal').val(data.total);
             $(parentElement + ' .transactionTypes').val(transactionTypeName);
+            $(parentElement + ' #txaDescription').val(note);
 
         }).catch(function(err) {
             let errText = "";
