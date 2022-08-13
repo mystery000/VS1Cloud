@@ -1,5 +1,6 @@
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+import '../../lib/global/colResizable.js';
 let sideBarService = new SideBarService();
 modalDraggable = function () {
     $('.modal-dialog').draggable({
@@ -526,12 +527,19 @@ vs1GlobalBackButton = async function () {
 
 tableResize = function() {
   setTimeout(function() {
-    $(".dataTable th, .draggingTable th").resizable({
-      handles: "e",
-      resize: function (event, ui) {
-          var sizerID = "." + $(event.target).attr("class").split(" ")[1];
-          $(sizerID).width(ui.size.width);
-      }
+//     // $(".dataTable th, .draggingTable th").resizable({
+//     //   handles: "e",
+//     //   resize: function (event, ui) {
+//     //       var sizerID = "." + $(event.target).attr("class").split(" ")[1];
+//     //       $(sizerID).width(ui.size.width);
+//     //   }
+//     // });
+    $(".dataTable").colResizable({
+      liveDrag:true,
+      gripInnerHtml:"<div class='grip'></div>",
+      draggingClass:"dragging",
+      resizeMode:'overflow',
+      // disabledColumns: [2]
     });
   }, 2000);
 };
