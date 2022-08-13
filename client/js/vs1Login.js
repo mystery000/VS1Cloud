@@ -175,6 +175,7 @@ Template.vs1login.onRendered(function () {
     Session.setPersistent('myMonthlyErnings', '');
 
     localStorage.setItem('vs1cloudlicenselevel', '');
+    localStorage.setItem('VS1TransTableUpdate', '');
 
     if (FlowRouter.current().queryParams.emailakey) {
         $('#email').val(FlowRouter.current().queryParams.emailakey);
@@ -2049,6 +2050,8 @@ Template.vs1login.onRendered(function () {
                                                         localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                                         localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
+                                                        localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
+
                                                         if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                                             localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                                         } else {
@@ -2127,8 +2130,8 @@ Template.vs1login.onRendered(function () {
                                                     .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                                     .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                                     .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                                    $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                                    $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                                    $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                                    $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                                     swal({
                                                         title: 'Awaiting Email Validation',
                                                         html: true,
@@ -2721,6 +2724,8 @@ Template.vs1login.onRendered(function () {
                                     localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                     localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
+                                    localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
+
                                     if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                         localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                     } else {
@@ -3259,6 +3264,7 @@ Template.vs1login.onRendered(function () {
                                                     localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                                     localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
+                                                    localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                                     if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                                         localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                                     } else {
@@ -3337,8 +3343,8 @@ Template.vs1login.onRendered(function () {
                                                 .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                                 .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                                 .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                                $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                                $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                                $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                                $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                                 swal({
                                                     title: 'Awaiting Email Validation',
                                                     html: true,
@@ -3995,6 +4001,7 @@ Template.vs1login.onRendered(function () {
                                                 localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                                 localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
+                                                localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                                 if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                                     localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                                 } else {
@@ -4073,8 +4080,8 @@ Template.vs1login.onRendered(function () {
                                             .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                             .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                             .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                            $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                            $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                            $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                            $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                             swal({
                                                 title: 'Awaiting Email Validation',
                                                 html: true,
@@ -4694,6 +4701,7 @@ Template.vs1login.onRendered(function () {
                                             localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                             localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
+                                            localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                             if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                                 localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                             } else {
@@ -4774,8 +4782,8 @@ Template.vs1login.onRendered(function () {
                                         .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
                                         .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
                                         .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/"));
-                                        $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
-                                        $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/sandboxcheck.php?checktoken=' + userLoginEmail + '');
+                                        $(".addloginkey").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
+                                        $(".addloginActive").attr("href", 'https://www.depot.vs1cloud.com/vs1activation/prodcheck.php?checktoken=' + userLoginEmail + '');
                                         swal({
                                             title: 'Awaiting Email Validation',
                                             html: true,

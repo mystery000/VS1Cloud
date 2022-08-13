@@ -2259,6 +2259,16 @@ Template.accountsoverview.helpers({
     }
     return bsbname;
   },
+  lastBatchUpdate: () => {
+    let transactionTableLastUpdated = "";
+    var currentDate = new Date();
+    if(localStorage.getItem('VS1TransTableUpdate')){
+       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, HH:mm:ss");
+    }else{
+      transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
+    }
+    return transactionTableLastUpdated;
+  },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
   },

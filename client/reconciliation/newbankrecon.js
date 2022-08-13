@@ -358,7 +358,6 @@ Template.newbankrecon.onRendered(function() {
             let access_token = data.token.accessToken;
             const yodleeAccountID = getYodleeAccountID(accountId);
             yodleeService.getTransactionData(access_token, yodleeFromDate).then(function(data) {
-                console.log(data);
                 let lastTransactionDate = '1899-12-31';
                 let debitTypeList = [];
                 let creditTypeList = [];
@@ -428,8 +427,6 @@ Template.newbankrecon.onRendered(function() {
                 debitTypeList = [...new Set(debitTypeList)];
                 creditTypeList = [...new Set(creditTypeList)];
 
-                console.log(creditTypeList);
-                console.log(debitTypeList);
                 templateObject.lastTransactionDate.set(moment(lastTransactionDate).format("DD/MM/YYYY"));
                 const currentBeginDate = new Date();
                 let fromDateMonth = (currentBeginDate.getMonth() + 1);
