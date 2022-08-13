@@ -1811,17 +1811,17 @@ Template.newbankrecon.events({
             paymentID = (paymentID && paymentID != '')?parseInt(paymentID):0;
             paymentID = 0; // Now keep 0 ???
             let clientDetail = null;
-            if (DepOrWith == "spent") {
+            if (DepOrWith == "received") {
                 clientDetail = getClientDetail(clientName, 'customer');
                 if (!clientDetail) {
-                    swal('Customer must be vaild.', '', 'error');
+                    swal('Supplier must be vaild.', '', 'error');
                     $("#whoDetail_"+selectedYodleeID).focus();
                     return false;
                 }
-            } else if (DepOrWith == "received") {
+            } else if (DepOrWith == "spent") {
                 clientDetail = getClientDetail(clientName, 'supplier');
                 if (!clientDetail) {
-                    swal('Supplier must be vaild.', '', 'error');
+                    swal('Customer must be vaild.', '', 'error');
                     $("#whoDetail_"+selectedYodleeID).focus();
                     return false;
                 }
@@ -1846,7 +1846,7 @@ Template.newbankrecon.events({
 
             let lineItems = [];
             let lineItemsObj = {};
-            if (DepOrWith == "spent") {
+            if (DepOrWith == "received") {
                 $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice > tbody > tr").each(function () {
                     let lineID = this.id;
                     let lineProductName = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineProductName").val();
@@ -1926,7 +1926,8 @@ Template.newbankrecon.events({
                         paymentService.saveDepositData(objPaymentDetails).then(function(resultPayment) {
                             if (resultPayment.fields.ID) {
                                 let lineReconObj = {
-                                    type: "TReconciliationWithdrawalLines",
+                                    // type: "TReconciliationWithdrawalLines",
+                                    type: "TReconciliationDepositLines",
                                     fields: {
                                         AccountID: bankaccountid || 0,
                                         AccountName: bankAccountName || '',
@@ -1953,7 +1954,7 @@ Template.newbankrecon.events({
                                         AccountName: bankAccountName || '',
                                         // CloseBalance: closebalance,
                                         Deleted: false,
-                                        DepositLines: null,
+                                        DepositLines: reconData || '',
                                         DeptName: defaultDept,
                                         EmployeeID: parseInt(employeeID) || 0,
                                         EmployeeName: employeename || '',
@@ -1963,7 +1964,7 @@ Template.newbankrecon.events({
                                         // OpenBalance: openbalance,
                                         ReconciliationDate: invoiceDate,
                                         StatementNo: selectedYodleeID.toString() || '0',
-                                        WithdrawalLines: reconData || ''
+                                        WithdrawalLines: null
                                     }
                                 };
                                 reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
@@ -1989,7 +1990,7 @@ Template.newbankrecon.events({
                     handleSaveError(err);
                 });
             }
-            if (DepOrWith == "received") {
+            if (DepOrWith == "spent") {
                 let isEmptyAccount = false;
                 $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice > tbody > tr").each(function () {
                     let lineID = this.id;
@@ -2083,7 +2084,7 @@ Template.newbankrecon.events({
                         paymentService.saveSuppDepositData(objPaymentDetails).then(function(resultPayment) {
                             if (resultPayment.fields.ID) {
                                 let lineReconObj = {
-                                    type: "TReconciliationDepositLines",
+                                    type: "TReconciliationWithdrawalLines",
                                     fields: {
                                         AccountID: bankaccountid || 0,
                                         AccountName: bankAccountName || '',
@@ -2110,7 +2111,7 @@ Template.newbankrecon.events({
                                         AccountName: bankAccountName || '',
                                         // CloseBalance: closebalance,
                                         Deleted: false,
-                                        DepositLines: reconData || '',
+                                        DepositLines: null,
                                         DeptName: defaultDept,
                                         EmployeeID: parseInt(employeeID) || 0,
                                         EmployeeName: employeename || '',
@@ -2120,7 +2121,7 @@ Template.newbankrecon.events({
                                         // OpenBalance: openbalance,
                                         ReconciliationDate: invoiceDate,
                                         StatementNo: selectedYodleeID.toString() || '0',
-                                        WithdrawalLines: null
+                                        WithdrawalLines: reconData || ''
                                     }
                                 };
                                 reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
