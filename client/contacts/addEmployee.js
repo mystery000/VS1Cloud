@@ -134,6 +134,7 @@ Template.employeescard.onCreated(function () {
 });
 
 Template.employeescard.onRendered(function () {
+ 
     var erpGet = erpDb();
     $('.fullScreenSpin').css('display', 'inline-block');
     Session.setPersistent('cloudCurrentLogonName', '');

@@ -26,7 +26,10 @@ Template.earningRateSettings.onCreated(function() {
 });
 
 Template.earningRateSettings.onRendered(function() {
-
+    $('.customEditableSelect').editableSelect('add', function(item){
+        $(this).val(item.id);
+        $(this).text(item.name);
+    });
   const templateObject = Template.instance();
   const dataTableList = [];
   var splashArrayEarningList = new Array();
