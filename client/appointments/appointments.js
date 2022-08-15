@@ -67,6 +67,101 @@ Template.appointments.onCreated(function () {
     templateObject.toupdatelogid = new ReactiveVar();
 });
 
+async function sendAppointmentEmail(){
+    let customerEmailCheck = $('.customerEmail').is(':checked') ? true : false;
+    let userEmailCheck = $('.userEmail').is(':checked') ? true : false;
+    // Send email to the customer 
+    
+    if( customerEmailCheck == true ){
+        let customerDataName = $("#customer").val();
+        let customerEmail='';
+        let dataObject = await getVS1Data('TCustomerVS1');
+        if(dataObject.length > 0){
+            let data = JSON.parse(dataObject[0].data);
+            for (let i = 0; i < data.tcustomervs1.length; i++) {
+                if ( data.tcustomervs1[i].fields.Companyname === customerDataName ) {
+                    customerEmail = data.tcustomervs1[i].fields.Email;
+                    break;
+                }
+            }
+        }
+        if( customerEmail ){
+            let mailSubject="Customer email testing subject";
+            let text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters,";
+            let mailFromName = Session.get('vs1companyName');
+            let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');      
+            Meteor.call('sendEmail', {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                // to: customerEmail,
+                to: 'rajesh.dev.up@gmail.com',
+                subject: mailSubject,
+                text: text,
+                html: ''
+            }, function (error, result) {
+                $('.fullScreenSpin').css('display', 'none');
+                if (error && error.error === "error") {
+                    // window.open('/statementlist', '_self');
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    $('#printstatmentdesign').css('display', 'none');
+                    swal({
+                        title: 'SUCCESS',
+                        text: "Email Sent To Customer ",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    })
+
+                }
+            });
+        }
+    }
+    // Send email to the user
+    if( userEmailCheck == true){
+        let employeeID = Session.get('mySessionEmployeeLoggedID');
+        let employeeEmail='';
+        let dataObject = await getVS1Data('TEmployee');
+        if(dataObject.length > 0){
+            dataObject.filter(function(arr){
+                let data=JSON.parse(arr.data)['temployee'];
+                for(let i=0; i < data.length; i++){
+                    if(employeeID == data[i].fields.ID){
+                        employeeEmail += data[i].fields.Email;
+                        break;
+                    }
+                }
+            });
+        }
+        let mailSubject="Customer email testing subject";
+        let text = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters,";
+        let mailFromName = Session.get('vs1companyName');
+        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');      
+        Meteor.call('sendEmail', {
+            from: "" + mailFromName + " <" + mailFrom + ">",
+            // to: employeeEmail,
+            to: 'rajesh.dev.up@gmail.com',
+            subject: mailSubject,
+            text: text,
+            html: ''
+        }, function (error, result) {
+            $('.fullScreenSpin').css('display', 'none');
+            $('#printstatmentdesign').css('display', 'none');
+            if (error && error.error === "error") {
+                // window.open('/statementlist', '_self');
+            } else {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'SUCCESS',
+                    text: "Email Sent To User ",
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                })
+            }
+        });
+    }
+}
+
 Template.appointments.onRendered(function () {
     let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly') || false;
     let templateObject = Template.instance();
@@ -9529,7 +9624,7 @@ Template.appointments.events({
                 });
                 $('#frmAppointment').trigger('submit');
             }
-        } else {
+        } else {            
             $('#frmAppointment').trigger('submit');
         }
     },
@@ -10333,6 +10428,7 @@ Template.appointments.events({
     'submit #frmAppointment': async function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
         event.preventDefault();
+
         /*
         if (createAppointment == false) {
             $('.modal-backdrop').css('display', 'none');
@@ -10388,9 +10484,8 @@ Template.appointments.events({
         let hourlyRate = '';
         let status = "Not Converted";
         let uploadedItems = templateObject.uploadedFiles.get();
-
-        let customerEmail=$('.customerEmail').is(':checked') ? true : false;
-        let userEmail=$('.userEmail').is(':checked') ? true : false;
+        await sendAppointmentEmail();
+        $('.fullScreenSpin').css('display', 'inline-block');
         if (aStartTime != '') {
             aStartDate = savedStartDate + ' ' + aStartTime;
         } else {
@@ -10512,58 +10607,6 @@ Template.appointments.events({
                     //   UserEmail: userEmail
                   }
               };
-
-
-              let customerDataName=$("#customer").val();
-              let customerEmail='';
-              let employeeID=Session.get('mySessionEmployeeLoggedID');
-                let employeeEmail='';
-                await getVS1Data('TCustomerVS1').then(function (dataObject) {
-                    let data = JSON.parse(dataObject[0].data);
-                    for (let i = 0; i < data.tcustomervs1.length; i++) {
-                        if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
-                            customerEmail += data.tcustomervs1[i].fields.Email;
-                            break;
-                        }
-                    }
-                })
-                await getVS1Data('TEmployee').then(function (dataObject) {
-                    if(dataObject.length > 0){
-                        dataObject.filter(function(arr){
-                            let data=JSON.parse(arr.data)['temployee'];
-                            for(let i=0; i < data.length; i++){
-                                if(employeeID == data[i].fields.ID){
-                                    employeeEmail += data[i].fields.Email;
-                                    break;
-                                }
-                            }
-                        });
-                    }
-                });
-                let subject="test";
-                let text="this is just a test";
-                let mailFromName = Session.get('vs1companyName');
-                let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                let details={
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: '',
-                    subject: subject,
-                    text: '',
-                    html: text,
-                };
-
-                if($("#userEmail").is(":checked")){
-                    details.to=customerEmail;
-                    Meteor.call("sendEmail", details, function(error, result){
-
-                    })
-                }
-                if($("#customerEmail").is(":checked")){
-                    details.to=employeeEmail;
-                    Meteor.call("sendEmail", details, function(error, result){
-                    })
-                }
-
 
               appointmentService.saveAppointment(objectData).then(function (data) {
                   let id = data.fields.ID;
