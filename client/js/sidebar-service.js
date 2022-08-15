@@ -1582,14 +1582,14 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         IsBill: true,
-        OrderBy: "PurchaseOrderID desc",
+        OrderBy: "PurchaseOrderNumber desc",
         Search: "IsBill = true and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "PurchaseOrderID desc",
+        OrderBy: "PurchaseOrderNumber desc",
         IsBill: true,
         Search: "IsBill = true and IsCheque != true",
         IgnoreDates: false,
