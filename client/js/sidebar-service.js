@@ -1222,25 +1222,25 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "PurchaseOrderID desc",
+        OrderBy: "PurchaseOrderNumber desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "Deleted != true and SupplierName != '' and IsCheque != true",
+        Search: "SupplierName != '' and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "PurchaseOrderID desc",
+        OrderBy: "PurchaseOrderNumber desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "Deleted != true and SupplierName != '' and IsCheque != true",
+        Search: "SupplierName != '' and IsCheque != true",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
