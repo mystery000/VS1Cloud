@@ -25,31 +25,6 @@ Template.mailchimpList.onRendered(function () {
     $("#tblEmailList").DataTable({
       data: reportArray,
       columnDefs: [
-        // {
-        //   targets: 0,
-        //   className: "colLabelCreatedDate",
-        //   createdCell: function (td, cellData, rowData, row, col) {
-        //     $(td).closest("tr").attr("data-id", rowData[3]);
-        //     $(td).attr("data-id", rowData[3]);
-        //   },
-        // },
-        // {
-        //   targets: 1,
-        //   className: "colLabel",
-        //   createdCell: function (td, cellData, rowData, row, col) {
-        //     $(td).attr("data-id", rowData[3]);
-        //   },
-        //   width: "100%",
-        // },
-        // {
-        //   orderable: false,
-        //   targets: 2,
-        //   className: "colLabelActions",
-        //   createdCell: function (td, cellData, rowData, row, col) {
-        //     $(td).attr("data-id", rowData[3]);
-        //   },
-        //   width: "50px",
-        // },
       ],
       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
       buttons: [
@@ -114,12 +89,13 @@ Template.mailchimpList.onRendered(function () {
     let taskRows = new Array();
     let td0 = (td1 = td2 = "");
 
-    data.forEach((item) => {
-      td0 = item.opens.length ? moment(item.opens[item.opens.length - 1].timestamp).format("YYYY-MM-DD HH:mm'") : '-';
-      td1 = item.contact_status;
-
-      td2 = item.opens_count;
-      taskRows.push([item.email_address, td0, td1, td2]);
+    data.forEach((lists) => {
+      lists.opens.forEach(reports => { 
+        td0 = reports.opens.length ? moment(reports.opens[reports.opens.length - 1].timestamp).format("DD/MM/YYYY HH:mm:ss") : '-';
+        td1 = reports.contact_status;
+        td2 = reports.opens_count;
+        taskRows.push([lists.campaign_name, lists.subject, reports.email_address, td0, td1, td2]);
+      });
     });
     return taskRows;
   };
