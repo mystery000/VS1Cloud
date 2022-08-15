@@ -92,18 +92,14 @@ async function sendAppointmentEmail(){
             let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');      
             Meteor.call('sendEmail', {
                 from: "" + mailFromName + " <" + mailFrom + ">",
-                // to: customerEmail,
-                to: 'rajesh.dev.up@gmail.com',
+                to: customerEmail,
                 subject: mailSubject,
                 text: text,
                 html: ''
             }, function (error, result) {
-                $('.fullScreenSpin').css('display', 'none');
                 if (error && error.error === "error") {
                     // window.open('/statementlist', '_self');
                 } else {
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('#printstatmentdesign').css('display', 'none');
                     swal({
                         title: 'SUCCESS',
                         text: "Email Sent To Customer ",
@@ -138,18 +134,14 @@ async function sendAppointmentEmail(){
         let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');      
         Meteor.call('sendEmail', {
             from: "" + mailFromName + " <" + mailFrom + ">",
-            // to: employeeEmail,
-            to: 'rajesh.dev.up@gmail.com',
+            to: employeeEmail,
             subject: mailSubject,
             text: text,
             html: ''
         }, function (error, result) {
-            $('.fullScreenSpin').css('display', 'none');
-            $('#printstatmentdesign').css('display', 'none');
             if (error && error.error === "error") {
                 // window.open('/statementlist', '_self');
             } else {
-                $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'SUCCESS',
                     text: "Email Sent To User ",
