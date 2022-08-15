@@ -524,7 +524,14 @@ vs1GlobalBackButton = async function () {
     }
  });
 };
-
+thWidthOnResize = function() {
+  let tableWidth = [];
+  $('#tblcontactoverview th').each(function() {   
+    tableWidth.push($(this).outerWidth());
+    tableWidth.push($(this).index());
+    
+  });
+};
 tableResize = function() {
   setTimeout(function() {
 //     // $(".dataTable th, .draggingTable th").resizable({
@@ -539,6 +546,11 @@ tableResize = function() {
       gripInnerHtml:"<div class='grip'></div>",
       draggingClass:"dragging",
       resizeMode:'overflow',
+      onResize: function (e) {
+        var table = $(e.currentTarget); //reference to the resized table
+        // console log this $(e.target).parent().index()
+        thWidthOnResize();
+      },
       // disabledColumns: [2]
     });
   }, 2000);
