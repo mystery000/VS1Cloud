@@ -35,6 +35,10 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#edtLeavePayStatus').editableSelect('add','Awaiting');
         $('#edtLeavePayStatus').editableSelect('add','Approved');
         $('#edtLeavePayStatus').editableSelect('add','Denied');
+        $('#edtTfnExemption').editableSelect('add','No TFN Quoted');
+        $('#edtTfnExemption').editableSelect('add','TFN Pending');
+        $('#edtTfnExemption').editableSelect('add','TFN Exempt - Under 18');
+        $('#edtTfnExemption').editableSelect('add','TFN Exempt - Pensioner');
 
         $('#edtLeaveTypeofRequest').editableSelect();
         $('#edtLeaveTypeofRequest').editableSelect()

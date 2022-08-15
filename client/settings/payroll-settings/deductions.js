@@ -494,11 +494,9 @@ Template.deductionSettings.events({
                 Description: deductionDesctiption,
                 Amount: parseInt(deductionAmount),
                 Basedonid:18,
-
-                // DisplayIn: displayName,
-                // Superinc: ExemptSuperannuation,
-                // Workcoverexempt: ExemptReportable,
-                // Payrolltaxexempt: ExemptPAYG
+                Superinc: ExemptSuperannuation,
+                Workcoverexempt: ExemptReportable,
+                Taxexempt: ExemptPAYG
             }
         };
 
@@ -515,7 +513,18 @@ Template.deductionSettings.events({
             await templateObject.saveDataLocalDB();
             await templateObject.getDeductions();
             $('#noneModal').modal('hide');
-            $('.fullScreenSpin').css('display', 'none')
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Deduction has been saved",
+                type: 'success',   
+                showCancelButton: false,
+                confirmButtonText: 'Done'             
+            }).then((result) => {
+                if (result.value) {                    
+                    window.location.reload();
+                }
+            });
         }else{
             $('.fullScreenSpin').css('display', 'none');
             swal({
