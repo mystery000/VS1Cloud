@@ -10,6 +10,7 @@ export default class CronSetting {
     employeeId,
     toParse,
     startAt = new date(),
+    isFuture = false,
     days = [],
     months = [],
     dayNumberOfMonth = 1,
@@ -24,6 +25,7 @@ export default class CronSetting {
     this.startAt = this.convertToDate(startAt);
     this.cronJob = cronJob;
     this.days = days;
+    this.isFuture = isFuture;
 
     this.months = months;
     this.dayNumberOfMonth = this.dayNumberOfMonth;
