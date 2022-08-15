@@ -16,8 +16,8 @@ Template.accountsoverview.onCreated(function () {
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.accountTypes = new ReactiveVar([]);
+  templateObject.availableCategories = new ReactiveVar([]);
   templateObject.taxraterecords = new ReactiveVar([]);
-
   templateObject.selectedFile = new ReactiveVar();
   templateObject.isBankAccount = new ReactiveVar();
   templateObject.isBankAccount.set(false);
@@ -27,15 +27,19 @@ Template.accountsoverview.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
   let accountService = new AccountService();
-  let organisationService = new OrganisationService();
   let productService = new ProductService();
   const accountTypeList = [];
   const taxCodesList = [];
-  let salesOrderTable;
-  var splashArray = [];
-  var splashArrayTaxRateList = [];
+  const splashArrayTaxRateList = [];
   const dataTableList = [];
   const tableHeaderList = [];
+  let categories = [];
+  categories.push('Materials');
+  categories.push('Meals & Entertainment');
+  categories.push('Office Supplies');
+  categories.push('Travel');
+  categories.push('Vehicle');
+  let usedCategories = [];
   let currentId = FlowRouter.current().context.hash;
 
   if (currentId === "addNewAccount" || currentId === "newaccount") {
@@ -311,22 +315,17 @@ Template.accountsoverview.onRendered(function () {
   //     getVS1Data('TTaxcodeVS1').then(function (dataObject) {
   //         if (dataObject.length == 0) {
   //             accountService.getTaxCodesVS1().then(function (data) {
-
   //                 let records = [];
   //                 let inventoryData = [];
   //                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-
   //                     let taxcoderecordObj = {
   //                         codename: data.ttaxcodevs1[i].CodeName || ' ',
   //                         coderate: data.ttaxcodevs1[i].Rate || ' ',
   //                         description: data.ttaxcodevs1[i].Description || ' '
   //                     };
-
   //                     taxCodesList.push(taxcoderecordObj);
-
   //                 }
   //                 templateObject.taxraterecords.set(taxCodesList);
-
   //             });
   //         } else {
   //             let data = JSON.parse(dataObject[0].data);
@@ -334,40 +333,30 @@ Template.accountsoverview.onRendered(function () {
   //             let records = [];
   //             let inventoryData = [];
   //             for (let i = 0; i < useData.length; i++) {
-
   //                 let taxcoderecordObj = {
   //                     codename: useData[i].CodeName || ' ',
   //                     coderate: useData[i].Rate || ' ',
   //                     description: useData[i].Description || ' '
   //                 };
-
   //                 taxCodesList.push(taxcoderecordObj);
-
   //             }
   //             templateObject.taxraterecords.set(taxCodesList);
-
   //         }
   //     }).catch(function (err) {
   //         accountService.getTaxCodesVS1().then(function (data) {
-
   //             let records = [];
   //             let inventoryData = [];
   //             for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-
   //                 let taxcoderecordObj = {
   //                     codename: data.ttaxcodevs1[i].CodeName || ' ',
   //                     coderate: data.ttaxcodevs1[i].Rate || ' ',
   //                     description: data.ttaxcodevs1[i].Description || ' '
   //                 };
-
   //                 taxCodesList.push(taxcoderecordObj);
-
   //             }
   //             templateObject.taxraterecords.set(taxCodesList);
-
   //         });
   //     });
-
   // }
 
   // templateObject.getAllTaxCodes();
@@ -384,8 +373,7 @@ Template.accountsoverview.onRendered(function () {
 
   if (FlowRouter.current().queryParams.id) {
     var currentAccountID = FlowRouter.current().queryParams.id;
-    getVS1Data("TAccountVS1")
-      .then(function (dataObject) {
+    getVS1Data("TAccountVS1").then(function (dataObject) {
         if (dataObject.length === 0) {
           accountService
             .getOneAccount(parseInt(currentAccountID))
@@ -426,25 +414,17 @@ Template.accountsoverview.onRendered(function () {
               });
           }
         }
-      })
-      .catch(function (err) {
-        accountService
-          .getOneAccount(parseInt(currentAccountID))
-          .then(function (data) {
+    }).catch(function (err) {
+        accountService.getOneAccount(parseInt(currentAccountID)).then(function (data) {
             setAccountModal(data);
-          })
-          .catch(function (err) {
+        }).catch(function (err) {
             $(".fullScreenSpin").css("display", "none");
-          });
-      });
+        });
+    });
   }
   if (FlowRouter.current().queryParams.name) {
-    var currentAccountID = FlowRouter.current().queryParams.name.replace(
-      /%20/g,
-      " "
-    );
-    getVS1Data("TAccountVS1")
-      .then(function (dataObject) {
+    var currentAccountID = FlowRouter.current().queryParams.name.replace(/%20/g, " ");
+    getVS1Data("TAccountVS1").then(function (dataObject) {
         if (dataObject.length == 0) {
           accountService
             .getOneAccountByName(currentAccountID)
@@ -482,17 +462,13 @@ Template.accountsoverview.onRendered(function () {
               });
           }
         }
-      })
-      .catch(function (err) {
-        accountService
-          .getOneAccountByName(currentAccountID)
-          .then(function (data) {
+    }).catch(function (err) {
+        accountService.getOneAccountByName(currentAccountID).then(function (data) {
             setAccountModal(data.taccountvs1[0]);
-          })
-          .catch(function (err) {
+        }).catch(function (err) {
             $(".fullScreenSpin").css("display", "none");
-          });
-      });
+        });
+    });
   }
 
   function setAccountModal(data) {
@@ -576,8 +552,8 @@ Template.accountsoverview.onRendered(function () {
       $(".accountIsHeader").prop("checked", false);
     }
 
-    $("#expenseCategory").val(expenseCategory);
     $("#expenseCategory").append('<option value="' +expenseCategory +'" selected="selected">' +expenseCategory +"</option>");
+    $("#expenseCategory").val(expenseCategory);
 
     setTimeout(function () {
       $("#addNewAccount").modal("show");
@@ -585,36 +561,28 @@ Template.accountsoverview.onRendered(function () {
   }
 
   templateObject.getAccountLists = function () {
-    getVS1Data("TAccountVS1")
-      .then(function (dataObject) {
+    getVS1Data("TAccountVS1").then(function (dataObject) {
         if (dataObject.length == 0) {
-          accountService
-            .getAccountListVS1()
-            .then(function (data) {
+          accountService.getAccountListVS1().then(function (data) {
               setAccountListVS1(data);
-            })
-            .catch(function (err) {
+          }).catch(function (err) {
               // Bert.alert('<strong>' + err + '</strong>!', 'danger');
               $(".fullScreenSpin").css("display", "none");
               // Meteor._reload.reload();
-            });
+          });
         } else {
           let data = JSON.parse(dataObject[0].data);
           setAccountListVS1(data, true);
         }
-      })
-      .catch(function (err) {
-        accountService
-          .getAccountListVS1()
-          .then(function (data) {
+    }).catch(function (err) {
+        accountService.getAccountListVS1().then(function (data) {
             setAccountListVS1(data);
-          })
-          .catch(function (err) {
+        }).catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
             $(".fullScreenSpin").css("display", "none");
             // Meteor._reload.reload();
-          });
-      });
+        });
+    });
   };
 
   function setAccountListVS1(data, isField=false) {
@@ -640,6 +608,9 @@ Template.accountsoverview.onRendered(function () {
         accBalance =utilityService.modifynegativeCurrencyFormat(lineData.Balance) || 0.0;
       } else {
         accBalance = Currency + "0.00";
+      }
+      if(data.taccountvs1[i].fields.AccountGroup && data.taccountvs1[i].fields.AccountGroup != ''){
+        usedCategories.push(data.taccountvs1[i].fields.AccountGroup);
       }
 
       var dataList = {
@@ -668,10 +639,12 @@ Template.accountsoverview.onRendered(function () {
       };
       dataTableList.push(dataList);
     }
+    usedCategories = [...new Set(usedCategories)];
+    let availableCategories = categories.filter((item) => !usedCategories.includes(item));
+    templateObject.availableCategories.set(availableCategories);
     templateObject.datatablerecords.set(dataTableList);
 
     if (templateObject.datatablerecords.get()) {
-
       setTimeout(function () {
         MakeNegative();
       }, 100);
@@ -807,14 +780,8 @@ Template.accountsoverview.onRendered(function () {
     "tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",
     function () {
       var listData = $(this).closest("tr").attr("id");
-      var tabletaxtcode = $(event.target)
-        .closest("tr")
-        .find(".colTaxCode")
-        .text();
-      var accountName = $(event.target)
-        .closest("tr")
-        .find(".colAccountName")
-        .text();
+      var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
+      var accountName = $(event.target).closest("tr").find(".colAccountName").text();
       let columnBalClass = $(event.target).attr("class");
       // let accountService = new AccountService();
 
@@ -892,8 +859,26 @@ Template.accountsoverview.onRendered(function () {
           } else {
             $(".useReceiptClaim").prop("checked", false);
           }
-          let category = $(event.target).closest("tr").find(".colExpenseCategpry").attr("category") || "";
+          let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
+          let availableCategories = templateObject.availableCategories.get();
+          let cateogoryHtml = "";
+          availableCategories.forEach(function (item) {
+            cateogoryHtml += '<option value="' +item +'">' +item +'</option>';
+          });
+          $("#expenseCategory").empty();
+          if (category != "") {
+            let selectedCategoryHtml = '<option value="' +category +'" selected="selected">' +category +'</option>';
+            cateogoryHtml = selectedCategoryHtml + cateogoryHtml;
+          }
+          $("#expenseCategory").append(cateogoryHtml);
           $("#expenseCategory").val(category);
+          if (cateogoryHtml == ""){
+            $("#expenseCategory").attr("readonly", true);
+            $("#expenseCategory").attr("disabled", "disabled");
+          } else {
+            $("#expenseCategory").removeAttr("readonly", true);
+            $("#expenseCategory").removeAttr("disabled", "disabled");
+          }
           //});
 
           $(this).closest("tr").attr("data-target", "#addNewAccount");
@@ -1055,7 +1040,6 @@ Template.accountsoverview.events({
   "click #btnNewJournalEntry": function (event) {
     FlowRouter.go("/journalentrycard");
   },
-
   "click .chkDatatable": function (event) {
     var columns = $("#tblAccountOverview th");
     let columnDataValue = $(event.target)
@@ -1781,6 +1765,20 @@ Template.accountsoverview.events({
     $(".showOnTransactions").prop("checked", false);
     $(".useReceiptClaim").prop("checked", false);
     $("#expenseCategory").val("");
+    let availableCategories = Template.instance().availableCategories.get();
+    let cateogoryHtml = "";
+    availableCategories.forEach(function (item) {
+      cateogoryHtml += '<option value="' +item +'">' +item +'</option>';
+    });
+    $("#expenseCategory").empty();
+    $("#expenseCategory").append(cateogoryHtml);
+    if (cateogoryHtml == "") {
+      $("#expenseCategory").attr("readonly", true);
+      $("#expenseCategory").attr("disabled", "disabled");
+    } else {
+      $("#expenseCategory").removeAttr("readonly", true);
+      $("#expenseCategory").removeAttr("disabled", "disabled");
+    }
     $(".isBankAccount").addClass("isNotBankAccount");
     $(".isCreditAccount").addClass("isNotCreditAccount");
   },
@@ -2191,7 +2189,7 @@ Template.accountsoverview.events({
         if (accountID === "") {
           window.open("/accountsoverview", "_self");
         } else {
-          data = {
+          let data = {
             type: "TAccount",
             fields: {
               ID: accountID,
@@ -2261,6 +2259,16 @@ Template.accountsoverview.helpers({
     }
     return bsbname;
   },
+  lastBatchUpdate: () => {
+    let transactionTableLastUpdated = "";
+    var currentDate = new Date();
+    if(localStorage.getItem('VS1TransTableUpdate')){
+       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, HH:mm:ss");
+    }else{
+      transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
+    }
+    return transactionTableLastUpdated;
+  },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
   },
@@ -2270,20 +2278,20 @@ Template.accountsoverview.helpers({
       PrefName: "tblAccountOverview",
     });
   },
-  accountTypes: () => {
-    return Template.instance()
-      .accountTypes.get()
-      .sort(function (a, b) {
-        if (a.description === "NA") {
-          return 1;
-        } else if (b.description === "NA") {
-          return -1;
-        }
-        return a.description.toUpperCase() > b.description.toUpperCase()
-          ? 1
-          : -1;
-      });
-  },
+  // accountTypes: () => {
+  //   return Template.instance()
+  //     .accountTypes.get()
+  //     .sort(function (a, b) {
+  //       if (a.description === "NA") {
+  //         return 1;
+  //       } else if (b.description === "NA") {
+  //         return -1;
+  //       }
+  //       return a.description.toUpperCase() > b.description.toUpperCase()
+  //         ? 1
+  //         : -1;
+  //     });
+  // },
   taxraterecords: () => {
     return Template.instance()
       .taxraterecords.get()

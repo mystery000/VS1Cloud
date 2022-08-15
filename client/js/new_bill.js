@@ -5527,8 +5527,8 @@ Template.billcard.events({
         let priceTotal = Number(price.replace(/[^0-9.-]+/g, ""));
         let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
 
-        let taxRateDetailList = [];
-        taxRateDetailList.push([
+        let taxDetailTableData = [];
+        taxDetailTableData.push([
             taxDetail.Description,
             taxDetail.Id,
             taxDetail.CodeName,
@@ -5540,8 +5540,8 @@ Template.billcard.events({
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
-                taxRateDetailList.push([
-                    "",
+                taxDetailTableData.push([
+                    line.Description,
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
@@ -5553,7 +5553,7 @@ Template.billcard.events({
             });
         }
 
-        if (taxRateDetailList) {
+        if (taxDetailTableData) {
 
             if (! $.fn.DataTable.isDataTable('#tblTaxDetail')) {
                 $('#tblTaxDetail').DataTable({
@@ -5603,139 +5603,139 @@ Template.billcard.events({
 
             let datatable = $('#tblTaxDetail').DataTable();
             datatable.clear();
-            datatable.rows.add(taxRateDetailList);
+            datatable.rows.add(taxDetailTableData);
             datatable.draw(false);
         }
 
         $('#tblBillLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
         $('#tblBillLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
-    'click .lineTaxCode, keydown .lineTaxCode': function(event) {
-       var $earch = $(event.currentTarget);
-       var offset = $earch.offset();
-       $('#edtTaxID').val('');
-       $('.taxcodepopheader').text('New Tax Rate');
-       $('#edtTaxID').val('');
-       $('#edtTaxNamePop').val('');
-       $('#edtTaxRatePop').val('');
-       $('#edtTaxDescPop').val('');
-       $('#edtTaxNamePop').attr('readonly', false);
-       let purchaseService = new PurchaseBoardService();
-       var taxRateDataName = $(event.target).val() || '';
-       if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-           $('#taxRateListModal').modal('toggle');
-           var targetID = $(event.target).closest('tr').attr('id');
-           $('#selectLineID').val(targetID);
-           setTimeout(function() {
-               $('#tblTaxRate_filter .form-control-sm').focus();
-               $('#tblTaxRate_filter .form-control-sm').val('');
-               $('#tblTaxRate_filter .form-control-sm').trigger("input");
+    'click .lineTaxCode, keydown .lineTaxCode': function (event) {
+        var $earch = $(event.currentTarget);
+        var offset = $earch.offset();
+        $('#edtTaxID').val('');
+        $('.taxcodepopheader').text('New Tax Rate');
+        $('#edtTaxID').val('');
+        $('#edtTaxNamePop').val('');
+        $('#edtTaxRatePop').val('');
+        $('#edtTaxDescPop').val('');
+        $('#edtTaxNamePop').attr('readonly', false);
+        let purchaseService = new PurchaseBoardService();
+        var taxRateDataName = $(event.target).val() || '';
+        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+            $('#taxRateListModal').modal('toggle');
+            var targetID = $(event.target).closest('tr').attr('id');
+            $('#selectLineID').val(targetID);
+            setTimeout(function () {
+                $('#tblTaxRate_filter .form-control-sm').focus();
+                $('#tblTaxRate_filter .form-control-sm').val('');
+                $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-               var datatable = $('#tblTaxRate').DataTable();
-               datatable.draw();
-               $('#tblTaxRate_filter .form-control-sm').trigger("input");
+                var datatable = $('#tblTaxRate').DataTable();
+                datatable.draw();
+                $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-           }, 500);
-       } else {
-           if (taxRateDataName.replace(/\s/g, '') != '') {
+            }, 500);
+        } else {
+            if (taxRateDataName.replace(/\s/g, '') != '') {
 
-               getVS1Data('TTaxcodeVS1').then(function (dataObject) {
-                 if(dataObject.length == 0){
-                   purchaseService.getTaxCodesVS1().then(function (data) {
-                     let lineItems = [];
-                     let lineItemObj = {};
-                     for(let i=0; i<data.ttaxcodevs1.length; i++){
-                       if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
-                         $('#edtTaxNamePop').attr('readonly', true);
-                       let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                       var taxRateID = data.ttaxcodevs1[i].Id || '';
-                        var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
-                        var taxRateDesc = data.ttaxcodevs1[i].Description || '';
-                        $('#edtTaxID').val(taxRateID);
-                        $('#edtTaxNamePop').val(taxRateName);
-                        $('#edtTaxRatePop').val(taxRate);
-                        $('#edtTaxDescPop').val(taxRateDesc);
-                        setTimeout(function() {
-                        $('#newTaxRateModal').modal('toggle');
-                        }, 100);
-                      }
-                     }
+                getVS1Data('TTaxcodeVS1').then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                        purchaseService.getTaxCodesVS1().then(function (data) {
+                            let lineItems = [];
+                            let lineItemObj = {};
+                            for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                                if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                    $('#edtTaxNamePop').attr('readonly', true);
+                                    let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                    var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                    var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                    var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                    $('#edtTaxID').val(taxRateID);
+                                    $('#edtTaxNamePop').val(taxRateName);
+                                    $('#edtTaxRatePop').val(taxRate);
+                                    $('#edtTaxDescPop').val(taxRateDesc);
+                                    setTimeout(function () {
+                                        $('#newTaxRateModal').modal('toggle');
+                                    }, 100);
+                                }
+                            }
 
-                   }).catch(function (err) {
-                       // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                       $('.fullScreenSpin').css('display','none');
-                       // Meteor._reload.reload();
-                   });
-                 }else{
-                   let data = JSON.parse(dataObject[0].data);
-                   let useData = data.ttaxcodevs1;
-                   let lineItems = [];
-                   let lineItemObj = {};
-                   $('.taxcodepopheader').text('Edit Tax Rate');
-                   for(let i=0; i<useData.length; i++){
+                        }).catch(function (err) {
+                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                            $('.fullScreenSpin').css('display', 'none');
+                            // Meteor._reload.reload();
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.ttaxcodevs1;
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        $('.taxcodepopheader').text('Edit Tax Rate');
+                        for (let i = 0; i < useData.length; i++) {
 
-                     if ((useData[i].CodeName) === taxRateDataName) {
-                       $('#edtTaxNamePop').attr('readonly', true);
-                     let taxRate = (useData[i].Rate * 100).toFixed(2);
-                     var taxRateID = useData[i].Id || '';
-                      var taxRateName = useData[i].CodeName ||'';
-                      var taxRateDesc = useData[i].Description || '';
-                      $('#edtTaxID').val(taxRateID);
-                      $('#edtTaxNamePop').val(taxRateName);
-                      $('#edtTaxRatePop').val(taxRate);
-                      $('#edtTaxDescPop').val(taxRateDesc);
-                      //setTimeout(function() {
-                      $('#newTaxRateModal').modal('toggle');
-                      //}, 500);
+                            if ((useData[i].CodeName) === taxRateDataName) {
+                                $('#edtTaxNamePop').attr('readonly', true);
+                                let taxRate = (useData[i].Rate * 100).toFixed(2);
+                                var taxRateID = useData[i].Id || '';
+                                var taxRateName = useData[i].CodeName || '';
+                                var taxRateDesc = useData[i].Description || '';
+                                $('#edtTaxID').val(taxRateID);
+                                $('#edtTaxNamePop').val(taxRateName);
+                                $('#edtTaxRatePop').val(taxRate);
+                                $('#edtTaxDescPop').val(taxRateDesc);
+                                //setTimeout(function() {
+                                $('#newTaxRateModal').modal('toggle');
+                                //}, 500);
+                            }
+                        }
                     }
-                   }
-                 }
-               }).catch(function (err) {
-                 purchaseService.getTaxCodesVS1().then(function (data) {
-                   let lineItems = [];
-                   let lineItemObj = {};
-                   for(let i=0; i<data.ttaxcodevs1.length; i++){
-                     if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
-                       $('#edtTaxNamePop').attr('readonly', true);
-                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                     var taxRateID = data.ttaxcodevs1[i].Id || '';
-                      var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
-                      var taxRateDesc = data.ttaxcodevs1[i].Description || '';
-                      $('#edtTaxID').val(taxRateID);
-                      $('#edtTaxNamePop').val(taxRateName);
-                      $('#edtTaxRatePop').val(taxRate);
-                      $('#edtTaxDescPop').val(taxRateDesc);
-                      setTimeout(function() {
-                      $('#newTaxRateModal').modal('toggle');
-                      }, 100);
+                }).catch(function (err) {
+                    purchaseService.getTaxCodesVS1().then(function (data) {
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                            if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                $('#edtTaxNamePop').attr('readonly', true);
+                                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                $('#edtTaxID').val(taxRateID);
+                                $('#edtTaxNamePop').val(taxRateName);
+                                $('#edtTaxRatePop').val(taxRate);
+                                $('#edtTaxDescPop').val(taxRateDesc);
+                                setTimeout(function () {
+                                    $('#newTaxRateModal').modal('toggle');
+                                }, 100);
 
-                    }
-                   }
+                            }
+                        }
 
-                 }).catch(function (err) {
-                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                     $('.fullScreenSpin').css('display','none');
-                     // Meteor._reload.reload();
-                 });
-               });
+                    }).catch(function (err) {
+                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                        $('.fullScreenSpin').css('display', 'none');
+                        // Meteor._reload.reload();
+                    });
+                });
 
-           } else {
-               $('#taxRateListModal').modal('toggle');
-               var targetID = $(event.target).closest('tr').attr('id');
-               $('#selectLineID').val(targetID);
-               setTimeout(function() {
-                   $('#tblTaxRate_filter .form-control-sm').focus();
-                   $('#tblTaxRate_filter .form-control-sm').val('');
-                   $('#tblTaxRate_filter .form-control-sm').trigger("input");
+            } else {
+                $('#taxRateListModal').modal('toggle');
+                var targetID = $(event.target).closest('tr').attr('id');
+                $('#selectLineID').val(targetID);
+                setTimeout(function () {
+                    $('#tblTaxRate_filter .form-control-sm').focus();
+                    $('#tblTaxRate_filter .form-control-sm').val('');
+                    $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-                   var datatable = $('#tblTaxRate').DataTable();
-                   datatable.draw();
-                   $('#tblTaxRate_filter .form-control-sm').trigger("input");
+                    var datatable = $('#tblTaxRate').DataTable();
+                    datatable.draw();
+                    $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-               }, 500);
-           }
+                }, 500);
+            }
 
-       }
+        }
 
     },
     'click .lineCustomerJob, keydown .lineCustomerJob': function(event) {
@@ -6362,19 +6362,99 @@ Template.billcard.events({
 
 
 
-                    } else {
-                                swal({
-                                    title: 'Customer Email Required',
-                                    text: 'Please enter customer email',
-                                    type: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK'
-                                }).then((result) => {
-                                    if (result.value) {}
-                                    else if (result.dismiss === 'cancel') {}
-                                });
+        } else {
+                    swal({
+                        title: 'Customer Email Required',
+                        text: 'Please enter customer email',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {}
+                        else if (result.dismiss === 'cancel') {}
+                    });
+        }
+
+        function generatePdfForMail(invoiceId) {
+            let file = "Bill-" + invoiceId + ".pdf"
+            return new Promise((resolve, reject) => {
+                let templateObject = Template.instance();
+                let completeTabRecord;
+                let doc = new jsPDF('p', 'pt', 'a4');
+                var source = document.getElementById('html-2-pdfwrapper');
+                var opt = {
+                    margin: 0,
+                    filename: file,
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'a4',
+                        orientation: 'portrait'
                     }
-         },
+                }
+                resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+
+            });
+        }
+
+        let attachment = [];
+        let templateObject = Template.instance();
+
+        let billId = FlowRouter.current().queryParams.id? parseInt(FlowRouter.current().queryParams.id) : 0;
+        let encodedPdf = await generatePdfForMail(billId);
+        let pdfObject = "";
+
+        let base64data = encodedPdf.split(',')[1];
+        pdfObject = {
+            filename: 'Bill-' + billId + '.pdf',
+            content: base64data,
+            encoding: 'base64'
+        };
+        attachment.push(pdfObject);
+
+
+        let values = [];
+        let basedOnTypeStorages = Object.keys(localStorage);
+        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split('_')[2];
+            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_');
+        });
+        let j = basedOnTypeStorages.length;
+        if (j > 0) {
+            while (j--) {
+                values.push(localStorage.getItem(basedOnTypeStorages[j]));
+            }
+        }
+        values.forEach(value => {
+            let reportData = JSON.parse(value);
+            let temp = {... reportData};
+            
+            temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+            temp.attachments = attachment;
+            if (temp.BasedOnType.includes("P")) {
+                if (temp.FormID == 1) {
+                    let formIds = temp.FormIDs.split(',');
+                    if (formIds.includes("12")) {
+                        temp.FormID = 12;
+                        Meteor.call('sendNormalEmail', temp);
+                    }
+                } else {
+                    if (temp.FormID == 12)
+                        Meteor.call('sendNormalEmail', temp);
+                }
+            }
+        });
+
+        
+    },
 
     'click  #open_print_confirm':function(event)
     {
@@ -6928,7 +7008,7 @@ Template.billcard.events({
 
                     let base64data = encodedPdf.split(',')[1];
                     pdfObject = {
-                        filename: 'invoice-' + invoiceId + '.pdf',
+                        filename: 'Bill-' + invoiceId + '.pdf',
                         content: base64data,
                         encoding: 'base64'
                     };
@@ -7054,7 +7134,8 @@ Template.billcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_');
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -7064,17 +7145,21 @@ Template.billcard.events({
                         }
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
+                            let temp = {... reportData};
+                            
+                            temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                            if (reportData.BasedOnType.includes("S")) {
-                                if (reportData.FormID == 1) {
-                                    let formIds = reportData.FormIDs.split(',');
+                            temp.attachments = attachment;
+                            if (temp.BasedOnType.includes("S")) {
+                                if (temp.FormID == 1) {
+                                    let formIds = temp.FormIDs.split(',');
                                     if (formIds.includes("12")) {
-                                        reportData.FormID = 12;
-                                        Meteor.call('sendNormalEmail', reportData);
+                                        temp.FormID = 12;
+                                        Meteor.call('sendNormalEmail', temp);
                                     }
                                 } else {
-                                    if (reportData.FormID == 12)
-                                        Meteor.call('sendNormalEmail', reportData);
+                                    if (temp.FormID == 12)
+                                        Meteor.call('sendNormalEmail', temp);
                                 }
                             }
                         });
@@ -7118,7 +7203,8 @@ Template.billcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -7129,6 +7215,7 @@ Template.billcard.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
                             if (reportData.BasedOnType.includes("S")) {
                                 if (reportData.FormID == 1) {
                                     let formIds = reportData.FormIDs.split(',');
@@ -7182,7 +7269,8 @@ Template.billcard.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_');
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -7193,6 +7281,7 @@ Template.billcard.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
                             if (reportData.BasedOnType.includes("S")) {
                                 if (reportData.FormID == 1) {
                                     let formIds = reportData.FormIDs.split(',');
@@ -7208,6 +7297,38 @@ Template.billcard.events({
                         });
 
                     } else {
+
+
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_');
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("12")) {
+                                        reportData.FormID = 12;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 12)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        }); 
                       if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{

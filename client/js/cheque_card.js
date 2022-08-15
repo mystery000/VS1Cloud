@@ -3799,61 +3799,7 @@ Template.chequecard.onRendered(() => {
       }
     });
 
-  const exportSalesToPdf = function () {
-    let margins = {
-      top: 0,
-      bottom: 0,
-      left: 0,
-      width: 100,
-    };
-    let id = $(".printID").attr("id");
 
-    var source = document.getElementById("html-2-pdfwrapper");
-
-    let file = "Cheque.pdf";
-    if (
-        $(".printID").attr("id") != undefined ||
-        $(".printID").attr("id") != ""
-    ) {
-      file = "Cheque-" + id + ".pdf";
-    }
-
-    var opt = {
-      margin: 0,
-      filename: file,
-      image: {
-        type: "jpeg",
-        quality: 0.98,
-      },
-      html2canvas: {
-        scale: 2,
-      },
-      jsPDF: {
-        unit: "in",
-        format: "a4",
-        orientation: "portrait",
-      },
-    };
-    html2pdf()
-        .set(opt)
-        .from(source)
-        .save()
-        .then(function (dataObject) {
-          if (
-              $(".printID").attr("id") == undefined ||
-              $(".printID").attr("id") == ""
-          ) {
-            $(".btnSave").trigger("click");
-          } else {
-            $("#html-2-pdfwrapper").css("display", "none");
-            $(".fullScreenSpin").css("display", "none");
-          }
-        });
-    // pdf.addHTML(source, function() {
-    //     pdf.save('Cheque '+id+'.pdf');
-    //     $('#html-2-pdfwrapper').css('display', 'none');
-    // });
-  };
 });
 
 Template.chequecard.onRendered(function () {
@@ -5191,6 +5137,107 @@ Template.chequecard.events({
         .val()
         .replace(/[\r\n]/g, "<br />")
     );
+
+
+
+    exportSalesToPdf =  () =>{
+      let margins = {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        width: 100,
+      };
+      let id = $(".printID").attr("id");
+  
+      var source = document.getElementById("html-2-pdfwrapper");
+  
+      let file = "Cheque.pdf";
+      if (
+          $(".printID").attr("id") != undefined ||
+          $(".printID").attr("id") != ""
+      ) {
+        file = "Cheque-" + id + ".pdf";
+      }
+  
+      var opt = {
+        margin: 0,
+        filename: file,
+        image: {
+          type: "jpeg",
+          quality: 0.98,
+        },
+        html2canvas: {
+          scale: 2,
+        },
+        jsPDF: {
+          unit: "in",
+          format: "a4",
+          orientation: "portrait",
+        },
+      };
+
+      html2pdf().set(opt).from(source).toPdf().output('datauristring').then((data)=>{
+        let attachment = [];
+        let base64data = data.split(',')[1];
+        let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
+        pdfObject = {
+            filename: 'Bill-' + chequeId + '.pdf',
+            content: base64data,
+            encoding: 'base64'
+        };
+        attachment.push(pdfObject);
+        let values = [];
+        let basedOnTypeStorages = Object.keys(localStorage);
+        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split('_')[2];
+            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_');
+        });
+        let j = basedOnTypeStorages.length;
+        if (j > 0) {
+            while (j--) {
+                values.push(localStorage.getItem(basedOnTypeStorages[j]));
+            }
+        }
+        if(values.length > 0) {
+          values.forEach(value => {
+              let reportData = JSON.parse(value);
+              let temp = {... reportData};
+              
+              temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+              reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+              temp.attachments = attachment;
+              if (temp.BasedOnType.includes("P")) {
+                  if (temp.FormID == 1) {
+                      let formIds = temp.FormIDs.split(',');
+                      if (formIds.includes("18")) {
+                          temp.FormID = 18;
+                          Meteor.call('sendNormalEmail', temp);
+                      }
+                  } else {
+                      if (temp.FormID == 18)
+                          Meteor.call('sendNormalEmail', temp);
+                  }
+              }
+          });
+        }
+        html2pdf().set(opt).from(source).save().then(function (dataObject) {
+              if (
+                  $(".printID").attr("id") == undefined ||
+                  $(".printID").attr("id") == ""
+              ) {
+                $(".btnSave").trigger("click");
+              } else {
+                $("#html-2-pdfwrapper").css("display", "none");
+                $(".fullScreenSpin").css("display", "none");
+              }
+            });
+      })
+      // pdf.addHTML(source, function() {
+      //     pdf.save('Cheque '+id+'.pdf');
+      //     $('#html-2-pdfwrapper').css('display', 'none');
+      // });
+    };
     exportSalesToPdf();
   },
   "keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount": function (
@@ -5888,6 +5935,41 @@ Template.chequecard.events({
                     }
                   }
                 );
+
+
+                let values = [];
+                let basedOnTypeStorages = Object.keys(localStorage);
+                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                    let employeeId = storage.split('_')[2];
+                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    return storage.includes('BasedOnType_');
+                });
+                let i = basedOnTypeStorages.length;
+                if (i > 0) {
+                    while (i--) {
+                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                    }
+                }
+                values.forEach(value => {
+                    let reportData = JSON.parse(value);
+                    let temp = {... reportData};
+                    
+                    temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    temp.attachments = attachment;
+                    if (temp.BasedOnType.includes("S")) {
+                        if (temp.FormID == 1) {
+                            let formIds = temp.FormIDs.split(',');
+                            if (formIds.includes("18")) {
+                                temp.FormID = 18;
+                                Meteor.call('sendNormalEmail', temp);
+                            }
+                        } else {
+                            if (temp.FormID == 18)
+                                Meteor.call('sendNormalEmail', temp);
+                        }
+                    }
+                });
               } else if ($(".chkEmailCopy").is(":checked")) {
                 Meteor.call(
                   "sendEmail",
@@ -5929,6 +6011,39 @@ Template.chequecard.events({
                     }
                   }
                 );
+                let values = [];
+                let basedOnTypeStorages = Object.keys(localStorage);
+                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                    let employeeId = storage.split('_')[2];
+                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    return storage.includes('BasedOnType_');
+                });
+                let i = basedOnTypeStorages.length;
+                if (i > 0) {
+                    while (i--) {
+                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                    }
+                }
+                values.forEach(value => {
+                    let reportData = JSON.parse(value);
+                    let temp = {... reportData};
+                    
+                    temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    temp.attachments = attachment;
+                    if (temp.BasedOnType.includes("S")) {
+                        if (temp.FormID == 1) {
+                            let formIds = temp.FormIDs.split(',');
+                            if (formIds.includes("18")) {
+                                temp.FormID = 18;
+                                Meteor.call('sendNormalEmail', temp);
+                            }
+                        } else {
+                            if (temp.FormID == 18)
+                                Meteor.call('sendNormalEmail', temp);
+                        }
+                    }
+                });
               } else if ($(".chkEmailRep").is(":checked")) {
                 Meteor.call(
                   "sendEmail",
@@ -5970,7 +6085,76 @@ Template.chequecard.events({
                     }
                   }
                 );
+
+                let values = [];
+                let basedOnTypeStorages = Object.keys(localStorage);
+                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                    let employeeId = storage.split('_')[2];
+                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    return storage.includes('BasedOnType_');
+                });
+                let i = basedOnTypeStorages.length;
+                if (i > 0) {
+                    while (i--) {
+                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                    }
+                }
+                values.forEach(value => {
+                    let reportData = JSON.parse(value);
+                    let temp = {... reportData};
+                    
+                    temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    temp.attachments = attachment;
+                    if (temp.BasedOnType.includes("S")) {
+                        if (temp.FormID == 1) {
+                            let formIds = temp.FormIDs.split(',');
+                            if (formIds.includes("18")) {
+                                temp.FormID = 18;
+                                Meteor.call('sendNormalEmail', temp);
+                            }
+                        } else {
+                            if (temp.FormID == 18)
+                                Meteor.call('sendNormalEmail', temp);
+                        }
+                    }
+                });
               } else {
+
+                let values = [];
+                let basedOnTypeStorages = Object.keys(localStorage);
+                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                    let employeeId = storage.split('_')[2];
+                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    return storage.includes('BasedOnType_');
+                });
+                let i = basedOnTypeStorages.length;
+                if (i > 0) {
+                    while (i--) {
+                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                    }
+                }
+                values.forEach(value => {
+                    let reportData = JSON.parse(value);
+                    let temp = {... reportData};
+                    
+                    temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    temp.attachments = attachment;
+                    if (temp.BasedOnType.includes("S")) {
+                        if (temp.FormID == 1) {
+                            let formIds = temp.FormIDs.split(',');
+                            if (formIds.includes("18")) {
+                                temp.FormID = 18;
+                                Meteor.call('sendNormalEmail', temp);
+                            }
+                        } else {
+                            if (temp.FormID == 18)
+                                Meteor.call('sendNormalEmail', temp);
+                        }
+                    }
+                });
+
                 if(FlowRouter.current().queryParams.trans){
                   FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                 }else{

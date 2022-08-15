@@ -6,12 +6,16 @@ import {AccountService} from "../accounts/account-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {OrganisationService} from '../js/organisation-service';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.billlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.custfields = new ReactiveVar([]);
+    templateObject.displayfields = new ReactiveVar([]);
 });
 
 Template.billlist.onRendered(function() {
@@ -403,6 +407,7 @@ Template.billlist.onRendered(function() {
                         sWidth = v.style.width.replace('px', "");
 
                         let datatablerecordObj = {
+                            custid: $(this).attr("custid") || 0,
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
                             sIndex: v.cellIndex || '',
@@ -425,6 +430,7 @@ Template.billlist.onRendered(function() {
                         }
                     });
 
+                    templateObject.getCustomFieldData();
                 }).catch(function (err) {
 
                     $('.fullScreenSpin').css('display','none');
@@ -710,6 +716,7 @@ Template.billlist.onRendered(function() {
                     sWidth = v.style.width.replace('px', "");
 
                     let datatablerecordObj = {
+                        custid: $(this).attr("custid") || 0,
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
                         sIndex: v.cellIndex || '',
@@ -732,6 +739,7 @@ Template.billlist.onRendered(function() {
                     }
                 });
 
+                templateObject.getCustomFieldData();
             }
         }).catch(function (err) {
           sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
@@ -1012,6 +1020,7 @@ Template.billlist.onRendered(function() {
                   sWidth = v.style.width.replace('px', "");
 
                   let datatablerecordObj = {
+                      custid: $(this).attr("custid") || 0,
                       sTitle: v.innerText || '',
                       sWidth: sWidth || '',
                       sIndex: v.cellIndex || '',
@@ -1034,6 +1043,7 @@ Template.billlist.onRendered(function() {
                   }
               });
 
+              templateObject.getCustomFieldData();
           }).catch(function (err) {
 
               $('.fullScreenSpin').css('display','none');
@@ -1075,6 +1085,124 @@ Template.billlist.onRendered(function() {
             $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
         }
     }
+
+
+    // custom field displaysettings
+  templateObject.getCustomFieldData= function() {
+    let listType = "ltBillList";
+      getVS1Data('TCustomFieldList').then(function (dataObject) {
+          if(dataObject.length == 0){
+                sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+                  templateObject.setCustomFieldDataCheckIndexDB(data);
+                });
+            }else{
+              let data = JSON.parse(dataObject[0].data);
+              templateObject.setCustomFieldDataCheckIndexDB(data);
+            }
+      }).catch(function (err) {
+            sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
+              templateObject.setCustomFieldDataCheckIndexDB(data);
+            });
+      });
+  }
+
+  // custom field displaysettings
+  templateObject.setCustomFieldDataCheckIndexDB = function(data) {
+
+
+    let custFields = [];
+    let dispFields = [];
+    let customData = {};
+    let customFieldCount = 11;
+    let listType = "ltBillList";
+
+    let reset_data = [
+
+      { label: 'Order Date', class: 'colOrderDate', active: true },
+      { label: 'Bill No.', class: 'colPurchaseNo', active: true },
+      { label: 'Supplier', class: 'colSupplier', active: true },
+      { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
+      { label: 'Tax', class: 'colTax', active: true },
+      { label: 'Amount', class: 'colAmount', active: true },
+      { label: 'Paid', class: 'colPaid', active: true },
+      { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
+      { label: 'Status', class: 'colStatus', active: true },
+      { label: 'Employee', class: 'colEmployee', active: true },
+      { label: 'Comments', class: 'colComments', active: false },
+    ];
+      for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+        if (data.tcustomfieldlist[x].fields.ListType == 'ltOrder') {
+          customData = {
+            active: data.tcustomfieldlist[x].fields.Active || false,
+            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+            datatype: data.tcustomfieldlist[x].fields.DataType || "",
+            isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+            iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+            dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+          };
+          custFields.push(customData);
+        } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
+          customData = {
+            active: data.tcustomfieldlist[x].fields.Active || false,
+            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+            datatype: data.tcustomfieldlist[x].fields.DataType || "",
+            isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+            iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+            dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+          };
+          dispFields.push(customData);
+        }
+      }
+
+      if (custFields.length < 3) {
+        let remainder = 3 - custFields.length;
+        let getRemCustomFields = parseInt(custFields.length);
+        for (let r = 0; r < remainder; r++) {
+          getRemCustomFields++;
+          customData = {
+            active: false,
+            id: "",
+            custfieldlabel: "Custom Field " + getRemCustomFields,
+            datatype: "",
+            isempty: true,
+            iscombo: false,
+          };
+          // count++;
+          custFields.push(customData);
+        }
+      }
+
+      if (dispFields.length < customFieldCount) {
+        let remainder = customFieldCount - dispFields.length;
+        let getRemCustomFields = parseInt(dispFields.length);
+        for (let r = 0; r < remainder; r++) {
+          customData = {
+            active: reset_data[getRemCustomFields].active,
+            id: "",
+            custfieldlabel: reset_data[getRemCustomFields].label,
+            datatype: "",
+            isempty: true,
+            iscombo: false,
+          };
+          getRemCustomFields++;
+          // count++;
+          dispFields.push(customData);
+        }
+      }
+
+      for (let index = 0; index < custFields.length; index++) {
+        const element = custFields[index];
+        dispFields.push(element);
+
+      }
+
+      templateObject.custfields.set(custFields);
+      templateObject.displayfields.set(dispFields);
+
+  }
+
 });
 
 Template.billlist.events({
@@ -1214,86 +1342,124 @@ Template.billlist.events({
         }
     },
     'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblbilllist'});
-                if (checkPrefDetails) {
-                    CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
-                        if (err) {
+      let templateObject = Template.instance();
+      let custFields = templateObject.custfields.get();
 
-                        }else{
-                            Meteor._reload.reload();
-                        }
-                    });
 
-                }
-            }
+      let reset_data = [
+        { label: 'Order Date', class: 'colOrderDate', active: true },
+        { label: 'Bill No.', class: 'colPurchaseNo', active: true },
+        { label: 'Supplier', class: 'colSupplier', active: true },
+        { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
+        { label: 'Tax', class: 'colTax', active: true },
+        { label: 'Amount', class: 'colAmount', active: true },
+        { label: 'Paid', class: 'colPaid', active: true },
+        { label: 'Outstanding', class: 'colBalanceOutstanding', active: false },
+        { label: 'Status', class: 'colStatus', active: true },
+        { label: 'Employee', class: 'colEmployee', active: true },
+        { label: 'Comments', class: 'colComments', active: false },
+        { label: custFields[0].custfieldlabel, class: 'colSaleCustField1', active: custFields[0].active },
+        { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
+        { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
+      ];
+
+      $('.displaySettings').each(function(index) {
+        var $tblrow = $(this);
+        $tblrow.find(".divcolumn").text(reset_data[index].label);
+        $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
+
+        // var title = datable.column( index+1 ).header();
+        var title = $('#tblpurchaseorderlist').find('th').eq(index + 1);
+        $(title).html(reset_data[index].label);
+
+        if (reset_data[index].active) {
+          $('.' + reset_data[index].class).css('display', 'table-cell');
+          $('.' + reset_data[index].class).css('padding', '.75rem');
+          $('.' + reset_data[index].class).css('vertical-align', 'top');
+        } else {
+          $('.' + reset_data[index].class).css('display', 'none');
         }
+
+      });
     },
+
     'click .saveTable' : function(event){
-        let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text()||'';
-            var colWidth = $tblrow.find(".custom-range").val()||0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate")||'';
-            var colHidden = false;
-            if($tblrow.find(".custom-control-input").is(':checked')){
-                colHidden = false;
-            }else{
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
+      let lineItems = [];
+      let organisationService = new OrganisationService();
+      let listType = "ltBillList";
 
-            lineItems.push(lineItemObj);
-        });
+      $(".fullScreenSpin").css("display", "inline-block");
 
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblbilllist'});
-                if (checkPrefDetails) {
-                    CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-                                                                               PrefGroup:'salesform',PrefName:'tblbilllist',published:true,
-                                                                               customFields:lineItems,
-                                                                               updatedAt: new Date() }}, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                }else{
-                    CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-                                            PrefGroup:'salesform',PrefName:'tblbilllist',published:true,
-                                            customFields:lineItems,
-                                            createdAt: new Date() }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-
-                }
-            }
+      $('.displaySettings').each(function(index) {
+        var $tblrow = $(this);
+        var fieldID = $tblrow.attr("custid") || 0;
+        var colTitle = $tblrow.find(".divcolumn").text() || '';
+        var colWidth = $tblrow.find(".custom-range").val() || 0;
+        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+        var colHidden = false;
+        if ($tblrow.find(".custom-control-input").is(':checked')) {
+            colHidden = true;
+        } else {
+            colHidden = false;
         }
-        $('#myModal2').modal('toggle');
+        let lineItemObj = {
+            index: index,
+            label: colTitle,
+            hidden: colHidden,
+            width: colWidth,
+            thclass: colthClass
+        }
+
+        lineItems.push(lineItemObj);
+
+        if(fieldID && parseInt(fieldID) != 0){
+          objDetails1 = {
+            type: "TCustomFieldList",
+            fields: {
+              Active: colHidden,
+              ID: parseInt(fieldID),
+              Description: colTitle,
+              Width: colWidth
+            },
+          };
+        } else {
+          objDetails1 = {
+            type: "TCustomFieldList",
+            fields: {
+              Active: colHidden,
+              DataType: "ftString",
+              Description: colTitle,
+              ListType: listType,
+              Width: colWidth
+            },
+          };
+        }
+
+        organisationService.saveCustomField(objDetails1).then(function (objDetails) {
+          $(".fullScreenSpin").css("display", "none");
+          //Reload Custom Field on Save
+          sideBarService.getAllCustomFields().then(function(data) {
+              addVS1Data('TCustomFieldList', JSON.stringify(data));
+          });
+          $('#myModal2').modal('hide');
+        }).catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {
+            if (result.value) {
+              $(".fullScreenSpin").css("display", "none");
+            } else if (result.dismiss === "cancel") {
+            }
+            $('#myModal2').modal('hide');
+          });
+          $(".fullScreenSpin").css("display", "none");
+          $('#myModal2').modal('hide');
+        });
+      });
     },
     'blur .divcolumn' : function(event){
         let columData = $(event.target).text();
@@ -1337,6 +1503,7 @@ Template.billlist.events({
             sWidth = v.style.width.replace('px', "");
 
             let datatablerecordObj = {
+                custid: $(this).attr("custid") || 0,
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
                 sIndex: v.cellIndex || '',
@@ -1421,7 +1588,7 @@ Template.billlist.events({
 
       sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataBillList) {
           addVS1Data('TBillList',JSON.stringify(dataBillList)).then(function (datareturn) {
-            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
+            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0, '').then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
                 sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
@@ -1716,6 +1883,17 @@ Template.billlist.helpers({
     },
     purchasesCloudPreferenceRec: () => {
         return CloudPreference.findOne({userid:Session.get('mycloudLogonID'),PrefName:'tblbilllist'});
-    }
+    },
+
+
+  // custom fields displaysettings
+  custfields: () => {
+    return Template.instance().custfields.get();
+  },
+
+  // custom fields displaysettings
+  displayfields: () => {
+    return Template.instance().displayfields.get();
+  },
 
 });

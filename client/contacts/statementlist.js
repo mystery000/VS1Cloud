@@ -109,134 +109,140 @@ Template.statementlist.onRendered(function () {
 
     templateObject.getOrganisationDetails();
     templateObject.getStatePrintData = async function (clientID) {
-        //getOneInvoicedata
-        let data = await contactService.getCustomerStatementPrintData(clientID);
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#printstatmentdesign').css('display', 'block');
-        let lineItems = [];
-        let lineItemObj = {};
-        let lineItemsTable = [];
-        let lineItemTableObj = {};
 
-        if (data.tstatementforcustomer.length) {
+        return new Promise(async (resolve, reject) =>{
+            //getOneInvoicedata
+            let data = await contactService.getCustomerStatementPrintData(clientID);
+            $('.fullScreenSpin').css('display', 'inline-block');
+            $('#printstatmentdesign').css('display', 'block');
             let lineItems = [];
-            let balance = data.tstatementforcustomer[0].closingBalance;
-            let stripe_id = templateObject.accountID.get();
-            let stripe_fee_method = templateObject.stripe_fee_method.get();
-            var erpGet = erpDb();
-            let company = Session.get('vs1companyName');
-            let vs1User = localStorage.getItem('mySession');
-            let dept = "Head Office";
+            let lineItemObj = {};
+            let lineItemsTable = [];
+            let lineItemTableObj = {};
 
-            let customerName = data.tstatementforcustomer[0].CustomerName;
-            let openingbalance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].OpeningBalance);
-            let closingbalance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].closingBalance);
-            let customerphone = data.tstatementforcustomer[0].Phone || '';
-            let customername = data.tstatementforcustomer[0].ClientName || '';
-            let billaddress = data.tstatementforcustomer[0].BillStreet || '';
-            let billstate = data.tstatementforcustomer[0].BillState || '';
-            let billcountry = data.tstatementforcustomer[0].BillCountry || '';
-            let statementId = data.tstatementforcustomer[0].TranstypeNo || '';
-            let email = data.tstatementforcustomer[0].Email || '';
-            let invoiceId = data.tstatementforcustomer[0].SaleID || '';
-            let date = moment(data.tstatementforcustomer[0].transdate).format('DD/MM/YYYY') || '';
-            let datedue = moment(data.tstatementforcustomer[0].Duedate).format('DD/MM/YYYY') || '';
-            // let paidAmt = data.tstatementforcustomer[0].Paidamt || '';
-            let paidAmt = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].Paidamt).toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                });
-            let stringQuery = "?";
-            for (let i = 0; i < data.tstatementforcustomer.length; i++) {
-                let id = data.tstatementforcustomer[i].SaleID;
-                let transdate =  moment(data.tstatementforcustomer[i].transdate).format('DD/MM/YYYY') ? moment(data.tstatementforcustomer[i].transdate).format('DD/MM/YYYY') : "";
-                let type = data.tstatementforcustomer[i].Transtype;
-                let status = '';
-                // let type = data.tstatementforcustomer[i].Transtype;
-                let total = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                });
-                let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                });
-                let balance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                });
+            if (data.tstatementforcustomer.length) {
+                let lineItems = [];
+                let balance = data.tstatementforcustomer[0].closingBalance;
+                let stripe_id = templateObject.accountID.get();
+                let stripe_fee_method = templateObject.stripe_fee_method.get();
+                var erpGet = erpDb();
+                let company = Session.get('vs1companyName');
+                let vs1User = localStorage.getItem('mySession');
+                let dept = "Head Office";
 
-                lineItemObj = {
-                    lineID: id,
-                    id: id || '',
-                    date: transdate || '',
-                    duedate: datedue,
-                    type: type || '',
-                    total: total || 0,
-                    paidamt:paidAmt || 0,
-                    totalPaid: totalPaid || 0,
+                let customerName = data.tstatementforcustomer[0].CustomerName;
+                let openingbalance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].OpeningBalance);
+                let closingbalance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].closingBalance);
+                let customerphone = data.tstatementforcustomer[0].Phone || '';
+                let customername = data.tstatementforcustomer[0].ClientName || '';
+                let billaddress = data.tstatementforcustomer[0].BillStreet || '';
+                let billstate = data.tstatementforcustomer[0].BillState || '';
+                let billcountry = data.tstatementforcustomer[0].BillCountry || '';
+                let statementId = data.tstatementforcustomer[0].TranstypeNo || '';
+                let email = data.tstatementforcustomer[0].Email || '';
+                let invoiceId = data.tstatementforcustomer[0].SaleID || '';
+                let date = moment(data.tstatementforcustomer[0].transdate).format('DD/MM/YYYY') || '';
+                let datedue = moment(data.tstatementforcustomer[0].Duedate).format('DD/MM/YYYY') || '';
+                // let paidAmt = data.tstatementforcustomer[0].Paidamt || '';
+                let paidAmt = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[0].Paidamt).toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    });
+                let stringQuery = "?";
+                for (let i = 0; i < data.tstatementforcustomer.length; i++) {
+                    let id = data.tstatementforcustomer[i].SaleID;
+                    let transdate =  moment(data.tstatementforcustomer[i].transdate).format('DD/MM/YYYY') ? moment(data.tstatementforcustomer[i].transdate).format('DD/MM/YYYY') : "";
+                    let type = data.tstatementforcustomer[i].Transtype;
+                    let status = '';
+                    // let type = data.tstatementforcustomer[i].Transtype;
+                    let total = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    });
+                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    });
+                    let balance = utilityService.modifynegativeCurrencyFormat(data.tstatementforcustomer[i].Amount).toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    });
 
-                    balance: balance || 0
+                    lineItemObj = {
+                        lineID: id,
+                        id: id || '',
+                        date: transdate || '',
+                        duedate: datedue,
+                        type: type || '',
+                        total: total || 0,
+                        paidamt:paidAmt || 0,
+                        totalPaid: totalPaid || 0,
 
+                        balance: balance || 0
+
+                    };
+
+                    lineItems.push(lineItemObj);
+                }
+
+                if (balance > 0) {
+                    for (let l = 0; l < lineItems.length; l++) {
+                        stringQuery = stringQuery + "product" + l + "=" + lineItems[l].type + "&price" + l + "=" + lineItems[l].balance + "&qty" + l + "=" + 1 + "&"; ;
+                    }
+                    stringQuery = stringQuery + "tax=0" + "&total=" + closingbalance + "&customer=" + customerName + "&name=" + customerName + "&surname=" + customerName + "&quoteid=" + invoiceId + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + email + "&type=Statement&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept;
+                }
+
+                var currentDate = new Date();
+                var begunDate = moment(currentDate).format("DD/MM/YYYY");
+                let statmentrecord = {
+                    id: '',
+                    printdate: begunDate,
+                    customername: customerName,
+                    LineItems: lineItems,
+                    phone: customerphone,
+                    customername: customername,
+                    billaddress: billaddress,
+                    billstate: billstate,
+                    billcountry: billcountry,
+                    email: email,
+                    openingBalance: openingbalance,
+                    closingBalance: closingbalance
                 };
 
-                lineItems.push(lineItemObj);
+                templateObject.statmentprintrecords.set(statmentrecord);
+
+                $(".linkText").text('Pay Now');
+                $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                var source = document.getElementById('printstatmentdesign');
+
+                let file = "Customer Statement.pdf";
+                var opt = {
+                    margin: 0,
+                    filename: file,
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'a4',
+                        orientation: 'portrait'
+                    }
+                };
+                setTimeout(function () {
+                    html2pdf().set(opt).from(source).toPdf().output('datauristring').then((data)=>{
+                        html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                            resolve(data)
+                            $('.fullScreenSpin').css('display', 'none');
+                            $('#printstatmentdesign').css('display', 'none');
+                        });
+                    })
+
+                }, 100);
+
             }
 
-            if (balance > 0) {
-                for (let l = 0; l < lineItems.length; l++) {
-                    stringQuery = stringQuery + "product" + l + "=" + lineItems[l].type + "&price" + l + "=" + lineItems[l].balance + "&qty" + l + "=" + 1 + "&"; ;
-                }
-                stringQuery = stringQuery + "tax=0" + "&total=" + closingbalance + "&customer=" + customerName + "&name=" + customerName + "&surname=" + customerName + "&quoteid=" + invoiceId + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + email + "&type=Statement&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept;
-            }
-
-            var currentDate = new Date();
-            var begunDate = moment(currentDate).format("DD/MM/YYYY");
-            let statmentrecord = {
-                id: '',
-                printdate: begunDate,
-                customername: customerName,
-                LineItems: lineItems,
-                phone: customerphone,
-                customername: customername,
-                billaddress: billaddress,
-                billstate: billstate,
-                billcountry: billcountry,
-                email: email,
-                openingBalance: openingbalance,
-                closingBalance: closingbalance
-            };
-
-            templateObject.statmentprintrecords.set(statmentrecord);
-
-            $(".linkText").text('Pay Now');
-            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-            var source = document.getElementById('printstatmentdesign');
-
-            let file = "Customer Statement.pdf";
-            var opt = {
-                margin: 0,
-                filename: file,
-                image: {
-                    type: 'jpeg',
-                    quality: 0.98
-                },
-                html2canvas: {
-                    scale: 2
-                },
-                jsPDF: {
-                    unit: 'in',
-                    format: 'a4',
-                    orientation: 'portrait'
-                }
-            };
-            setTimeout(function () {
-                html2pdf().set(opt).from(source).save().then(function (dataObject) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('#printstatmentdesign').css('display', 'none');
-                });
-
-            }, 100);
-
-        }
-
-        //});
+            //});
+        })
     };
 
     templateObject.getStatementPdfData = function (clientID) {
@@ -245,6 +251,7 @@ Template.statementlist.onRendered(function () {
         let objectDataArray = []
         //contactService.getCustomerStatementPrintData(clientID).then(function (data) {
 
+        $('#printstatmentdesign').css('display', 'block');
         return new Promise((resolve, reject) => {
             contactService.getCustomerStatementPrintData(clientID).then(function (data) {
                 let lineItems = [];
@@ -342,7 +349,7 @@ Template.statementlist.onRendered(function () {
                             $('.link').css('display', 'none');
                             $('.linklabel').css('display', 'none');
                         }
-                        let file = "Invoice-" + invoiceId + ".pdf"
+                        let file = "Statement-" + invoiceId + ".pdf"
                             let templateObject = Template.instance();
                         let completeTabRecord;
 
@@ -371,9 +378,10 @@ Template.statementlist.onRendered(function () {
                                 email: email,
                                 link: stringQuery
                             };
-                            //$('#printstatmentdesign').css('display', 'none');
+
                             resolve(html2pdf().set(opt1).from(source).toPdf().output('datauristring'))
                         }, 2000);
+                        $('#printstatmentdesign').css('display', 'none');
 
                     }
                 }
@@ -1654,6 +1662,7 @@ Template.statementlist.onRendered(function () {
         }
     }
 
+
     templateObject.emailMultipleStatementPdf = async function (listIds) {
         let multiPDF = [];
         let doc = new jsPDF();
@@ -2310,6 +2319,7 @@ Template.statementlist.events({
     },
     'click .printConfirm ': async function (event) {
         $('.fullScreenSpin').css('display', 'block');
+        let attachment = [] ;
         let templateObject = Template.instance();
 
         let listIds = [];
@@ -2322,8 +2332,17 @@ Template.statementlist.events({
         });
 
         if (listIds != '') {
-            await templateObject.customerToMultiplePdf(listIds);
-
+            // await templateObject.customerToMultiplePdf(listIds);
+            for (let j = 0; j < listIds.length; j++) {
+                let encodedPdf = await templateObject.getStatePrintData(listIds[j]);
+                let base64data = encodedPdf.split(',')[1];
+                pdfObject = {
+                    filename: 'Statement-' + listIds[j] + '.pdf',
+                    content: base64data,
+                    encoding: 'base64'
+                };
+                attachment.push(pdfObject);
+            }
         } else {
             $('.fullScreenSpin').css('display', 'none');
             $('#printLineModal').modal('toggle');
@@ -2336,11 +2355,13 @@ Template.statementlist.events({
         //     listIds.push(ids);
         // }
 
+
         let values = [];
         let basedOnTypeStorages = Object.keys(localStorage);
         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            return storage.includes('BasedOnType_');
+            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
         });
         let i = basedOnTypeStorages.length;
         if (i > 0) {
@@ -2352,14 +2373,15 @@ Template.statementlist.events({
             let reportData = JSON.parse(value);
             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
             if (reportData.BasedOnType.includes("P")) {
+                reportData.attachments = attachment;
                 if (reportData.FormID == 1) {
                     let formIds = reportData.FormIDs.split(',');
-                    if (formIds.includes("177")) {
+                    if (formIds.includes("177") || formIds.includes("17544")) {
                         reportData.FormID = 177;
                         Meteor.call('sendNormalEmail', reportData);
                     }
                 } else {
-                    if (reportData.FormID == 177)
+                    if (reportData.FormID == 177 || reportData.FormID == 17544)
                         Meteor.call('sendNormalEmail', reportData);
                 }
             }

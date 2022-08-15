@@ -3,9 +3,11 @@ import {SideBarService} from '../../js/sidebar-service';
 import { UtilityService } from "../../utility-service";
 import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
 import ApiService from "../../js/Api/Module/ApiService";
+import { EmployeePayrollService } from '../../js/employeepayroll-service';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let employeePayrollService = new EmployeePayrollService();
 
 Template.deductionSettings.onCreated(function() {
   const templateObject = Template.instance();
@@ -350,14 +352,14 @@ Template.deductionSettings.events({
         $('#deductionRateForm')[0].reset();
         $('#noneModal').modal('show');
     },
-    'click .btnSearchAlert':function(event){      
+    'click .btnRefreshDeductions':function(event){      
         let templateObject = Template.instance();
         var splashArrayDeductionList = new Array();
         const lineExtaSellItems = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblDeductions_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getDeduction(dataSearchName).then(function (data) {
+            employeePayrollService.getDeductionByName(dataSearchName).then(function (data) {
                 $(".btnRefreshDeductions").removeClass('btnSearchAlert');
                 let lineItems = [];
                 if (data.tdeduction.length > 0) {
@@ -448,6 +450,34 @@ Template.deductionSettings.events({
         let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
         let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
         let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
+        
+        if(deductionDesctiption == ''){
+            swal({
+                title: "Warning",
+                text: "Please select Deduction Name",
+                type: 'warning',
+            })
+            return false;
+        }
+
+        if(deductionAmount == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter Amount",
+                type: 'warning',
+            })
+            return false;
+        }
+
+        if(deductionAccount == ''){
+            swal({
+                title: "Warning",
+                text: "Please enter Account",
+                type: 'warning',
+            })
+            return false;
+        }
+        
         /**
          * Saving Earning Object in localDB
         */

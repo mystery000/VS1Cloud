@@ -173,20 +173,20 @@ Template.refundcard.onRendered(() => {
               if (dataObject.length == 0) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));
-                      
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
-                   
+
+
                             if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                             {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {       
+                                {
                                         $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                             $('#Refunds_1').attr('checked','checked');
                                         }
-                                        
+
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -196,7 +196,7 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_2').attr('checked','checked');
                                         }
                                 }
-    
+
                                 if(data.ttemplatesettings[i].fields.Template == 3)
                                 {
                                         $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -205,34 +205,34 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_3').attr('checked','checked');
                                         }
                                 }
-    
-    
+
+
                             }
-                   
-    
+
+
                      }
-                      
-                          
+
+
                       $('.fullScreenSpin').css('display', 'none');
                   }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                   });
-              }else{ 
-                      let data = JSON.parse(dataObject[0].data);    
-                    
+              }else{
+                      let data = JSON.parse(dataObject[0].data);
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
-   
+
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                         {
                                if(data.ttemplatesettings[i].fields.Template == 1)
-                               {       
+                               {
                                        $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                        if(data.ttemplatesettings[i].fields.Active == true)
                                        {
                                          $('#Refunds_1').attr('checked','checked');
                                        }
-                                     
+
                                }
                                if(data.ttemplatesettings[i].fields.Template == 2)
                                {
@@ -242,7 +242,7 @@ Template.refundcard.onRendered(() => {
                                        $('#Refunds_2').attr('checked','checked');
                                      }
                                }
-   
+
                                if(data.ttemplatesettings[i].fields.Template == 3)
                                {
                                      $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -251,33 +251,33 @@ Template.refundcard.onRendered(() => {
                                        $('#Refunds_3').attr('checked','checked');
                                      }
                                }
-   
-   
+
+
                         }
-                   
-                   
-    
+
+
+
                      }
                       $('.fullScreenSpin').css('display', 'none');
               }
             }).catch(function(err) {
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                    
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
-               
-    
+
+
+
                          if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                          {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {       
+                                {
                                         $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                           $('#Refunds_1').attr('checked','checked');
                                         }
-                                      
+
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -287,7 +287,7 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_2').attr('checked','checked');
                                       }
                                 }
-    
+
                                 if(data.ttemplatesettings[i].fields.Template == 3)
                                 {
                                       $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -296,24 +296,24 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_3').attr('checked','checked');
                                       }
                                 }
-    
-    
+
+
                          }
-    
-                      
-                 
-      
-                    
-    
+
+
+
+
+
+
                       }
                       $('.fullScreenSpin').css('display', 'none');
             }).catch(function (err) {
               $('.fullScreenSpin').css('display', 'none');
             });
           });
-    
+
           };
-    
+
         templateObject.getTemplateInfoNew();
 
 
@@ -1393,7 +1393,7 @@ Template.refundcard.onRendered(() => {
                   statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
                   country: data.tcustomervs1[i].fields.Country || ' ',
                   termsName: data.tcustomervs1[i].fields.TermsName || '',
-                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || '',
                   clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
                   discount: data.tcustomervs1[i].fields.Discount || 0
               };
@@ -3525,7 +3525,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    $('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
+                    //$('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
                 }
             }
         }
@@ -4666,17 +4666,65 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         };
 
 
-        html2pdf().set(opt).from(source).save().then(function (dataObject) {
-            if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                $('#html-2-pdfwrapper_new').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
-                //$(".btnSave").trigger("click");
-            } else {
-                document.getElementById('html-2-pdfwrapper_new').style.display="none";
-                $('#html-2-pdfwrapper_new').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
+        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
+            let attachment = [];
+            let base64data = data.split(',')[1];
+            let refundId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
+            pdfObject = {
+                filename: 'Refund-' + refundId + '.pdf',
+                content: base64data,
+                encoding: 'base64'
+            };
+            attachment.push(pdfObject);
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                return storage.includes('BasedOnType_');
+            });
+            let j = basedOnTypeStorages.length;
+            if (j > 0) {
+                while (j--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                }
             }
-        });
+            if(values.length > 0) {
+              values.forEach(value => {
+                  let reportData = JSON.parse(value);
+                  let temp = {... reportData};
+
+                  temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                  reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                  temp.attachments = attachment;
+                  if (temp.BasedOnType.includes("P")) {
+                      if (temp.FormID == 1) {
+                          let formIds = temp.FormIDs.split(',');
+                          if (formIds.includes("74")) {
+                              temp.FormID = 74;
+                              Meteor.call('sendNormalEmail', temp);
+                          }
+                      } else {
+                          if (temp.FormID == 74)
+                              Meteor.call('sendNormalEmail', temp);
+                      }
+                  }
+              });
+            }
+            html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                    $('#html-2-pdfwrapper_new').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                    //$(".btnSave").trigger("click");
+                } else {
+                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                    $('#html-2-pdfwrapper_new').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+        })
+
+
 
        // $('.fullScreenSpin').css('display', 'none');
 
@@ -6354,8 +6402,8 @@ Template.refundcard.events({
         let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
         let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
 
-        let taxRateDetailList = [];
-        taxRateDetailList.push([
+        let taxDetailTableData = [];
+        taxDetailTableData.push([
             taxDetail.Description,
             taxDetail.Id,
             taxDetail.CodeName,
@@ -6367,8 +6415,8 @@ Template.refundcard.events({
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
-                taxRateDetailList.push([
-                    "",
+                taxDetailTableData.push([
+                    line.Description,
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
@@ -6380,7 +6428,7 @@ Template.refundcard.events({
             });
         }
 
-        if (taxRateDetailList) {
+        if (taxDetailTableData) {
 
             if (! $.fn.DataTable.isDataTable('#tblTaxDetail')) {
                 $('#tblTaxDetail').DataTable({
@@ -6430,143 +6478,141 @@ Template.refundcard.events({
 
             let datatable = $('#tblTaxDetail').DataTable();
             datatable.clear();
-            datatable.rows.add(taxRateDetailList);
+            datatable.rows.add(taxDetailTableData);
             datatable.draw(false);
         }
 
         $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-toggle", "modal");
         $('#tblInvoiceLine tbody tr .lineTaxAmount').attr("data-target", "#taxDetailModal");
     },
-    'click .lineTaxCode, keydown .lineTaxCode': function(event) {
-       var $earch = $(event.currentTarget);
-       var offset = $earch.offset();
-       $('#edtTaxID').val('');
-       $('.taxcodepopheader').text('New Tax Rate');
-       $('#edtTaxID').val('');
-       $('#edtTaxNamePop').val('');
-       $('#edtTaxRatePop').val('');
-       $('#edtTaxDescPop').val('');
-       $('#edtTaxNamePop').attr('readonly', false);
-       let purchaseService = new PurchaseBoardService();
-       var taxRateDataName = $(event.target).val() || '';
-       if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-           $('#taxRateListModal').modal('toggle');
-           var targetID = $(event.target).closest('tr').attr('id');
-           $('#selectLineID').val(targetID);
-           setTimeout(function() {
-               $('#tblTaxRate_filter .form-control-sm').focus();
-               $('#tblTaxRate_filter .form-control-sm').val('');
-               $('#tblTaxRate_filter .form-control-sm').trigger("input");
+    'click .lineTaxCode, keydown .lineTaxCode': function (event) {
+        var $earch = $(event.currentTarget);
+        var offset = $earch.offset();
+        $('#edtTaxID').val('');
+        $('.taxcodepopheader').text('New Tax Rate');
+        $('#edtTaxID').val('');
+        $('#edtTaxNamePop').val('');
+        $('#edtTaxRatePop').val('');
+        $('#edtTaxDescPop').val('');
+        $('#edtTaxNamePop').attr('readonly', false);
+        let purchaseService = new PurchaseBoardService();
+        var taxRateDataName = $(event.target).val() || '';
+        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+            $('#taxRateListModal').modal('toggle');
+            var targetID = $(event.target).closest('tr').attr('id');
+            $('#selectLineID').val(targetID);
+            setTimeout(function () {
+                $('#tblTaxRate_filter .form-control-sm').focus();
+                $('#tblTaxRate_filter .form-control-sm').val('');
+                $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-               var datatable = $('#tblTaxRate').DataTable();
-               datatable.draw();
-               $('#tblTaxRate_filter .form-control-sm').trigger("input");
+                var datatable = $('#tblTaxRate').DataTable();
+                datatable.draw();
+                $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-           }, 500);
-       } else {
-           if (taxRateDataName.replace(/\s/g, '') != '') {
+            }, 500);
+        } else {
+            if (taxRateDataName.replace(/\s/g, '') != '') {
 
-               getVS1Data('TTaxcodeVS1').then(function (dataObject) {
-                 if(dataObject.length == 0){
-                   purchaseService.getTaxCodesVS1().then(function (data) {
-                     let lineItems = [];
-                     let lineItemObj = {};
-                     for(let i=0; i<data.ttaxcodevs1.length; i++){
-                       if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
-                         $('#edtTaxNamePop').attr('readonly', true);
-                       let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                       var taxRateID = data.ttaxcodevs1[i].Id || '';
-                        var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
-                        var taxRateDesc = data.ttaxcodevs1[i].Description || '';
-                        $('#edtTaxID').val(taxRateID);
-                        $('#edtTaxNamePop').val(taxRateName);
-                        $('#edtTaxRatePop').val(taxRate);
-                        $('#edtTaxDescPop').val(taxRateDesc);
-                        setTimeout(function() {
-                        $('#newTaxRateModal').modal('toggle');
-                        }, 100);
-                      }
-                     }
+                getVS1Data('TTaxcodeVS1').then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                        purchaseService.getTaxCodesVS1().then(function (data) {
+                            let lineItems = [];
+                            let lineItemObj = {};
+                            for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                                if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                    $('#edtTaxNamePop').attr('readonly', true);
+                                    let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                    var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                    var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                    var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                    $('#edtTaxID').val(taxRateID);
+                                    $('#edtTaxNamePop').val(taxRateName);
+                                    $('#edtTaxRatePop').val(taxRate);
+                                    $('#edtTaxDescPop').val(taxRateDesc);
+                                    setTimeout(function () {
+                                        $('#newTaxRateModal').modal('toggle');
+                                    }, 100);
+                                }
+                            }
 
-                   }).catch(function (err) {
-                       // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                       $('.fullScreenSpin').css('display','none');
-                       // Meteor._reload.reload();
-                   });
-                 }else{
-                   let data = JSON.parse(dataObject[0].data);
-                   let useData = data.ttaxcodevs1;
-                   let lineItems = [];
-                   let lineItemObj = {};
-                   $('.taxcodepopheader').text('Edit Tax Rate');
-                   for(let i=0; i<useData.length; i++){
+                        }).catch(function (err) {
+                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                            $('.fullScreenSpin').css('display', 'none');
+                            // Meteor._reload.reload();
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.ttaxcodevs1;
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        $('.taxcodepopheader').text('Edit Tax Rate');
+                        for (let i = 0; i < useData.length; i++) {
 
-                     if ((useData[i].CodeName) === taxRateDataName) {
-                       $('#edtTaxNamePop').attr('readonly', true);
-                     let taxRate = (useData[i].Rate * 100).toFixed(2);
-                     var taxRateID = useData[i].Id || '';
-                      var taxRateName = useData[i].CodeName ||'';
-                      var taxRateDesc = useData[i].Description || '';
-                      $('#edtTaxID').val(taxRateID);
-                      $('#edtTaxNamePop').val(taxRateName);
-                      $('#edtTaxRatePop').val(taxRate);
-                      $('#edtTaxDescPop').val(taxRateDesc);
-                      //setTimeout(function() {
-                      $('#newTaxRateModal').modal('toggle');
-                      //}, 500);
+                            if ((useData[i].CodeName) === taxRateDataName) {
+                                $('#edtTaxNamePop').attr('readonly', true);
+                                let taxRate = (useData[i].Rate * 100).toFixed(2);
+                                var taxRateID = useData[i].Id || '';
+                                var taxRateName = useData[i].CodeName || '';
+                                var taxRateDesc = useData[i].Description || '';
+                                $('#edtTaxID').val(taxRateID);
+                                $('#edtTaxNamePop').val(taxRateName);
+                                $('#edtTaxRatePop').val(taxRate);
+                                $('#edtTaxDescPop').val(taxRateDesc);
+                                //setTimeout(function() {
+                                $('#newTaxRateModal').modal('toggle');
+                                //}, 500);
+                            }
+                        }
                     }
-                   }
-                 }
-               }).catch(function (err) {
-                 purchaseService.getTaxCodesVS1().then(function (data) {
-                   let lineItems = [];
-                   let lineItemObj = {};
-                   for(let i=0; i<data.ttaxcodevs1.length; i++){
-                     if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
-                       $('#edtTaxNamePop').attr('readonly', true);
-                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                     var taxRateID = data.ttaxcodevs1[i].Id || '';
-                      var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
-                      var taxRateDesc = data.ttaxcodevs1[i].Description || '';
-                      $('#edtTaxID').val(taxRateID);
-                      $('#edtTaxNamePop').val(taxRateName);
-                      $('#edtTaxRatePop').val(taxRate);
-                      $('#edtTaxDescPop').val(taxRateDesc);
-                      setTimeout(function() {
-                      $('#newTaxRateModal').modal('toggle');
-                      }, 100);
+                }).catch(function (err) {
+                    purchaseService.getTaxCodesVS1().then(function (data) {
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                            if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                $('#edtTaxNamePop').attr('readonly', true);
+                                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                $('#edtTaxID').val(taxRateID);
+                                $('#edtTaxNamePop').val(taxRateName);
+                                $('#edtTaxRatePop').val(taxRate);
+                                $('#edtTaxDescPop').val(taxRateDesc);
+                                setTimeout(function () {
+                                    $('#newTaxRateModal').modal('toggle');
+                                }, 100);
 
-                    }
-                   }
+                            }
+                        }
 
-                 }).catch(function (err) {
-                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                     $('.fullScreenSpin').css('display','none');
-                     // Meteor._reload.reload();
-                 });
-               });
+                    }).catch(function (err) {
+                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                        $('.fullScreenSpin').css('display', 'none');
+                        // Meteor._reload.reload();
+                    });
+                });
 
-           } else {
-               $('#taxRateListModal').modal('toggle');
-               var targetID = $(event.target).closest('tr').attr('id');
-               $('#selectLineID').val(targetID);
-               setTimeout(function() {
-                   $('#tblTaxRate_filter .form-control-sm').focus();
-                   $('#tblTaxRate_filter .form-control-sm').val('');
-                   $('#tblTaxRate_filter .form-control-sm').trigger("input");
+            } else {
+                $('#taxRateListModal').modal('toggle');
+                var targetID = $(event.target).closest('tr').attr('id');
+                $('#selectLineID').val(targetID);
+                setTimeout(function () {
+                    $('#tblTaxRate_filter .form-control-sm').focus();
+                    $('#tblTaxRate_filter .form-control-sm').val('');
+                    $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-                   var datatable = $('#tblTaxRate').DataTable();
-                   datatable.draw();
-                   $('#tblTaxRate_filter .form-control-sm').trigger("input");
+                    var datatable = $('#tblTaxRate').DataTable();
+                    datatable.draw();
+                    $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-               }, 500);
-           }
+                }, 500);
+            }
 
-       }
+        }
 
     },
-
-
     'click .printConfirm':async function (event) {
 
         var printTemplate = [];
@@ -6574,181 +6620,181 @@ Template.refundcard.events({
 
         var refunds = $('input[name="Refunds"]:checked').val();
         let emid = Session.get('mySessionEmployeeLoggedID');
-        
+
          sideBarService.getTemplateNameandEmployeId("Refunds",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_1"]').val(),
                                 Template:"1",
                                 Active:refunds == 1 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                    
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                });
-        
+
             }).catch(function (err) {
-        
-              
-          
+
+
+
             });
-        
+
          }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_1"]').val(),
                                 Template:"1",
                                 Active:refunds == 1 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                         
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                        });
-                        
-                
+
+
                     }).catch(function (err) {
-                
-                        
-                  
-                    });  
-    
+
+
+
+                    });
+
          });
-    
-    
+
+
           sideBarService.getTemplateNameandEmployeId("Refunds",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_2"]').val(),
                                 Template:"2",
                                 Active:refunds == 2 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                  
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-             
-        
+
+
             }).catch(function (err) {
-        
-             
+
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_2"]').val(),
                                 Template:"2",
                                 Active:refunds == 2 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                      
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                       
-                
+
+
                     }).catch(function (err) {
-                
-                        
-                  
-                    });  
-    
+
+
+
+                    });
+
           });
-    
-    
+
+
           sideBarService.getTemplateNameandEmployeId("Refunds",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_3"]').val(),
                                 Template:"3",
                                 Active:refunds == 3 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));   
-               
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-              
-        
+
+
             }).catch(function (err) {
-        
-              
-          
+
+
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_3"]').val(),
                                 Template:"3",
                                 Active:refunds == 3 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                                
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                
+
                     }).catch(function (err) {
-                
-                       
-                  
-                    });  
-    
+
+
+
+                    });
+
           });
 
         $('#html-2-pdfwrapper-new').css('display', 'block');
@@ -7389,6 +7435,37 @@ Template.refundcard.events({
                                 }
                             });
 
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("74")) {
+                                            reportData.FormID = 74;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 74)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+
                         } else if (($('.chkEmailCopy').is(':checked'))) {
                             Meteor.call('sendEmail', {
                                 from: "" + mailFromName + " <" + mailFrom + ">",
@@ -7422,6 +7499,37 @@ Template.refundcard.events({
                                     });
 
                                     $('.fullScreenSpin').css('display', 'none');
+                                }
+                            });
+
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("74")) {
+                                            reportData.FormID = 74;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 74)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
                                 }
                             });
 
@@ -7460,7 +7568,69 @@ Template.refundcard.events({
                                 }
                             });
 
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("74")) {
+                                            reportData.FormID = 74;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 74)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
+
                         } else {
+
+                            let values = [];
+                            let basedOnTypeStorages = Object.keys(localStorage);
+                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                let employeeId = storage.split('_')[2];
+                                return storage.includes('BasedOnType_');
+                                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            });
+                            let i = basedOnTypeStorages.length;
+                            if (i > 0) {
+                                while (i--) {
+                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                }
+                            }
+                            values.forEach(value => {
+                                let reportData = JSON.parse(value);
+                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                reportData.attachments = attachment
+                                if (reportData.BasedOnType.includes("S")) {
+                                    if (reportData.FormID == 1) {
+                                        let formIds = reportData.FormIDs.split(',');
+                                        if (formIds.includes("74")) {
+                                            reportData.FormID = 74;
+                                            Meteor.call('sendNormalEmail', reportData);
+                                        }
+                                    } else {
+                                        if (reportData.FormID == 74)
+                                            Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                }
+                            });
                           if(FlowRouter.current().queryParams.trans){
                             FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                           }else{

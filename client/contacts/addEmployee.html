@@ -50,7 +50,9 @@
                         background-color: #fff !important;
                         border-color: #00a3d3 !important;
                     }
-
+                    .form-control {
+                        background-color: #fff !important;
+                    }
                     @media only screen and (max-width: 600px) {
                         .sideSearch {
                             width: auto;
@@ -92,6 +94,20 @@
                     }
                     .swal2-container, .fullScreenSpin{
                         z-index: 9999999999 !important;
+                    }
+
+
+                    /* form Zindedx */
+                    #addReimbursementLineModal,
+                    #addSuperannuationLineModal {
+                        z-index: 9999 !important;
+                    }
+                    #newReimbursementModal,
+                    #newSuperannuationFundModal {
+                        z-index: 99999 !important;
+                    }
+                    #ordinaryTimeEarningsModal {
+                        z-index: 999999 !important;
                     }
                 </style>
 
@@ -1473,7 +1489,9 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>First Pay Date</label>
-                                                                            <input type="text" class="form-control" name="edtFirstPayDate" id="edtFirstPayDate" />
+                                                                            <div class="input-group date">
+                                                                                <input type="text" class="form-control" name="edtFirstPayDate" id="edtFirstPayDate" />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1820,7 +1838,7 @@
                                                                                 </button>
                                                                             </div>
                                                                             <div class="modal-body">
-                                                                                <div class="row">
+                                                                                <form class="row" id="assignLeaveTypeForm">
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Leave</label>
@@ -1889,7 +1907,7 @@
                                                                                             <label><input type="checkbox" name="superannuationGuarantee" id="superannuationGuarantee"> Includes Superannuation Guarantee Contribution</label>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </form>
                                                                             </div>
                                                                             <div class="modal-footer">
                                                                                 <button type="button" id="btnSaveAssignLeaveType" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
@@ -1948,7 +1966,7 @@
                                                                                 </button>
                                                                             </div>
                                                                             <div class="modal-body">
-                                                                                <div class="row">
+                                                                                <form class="row" id="leaveRequestForm">
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Type of Request</label>
@@ -1997,7 +2015,7 @@
                                                                                             <input type="text" class="form-control" id="edtLeaveHours" name="edtLeaveHours">
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                </form>
                                                                             </div>
                                                                             <div class="modal-footer" style="justify-content: space-between;">
                                                                                 <div class="col-6 pl-0">
@@ -3613,7 +3631,7 @@
         {{> accountlistpop}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal" style="z-index: 99999999 !important;">
         {{> addaccountpop}}
     </div>
 

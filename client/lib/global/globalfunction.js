@@ -1,5 +1,6 @@
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+import '../../lib/global/colResizable.js';
 let sideBarService = new SideBarService();
 modalDraggable = function () {
     $('.modal-dialog').draggable({
@@ -523,15 +524,34 @@ vs1GlobalBackButton = async function () {
     }
  });
 };
-
+thWidthOnResize = function() {
+  let tableWidth = [];
+  $('#tblcontactoverview th').each(function() {   
+    tableWidth.push($(this).outerWidth());
+    tableWidth.push($(this).index());
+    
+  });
+};
 tableResize = function() {
   setTimeout(function() {
-    $(".dataTable th, .draggingTable th").resizable({
-      handles: "e",
-      resize: function (event, ui) {
-          var sizerID = "." + $(event.target).attr("class").split(" ")[1];
-          $(sizerID).width(ui.size.width);
-      }
+//     // $(".dataTable th, .draggingTable th").resizable({
+//     //   handles: "e",
+//     //   resize: function (event, ui) {
+//     //       var sizerID = "." + $(event.target).attr("class").split(" ")[1];
+//     //       $(sizerID).width(ui.size.width);
+//     //   }
+//     // });
+    $(".dataTable").colResizable({
+      liveDrag:true,
+      gripInnerHtml:"<div class='grip'></div>",
+      draggingClass:"dragging",
+      resizeMode:'overflow',
+      onResize: function (e) {
+        var table = $(e.currentTarget); //reference to the resized table
+        // console log this $(e.target).parent().index()
+        thWidthOnResize();
+      },
+      // disabledColumns: [2]
     });
   }, 2000);
 };

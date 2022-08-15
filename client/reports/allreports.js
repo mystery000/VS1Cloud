@@ -113,7 +113,8 @@ Template.allreports.onCreated(function() {
     templateObject.isPurchaseSummaryReport.set(false);
     templateObject.isPrintStatement = new ReactiveVar();
     templateObject.isPrintStatement.set(false);
-
+    templateObject.isExecutiveSummary = new ReactiveVar();
+    templateObject.isExecutiveSummary.set(false);
     templateObject.accountantList = new ReactiveVar([]);
 });
 Template.allreports.onRendered(() => {
@@ -173,6 +174,7 @@ Template.allreports.onRendered(() => {
     let isPurchaseReport = Session.get('cloudPurchaseReport');
     let isPurchaseSummaryReport = Session.get('cloudPurchaseSummaryReport');
     let isPrintStatement = Session.get('cloudPrintStatement');
+    let isExecutiveSummary = Session.get('cloudExecutiveSummary');
 
     const accountantList = [];
 
@@ -340,6 +342,9 @@ Template.allreports.onRendered(() => {
     }
     if (isPrintStatement == true) {
         templateObject.isPrintStatement.set(true);
+    }
+    if (isExecutiveSummary == true) {
+        templateObject.isExecutiveSummary.set(true);
     }
 
     templateObject.getAccountantList = function () {
@@ -522,7 +527,7 @@ Template.allreports.onRendered(() => {
     //         }
     //         else{
                 let data = JSON.parse(dataObject[0].data);
-                
+
                 // for(let i=0; i<useData.length; i++){
                     var dataInfo = {
                         id: data.Id || '',
@@ -1131,6 +1136,16 @@ Template.allreports.events({
             templateObject.isPrintStatement.set(false);
         }
     },
+    'click .chkExecutiveSummary': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudExecutiveSummary', true);
+            templateObject.isExecutiveSummary.set(true);
+        } else {
+            Session.setPersistent('cloudExecutiveSummary', false);
+            templateObject.isExecutiveSummary.set(false);
+        }
+    },
     'click .showhidden_fin': function(event) {
         if (event.target.id === "ellipsis_fin") {
             $('#ellipsis_fin').hide();
@@ -1185,6 +1200,16 @@ Template.allreports.events({
 Template.allreports.helpers({
     isBalanceSheet: function() {
         return Template.instance().isBalanceSheet.get();
+    },
+    lastBatchUpdate: () => {
+      let transactionTableLastUpdated = "";
+      var currentDate = new Date();
+      if(localStorage.getItem('VS1TransTableUpdate')){
+         transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
+      }else{
+        transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
+      }
+      return transactionTableLastUpdated;
     },
     isAccountsLists: function() {
         return Template.instance().isAccountsLists.get();
@@ -1348,6 +1373,9 @@ Template.allreports.helpers({
     isPrintStatement: function() {
         return Template.instance().isPrintStatement.get();
     },
+    isExecutiveSummary: function() {
+        return Template.instance().isExecutiveSummary.get();
+    },
     isFavorite: function() {
         let isBalanceSheet = Template.instance().isBalanceSheet.get();
         let isProfitLoss = Template.instance().isProfitLoss.get();
@@ -1404,9 +1432,10 @@ Template.allreports.helpers({
         let isPurchaseReport = Template.instance().isPurchaseReport.get();
         let isPurchaseSummaryReport = Template.instance().isPurchaseSummaryReport.get();
         let isPrintStatement = Template.instance().isPrintStatement.get();
+        let isExecutiveSummary = Template.instance().isExecutiveSummary.get();
         let isShowFavorite = false;
 
-        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary) {
+        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary) {
             isShowFavorite = true;
         }
         return isShowFavorite;

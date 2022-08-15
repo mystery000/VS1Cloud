@@ -420,7 +420,7 @@ Template.registerdb.events({
 $('.fullScreenSpin').css('display','none');
 swal({
 title: 'Oooops...',
-text: 'It seems we are unable to connect you to VS1Cloud at the moment. Please try again in a few minutes.',
+text: 'It seems we are unable to connect you to VS1Cloud at the moment. Please try again in a few minutes.--------r',
 type: 'error',
 showCancelButton: false,
 confirmButtonText: 'Try Again'

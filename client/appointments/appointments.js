@@ -103,6 +103,14 @@ Template.appointments.onRendered(function () {
         //$("#btnHold").prop("disabled", true);
     }
 
+    if (FlowRouter.current().queryParams.leadid) {
+        openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject, true);
+    } else if(FlowRouter.current().queryParams.customerid) {
+        openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject, true);
+    } else if(FlowRouter.current().queryParams.supplierid) {
+        openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject, true);
+    }
+
     getVS1Data('TERPPreference').then(function (dataObject) {
         if (dataObject.length == 0) {
             appointmentService.getGlobalSettings().then(function (data) {
@@ -879,7 +887,7 @@ Template.appointments.onRendered(function () {
 
                 var endTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
                 var startTime = moment(document.getElementById("dtSODate2").value + ' ' + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
-                
+
                 if(FlowRouter.current().queryParams.leadid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
                 } else if (FlowRouter.current().queryParams.customerid){
@@ -11114,15 +11122,20 @@ Template.registerHelper('and', (a, b) => {
     return a && b;
 });
 
-openAppointModalDirectly = (leadid, templateObject) => {
+openAppointModalDirectly = (leadid, templateObject, auto = false) => {
     let contactService = new ContactService();
+    $('#frmAppointment')[0].reset();
+    // templateObject.getAllProductData();
+    $(".paused").hide();
     if(FlowRouter.current().queryParams.leadid) {
+
         contactService.getOneLeadDataEx(leadid).then(function (data) {
             // return;
             //$("#updateID").val("");
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || '';
             let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("employee_name").value = Session.get('mySessionEmployee');
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -11134,6 +11147,14 @@ openAppointModalDirectly = (leadid, templateObject) => {
             }
             document.getElementById("suburb").value = data.fields.Suburb;
             document.getElementById("zip").value = data.fields.Postcode;
+            if (auto == true) {
+                let dateStart = getRegalTime();
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
+                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ':' + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ':' + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                document.getElementById("startTime").value = startTime;
+                document.getElementById("endTime").value = endTime;
+            }
             if($("#updateID").val() == ""){
             let appointmentService = new AppointmentService();
             appointmentService.getAllAppointmentListCount().then(function (dataObj) {
@@ -11145,7 +11166,7 @@ openAppointModalDirectly = (leadid, templateObject) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -11174,7 +11195,7 @@ openAppointModalDirectly = (leadid, templateObject) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');
@@ -11185,6 +11206,7 @@ openAppointModalDirectly = (leadid, templateObject) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || '';
             let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("employee_name").value = Session.get('mySessionEmployee');
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -11196,6 +11218,14 @@ openAppointModalDirectly = (leadid, templateObject) => {
             }
             document.getElementById("suburb").value = data.fields.Suburb;
             document.getElementById("zip").value = data.fields.Postcode;
+            if (auto == true) {
+                let dateStart = getRegalTime();
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
+                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ':' + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ':' + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                document.getElementById("startTime").value = startTime;
+                document.getElementById("endTime").value = endTime;
+            }
             if($("#updateID").val() == ""){
             let appointmentService = new AppointmentService();
             appointmentService.getAllAppointmentListCount().then(function (dataObj) {
@@ -11207,7 +11237,7 @@ openAppointModalDirectly = (leadid, templateObject) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -11236,7 +11266,7 @@ openAppointModalDirectly = (leadid, templateObject) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');
@@ -11247,6 +11277,7 @@ openAppointModalDirectly = (leadid, templateObject) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || '';
             let getEmployeeID = templateObject.empID.get() || '';
+            document.getElementById("employee_name").value = Session.get('mySessionEmployee');
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -11258,6 +11289,14 @@ openAppointModalDirectly = (leadid, templateObject) => {
             }
             document.getElementById("suburb").value = data.fields.Suburb;
             document.getElementById("zip").value = data.fields.Postcode;
+            if (auto == true) {
+                let dateStart = getRegalTime();
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
+                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ':' + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ':' + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                document.getElementById("startTime").value = startTime;
+                document.getElementById("endTime").value = endTime;
+            }
             if($("#updateID").val() == ""){
             let appointmentService = new AppointmentService();
             appointmentService.getAllAppointmentListCount().then(function (dataObj) {
@@ -11269,7 +11308,7 @@ openAppointModalDirectly = (leadid, templateObject) => {
                         }
                     }
                     document.getElementById("appID").value = max + 1;
-        
+
                 } else {
                     document.getElementById("appID").value = 1;
                 }
@@ -11298,11 +11337,16 @@ openAppointModalDirectly = (leadid, templateObject) => {
             //   }
             //
             // }
-        
+
             //templateObject.getAllProductData();
             }
             $('#customerListModal').modal('hide');
             $('#event-modal').modal();
         })
     }
+}
+
+getRegalTime = (date = new Date()) => {
+    var coeff = 1000 * 60 * 60;
+    return new Date(Math.round(date.getTime() / coeff) * coeff)
 }

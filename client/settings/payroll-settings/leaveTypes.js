@@ -4,7 +4,7 @@ import { UtilityService } from "../../utility-service";
 import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
 import ApiService from "../../js/Api/Module/ApiService";
 import UnPaidLeaveRequest from "../../js/Api/Model/UnPaidLeaveRequest";
-import PaidLeaveRequest from "../../js/Api/Model/UnPaidLeaveRequest";
+import PaidLeaveRequest from "../../js/Api/Model/PaidLeaveRequest";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -104,18 +104,14 @@ Template.leaveTypeSettings.onRendered(function() {
             }
 
             if( data.tpaidleave.length > 0 ){
-
-
                 let useData = PaidLeaveRequest.fromList(
                     data.tpaidleave
-                ).filter((item) => {
-            
+                ).filter((item) => {       
                     if ( item.fields.LeavePaidActive == true ) {
                         return item;
                     }
-                });
-            
-                templateObject.leaveRequestInfos.set(useData);
+                });            
+                // templateObject.leaveRequestInfos.set(useData);
                 for (let i = 0; i < useData.length; i++) {
             
                     var dataListAllowance = [
@@ -126,8 +122,6 @@ Template.leaveTypeSettings.onRendered(function() {
                         useData[i].fields.LeavePaidLeaveLoadingRate || '',
                         'paid',
                         useData[i].fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
-                        `<button type="button" class="btn btn-success btnEditPaidLeaveType"><i class="fas fa-edit"></i></button>
-                        <button type="button" class="btn btn-danger btnDeletePaidLeaveType" id="btnDeletePaidLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
                     ];
             
                     splashArrayLeaveList.push(dataListAllowance);
@@ -145,18 +139,15 @@ Template.leaveTypeSettings.onRendered(function() {
             
 
             if( unPaidData.tunpaidleave.length > 0 ){
-
-
                 let useData = UnPaidLeaveRequest.fromList(
                     unPaidData.tunpaidleave
                 ).filter((item) => {
-
                     if ( item.fields.LeaveUnpaidActive == true ) {
                         return item;
                     }
                 });
     
-                templateObject.leaveRequestInfos.set(useData);
+                // templateObject.leaveRequestInfos.set(useData);
                 for (let i = 0; i < useData.length; i++) {
 
                     var dataListAllowance = [
@@ -167,8 +158,6 @@ Template.leaveTypeSettings.onRendered(function() {
                         useData[i].fields.LeaveUnpaidLeaveLoadingRate || '',
                         'unpaid',
                         useData[i].fields.LeaveUnpaidShowBalanceOnPayslip == true ? 'show': 'hide',
-                        `<button type="button" class="btn btn-success btnEditUnpaidLeaveType"><i class="fas fa-edit"></i></button>
-                        <button type="button" class="btn btn-danger btnDeleteUnpaidLeaveType" id="btnDeleteUnpaidLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
                     ];
 
                     splashArrayLeaveList.push(dataListAllowance);
@@ -206,24 +195,20 @@ Template.leaveTypeSettings.onRendered(function() {
                             "targets": [2]
                         },
                         {
-                        className: "colLeaveNormalEntitlement",
-                        "targets": [3]
+                            className: "colLeaveNormalEntitlement",
+                            "targets": [3]
                         },
                         {
-                        className: "colLeaveLeaveLoadingRate",
-                        "targets": [4]
+                            className: "colLeaveLeaveLoadingRate",
+                            "targets": [4]
                         },
                         {
-                        className: "colLeavePaidLeave",
-                        "targets": [5]
+                            className: "colLeavePaidLeave",
+                            "targets": [5]
                         },
                         {
-                        className: "colLeaveShownOnPayslip",
-                        "targets": [6]
-                        },
-                        {
-                        className: "colLeaveActions",
-                        "targets": [7]
+                            className: "colLeaveShownOnPayslip",
+                            "targets": [6]
                         }
                     ],
                     select: true,
@@ -258,7 +243,7 @@ Template.leaveTypeSettings.onRendered(function() {
                                 let dataLenght = oSettings._iDisplayLength;
                                 let customerSearch = $('#tblLeaves_filter input').val();
     
-                                sideBarService.getPaidLeave(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                                sideBarService.getPaidLeaveByName(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
                                     for (let i = 0; i < data.tpaidleave.length; i++) {
                                         var dataListAllowance = [
@@ -320,9 +305,9 @@ Template.leaveTypeSettings.onRendered(function() {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
-                            sideBarService.getLeave(dataLenght, 0).then(function (dataNonBo) {
+                            sideBarService.getPaidLeave(dataLenght, 0).then(function (dataNonBo) {
     
-                                addVS1Data('TLeave', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                addVS1Data('TPaidLeave', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     // templateObject.resetData(dataNonBo);
                                     $('.fullScreenSpin').css('display', 'none');
                                 }).catch(function (err) {
@@ -349,7 +334,7 @@ Template.leaveTypeSettings.onRendered(function() {
     $(document).ready(function(){
         $('#leaveTypeSelect').editableSelect();
         $('#leaveTypeSelect').editableSelect()
-            .on('click.editable-select', function (e, li) {
+            .on('click.editable-select', async function (e, li) {
                 let $search = $(this);
                 let offset = $search.offset();
                 let dropDownID = $search.attr('id')
@@ -358,11 +343,68 @@ Template.leaveTypeSettings.onRendered(function() {
                 let searchName = e.target.value || '';
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                     $('#leaveTypeSettingsModal').modal('show');
-
                 } else {
                     if (searchName.replace(/\s/g, '') == '') {
                         $('#leaveTypeSettingsModal').modal('show');
+                        return false;
                     }
+
+                    let dataObject = await getVS1Data('TPaidLeave');
+                    if ( dataObject.length == 0) {
+                        data = await templateObject.saveDataLocalDB('Paid Leave');
+                    }else{
+                        data = JSON.parse(dataObject[0].data);
+                    }
+                    let useData = [];
+                    if( data.tpaidleave.length > 0 ){
+                        useData = PaidLeaveRequest.fromList(
+                            data.tpaidleave
+                        ).filter((item) => {   
+                            if( item.fields.LeavePaidName == searchName ){
+                                return item;
+                            }   
+                        });
+                        if( useData.length > 0 ){
+                            $('#leaveID').val(useData[0].fields.ID)
+                            $("#edtLeaveName").val( useData[0].fields.LeavePaidName );
+                            $("#edtLeaveType").val('Paid Leave');
+                            $("#edtTypeOfUnits").val(useData[0].fields.LeavePaidUnits);
+                            $("#edtLeaveLoadingRate").val(useData[0].fields.LeavePaidLeaveLoadingRate);
+                            $("#edtNormalEntitlement").val(useData[0].fields.LeavePaidNormalEntitlement);
+                            $("#formCheck-ShowBalance").attr( 'checked', useData[0].fields.LeavePaidShowBalanceOnPayslip );
+                            $('#leaveModal').modal('show');
+                            return true;
+                        }
+                    }
+                    if( useData.length == 0 ){
+                        let dataUnObject = await getVS1Data('TUnpaidLeave');
+                        if ( dataUnObject.length == 0) {
+                            unPaidData = await templateObject.saveDataLocalDB('Unpaid Leave');
+                        }else{
+                            unPaidData = JSON.parse(dataUnObject[0].data);
+                        }
+                        useData = UnPaidLeaveRequest.fromList(
+                            unPaidData.tunpaidleave
+                        ).filter((item) => {
+                            if( item.fields.LeaveUnpaidName == searchName ){
+                                return item;
+                            }
+                        });
+                        if( useData.length > 0 ){
+                            $('#leaveID').val(useData[0].fields.ID)
+                            $("#edtLeaveName").val( useData[0].fields.LeaveUnpaidName );
+                            $("#edtLeaveType").val('Unpaid Leave');
+                            $("#edtTypeOfUnits").val(useData[0].fields.LeaveUnpaidUnits);
+                            $("#edtLeaveLoadingRate").val(useData[0].fields.LeaveUnpaidLeaveLoadingRate);
+                            $("#edtNormalEntitlement").val(useData[0].fields.LeaveUnpaidNormalEntitlement);
+                            $("#formCheck-ShowBalance").attr( 'checked', useData[0].fields.LeaveUnpaidShowBalanceOnPayslip );
+                            $('#leaveModal').modal('show');
+                            return true;
+                        }
+                        $('#leaveModal').modal('show');
+                        return true;
+                    }
+                        
                 }
             });
 
@@ -400,20 +442,20 @@ Template.leaveTypeSettings.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblLeaves_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getLeave(dataSearchName).then(function (data) {
+            sideBarService.getPaidLeaveByName(dataSearchName).then(function (data) {
                 $(".btnRefreshLeave").removeClass('btnSearchAlert');
                 let lineItems = [];                
-                if (data.tleave.length > 0) {
-                    for (let i = 0; i < data.tleave.length; i++) {
-                        var dataListAllowance = [
-                            data.tleave[i].fields.ID || '',
-                            data.tleave[i].fields.LeaveName || '',
-                            data.tleave[i].fields.Unit || '',
-                            data.tleave[i].fields.LeaveNormalEntitlement || '',
-                            data.tleave[i].fields.LeaveLeaveLoadingRate || '',
-                            data.tleave[i].fields.LeaveType || '',
-                            data.tleave[i].fields.LeaveShowBalanceOnPayslip == true ? 'show': 'hide',
-                        ];
+                if (data.tpaidleave.length > 0) {
+                    for (let i = 0; i < data.tpaidleave.length; i++) {
+                        let dataListAllowance = {
+                            id:data.tpaidleave[i].fields.ID || '',
+                            name:data.tpaidleave[i].fields.LeavePaidName || '',
+                            units:data.tpaidleave[i].fields.LeavePaidUnits || '',
+                            edtNormalEntitlement:data.tpaidleave[i].fields.LeavePaidNormalEntitlement || '',
+                            loadingrate:data.tpaidleave[i].fields.LeavePaidLeaveLoadingRate || '',
+                            type:true,
+                            payonslip:data.tpaidleave[i].fields.LeavePaidShowBalanceOnPayslip || false,
+                        };
         
                         splashArrayLeaveList.push(dataListAllowance);
                     }
@@ -462,6 +504,7 @@ Template.leaveTypeSettings.events({
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         let leaveName=$("#edtLeaveName").val();
+        let leaveID =$("#leaveID").val();
         let leaveType=$("#edtLeaveType").val();
         let typeOfUnit=$("#edtTypeOfUnits").val();
         let loadingRate=$("#edtLeaveLoadingRate").val();
@@ -478,6 +521,7 @@ Template.leaveTypeSettings.events({
             leaveDetails= {
                 type : "TPaidLeave",
                 fields : {
+                    ID: parseInt(leaveID),
                     LeavePaidName:leaveName,
                     LeavePaidUnits:typeOfUnit,
                     LeavePaidLeaveLoadingRate:loadingRate,
@@ -486,21 +530,20 @@ Template.leaveTypeSettings.events({
                     LeavePaidActive:true,
                 }
             }
-        }
-        else if(leaveType == "Unpaid Leave"){
+        }else if(leaveType == "Unpaid Leave"){
             apiEndpoint = employeePayrolApis.collection.findByName(
                 employeePayrolApis.collectionNames.TUnpaidLeave
             );
             leaveDetails= {
                 type : "TUnpaidLeave",
                 fields : {
+                    ID: parseInt(leaveID),
                     LeaveUnPaidName:leaveName,
                     LeaveUnPaidUnits:typeOfUnit,
                     LeaveUnPaidLeaveLoadingRate:loadingRate,
                     LeaveUnPaidNormalEntitlement:leaveNormalEntitlement,
                     LeaveUnPaidShowBalanceOnPayslip:showBalance,
                     LeaveUnPaidActive:true,
-
                 }
             }
         }
@@ -512,7 +555,7 @@ Template.leaveTypeSettings.events({
         });
 
         if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
+            // const jsonResponse = await ApiResponse.json();
             $('#leaveRateForm')[0].reset();
             await templateObject.saveDataLocalDB(leaveType);
             await templateObject.getLeaves();
@@ -521,9 +564,14 @@ Template.leaveTypeSettings.events({
             swal({
                 title: "Success",
                 text: "Leave has been saved",
-                type: 'success',
-                
-            })
+                type: 'success',   
+                showCancelButton: false,
+                confirmButtonText: 'Done'             
+            }).then((result) => {
+                if (result.value) {                    
+                    window.location.reload();
+                }
+            });
         }else{
             $('.fullScreenSpin').css('display', 'none');
             swal({

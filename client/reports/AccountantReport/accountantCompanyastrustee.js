@@ -411,10 +411,11 @@ Template.accountant_companyastrustee.onRendered(() => {
             country: data.Country || '-',
         };
 
-        let headerHtml = "<span>"+dataInfo.firstname+" "+dataInfo.lastname+", CPA</span><br>";
-        headerHtml += "<span>"+dataInfo.address+", "+dataInfo.towncity+", "+dataInfo.postalzip+", "+dataInfo.stateregion+", "+dataInfo.country+"</span>";
-        headerHtml += "<h3>Company as Trustee</h3>";
-        headerHtml += "<span>"+dataInfo.companyname+"<br>For the year ended "+(new Date())+"</span>";
+        let headerHtml = "<div style='border-top:1px solid #858796; width:172px; margin-bottom:12px'></div>";
+        headerHtml += "<span style='float:left; padding-bottom:8px'>"+dataInfo.firstname+" "+dataInfo.lastname+", CPA</span>";
+        headerHtml += "<span style='float:left; padding-bottom:8px'><b>OnPoint Advisory</b></span>";
+        headerHtml += "<span style='float:left; padding-bottom:20px'>"+dataInfo.address+"<br/>"+dataInfo.towncity+", "+dataInfo.postalzip+", "+dataInfo.stateregion+", "+dataInfo.country+"</span>";
+        headerHtml += "<span style='float:left;'>Dated: 31 August 2021</span>";
 
         $("#reportsAccountantHeader").html(headerHtml);
       })
@@ -972,6 +973,10 @@ Template.accountant_companyastrustee.onRendered(() => {
 });
 
 Template.accountant_companyastrustee.events({
+  "click #btnaddAccountant": function () {
+    FlowRouter.go("/reportsAccountantSettings");
+  },
+
   'click .custom-control-input': function(event) {
     const templateObject = Template.instance();
     let accountantList = templateObject.datatablerecords.curValue;
@@ -983,9 +988,10 @@ Template.accountant_companyastrustee.events({
     for(var i=0; i<accountantList.length; i++){
       if(accountantList[i].id == accountantItemID){
         if($("#"+$(event.target).attr('id')).prop('checked') == true){    
-          innerHtml += "<div class='col-6 col-md-12' id='row-"+accountantPanID+"-"+accountantList[i].id+"' style='border-bottom: 1px solid #ccc;'>";
-          innerHtml += "<div style='width:80%; float:left; padding-left:6px; padding-top:6px'><label>"+accountantList[i].accountname+"</label></div>";
-          innerHtml += "<div style='float:left; padding-top:6px'><label>"+accountantList[i].balance+"</label></div>";
+          innerHtml += "<div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0' id='row-"+accountantPanID+"-"+accountantList[i].id+"'>";
+          innerHtml += "<div style='width:calc(100% - 180px); float:left; padding-top:4px'>"+accountantList[i].accountname+"</div>";
+          innerHtml += "<div style='float:left; padding-top:4px; width:90px'>"+accountantList[i].balance+"</div>";
+          innerHtml += "<div style='float:left; padding-top:4px; width:90px'>"+accountantList[i].balance+"</div>";
           innerHtml += "</div>";
 
           $("#reportAccPan"+accountantPanID).append(innerHtml);
@@ -1174,6 +1180,14 @@ Template.accountant_companyastrustee.events({
 });
 
 Template.accountant_companyastrustee.helpers({
+  accountantPanList1: (no) => {
+    return no < 6;
+  },
+
+  accountantPanList2: (no) => {
+    return no >= 6;
+  },
+
   countryList: () => {
       return Template.instance().countryData.get();
   },
@@ -1198,6 +1212,11 @@ Template.accountant_companyastrustee.helpers({
 
   companyname: () => {
     return loggedCompany;
+  },
+
+  fiscalYearEnding: () => {
+    let date = new Date(dateAsOf);
+    return date.getFullYear() - 1;
   },
 
   dateAsAt: () => {

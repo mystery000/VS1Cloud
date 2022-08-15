@@ -310,7 +310,8 @@
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    return storage.includes('BasedOnType_')
+                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                 });
                 let i = basedOnTypeStorages.length;
                 if (i > 0) {
@@ -324,7 +325,7 @@
                     if (reportData.BasedOnType.includes("EU"))
                         Meteor.call('sendNormalEmail', reportData);
                 });
-                window.open('/vs1greentracklogin', '_self');
+                FlowRouter.go('/vs1greentracklogin');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
                 }, {
@@ -341,7 +342,8 @@
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                     let employeeId = storage.split('_')[2];
-                    return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    return storage.includes('BasedOnType_')
+                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                 });
                 let i = basedOnTypeStorages.length;
                 if (i > 0) {
@@ -355,7 +357,8 @@
                     if (reportData.BasedOnType.includes("EU"))
                         Meteor.call('sendNormalEmail', reportData);
                 });
-                window.open('/', '_self');
+                // window.open('/', '_self');
+                FlowRouter.go('/');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
                 }, {

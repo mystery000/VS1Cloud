@@ -418,12 +418,7 @@ Template.customerawaitingpayments.onRendered(function () {
                   });
                   templateObject.tableheaderrecords.set(tableHeaderList);
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                  $('#tblcustomerAwaitingPayment tbody').on('click', 'tr .colPaymentDate, tr .colReceiptNo, tr .colPaymentAmount, tr .colApplied, tr .colBalance, tr .colCustomerName, tr .colDepartment, tr .colRefNo, tr .colPaymentMethod, tr .colNotes', function () {
-                      var listData = $(this).closest('tr').attr('id');
-                      if (listData) {
-                          FlowRouter.go('/paymentcard?invid=' + listData);
-                      }
-                  });
+
 
               }).catch(function (err) {
                   // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -745,12 +740,7 @@ Template.customerawaitingpayments.onRendered(function () {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblcustomerAwaitingPayment tbody').on('click', 'tr .colPaymentDate, tr .colReceiptNo, tr .colPaymentAmount, tr .colApplied, tr .colBalance, tr .colCustomerName, tr .colDepartment, tr .colRefNo, tr .colPaymentMethod, tr .colNotes', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if (listData) {
-                        FlowRouter.go('/paymentcard?invid=' + listData);
-                    }
-                });
+
 
             }
         }).catch(function (err) {
@@ -1067,12 +1057,7 @@ Template.customerawaitingpayments.onRendered(function () {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblcustomerAwaitingPayment tbody').on('click', 'tr .colPaymentDate, tr .colReceiptNo, tr .colPaymentAmount, tr .colApplied, tr .colBalance, tr .colCustomerName, tr .colDepartment, tr .colRefNo, tr .colPaymentMethod, tr .colNotes', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if (listData) {
-                        FlowRouter.go('/paymentcard?invid=' + listData);
-                    }
-                });
+
 
             }).catch(function (err) {
                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -1084,6 +1069,12 @@ Template.customerawaitingpayments.onRendered(function () {
 
     templateObject.getAllCustomerPaymentData();
 
+    $('#tblcustomerAwaitingPayment tbody').on('click', 'tr .colOverdueDays, tr .colPaymentDate, tr .colReceiptNo, tr .colPaymentAmount, tr .colApplied, tr .colBalance, tr .colCustomerName, tr .colPaymentId, tr .colDepartment, tr .colRefNo, tr .colPaymentMethod, tr .colNotes', function () {
+        var listData = $(this).closest('tr').attr('id');
+        if (listData) {
+            FlowRouter.go('/invoicecard?id=' + listData);
+        }
+    });
 
     templateObject.getAllFilterAwaitingCustData = function(fromDate, toDate, ignoreDate) {
         sideBarService.getAllAwaitingCustomerPayment(fromDate, toDate, ignoreDate,initialReportLoad,0,contactID).then(function(data) {
@@ -1491,7 +1482,7 @@ Template.customerawaitingpayments.events({
         });
 
 
-    sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
+    sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(dataPaymentList) {
         addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
             sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
                 addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {

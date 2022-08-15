@@ -631,6 +631,11 @@ Template.crmoverview.events({
   },
 
   "click .btnMailchimp": function (e) {
+    FlowRouter.go("/email-list");
+    return;
+  },
+
+  "click #btnCorrespondence": function (e) {
     $('#crmMailchimpModal').modal();
     return;
   },

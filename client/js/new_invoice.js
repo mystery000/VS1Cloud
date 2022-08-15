@@ -119,19 +119,19 @@ Template.new_invoice.onRendered(() => {
               if (dataObject.length == 0) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));
-                      
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                        
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Invoices')
                         {
                                if(data.ttemplatesettings[i].fields.Template == 1)
-                               {       
+                               {
                                        $('input[name="Invoices_1"]').val(data.ttemplatesettings[i].fields.Description);
                                        if(data.ttemplatesettings[i].fields.Active == true)
                                        {
                                          $('#Invoices_1').attr('checked','checked');
                                        }
-                                     
+
                                }
                                if(data.ttemplatesettings[i].fields.Template == 2)
                                {
@@ -141,7 +141,7 @@ Template.new_invoice.onRendered(() => {
                                        $('#Invoices_2').attr('checked','checked');
                                      }
                                }
-    
+
                                if(data.ttemplatesettings[i].fields.Template == 3)
                                {
                                      $('input[name="Invoices_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -150,20 +150,20 @@ Template.new_invoice.onRendered(() => {
                                        $('#Invoices_3').attr('checked','checked');
                                      }
                                }
-    
-    
+
+
                         }
-    
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Invoice Back Orders')
                         {
                              if(data.ttemplatesettings[i].fields.Template == 1)
-                             {       
+                             {
                                      $('input[name="Invoice Back Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                      if(data.ttemplatesettings[i].fields.Active == true)
                                      {
                                        $('#Invoice_Back_Orders_1').attr('checked','checked');
                                      }
-                                   
+
                              }
                              if(data.ttemplatesettings[i].fields.Template == 2)
                              {
@@ -173,7 +173,7 @@ Template.new_invoice.onRendered(() => {
                                      $('#Invoice_Back_Orders_2').attr('checked','checked');
                                    }
                              }
-    
+
                              if(data.ttemplatesettings[i].fields.Template == 3)
                              {
                                    $('input[name="Invoice Back Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -182,20 +182,20 @@ Template.new_invoice.onRendered(() => {
                                      $('#Invoice_Back_Orders_3').attr('checked','checked');
                                    }
                              }
-    
-    
+
+
                         }
-  
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
                         {
                                    if(data.ttemplatesettings[i].fields.Template == 1)
-                                   {       
+                                   {
                                            $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
                                            if(data.ttemplatesettings[i].fields.Active == true)
                                            {
                                              $('#Delivery_Docket_1').attr('checked','checked');
                                            }
-                                         
+
                                    }
                                    if(data.ttemplatesettings[i].fields.Template == 2)
                                    {
@@ -205,7 +205,7 @@ Template.new_invoice.onRendered(() => {
                                            $('#Delivery_Docket_2').attr('checked','checked');
                                          }
                                    }
-    
+
                                    if(data.ttemplatesettings[i].fields.Template == 3)
                                    {
                                          $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -213,34 +213,34 @@ Template.new_invoice.onRendered(() => {
                                          {
                                            $('#Delivery_Docket_3').attr('checked','checked');
                                          }
-                                   } 
-    
+                                   }
+
                         }
-                   
-                   
-    
+
+
+
                      }
-                      
-                          
+
+
                       $('.fullScreenSpin').css('display', 'none');
                   }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                   });
-              }else{ 
-                      let data = JSON.parse(dataObject[0].data);    
-                    
+              }else{
+                      let data = JSON.parse(dataObject[0].data);
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                       
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Invoices')
                         {
                                if(data.ttemplatesettings[i].fields.Template == 1)
-                               {       
+                               {
                                        $('input[name="Invoices_1"]').val(data.ttemplatesettings[i].fields.Description);
                                        if(data.ttemplatesettings[i].fields.Active == true)
                                        {
                                          $('#Invoices_1').attr('checked','checked');
                                        }
-                                     
+
                                }
                                if(data.ttemplatesettings[i].fields.Template == 2)
                                {
@@ -250,7 +250,7 @@ Template.new_invoice.onRendered(() => {
                                        $('#Invoices_2').attr('checked','checked');
                                      }
                                }
-    
+
                                if(data.ttemplatesettings[i].fields.Template == 3)
                                {
                                      $('input[name="Invoices_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -259,20 +259,20 @@ Template.new_invoice.onRendered(() => {
                                        $('#Invoices_3').attr('checked','checked');
                                      }
                                }
-    
-    
+
+
                         }
-    
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Invoice Back Orders')
                         {
                              if(data.ttemplatesettings[i].fields.Template == 1)
-                             {       
+                             {
                                      $('input[name="Invoice Back Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                      if(data.ttemplatesettings[i].fields.Active == true)
                                      {
                                        $('#Invoice_Back_Orders_1').attr('checked','checked');
                                      }
-                                   
+
                              }
                              if(data.ttemplatesettings[i].fields.Template == 2)
                              {
@@ -282,7 +282,7 @@ Template.new_invoice.onRendered(() => {
                                      $('#Invoice_Back_Orders_2').attr('checked','checked');
                                    }
                              }
-    
+
                              if(data.ttemplatesettings[i].fields.Template == 3)
                              {
                                    $('input[name="Invoice Back Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -291,20 +291,20 @@ Template.new_invoice.onRendered(() => {
                                      $('#Invoice_Back_Orders_3').attr('checked','checked');
                                    }
                              }
-    
-    
+
+
                         }
-  
+
                         if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
                         {
                                    if(data.ttemplatesettings[i].fields.Template == 1)
-                                   {       
+                                   {
                                            $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
                                            if(data.ttemplatesettings[i].fields.Active == true)
                                            {
                                              $('#Delivery_Docket_1').attr('checked','checked');
                                            }
-                                         
+
                                    }
                                    if(data.ttemplatesettings[i].fields.Template == 2)
                                    {
@@ -314,7 +314,7 @@ Template.new_invoice.onRendered(() => {
                                            $('#Delivery_Docket_2').attr('checked','checked');
                                          }
                                    }
-    
+
                                    if(data.ttemplatesettings[i].fields.Template == 3)
                                    {
                                          $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -322,30 +322,30 @@ Template.new_invoice.onRendered(() => {
                                          {
                                            $('#Delivery_Docket_3').attr('checked','checked');
                                          }
-                                   } 
-    
+                                   }
+
                         }
-                   
-                   
-    
+
+
+
                      }
                       $('.fullScreenSpin').css('display', 'none');
               }
             }).catch(function(err) {
                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data));                 
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                                   
+
                          if(data.ttemplatesettings[i].fields.SettingName == 'Invoices')
                          {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {       
+                                {
                                         $('input[name="Invoices_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                           $('#Invoices_1').attr('checked','checked');
                                         }
-                                      
+
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -355,7 +355,7 @@ Template.new_invoice.onRendered(() => {
                                         $('#Invoices_2').attr('checked','checked');
                                       }
                                 }
-    
+
                                 if(data.ttemplatesettings[i].fields.Template == 3)
                                 {
                                       $('input[name="Invoices_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -364,20 +364,20 @@ Template.new_invoice.onRendered(() => {
                                         $('#Invoices_3').attr('checked','checked');
                                       }
                                 }
-    
-    
+
+
                          }
-    
+
                          if(data.ttemplatesettings[i].fields.SettingName == 'Invoice Back Orders')
                          {
                               if(data.ttemplatesettings[i].fields.Template == 1)
-                              {       
+                              {
                                       $('input[name="Invoice Back Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                       if(data.ttemplatesettings[i].fields.Active == true)
                                       {
                                         $('#Invoice_Back_Orders_1').attr('checked','checked');
                                       }
-                                    
+
                               }
                               if(data.ttemplatesettings[i].fields.Template == 2)
                               {
@@ -387,7 +387,7 @@ Template.new_invoice.onRendered(() => {
                                       $('#Invoice_Back_Orders_2').attr('checked','checked');
                                     }
                               }
-    
+
                               if(data.ttemplatesettings[i].fields.Template == 3)
                               {
                                     $('input[name="Invoice Back Orders_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -396,25 +396,25 @@ Template.new_invoice.onRendered(() => {
                                       $('#Invoice_Back_Orders_3').attr('checked','checked');
                                     }
                               }
-    
-    
+
+
                          }
-    
-                     
-    
-                    
-    
-    
+
+
+
+
+
+
                          if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
                          {
                                     if(data.ttemplatesettings[i].fields.Template == 1)
-                                    {       
+                                    {
                                             $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
                                             if(data.ttemplatesettings[i].fields.Active == true)
                                             {
                                               $('#Delivery_Docket_1').attr('checked','checked');
                                             }
-                                          
+
                                     }
                                     if(data.ttemplatesettings[i].fields.Template == 2)
                                     {
@@ -424,7 +424,7 @@ Template.new_invoice.onRendered(() => {
                                             $('#Delivery_Docket_2').attr('checked','checked');
                                           }
                                     }
-    
+
                                     if(data.ttemplatesettings[i].fields.Template == 3)
                                     {
                                           $('input[name="Delivery Docket_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -432,23 +432,23 @@ Template.new_invoice.onRendered(() => {
                                           {
                                             $('#Delivery_Docket_3').attr('checked','checked');
                                           }
-                                    } 
-    
+                                    }
+
                          }
-                    
-                    
-    
+
+
+
                       }
                       $('.fullScreenSpin').css('display', 'none');
             }).catch(function (err) {
               $('.fullScreenSpin').css('display', 'none');
             });
             });
-    
+
           };
-    
+
           templateObject.getTemplateInfoNew();
-          
+
                   templateObject.getLastInvoiceData = async function() {
             let lastBankAccount = "Bank";
             let lastDepartment = defaultDept || "";
@@ -570,7 +570,7 @@ Template.new_invoice.onRendered(() => {
                         statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
                         country: data.tcustomervs1[i].fields.Country || ' ',
                         termsName: data.tcustomervs1[i].fields.TermsName || '',
-                        taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                        taxCode: data.tcustomervs1[i].fields.TaxCodeName || '',
                         clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
                         discount: data.tcustomervs1[i].fields.Discount || 0
                     };
@@ -5643,7 +5643,7 @@ function setCustomerInfo(selectedTaxCodeName){
                 $('#pdfCustomerAddress').html(postalAddress);
                 $('.pdfCustomerAddress').text(postalAddress);
                 $('#txaShipingInfo').val(postalAddress);
-                $('#sltTerms').val(clientList[i].termsName || '');
+                //$('#sltTerms').val(clientList[i].termsName || '');
             }
         }
     }
@@ -6638,7 +6638,7 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    $('#sltTerms').val(clientList[i].termsName || '');
+                    //$('#sltTerms').val(clientList[i].termsName || '');
                 }
             }
         }
@@ -11554,8 +11554,8 @@ Template.new_invoice.events({
         let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
         let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
 
-        let taxRateDetailList = [];
-        taxRateDetailList.push([
+        let taxDetailTableData = [];
+        taxDetailTableData.push([
             taxDetail.Description,
             taxDetail.Id,
             taxDetail.CodeName,
@@ -11567,8 +11567,8 @@ Template.new_invoice.events({
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
-                taxRateDetailList.push([
-                    "",
+                taxDetailTableData.push([
+                    line.Description,
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
@@ -11580,7 +11580,7 @@ Template.new_invoice.events({
             });
         }
 
-        if (taxRateDetailList) {
+        if (taxDetailTableData) {
 
             if (! $.fn.DataTable.isDataTable('#tblTaxDetail')) {
                 $('#tblTaxDetail').DataTable({
@@ -11630,7 +11630,7 @@ Template.new_invoice.events({
 
             let datatable = $('#tblTaxDetail').DataTable();
             datatable.clear();
-            datatable.rows.add(taxRateDetailList);
+            datatable.rows.add(taxDetailTableData);
             datatable.draw(false);
         }
 
@@ -11655,132 +11655,132 @@ Template.new_invoice.events({
             $('#lotNumberModal').modal('toggle');
         }
     },
-    'click .lineTaxCode, keydown .lineTaxCode': function(event) {
-       var $earch = $(event.currentTarget);
-       var offset = $earch.offset();
-       $('#edtTaxID').val('');
-       $('.taxcodepopheader').text('New Tax Rate');
-       $('#edtTaxID').val('');
-       $('#edtTaxNamePop').val('');
-       $('#edtTaxRatePop').val('');
-       $('#edtTaxDescPop').val('');
-       $('#edtTaxNamePop').attr('readonly', false);
-       let purchaseService = new PurchaseBoardService();
-       var taxRateDataName = $(event.target).val() || '';
-       if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-           $('#taxRateListModal').modal('toggle');
-           var targetID = $(event.target).closest('tr').attr('id');
-           $('#selectLineID').val(targetID);
-           setTimeout(function() {
-               $('#tblTaxRate_filter .form-control-sm').focus();
-               $('#tblTaxRate_filter .form-control-sm').val('');
-               $('#tblTaxRate_filter .form-control-sm').trigger("input");
+    'click .lineTaxCode, keydown .lineTaxCode': function (event) {
+        var $earch = $(event.currentTarget);
+        var offset = $earch.offset();
+        $('#edtTaxID').val('');
+        $('.taxcodepopheader').text('New Tax Rate');
+        $('#edtTaxID').val('');
+        $('#edtTaxNamePop').val('');
+        $('#edtTaxRatePop').val('');
+        $('#edtTaxDescPop').val('');
+        $('#edtTaxNamePop').attr('readonly', false);
+        let purchaseService = new PurchaseBoardService();
+        var taxRateDataName = $(event.target).val() || '';
+        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+            $('#taxRateListModal').modal('toggle');
+            var targetID = $(event.target).closest('tr').attr('id');
+            $('#selectLineID').val(targetID);
+            setTimeout(function () {
+                $('#tblTaxRate_filter .form-control-sm').focus();
+                $('#tblTaxRate_filter .form-control-sm').val('');
+                $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-               var datatable = $('#tblTaxRate').DataTable();
-               datatable.draw();
-               $('#tblTaxRate_filter .form-control-sm').trigger("input");
+                var datatable = $('#tblTaxRate').DataTable();
+                datatable.draw();
+                $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-           }, 500);
-       } else {
-           if (taxRateDataName.replace(/\s/g, '') != '') {
+            }, 500);
+        } else {
+            if (taxRateDataName.replace(/\s/g, '') != '') {
 
-               getVS1Data('TTaxcodeVS1').then(function (dataObject) {
-                 if(dataObject.length == 0){
-                   purchaseService.getTaxCodesVS1().then(function (data) {
-                     let lineItems = [];
-                     let lineItemObj = {};
-                     for(let i=0; i<data.ttaxcodevs1.length; i++){
-                       if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
-                         $('#edtTaxNamePop').attr('readonly', true);
-                       let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                       var taxRateID = data.ttaxcodevs1[i].Id || '';
-                        var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
-                        var taxRateDesc = data.ttaxcodevs1[i].Description || '';
-                        $('#edtTaxID').val(taxRateID);
-                        $('#edtTaxNamePop').val(taxRateName);
-                        $('#edtTaxRatePop').val(taxRate);
-                        $('#edtTaxDescPop').val(taxRateDesc);
-                        setTimeout(function() {
-                        $('#newTaxRateModal').modal('toggle');
-                        }, 100);
-                      }
-                     }
+                getVS1Data('TTaxcodeVS1').then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                        purchaseService.getTaxCodesVS1().then(function (data) {
+                            let lineItems = [];
+                            let lineItemObj = {};
+                            for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                                if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                    $('#edtTaxNamePop').attr('readonly', true);
+                                    let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                    var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                    var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                    var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                    $('#edtTaxID').val(taxRateID);
+                                    $('#edtTaxNamePop').val(taxRateName);
+                                    $('#edtTaxRatePop').val(taxRate);
+                                    $('#edtTaxDescPop').val(taxRateDesc);
+                                    setTimeout(function () {
+                                        $('#newTaxRateModal').modal('toggle');
+                                    }, 100);
+                                }
+                            }
 
-                   }).catch(function (err) {
-                       // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                       $('.fullScreenSpin').css('display','none');
-                       // Meteor._reload.reload();
-                   });
-                 }else{
-                   let data = JSON.parse(dataObject[0].data);
-                   let useData = data.ttaxcodevs1;
-                   let lineItems = [];
-                   let lineItemObj = {};
-                   $('.taxcodepopheader').text('Edit Tax Rate');
-                   for(let i=0; i<useData.length; i++){
+                        }).catch(function (err) {
+                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                            $('.fullScreenSpin').css('display', 'none');
+                            // Meteor._reload.reload();
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.ttaxcodevs1;
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        $('.taxcodepopheader').text('Edit Tax Rate');
+                        for (let i = 0; i < useData.length; i++) {
 
-                     if ((useData[i].CodeName) === taxRateDataName) {
-                       $('#edtTaxNamePop').attr('readonly', true);
-                     let taxRate = (useData[i].Rate * 100).toFixed(2);
-                     var taxRateID = useData[i].Id || '';
-                      var taxRateName = useData[i].CodeName ||'';
-                      var taxRateDesc = useData[i].Description || '';
-                      $('#edtTaxID').val(taxRateID);
-                      $('#edtTaxNamePop').val(taxRateName);
-                      $('#edtTaxRatePop').val(taxRate);
-                      $('#edtTaxDescPop').val(taxRateDesc);
-                      //setTimeout(function() {
-                      $('#newTaxRateModal').modal('toggle');
-                      //}, 500);
+                            if ((useData[i].CodeName) === taxRateDataName) {
+                                $('#edtTaxNamePop').attr('readonly', true);
+                                let taxRate = (useData[i].Rate * 100).toFixed(2);
+                                var taxRateID = useData[i].Id || '';
+                                var taxRateName = useData[i].CodeName || '';
+                                var taxRateDesc = useData[i].Description || '';
+                                $('#edtTaxID').val(taxRateID);
+                                $('#edtTaxNamePop').val(taxRateName);
+                                $('#edtTaxRatePop').val(taxRate);
+                                $('#edtTaxDescPop').val(taxRateDesc);
+                                //setTimeout(function() {
+                                $('#newTaxRateModal').modal('toggle');
+                                //}, 500);
+                            }
+                        }
                     }
-                   }
-                 }
-               }).catch(function (err) {
-                 purchaseService.getTaxCodesVS1().then(function (data) {
-                   let lineItems = [];
-                   let lineItemObj = {};
-                   for(let i=0; i<data.ttaxcodevs1.length; i++){
-                     if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
-                       $('#edtTaxNamePop').attr('readonly', true);
-                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                     var taxRateID = data.ttaxcodevs1[i].Id || '';
-                      var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
-                      var taxRateDesc = data.ttaxcodevs1[i].Description || '';
-                      $('#edtTaxID').val(taxRateID);
-                      $('#edtTaxNamePop').val(taxRateName);
-                      $('#edtTaxRatePop').val(taxRate);
-                      $('#edtTaxDescPop').val(taxRateDesc);
-                      setTimeout(function() {
-                      $('#newTaxRateModal').modal('toggle');
-                      }, 100);
+                }).catch(function (err) {
+                    purchaseService.getTaxCodesVS1().then(function (data) {
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                            if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+                                $('#edtTaxNamePop').attr('readonly', true);
+                                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                                var taxRateID = data.ttaxcodevs1[i].Id || '';
+                                var taxRateName = data.ttaxcodevs1[i].CodeName || '';
+                                var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+                                $('#edtTaxID').val(taxRateID);
+                                $('#edtTaxNamePop').val(taxRateName);
+                                $('#edtTaxRatePop').val(taxRate);
+                                $('#edtTaxDescPop').val(taxRateDesc);
+                                setTimeout(function () {
+                                    $('#newTaxRateModal').modal('toggle');
+                                }, 100);
 
-                    }
-                   }
+                            }
+                        }
 
-                 }).catch(function (err) {
-                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                     $('.fullScreenSpin').css('display','none');
-                     // Meteor._reload.reload();
-                 });
-               });
+                    }).catch(function (err) {
+                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                        $('.fullScreenSpin').css('display', 'none');
+                        // Meteor._reload.reload();
+                    });
+                });
 
-           } else {
-               $('#taxRateListModal').modal('toggle');
-               var targetID = $(event.target).closest('tr').attr('id');
-               $('#selectLineID').val(targetID);
-               setTimeout(function() {
-                   $('#tblTaxRate_filter .form-control-sm').focus();
-                   $('#tblTaxRate_filter .form-control-sm').val('');
-                   $('#tblTaxRate_filter .form-control-sm').trigger("input");
+            } else {
+                $('#taxRateListModal').modal('toggle');
+                var targetID = $(event.target).closest('tr').attr('id');
+                $('#selectLineID').val(targetID);
+                setTimeout(function () {
+                    $('#tblTaxRate_filter .form-control-sm').focus();
+                    $('#tblTaxRate_filter .form-control-sm').val('');
+                    $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-                   var datatable = $('#tblTaxRate').DataTable();
-                   datatable.draw();
-                   $('#tblTaxRate_filter .form-control-sm').trigger("input");
+                    var datatable = $('#tblTaxRate').DataTable();
+                    datatable.draw();
+                    $('#tblTaxRate_filter .form-control-sm').trigger("input");
 
-               }, 500);
-           }
+                }, 500);
+            }
 
-       }
+        }
     },
     'click .lineUOM, keydown .lineUOM': function(event) {
         var $earch = $(event.currentTarget);
@@ -11919,533 +11919,533 @@ Template.new_invoice.events({
                 let emid = Session.get('mySessionEmployeeLoggedID');
                 sideBarService.getTemplateNameandEmployeId("Invoices",emid,1).then(function (data) {
                 templateid = data.ttemplatesettings;
-                var id = templateid[0].fields.ID;    
+                var id = templateid[0].fields.ID;
                 objDetails =  {
                 type:"TTemplateSettings",
-                fields:{        
-                                     ID:parseInt(id),                      
+                fields:{
+                                     ID:parseInt(id),
                                      EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                      SettingName:"Invoices",
                                      GlobalRef:"Invoices",
                                      Description:$('input[name="Invoices_1"]').val(),
                                      Template:"1",
                                      Active:invoices == 1 ? true:false
-                         }          
+                         }
                 }
-             
+
                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-             
+
                     sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));   });
                  }).catch(function (err) {   });
-             
+
                 }).catch(function (err) {
-                         
+
                           objDetails =  {
                           type:"TTemplateSettings",
-                          fields:{                                                                  
+                          fields:{
                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                        SettingName:"Invoices",
                                        Description:$('input[name="Invoices_1"]').val(),
                                        Template:"1",
                                        Active:invoices == 1 ? true:false,
-                                 }            
+                                 }
                           }
-                     
+
                            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                     
+
                              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                               addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                            
+                               addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                               });
-                           
-                     
+
+
                            }).catch(function (err) {
-                     
-                            
-                       
-                           });  
-           
+
+
+
+                           });
+
                 });
-         
+
                 sideBarService.getTemplateNameandEmployeId("Invoices",emid,2).then(function (data) {
                  templateid = data.ttemplatesettings;
-                 var id = templateid[0].fields.ID;    
+                 var id = templateid[0].fields.ID;
                  objDetails =  {
                  type:"TTemplateSettings",
-                 fields:{        
-                                     ID:parseInt(id),                      
+                 fields:{
+                                     ID:parseInt(id),
                                      EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                      SettingName:"Invoices",
                                      GlobalRef:"Invoices",
                                      Description:$('input[name="Invoices_2"]').val(),
                                      Template:"2",
                                      Active:invoices == 2 ? true:false,
-                         }            
+                         }
                   }
-             
+
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-             
+
                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                     addVS1Data('TTemplateSettings', JSON.stringify(data));           
+                     addVS1Data('TTemplateSettings', JSON.stringify(data));
                    });
-                  
-             
+
+
                  }).catch(function (err) {
 
                  });
-             
+
                 }).catch(function (err) {
-                         
+
                           objDetails =  {
                           type:"TTemplateSettings",
-                          fields:{                                                                  
+                          fields:{
                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                        SettingName:"Invoices",
                                        Description:$('input[name="Invoices_2"]').val(),
                                        Template:"2",
                                        Active:invoices == 2 ? true:false,
-                                 }            
+                                 }
                           }
-                     
+
                            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                     
+
                              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                               addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                            
+                               addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                              });
-                            
-                     
+
+
                            }).catch(function (err) {
-                     
-                            
-                       
-                           });  
-           
+
+
+
+                           });
+
                 });
-         
-         
+
+
                 sideBarService.getTemplateNameandEmployeId("Invoices",emid,3).then(function (data) {
                  templateid = data.ttemplatesettings;
-                 var id = templateid[0].fields.ID;    
+                 var id = templateid[0].fields.ID;
                  objDetails =  {
                  type:"TTemplateSettings",
-                 fields:{        
-                                     ID:parseInt(id),                      
+                 fields:{
+                                     ID:parseInt(id),
                                      EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                      SettingName:"Invoices",
                                      GlobalRef:"Invoices",
                                      Description:$('input[name="Invoices_3"]').val(),
                                      Template:"3",
                                      Active:invoices == 3 ? true:false,
-                         }            
+                         }
                   }
-             
+
                   sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-             
+
                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                     addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                    
+                     addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                    });
-                  
-             
+
+
                  }).catch(function (err) {
-             
-                 
-                
+
+
+
                  });
-             
+
                 }).catch(function (err) {
-                         
+
                           objDetails =  {
                           type:"TTemplateSettings",
-                          fields:{                                                                  
+                          fields:{
                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                        SettingName:"Invoices",
                                        Description:$('input[name="Invoices_3"]').val(),
                                        Template:"3",
                                        Active:invoices == 3 ? true:false,
-                                 }            
+                                 }
                           }
-                     
+
                            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                     
+
                              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                               addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                                 
+                               addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                              });
-                           
-                     
+
+
                            }).catch(function (err) {
-                     
-                           
-                       
-                           });  
-           
+
+
+
+                           });
+
                 });
-         
-                // Invoice Back Orders Template Section 
-         
+
+                // Invoice Back Orders Template Section
+
                  sideBarService.getTemplateNameandEmployeId("Invoice Back Orders",emid,1).then(function (data) {
                  templateid = data.ttemplatesettings;
-                 var id = templateid[0].fields.ID;    
+                 var id = templateid[0].fields.ID;
                  objDetails =  {
                    type:"TTemplateSettings",
-                   fields:{        
-                                       ID:parseInt(id),                      
+                   fields:{
+                                       ID:parseInt(id),
                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                        SettingName:"Invoice Back Orders",
                                        GlobalRef:"Invoice Back Orders",
                                        Description:$('input[name="Invoice Back Orders_1"]').val(),
                                        Template:"1",
                                        Active:invoices_back_order == 1 ? true:false,
-                           }            
+                           }
                    }
-               
+
                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-               
+
                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                       addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                 
+                       addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                      });
-                  
-               
+
+
                    }).catch(function (err) {
-               
-                  
-                 
+
+
+
                    });
-               
+
                  }).catch(function (err) {
-                           
+
                            objDetails =  {
                            type:"TTemplateSettings",
-                           fields:{                                                                  
+                           fields:{
                                          EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                          SettingName:"Invoice Back Orders",
                                          Description:$('input[name="Invoice Back Orders_1"]').val(),
                                          Template:"1",
                                          Active:invoices_back_order == 1 ? true:false,
-                                   }            
+                                   }
                            }
-                       
+
                              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                       
+
                                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                 addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                       
+                                 addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                                 });
-                       
+
                              }).catch(function (err) {
-                       
-                               
-                         
-                             });  
-         
+
+
+
+                             });
+
                  });
-         
-         
+
+
                  sideBarService.getTemplateNameandEmployeId("Invoice Back Orders",emid,2).then(function (data) {
                    templateid = data.ttemplatesettings;
-                   var id = templateid[0].fields.ID;    
+                   var id = templateid[0].fields.ID;
                    objDetails =  {
                    type:"TTemplateSettings",
-                   fields:{        
-                                       ID:parseInt(id),                      
+                   fields:{
+                                       ID:parseInt(id),
                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                        SettingName:"Invoice Back Orders",
                                        GlobalRef:"Invoice Back Orders",
                                        Description:$('input[name="Invoice Back Orders_2"]').val(),
                                        Template:"2",
                                        Active:invoices_back_order == 2 ? true:false,
-                           }            
+                           }
                    }
-               
+
                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-               
+
                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                       addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                 
-                         
+                       addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+
                      });
-               
+
                    }).catch(function (err) {
-               
-                   
-                 
+
+
+
                    });
-               
+
                  }).catch(function (err) {
-                           
+
                            objDetails =  {
                            type:"TTemplateSettings",
-                           fields:{                                                                  
+                           fields:{
                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                        SettingName:"Invoice Back Orders",
                                        Description:$('input[name="Invoice Back Orders_2"]').val(),
                                        Template:"2",
                                        Active:invoices_back_order == 2 ? true:false,
-                                   }            
+                                   }
                            }
-                       
+
                              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                       
+
                                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                 addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                          
-                                 
+                                 addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+
                                 });
-                       
+
                              }).catch(function (err) {
-                       
-                               
-                         
-                             });  
-         
+
+
+
+                             });
+
                  });
-         
+
                  sideBarService.getTemplateNameandEmployeId("Invoice Back Orders",emid,3).then(function (data) {
                    templateid = data.ttemplatesettings;
-                   var id = templateid[0].fields.ID;    
+                   var id = templateid[0].fields.ID;
                    objDetails =  {
                    type:"TTemplateSettings",
-                   fields:{        
-                                       ID:parseInt(id),                      
+                   fields:{
+                                       ID:parseInt(id),
                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                        SettingName:"Invoice Back Orders",
                                        GlobalRef:"Invoice Back Orders",
                                        Description:$('input[name="Invoice Back Orders_3"]').val(),
                                        Template:"3",
                                        Active:invoices_back_order == 3 ? true:false,
-                           }            
+                           }
                    }
-               
+
                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-               
+
                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                       addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                         
+                       addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                      });
-                   
-               
+
+
                    }).catch(function (err) {
-               
-                   
-                 
+
+
+
                    });
-               
+
                  }).catch(function (err) {
-                           
+
                            objDetails =  {
                            type:"TTemplateSettings",
-                           fields:{                                                                  
+                           fields:{
                                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                        SettingName:"Invoice Back Orders",
                                        Description:$('input[name="Invoice Back Orders_3"]').val(),
                                        Template:"3",
                                        Active:invoices_back_order == 3 ? true:false,
-                                   }            
+                                   }
                            }
-                       
+
                              sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                       
+
                                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                 addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                              
+                                 addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                                 });
-                             
-                       
+
+
                              }).catch(function (err) {
-                       
-                               
-                             });  
-         
+
+
+                             });
+
                  });
-                 
+
                  sideBarService.getTemplateNameandEmployeId("Delivery Docket",emid,1).then(function (data) {
                     templateid = data.ttemplatesettings;
-                    var id = templateid[0].fields.ID;    
+                    var id = templateid[0].fields.ID;
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{        
-                                        ID:parseInt(id),                      
+                    fields:{
+                                        ID:parseInt(id),
                                         EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                         SettingName:"Delivery Docket",
                                         GlobalRef:"Delivery Docket",
                                         Description:$('input[name="Delivery Docket_1"]').val(),
                                         Template:"1",
                                         Active:delivery_docket == 1 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));          
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
                       });
-                      
-                
+
+
                     }).catch(function (err) {
-                
-                      
-                  
+
+
+
                     });
-                
+
                    }).catch(function (err) {
-                            
+
                             objDetails =  {
                             type:"TTemplateSettings",
-                            fields:{                                                                  
+                            fields:{
                                         EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                         SettingName:"Delivery Docket",
                                         Description:$('input[name="Delivery Docket_1"]').val(),
                                         Template:"1",
                                         Active:delivery_docket == 1 ? true:false,
-                                    }            
+                                    }
                             }
-                        
+
                             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                        
+
                               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                                   
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                               });
-                        
+
                             }).catch(function (err) {
-                        
-                                
-                          
-                            });  
-              
+
+
+
+                            });
+
                    });
-            
-            
-            
+
+
+
                    sideBarService.getTemplateNameandEmployeId("Delivery Docket",emid,2).then(function (data) {
                     templateid = data.ttemplatesettings;
-                    var id = templateid[0].fields.ID;    
+                    var id = templateid[0].fields.ID;
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{        
-                                        ID:parseInt(id),                      
+                    fields:{
+                                        ID:parseInt(id),
                                         EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                         SettingName:"Delivery Docket",
                                         GlobalRef:"Delivery Docket",
                                         Description:$('input[name="Delivery Docket_2"]').val(),
                                         Template:"2",
                                         Active:delivery_docket == 2 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                               
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                
+
                     }).catch(function (err) {
-                
-                      
-                  
+
+
+
                     });
-                
+
                    }).catch(function (err) {
-                            
+
                             objDetails =  {
                             type:"TTemplateSettings",
-                            fields:{                                                                  
+                            fields:{
                                         EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                         SettingName:"Delivery Docket",
                                         Description:$('input[name="Delivery Docket_2"]').val(),
                                         Template:"2",
                                         Active:delivery_docket == 2 ? true:false,
-                                    }            
+                                    }
                             }
-                        
+
                             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                        
+
                               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                                
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                               });
-                        
+
                             }).catch(function (err) {
-                        
-                                
-                          
-                            });  
-              
+
+
+
+                            });
+
                    });
-            
-            
+
+
                    sideBarService.getTemplateNameandEmployeId("Delivery Docket",emid,3).then(function (data) {
-            
+
                     $('.fullScreenSpin').css('display','none');
                     templateid = data.ttemplatesettings;
-                    var id = templateid[0].fields.ID;    
+                    var id = templateid[0].fields.ID;
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{        
-                                        ID:parseInt(id),                      
+                    fields:{
+                                        ID:parseInt(id),
                                         EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                         SettingName:"Delivery Docket",
                                         GlobalRef:"Delivery Docket",
                                         Description:$('input[name="Delivery Docket_3"]').val(),
                                         Template:"3",
                                         Active:delivery_docket == 3 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                           
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                    
-                      
-                
+
+
+
                     }).catch(function (err) {
                       $('.fullScreenSpin').css('display','none');
-            
-                
-                      
-                  
+
+
+
+
                     });
-                
+
                    }).catch(function (err) {
                            $('.fullScreenSpin').css('display','none');
                             objDetails =  {
                             type:"TTemplateSettings",
-                            fields:{                                                                  
+                            fields:{
                                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                           SettingName:"Delivery Docket",
                                           Description:$('input[name="Delivery Docket_3"]').val(),
                                           Template:"3",
                                           Active:delivery_docket == 3 ? true:false,
-                                    }            
+                                    }
                             }
-                        
+
                             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-            
+
                               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                                addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                                    
+                                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                               });
-            
-                         
-                                
+
+
+
                             }).catch(function (err) {
-                        
-                                
-                          
-                            });  
-              
+
+
+
+                            });
+
                    });
-            
 
 
 
-           
+
+
             if ($('.edtCustomerEmail').val() != "") {
                 $('.pdfCustomerName').html($('#edtCustomerName').val());
                 $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
@@ -12521,6 +12521,86 @@ Template.new_invoice.events({
                     else if (result.dismiss === 'cancel') {}
                 });
             }
+
+
+
+            function generatePdfForMail(invoiceId) {
+                $('#html-Invoice-pdfwrapper').css('display', 'block');
+                let file = "Invoice-" + invoiceId + ".pdf"
+                    return new Promise((resolve, reject) => {
+                    $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+                    let templateObject = Template.instance();
+                    let completeTabRecord;
+                    let doc = new jsPDF('p', 'pt', 'a4');
+                    var source = document.getElementById('html-2-pdfwrapper');
+                    var opt = {
+                        margin: 0,
+                        filename: file,
+                        image: {
+                            type: 'jpeg',
+                            quality: 0.98
+                        },
+                        html2canvas: {
+                            scale: 2
+                        },
+                        jsPDF: {
+                            unit: 'in',
+                            format: 'a4',
+                            orientation: 'portrait'
+                        }
+                    }
+                    resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+                    $('#html-Invoice-pdfwrapper').css('display', 'none');
+                });
+            }
+            let attachment = [];
+            let templateObject = Template.instance();
+
+            let invoiceId = FlowRouter.current().queryParams.id?parseInt(FlowRouter.current().queryParams.id):0;
+            let encodedPdf = await generatePdfForMail(invoiceId);
+
+            // var base64data = reader.result;
+            let base64data = encodedPdf.split(',')[1];
+            pdfObject = {
+                filename: 'invoice-' + invoiceId + '.pdf',
+                content: base64data,
+                encoding: 'base64'
+            };
+
+            attachment.push(pdfObject);
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                return storage.includes('BasedOnType_');
+                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            });
+            let j = basedOnTypeStorages.length;
+            if (j > 0) {
+                while (j--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                }
+            }
+
+
+            values.forEach(value => {
+
+                let reportData = JSON.parse(value);
+                reportData.HostURL = $(location).attr  ('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                reportData.attachments = attachment;
+                if (reportData.BasedOnType.includes("P")) {
+                    if (reportData.FormID == 1) {
+                        let formIds = reportData.FormIDs.split(',');
+                        if (formIds.includes("54")) {
+                            reportData.FormID = 54;
+                            Meteor.call('sendNormalEmail', reportData);
+                        }
+                    } else {
+                        if (reportData.FormID == 54)
+                            Meteor.call('sendNormalEmail', reportData);
+                    }
+                }
+            });
     },
     'keydown .lineQty, keydown .lineUnitPrice, keydown .lineOrdered': function (event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -13382,7 +13462,8 @@ Template.new_invoice.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_');
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -13393,6 +13474,7 @@ Template.new_invoice.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
                             if (reportData.BasedOnType.includes("S")) {
                                 if (reportData.FormID == 1) {
                                     let formIds = reportData.FormIDs.split(',');
@@ -13445,7 +13527,8 @@ Template.new_invoice.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_')
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -13456,6 +13539,8 @@ Template.new_invoice.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
+                            // reportData.attachments.push(attachment);
                             if (reportData.BasedOnType.includes("S")) {
                                 if (reportData.FormID == 1) {
                                     let formIds = reportData.FormIDs.split(',');
@@ -13507,7 +13592,8 @@ Template.new_invoice.events({
                         let basedOnTypeStorages = Object.keys(localStorage);
                         basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                             let employeeId = storage.split('_')[2];
-                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                            return storage.includes('BasedOnType_')
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                         });
                         let i = basedOnTypeStorages.length;
                         if (i > 0) {
@@ -13518,6 +13604,7 @@ Template.new_invoice.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
                             if (reportData.BasedOnType.includes("S")) {
                                 if (reportData.FormID == 1) {
                                     let formIds = reportData.FormIDs.split(',');
@@ -13533,6 +13620,38 @@ Template.new_invoice.events({
                         });
 
                     } else {
+
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_')
+                            // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            reportData.attachments = attachment;
+                            // reportData.attachments.push(attachment);
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("54")) {
+                                        reportData.FormID = 54;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 54)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
                       if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{

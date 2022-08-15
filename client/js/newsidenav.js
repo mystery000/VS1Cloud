@@ -216,6 +216,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').addClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -237,6 +238,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').addClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -252,12 +254,11 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('.collapse').collapse('hide');
-            }else if (currentLoc == "/dashboardsales") {
+            }else if (currentLoc == "/dashboardsalesmanager" || currentLoc == "/dashboardsales") {
               $('#sidenavaccounts').removeClass('active');
               $('#sidenavbanking').removeClass('active');
               $('#sidenavdashbaord').removeClass('active');
               $('#sidenavdashbaordexe').removeClass('active');
-              $('#sidenavdashbaordsales').addClass('active');
               $('#sidenavappointment').removeClass('active');
               $('#sidenavcontacts').removeClass('active');
               $('#sidenavcrm').removeClass('active');
@@ -273,6 +274,13 @@ Template.newsidenav.onRendered(function() {
               $('#sidenavshipping').removeClass('active');
               $('#sidenavreceipt').removeClass('active');
               $('.collapse').collapse('hide');
+              if(currentLoc == "/dashboardsales") {
+                $('#sidenavdashbaordsales').addClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
+              } else {
+                $('#sidenavdashbaordsalesmanager').addClass('active');
+                $('#sidenavdashbaordsales').removeClass('active');
+              }
           }
             else if ((currentLoc == "/appointments") || (currentLoc == "/appointmentlist") || (currentLoc == "/appointmenttimelist")) {
                 $('#sidenavaccounts').removeClass('active');
@@ -281,6 +289,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
                 $('#sidenavinventory').removeClass('active');
@@ -302,6 +311,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -325,6 +335,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -350,6 +361,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment ').removeClass('active');
                 $('#sidenavcontacts').addClass('active');
                 $('#sidenavcrm ').removeClass('active');
@@ -371,6 +383,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').addClass('active');
@@ -395,6 +408,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -420,6 +434,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -442,6 +457,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -466,6 +482,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -497,6 +514,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -522,6 +540,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -547,6 +566,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord ').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -569,6 +589,7 @@ Template.newsidenav.onRendered(function() {
                   $('#sidenavdashbaord').removeClass('active');
                   $('#sidenavdashbaordexe').removeClass('active');
                   $('#sidenavdashbaordsales').removeClass('active');
+                  $('#sidenavdashbaordsalesmanager').removeClass('active');
                   $('#sidenavappointment').removeClass('active');
                   $('#sidenavcontacts').removeClass('active');
                   $('#sidenavcrm').removeClass('active');
@@ -594,6 +615,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment ').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm ').removeClass('active');
@@ -616,6 +638,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord').removeClass('active');
                 $('#sidenavdashbaordexe').removeClass('active');
                 $('#sidenavdashbaordsales').removeClass('active');
+                $('#sidenavdashbaordsalesmanager').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
                 $('#sidenavcrm').removeClass('active');
@@ -3469,7 +3492,7 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getTPaymentListData = function() {
 
-        sideBarService.getTPaymentList(prevMonth11Date, toDate, true,initialReportLoad,0).then(function(data) {
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, true,initialReportLoad,0,'').then(function(data) {
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -6593,6 +6616,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -6653,6 +6677,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -6748,6 +6773,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -6787,6 +6813,7 @@ Template.newsidenav.events({
         $('.dashboardLi').removeClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -6823,6 +6850,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').removeClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -6851,7 +6879,7 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
-    'click #sidenavdashbaordsales': function(event) {
+    'click #sidenavdashbaordsalesmanager': function(event) {
       $('.accountsLi').addClass('opacityNotActive');
       $('.appointmentsLi').addClass('opacityNotActive');
       $('.bankingLi').addClass('opacityNotActive');
@@ -6859,6 +6887,7 @@ Template.newsidenav.events({
       $('.dashboardLi').addClass('opacityNotActive');
       $('.dashboardLiExe').addClass('opacityNotActive');
       $('.dashboardLiSales').removeClass('opacityNotActive');
+      $('.dashboardLiSalesManager').addClass('opacityNotActive');
       $('.gsemployeesLi').addClass('opacityNotActive');
       $('.inventoryLi').addClass('opacityNotActive');
       $('.paymentsLi').addClass('opacityNotActive');
@@ -6883,9 +6912,46 @@ Template.newsidenav.events({
       $('#seedToSaleSubmenu').collapse('hide');
       $('#settingsSubmenu').collapse('hide');
       event.preventDefault();
-      FlowRouter.go('/dashboardsales');
+      FlowRouter.go('/dashboardsalesmanager');
       let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavdashbaordsales': function(event) {
+    $('.accountsLi').addClass('opacityNotActive');
+    $('.appointmentsLi').addClass('opacityNotActive');
+    $('.bankingLi').addClass('opacityNotActive');
+    $('.contactsLi').addClass('opacityNotActive');
+    $('.dashboardLi').addClass('opacityNotActive');
+    $('.dashboardLiExe').addClass('opacityNotActive');
+    $('.dashboardLiSales').addClass('opacityNotActive');
+    $('.dashboardLiSalesManager').removeClass('opacityNotActive');
+    $('.gsemployeesLi').addClass('opacityNotActive');
+    $('.inventoryLi').addClass('opacityNotActive');
+    $('.paymentsLi').addClass('opacityNotActive');
+    $('.payrollLi').addClass('opacityNotActive');
+    $('.purchasesLi').addClass('opacityNotActive');
+    $('.reportsLi').addClass('opacityNotActive');
+    $('.reportsLi2').addClass('opacityNotActive');
+    $('.salesLi').addClass('opacityNotActive');
+    $('.seedtosaleLi').addClass('opacityNotActive');
+    $('.settingsLi').addClass('opacityNotActive');
+    $('.logoutLi').addClass('opacityNotActive');
+    $('#accountsSubmenu').collapse('hide');
+    $('#appointmentsSubmenu').collapse('hide');
+    $('#bankingSubmenu').collapse('hide');
+    $('#contactsSubmenu').collapse('hide');
+    $('#inventorySubmenu').collapse('hide');
+    $('#paymentsSubmenu').collapse('hide');
+    $('#payrollSubmenu').collapse('hide');
+    $('#purchasesSubmenu').collapse('hide');
+    $('#reportsSubmenu').collapse('hide');
+    $('#salesSubmenu').collapse('hide');
+    $('#seedToSaleSubmenu').collapse('hide');
+    $('#settingsSubmenu').collapse('hide');
+    event.preventDefault();
+    FlowRouter.go('/dashboardsales');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
   },
     'click #sidenavappointment': function(event) {
         $('.accountsLi').addClass('opacityNotActive');
@@ -6895,6 +6961,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -6957,6 +7024,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').removeClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -7009,6 +7077,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').removeClass('opacityNotActive');
@@ -7048,6 +7117,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -7087,6 +7157,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -7249,6 +7320,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -7641,6 +7713,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');
@@ -7691,6 +7764,7 @@ Template.newsidenav.events({
         $('.dashboardLi').addClass('opacityNotActive');
         $('.dashboardLiExe').addClass('opacityNotActive');
         $('.dashboardLiSales').addClass('opacityNotActive');
+        $('.dashboardLiSalesManager').addClass('opacityNotActive');
         $('.gsemployeesLi').addClass('opacityNotActive');
         $('.inventoryLi').addClass('opacityNotActive');
         $('.paymentsLi').addClass('opacityNotActive');

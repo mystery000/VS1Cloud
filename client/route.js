@@ -217,12 +217,20 @@ authenticatedRoutes.route('/dashboardexe', {
     }
 });
 
-
 authenticatedRoutes.route('/dashboardsales', {
     name: 'dashboardsales',
     action() {
         BlazeLayout.render('layout', {
             yield: 'dashboardsales'
+        });
+    }
+});
+
+authenticatedRoutes.route('/dashboardsalesmanager', {
+    name: 'dashboardsalesmanager',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'dashboardsalesmanager'
         });
     }
 });
@@ -1066,6 +1074,15 @@ authenticatedRoutes.route('/trialbalance', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'trialbalance'
+        });
+    }
+});
+
+authenticatedRoutes.route('/executivesummaryreport', {
+    name: 'executivesummaryreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'executivesummaryreport'
         });
     }
 });
