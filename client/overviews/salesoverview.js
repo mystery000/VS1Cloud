@@ -109,11 +109,9 @@ Template.salesoverview.onRendered(function () {
       .subtract(reportsloadMonths, "months")
       .format("YYYY-MM-DD");
 
-    getVS1Data("TSalesList")
-      .then(function (dataObject) {
+    getVS1Data("TSalesList").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService
-            .getSalesListData(
+          sideBarService.getSalesListData(
               prevMonth11Date,
               toDate,
               true,
@@ -524,7 +522,6 @@ Template.salesoverview.onRendered(function () {
           let useData = data.tsaleslist;
           let lineItems = [];
           let lineItemObj = {};
-s
           $(".fullScreenSpin").css("display", "none");
           for (let i = 0; i < useData.length; i++) {
 
@@ -585,38 +582,7 @@ s
           }
           templateObject.datatablerecords.set(dataTableList);
           if (templateObject.datatablerecords.get()) {
-            Meteor.call(
-              "readPrefMethod",
-              Session.get("mycloudLogonID"),
-              "tblSalesOverview",
-              function (error, result) {
-                if (error) {
-                } else {
-                  if (result) {
-                    for (let i = 0; i < result.customFields.length; i++) {
-                      let customcolumn = result.customFields;
-                      let columData = customcolumn[i].label;
-                      let columHeaderUpdate = customcolumn[i].thclass.replace(
-                        / /g,
-                        "."
-                      );
-                      let hiddenColumn = customcolumn[i].hidden;
-                      let columnClass = columHeaderUpdate.split(".")[1];
-                      let columnWidth = customcolumn[i].width;
-                      let columnindex = customcolumn[i].index + 1;
 
-                      if (hiddenColumn == true) {
-                        $("." + columnClass + "").addClass("hiddenColumn");
-                        $("." + columnClass + "").removeClass("showColumn");
-                      } else if (hiddenColumn == false) {
-                        $("." + columnClass + "").removeClass("hiddenColumn");
-                        $("." + columnClass + "").addClass("showColumn");
-                      }
-                    }
-                  }
-                }
-              }
-            );
 
             setTimeout(function () {
               MakeNegative();
@@ -901,8 +867,7 @@ s
             "form-control form-control-sm"
           );
         }
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         sideBarService
           .getSalesListData(
             prevMonth11Date,
@@ -984,38 +949,7 @@ s
             }
             templateObject.datatablerecords.set(dataTableList);
             if (templateObject.datatablerecords.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "tblSalesOverview",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass.replace(
-                          / /g,
-                          "."
-                        );
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.split(".")[1];
-                        let columnWidth = customcolumn[i].width;
-                        let columnindex = customcolumn[i].index + 1;
 
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
-                    }
-                  }
-                }
-              );
 
               setTimeout(function () {
                 MakeNegative();
@@ -1535,15 +1469,12 @@ Template.salesoverview.events({
               .then(function (data) {
                 addVS1Data("TInvoiceEx", JSON.stringify(data))
                   .then(function (datareturn) {
-
-                    batchUpdateCall('/salesoverview');
-                  })
-                  .catch(function (err) {
-                    batchUpdateCall('/salesoverview');
+                    window.open('/salesoverview', '_self');
+                  }).catch(function (err) {
+                    window.open('/salesoverview', '_self');
                   });
-              })
-              .catch(function (err) {
-                batchUpdateCall('/salesoverview');
+              }).catch(function (err) {
+                window.open('/salesoverview', '_self');
               });
           })
           .catch(function (err) {
@@ -1552,7 +1483,7 @@ Template.salesoverview.events({
               .then(function (data) {
                 addVS1Data("TInvoiceEx", JSON.stringify(data))
                   .then(function (datareturn) {
-                    batchUpdateCall('/salesoverview');
+                    window.open('/salesoverview', '_self');
                   })
                   .catch(function (err) {
                     window.open("/salesoverview", "_self");

@@ -569,28 +569,47 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TExpenseClaimEx, options);
   }
 
-  getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, isDeleted) {
     let options = "";
-    if (ignoreDate == true) {
-      options = {
-        IgnoreDates: true,
-        Search: "Deleted != true",
-        OrderBy: "PaymentID desc",
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
-      };
-    } else {
-      options = {
-        orderby: '"PaymentID desc"',
-        ListType: "Detail",
-        IgnoreDates: false,
-        Search: "Deleted != true",
-        // OrderBy: "PaymentDate desc",
-        DateFrom: '"' + dateFrom + '"',
-        DateTo: '"' + dateTo + '"',
-        LimitCount: '"' + limitcount + '"',
-        LimitFrom: '"' + limitfrom + '"',
-      };
+    if(isDeleted == ""){
+        if (ignoreDate == true) {
+          options = {
+            IgnoreDates: true,
+            OrderBy: "PaymentID desc",
+            Search: "Deleted <> true",
+            LimitCount: '"' + limitcount + '"',
+            LimitFrom: '"' + limitfrom + '"',
+          };
+        } else {
+          options = {
+            orderby: '"PaymentID desc"',
+            ListType: "Detail",
+            IgnoreDates: false,
+            Search: "Deleted <> true",
+            // OrderBy: "PaymentDate desc",
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: '"' + limitcount + '"',
+            LimitFrom: '"' + limitfrom + '"',
+          };
+        }
+    }else{
+      if(isDeleted== true){
+        options = {
+          IgnoreDates: true,
+          OrderBy: "PaymentID desc",
+          Search: "Deleted = true",
+          LimitCount: '"' + limitcount + '"',
+          LimitFrom: '"' + limitfrom + '"',
+        };
+      }else{
+        options = {
+          IgnoreDates: true,
+          OrderBy: "PaymentID desc",
+          LimitCount: '"' + limitcount + '"',
+          LimitFrom: '"' + limitfrom + '"',
+        };
+      }
     }
     return this.getList(this.ERPObjects.TPaymentList, options);
   }
@@ -628,19 +647,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCustomerPayment, options);
   }
 
-  getAllTCustomerPaymentListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTCustomerPaymentListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
         OrderBy: "PaymentID desc",
+        Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -648,6 +662,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: false,
         OrderBy: "PaymentID desc",
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -700,19 +715,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSupplierPaymentList, options);
   }
 
-  getAllTSupplierPaymentListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTSupplierPaymentListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
         OrderBy: "PaymentID desc",
+        Search: 'Deleted != true',
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -720,6 +730,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: false,
         OrderBy: "PaymentID desc",
+        Search: 'Deleted != true',
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1160,6 +1171,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1167,6 +1179,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: false,
         OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1209,25 +1222,25 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "PurchaseOrderID desc",
+        OrderBy: "PurchaseOrderNumber desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "Deleted != true and SupplierName != ''",
+        Search: "SupplierName != '' and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "PurchaseOrderID desc",
+        OrderBy: "PurchaseOrderNumber desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "Deleted != true and SupplierName != ''",
+        Search: "SupplierName != '' and IsCheque != true",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -1569,16 +1582,16 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         IsBill: true,
-        OrderBy: "PurchaseOrderID desc",
-        Search: "IsBill = true",
+        OrderBy: "PurchaseOrderNumber desc",
+        Search: "IsBill = true and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "PurchaseOrderID desc",
+        OrderBy: "PurchaseOrderNumber desc",
         IsBill: true,
-        Search: "IsBill = true",
+        Search: "IsBill = true and IsCheque != true",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -3156,6 +3169,20 @@ export class SideBarService extends BaseService {
        select: "[Active]=true"
      };
     return this.getList(this.ERPObjects.Tprojectlist, options);
+  }
+
+  getCorrespondences() {
+    let options = "";
+    options = {
+     ListType: "Detail",
+     select: "[Active]=true"
+   };
+  return this.getList(this.ERPObjects.TCorrespondence, options);
+  }
+
+  saveCorrespondence(data)
+  {
+      return this.POST(this.ERPObjects.TCorrespondence,data);
   }
 
 }

@@ -1,0 +1,182 @@
+<template name="dashboardsalesmanager">
+    <style>
+        .custom-sales-card > .card-body{
+            padding: 1rem 0.4rem;
+        }
+        .small-heading {
+            font-size: 0.8rem;
+        }
+
+        .my-tasks {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            background-color: #9ed5f5;
+            border-radius: 14px;
+            color: black;
+            margin-left: -4px;
+            max-height: 350px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    </style>
+    <div class="container-fluid">
+        {{#if includeDashboard}}
+            <div class="row mb-2">
+                <div class="col-12 col-md-12">
+                    <header class="pt-1 pb-1 d-flex justify-content-center">
+                        <h2>Sales Performance Dashboard</h2>
+                    </header>
+                    <hr>
+                </div>
+            </div>
+            <div class="row pt-3 pb-3">
+                <div class="col-md-8" data-default-class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2"
+                                data-toggle="tooltip" 
+                                data-bs-tooltip=""
+                                title="is new Lead/Customer source count for last 30 days."
+                            >
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="new-leads-month">000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0"><span>New Leads this month</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2"
+                            data-toggle="tooltip" 
+                            data-bs-tooltip=""
+                            title="is new Quotes count for this month."
+                            >
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="new-deals-month">000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center"><span>New Deals this month</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2"
+                                data-toggle="tooltip" 
+                                data-bs-tooltip=""
+                                title="is new Invoice Value for last 30 days."
+                            >
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="closed-deals-month">000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center"><span>Closed Deals this month</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2"
+                                data-toggle="tooltip" 
+                                data-bs-tooltip=""
+                                title="is new Invoices value for last 12 months."
+                            >
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="closed-deals-year">000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center"><span>Closed Deals Total</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2"
+                                data-toggle="tooltip" 
+                                data-bs-tooltip=""
+                                title="is last 30 days converted quotes to invoice count to non-Converted quotes."
+                            >
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="sales-winrate">000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center"><span>Win Rate</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2"
+                                data-toggle="tooltip" 
+                                data-bs-tooltip=""
+                                title="Is last 30 days average between quote date and converted to invoice date."
+                            >
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span id="avg-sales-cycle">000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center"><span>Avg. Sales Cycle</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 my-tasks">
+                    {{> myTasksWidget}}
+                  </div>
+            </div>
+
+            <hr>
+
+            <div class="row align-items-center pt-3 pb-3">
+                <div class="col-auto col-md-5 no-gutters" data-default-class="col-md-6">
+                    <div id="spd-employee-chart"></div>
+                </div>
+
+                <div class="col-md-3 no-gutters">
+                    <div id="spd-gauge-area1"></div>
+                </div>
+                <div class="col-md-3 no-gutters">
+                    <div id="spd-gauge-area2"></div>
+                </div>
+            </div>
+            <hr>
+            <div class="row align-items-center pt-3 pb-3">
+                <div class="col-md-5 no-gutters">
+                    {{> appointmentsWidget}}
+                </div>
+                <div class="col-md-6 no-gutters">
+                   <div class="row no-gutters">
+                        <div class="col-md-6 no-gutters">
+                            <div id="spd-gauge-area3"></div>
+                        </div>
+                        <div class="col-md-6 no-gutters">
+                            <div id="spd-gauge-area4"></div>
+                        </div>
+
+                        <div class="col-md-6 no-gutters">
+                            <div id="spd-gauge-area5"></div>
+                        </div>
+                        <div class="col-md-6 no-gutters">
+                            <div id="spd-gauge-area6"></div>
+                        </div>
+                   </div>
+                </div>
+            </div>
+            <hr>
+            <div class="pt-3 pb-3" style="overflow: hidden;">
+                    {{> leadlist}}
+            </div>
+        {{/if}}
+    </div>
+</template>

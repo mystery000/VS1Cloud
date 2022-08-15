@@ -299,7 +299,6 @@ Template.accountant_company.onRendered(() => {
               info: true,
               responsive: true,
               order: [[0, "asc"]],
-              // "aaSorting": [[1,'desc']],
               action: function () {
                 $("#tblAccountOverview").DataTable().ajax.reload();
               },
@@ -331,8 +330,12 @@ Template.accountant_company.onRendered(() => {
       }, 10);
   
       var columns = $("#tblAccountOverview th");
+      let sTible = "";
       let sWidth = "";
+      let sIndex = "";
+      let sVisible = "";
       let columVisible = false;
+      let sClass = "";
       $.each(columns, function (i, v) {
         if (v.hidden === false) {
           columVisible = true;
@@ -377,7 +380,7 @@ Template.accountant_company.onRendered(() => {
           $(this).datepicker(
             "setDate",
             new Date(year, inst.selectedMonth, inst.selectedDay)
-          );
+          );          
         },
       });
   
@@ -392,27 +395,29 @@ Template.accountant_company.onRendered(() => {
       var begunDate = moment(currentDate).format("DD/MM/YYYY");
       templateObject.dateAsAt.set(begunDate);
 
+      let accountantID = FlowRouter.getParam("_id");
+
       getVS1Data('TReportsAccountantsCategory').then(function (dataObject) {
-          let data = JSON.parse(dataObject[0].data);
-          var dataInfo = {
-              id: data.Id || '',
-              firstname: data.FirstName || '-',
-              lastname: data.LastName || '-',
-              companyname: data.CompanyName || '-',
-              address: data.Address || '-',
-              docname: data.DocName || '-',
-              towncity: data.TownCity || '-',
-              postalzip: data.PostalZip || '-',
-              stateregion: data.StateRegion || '-',
-              country: data.Country || '-',
-          };
+        let data = JSON.parse(dataObject[0].data);
+        var dataInfo = {
+            id: data.Id || '',
+            firstname: data.FirstName || '-',
+            lastname: data.LastName || '-',
+            companyname: data.CompanyName || '-',
+            address: data.Address || '-',
+            towncity: data.TownCity || '-',
+            postalzip: data.PostalZip || '-',
+            stateregion: data.StateRegion || '-',
+            country: data.Country || '-',
+        };
 
-          let headerHtml = "<span>"+dataInfo.firstname+" "+dataInfo.lastname+", CPA</span><br>";
-          headerHtml += "<span>"+dataInfo.address+", "+dataInfo.towncity+", "+dataInfo.postalzip+", "+dataInfo.stateregion+", "+dataInfo.country+"</span>";
-          headerHtml += "<h3>Company</h3>";
-          headerHtml += "<span>"+dataInfo.companyname+"<br>For the year ended "+(new Date())+"</span>";
+        let headerHtml = "<div style='border-top:1px solid #858796; width:172px; margin-bottom:12px'></div>";
+        headerHtml += "<span style='float:left; padding-bottom:8px'>"+dataInfo.firstname+" "+dataInfo.lastname+", CPA</span>";
+        headerHtml += "<span style='float:left; padding-bottom:8px'><b>OnPoint Advisory</b></span>";
+        headerHtml += "<span style='float:left; padding-bottom:20px'>"+dataInfo.address+"<br/>"+dataInfo.towncity+", "+dataInfo.postalzip+", "+dataInfo.stateregion+", "+dataInfo.country+"</span>";
+        headerHtml += "<span style='float:left;'>Dated: 31 August 2021</span>";
 
-          $("#reportsAccountantHeader").html(headerHtml);
+        $("#reportsAccountantHeader").html(headerHtml);
       })
       .catch(function (err) {
         // taxRateService.getAccountantCategory().then(function (data) {
@@ -513,13 +518,12 @@ Template.accountant_company.onRendered(() => {
             recordObj.dataArrHeader = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-          } 
-          else if (i == 1 || i == 2 || AccountTree == "") {
+  
+          } else if (i == 1 || i == 2 || AccountTree == "") {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-          } 
-          else if (AccountTree.replace(/\s/g, "") == "TotalChequeorSaving") {
+          } else if (AccountTree.replace(/\s/g, "") == "TotalChequeorSaving") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -536,8 +540,8 @@ Template.accountant_company.onRendered(() => {
                   utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
-          } 
-          else if (
+  
+          } else if (
             AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable"
           ) {
             recordObj.dataArrTotal = [
@@ -557,8 +561,8 @@ Template.accountant_company.onRendered(() => {
               },
               ,
             ];
-          } 
-          else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
+  
+          } else if (AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -575,8 +579,8 @@ Template.accountant_company.onRendered(() => {
                   utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
-          } 
-          else if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
+  
+          } else if (AccountTree.replace(/\s/g, "") == "TotalCurrentAssets") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
               {
@@ -598,8 +602,6 @@ Template.accountant_company.onRendered(() => {
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
   
-            // recordObj.type = "asset";
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else if (AccountTree.replace(/\s/g, "") == "TotalFixedAsset") {
             recordObj.dataArrTotal = [
               data.balancesheetreport[i]["Account Tree"] || "-",
@@ -761,7 +763,6 @@ Template.accountant_company.onRendered(() => {
             recordObj.dataArrAsset = [
               data.balancesheetreport[i]["Account Tree"] || " ",
             ];
-            // recordObj.title = data.balancesheetreport[i]["Account Tree"] || " ";
           } else {
             if (flag) {
               let accountCode = "";
@@ -816,9 +817,6 @@ Template.accountant_company.onRendered(() => {
         let netAssets = {
           id: "",
           selected: false,
-          //   title: "Net Assets",
-          //   subTotal: Currency + "0.00",
-          //   total: utilityService.modifynegativeCurrencyFormat(totalNetAssets),
           dataTotal: [
             "Net Assets",
             {
@@ -839,8 +837,7 @@ Template.accountant_company.onRendered(() => {
         templateObject.netAssetTotal.set(
           utilityService.modifynegativeCurrencyFormat(totalNetAssets)
         );
-      }
-  
+      }  
   
       templateObject.records.set(records);
       if (templateObject.records.get()) {
@@ -976,6 +973,10 @@ Template.accountant_company.onRendered(() => {
 });
 
 Template.accountant_company.events({
+  "click #btnaddAccountant": function () {
+    FlowRouter.go("/reportsAccountantSettings");
+  },
+
   'click .custom-control-input': function(event) {
     const templateObject = Template.instance();
     let accountantList = templateObject.datatablerecords.curValue;
@@ -987,9 +988,10 @@ Template.accountant_company.events({
     for(var i=0; i<accountantList.length; i++){
       if(accountantList[i].id == accountantItemID){
         if($("#"+$(event.target).attr('id')).prop('checked') == true){    
-          innerHtml += "<div class='col-6 col-md-12' id='row-"+accountantPanID+"-"+accountantList[i].id+"' style='border-bottom: 1px solid #ccc;'>";
-          innerHtml += "<div style='width:80%; float:left; padding-left:6px; padding-top:6px'><label>"+accountantList[i].accountname+"</label></div>";
-          innerHtml += "<div style='float:left; padding-top:6px'><label>"+accountantList[i].balance+"</label></div>";
+          innerHtml += "<div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0' id='row-"+accountantPanID+"-"+accountantList[i].id+"'>";
+          innerHtml += "<div style='width:calc(100% - 180px); float:left; padding-top:4px'>"+accountantList[i].accountname+"</div>";
+          innerHtml += "<div style='float:left; padding-top:4px; width:90px'>"+accountantList[i].balance+"</div>";
+          innerHtml += "<div style='float:left; padding-top:4px; width:90px'>"+accountantList[i].balance+"</div>";
           innerHtml += "</div>";
 
           $("#reportAccPan"+accountantPanID).append(innerHtml);
@@ -1178,6 +1180,14 @@ Template.accountant_company.events({
 });
 
 Template.accountant_company.helpers({
+  accountantPanList1: (no) => {
+    return no < 6;
+  },
+
+  accountantPanList2: (no) => {
+    return no >= 6;
+  },
+
   countryList: () => {
       return Template.instance().countryData.get();
   },
@@ -1204,6 +1214,11 @@ Template.accountant_company.helpers({
     return loggedCompany;
   },
 
+  fiscalYearEnding: () => {
+    let date = new Date(dateAsOf);
+    return date.getFullYear() - 1;
+  },
+
   dateAsAt: () => {
     //var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];;
     //var date = new Date();
@@ -1214,8 +1229,6 @@ Template.accountant_company.helpers({
 
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-
-
 
     if (!amount || amount.trim() == "") {
       return "";
@@ -1230,7 +1243,7 @@ Template.accountant_company.helpers({
     // Lets remove the minus character
     const isMinus = amount < 0;
     if (isMinus == true) amount = amount * -1; // Make it positive
-    
+
     // Get the selected date
     let dateTo = $("#balancedate").val();
     const day = dateTo.split("/")[0];
@@ -1273,7 +1286,6 @@ Template.accountant_company.helpers({
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
-
 
     return convertedAmount;
   },

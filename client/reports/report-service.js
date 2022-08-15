@@ -1,6 +1,15 @@
 import { BaseService } from "../js/base-service.js";
 
 export class ReportService extends BaseService {
+  getExecutiveSummaryReport(dateAsOf) {
+    let options = {
+      //select: "[Active]=true",
+      //ListType:"Detail",
+      DateTo: '"' + dateAsOf + '"',
+    };
+    return this.getList(this.ERPObjects.BalanceSheetReport, options);
+  }
+
   getBalanceSheetReport(dateAsOf) {
     let options = {
       //select: "[Active]=true",

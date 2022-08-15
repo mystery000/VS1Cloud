@@ -122,6 +122,7 @@
             .liHeader {
                 display: grid !important;
                 justify-content: center !important;
+                text-align: center;
             }
 
             .opacityNotActive {
@@ -463,13 +464,16 @@
             {{/if}}
             {{#if includeDashboard}}
                 <li class="dashboardLi" id="sidenavdashbaord">
-                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard</a>
+                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Accounts</a>
                 </li>
                 <li class="dashboardLiExe" id="sidenavdashbaordexe">
                     <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Executive</a>
                 </li>
+                <li class="dashboardLiSalesManager" id="sidenavdashbaordsalesmanager">
+                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br>  Sales Manager</a>
+                </li>
                 <li class="dashboardLiSales" id="sidenavdashbaordsales">
-                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Sales Performance</a>
+                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Sales</a>
                 </li>
             {{/if}}
 

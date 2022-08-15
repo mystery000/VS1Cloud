@@ -20,6 +20,9 @@
       margin: 0 16px 24px 16px;
     }
   </style>
+  <div class="fullScreenSpin" style="display:none;">
+    <div class="spinner"></div>
+  </div>
 
   <div class="row" style="padding: 0px 16px;">
     <div class="col-6 col-md-8">
@@ -60,9 +63,12 @@
                 class="dataTable table table-hover table-striped table-bordered tblEmailList">
                 <thead>
                   <tr class="dnd-moved">
-                    <th class="th colPrjectDate">Date Sent</th>
-                    <th class="th colProjectDesc">Records Sent</th> 
-                    <th class="th colProjectName">Reply's Received</th>
+                    <th class="th colReportEmail">Campaign Name</th>
+                    <th class="th colReportEmail">Subject</th>
+                    <th class="th colReportEmail">Email</th>
+                    <th class="th colReportDate">Date Open</th>
+                    <th class="th colReportDesc">Status</th>
+                    <th class="th colReportName">Opens Count</th>
                   </tr>
                 </thead>
                 <tbody>
