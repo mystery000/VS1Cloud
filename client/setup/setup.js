@@ -20,6 +20,29 @@ const contactService = new ContactService();
 
 const refreshTableTimout = 300;
 
+export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
+  if(isSetupFinished() == true) {
+    //FlowRouter.go(onSetupFinished);
+    window.open(onSetupFinished, '_self');
+  } else {
+   // FlowRouter.go(onSetupUnFinished);
+    window.open(onSetupUnFinished, '_self');
+  }
+}
+
+
+/**
+ * 
+ * @returns {boolean} true / false
+ */
+export const isSetupFinished  = () => {
+  const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+  if (isFinished == true || isFinished == "true") {
+    return true;
+  }
+  return false;
+}
+
 function MakeNegative() {
   $("td").each(function () {
     if (
@@ -32,6 +55,7 @@ function MakeNegative() {
 }
 
 const numberOfSteps = 10;
+
 
 function setAlreadyLoaded(step, bool = false) {
   return localStorage.setItem(`SETUP_STEP_ALREADY-${step}`, bool);
@@ -135,6 +159,11 @@ function isClickableStep(stepId) {
   }
   return false;
 }
+
+function setSetupFinished() {
+  return localStorage.setItem("IS_SETUP_FINISHED", true);
+}
+
 
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
