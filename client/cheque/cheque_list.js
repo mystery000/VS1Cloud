@@ -66,25 +66,6 @@ Template.chequelist.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblchequelist', function(error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-                }
-            }
-        }
-    });
-
     function MakeNegative() {
         $('td').each(function() {
             if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
@@ -157,8 +138,35 @@ Template.chequelist.onRendered(function() {
             let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].TotalAmount) || 0.00;
             let totalTax = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].TotalTax) || 0.00;
             let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].TotalAmountInc) || 0.00;
-            let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].Payment) || 0.00;
             let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].Balance) || 0.00;
+            let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].Payment) || 0.00;
+
+              if(data.tchequelist[i].TotalAmount > 0 && data.tchequelist[i].TotalAmount != 0){
+                totalAmountEx = utilityService.modifynegativeCurrencyFormat(-Math.abs(data.tchequelist[i].TotalAmount)) || 0.00;
+              }else{
+                totalAmountEx = utilityService.modifynegativeCurrencyFormat(Math.abs(data.tchequelist[i].TotalAmount)) || 0.00;
+              }
+
+              if(data.tchequelist[i].TotalTax > 0 && data.tchequelist[i].TotalTax != 0){
+                totalTax = utilityService.modifynegativeCurrencyFormat(-Math.abs(data.tchequelist[i].TotalTax)) || 0.00;
+              }else{
+                totalTax = utilityService.modifynegativeCurrencyFormat(Math.abs(data.tchequelist[i].TotalTax)) || 0.00;
+              }
+
+
+              if(data.tchequelist[i].TotalAmountInc > 0 && data.tchequelist[i].TotalAmountInc != 0){
+                totalAmount = utilityService.modifynegativeCurrencyFormat(-Math.abs(data.tchequelist[i].TotalAmountInc)) || 0.00;
+              }else{
+                totalAmount = utilityService.modifynegativeCurrencyFormat(Math.abs(data.tchequelist[i].TotalAmountInc)) || 0.00;
+              }
+
+
+              if(data.tchequelist[i].Balance > 0 && data.tchequelist[i].Balance != 0){
+                totalOutstanding = utilityService.modifynegativeCurrencyFormat(-Math.abs(data.tchequelist[i].Balance)) || 0.00;
+              }else{
+                totalOutstanding = utilityService.modifynegativeCurrencyFormat(Math.abs(data.tchequelist[i].Balance)) || 0.00;
+              }
+
 
             let orderstatus = data.tchequelist[i].OrderStatus || '';
             if (data.tchequelist[i].Deleted == true){
@@ -193,30 +201,6 @@ Template.chequelist.onRendered(function() {
 
         if (templateObject.datatablerecords.get()) {
 
-            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblchequelist', function(error, result) {
-                if (error) {
-
-                } else {
-                    if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columData = customcolumn[i].label;
-                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.split('.')[1];
-                            let columnWidth = customcolumn[i].width;
-                            let columnindex = customcolumn[i].index + 1;
-                            if (hiddenColumn == true) {
-                                $("." + columnClass + "").addClass('hiddenColumn');
-                                $("." + columnClass + "").removeClass('showColumn');
-                            } else if (hiddenColumn == false) {
-                                $("." + columnClass + "").removeClass('hiddenColumn');
-                                $("." + columnClass + "").addClass('showColumn');
-                            }
-                        }
-                    }
-                }
-            });
             setTimeout(function() {
                 MakeNegative();
             }, 100);
