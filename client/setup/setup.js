@@ -4232,9 +4232,9 @@ Template.setup.events({
     setCurrentStep(1);
     templateObject.loadSteps();
   },
-  "click .confirmBtn": (event) => {
+  "click .confirmBtn": (event, templateObject) => {
     LoadingOverlay.show();
-    let templateObject = Template.instance();
+  
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
     goToNextStep(stepId, true, (step) => {
       templateObject.lazyLoader(step);
@@ -4262,9 +4262,8 @@ Template.setup.events({
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
   },
-  "click .btnBack": function (event) {
+  "click .btnBack": (event, templateObject) => {
     LoadingOverlay.show();
-    let templateObject = Template.instance();
     let skippedSteps = templateObject.skippedSteps.get();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
@@ -4296,8 +4295,7 @@ Template.setup.events({
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
   },
-  "click .gotToStepID": (event) => {
-    let templateObj = Template.instance();
+  "click .gotToStepID": (event, templateObj) => {
     const stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
     $(".setup-step").removeClass("show");
