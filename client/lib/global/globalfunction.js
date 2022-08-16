@@ -367,6 +367,8 @@ batchUpdateCall = async function (url) {
                   localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx||0);
                   localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx||0);
 
+                  localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated);
+                  
                   if(dataReturnRes.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401){
                     localStorage.setItem('vs1LoggedEmployeeImages_dash','');
                   }else{
@@ -526,10 +528,10 @@ vs1GlobalBackButton = async function () {
 };
 thWidthOnResize = function() {
   let tableWidth = [];
-  $('#tblcontactoverview th').each(function() {   
+  $('#tblcontactoverview th').each(function() {
     tableWidth.push($(this).outerWidth());
     tableWidth.push($(this).index());
-    
+
   });
 };
 tableResize = function() {

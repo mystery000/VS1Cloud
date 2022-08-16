@@ -1983,11 +1983,19 @@ authenticatedRoutes.route('/mailchimpsettings', {
   }
 });
 
-authenticatedRoutes.route('/email-list', {
+authenticatedRoutes.route('/correspondence-list', {
   name: 'mailchimpList',
   action() {
       BlazeLayout.render('layout', {
           yield: 'mailchimpList'
+      });
+  }
+});
+authenticatedRoutes.route('/campaign-list', {
+  name: 'mailchimpCampaignList',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'mailchimpCampaignList'
       });
   }
 });
