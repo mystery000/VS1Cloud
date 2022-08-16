@@ -25,6 +25,13 @@ Template.overduesupplierawaiting.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
 
+    var currenturl = window.location.href;
+    let supplierID = 0;
+    if (currenturl.indexOf("supplierawaitingpurchaseorder?id=") > 0) {
+        newurl = new URL(currenturl);
+        supplierID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
+    }
+
 
     var today = moment().format('DD/MM/YYYY');
     var currentDate = new Date();
@@ -177,11 +184,16 @@ Template.overduesupplierawaiting.onRendered(function () {
                                     overduetype:overDueType,
                                 };
                                 //&& (data.tpurchaseorder[i].Invoiced == true)
-                                if ((data.tbillreport[i].TotalBalance != 0)) {
-                                    if ((data.tbillreport[i].Deleted == false)) {
+                                if ((data.tbillreport[i].TotalBalance != 0) && (data.tbillreport[i].Deleted == false) ) {
+                                    if( supplierID != 0 ){
+                                        if( supplierID == data.tbillreport[i].ClientID ){
+                                            dataTableList.push(dataList);
+                                        }
+                                    }else{
                                         dataTableList.push(dataList);
                                     }
                                 }
+
                             }
                         //}
                     }
@@ -529,8 +541,12 @@ Template.overduesupplierawaiting.onRendered(function () {
                                 overduetype:overDueType,
                             };
                             //&& (data.tpurchaseorder[i].Invoiced == true)
-                            if ((useData[i].TotalBalance != 0)) {
-                                if ((useData[i].Deleted == false)) {
+                            if ((useData[i].TotalBalance != 0) && (useData[i].Deleted == false) ) {
+                                if( supplierID != 0 ){
+                                    if( supplierID == useData[i].ClientID ){
+                                        dataTableList.push(dataList);
+                                    }
+                                }else{
                                     dataTableList.push(dataList);
                                 }
                             }
@@ -843,8 +859,12 @@ Template.overduesupplierawaiting.onRendered(function () {
                                 overduetype:overDueType,
                             };
                             //&& (data.tpurchaseorder[i].Invoiced == true)
-                            if ((data.tbillreport[i].TotalBalance != 0)) {
-                                if ((data.tbillreport[i].Deleted == false)) {
+                            if ((data.tbillreport[i].TotalBalance != 0) && (data.tbillreport[i].Deleted == false) ) {
+                                if( supplierID != 0 ){
+                                    if( supplierID == data.tbillreport[i].ClientID ){
+                                        dataTableList.push(dataList);
+                                    }
+                                }else{
                                     dataTableList.push(dataList);
                                 }
                             }
