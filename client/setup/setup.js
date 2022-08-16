@@ -49,9 +49,8 @@ export const isSetupFinished  = async () => {
   const organisationDetails = await organisationService.getOrganisationDetail();
   let companyInfo = organisationDetails.tcompanyinfo[0];
 
-  if(companyInfo.IsSetUpWizard == true) {
-    return companyInfo.IsSetUpWizard;
-  }
+ 
+  return companyInfo.IsSetUpWizard == true ? false : true;
 
   // const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   // if (isFinished == true || isFinished == "true") {
@@ -5977,8 +5976,8 @@ Template.setup.events({
     let isEOMPlus = $("#addTermModal #isEOMPlus").is(":checked");
     let days = 0;
 
-    let isSalesdefault = $("#addTermModal #chkCustomerDef").is(":checked");
-    let isPurchasedefault = $("#addTermModal #chkSupplierDef").is(":checked");
+    let isCustomerDefault = $("#addTermModal #chkCustomerDef").is(":checked");
+    let isSupplierDefault = $("#addTermModal #chkSupplierDef").is(":checked");
 
     if (termdays.replace(/\s/g, "") != "") {
       isDays = true;
@@ -6027,6 +6026,7 @@ Template.setup.events({
         .checkTermByName(termsName)
         .then(function (data) {
           termsID = data.tterms[0].Id;
+         
           objDetails = {
             type: "TTerms",
             fields: {
@@ -6037,8 +6037,8 @@ Template.setup.events({
               IsDays: isDays,
               IsEOM: isEOM,
               IsEOMPlus: isEOMPlus,
-              isPurchasedefault: isPurchasedefault,
-              isSalesdefault: isSalesdefault,
+              isPurchasedefault: isSupplierDefault,
+              isSalesdefault: isCustomerDefault,
               Days: termdays || 0,
               PublishOnVS1: true,
             },
@@ -6088,8 +6088,8 @@ Template.setup.events({
               IsDays: isDays,
               IsEOM: isEOM,
               IsEOMPlus: isEOMPlus,
-              isPurchasedefault: isPurchasedefault,
-              isSalesdefault: isSalesdefault,
+              isPurchasedefault: isSupplierDefault,
+              isSalesdefault: isCustomerDefault,
               Days: termdays || 0,
               PublishOnVS1: true,
             },
@@ -6140,8 +6140,8 @@ Template.setup.events({
           IsDays: isDays,
           IsEOM: isEOM,
           IsEOMPlus: isEOMPlus,
-          isPurchasedefault: isPurchasedefault,
-          isSalesdefault: isSalesdefault,
+          isPurchasedefault: isSupplierDefault,
+          isSalesdefault: isCustomerDefault,
           Days: termdays || 0,
           PublishOnVS1: true,
         },
