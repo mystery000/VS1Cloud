@@ -49,9 +49,8 @@ export const isSetupFinished  = async () => {
   const organisationDetails = await organisationService.getOrganisationDetail();
   let companyInfo = organisationDetails.tcompanyinfo[0];
 
-  if(companyInfo.IsSetUpWizard == true) {
-    return companyInfo.IsSetUpWizard;
-  }
+ 
+  return companyInfo.IsSetUpWizard == true ? false : true;
 
   // const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   // if (isFinished == true || isFinished == "true") {
