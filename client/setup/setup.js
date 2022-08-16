@@ -5977,8 +5977,8 @@ Template.setup.events({
     let isEOMPlus = $("#addTermModal #isEOMPlus").is(":checked");
     let days = 0;
 
-    let isSalesdefault = $("#addTermModal #chkCustomerDef").is(":checked");
-    let isPurchasedefault = $("#addTermModal #chkSupplierDef").is(":checked");
+    let isCustomerDefault = $("#addTermModal #chkCustomerDef").is(":checked");
+    let isSupplierDefault = $("#addTermModal #chkSupplierDef").is(":checked");
 
     if (termdays.replace(/\s/g, "") != "") {
       isDays = true;
@@ -6027,6 +6027,7 @@ Template.setup.events({
         .checkTermByName(termsName)
         .then(function (data) {
           termsID = data.tterms[0].Id;
+          console.log('Terms', data.tterms[0]);
           objDetails = {
             type: "TTerms",
             fields: {
@@ -6037,8 +6038,8 @@ Template.setup.events({
               IsDays: isDays,
               IsEOM: isEOM,
               IsEOMPlus: isEOMPlus,
-              isPurchasedefault: isPurchasedefault,
-              isSalesdefault: isSalesdefault,
+              isPurchasedefault: isSupplierDefault,
+              isSalesdefault: isCustomerDefault,
               Days: termdays || 0,
               PublishOnVS1: true,
             },
@@ -6088,8 +6089,8 @@ Template.setup.events({
               IsDays: isDays,
               IsEOM: isEOM,
               IsEOMPlus: isEOMPlus,
-              isPurchasedefault: isPurchasedefault,
-              isSalesdefault: isSalesdefault,
+              isPurchasedefault: isSupplierDefault,
+              isSalesdefault: isCustomerDefault,
               Days: termdays || 0,
               PublishOnVS1: true,
             },
@@ -6140,8 +6141,8 @@ Template.setup.events({
           IsDays: isDays,
           IsEOM: isEOM,
           IsEOMPlus: isEOMPlus,
-          isPurchasedefault: isPurchasedefault,
-          isSalesdefault: isSalesdefault,
+          isPurchasedefault: isSupplierDefault,
+          isSalesdefault: isCustomerDefault,
           Days: termdays || 0,
           PublishOnVS1: true,
         },
