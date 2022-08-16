@@ -6026,7 +6026,7 @@ Template.setup.events({
         .checkTermByName(termsName)
         .then(function (data) {
           termsID = data.tterms[0].Id;
-          console.log('Terms', data.tterms[0]);
+         
           objDetails = {
             type: "TTerms",
             fields: {
