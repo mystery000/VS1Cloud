@@ -67,8 +67,8 @@ function isAlreadyLoaded(step) {
   return string == "true" || string == true ? true : false;
 }
 
-function getCurrentStep() {
-  const step = localStorage.getItem("VS1Cloud_SETUP_STEP");
+function getCurrentStep(onNaN = 1) {
+  const step = localStorage.getItem("VS1Cloud_SETUP_STEP") || onNaN;
   return parseInt(step);
 }
 
@@ -294,6 +294,7 @@ Template.setup.onCreated(() => {
 Template.setup.onRendered(function () {
   LoadingOverlay.show();
   const templateObject = Template.instance();
+  
 
   /**
    * This function will autoredirect to dashboard if setup is finished
@@ -309,7 +310,6 @@ Template.setup.onRendered(function () {
   //templateObject.isSetupFinished();
   // Get step local storage variable and set step
   const currentStep = getCurrentStep();
-
   templateObject.loadSteps = () => {
     let _steps = [];
     for (let i = 1; i <= numberOfSteps; i++) {
@@ -4150,6 +4150,7 @@ Template.setup.onRendered(function () {
    * @returns
    */
   templateObject.lazyLoader = (stepId = 1) => {
+    console.log("Loading" , stepId);
     if (isAlreadyLoaded(stepId) == false) {
       //LoadingOverlay.show();
       switch (stepId) {
@@ -4196,6 +4197,9 @@ Template.setup.onRendered(function () {
   };
 
   templateObject.lazyLoader(currentStep);
+
+ 
+  
 });
 
 function isStepActive(stepId) {
