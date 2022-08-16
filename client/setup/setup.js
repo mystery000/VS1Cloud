@@ -21,13 +21,21 @@ const contactService = new ContactService();
 const refreshTableTimout = 300;
 
 export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
-  if(isSetupFinished() == true) {
-    //FlowRouter.go(onSetupFinished);
-    window.open(onSetupFinished, '_self');
-  } else {
-   // FlowRouter.go(onSetupUnFinished);
-    window.open(onSetupUnFinished, '_self');
-  }
+  // if(isSetupFinished() == true) {
+  //   //FlowRouter.go(onSetupFinished);
+  //   window.open(onSetupFinished, '_self');
+  // } else {
+  //  // FlowRouter.go(onSetupUnFinished);
+  //   window.open(onSetupUnFinished, '_self');
+  // }
+
+  isSetupFinished().then(boolean => {
+    if(boolean == true) {
+     window.open(onSetupFinished, '_self');
+    } else {
+     window.open(onSetupUnFinished, '_self');
+    }
+  });
 }
 
 
@@ -35,10 +43,10 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
  * 
  * @returns {boolean} true / false
  */
-export const isSetupFinished  = () => {
+export const isSetupFinished  = async () => {
  
   let organisationService = new OrganisationService();
-  const organisationDetails = organisationService.getOrganisationDetail();
+  const organisationDetails = await organisationService.getOrganisationDetail();
   let companyInfo = organisationDetails.tcompanyinfo[0];
 
   if(companyInfo.IsSetUpWizard == true) {
