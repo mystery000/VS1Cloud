@@ -36,11 +36,20 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
  * @returns {boolean} true / false
  */
 export const isSetupFinished  = () => {
-  const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-  if (isFinished == true || isFinished == "true") {
-    return true;
+ 
+  let organisationService = new OrganisationService();
+  const organisationDetails = organisationService.getOrganisationDetail();
+  let companyInfo = organisationDetails.tcompanyinfo[0];
+
+  if(companyInfo.IsSetUpWizard == true) {
+    return companyInfo.IsSetUpWizard;
   }
-  return false;
+
+  // const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+  // if (isFinished == true || isFinished == "true") {
+  //   return true;
+  // }
+  // return false;
 }
 
 function MakeNegative() {
@@ -4150,7 +4159,6 @@ Template.setup.onRendered(function () {
    * @returns
    */
   templateObject.lazyLoader = (stepId = 1) => {
-    console.log("Loading" , stepId);
     if (isAlreadyLoaded(stepId) == false) {
       //LoadingOverlay.show();
       switch (stepId) {
@@ -5957,41 +5965,43 @@ Template.setup.events({
 
     let isDays = false;
     let is30days = false;
-    let isEOM = false;
-    let isEOMPlus = false;
+    let isEOM = $("#addTermModal #isEOM").is(":checked");
+    let isEOMPlus = $("#addTermModal #isEOMPlus").is(":checked");
     let days = 0;
 
-    let isSalesdefault = false;
-    let isPurchasedefault = false;
+    let isSalesdefault = $("#addTermModal #chkCustomerDef").is(":checked");
+    let isPurchasedefault = $("#addTermModal #chkSupplierDef").is(":checked");
+
     if (termdays.replace(/\s/g, "") != "") {
       isDays = true;
     } else {
       isDays = false;
     }
 
-    if ($("#isEOM").is(":checked")) {
-      isEOM = true;
-    } else {
-      isEOM = false;
-    }
+    // if ($("#addTermModal #isEOM").is(":checked")) {
+    //   isEOM = true;
+    // } else {
+    //   isEOM = false;
+    // }
 
-    if ($("#isEOMPlus").is(":checked")) {
-      isEOMPlus = true;
-    } else {
-      isEOMPlus = false;
-    }
+    // if ($("#isEOMPlus").is(":checked")) {
+    //   isEOMPlus = true;
+    // } else {
+    //   isEOMPlus = false;
+    // }
 
-    if ($("#chkCustomerDef").is(":checked")) {
-      isSalesdefault = true;
-    } else {
-      isSalesdefault = false;
-    }
-
-    if ($("#chkSupplierDef").is(":checked")) {
-      isPurchasedefault = true;
-    } else {
-      isPurchasedefault = false;
-    }
+    // isSalesdefault = $("#addTermModal #chkCustomerDef").is(":checked");
+    // if ($("#addTermModal #chkCustomerDef").is(":checked")) {
+    //   isSalesdefault = true;
+    // } else {
+    //   isSalesdefault = false;
+    // }
+    // isPurchasedefault = $("#addTermModal #chkSupplierDef").is(":checked");
+    // if ($("#addTermModal #chkSupplierDef").is(":checked")) {
+    //   isPurchasedefault = true;
+    // } else {
+    //   isPurchasedefault = false;
+    // }
 
     let objDetails = "";
     if (termsName === "") {
@@ -6004,6 +6014,7 @@ Template.setup.events({
     }
 
     if (termsID == "") {
+      
       taxRateService
         .checkTermByName(termsName)
         .then(function (data) {
@@ -6069,6 +6080,8 @@ Template.setup.events({
               IsDays: isDays,
               IsEOM: isEOM,
               IsEOMPlus: isEOMPlus,
+              isPurchasedefault: isPurchasedefault,
+              isSalesdefault: isSalesdefault,
               Days: termdays || 0,
               PublishOnVS1: true,
             },
@@ -6109,6 +6122,7 @@ Template.setup.events({
             });
         });
     } else {
+      
       objDetails = {
         type: "TTerms",
         fields: {
@@ -6117,9 +6131,9 @@ Template.setup.events({
           Description: description,
           IsDays: isDays,
           IsEOM: isEOM,
+          IsEOMPlus: isEOMPlus,
           isPurchasedefault: isPurchasedefault,
           isSalesdefault: isSalesdefault,
-          IsEOMPlus: isEOMPlus,
           Days: termdays || 0,
           PublishOnVS1: true,
         },
@@ -6160,14 +6174,19 @@ Template.setup.events({
         });
     }
   },
-  "click .btnAddTerms": function () {
-    let templateObject = Template.instance();
+  "click .btnAddTerms":  (e, templateObject) => {
     $("#add-terms-title").text("Add New Term ");
     $("#edtTermsID").val("");
     $("#edtName").val("");
     $("#edtName").prop("readonly", false);
     $("#edtDesc").val("");
     $("#edtDays").val("");
+
+    $('#addTermModal #isEOM').prop('checked', false);
+    $('#addTermModal #isEOMPlus').prop('checked', false);
+
+    $('#addTermModal #chkCustomerDef').prop('checked', false);
+    $('#addTermModal #chkSupplierDef').prop('checked', false);
 
     templateObject.include7Days.set(false);
     templateObject.includeCOD.set(false);
@@ -6217,8 +6236,7 @@ Template.setup.events({
       event.preventDefault();
     }
   },
-  "click #termsList tbody td.clickable": (event) => {
-    let templateObject = Template.instance();
+  "click #termsList tbody td.clickable": (event, templateObject) => {
     const tr = $(event.currentTarget).parent();
     var listData = tr.attr("id");
     var is7days = false;
@@ -6233,44 +6251,23 @@ Template.setup.events({
         listData = Number(listData);
 
         var termsID = listData || "";
-        var termsName =
-          $(event.target).closest("tr").find(".colName").text() || "";
-        var description =
-          $(event.target).closest("tr").find(".colDescription").text() || "";
-        var days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
+        var termsName = tr.find(".colName").text() || "";
+        var description = tr.find(".colDescription").text() || "";
+        var days = tr.find(".colIsDays").text() || 0;
+        isEOM = tr.find(".colIsEOM .chkBox").is(":checked");
+        isEOMPlus = tr.find(".colIsEOMPlus .chkBox").is(":checked");
         //let isDays = data.fields.IsDays || '';
-        if (
-          $(event.target).closest("tr").find(".colIsEOM .chkBox").is(":checked")
-        ) {
-          isEOM = true;
-        }
+        // if (tr.find(".colIsEOM .chkBox").is(":checked")) {
+        //   isEOM = true;
+        // }
 
-        if (
-          $(event.target)
-            .closest("tr")
-            .find(".colIsEOMPlus .chkBox")
-            .is(":checked")
-        ) {
-          isEOMPlus = true;
-        }
+        // if (tr.find(".colIsEOMPlus .chkBox").is(":checked")) {
+        //   isEOMPlus = true;
+        // }
 
-        if (
-          $(event.target)
-            .closest("tr")
-            .find(".colCustomerDef .chkBox")
-            .is(":checked")
-        ) {
-          isSalesDefault = true;
-        }
-
-        if (
-          $(event.target)
-            .closest("tr")
-            .find(".colSupplierDef .chkBox")
-            .is(":checked")
-        ) {
-          isPurchaseDefault = true;
-        }
+        isSalesDefault = tr.find(".colCustomerDef .chkBox").is(":checked");
+        isPurchaseDefault = tr.find(".colSupplierDef .chkBox").is(":checked");
+        
 
         if (isEOM == true || isEOMPlus == true) {
           isDays = false;
@@ -6283,6 +6280,12 @@ Template.setup.events({
         $("#edtName").prop("readonly", true);
         $("#edtDesc").val(description);
         $("#edtDays").val(days);
+
+        $('#addTermModal #isEOM').prop('checked', isEOM);
+        $('#addTermModal #isEOMPlus').prop('checked', isEOMPlus);
+
+        $('#addTermModal #chkCustomerDef').prop('checked', isSalesDefault);
+        $('#addTermModal #chkSupplierDef').prop('checked', isPurchaseDefault);
 
         if (isDays == true && days == 0) {
           templateObject.includeCOD.set(true);
