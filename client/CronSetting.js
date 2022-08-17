@@ -141,6 +141,7 @@ export default class CronSetting {
         text += " every " + this.every + " day";
         // text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
 
+        this.isFuture = true;
         
       }
 
