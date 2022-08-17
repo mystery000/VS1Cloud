@@ -1,7 +1,28 @@
 
 Template.mailchimpList.onRendered(function () {
   const templateObject = Template.instance();
-  function getCampaignOpenReports() {
+
+  templateObject.getInitCampaignOpenReports = function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    try {
+      getVS1Data("TCampaignList").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          templateObject.getCampaignOpenReports();
+          $(".fullScreenSpin").css("display", "none");
+        } else {
+          let result = JSON.parse(dataObject[0].data);
+          initDatatable(result);
+          $(".fullScreenSpin").css("display", "none");
+        }
+      })
+    } catch (error) {
+      templateObject.getCampaignOpenReports();
+      $(".fullScreenSpin").css("display", "none");
+    }
+  }
+  templateObject.getInitCampaignOpenReports();
+
+  templateObject.getCampaignOpenReports = function () {
     $(".fullScreenSpin").css("display", "inline-block");
     try {
       var erpGet = erpDb();
@@ -9,6 +30,7 @@ Template.mailchimpList.onRendered(function () {
         if (error !== undefined) {
           swal("Something went wrong!", "", "error");
         } else {
+          addVS1Data("TCampaignList", JSON.stringify(result));
           initDatatable(result);
         }
         $(".fullScreenSpin").css("display", "none");
@@ -18,7 +40,6 @@ Template.mailchimpList.onRendered(function () {
       $(".fullScreenSpin").css("display", "none");
     }
   }
-  getCampaignOpenReports();
 
   function initDatatable(data) {
     var reportArray = templateObject.makeEmailTableRows(data);
@@ -33,8 +54,8 @@ Template.mailchimpList.onRendered(function () {
           text: "",
           download: "open",
           className: "btntabletocsv hiddenColumn",
-          filename: "Email Report List" + moment().format(),
-          title: "Email Report",
+          filename: "Correspondence List" + moment().format(),
+          title: "Correspondence",
           orientation: "portrait",
           exportOptions: {
             // columns: function (idx, data, node) {
@@ -50,8 +71,8 @@ Template.mailchimpList.onRendered(function () {
           download: "open",
           className: "btntabletopdf hiddenColumn",
           text: "",
-          title: "Email Report List",
-          filename: "Email Report List" + moment().format(),
+          title: "Correspondence List",
+          filename: "Correspondence List" + moment().format(),
           exportOptions: {
             // columns: function (idx, data, node) {
             //   if (idx == 2) {
@@ -90,7 +111,7 @@ Template.mailchimpList.onRendered(function () {
     let td0 = (td1 = td2 = "");
 
     data.forEach((lists) => {
-      lists.opens.forEach(reports => { 
+      lists.opens.forEach(reports => {
         td0 = reports.opens.length ? moment(reports.opens[reports.opens.length - 1].timestamp).format("DD/MM/YYYY HH:mm:ss") : '-';
         td1 = reports.contact_status;
         td2 = reports.opens_count;
@@ -99,4 +120,27 @@ Template.mailchimpList.onRendered(function () {
     });
     return taskRows;
   };
+})
+
+Template.mailchimpList.events({
+  "click .btnRefresh": function (e) {
+    const templateObject = Template.instance();
+    templateObject.getCampaignOpenReports();
+    // Meteor._reload.reload();
+  },
+
+  "click .printConfirm": function (event) {
+    $(".fullScreenSpin").css("display", "inline-block");
+    jQuery("#tblEmailList_wrapper .dt-buttons .btntabletopdf").click();
+
+    $(".fullScreenSpin").css("display", "none");
+  },
+
+  "click #exportbtn": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    jQuery("#tblEmailList_wrapper .dt-buttons .btntabletocsv").click();
+
+    $(".fullScreenSpin").css("display", "none");
+  },
+
 })
