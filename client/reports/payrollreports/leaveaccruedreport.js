@@ -14,6 +14,7 @@ const currentDate = new Date();
 Template.leaveaccruedreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
+  templateObject.records = new ReactiveVar([]);
 
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
@@ -78,9 +79,19 @@ Template.leaveaccruedreport.onRendered(() => {
   };
 
   templateObject.getleaveAccrualReport = async () => {
+    $(".fullScreenSpin").css("display", "inline-block");
+   
     let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
     let dateTo = moment().format("YYYY-MM-DD");
     let data = await reportService.getleaveAccruals( dateFrom, dateTo, false, '1 month');
+    console.log('data =', data.tleaveaccruals);
+
+    templateObject.records.set(data.tleaveaccruals);
+    setTimeout(function() {
+        MakeNegative();
+    }, 1000);
+
+    $(".fullScreenSpin").css("display", "none");
   }
 
   templateObject.getleaveAccrualReport();
@@ -427,6 +438,38 @@ Template.leaveaccruedreport.events({
 Template.leaveaccruedreport.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
+  },
+  records: () => {
+    return Template.instance().records.get();
+  },
+  calculateHourPrice: (item) => {
+    let utilityService = new UtilityService();
+    let amount = item.fields.AccruedHours * item.fields.CurrentHourlyRate
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+    return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  floatValue: (item) => {
+    return Number.parseFloat(item).toFixed(2);
+  },
+  isZeroValue(valueZero) {
+    if (Math.sign(valueZero) === -1) {
+      return true;
+    }
+    return false;
+  },
+  formatPrice( amount ){
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatDate: ( date ) => {
+      return ( date )? moment(date).format("DD/MM/YYYY") : '';
   },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
