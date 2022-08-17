@@ -22,7 +22,7 @@ Template.deductionSettings.onCreated(function() {
 });
 
 Template.deductionSettings.onRendered(function() {
-    $('.customEditableSelect').editableSelect('add', function(item){
+    $('#edtDeductionType').editableSelect('add', function(item){
         $(this).val(item.id);
         $(this).text(item.name);
     });

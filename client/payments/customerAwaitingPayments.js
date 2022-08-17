@@ -42,6 +42,14 @@ Template.customerawaitingpayments.onRendered(function () {
     }
     var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
+    var url = window.location.href;
+    let customerID = 0;
+    if (url.indexOf("customerawaitingpayments?id=") > 0) {
+        newurl = new URL(window.location.href);
+        customerID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
+    }
+
+
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
@@ -172,7 +180,13 @@ Template.customerawaitingpayments.onRendered(function () {
                           overduetype:overDueType,
                       };
                       //if (data.tsaleslist[i].Balance != 0) {
+                        if( customerID != 0 ){
+                            if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                                dataTableList.push(dataList);
+                            }
+                        }else{
                           dataTableList.push(dataList);
+                        }
                     //  }
 
                   }
@@ -494,7 +508,13 @@ Template.customerawaitingpayments.onRendered(function () {
                         overduetype:overDueType,
                     };
                     //if (data.tsaleslist[i].Balance != 0) {
-                        dataTableList.push(dataList);
+                        if( customerID != 0 ){
+                            if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                                dataTableList.push(dataList);
+                            }
+                        }else{
+                          dataTableList.push(dataList);
+                        }
                     //}
 
                 }
@@ -811,7 +831,13 @@ Template.customerawaitingpayments.onRendered(function () {
                         overduetype:overDueType,
                     };
                     //if (data.tsaleslist[i].Balance != 0) {
-                        dataTableList.push(dataList);
+                        if( customerID != 0 ){
+                            if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                                dataTableList.push(dataList);
+                            }
+                        }else{
+                          dataTableList.push(dataList);
+                        }
                     //}
 
                 }

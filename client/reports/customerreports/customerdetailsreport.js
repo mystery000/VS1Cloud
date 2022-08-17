@@ -106,19 +106,19 @@ Template.customerdetailsreport.onRendered(() => {
         for (const item of reportSummary) {   
             let isExist = reportGroups.filter((subitem) => {
                 if( subitem.EMAIL == item.EMAIL ){
-                    subitem.SubAccounts.push(item)
-                    return subitem
+                  subitem.SubAccounts.push(item)
+                  return subitem
                 }
             });
 
             if( isExist.length == 0 ){
-                reportGroups.push({
-                    SubAccounts: [item],
-                    TotalEx: 0,
-                    TotalInc: 0,
-                    TotalGrossProfit: 0,
-                    ...item
-                });
+              reportGroups.push({
+                  SubAccounts: [item],
+                  TotalEx: 0,
+                  TotalInc: 0,
+                  TotalGrossProfit: 0,
+                  ...item
+              });
             }
         }
 
@@ -510,6 +510,18 @@ Template.customerdetailsreport.events({
 });
 
 Template.customerdetailsreport.helpers({
+  checkEmptySubAccount: ( item ) => {
+    if( item.Total_Amount_Ex == 0 && item.Total_Amount_Inc == 0 && item.Gross_Profit == 0 ){
+        return false
+    }
+    return true
+  },
+  checkEmpty: ( item ) => {
+    if( item.TotalEx == 0 && item.TotalInc == 0 && item.TotalGrossProfit == 0 ){
+        return false
+    }
+    return true
+  },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },

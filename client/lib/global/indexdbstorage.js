@@ -293,6 +293,8 @@ openDb = function (dbName) {
       db.createObjectStore('TltInventoryOverview',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TltProductList',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TltProductLines',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TCorrespendenceList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TCampaignList',{ keyPath: "EmployeeEmail"});
 
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));

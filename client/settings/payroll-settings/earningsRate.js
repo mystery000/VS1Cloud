@@ -26,7 +26,7 @@ Template.earningRateSettings.onCreated(function() {
 });
 
 Template.earningRateSettings.onRendered(function() {
-    $('.customEditableSelect').editableSelect('add', function(item){
+    $('#edtEarningsType').editableSelect('add', function(item){
         $(this).val(item.id);
         $(this).text(item.name);
     });

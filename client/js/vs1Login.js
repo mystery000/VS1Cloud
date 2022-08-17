@@ -585,9 +585,12 @@ Template.vs1login.onRendered(function () {
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
 
-                //window.open('/dashboard', '_self');
+                var ERPDetails = erpdbname;
+                var SegsDatabase = ERPDetails.split(',');
 
-                handleSetupRedirection();
+                //window.open('/dashboard', '_self');
+            
+                 handleSetupRedirection();
 
             }
         }
@@ -1172,13 +1175,12 @@ Template.vs1login.onRendered(function () {
                 } else if (isAppointmentLaunch == true) {
                     window.open('/appointments', '_self');
                 } else {
-                   // window.open('/dashboard', '_self');
+                    // window.open('/dashboard', '_self');
                     handleSetupRedirection();
                 }
             } else {
                 //window.open('/dashboard', '_self');
                 handleSetupRedirection();
-
             }
 
         } else {
