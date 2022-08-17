@@ -40,11 +40,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         //     $(this).val(item.id);
         //     $(this).text(item.name);
         // });
-        $('#leaveCalcMethodSelect').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#onTerminationUnusedBalance').editableSelect('add', function(item){
+        $('#edtTfnExemption').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
         });
@@ -53,6 +49,22 @@ Template.assignLeaveTypePop.onCreated(function () {
             $(this).text(item.name);
         });
         $('#edtResidencyStatus').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#leaveCalcMethodSelect').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#onTerminationUnusedBalance').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#superannuationTypeSelect').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#paymentFrequency').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
         });
