@@ -2018,3 +2018,12 @@ authenticatedRoutes.route('/receiptcategory', {
         });
     }
 });
+
+authenticatedRoutes.route('/processlist', {
+    name: 'processList',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'processList'
+        });
+    }
+});
