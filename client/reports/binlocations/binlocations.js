@@ -88,13 +88,11 @@ Template.binlocationslist.onRendered(() => {
     let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
     let dateTo = moment().format("YYYY-MM-DD");
     let data = await reportService.getBinLocationReport( dateFrom, dateTo, true);
-    return false
-    let movementReport = [];
+    let reportGroups = []; 
     if( data.tproductbin.length > 0 ){
-        let reportGroups = []; 
         for (const item of data.tproductbin) {   
             let isExist = reportGroups.filter((subitem) => {
-                if( subitem.ID == item.fields.ProductID ){
+                if( subitem.BinClassName == item.fields.BinClassName ){
                     subitem.SubAccounts.push(item)
                     return subitem
                 }
@@ -102,32 +100,13 @@ Template.binlocationslist.onRendered(() => {
 
             if( isExist.length == 0 ){
                 reportGroups.push({
-                    ID: item.fields.ProductID,
-                    ProductName: item.fields.ProductName,
                     SubAccounts: [item],
-                    TotalRunningQty: 0,
-                    TotalCurrentQty: 0,
-                    TotalUnitCost: 0
+                    ...item.fields
                 });
             }
         }
-
-        movementReport = reportGroups.filter((item) => {
-            let TotalRunningQty = 0;
-            let TotalCurrentQty = 0;
-            let TotalUnitCost = 0;
-            item.SubAccounts.map((subitem) => {
-              TotalRunningQty += subitem.fields.Qty;
-              TotalCurrentQty += subitem.fields.Qty;
-              TotalUnitCost += subitem.fields.Cost;
-            });
-            item.TotalRunningQty = TotalRunningQty;
-            item.TotalCurrentQty = TotalCurrentQty;
-            item.TotalUnitCost = TotalUnitCost;
-            return item;
-        });        
     }
-    templateObject.records.set(movementReport);
+    templateObject.records.set(reportGroups);
     setTimeout(function() {
         MakeNegative();
     }, 1000);
@@ -481,6 +460,12 @@ Template.binlocationslist.helpers({
   },
   records: () => {
     return Template.instance().records.get();
+  },
+  isZeroValue(valueZero) {
+    if (Math.sign(valueZero) !== 0) {
+      return true;
+    }
+    return false;
   },
   formatPrice( amount ){
     let utilityService = new UtilityService();
