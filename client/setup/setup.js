@@ -29,8 +29,9 @@ const refreshTableTimout = 300;
 export const getCompanyInfo = async () => {
  
   const headers = ApiService.getHeaders();
-  const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax, IsSetupWizard"});
+  //const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard", isUrl: false});
 
+  const url = "https://sandboxdb.vs1cloud.com:4443/erpapi/TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard";
   const response = await fetch(url, {
     headers: headers,
     method: "GET"
@@ -70,24 +71,17 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
  */
 export const isSetupFinished  = async () => {
 
-  const companyInfo = await getCompanyInfo();
-
-  return companyInfo.IsSetUpWizard == true ? false : true;
- 
-  // let organisationService = new OrganisationService();
-  // const organisationDetails = await organisationService.getOrganisationDetail();
-  // let companyInfo = organisationDetails.tcompanyinfo[0];
-
- 
+  // This is to get from remote server the IsSetupWizard status
+  // But it is not working, because we need to hit the right URL
+  // const companyInfo = await getCompanyInfo();
   // return companyInfo.IsSetUpWizard == true ? false : true;
+ 
 
-  // const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-  // if (isFinished == true || isFinished == "true") {
-  //   return true;
-  // }
-  // return false;
-
-
+  const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+  if (isFinished == true || isFinished == "true") {
+    return true;
+  }
+  return false;
 }
 
 function MakeNegative() {

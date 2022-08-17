@@ -10,13 +10,14 @@ export default class ApiService {
    * @param {string} endpoint my-endpoint
    * @returns {URL}
    */
-   static getBaseUrl({ endpoint = null}) {
+   static getBaseUrl({ endpoint = null, isUrl = true}) {
     let _url = `https://${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/`;
-    let url = new URL(_url);
     if(endpoint != null) {
-      url = new URL(`https://${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/${endpoint}`);
+      _url = `https://${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/${endpoint}`;
     }
-    return url;
+
+    if(isUrl == true) return new URL(_url);
+    return _url;
   }
 
   /**

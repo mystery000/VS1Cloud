@@ -585,11 +585,9 @@ Template.vs1login.onRendered(function () {
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
 
-                var ERPDetails = erpdbname;
-                var SegsDatabase = ERPDetails.split(',');
-
                 //window.open('/dashboard', '_self');
             
+                console.log('1st');
                  handleSetupRedirection();
 
             }
@@ -1176,10 +1174,14 @@ Template.vs1login.onRendered(function () {
                     window.open('/appointments', '_self');
                 } else {
                     // window.open('/dashboard', '_self');
+                console.log('2nd');
+
                     handleSetupRedirection();
                 }
             } else {
                 //window.open('/dashboard', '_self');
+                console.log('3rd');
+
                 handleSetupRedirection();
             }
 
