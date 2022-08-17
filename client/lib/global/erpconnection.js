@@ -8,6 +8,13 @@ var d = new Date();
 var month = d.getMonth()+1;
 var day = d.getDate();
 
+export const _IPADDRESS = IPAddress;
+export const _USERNAME = UserName;
+export const _PASSWORD = Password;
+export const _DATABASE = Database;
+export const _PORT = Port;
+export const _ERP_BASE_API = "erpapi";
+
 var output = d.getFullYear() + '-' +
     ((''+month).length<2 ? '0' : '') + month + '-' +
     ((''+day).length<2 ? '0' : '') + day;
