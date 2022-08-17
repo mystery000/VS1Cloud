@@ -1222,7 +1222,7 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "PurchaseOrderNumber desc",
+        // OrderBy: "PurchaseOrderID desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
@@ -1234,7 +1234,7 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        OrderBy: "PurchaseOrderNumber desc",
+        // OrderBy: "PurchaseOrderID desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
@@ -1582,14 +1582,14 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         IsBill: true,
-        OrderBy: "PurchaseOrderNumber desc",
+        // OrderBy: "PurchaseOrderNumber desc",
         Search: "IsBill = true and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "PurchaseOrderNumber desc",
+        // OrderBy: "PurchaseOrderNumber desc",
         IsBill: true,
         Search: "IsBill = true and IsCheque != true",
         IgnoreDates: false,
