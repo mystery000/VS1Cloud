@@ -587,8 +587,7 @@ Template.vs1login.onRendered(function () {
 
                 //window.open('/dashboard', '_self');
             
-                console.log('1st');
-                 handleSetupRedirection();
+                handleSetupRedirection();
 
             }
         }
@@ -1174,13 +1173,10 @@ Template.vs1login.onRendered(function () {
                     window.open('/appointments', '_self');
                 } else {
                     // window.open('/dashboard', '_self');
-                console.log('2nd');
-
                     handleSetupRedirection();
                 }
             } else {
                 //window.open('/dashboard', '_self');
-                console.log('3rd');
 
                 handleSetupRedirection();
             }
