@@ -8,34 +8,13 @@ export default class ApiService {
    * @param {string} endpoint my-endpoint
    * @returns {URL}
    */
-  static getBaseUrl({ endpoint = null}) {
-    const erp = erpDb();
-    let url = new URL(
-      URLRequest +
-        erp.ERPIPAddress +
-        ":" +
-        erp.ERPPort +
-        "/" +
-        erp.ERPApi +
-        "/"
-    );
+   static getBaseUrl({ endpoint = null}) {
+    let url = new URL(URLRequest + erpDb().ERPIPAddress + ":" + erpDb().ERPPort + "/" + erpDb().ERPApi + "/");
 
     if(endpoint != null) {
-      url = new URL(
-        URLRequest +
-          erp.ERPIPAddress +
-          ":" +
-          erp.ERPPort +
-          "/" +
-          erp.ERPApi +
-          "/" + endpoint
-      );
+      url = new URL(URLRequest + erpDb().ERPIPAddress + ":" + erpDb().ERPPort + "/" + erpDb().ERPApi + "/" + endpoint);
     }
-
-    // if (endpoint != null) {
-    //   url = url + endpoint;
-    // }
-
+    
     return url;
   }
 

@@ -27,7 +27,7 @@ const refreshTableTimout = 300;
  * @returns {Object}
  */
 export const getCompanyInfo = async () => {
-  const baseService = new BaseService();
+ 
   const headers = ApiService.getHeaders();
   const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax, IsSetupWizard"});
 
