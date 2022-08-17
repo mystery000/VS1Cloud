@@ -976,6 +976,24 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProspect, options);
   }
 
+  getAllTripGroups(limitcount, limitfrom) {
+    let options = "";
+    if (limitcount === "All") {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+      };
+    } else {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TTripGroup, options);
+  }
+
   getCheckLeadData(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {
@@ -2228,6 +2246,14 @@ export class SideBarService extends BaseService {
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TDeptClass, options);
+  }
+
+  getTripGroup() {
+    let options = {
+      PropertyList:"ID,TripName,Description,Active",
+      select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TTripGroup, options);
   }
 
   getAccountantCategory() {

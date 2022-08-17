@@ -2835,6 +2835,7 @@ Template.receiptsoverview.events({
 
         function saveCheque(supplierID, supplierName, tr) {
             let taxCode = tr.find(".colTaxCode").text();
+            taxCode = (taxCode != "")?taxCode: "NT";
             if (supplierName != "" && taxCode != "") {
                 let amount = tr.find(".colReceiptAmount").text();
                 let accountName = tr.find(".colReceiptAccount").text();
