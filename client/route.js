@@ -1983,11 +1983,38 @@ authenticatedRoutes.route('/mailchimpsettings', {
   }
 });
 
-authenticatedRoutes.route('/email-list', {
+authenticatedRoutes.route('/correspondence-list', {
   name: 'mailchimpList',
   action() {
       BlazeLayout.render('layout', {
           yield: 'mailchimpList'
       });
   }
+});
+
+authenticatedRoutes.route('/campaign-list', {
+  name: 'mailchimpCampaignList',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'mailchimpCampaignList'
+      });
+  }
+});
+
+authenticatedRoutes.route('/tripgroup', {
+    name: 'tripgroup',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'tripgroup'
+        });
+    }
+});
+
+authenticatedRoutes.route('/receiptcategory', {
+    name: 'receiptcategory',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'receiptcategory'
+        });
+    }
 });

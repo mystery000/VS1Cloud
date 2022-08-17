@@ -12,6 +12,18 @@ Template.paymentoverviewcardscustomer.onCreated(function() {
 
 Template.paymentoverviewcardscustomer.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
+
+    var url = window.location.href;
+    let customerID = 0;
+    if (url.indexOf("customerscard?id=") > 0) {
+        newurl = new URL(window.location.href);
+        customerID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
+    }
+    if (url.indexOf("customerscard?jobid=") > 0) {
+        newurl = new URL(window.location.href);
+        customerID = ( !isNaN(newurl.searchParams.get("jobid")) )? newurl.searchParams.get("jobid") : 0;
+    }
+
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];
@@ -72,7 +84,9 @@ Template.paymentoverviewcardscustomer.onRendered(function() {
     let OUTSTANDING_INVOICES_AMOUNT = localStorage.getItem('VS1OutstandingInvoiceAmt_dash') || 0;
     let OUTSTANDING_INVOICES_QUANTITY = localStorage.getItem('VS1OutstandingInvoiceQty_dash') || 0;
 
-    if ((!localStorage.getItem('VS1OverDueInvoiceQty_dash')) && (!localStorage.getItem('VS1OverDueInvoiceAmt_dash'))) {
+
+
+    // if ((!localStorage.getItem('VS1OverDueInvoiceQty_dash')) && (!localStorage.getItem('VS1OverDueInvoiceAmt_dash'))) {
     getVS1Data('TAwaitingCustomerPayment').then(function(dataObject) {
         if (dataObject.length == 0) {
             sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(data) {
@@ -87,20 +101,32 @@ Template.paymentoverviewcardscustomer.onRendered(function() {
                         dataListAwaitingCust = {
                             id: data.tsaleslist[i].SaleId || '',
                         };
-                        if (data.tsaleslist[i].Balance != 0) {
-                            itemsAwaitingPaymentcount.push(dataListAwaitingCust);
-                            totAmount += Number(data.tsaleslist[i].Balance);
-                            let date = new Date(data.tsaleslist[i].dueDate);
-                            if (date < new Date()) {
-                                itemsOverduePaymentcount.push(dataListAwaitingCust);
-                                totAmountOverDue += Number(data.tsaleslist[i].Balance);
+                        if( customerID != 0 ){
+                            if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                                itemsAwaitingPaymentcount.push(dataListAwaitingCust);
+                                totAmount += Number(data.tsaleslist[i].Balance);
+                                let date = new Date(data.tsaleslist[i].dueDate);
+                                if (date < new Date() ) {
+                                    itemsOverduePaymentcount.push(dataListAwaitingCust);
+                                    totAmountOverDue += Number(data.tsaleslist[i].Balance);
+                                }
+                            }
+                        }else{
+                            if (data.tsaleslist[i].Balance != 0 ) {
+                                itemsAwaitingPaymentcount.push(dataListAwaitingCust);
+                                totAmount += Number(data.tsaleslist[i].Balance);
+                                let date = new Date(data.tsaleslist[i].dueDate);
+                                if (date < new Date() ) {
+                                    itemsOverduePaymentcount.push(dataListAwaitingCust);
+                                    totAmountOverDue += Number(data.tsaleslist[i].Balance);
+                                }
                             }
                         }
                     }
                 }
                 $('.invoiceOutstandingQTY').text(itemsAwaitingPaymentcount.length);
                 $('.invoiceOverDueQTY').text(itemsOverduePaymentcount.length);
-                $('invoiceOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+                $('.invoiceOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
                 $('.invoiceOverDueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
             });
         } else {
@@ -117,22 +143,32 @@ Template.paymentoverviewcardscustomer.onRendered(function() {
                     dataListAwaitingCust = {
                         id: data.tsaleslist[i].SaleId || '',
                     };
-                    if (data.tsaleslist[i].Balance != 0) {
-                        itemsAwaitingPaymentcount.push(dataListAwaitingCust);
-
-                        totAmount += Number(data.tsaleslist[i].Balance);
-                        let date = new Date(data.tsaleslist[i].dueDate);
-                        if (date < new Date()) {
-                            itemsOverduePaymentcount.push(dataListAwaitingCust);
-                            totAmountOverDue += Number(data.tsaleslist[i].Balance);
-
+                    if( customerID != 0 ){
+                        if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                            itemsAwaitingPaymentcount.push(dataListAwaitingCust);
+                            totAmount += Number(data.tsaleslist[i].Balance);
+                            let date = new Date(data.tsaleslist[i].dueDate);
+                            if (date < new Date() ) {
+                                itemsOverduePaymentcount.push(dataListAwaitingCust);
+                                totAmountOverDue += Number(data.tsaleslist[i].Balance);
+                            }
+                        }
+                    }else{
+                        if (data.tsaleslist[i].Balance != 0 ) {
+                            itemsAwaitingPaymentcount.push(dataListAwaitingCust);
+                            totAmount += Number(data.tsaleslist[i].Balance);
+                            let date = new Date(data.tsaleslist[i].dueDate);
+                            if (date < new Date() ) {
+                                itemsOverduePaymentcount.push(dataListAwaitingCust);
+                                totAmountOverDue += Number(data.tsaleslist[i].Balance);
+                            }
                         }
                     }
                 }
             }
             $('.invoiceOutstandingQTY').text(itemsAwaitingPaymentcount.length);
             $('.invoiceOverDueQTY').text(itemsOverduePaymentcount.length);
-            $('invoiceOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+            $('.invoiceOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
             $('.invoiceOverDueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
         }
     }).catch(function(err) {
@@ -148,30 +184,42 @@ Template.paymentoverviewcardscustomer.onRendered(function() {
                     dataListAwaitingCust = {
                         id: data.tsaleslist[i].SaleId || '',
                     };
-                    if (data.tsaleslist[i].Balance != 0) {
-                        itemsAwaitingPaymentcount.push(dataListAwaitingCust);
-                        totAmount += Number(data.tsaleslist[i].Balance);
-                        let date = new Date(data.tsaleslist[i].dueDate);
-                        if (date < new Date()) {
-                            itemsOverduePaymentcount.push(dataListAwaitingCust);
-                            totAmountOverDue += Number(data.tsaleslist[i].Balance);
+                    if( customerID != 0 ){
+                        if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                            itemsAwaitingPaymentcount.push(dataListAwaitingCust);
+                            totAmount += Number(data.tsaleslist[i].Balance);
+                            let date = new Date(data.tsaleslist[i].dueDate);
+                            if (date < new Date() ) {
+                                itemsOverduePaymentcount.push(dataListAwaitingCust);
+                                totAmountOverDue += Number(data.tsaleslist[i].Balance);
+                            }
+                        }
+                    }else{
+                        if (data.tsaleslist[i].Balance != 0 ) {
+                            itemsAwaitingPaymentcount.push(dataListAwaitingCust);
+                            totAmount += Number(data.tsaleslist[i].Balance);
+                            let date = new Date(data.tsaleslist[i].dueDate);
+                            if (date < new Date() ) {
+                                itemsOverduePaymentcount.push(dataListAwaitingCust);
+                                totAmountOverDue += Number(data.tsaleslist[i].Balance);
+                            }
                         }
                     }
                 }
             }
             $('.invoiceOutstandingQTY').text(itemsAwaitingPaymentcount.length);
             $('.invoiceOverDueQTY').text(itemsOverduePaymentcount.length);
-            $('invoiceOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+            $('.invoiceOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
             $('.invoiceOverDueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
         });
     });
 
-  }else{
-    $('.invoiceOutstandingQTY').text(OUTSTANDING_INVOICES_QUANTITY);
-    $('invoiceOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(OUTSTANDING_INVOICES_AMOUNT));
-    $('.invoiceOverDueAmt').text(utilityService.modifynegativeCurrencyFormat(OVERDUE_INVOICES_AMOUNT));
-    $('.invoiceOverDueQTY').text(OVERDUE_INVOICES_QUANTITY);
-  }
+//   }else{
+//     $('.invoiceOutstandingQTY').text(OUTSTANDING_INVOICES_QUANTITY);
+//     $('invoiceOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(OUTSTANDING_INVOICES_AMOUNT));
+//     $('.invoiceOverDueAmt').text(utilityService.modifynegativeCurrencyFormat(OVERDUE_INVOICES_AMOUNT));
+//     $('.invoiceOverDueQTY').text(OVERDUE_INVOICES_QUANTITY);
+//   }
 
 });
 

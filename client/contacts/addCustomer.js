@@ -191,9 +191,33 @@ Template.customerscard.onRendered(function () {
     }
 
     templateObject.getReferenceLetters = () => {
-        let temp = localStorage.getItem('correspondence');
-        templateObject.correspondences.set(temp? JSON.parse(temp): [])
+        sideBarService.getCorrespondences().then(dataObject => {
+            let tempArray = [];
+            if(dataObject.tcorrespondence.length > 0) {
+                let temp = dataObject.tcorrespondence.filter(item=>{
+                    return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                })
+
+                for(let i = 0; i< temp.length; i++) {
+                    for (let j = i+1; j< temp.length; j++ ) {
+                        if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                            temp[j].fields.dup = true
+                        }
+                    }
+                }
+                
+                temp.map(item=>{
+                    if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                        tempArray.push(item.fields)
+                    }
+                })
+            }
+
+            templateObject.correspondences.set(tempArray)
+        }).catch(function(err){
+        })
     }
+
 
     templateObject.getAllJobsIds = function () {
         contactService.getJobIds().then(function (data) {
@@ -669,42 +693,55 @@ Template.customerscard.onRendered(function () {
     }
 
     templateObject.getAllCrm = function (customerName) {
-        $('.fullScreenSpin').style.display = 'inline-block';
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+        var url = FlowRouter.current().path;
+        if (url.includes("/employeescard")) {
+            url = new URL(window.location.href);
+            employeeID = url.searchParams.get("id");
+        }
         let dataTableList = [];
-        crmService.getAllTasksByTaskName(customerName).then(function (dataObject) {
-            if (dataObject.tprojecttasks.length > 0) {
-            for (let i = 0; i < data.tprojecttasks.length; i++) {
-                if (data.tprojecttasks[i].fields.TaskName === customerName) {
-                    let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
-                    let taskLabelArray = [];
-                    if (taskLabel !== null) {
-                        if (taskLabel.length === undefined || taskLabel.length === 0) {
-                            taskLabelArray.push(taskLabel.fields);
-                        } else {
-                            for (let j = 0; j < taskLabel.length; j++) {
-                                taskLabelArray.push(taskLabel[j].fields);
+
+        // async function getTask() {
+        crmService.getAllTasksByTaskName(customerName).then(async function (data) {
+            if(data.tprojecttasks.length > 0) {
+                for (let i = 0; i < data.tprojecttasks.length; i++) {
+                    if (data.tprojecttasks[i].fields.TaskName === customerName) {
+                        let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+                        let taskLabelArray = [];
+                        if (taskLabel !== null) {
+                            if (taskLabel.length === undefined || taskLabel.length === 0) {
+                                taskLabelArray.push(taskLabel.fields);
+                            } else {
+                                for (let j = 0; j < taskLabel.length; j++) {
+                                    taskLabelArray.push(taskLabel[j].fields);
+                                }
                             }
                         }
+                        let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+                        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+                        const dataList = {
+                            id: data.tprojecttasks[i].fields.ID || 0,
+                            priority: data.tprojecttasks[i].fields.priority || 0,
+                            date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                            taskName: 'Task',
+                            projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                            projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                            description: taskDescription,
+                            labels: taskLabelArray,
+                            category: 'task'
+                        };
+                        dataTableList.push(dataList);
                     }
-                    let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
-                    taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-                    const dataList = {
-                        id: data.tprojecttasks[i].fields.ID || 0,
-                        priority: data.tprojecttasks[i].fields.priority || 0,
-                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                        taskName: 'Task',
-                        projectID: data.tprojecttasks[i].fields.ProjectID || '',
-                        projectName: data.tprojecttasks[i].fields.ProjectName || '',
-                        description: taskDescription,
-                        labels: taskLabelArray,
-                        category: 'task'
-                    };
-                    // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === cutomerName) {
-                    dataTableList.push(dataList);
-                    // }
                 }
             }
-            crmService.getAllAppointments(customerName).then(dataObj => {
+            await getAppointments();
+        }).catch(function(err){
+             getAppointments();
+        })
+
+        async function getAppointments() {
+            crmService.getAllAppointments(customerName).then(async function(dataObj) {
                 if(dataObj.tappointmentex.length > 0) {
                     dataObj.tappointmentex.map(data=>{
                         let obj = {
@@ -717,43 +754,63 @@ Template.customerscard.onRendered(function () {
                             description: '',
                             labels: '',
                             category: 'appointment'
+        
                         }
+    
                         dataTableList.push(obj);
                     })
                 }
-                templateObject.crmRecords.set(dataTableList);
-                setCrmProjectTasks()
-                $('.fullScreenSpin').css('display', 'none');
-            }).catch((error)=>{
-                templateObject.crmRecords.set(dataTableList);
-                $('.fullScreenSpin').css('display', 'none');
-            })
-            }
-        }).catch(function (err) {
-            crmService.getAllAppointments(leadName).then(dataObj => {
-                if(dataObj.tappointmentex.length > 0) {
-                    dataObj.tappointmentex.map(data=>{
-                        let obj = {
-                            id: data.fields.ID,
-                            priority: 0,
-                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                            taskName: 'Appointment',
-                            projectID: data.fields.ProjectID || '',
-                            projectName: '',
-                            description: '',
-                            labels: '',
-                            category: 'appointment'
-                        }
-                        dataTableList.push(obj);
-                    })
-                }
-                templateObject.crmRecords.set(dataTableList);
-                setCrmProjectTasks()
-                $('.fullScreenSpin').css('display', 'none');
+                await getEmails();
             }).catch(function(error) {
+                getEmails();
+            })
+        }
+
+        async function getEmails () {
+            sideBarService.getCorrespondences().then(dataReturn=>{
+                let totalCorrespondences = dataReturn.tcorrespondence;
+                totalCorrespondences = totalCorrespondences.filter(item=>{
+                    return item.fields.MessageTo == $('#edtCustomerEmail').val()
+                })
+                if(totalCorrespondences.length > 0 && $('#edtCustomerEmail').val() != '') {
+                    totalCorrespondences.map(item => {
+                        let labels = [];
+                        labels.push(item.fields.Ref_Type)
+                        let obj = {
+                            id: item.fields.MessageId?parseInt(item.fields.MessageId): 999999,
+                            priority: 0,
+                            date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
+                            taskName: 'Email',
+                            projectID:  '',
+                            projectName: '',
+                            description: '',
+                            labels: '',
+                            category: 'email'
+                        }
+                        dataTableList.push(obj)
+                    })
+                }
+                try {
+                    dataTableList.sort((a, b)=>{
+                        new Date(a.date) - new Date(b.date)
+                    })
+                    templateObject.crmRecords.set(dataTableList);
+                }catch (error) {
+                }
+                setCrmProjectTasks()
+                
+            })
+            .catch((err)=>{
+                templateObject.crmRecords.set(dataTableList);
+                setCrmProjectTasks()
                 $('.fullScreenSpin').css('display', 'none');
             })
-        });
+        }
+  
+        // await getTask();
+        // await getAppointments();
+        // await getEmails();
+
     };
     function setCrmProjectTasks(data, customerName) {
         let tableHeaderList = [];
@@ -1814,7 +1871,6 @@ Template.customerscard.onRendered(function () {
     });
 
     $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function (e) {
-        let email = $('#edtCustomerEmail').val();
         if($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null ) {
             swal({
                 title: 'Oooops...',
@@ -1825,16 +1881,36 @@ Template.customerscard.onRendered(function () {
             }).then((result) => {
                 if (result.value) {
                     $('#referenceLetterModal').modal('toggle');
-                }
+                } 
             });
         } else {
+            let email = $('#edtCustomerEmail').val();
             let dataLabel = $("input[name='refTemp']:checked").attr('value');
-            let dataSubject = $("input[name='refTemp']:checked").attr('data-subject') ? $("input[name='refTemp']:checked").attr('data-subject'): '';
-            let dataMemo = $("input[name='refTemp']:checked").attr('data-memo') ? $("input[name='refTemp']:checked").attr('data-memo'): '';
+            let dataSubject = $("input[name='refTemp']:checked").attr('data-subject');
+            let dataMemo = $("input[name='refTemp']:checked").attr('data-memo');
             if(email && email != null && email != '') {
                 document.location =
                 "mailto:" + email + "?subject=" + dataSubject + "&body=" + dataMemo;
-                $('#referenceLetterModal').modal('toggle');
+                sideBarService.getCorrespondences().then(dataObject => {
+                    let temp = {
+                        type: "TCorrespondence",
+                        fields: {
+                            Active: true,
+                            EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                            Ref_Type: dataLabel,
+                            MessageAsString: dataMemo,
+                            MessageFrom: Session.get('mySessionEmployee'),
+                            MessageId : dataObject.tcorrespondence.length.toString(),
+                            MessageTo : email,
+                            ReferenceTxt: dataSubject,
+                            Ref_Date: moment().format('YYYY-MM-DD'),
+                            Status: ""
+                        }
+                    }
+                    sideBarService.saveCorrespondence(temp).then(data => {
+                        $('#referenceLetterModal').modal('toggle');
+                    })
+                })
             } else {
                 swal({
                     title: 'Oooops...',
@@ -1845,10 +1921,150 @@ Template.customerscard.onRendered(function () {
                 }).then((result) => {
                     if (result.value) {
                         $('#referenceLetterModal').modal('toggle');
-                    }
+                    } 
                 });
             }
         }
+    });
+
+    $(document).on('click', '#referenceLetterModal .btnAddLetter', function (e) {
+        $('#addLetterTemplateModal').modal('toggle')
+    });
+
+    $(document).on('click','#addLetterTemplateModal #save-correspondence', function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        // let correspondenceData = localStorage.getItem('correspondence');
+        let correspondenceTemp = templateObject.correspondences.get()
+        let tempLabel = $("#edtTemplateLbl").val();
+        let tempSubject = $('#edtTemplateSubject').val();
+        let tempContent = $("#edtTemplateContent").val();
+        if(correspondenceTemp.length > 0 ) {
+            let index = correspondenceTemp.findIndex(item=>{
+                return item.Ref_Type == tempLabel
+            })
+            if(index > 0) {
+                swal({
+                    title: 'Oooops...',
+                    text: 'There is already a template labeled ' + tempLabel,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') { }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            } else {
+               
+                sideBarService.getCorrespondences().then(dObject =>{
+
+                    let temp = {
+                        Active: true,
+                        EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                        Ref_Type: tempLabel,
+                        MessageAsString: tempContent,
+                        MessageFrom: "",
+                        MessageId : dObject.tcorrespondence.length.toString(),
+                        MessageTo : "",
+                        ReferenceTxt: tempSubject,
+                        Ref_Date: moment().format('YYYY-MM-DD'),
+                        Status: ""
+                    }
+                    let objDetails = {
+                        type: 'TCorrespondence',
+                        fields: temp
+                    }
+    
+                    // let array = [];
+                    // array.push(objDetails)
+                    
+                    sideBarService.saveCorrespondence(objDetails).then(data=>{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Success',
+                            text: 'Template has been saved successfully ',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Continue'
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#addLetterTemplateModal').modal('toggle')
+                                templateObject.getReferenceLetters();
+                            } else if (result.dismiss === 'cancel') { }
+                        });
+                    }).catch(function () {
+                        swal({
+                            title: 'Oooops...',
+                            text: 'Something went wrong',
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#addLetterTemplateModal').modal('toggle')
+                                $('.fullScreenSpin').css('display', 'none');
+                            } else if (result.dismiss === 'cancel') { }
+                        });
+                    })
+                    
+                })
+            }
+        } else {
+            sideBarService.getCorrespondences().then(dObject =>{
+                let temp = {
+                    Active: true,
+                    EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                    Ref_Type: tempLabel,
+                    MessageAsString: tempContent,
+                    MessageFrom: "",
+                    MessageId : dObject.tcorrespondence.length.toString(),
+                    MessageTo : "",
+                    ReferenceTxt: tempSubject,
+                    Ref_Date: moment().format('YYYY-MM-DD'),
+                    Status: ""
+                }
+                let objDetails = {
+                    type: 'TCorrespondence',
+                    fields: temp
+                }
+    
+                let array = [];
+                    array.push(objDetails)
+    
+                sideBarService.saveCorrespondence(objDetails).then(data=>{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Success',
+                        text: 'Template has been saved successfully ',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Continue'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#addLetterTemplateModal').modal('toggle')
+                            templateObject.getReferenceLetters();
+                            
+                        } else if (result.dismiss === 'cancel') { }
+                    });
+                }).catch(function () {
+                    swal({
+                        title: 'Oooops...',
+                        text: 'Something went wrong',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#addLetterTemplateModal').modal('toggle')
+                        } else if (result.dismiss === 'cancel') { }
+                    });
+                })
+            })
+            
+        }
+        // localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
+        // templateObject.correspondences.set(correspondenceTemp);
+        // $('#addLetterTemplateModal').modal('toggle');
     });
 });
 

@@ -67,6 +67,94 @@ Template.appointments.onCreated(function () {
     templateObject.toupdatelogid = new ReactiveVar();
 });
 
+async function sendAppointmentEmail(){
+    let customerEmailCheck = $('.customerEmail').is(':checked') ? true : false;
+    let userEmailCheck = $('.userEmail').is(':checked') ? true : false;
+    var emailText = $('#saveAppointmentSMSMessage').val();
+    // Send email to the customer 
+    
+    if( customerEmailCheck == true ){
+        let customerDataName = $("#customer").val();
+        let customerEmail='';
+        let dataObject = await getVS1Data('TCustomerVS1');
+        if(dataObject.length > 0){
+            let data = JSON.parse(dataObject[0].data);
+            for (let i = 0; i < data.tcustomervs1.length; i++) {
+                if ( data.tcustomervs1[i].fields.Companyname === customerDataName ) {
+                    customerEmail = data.tcustomervs1[i].fields.Email;
+                    break;
+                }
+            }
+        }
+        if( customerEmail ){
+            let mailSubject="Appointment Email";
+            let mailFromName = Session.get('vs1companyName');
+            let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');      
+            Meteor.call('sendEmail', {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: customerEmail,
+                subject: mailSubject,
+                text: emailText,
+                html: ''
+            }, function (error, result) {
+                if (error && error.error === "error") {
+                    // window.open('/statementlist', '_self');
+                } else {
+                    swal({
+                        title: 'SUCCESS',
+                        text: "Email Sent To Customer ",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    })
+
+                }
+            });
+        }
+    }
+    // Send email to the user
+    if( userEmailCheck == true){
+        let employeeID = Session.get('mySessionEmployeeLoggedID');
+        let employeeEmail='';
+        let dataObject = await getVS1Data('TEmployee');
+        if(dataObject.length > 0){
+            dataObject.filter(function(arr){
+                let data=JSON.parse(arr.data)['temployee'];
+                for(let i=0; i < data.length; i++){
+                    if(employeeID == data[i].fields.ID){
+                        employeeEmail += data[i].fields.Email;
+                        break;
+                    }
+                }
+            });
+        }
+        if( employeeEmail ){
+            let mailSubject="Appointment Email";
+            let mailFromName = Session.get('vs1companyName');
+            let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');      
+            Meteor.call('sendEmail', {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: employeeEmail,
+                subject: mailSubject,
+                text: emailText,
+                html: ''
+            }, function (error, result) {
+                if (error && error.error === "error") {
+                    // window.open('/statementlist', '_self');
+                } else {
+                    swal({
+                        title: 'SUCCESS',
+                        text: "Email Sent To User ",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    })
+                }
+            });
+        }
+    }
+}
+
 Template.appointments.onRendered(function () {
     let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly') || false;
     let templateObject = Template.instance();
@@ -9392,6 +9480,8 @@ Template.appointments.events({
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
+        const emailCustomer = $('#customerEmail').is(':checked');
+        const emailUser = $('#userEmail').is(':checked');
         const customerPhone = $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
@@ -9409,8 +9499,21 @@ Template.appointments.events({
                         $('#btnSaveAppointmentSubmit').trigger('click');
                     }
                 })
-            } else {
-              $('#btnSaveAppointmentSubmit').trigger('click');
+            } else if (emailCustomer || emailUser) { 
+                const templateObject = Template.instance();
+                $('#saveAppointmentModal').modal('show');
+                const accountName = $('#customer').val();
+                const employeeName = $('#employee_name').val();
+                const companyName = Session.get('vs1companyName');
+                const fullAddress = $('#address').val() + ', ' + $('#suburb').val() + ', ' + $('#state').val() + ', ' + $('#country').val();
+                const bookedTime = $('#startTime').val() ? $('#startTime').val() : '';
+                const productService = $('#product-list').val();
+                const saveAppointmentSMS = templateObject.defaultSMSSettings.get().saveAppointmentSMSMessage.replace('[Customer Name]', accountName)
+                    .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService)
+                    .replace('[Full Address]', fullAddress).replace('[Booked Time]', bookedTime);
+                $('#saveAppointmentSMSMessage').val(saveAppointmentSMS);
+            }else{
+                $('#btnSaveAppointmentSubmit').trigger('click');
             }
         } else {
             const templateObject = Template.instance();
@@ -9451,15 +9554,36 @@ Template.appointments.events({
                         .replace('[Full Address]', fullAddress).replace('[Booked Time]', bookedTime);
                     $('#saveAppointmentSMSMessage').val(saveAppointmentSMS);
                 }
+            }else if (emailCustomer || emailUser) { 
+                const templateObject = Template.instance();
+                $('#saveAppointmentModal').modal('show');
+                const accountName = $('#customer').val();
+                const employeeName = $('#employee_name').val();
+                const companyName = Session.get('vs1companyName');
+                const fullAddress = $('#address').val() + ', ' + $('#suburb').val() + ', ' + $('#state').val() + ', ' + $('#country').val();
+                const bookedTime = $('#startTime').val() ? $('#startTime').val() : '';
+                const productService = $('#product-list').val();
+                const saveAppointmentSMS = templateObject.defaultSMSSettings.get().saveAppointmentSMSMessage.replace('[Customer Name]', accountName)
+                    .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService)
+                    .replace('[Full Address]', fullAddress).replace('[Booked Time]', bookedTime);
+                $('#saveAppointmentSMSMessage').val(saveAppointmentSMS);
             } else {
                 $('#btnSaveAppointmentSubmit').trigger('click');
             }
         }
     },
-    'click .btnSaveIgnoreSMS': function() {
+    'click .btnSaveIgnoreSMS': async function() {
        $('#chkSMSCustomer').prop('checked', false);
         $('#chkSMSUser').prop('checked', false);
-        $('#frmAppointment').trigger('submit');
+        let emailCustomer = $('#customerEmail').is(':checked');
+        let emailUser = $('#userEmail').is(':checked');
+        if( emailCustomer || emailUser ){
+            await sendAppointmentEmail();
+            $('#frmAppointment').trigger('submit');
+        }else{
+            $('#frmAppointment').trigger('submit');
+        }
+        
     },
     'click #btnCloseStopAppointmentModal': function() {
         $('#stopAppointmentModal').modal('hide');
@@ -9476,6 +9600,8 @@ Template.appointments.events({
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
+        var emailCustomer = $('#customerEmail').is(':checked');
+        var emailUser = $('#userEmail').is(':checked');
         const smsSettings = templateObject.defaultSMSSettings.get();
         let sendSMSRes = true;
         /*
@@ -9527,10 +9653,21 @@ Template.appointments.events({
                         // window.open('/appointments', '_self');
                     }
                 });
+                if( emailCustomer || emailUser ){
+                    await sendAppointmentEmail();
+                    $('#frmAppointment').trigger('submit');
+                }else{
+                    $('#frmAppointment').trigger('submit');
+                }
+                
+            }
+        } else {   
+            if( emailCustomer || emailUser ){
+                await sendAppointmentEmail();
+                $('#frmAppointment').trigger('submit');
+            }else{
                 $('#frmAppointment').trigger('submit');
             }
-        } else {
-            $('#frmAppointment').trigger('submit');
         }
     },
     'change #chkSMSCustomer': function() {
@@ -10333,6 +10470,7 @@ Template.appointments.events({
     'submit #frmAppointment': async function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
         event.preventDefault();
+
         /*
         if (createAppointment == false) {
             $('.modal-backdrop').css('display', 'none');
@@ -10388,9 +10526,7 @@ Template.appointments.events({
         let hourlyRate = '';
         let status = "Not Converted";
         let uploadedItems = templateObject.uploadedFiles.get();
-
-        let customerEmail=$('.customerEmail').is(':checked') ? true : false;
-        let userEmail=$('.userEmail').is(':checked') ? true : false;
+        $('.fullScreenSpin').css('display', 'inline-block');
         if (aStartTime != '') {
             aStartDate = savedStartDate + ' ' + aStartTime;
         } else {
@@ -10512,58 +10648,6 @@ Template.appointments.events({
                     //   UserEmail: userEmail
                   }
               };
-
-
-              let customerDataName=$("#customer").val();
-              let customerEmail='';
-              let employeeID=Session.get('mySessionEmployeeLoggedID');
-                let employeeEmail='';
-                await getVS1Data('TCustomerVS1').then(function (dataObject) {
-                    let data = JSON.parse(dataObject[0].data);
-                    for (let i = 0; i < data.tcustomervs1.length; i++) {
-                        if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
-                            customerEmail += data.tcustomervs1[i].fields.Email;
-                            break;
-                        }
-                    }
-                })
-                await getVS1Data('TEmployee').then(function (dataObject) {
-                    if(dataObject.length > 0){
-                        dataObject.filter(function(arr){
-                            let data=JSON.parse(arr.data)['temployee'];
-                            for(let i=0; i < data.length; i++){
-                                if(employeeID == data[i].fields.ID){
-                                    employeeEmail += data[i].fields.Email;
-                                    break;
-                                }
-                            }
-                        });
-                    }
-                });
-                let subject="test";
-                let text="this is just a test";
-                let mailFromName = Session.get('vs1companyName');
-                let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                let details={
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: '',
-                    subject: subject,
-                    text: '',
-                    html: text,
-                };
-
-                if($("#userEmail").is(":checked")){
-                    details.to=customerEmail;
-                    Meteor.call("sendEmail", details, function(error, result){
-
-                    })
-                }
-                if($("#customerEmail").is(":checked")){
-                    details.to=employeeEmail;
-                    Meteor.call("sendEmail", details, function(error, result){
-                    })
-                }
-
 
               appointmentService.saveAppointment(objectData).then(function (data) {
                   let id = data.fields.ID;

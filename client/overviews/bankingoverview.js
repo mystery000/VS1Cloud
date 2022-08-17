@@ -231,7 +231,7 @@ Template.bankingoverview.onRendered(function() {
         });
     });
 
-
+/*
     getVS1Data('TPurchaseOrderEx').then(function(dataObject) {
         if (dataObject.length == 0) {
             paymentService.getOverviewAwaitingSupplierDetails().then(function(data) {
@@ -328,6 +328,7 @@ Template.bankingoverview.onRendered(function() {
             // templateObject.awaitingpaymentCount.set(itemsAwaitingPaymentcount.length);
         });
     });
+    */
 
     templateObject.resetData = function (dataVal) {
         window.open('/bankingoverview?page=last', '_self');
