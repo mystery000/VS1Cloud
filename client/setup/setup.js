@@ -11,6 +11,8 @@ import User from "../js/Api/Model/User";
 import { AccountService } from "../accounts/account-service";
 import "jquery-editable-select";
 import { ContactService } from "../contacts/contact-service";
+import { BaseService } from "../js/base-service";
+import ApiService from "../js/Api/Module/ApiService";
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
@@ -20,14 +22,37 @@ const contactService = new ContactService();
 
 const refreshTableTimout = 300;
 
+/**
+ * This will get the TCompanyInfo 
+ * @returns {Object}
+ */
+export const getCompanyInfo = async () => {
+  const baseService = new BaseService();
+  const headers = ApiService.getHeaders();
+  const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax, IsSetupWizard"});
+
+  const response = await fetch(url, {
+    headers: headers,
+    method: "GET"
+  });
+
+  if(response.status >= 200 && response.status < 301) {
+    const data = await response.json();
+    const companyInfo = data.tcompanyinfo[0];
+    return companyInfo;
+  }
+
+}
+
 export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
   // if(isSetupFinished() == true) {
-  //   //FlowRouter.go(onSetupFinished);
+  //   FlowRouter.go(onSetupFinished);
   //   window.open(onSetupFinished, '_self');
   // } else {
-  //  // FlowRouter.go(onSetupUnFinished);
+  //   FlowRouter.go(onSetupUnFinished);
   //   window.open(onSetupUnFinished, '_self');
   // }
+
 
   isSetupFinished().then(boolean => {
     if(boolean == true) {
@@ -36,7 +61,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
      window.open(onSetupUnFinished, '_self');
     }
   });
-}
+};
 
 
 /**
@@ -44,19 +69,25 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
  * @returns {boolean} true / false
  */
 export const isSetupFinished  = async () => {
+
+  const companyInfo = await getCompanyInfo();
+
+  return companyInfo.IsSetUpWizard == true ? false : true;
  
-  let organisationService = new OrganisationService();
-  const organisationDetails = await organisationService.getOrganisationDetail();
-  let companyInfo = organisationDetails.tcompanyinfo[0];
+  // let organisationService = new OrganisationService();
+  // const organisationDetails = await organisationService.getOrganisationDetail();
+  // let companyInfo = organisationDetails.tcompanyinfo[0];
 
  
-  return companyInfo.IsSetUpWizard == true ? false : true;
+  // return companyInfo.IsSetUpWizard == true ? false : true;
 
   // const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   // if (isFinished == true || isFinished == "true") {
   //   return true;
   // }
   // return false;
+
+
 }
 
 function MakeNegative() {
