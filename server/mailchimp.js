@@ -43,7 +43,6 @@ Meteor.methods({
 
       }
       catch (err) {
-        console.log(err)
         return err;
       }
     }
@@ -262,7 +261,6 @@ Meteor.methods({
 
     }
     catch (err) {
-      console.log(err)
       return [];
     }
 

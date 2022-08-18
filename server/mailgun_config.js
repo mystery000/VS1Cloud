@@ -39,7 +39,7 @@ Meteor.methods({
     })
   },
   sendEmail: function (details) {
-    check([mailFields.to, mailFields.from, mailFields.subject, mailFields.text, mailFields.html], [String]);
+    check([details.to, details.from, details.subject, details.text, details.html], [String]);
     this.unblock();
     if(details.attachments === undefined){
         details.attachments = [];
