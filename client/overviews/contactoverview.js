@@ -345,7 +345,8 @@ Template.contactoverview.onRendered(function () {
                     let draftRecord = templateObject.datatablerecords.get();
                     templateObject.datatablerecords.set(draftRecord);
                   })
-                  .on("column-reorder", function () {})
+                  .on("column-reorder", function () {
+                  })
                   .on("length.dt", function (e, settings, len) {
                     $(".fullScreenSpin").css("display", "inline-block");
                     let dataLenght = settings._iDisplayLength;
@@ -901,7 +902,8 @@ Template.contactoverview.onRendered(function () {
                 let draftRecord = templateObject.datatablerecords.get();
                 templateObject.datatablerecords.set(draftRecord);
               })
-              .on("column-reorder", function () {})
+              .on("column-reorder", function () {
+              })
               .on("length.dt", function (e, settings, len) {
                 $(".fullScreenSpin").css("display", "inline-block");
                 let dataLenght = settings._iDisplayLength;
@@ -1413,7 +1415,8 @@ Template.contactoverview.onRendered(function () {
                   let draftRecord = templateObject.datatablerecords.get();
                   templateObject.datatablerecords.set(draftRecord);
                 })
-                .on("column-reorder", function () {})
+                .on("column-reorder", function () {
+                })
                 .on("length.dt", function (e, settings, len) {
                   $(".fullScreenSpin").css("display", "inline-block");
                   let dataLenght = settings._iDisplayLength;

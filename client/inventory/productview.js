@@ -1619,7 +1619,7 @@ Template.productview.onRendered(function() {
                                 if (useData[i].fields.SNTracking) $('#chkSNTrack').prop('checked', true);
                                 if (useData[i].fields.Batch) $('#chkLotTrack').prop('checked', true);
                                 if (useData[i].fields.CUSTFLD13 === 'true') $('#chkAddSN').prop('checked', true);
-    
+
                                 if (useData[i].fields.CUSTFLD14 == 'true') {
                                     $('.lblPriceEx').addClass('hiddenColumn');
                                     $('.lblPriceEx').removeClass('showColumn');
@@ -1769,7 +1769,7 @@ Template.productview.onRendered(function() {
                                 if (data.fields.SNTracking) $('#chkSNTrack').prop('checked', true);
                                 if (data.fields.Batch) $('#chkLotTrack').prop('checked', true);
                                 if (data.fields.CUSTFLD13 === 'true') $('#chkAddSN').prop('checked', true);
-  
+
                                 if (data.fields.CUSTFLD14 == 'true') {
                                     $('.lblPriceEx').addClass('hiddenColumn');
                                     $('.lblPriceEx').removeClass('showColumn');
@@ -3472,7 +3472,7 @@ Template.productview.events({
         let customField1 = $('#edtSaleCustField1').val()||'';
         let customField2 = $('#edtSaleCustField2').val()||'';
         let customField3 = $('#edtSaleCustField3').val()||'';
-        
+
         // Feature/ser-lot-tracking: Check if serial and lot number checkboxes and save them
         let trackSerialNumber = $('#chkSNTrack').prop('checked') ? "true" : "false";
         let trackLotNumber = $('#chkLotTrack').prop('checked') ? "true" : "false";
@@ -4044,7 +4044,6 @@ Template.productview.events({
             if(isCheckedLotTrack){
                 $('.fullScreenSpin').css('display', 'inline-block');
                 let templateObject = Template.instance();
-                console.log(templateObject);
                 templateObject.getLotNumberList();
                 $('#LotNumberModal').modal('show');
             } else{
@@ -4552,13 +4551,13 @@ Template.productview.events({
                     $('#edtRaw').removeAttr('id');
                 }
                 let grandParent = row.parent();
-                grandParent.append("<div class='d-flex productRow'>" + 
+                grandParent.append("<div class='d-flex productRow'>" +
                 "<div class='colProduct d-flex'>" +
                     "<button class='btnAddProduct' style='width: 30%; background-color: #00a3d3; border: 2px solid black'>Product+</button>" +
                     "<select class='edtProductName  edtRaw' id='edtRaw' type='search' value='12345' style='width: 30%'></select>"+
                 "</div>" +
                 "<div class='colQty'>" +
-                    "<input type='text' class='edtQuantity w-100'/>" + 
+                    "<input type='text' class='edtQuantity w-100'/>" +
                 "</div>" +
                 "<div class='colProcess'>" +
                 "</div>" +
@@ -4570,11 +4569,11 @@ Template.productview.events({
                 $(colProduct).prepend("<div style='width: 30%'></div>")
             }
         }
-        
+
         // let colProductName = $(colProduct).find('.edtProductName');
         // $(colProductName).attr('id', 'edtRaw');
-      
-       
+
+
     },
 
 // add to custom field

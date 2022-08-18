@@ -23,6 +23,11 @@ Template.addaccountpop.onCreated(function () {
 });
 
 Template.addaccountpop.onRendered(function () {
+    
+    // $('#sltAccountType').editableSelect('add', function(item){
+    //     $(this).val(item.id);
+    //     $(this).text(item.name);
+    // });
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let accountService = new AccountService();

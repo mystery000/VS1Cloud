@@ -9482,13 +9482,22 @@ Template.paymentcard.events({
         }
     },
     'click .btnDeletePayment': async function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+
         let templateObject = Template.instance();
         let paymentService = new PaymentsService();
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentInvoice = getso_id[getso_id.length - 1];
         var objDetails = '';
+        swal({
+            title: 'Delete Payment',
+            text: "Are you sure you want to Delete this Payment?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+            $('.fullScreenSpin').css('display', 'inline-block');
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var objDetails = {
@@ -9499,7 +9508,7 @@ Template.paymentcard.events({
                 }
             };
 
-            await paymentService.deleteDepositData(objDetails).then(function(objDetails) {
+           paymentService.deleteDepositData(objDetails).then(function(objDetails) {
                 $('.modal-backdrop').css('display', 'none');
                 FlowRouter.go('/paymentoverview?success=true');
             }).catch(function(err) {
@@ -9520,7 +9529,8 @@ Template.paymentcard.events({
           $('.modal-backdrop').css('display', 'none');
             FlowRouter.go('/paymentoverview?success=true');
         }
-
+          } else {}
+      });
         // $('#deleteLineModal').modal('toggle');
     },
     'click .btnRecoverPayment': function(event) {

@@ -8283,7 +8283,7 @@ Template.supplierpaymentcard.events({
     let customer = $("#edtSupplierName").val();
     let paymentAmt = $("#edtPaymentAmount").val();
     var paymentDateTime = new Date($("#dtPaymentDate").datepicker("getDate"));
-    let paymentDate = paymentDateTime.getFullYear() +"-" +(paymentDateTime.getMonth() + 1) +"-" +paymentDateTime.getDate();
+    let paymentDate = paymentDateTime.getFullYear() + "-" + (paymentDateTime.getMonth() + 1) + "-" + paymentDateTime.getDate();
 
     let bankAccount = $("#edtSelectBankAccountName").val() || "Bank";
     let reference = $("#edtReference").val();
@@ -8312,11 +8312,8 @@ Template.supplierpaymentcard.events({
     if (currentBeginDate.getDate() < 10) {
       fromDateDay = "0" + currentBeginDate.getDate();
     }
-    var toDate =
-      currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-    let prevMonth11Date = moment()
-      .subtract(reportsloadMonths, "months")
-      .format("YYYY-MM-DD");
+    var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
+    let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
 
     /**
      * Currency module data
@@ -8380,28 +8377,23 @@ Template.supplierpaymentcard.events({
         type: "TSuppPayments",
         fields: {
           ID: paymentID,
-          Deleted: false,
+          //Deleted: false,
+          PaymentDate: paymentDate,
           Notes: notes,
           ReferenceNo: reference,
-          PaymentDate: paymentDate,
+
           // ForeignExchangeCode: foreignCurrency || defaultCurrencyCode,
           // ForeignExchangeRate: parseFloat(exchangeRate),
           //ForeignAppliedAmount: foreignAppliedAmount != null ? foreignAppliedAmount : foreignAmount, // foriegn applied amount
         },
       };
 
-      paymentService
-        .saveSuppDepositData(objDetails)
-        .then(function (data) {
+      paymentService.saveSuppDepositData(objDetails).then(function (data) {
           var customerID = $("#edtSupplierEmail").attr("customerid");
           // Start End Send Email
           $("#html-2-pdfwrapper").css("display", "block");
           $(".pdfCustomerName").html($("#edtSupplierEmail").val());
-          $(".pdfCustomerAddress").html(
-            $("#txabillingAddress")
-              .val()
-              .replace(/[\r\n]/g, "<br />")
-          );
+          $(".pdfCustomerAddress").html($("#txabillingAddress").val().replace(/[\r\n]/g, "<br />"));
           async function addAttachment() {
             let attachment = [];
             let templateObject = Template.instance();
@@ -8674,47 +8666,29 @@ Template.supplierpaymentcard.events({
           }
           // $('.fullScreenSpin').css('display','none');
           // window.open('/supplierpayment','_self');
-          sideBarService
-            .getTSupplierPaymentList(initialDataLoad, 0)
-            .then(function (dataUpdate) {
-              addVS1Data("TSupplierPayment", JSON.stringify(dataUpdate))
-                .then(function (datareturn) {
+          sideBarService.getTSupplierPaymentList(initialDataLoad, 0).then(function (dataUpdate) {
+              addVS1Data("TSupplierPayment", JSON.stringify(dataUpdate)).then(function (datareturn) {
                   if (FlowRouter.current().queryParams.trans) {
-                    FlowRouter.go(
-                      "/customerscard?id=" +
-                        FlowRouter.current().queryParams.trans +
-                        "&transTab=active"
-                    );
+                    FlowRouter.go("/customerscard?id=" +FlowRouter.current().queryParams.trans +"&transTab=active");
                   } else {
                     window.open("/supplierpayment?success=true", "_self");
                   }
-                })
-                .catch(function (err) {
+                }).catch(function (err) {
                   if (FlowRouter.current().queryParams.trans) {
-                    FlowRouter.go(
-                      "/customerscard?id=" +
-                        FlowRouter.current().queryParams.trans +
-                        "&transTab=active"
-                    );
+                    FlowRouter.go("/customerscard?id=" +FlowRouter.current().queryParams.trans +"&transTab=active");
                   } else {
                     window.open("/supplierpayment?success=true", "_self");
                   }
                 });
-            })
-            .catch(function (err) {
+            }).catch(function (err) {
               if (FlowRouter.current().queryParams.trans) {
-                FlowRouter.go(
-                  "/customerscard?id=" +
-                    FlowRouter.current().queryParams.trans +
-                    "&transTab=active"
-                );
+                FlowRouter.go("/customerscard?id=" +FlowRouter.current().queryParams.trans +"&transTab=active");
               } else {
                 window.open("/supplierpayment?success=true", "_self");
               }
             });
           //window.history.go(-2);
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
           swal({
             title: "Oooops...",
             text: err,
@@ -12358,13 +12332,21 @@ Template.supplierpaymentcard.events({
     }
   },
   "click .btnDeletePayment": async function (event) {
-    $('.fullScreenSpin').css('display', 'inline-block');
+
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     var url = FlowRouter.current().path;
     var getso_id = url.split('?id=');
     var currentInvoice = getso_id[getso_id.length - 1];
     var objDetails = '';
+    swal({
+        title: 'Delete Payment',
+        text: "Are you sure you want to Delete this Payment?",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.value) {
     if (getso_id[1]) {
         currentInvoice = parseInt(currentInvoice);
         var objDetails = {
@@ -12375,7 +12357,7 @@ Template.supplierpaymentcard.events({
             }
         };
 
-        await paymentService.deleteSuppDepositData(objDetails).then(function(objDetails) {
+       paymentService.deleteSuppDepositData(objDetails).then(function(objDetails) {
             $('.modal-backdrop').css('display', 'none');
             FlowRouter.go('/paymentoverview?success=true');
         }).catch(function(err) {
@@ -12396,6 +12378,8 @@ Template.supplierpaymentcard.events({
       $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/paymentoverview?success=true');
     }
+    } else {}
+  });
     // $('#deleteLineModal').modal('toggle');
   },
   "click .btnConfirmPayment": function (event) {
