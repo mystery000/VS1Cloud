@@ -586,7 +586,7 @@ Template.vs1login.onRendered(function () {
                 $('.myVS1VideoLogin').css('display', 'none');
 
                 //window.open('/dashboard', '_self');
-            
+
                 handleSetupRedirection();
 
             }
