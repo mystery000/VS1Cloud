@@ -6550,7 +6550,7 @@ Template.billcard.events({
         values.forEach(value => {
             let reportData = JSON.parse(value);
             let temp = {... reportData};
-            
+
             temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
             temp.attachments = attachment;
@@ -6568,7 +6568,7 @@ Template.billcard.events({
             }
         });
 
-        
+
     },
 
     'click  #open_print_confirm':function(event)
@@ -7261,7 +7261,7 @@ Template.billcard.events({
                         values.forEach(value => {
                             let reportData = JSON.parse(value);
                             let temp = {... reportData};
-                            
+
                             temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                             temp.attachments = attachment;
@@ -7443,7 +7443,7 @@ Template.billcard.events({
                                         Meteor.call('sendNormalEmail', reportData);
                                 }
                             }
-                        }); 
+                        });
                       if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{
