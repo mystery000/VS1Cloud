@@ -544,6 +544,7 @@ templateObject.getLastPOData = async function() {
     {
         var array_data = [];
         let lineItems = [];
+        let taxItems = {};
         object_invoce = [];
         let item_invoices = '';
 
@@ -592,6 +593,32 @@ templateObject.getLastPOData = async function() {
             let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
+
+            let targetRow = $('#' + lineID);
+            let targetTaxCode = targetRow.find('.lineTaxCode').val();
+            let qty = targetRow.find(".lineQty").val() || 0
+            let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+            const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+            if (taxDetail) {
+                let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+                let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+                if (taxDetail.Lines) {
+                    taxDetail.Lines.map((line) => {
+                        let taxCode = line.SubTaxCode;
+                        let amount = priceTotal * line.Percentage / 100;
+                        if (taxItems[taxCode]) {
+                            taxItems[taxCode] += amount;
+                        }
+                        else {
+                            taxItems[taxCode] = amount;
+                        }
+                    });
+                }
+                else {
+                    taxItems[targetTaxCode] = taxTotal;
+                }
+            }
 
 
             array_data.push([
@@ -771,9 +798,7 @@ templateObject.getLastPOData = async function() {
               };
 
         }
-
-
-
+        item_invoices.taxItems = taxItems;
 
         object_invoce.push(item_invoices);
         $("#templatePreviewModal .field_payment").show();
@@ -1256,6 +1281,27 @@ templateObject.getLastPOData = async function() {
         for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
         }
+
+            if (object_invoce[0]["taxItems"]) {
+                let taxItems = object_invoce[0]["taxItems"];
+                $("#html-2-pdfwrapper_new #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $ ${taxItems[code]}</p>
+                            </div>
+                        </div>
+                    `;
+                    $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+                });
+            }
+            $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
         }
 
         // table content
