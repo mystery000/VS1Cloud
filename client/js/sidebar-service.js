@@ -84,6 +84,11 @@ export class SideBarService extends BaseService {
     return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
 
   }
+  
+  saveSerialNumber(data)
+  {
+    return this.POST(this.ERPObjects.TSerialNumberListCurrentReport, data);
+  }
 
   removeTempateData(data)
   {
@@ -2254,6 +2259,14 @@ export class SideBarService extends BaseService {
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TTripGroup, options);
+  }
+
+  getReceiptCategory() {
+    let options = {
+      PropertyList:"ID,CategoryName,CategoryDesc,Active",
+      select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TReceiptCategory, options);
   }
 
   getAccountantCategory() {

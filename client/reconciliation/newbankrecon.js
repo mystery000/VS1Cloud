@@ -2764,7 +2764,6 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
             clientDetail = getClientDetail($('#whoDetail_' + selectedYodleeID).val(), 'supplier');
             contactName = clientDetail? clientDetail.suppliername:'';
         }
-        console.log(clientDetail);
         let discountAmount = 0;
         if (DepOrWith == "received") {
             discountAmount = clientDetail? Amount * clientDetail.discount / 100 : 0;

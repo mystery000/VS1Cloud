@@ -2261,6 +2261,9 @@ Template.stockadjustmentcard.events({
                 let tdfinalqty = $('#' + lineID + " .lineFinalQty").val();
                 let tdadjustqty = $('#' + lineID + " .lineAdjustQty").val();
                 let tdDepartment = $('#' + lineID + " .lineDepartment").val();
+                let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
 
                 if (tdproduct != "") {
 
@@ -2285,6 +2288,57 @@ Template.stockadjustmentcard.events({
 
                         }
                     };
+
+                    // Feature/ser-lot number tracking: Save Serial Numbers
+                    if (tdSerialNumber) {
+                        const serialNumbers = tdSerialNumber.split(',');
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "TPQASN",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQASN: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+                    
+                    // Feature/ser-lot number tracking: Save Lot Number
+                    if (tdLotNumber) {
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "PQABatch",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQABatch: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
 
                     //lineItemsForm.push(lineItemObjForm);
                     splashLineArray.push(lineItemObjForm);
@@ -3357,6 +3411,8 @@ Template.stockadjustmentcard.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        let selectedunit = $(target).closest('tr').find('.colAdjustQty').val();
+        localStorage.setItem('productItem', selectedunit);
         let productService = new ProductService();
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
@@ -3371,8 +3427,12 @@ Template.stockadjustmentcard.events({
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#lotNumberModal').attr('data-row', row + 1);
                     $('#lotNumberModal').modal('show');
                 } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#serialNumberModal').attr('data-row', row + 1);
                     $('#serialNumberModal').modal('show');
                 }
             });

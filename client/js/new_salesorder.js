@@ -1,5 +1,4 @@
 import {SalesBoardService} from './sales-service';
-import { TaxRateService } from "../settings/settings-service";
 import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
@@ -29,7 +28,7 @@ var template_list = [
     "Delivery Docket",
   ];
 
-
+  
 Template.new_salesorder.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
@@ -70,7 +69,6 @@ Template.new_salesorder.onCreated(() => {
     templateObject.record = new ReactiveVar({});
     templateObject.productextrasellrecords = new ReactiveVar([]);
     templateObject.defaultsaleterm = new ReactiveVar();
-    templateObject.subtaxcodes = new ReactiveVar([]);
 });
 
 Template.new_salesorder.onRendered(() => {
@@ -128,27 +126,27 @@ Template.new_salesorder.onRendered(() => {
         yearRange: "-90:+10",
     });
 
-
+    
     templateObject.getTemplateInfoNew = function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         getVS1Data('TTemplateSettings').then(function(dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                  
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
+                   
+                  
                     if(data.ttemplatesettings[i].fields.SettingName == 'Sales Orders')
                     {
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
+                            {       
                                     $('input[name="Sales Order_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                     $('#Sales_Orders_1').attr('checked','checked');
                                     }
-
+                                
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -166,7 +164,7 @@ Template.new_salesorder.onRendered(() => {
                                 {
                                     $('#Sales_Orders_3').attr('checked','checked');
                                 }
-                            }
+                            } 
 
 
                     }
@@ -174,13 +172,13 @@ Template.new_salesorder.onRendered(() => {
                     if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
                     {
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
+                            {       
                                     $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                         $('#Delivery_Docket_1').attr('checked','checked');
                                     }
-
+                                    
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -198,34 +196,34 @@ Template.new_salesorder.onRendered(() => {
                                     {
                                     $('#Delivery_Docket_3').attr('checked','checked');
                                     }
-                            }
+                            } 
 
                     }
-
+               
 
                  }
-
-
+                  
+                      
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
+          }else{ 
+                  let data = JSON.parse(dataObject[0].data);    
+                
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
+                   
+                  
                         if(data.ttemplatesettings[i].fields.SettingName == 'Sales Orders')
                         {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
+                                {       
                                         $('input[name="Sales Order_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                         $('#Sales_Orders_1').attr('checked','checked');
                                         }
-
+                                    
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -243,24 +241,24 @@ Template.new_salesorder.onRendered(() => {
                                     {
                                         $('#Sales_Orders_3').attr('checked','checked');
                                     }
-                                }
+                                } 
 
 
                         }
 
-
-
+             
+            
 
                         if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
                         {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
+                                {       
                                         $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                             $('#Delivery_Docket_1').attr('checked','checked');
                                         }
-
+                                        
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -278,31 +276,31 @@ Template.new_salesorder.onRendered(() => {
                                         {
                                         $('#Delivery_Docket_3').attr('checked','checked');
                                         }
-                                }
+                                } 
 
                         }
-
-
+                
+               
                   }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
+                   
+                
                      if(data.ttemplatesettings[i].fields.SettingName == 'Sales Orders')
                      {
                               if(data.ttemplatesettings[i].fields.Template == 1)
-                              {
+                              {       
                                       $('input[name="Sales Order_1"]').val(data.ttemplatesettings[i].fields.Description);
                                       if(data.ttemplatesettings[i].fields.Active == true)
                                       {
                                         $('#Sales_Orders_1').attr('checked','checked');
                                       }
-
+                                    
                               }
                               if(data.ttemplatesettings[i].fields.Template == 2)
                               {
@@ -320,24 +318,24 @@ Template.new_salesorder.onRendered(() => {
                                     {
                                       $('#Sales_Orders_3').attr('checked','checked');
                                     }
-                              }
+                              } 
 
 
                      }
 
-
-
+              
+             
 
                      if(data.ttemplatesettings[i].fields.SettingName == 'Delivery Docket')
                      {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
+                                {       
                                         $('input[name="Delivery Docket_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                           $('#Delivery_Docket_1').attr('checked','checked');
                                         }
-
+                                      
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -351,8 +349,8 @@ Template.new_salesorder.onRendered(() => {
    templateObject.getTemplateInfo();
 
                      }
-
-
+                
+                
 
                   }
                   $('.fullScreenSpin').css('display', 'none');
@@ -364,7 +362,7 @@ Template.new_salesorder.onRendered(() => {
       };
 
       templateObject.getTemplateInfoNew();
-
+      
       templateObject.getLastSOData = async function() {
        let lastBankAccount = "Bank";
        let lastDepartment = defaultDept || "";
@@ -1514,7 +1512,7 @@ Template.new_salesorder.onRendered(() => {
                   statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
                   country: data.tcustomervs1[i].fields.Country || ' ',
                   termsName: data.tcustomervs1[i].fields.TermsName || '',
-                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || '',
+                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
                   clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
                   discount: data.tcustomervs1[i].fields.Discount || 0
               };
@@ -4841,7 +4839,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    //$('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
+                    $('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
                 }
             }
         }
@@ -6458,7 +6456,7 @@ Template.new_salesorder.onRendered(() => {
               values.forEach(value => {
                   let reportData = JSON.parse(value);
                   let temp = {... reportData};
-
+                  
                   temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                   reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                   temp.attachments = attachment;
@@ -6488,7 +6486,7 @@ Template.new_salesorder.onRendered(() => {
                     }
                 });
 
-            })
+            })    
 
 
             return true;
@@ -6571,7 +6569,6 @@ Template.new_salesorder.onRendered(function() {
     let utilityService = new UtilityService();
     let productService = new ProductService();
     let salesService = new SalesBoardService();
-    const taxRateService = new TaxRateService();
     let tableProductList;
     const splashArrayProductList = [];
     const splashArrayTaxRateList = [];
@@ -7045,63 +7042,6 @@ Template.new_salesorder.onRendered(function() {
     };
     tempObj.getAllTaxCodes();
 
-    tempObj.getSubTaxCodes = function () {
-
-        let subTaxTableList = [];
-    
-        getVS1Data('TSubTaxVS1').then(function (dataObject) {
-          if (dataObject.length == 0) {
-            taxRateService.getSubTaxCode().then(function (data) {
-              for (let i = 0; i < data.tsubtaxcode.length; i++) {
-                var dataList = {
-                  id: data.tsubtaxcode[i].Id || '',
-                  codename: data.tsubtaxcode[i].Code || '-',
-                  description: data.tsubtaxcode[i].Description || '-',
-                  category: data.tsubtaxcode[i].Category || '-'
-                };
-    
-                subTaxTableList.push(dataList);
-              }
-    
-              tempObj.subtaxcodes.set(subTaxTableList);
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.tsubtaxcode;
-            for (let i = 0; i < useData.length; i++) {
-              var dataList = {
-                id: useData[i].Id || '',
-                codename: useData[i].Code || '-',
-                description: useData[i].Description || '-',
-                category: useData[i].Category || '-'
-              };
-    
-              subTaxTableList.push(dataList);
-            }
-    
-            tempObj.subtaxcodes.set(subTaxTableList);
-          }
-        }).catch(function (err) {
-          taxRateService.getSubTaxCode().then(function (data) {
-            for (let i = 0; i < data.tsubtaxcode.length; i++) {
-              var dataList = {
-                id: data.tsubtaxcode[i].Id || '',
-                codename: data.tsubtaxcode[i].Code || '-',
-                description: data.tsubtaxcode[i].Description || '-',
-                category: data.tsubtaxcode[i].Category || '-'
-              };
-    
-              subTaxTableList.push(dataList);
-            }
-    
-            tempObj.subtaxcodes.set(subTaxTableList);
-          });
-    
-        });
-      }
-    
-      tempObj.getSubTaxCodes();
-
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
@@ -7123,7 +7063,7 @@ Template.new_salesorder.onRendered(function() {
         { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-      ];
+      ]; 
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -8215,7 +8155,6 @@ Template.new_salesorder.events({
         let price = targetRow.find('.colUnitPriceExChange').val() || 0;
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
-        const subTaxCodes = tmpObj.subtaxcodes.get();
 
         if (!taxDetail) {
             return;
@@ -8237,16 +8176,8 @@ Template.new_salesorder.events({
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
-                let lineDescription = "";
-                // if (line.Description) {
-                //     lineDescription = line.Description;
-                // } else {
-                //     lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
-                //     lineDescription = lineDescription.description;
-                // }
-
                 taxDetailTableData.push([
-                    lineDescription,
+                    line.Description,
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
@@ -8454,347 +8385,357 @@ Template.new_salesorder.events({
 
           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 GlobalRef:"Sales Orders",
                                 Description:$('input[name="Sales Orders_1"]').val(),
                                 Template:"1",
                                 Active:sales_orders == 1 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+              
               });
-
-
+             
+        
             }).catch(function (err) {
-
-
+        
+          
             });
-
+        
            }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 Description:$('input[name="Sales Orders_1"]').val(),
                                 Template:"1",
                                 Active:sales_orders == 1 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                         addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                              
                       });
-
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                      
+                  
+                    });  
+      
            });
-
-            sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,2).then(function (data) {
-                templateid = data.ttemplatesettings;
-                var id = templateid[0].fields.ID;
-                objDetails =  {
-                type:"TTemplateSettings",
-                fields:{
-                    ID:parseInt(id),
-                    EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                    SettingName:"Sales Orders",
-                    GlobalRef:"Sales Orders",
-                    Description:$('input[name="Sales Orders_2"]').val(),
-                    Template:"2",
-                    Active:sales_orders == 2 ? true:false,
-                }
+          
+           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,2).then(function (data) {
+            templateid = data.ttemplatesettings;
+            var id = templateid[0].fields.ID;    
+            objDetails =  {
+            type:"TTemplateSettings",
+            fields:{        
+                                ID:parseInt(id),                      
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Sales Orders",
+                                GlobalRef:"Sales Orders",
+                                Description:$('input[name="Sales Orders_2"]').val(),
+                                Template:"2",
+                                Active:sales_orders == 2 ? true:false,
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                     
               });
-
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
            }).catch(function (err) {
-
-                objDetails =  {
-                    type:"TTemplateSettings",
-                    fields:{
-                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                        SettingName:"Sales Orders",
-                        Description:$('input[name="Sales Orders_2"]').val(),
-                        Template:"2",
-                        Active:sales_orders == 2 ? true:false,
-                    }
-                }
-
-                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
-                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-                    });
-
-                }).catch(function (err) {
-
-                });
-
-           });
-
-
-            sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,3).then(function (data) {
-                templateid = data.ttemplatesettings;
-                var id = templateid[0].fields.ID;
-                objDetails =  {
-                    type:"TTemplateSettings",
-                    fields:{
-                        ID:parseInt(id),
-                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                        SettingName:"Sales Orders",
-                        GlobalRef:"Sales Orders",
-                        Description:$('input[name="Sales Orders_3"]').val(),
-                        Template:"3",
-                        Active:sales_orders == 3 ? true:false,
-                    }
-                }
-
-                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                    });
-
-                }).catch(function (err) {
-
-                });
-
-           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Sales Orders",
+                                Description:$('input[name="Sales Orders_2"]').val(),
+                                Template:"2",
+                                Active:sales_orders == 2 ? true:false,
+                            }            
+                    }
+                
+                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                
+                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                             
+                      });
+                
+                    }).catch(function (err) {
+                
+                     
+                  
+                    });  
+      
+           });
+      
+      
+           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,3).then(function (data) {
+            templateid = data.ttemplatesettings;
+            var id = templateid[0].fields.ID;    
+            objDetails =  {
+            type:"TTemplateSettings",
+            fields:{        
+                                ID:parseInt(id),                      
+                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                                SettingName:"Sales Orders",
+                                GlobalRef:"Sales Orders",
+                                Description:$('input[name="Sales Orders_3"]').val(),
+                                Template:"3",
+                                Active:sales_orders == 3 ? true:false,
+                    }            
+            }
+        
+            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                     
+              });
+             
+        
+            }).catch(function (err) {
+        
+             
+          
+            });
+        
+           }).catch(function (err) {
+                    
+                    objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Sales Orders",
                                 Description:$('input[name="Sales Orders_3"]').val(),
                                 Template:"3",
                                 Active:sales_orders == 3 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                              
                       });
-
-
+                       
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                       
+                  
+                    });  
+      
            });
 
            sideBarService.getTemplateNameandEmployeId("Delivery Docket",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_1"]').val(),
                                 Template:"1",
                                 Active:delivery_docket == 1 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));     
+                      
               });
-
-
+              
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
            }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_1"]').val(),
                                 Template:"1",
                                 Active:delivery_docket == 1 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                            
                       });
-
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+      
            });
-
-
-
+    
+    
+    
            sideBarService.getTemplateNameandEmployeId("Delivery Docket",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_2"]').val(),
                                 Template:"2",
                                 Active:delivery_docket == 2 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                         
               });
-
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
            }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_2"]').val(),
                                 Template:"2",
                                 Active:delivery_docket == 2 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                            
                       });
-
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+      
            });
-
-
+    
+    
            sideBarService.getTemplateNameandEmployeId("Delivery Docket",emid,3).then(function (data) {
-
+    
             $('.fullScreenSpin').css('display','none');
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Delivery Docket",
                                 GlobalRef:"Delivery Docket",
                                 Description:$('input[name="Delivery Docket_3"]').val(),
                                 Template:"3",
                                 Active:delivery_docket == 3 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                  
               });
-
-
-
+            
+              
+        
             }).catch(function (err) {
               $('.fullScreenSpin').css('display','none');
+    
+        
+              
+          
             });
-
+        
            }).catch(function (err) {
                    $('.fullScreenSpin').css('display','none');
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Delivery Docket",
                                   Description:$('input[name="Delivery Docket_3"]').val(),
                                   Template:"3",
                                   Active:delivery_docket == 3 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+    
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                              
                       });
-
-
-
+    
+                 
+                        
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+      
            });
-
+ 
         $('#html-2-pdfwrapper-new').css('display', 'block');
         if ($('.edtCustomerEmail').val() != "") {
             $('.pdfCustomerName').html($('#edtCustomerName').val());
@@ -9262,6 +9203,9 @@ Template.new_salesorder.events({
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
+                let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
 
                 if (tdproduct != "") {
 
@@ -9278,6 +9222,58 @@ Template.new_salesorder.events({
                             DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
                         }
                     };
+
+                    // Feature/ser-lot number tracking: Save Serial Numbers
+                    if (tdSerialNumber) {
+                        const serialNumbers = tdSerialNumber.split(',');
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "TPQASN",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQASN: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
+                    // Feature/ser-lot number tracking: Save Lot Number
+                    if (tdLotNumber) {
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "PQABatch",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQABatch: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
                     lineItemsForm.push(lineItemObjForm);
                     splashLineArray.push(lineItemObjForm);
                 }
@@ -11738,6 +11734,8 @@ Template.new_salesorder.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        let selectedunit = $(target).closest('tr').find('.lineQty').val();
+        localStorage.setItem('productItem', selectedunit);
         let productService = new ProductService();
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
@@ -11752,8 +11750,12 @@ Template.new_salesorder.events({
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#lotNumberModal').attr('data-row', row + 1);
                     $('#lotNumberModal').modal('show');
                 } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#serialNumberModal').attr('data-row', row + 1);
                     $('#serialNumberModal').modal('show');
                 }
             });

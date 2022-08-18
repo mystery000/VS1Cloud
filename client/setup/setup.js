@@ -24,11 +24,11 @@ const contactService = new ContactService();
 const refreshTableTimout = 300;
 
 /**
- * This will get the TCompanyInfo 
+ * This will get the TCompanyInfo
  * @returns {Object}
  */
 export const getCompanyInfo = async () => {
- 
+
   const headers = ApiService.getHeaders();
   //const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard", isUrl: false});
 
@@ -46,8 +46,8 @@ export const getCompanyInfo = async () => {
 
 }
 
-export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {    
-    
+export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
+
     let ERPIPAddress = localStorage.getItem('EIPAddress');
     let ERPUsername = localStorage.getItem('EUserName');
     let ERPPassword = localStorage.getItem('EPassword');
@@ -64,7 +64,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
           // handle error here
         } else {
           if( result.data.tcompanyinfo.length > 0 ){
-            let data = result.data.tcompanyinfo[0];   
+            let data = result.data.tcompanyinfo[0];
             localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
             if(data.IsSetUpWizard == true) {
               window.open(onSetupFinished, '_self');
@@ -85,7 +85,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
 
 
 /**
- * 
+ *
  * @returns {boolean} true / false
  */
 export const isSetupFinished  = async () => {
@@ -94,7 +94,7 @@ export const isSetupFinished  = async () => {
   // But it is not working, because we need to hit the right URL
   // const companyInfo = await getCompanyInfo();
   // return companyInfo.IsSetUpWizard == true ? false : true;
- 
+
 
   const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   if (isFinished == true || isFinished == "true") {
@@ -354,7 +354,7 @@ Template.setup.onCreated(() => {
 Template.setup.onRendered(function () {
   LoadingOverlay.show();
   const templateObject = Template.instance();
-  
+
 
   /**
    * This function will autoredirect to dashboard if setup is finished
@@ -842,7 +842,7 @@ Template.setup.onRendered(function () {
                 }, 100);
               }
 
-              
+
 
               if ($.fn.dataTable.isDataTable("#paymentmethodList")) {
                 $("#paymentmethodList").DataTable().destroy();
@@ -1613,7 +1613,7 @@ Template.setup.onRendered(function () {
       if ($.fn.dataTable.isDataTable("#termsList")) {
         $("#termsList").DataTable().destroy();
       }
-     
+
 
       setTimeout(function () {
         $("#termsList")
@@ -2381,14 +2381,14 @@ Template.setup.onRendered(function () {
 
     await templateObject.currentEmployees.set(employeeList);
 
-  
+
 
     if (await templateObject.currentEmployees.get()) {
 
       if ($.fn.dataTable.isDataTable("#employeeListTable")) {
         $("#employeeListTable").DataTable().destroy();
       }
-      
+
       setTimeout(() => {
         $("#employeeListTable")
           .DataTable({
@@ -3107,7 +3107,7 @@ Template.setup.onRendered(function () {
       if ($.fn.dataTable.isDataTable("#tblTaxRate")) {
         $("#tblTaxRate").DataTable().destroy();
       }
-      
+
       $("#tblTaxRate").DataTable({
         data: splashArrayTaxRateList,
         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -4257,8 +4257,8 @@ Template.setup.onRendered(function () {
 
   templateObject.lazyLoader(currentStep);
 
- 
-  
+
+
 });
 
 function isStepActive(stepId) {
@@ -4297,7 +4297,7 @@ Template.setup.events({
   },
   "click .confirmBtn": (event, templateObject) => {
     LoadingOverlay.show();
-  
+
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
     goToNextStep(stepId, true, (step) => {
       templateObject.lazyLoader(step);
@@ -6065,12 +6065,12 @@ Template.setup.events({
     }
 
     if (termsID == "") {
-      
+
       taxRateService
         .checkTermByName(termsName)
         .then(function (data) {
           termsID = data.tterms[0].Id;
-         
+
           objDetails = {
             type: "TTerms",
             fields: {
@@ -6139,14 +6139,45 @@ Template.setup.events({
             },
           };
 
-          taxRateService
-            .saveTerms(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTermsVS1()
-                .then(function (dataReload) {
-                  addVS1Data("TTermsVS1", JSON.stringify(dataReload))
-                    .then(function (datareturn) {
+          taxRateService.saveTerms(objDetails).then(function (objResponse) {
+              if( isSupplierDefault == true ||  isCustomerDefault == true ){
+                updateObjDetails = {
+                  type: "TTerms",
+                  fields: {
+                    ID: parseInt(objResponse.fields.ID),
+                    isPurchasedefault: isSupplierDefault,
+                    isSalesdefault: isCustomerDefault
+                  },
+                };
+                taxRateService.saveTerms(updateObjDetails).then(function () {
+                  sideBarService.getTermsVS1().then(function (dataReload) {
+                    addVS1Data("TTermsVS1", JSON.stringify(dataReload)).then(function (datareturn) {
+                      Meteor._reload.reload();
+                    }).catch(function (err) {
+                      Meteor._reload.reload();
+                    });
+                  }).catch(function (err) {
+                    Meteor._reload.reload();
+                  });
+                })
+                .catch(function (err) {
+                  swal({
+                    title: "Oooops...",
+                    text: err,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "Try Again",
+                  }).then((result) => {
+                    if (result.value) {
+                      Meteor._reload.reload();
+                    } else if (result.dismiss === "cancel") {
+                    }
+                  });
+                  LoadingOverlay.hide();
+                });
+              }
+              sideBarService.getTermsVS1().then(function (dataReload) {
+                  addVS1Data("TTermsVS1", JSON.stringify(dataReload)).then(function (datareturn) {
                       Meteor._reload.reload();
                     })
                     .catch(function (err) {
@@ -6174,7 +6205,7 @@ Template.setup.events({
             });
         });
     } else {
-      
+
       objDetails = {
         type: "TTerms",
         fields: {
@@ -6319,7 +6350,7 @@ Template.setup.events({
 
         isSalesDefault = tr.find(".colCustomerDef .chkBox").is(":checked");
         isPurchaseDefault = tr.find(".colSupplierDef .chkBox").is(":checked");
-        
+
 
         if (isEOM == true || isEOMPlus == true) {
           isDays = false;
