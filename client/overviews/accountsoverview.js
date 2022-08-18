@@ -34,11 +34,11 @@ Template.accountsoverview.onRendered(function () {
   const dataTableList = [];
   const tableHeaderList = [];
   let categories = [];
-  categories.push('Materials');
-  categories.push('Meals & Entertainment');
-  categories.push('Office Supplies');
-  categories.push('Travel');
-  categories.push('Vehicle');
+  // categories.push('Materials');
+  // categories.push('Meals & Entertainment');
+  // categories.push('Office Supplies');
+  // categories.push('Travel');
+  // categories.push('Vehicle');
   let usedCategories = [];
   let currentId = FlowRouter.current().context.hash;
 

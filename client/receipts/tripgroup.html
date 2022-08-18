@@ -119,50 +119,6 @@
                                             <button class="btn btn-primary btnAddNew" type="button" style="margin: 8px 0px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Add New Trip-Group</button>
                                         </div>
                                     </div>
-                                    <style>
-                                        .newTaxRate {
-                                            display: none;
-                                            padding: 16px;
-                                            margin: 16px 0px;
-                                        }
-                                    </style>
-                                    <div class="card newTaxRate" id="newTaxRate">
-                                        <div class="row no-gutters d-xl-flex flex-column justify-content-xl-center">
-                                            <div class="col d-xl-flex align-items-xl-end">
-                                                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start" style="margin: 8px;">
-                                                    <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Trip-Group ID</label><input type="text" class="form-control" style="width: 150px;" readonly="">
-                                                </div>
-                                                <div class="form-group d-xl-flex flex-column justify-content-xl-start align-items-xl-start" style="margin: 8px;">
-                                                    <label class="text-nowrap" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Header Trip-Group</label>
-                                                    <select class="custom-select">
-                                                        <optgroup label="This is a group">
-                                                            <option value="12" selected="">This is item 1</option>
-                                                            <option value="13">This is item 2</option>
-                                                            <option value="14">This is item 3</option>
-                                                        </optgroup>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group d-xl-flex flex-column flex-grow-1 justify-content-xl-start align-items-xl-start" style="margin: 8px;">
-                                                    <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Trip-Group Name</label><input type="text" class="form-control">
-                                                </div>
-                                                <div class="form-group d-xl-flex flex-column flex-grow-1 justify-content-xl-start align-items-xl-start" style="margin: 8px;">
-                                                    <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Description</label>
-                                                    <input type="text" class="form-control">
-                                                </div>
-                                                <div class="form-group" style="margin: 8px;">
-                                                    <div class="custom-control custom-switch" style="margin: 8px;">
-                                                        <input class="custom-control-input" type="checkbox" id="formCheck-2"><label class="custom-control-label" for="formCheck-2">Active</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row no-gutters">
-                                            <div class="col">
-                                                <button class="btn btn-secondary float-right btnCloseAddNewDept" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                <!-- <button class="btn btn-primary float-right" type="button" style="margin: 8px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button> -->
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="">
                                         <style>
                                             .hiddenColumn{
@@ -197,7 +153,7 @@
                                         <table id="tripGroupList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tripGroupList">
                                             <thead>
                                             <tr class="dnd-moved">
-                                                <th class="th colName" style="width:150px">Trip-Group Name</th>
+                                                <th class="th colName">Trip-Group Name</th>
                                                 <th class="th colDescription" >Description</th>
                                                 <th class="th colDelete" style="width:20px;"></th>
                                             </tr>

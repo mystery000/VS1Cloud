@@ -109,7 +109,6 @@ Template.tripgroup.onRendered(function() {
     });
 });
 
-
 Template.tripgroup.events({
     'click .chkDatatable' : function(event){
         const columns = $('#tripGroupList th');
@@ -169,14 +168,6 @@ Template.tripgroup.events({
             location.reload(true);
         });
     },
-    'click .btnAddNew': function () {
-        $('#newTaxRate').css('display','block');
-
-    },
-    'click .btnCloseAddNewDept': function () {
-        $('#newTaxRate').css('display','none');
-
-    },
     'click .btnDelete': function () {
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
@@ -224,24 +215,27 @@ Template.tripgroup.events({
         if (tripGroupName == '') {
             swal('Trip-Group name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
             return false;
         }
         let tripGroupDesc = $('#edtTripGroupDesc').val();
         let objDetails = '';
         if (tripGroupID == "") {
             receiptService.getOneTripGroupDataExByName(tripGroupName).then(function (data) {
-                tripGroupID = data.ttripgroup[0].Id;
-                objDetails = {
-                    type: "TTripGroup",
-                    fields: {
-                        ID: parseInt(tripGroupID)||0,
-                        Active: true,
-                        TripName: tripGroupName,
-                        Description: tripGroupDesc
-                    }
-                };
-                doSaveTripGroup(objDetails);
+                if (data.ttripgroup.length > 0) {
+                    swal('Trip-Group name duplicated', '', 'warning');
+                    $('.fullScreenSpin').css('display','none');
+                    return false;
+                } else {
+                    objDetails = {
+                        type: "TTripGroup",
+                        fields: {
+                            Active: true,
+                            TripName: tripGroupName,
+                            Description: tripGroupDesc
+                        }
+                    };
+                    doSaveTripGroup(objDetails);
+                }
             }).catch(function (err) {
                 objDetails = {
                     type: "TTripGroup",
@@ -251,7 +245,7 @@ Template.tripgroup.events({
                         Description: tripGroupDesc
                     }
                 };
-                doSaveTripGroup(objDetails);
+                // doSaveTripGroup(objDetails);
             });
         } else {
             objDetails = {

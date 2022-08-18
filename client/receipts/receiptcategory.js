@@ -3,21 +3,21 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
-Template.tripgroup.onCreated(function(){
+Template.receiptcategory.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.tableheaderrecords = new ReactiveVar([]);
-    templateObject.tripgrouprecords = new ReactiveVar();
+    templateObject.receiptcategoryrecords = new ReactiveVar();
 });
 
-Template.tripgroup.onRendered(function() {
+Template.receiptcategory.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
     let receiptService = new ReceiptService();
-    const tripGroupList = [];
+    const receiptCategoryList = [];
     const dataTableList = [];
     const tableHeaderList = [];
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tripGroupList', function(error, result){
+    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'receiptCategoryList', function(error, result){
         if(error){
 
         }else{
@@ -42,37 +42,37 @@ Template.tripgroup.onRendered(function() {
         });
     }
 
-    templateObject.getTripGroupList = function(){
-        getVS1Data('TTripGroup').then(function (dataObject) {
+    templateObject.getReceiptCategoryList = function(){
+        getVS1Data('TReceiptCategory').then(function (dataObject) {
             if(dataObject.length == 0){
-                receiptService.getAllTripGroups().then(function(data){
-                    setTripGroup(data);
+                receiptService.getAllReceiptCategorys().then(function(data){
+                    setReceiptCategory(data);
                 });
             }else{
                 let data = JSON.parse(dataObject[0].data);
-                setTripGroup(data);
+                setReceiptCategory(data);
             }
         }).catch(function (err) {
-            receiptService.getAllTripGroups().then(function(data){
-                setTripGroup(data);
+            receiptService.getAllReceiptCategorys().then(function(data){
+                setReceiptCategory(data);
             });
         });
     };
-    function setTripGroup(data) {
-        for (let i in data.ttripgroup){
-            if (data.ttripgroup.hasOwnProperty(i)) {
+    function setReceiptCategory(data) {
+        for (let i in data.treceiptcategory){
+            if (data.treceiptcategory.hasOwnProperty(i)) {
                 let Obj = {
-                    id: data.ttripgroup[i].Id || ' ',
-                    tripName: data.ttripgroup[i].TripName || ' ',
-                    description: data.ttripgroup[i].Description || ' ',
+                    id: data.treceiptcategory[i].Id || ' ',
+                    categoryName: data.treceiptcategory[i].CategoryName || ' ',
+                    description: data.treceiptcategory[i].CategoryDesc || ' ',
                 };
-                tripGroupList.push(Obj);
+                receiptCategoryList.push(Obj);
             }
         }
-        templateObject.tripgrouprecords.set(tripGroupList);
+        templateObject.receiptcategoryrecords.set(receiptCategoryList);
         $('.fullScreenSpin').css('display','none');
     }
-    templateObject.getTripGroupList();
+    templateObject.getReceiptCategoryList();
 
     $(document).on('click', '.table-remove', function() {
         event.stopPropagation();
@@ -80,7 +80,7 @@ Template.tripgroup.onRendered(function() {
         const targetID = $(event.target).closest('tr').attr('id'); // table row ID
         $('#selectDeleteLineID').val(targetID);
         $('#deleteLineModal').modal('toggle');
-        // if ($('.tripGroupList tbody>tr').length > 1) {
+        // if ($('.receiptCategoryList tbody>tr').length > 1) {
         // // if(confirm("Are you sure you want to delete this row?")) {
         // this.click;
         // $(this).closest('tr').remove();
@@ -90,18 +90,18 @@ Template.tripgroup.onRendered(function() {
         // }
     });
 
-    $('#tripGroupList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
+    $('#receiptCategoryList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
         let listData = $(this).closest('tr').attr('id');
         if(listData){
-            $('#add-tripgroup-title').text('Edit Trip-Group');
+            $('#add-receiptcategory-title').text('Edit Trip-Group');
             if (listData !== '') {
                 listData = Number(listData);
-                const tripGroupID = listData || '';
-                const tripGroupName = $(event.target).closest("tr").find(".colName").text() || '';
-                const tripGroupDesc = $(event.target).closest("tr").find(".colDescription").text() || '';
-                $('#edtTripGroupID').val(tripGroupID);
-                $('#edtTripGroupName').val(tripGroupName);
-                $('#edtTripGroupDesc').val(tripGroupDesc);
+                const receiptCategoryID = listData || '';
+                const receiptCategoryName = $(event.target).closest("tr").find(".colName").text() || '';
+                const receiptCategoryDesc = $(event.target).closest("tr").find(".colDescription").text() || '';
+                $('#edtReceiptCategoryID').val(receiptCategoryID);
+                $('#edtReceiptCategoryName').val(receiptCategoryName);
+                $('#edtReceiptCategoryDesc').val(receiptCategoryDesc);
                 $(this).closest('tr').attr('data-target', '#myModal');
                 $(this).closest('tr').attr('data-toggle', 'modal');
             }
@@ -109,9 +109,9 @@ Template.tripgroup.onRendered(function() {
     });
 });
 
-Template.tripgroup.events({
+Template.receiptcategory.events({
     'click .chkDatatable' : function(event){
-        const columns = $('#tripGroupList th');
+        const columns = $('#receiptCategoryList th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
         $.each(columns, function(i,v) {
             let className = v.classList;
@@ -129,7 +129,7 @@ Template.tripgroup.events({
     },
     'click .btnOpenSettings' : function(event){
         let templateObject = Template.instance();
-        const columns = $('#tripGroupList th');
+        const columns = $('#receiptCategoryList th');
         const tableHeaderList = [];
         let sTible = "";
         let sWidth = "";
@@ -158,8 +158,8 @@ Template.tripgroup.events({
     },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');
-        sideBarService.getTripGroup().then(function(dataReload) {
-            addVS1Data('TTripGroup',JSON.stringify(dataReload)).then(function (datareturn) {
+        sideBarService.getReceiptCategory().then(function(dataReload) {
+            addVS1Data('TReceiptCategory',JSON.stringify(dataReload)).then(function (datareturn) {
                 location.reload(true);
             }).catch(function (err) {
                 location.reload(true);
@@ -168,28 +168,20 @@ Template.tripgroup.events({
             location.reload(true);
         });
     },
-    'click .btnAddNew': function () {
-        $('#newTaxRate').css('display','block');
-
-    },
-    'click .btnCloseAddNewDept': function () {
-        $('#newTaxRate').css('display','none');
-
-    },
     'click .btnDelete': function () {
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
-        let tripGroupId = $('#selectDeleteLineID').val();
+        let receiptCategoryId = $('#selectDeleteLineID').val();
         let objDetails = {
-            type: "TTripGroup",
+            type: "TReceiptCategory",
             fields: {
-                Id: parseInt(tripGroupId),
+                Id: parseInt(receiptCategoryId),
                 Active: false
             }
         };
-        receiptService.saveTripGroup(objDetails).then(function (objDetails) {
-            sideBarService.getTripGroup().then(function(dataReload) {
-                addVS1Data('TTripGroup',JSON.stringify(dataReload)).then(function (datareturn) {
+        receiptService.saveReceiptCategory(objDetails).then(function (objDetails) {
+            sideBarService.getReceiptCategory().then(function(dataReload) {
+                addVS1Data('TReceiptCategory',JSON.stringify(dataReload)).then(function (datareturn) {
                     location.reload(true);
                 }).catch(function (err) {
                     location.reload(true);
@@ -218,56 +210,60 @@ Template.tripgroup.events({
     'click .btnSave': function () {
         $('.fullScreenSpin').css('display','inline-block');
         let receiptService = new ReceiptService();
-        let tripGroupID = $('#edtTripGroupID').val();
-        let tripGroupName = $('#edtTripGroupName').val();
-        if (tripGroupName == '') {
+        let receiptCategoryID = $('#edtReceiptCategoryID').val();
+        let receiptCategoryName = $('#edtReceiptCategoryName').val();
+        if (receiptCategoryName == '') {
             swal('Trip-Group name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display','none');
-            e.preventDefault();
             return false;
         }
-        let tripGroupDesc = $('#edtTripGroupDesc').val();
+        let receiptCategoryDesc = $('#edtReceiptCategoryDesc').val();
         let objDetails = '';
-        if (tripGroupID == "") {
-            receiptService.getOneTripGroupDataExByName(tripGroupName).then(function (data) {
-                tripGroupID = data.ttripgroup[0].Id;
-                objDetails = {
-                    type: "TTripGroup",
-                    fields: {
-                        ID: parseInt(tripGroupID)||0,
-                        Active: true,
-                        TripName: tripGroupName,
-                        Description: tripGroupDesc
-                    }
-                };
-                doSaveTripGroup(objDetails);
+        if (receiptCategoryID == "") {
+            receiptService.getOneReceiptCategoryDataExByName(receiptCategoryName).then(function (data) {
+                if (data.treceiptcategory.length > 0 ) {
+                    swal('Category name duplicated.', '', 'warning');
+                    $('.fullScreenSpin').css('display','none');
+                    return false;
+                } else {
+                    objDetails = {
+                        type: "TReceiptCategory",
+                        fields: {
+                            ID: parseInt(receiptCategoryID)||0,
+                            Active: true,
+                            CategoryName: receiptCategoryName,
+                            CategoryDesc: receiptCategoryDesc
+                        }
+                    };
+                    doSaveReceiptCategory(objDetails);
+                }
             }).catch(function (err) {
                 objDetails = {
-                    type: "TTripGroup",
+                    type: "TReceiptCategory",
                     fields: {
                         Active: true,
-                        TripName: tripGroupName,
-                        Description: tripGroupDesc
+                        CategoryName: receiptCategoryName,
+                        CategoryDesc: receiptCategoryDesc
                     }
                 };
-                doSaveTripGroup(objDetails);
+                // doSaveReceiptCategory(objDetails);
             });
         } else {
             objDetails = {
-                type: "TTripGroup",
+                type: "TReceiptCategory",
                 fields: {
-                    ID: parseInt(tripGroupID),
+                    ID: parseInt(receiptCategoryID),
                     Active: true,
-                    TripName: tripGroupName,
-                    Description: tripGroupDesc
+                    CategoryName: receiptCategoryName,
+                    CategoryDesc: receiptCategoryDesc
                 }
             };
-            doSaveTripGroup(objDetails);
+            doSaveReceiptCategory(objDetails);
         }
-        function doSaveTripGroup(objDetails) {
-            receiptService.saveTripGroup(objDetails).then(function (objDetails) {
-                sideBarService.getTripGroup().then(function(dataReload) {
-                    addVS1Data('TTripGroup',JSON.stringify(dataReload)).then(function (datareturn) {
+        function doSaveReceiptCategory(objDetails) {
+            receiptService.saveReceiptCategory(objDetails).then(function (objDetails) {
+                sideBarService.getReceiptCategory().then(function(dataReload) {
+                    addVS1Data('TReceiptCategory',JSON.stringify(dataReload)).then(function (datareturn) {
                         location.reload(true);
                     }).catch(function (err) {
                         location.reload(true);
@@ -294,10 +290,10 @@ Template.tripgroup.events({
         }
     },
     'click .btnAdd': function () {
-        $('#add-tripgroup-title').text('Add New Trip-Group');
-        $('#edtTripGroupID').val('');
-        $('#edtTripGroupName').val('');
-        $('#edtTripGroupDesc').val('');
+        $('#add-receiptcategory-title').text('Add New Trip-Group');
+        $('#edtReceiptCategoryID').val('');
+        $('#edtReceiptCategoryName').val('');
+        $('#edtReceiptCategoryDesc').val('');
     },
     'click .btnBack':function(event){
         event.preventDefault();
@@ -305,21 +301,21 @@ Template.tripgroup.events({
     },
 });
 
-Template.tripgroup.helpers({
+Template.receiptcategory.helpers({
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },
-    tripgrouprecords: () => {
-        let arr = Template.instance().tripgrouprecords.get();
+    receiptcategoryrecords: () => {
+        let arr = Template.instance().receiptcategoryrecords.get();
         if (arr != undefined && arr.length > 0) {
             return arr.sort(function(a, b){
-                if (a.tripName == 'NA') {
+                if (a.categoryName == 'NA') {
                     return 1;
                 }
-                else if (b.tripName == 'NA') {
+                else if (b.categoryName == 'NA') {
                     return -1;
                 }
-                return (a.tripName.toUpperCase() > b.tripName.toUpperCase()) ? 1 : -1;
+                return (a.categoryName.toUpperCase() > b.categoryName.toUpperCase()) ? 1 : -1;
             });
         } else {
             return arr;
