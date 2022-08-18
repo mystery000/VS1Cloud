@@ -103,8 +103,6 @@ Template.balancesheetreport.onRendered(() => {
             await reportService.getBalanceSheetReport(dateAsOf) :
             JSON.parse(localStorage.getItem("VS1BalanceSheet_Report"));
 
-        console.log("data", data);
-
         let records = [];
         if (data.balancesheetreport) {
             let date = new Date(dateAsOf);
