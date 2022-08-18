@@ -36,8 +36,8 @@
     </div>
     <div class="row align-items-center mb-2">
         <div class="col-4">
-            <a href="#" class="progress progress-sm asd" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 36px;" title="">
-                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+            <a href="#" class="progress progress-sm asd" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 36px;" title=""><!--style="width: {{salespercTotal}}%; margin-left: calc(100%-{{salespercTotal}}%);"-->
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{salespercTotal}}" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
                     <span class="spnTotalSales" style="text-align: right; padding-right: 10px;"></span>
                 </div>
             </a>
@@ -60,8 +60,8 @@
     <div class="row align-items-center mb-2">
         <div class="col-4">
             <a href="#" class="progress progress-sm asd" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 36px;" title="">
-                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="100" aria-valuemin="0" aria-valuemax="50" style="width: 50%; margin-left: 50%;">
-                    <span class="spnTotalGross" style="text-align: right; padding-right: 10px;"></span>
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{grossprofitpercTotal}}" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                    <span class="spnGrossProfit" style="text-align: right; padding-right: 10px;"></span>
                 </div>
             </a>
         </div>
@@ -71,7 +71,7 @@
         <div class="col-4">
             <a href="#" class="progress progress-sm asd" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 36px;" title="">
                 <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100" style="width: 76%;">
-                    <span class="spnTotalGross2" style="text-align: left; padding-left: 10px;"></span>
+                    <span class="spnGrossProfit2" style="text-align: left; padding-left: 10px;"></span>
                 </div>
             </a>
         </div>
@@ -83,7 +83,7 @@
     <div class="row align-items-center mb-2">
         <div class="col-4">
             <a href="#" class="progress progress-sm asd" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 36px;" title="">
-                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%; margin-left: 25%;">
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{expensepercTotal}}" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
                     <span class="spnTotalExpense" style="text-align: right; padding-right: 10px;"></span>
                 </div>
             </a>
@@ -106,7 +106,7 @@
     <div class="row align-items-center mb-2">
         <div class="col-4">
             <a href="#" class="progress progress-sm asd" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 36px;" title="">
-                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%; margin-left: 75%;">
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{netincomepercTotal}}" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
                     <span class="spnTotalnetincome" style="text-align: right; padding-right: 10px;"></span>
                 </div>
             </a>
