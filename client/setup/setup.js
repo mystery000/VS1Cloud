@@ -1,3 +1,4 @@
+import { Meteor, fetch } from "meteor/meteor";
 import { ReactiveVar } from "meteor/reactive-var";
 import { OrganisationService } from "../js/organisation-service";
 import { CountryService } from "../js/country-service";
@@ -11,6 +12,8 @@ import User from "../js/Api/Model/User";
 import { AccountService } from "../accounts/account-service";
 import "jquery-editable-select";
 import { ContactService } from "../contacts/contact-service";
+import { BaseService } from "../js/base-service";
+import ApiService from "../js/Api/Module/ApiService";
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
@@ -19,6 +22,86 @@ const contactService = new ContactService();
 // let purchaseService = new PurchaseBoardService();
 
 const refreshTableTimout = 300;
+
+/**
+ * This will get the TCompanyInfo
+ * @returns {Object}
+ */
+export const getCompanyInfo = async () => {
+
+  const headers = ApiService.getHeaders();
+  //const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard", isUrl: false});
+
+  const url = "https://sandboxdb.vs1cloud.com:4443/erpapi/TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard";
+  const response = await fetch(url, {
+    headers: headers,
+    method: "GET"
+  });
+
+  if(response.status >= 200 && response.status < 301) {
+    const data = await response.json();
+    const companyInfo = data.tcompanyinfo[0];
+    return companyInfo;
+  }
+
+}
+
+export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
+
+    let ERPIPAddress = localStorage.getItem('EIPAddress');
+    let ERPUsername = localStorage.getItem('EUserName');
+    let ERPPassword = localStorage.getItem('EPassword');
+    let ERPDatabase = localStorage.getItem('EDatabase');
+    let ERPPort = localStorage.getItem('EPort');
+    const apiUrl = `https://${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard`;
+    const _headers = {
+        database: ERPDatabase,
+        username: ERPUsername,
+        password: ERPPassword
+    };
+    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+        if (error) {
+          // handle error here
+        } else {
+          if( result.data.tcompanyinfo.length > 0 ){
+            let data = result.data.tcompanyinfo[0];
+            localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+            if(data.IsSetUpWizard == true) {
+              window.open(onSetupFinished, '_self');
+            } else {
+              window.open(onSetupUnFinished, '_self');
+            }
+          }
+        }
+    });
+     // isSetupFinished().then(boolean => {
+    //   if(boolean == true) {
+    //    window.open(onSetupFinished, '_self');
+    //   } else {
+    //    window.open(onSetupUnFinished, '_self');
+    //   }
+    // });
+};
+
+
+/**
+ *
+ * @returns {boolean} true / false
+ */
+export const isSetupFinished  = async () => {
+
+  // This is to get from remote server the IsSetupWizard status
+  // But it is not working, because we need to hit the right URL
+  // const companyInfo = await getCompanyInfo();
+  // return companyInfo.IsSetUpWizard == true ? false : true;
+
+
+  const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+  if (isFinished == true || isFinished == "true") {
+    return true;
+  }
+  return false;
+}
 
 function MakeNegative() {
   $("td").each(function () {
@@ -33,6 +116,7 @@ function MakeNegative() {
 
 const numberOfSteps = 10;
 
+
 function setAlreadyLoaded(step, bool = false) {
   return localStorage.setItem(`SETUP_STEP_ALREADY-${step}`, bool);
 }
@@ -43,8 +127,8 @@ function isAlreadyLoaded(step) {
   return string == "true" || string == true ? true : false;
 }
 
-function getCurrentStep() {
-  const step = localStorage.getItem("VS1Cloud_SETUP_STEP");
+function getCurrentStep(onNaN = 1) {
+  const step = localStorage.getItem("VS1Cloud_SETUP_STEP") || onNaN;
   return parseInt(step);
 }
 
@@ -135,6 +219,11 @@ function isClickableStep(stepId) {
   }
   return false;
 }
+
+function setSetupFinished() {
+  return localStorage.setItem("IS_SETUP_FINISHED", true);
+}
+
 
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
@@ -266,6 +355,7 @@ Template.setup.onRendered(function () {
   LoadingOverlay.show();
   const templateObject = Template.instance();
 
+
   /**
    * This function will autoredirect to dashboard if setup is finished
    */
@@ -280,7 +370,6 @@ Template.setup.onRendered(function () {
   //templateObject.isSetupFinished();
   // Get step local storage variable and set step
   const currentStep = getCurrentStep();
-
   templateObject.loadSteps = () => {
     let _steps = [];
     for (let i = 1; i <= numberOfSteps; i++) {
@@ -753,7 +842,7 @@ Template.setup.onRendered(function () {
                 }, 100);
               }
 
-              
+
 
               if ($.fn.dataTable.isDataTable("#paymentmethodList")) {
                 $("#paymentmethodList").DataTable().destroy();
@@ -1524,7 +1613,7 @@ Template.setup.onRendered(function () {
       if ($.fn.dataTable.isDataTable("#termsList")) {
         $("#termsList").DataTable().destroy();
       }
-     
+
 
       setTimeout(function () {
         $("#termsList")
@@ -2292,14 +2381,14 @@ Template.setup.onRendered(function () {
 
     await templateObject.currentEmployees.set(employeeList);
 
-  
+
 
     if (await templateObject.currentEmployees.get()) {
 
       if ($.fn.dataTable.isDataTable("#employeeListTable")) {
         $("#employeeListTable").DataTable().destroy();
       }
-      
+
       setTimeout(() => {
         $("#employeeListTable")
           .DataTable({
@@ -3018,7 +3107,7 @@ Template.setup.onRendered(function () {
       if ($.fn.dataTable.isDataTable("#tblTaxRate")) {
         $("#tblTaxRate").DataTable().destroy();
       }
-      
+
       $("#tblTaxRate").DataTable({
         data: splashArrayTaxRateList,
         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -4167,6 +4256,9 @@ Template.setup.onRendered(function () {
   };
 
   templateObject.lazyLoader(currentStep);
+
+
+
 });
 
 function isStepActive(stepId) {
@@ -4203,9 +4295,9 @@ Template.setup.events({
     setCurrentStep(1);
     templateObject.loadSteps();
   },
-  "click .confirmBtn": (event) => {
+  "click .confirmBtn": (event, templateObject) => {
     LoadingOverlay.show();
-    let templateObject = Template.instance();
+
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
     goToNextStep(stepId, true, (step) => {
       templateObject.lazyLoader(step);
@@ -4233,9 +4325,8 @@ Template.setup.events({
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
   },
-  "click .btnBack": function (event) {
+  "click .btnBack": (event, templateObject) => {
     LoadingOverlay.show();
-    let templateObject = Template.instance();
     let skippedSteps = templateObject.skippedSteps.get();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
@@ -4267,8 +4358,7 @@ Template.setup.events({
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
   },
-  "click .gotToStepID": (event) => {
-    let templateObj = Template.instance();
+  "click .gotToStepID": (event, templateObj) => {
     const stepId = parseInt($(event.currentTarget).attr("data-step-id"));
 
     $(".setup-step").removeClass("show");
@@ -5926,41 +6016,43 @@ Template.setup.events({
 
     let isDays = false;
     let is30days = false;
-    let isEOM = false;
-    let isEOMPlus = false;
+    let isEOM = $("#addTermModal #isEOM").is(":checked");
+    let isEOMPlus = $("#addTermModal #isEOMPlus").is(":checked");
     let days = 0;
 
-    let isSalesdefault = false;
-    let isPurchasedefault = false;
+    let isCustomerDefault = $("#addTermModal #chkCustomerDef").is(":checked");
+    let isSupplierDefault = $("#addTermModal #chkSupplierDef").is(":checked");
+
     if (termdays.replace(/\s/g, "") != "") {
       isDays = true;
     } else {
       isDays = false;
     }
 
-    if ($("#isEOM").is(":checked")) {
-      isEOM = true;
-    } else {
-      isEOM = false;
-    }
+    // if ($("#addTermModal #isEOM").is(":checked")) {
+    //   isEOM = true;
+    // } else {
+    //   isEOM = false;
+    // }
 
-    if ($("#isEOMPlus").is(":checked")) {
-      isEOMPlus = true;
-    } else {
-      isEOMPlus = false;
-    }
+    // if ($("#isEOMPlus").is(":checked")) {
+    //   isEOMPlus = true;
+    // } else {
+    //   isEOMPlus = false;
+    // }
 
-    if ($("#chkCustomerDef").is(":checked")) {
-      isSalesdefault = true;
-    } else {
-      isSalesdefault = false;
-    }
-
-    if ($("#chkSupplierDef").is(":checked")) {
-      isPurchasedefault = true;
-    } else {
-      isPurchasedefault = false;
-    }
+    // isSalesdefault = $("#addTermModal #chkCustomerDef").is(":checked");
+    // if ($("#addTermModal #chkCustomerDef").is(":checked")) {
+    //   isSalesdefault = true;
+    // } else {
+    //   isSalesdefault = false;
+    // }
+    // isPurchasedefault = $("#addTermModal #chkSupplierDef").is(":checked");
+    // if ($("#addTermModal #chkSupplierDef").is(":checked")) {
+    //   isPurchasedefault = true;
+    // } else {
+    //   isPurchasedefault = false;
+    // }
 
     let objDetails = "";
     if (termsName === "") {
@@ -5973,10 +6065,12 @@ Template.setup.events({
     }
 
     if (termsID == "") {
+
       taxRateService
         .checkTermByName(termsName)
         .then(function (data) {
           termsID = data.tterms[0].Id;
+
           objDetails = {
             type: "TTerms",
             fields: {
@@ -5987,8 +6081,8 @@ Template.setup.events({
               IsDays: isDays,
               IsEOM: isEOM,
               IsEOMPlus: isEOMPlus,
-              isPurchasedefault: isPurchasedefault,
-              isSalesdefault: isSalesdefault,
+              isPurchasedefault: isSupplierDefault,
+              isSalesdefault: isCustomerDefault,
               Days: termdays || 0,
               PublishOnVS1: true,
             },
@@ -6038,19 +6132,52 @@ Template.setup.events({
               IsDays: isDays,
               IsEOM: isEOM,
               IsEOMPlus: isEOMPlus,
+              isPurchasedefault: isSupplierDefault,
+              isSalesdefault: isCustomerDefault,
               Days: termdays || 0,
               PublishOnVS1: true,
             },
           };
 
-          taxRateService
-            .saveTerms(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTermsVS1()
-                .then(function (dataReload) {
-                  addVS1Data("TTermsVS1", JSON.stringify(dataReload))
-                    .then(function (datareturn) {
+          taxRateService.saveTerms(objDetails).then(function (objResponse) {
+              if( isSupplierDefault == true ||  isCustomerDefault == true ){
+                updateObjDetails = {
+                  type: "TTerms",
+                  fields: {
+                    ID: parseInt(objResponse.fields.ID),
+                    isPurchasedefault: isSupplierDefault,
+                    isSalesdefault: isCustomerDefault
+                  },
+                };
+                taxRateService.saveTerms(updateObjDetails).then(function () {
+                  sideBarService.getTermsVS1().then(function (dataReload) {
+                    addVS1Data("TTermsVS1", JSON.stringify(dataReload)).then(function (datareturn) {
+                      Meteor._reload.reload();
+                    }).catch(function (err) {
+                      Meteor._reload.reload();
+                    });
+                  }).catch(function (err) {
+                    Meteor._reload.reload();
+                  });
+                })
+                .catch(function (err) {
+                  swal({
+                    title: "Oooops...",
+                    text: err,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "Try Again",
+                  }).then((result) => {
+                    if (result.value) {
+                      Meteor._reload.reload();
+                    } else if (result.dismiss === "cancel") {
+                    }
+                  });
+                  LoadingOverlay.hide();
+                });
+              }
+              sideBarService.getTermsVS1().then(function (dataReload) {
+                  addVS1Data("TTermsVS1", JSON.stringify(dataReload)).then(function (datareturn) {
                       Meteor._reload.reload();
                     })
                     .catch(function (err) {
@@ -6078,6 +6205,7 @@ Template.setup.events({
             });
         });
     } else {
+
       objDetails = {
         type: "TTerms",
         fields: {
@@ -6086,9 +6214,9 @@ Template.setup.events({
           Description: description,
           IsDays: isDays,
           IsEOM: isEOM,
-          isPurchasedefault: isPurchasedefault,
-          isSalesdefault: isSalesdefault,
           IsEOMPlus: isEOMPlus,
+          isPurchasedefault: isSupplierDefault,
+          isSalesdefault: isCustomerDefault,
           Days: termdays || 0,
           PublishOnVS1: true,
         },
@@ -6129,14 +6257,19 @@ Template.setup.events({
         });
     }
   },
-  "click .btnAddTerms": function () {
-    let templateObject = Template.instance();
+  "click .btnAddTerms":  (e, templateObject) => {
     $("#add-terms-title").text("Add New Term ");
     $("#edtTermsID").val("");
     $("#edtName").val("");
     $("#edtName").prop("readonly", false);
     $("#edtDesc").val("");
     $("#edtDays").val("");
+
+    $('#addTermModal #isEOM').prop('checked', false);
+    $('#addTermModal #isEOMPlus').prop('checked', false);
+
+    $('#addTermModal #chkCustomerDef').prop('checked', false);
+    $('#addTermModal #chkSupplierDef').prop('checked', false);
 
     templateObject.include7Days.set(false);
     templateObject.includeCOD.set(false);
@@ -6186,8 +6319,7 @@ Template.setup.events({
       event.preventDefault();
     }
   },
-  "click #termsList tbody td.clickable": (event) => {
-    let templateObject = Template.instance();
+  "click #termsList tbody td.clickable": (event, templateObject) => {
     const tr = $(event.currentTarget).parent();
     var listData = tr.attr("id");
     var is7days = false;
@@ -6202,44 +6334,23 @@ Template.setup.events({
         listData = Number(listData);
 
         var termsID = listData || "";
-        var termsName =
-          $(event.target).closest("tr").find(".colName").text() || "";
-        var description =
-          $(event.target).closest("tr").find(".colDescription").text() || "";
-        var days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
+        var termsName = tr.find(".colName").text() || "";
+        var description = tr.find(".colDescription").text() || "";
+        var days = tr.find(".colIsDays").text() || 0;
+        isEOM = tr.find(".colIsEOM .chkBox").is(":checked");
+        isEOMPlus = tr.find(".colIsEOMPlus .chkBox").is(":checked");
         //let isDays = data.fields.IsDays || '';
-        if (
-          $(event.target).closest("tr").find(".colIsEOM .chkBox").is(":checked")
-        ) {
-          isEOM = true;
-        }
+        // if (tr.find(".colIsEOM .chkBox").is(":checked")) {
+        //   isEOM = true;
+        // }
 
-        if (
-          $(event.target)
-            .closest("tr")
-            .find(".colIsEOMPlus .chkBox")
-            .is(":checked")
-        ) {
-          isEOMPlus = true;
-        }
+        // if (tr.find(".colIsEOMPlus .chkBox").is(":checked")) {
+        //   isEOMPlus = true;
+        // }
 
-        if (
-          $(event.target)
-            .closest("tr")
-            .find(".colCustomerDef .chkBox")
-            .is(":checked")
-        ) {
-          isSalesDefault = true;
-        }
+        isSalesDefault = tr.find(".colCustomerDef .chkBox").is(":checked");
+        isPurchaseDefault = tr.find(".colSupplierDef .chkBox").is(":checked");
 
-        if (
-          $(event.target)
-            .closest("tr")
-            .find(".colSupplierDef .chkBox")
-            .is(":checked")
-        ) {
-          isPurchaseDefault = true;
-        }
 
         if (isEOM == true || isEOMPlus == true) {
           isDays = false;
@@ -6252,6 +6363,12 @@ Template.setup.events({
         $("#edtName").prop("readonly", true);
         $("#edtDesc").val(description);
         $("#edtDays").val(days);
+
+        $('#addTermModal #isEOM').prop('checked', isEOM);
+        $('#addTermModal #isEOMPlus').prop('checked', isEOMPlus);
+
+        $('#addTermModal #chkCustomerDef').prop('checked', isSalesDefault);
+        $('#addTermModal #chkSupplierDef').prop('checked', isPurchaseDefault);
 
         if (isDays == true && days == 0) {
           templateObject.includeCOD.set(true);

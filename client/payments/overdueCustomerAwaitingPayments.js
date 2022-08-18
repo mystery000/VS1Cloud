@@ -37,6 +37,13 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
         fromDateMonth = "0" + (currentDate.getMonth() + 1);
     }
 
+    var url = window.location.href;
+    let customerID = 0;
+    if (url.indexOf("overduecustomerawaitingpayments?id=") > 0) {
+        newurl = new URL(window.location.href);
+        customerID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
+    }
+
     if (currentDate.getDate() < 10) {
         fromDateDay = "0" + currentDate.getDate();
     }
@@ -170,7 +177,13 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                           overduetype:overDueType,
                       };
                       //if (data.tsaleslist[i].Balance != 0) {
+                        if( customerID != 0 ){
+                            if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                                dataTableList.push(dataList);
+                            }
+                        }else{
                           dataTableList.push(dataList);
+                        }
                     //  }
 
                   }
@@ -491,7 +504,13 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                         overduetype:overDueType,
                     };
                     //if (data.tsaleslist[i].Balance != 0) {
-                        dataTableList.push(dataList);
+                        if( customerID != 0 ){
+                            if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                                dataTableList.push(dataList);
+                            }
+                        }else{
+                          dataTableList.push(dataList);
+                        }
                     //}
 
                 }
@@ -780,7 +799,13 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                         overduetype:overDueType,
                     };
                     //if (data.tsaleslist[i].Balance != 0) {
-                        dataTableList.push(dataList);
+                        if( customerID != 0 ){
+                            if (data.tsaleslist[i].Balance != 0 && data.tsaleslist[i].ClientId == customerID ) {
+                                dataTableList.push(dataList);
+                            }
+                        }else{
+                          dataTableList.push(dataList);
+                        }
                     //}
 
                 }
@@ -1466,7 +1491,7 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
         });
 
 
-        sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
                 sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {

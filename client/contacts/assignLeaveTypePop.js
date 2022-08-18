@@ -35,7 +35,39 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#edtLeavePayStatus').editableSelect('add','Awaiting');
         $('#edtLeavePayStatus').editableSelect('add','Approved');
         $('#edtLeavePayStatus').editableSelect('add','Denied');
-
+        
+        // $('.customEditableSelect').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        $('#edtTfnExemption').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#edtEmploymentBasis').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#edtResidencyStatus').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#leaveCalcMethodSelect').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#onTerminationUnusedBalance').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#superannuationTypeSelect').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#paymentFrequency').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
         $('#edtLeaveTypeofRequest').editableSelect();
         $('#edtLeaveTypeofRequest').editableSelect()
             .on('click.editable-select', async function (e, li) {

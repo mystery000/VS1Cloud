@@ -116,16 +116,16 @@
                                         <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu" role="menu">
                                             <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
-                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="javascript:void(0);">Last Month</a>
+                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="javascript:void(0);">Last Quarter</a>
+                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="javascript:void(0);">Last 12 Months</a>
+                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="javascript:void(0);">Ignore Date</a>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin: 8px;">
                                         <label>From</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
+                                            <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -134,7 +134,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>To</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
+                                            <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -208,33 +208,37 @@
                                                         <td style="font-weight: 800;">{{ value.State }}</td>
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
-                                                        <tr>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td>{{ item.Type }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td>
-                                                            <td class="text-right text-success">0</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
+                                                        {{#if checkEmptySubAccount item }}
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td>{{ item.Type }}</td>
+                                                                <td class="text-right text-success">{{ formatPrice item.Total_Amount_Ex }}</td>
+                                                                <td class="text-right text-success">{{ formatPrice item.Total_Amount_Inc }}</td>
+                                                                <td class="text-right text-success">{{ formatPrice item.Gross_Profit }}</td>
+                                                                <td class="text-right text-success">0</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        {{/if}}
                                                     {{/each}}
-                                                    <tr>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalEx }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalInc }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalGrossProfit }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">0</td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                    </tr>
+                                                    {{#if checkEmpty value }}
+                                                        <tr>
+                                                            <td style="font-weight: 800;"></td>
+                                                            <td style="font-weight: 800;"></td>
+                                                            <td style="font-weight: 800;"></td>
+                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalEx }}</td>
+                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalInc }}</td>
+                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalGrossProfit }}</td>
+                                                            <td class="text-right" style="font-weight: 800;">0</td>
+                                                            <td style="font-weight: 800;"></td>
+                                                            <td style="font-weight: 800;"></td>
+                                                            <td style="font-weight: 800;"></td>
+                                                            <td style="font-weight: 800;"></td>
+                                                        </tr>
+                                                    {{/if}}
                                                 {{/each}}
                                             {{/if}}
                                         </tbody>

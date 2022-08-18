@@ -50,7 +50,7 @@ Template.mailchimpSettings.onRendered(function () {
   const templateObject = Template.instance();
   const mailchimpSettings = {
     mailchimpApiKey: "",
-    mailchimpApiRegion: "",
+    mailchimpCampaignID: "",
     mailchimpAudienceID: ""
   }
   mailchimpService.getMailchimpSettings().then((result) => {
@@ -60,14 +60,14 @@ Template.mailchimpSettings.onRendered(function () {
       for (let i = 0; i < result.terppreference.length; i++) {
         switch (result.terppreference[i].PrefName) {
           case "VS1MailchimpApiKey": mailchimpSettings.mailchimpApiKey = result.terppreference[i].Fieldvalue || mailchimpSettings.mailchimpApiKey; break;
-          case "VS1MailchimpApiRegion": mailchimpSettings.mailchimpApiRegion = result.terppreference[i].Fieldvalue || mailchimpSettings.mailchimpApiRegion; break;
+          case "VS1MailchimpCampaignID": mailchimpSettings.mailchimpCampaignID = result.terppreference[i].Fieldvalue || mailchimpSettings.mailchimpCampaignID; break;
           case "VS1MailchimpAudienceID": mailchimpSettings.mailchimpAudienceID = result.terppreference[i].Fieldvalue || mailchimpSettings.mailchimpAudienceID; break;
         }
       }
     }
 
     $('#mailchimpApiKey').val(mailchimpSettings.mailchimpApiKey);
-    $('#mailchimpApiRegion').val(mailchimpSettings.mailchimpApiRegion);
+    $('#mailchimpCampaignID').val(mailchimpSettings.mailchimpCampaignID);
     $('#mailchimpAudienceID').val(mailchimpSettings.mailchimpAudienceID);
 
   }).catch((error) => {
@@ -85,13 +85,12 @@ Template.mailchimpSettings.events({
 
     const templateObject = Template.instance();
 
-    const allKeys = ["VS1MailchimpApiKey", "VS1MailchimpAudienceID"];
-    // const allKeys = ["VS1MailchimpApiKey", "VS1MailchimpApiRegion", "VS1MailchimpAudienceID"];
+    const allKeys = ["VS1MailchimpApiKey", "VS1MailchimpAudienceID", "VS1MailchimpCampaignID"]; 
     for (const eKey of allKeys) {
       let value = ''; 
       switch (eKey) {
         case "VS1MailchimpApiKey": value = $('#mailchimpApiKey').val(); break;
-        case "VS1MailchimpApiRegion": value = $('#mailchimpApiRegion').val(); break;
+        case "VS1MailchimpCampaignID": value = $('#mailchimpCampaignID').val(); break;
         case "VS1MailchimpAudienceID": value = $('#mailchimpAudienceID').val(); break;
       }
       const data = {

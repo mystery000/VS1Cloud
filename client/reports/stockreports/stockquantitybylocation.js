@@ -14,7 +14,7 @@ let defaultCurrencyCode = CountryAbbr;
 Template.stockquantitybylocation.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
-
+  templateObject.reportOptions = new ReactiveVar([]);
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
@@ -78,14 +78,33 @@ Template.stockquantitybylocation.onRendered(() => {
 
     //--------- END OF DATE ---------------//
   };
-
+  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    $("#dateFrom").val(defaultOptions.fromDate);
+    $("#dateTo").val(defaultOptions.toDate);
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.getStockLocationReportData();
+  };
   templateObject.getStockLocationReportData = async function () {
-    let dateFrom = moment().subtract(6, "months").format("YYYY-MM-DD");;
-    let dateTo = moment().format("YYYY-MM-DD");
+    const options = await templateObject.reportOptions.get();
+    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let ignoreDate = options.ignoreDate || false;
     let data = await reportService.getStockQuantityLocationReport( dateFrom, dateTo, false);
   }
 
-  templateObject.getStockLocationReportData();
+  templateObject.setReportOptions();
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
