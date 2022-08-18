@@ -3197,6 +3197,7 @@ Template.productview.onRendered(function() {
     
     $(document).ready(function() {
         $('#edtRaw').editableSelect();
+        $('#edtProcess').editableSelect();
     })
 
     $(document).on('click', '#edtRaw', function(event) {
@@ -3204,10 +3205,20 @@ Template.productview.onRendered(function() {
         $('#productListModal').modal('toggle');
     })
 
+    $(document).on('click', '.edtProcess', function(event) {
+        $('.edtProcess').editableSelect();
+        $('#processListModal').modal('toggle');
+    })
+
     $(document).on('click', '#productListModal table tr', function(event) {
         let productName = $(event.target).closest('tr').find('.productName').text();
         $('#edtRaw').val(productName);
         $('#productListModal').modal('toggle')
+    })
+    $(document).on('click', '#processListModal table tr', function(event) {
+        let processName = $(event.target).closest('tr').find('.colProcessName').text();
+        $('#edtProcess').val(processName);
+        $('#processListModal').modal('toggle')
     })
 
 });

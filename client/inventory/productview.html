@@ -980,7 +980,7 @@
                             <input type="text" class="edtQuantity w-100" value="1"/>
                         </div>
                         <div class="colProcess">
-                            <select type="search" class="edtProcess w-100" name="edtProcess"></select>
+                            <select type="search" id="edtProcess" class="edtProcess w-100" name="edtProcess"></select>
                         </div>
                         <div class="colNote">
                             <input type="text" class="edtProcessNote w-100"/>
@@ -1012,6 +1012,10 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
         {{> productlistpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="processListModal">
+        {{> processlistpopup}}
+        <!-- {{> statuspop}} -->
     </div>
     <script>
         modalDraggable();
