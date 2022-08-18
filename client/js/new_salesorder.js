@@ -8169,12 +8169,12 @@ Template.new_salesorder.events({
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
                 let lineDescription = "";
-                if (line.Description) {
-                    lineDescription = line.Description;
-                } else {
-                    lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
-                    lineDescription = lineDescription.description;
-                }
+                // if (line.Description) {
+                //     lineDescription = line.Description;
+                // } else {
+                //     lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
+                //     lineDescription = lineDescription.description;
+                // }
 
                 taxDetailTableData.push([
                     lineDescription,
@@ -8440,20 +8440,20 @@ Template.new_salesorder.events({
 
            });
 
-           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,2).then(function (data) {
-            templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
-            objDetails =  {
-            type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                SettingName:"Sales Orders",
-                                GlobalRef:"Sales Orders",
-                                Description:$('input[name="Sales Orders_2"]').val(),
-                                Template:"2",
-                                Active:sales_orders == 2 ? true:false,
-                    }
+            sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,2).then(function (data) {
+                templateid = data.ttemplatesettings;
+                var id = templateid[0].fields.ID;
+                objDetails =  {
+                type:"TTemplateSettings",
+                fields:{
+                    ID:parseInt(id),
+                    EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                    SettingName:"Sales Orders",
+                    GlobalRef:"Sales Orders",
+                    Description:$('input[name="Sales Orders_2"]').val(),
+                    Template:"2",
+                    Active:sales_orders == 2 ? true:false,
+                }
             }
 
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
@@ -8471,61 +8471,55 @@ Template.new_salesorder.events({
 
            }).catch(function (err) {
 
-                    objDetails =  {
+                objDetails =  {
                     type:"TTemplateSettings",
                     fields:{
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                SettingName:"Sales Orders",
-                                Description:$('input[name="Sales Orders_2"]').val(),
-                                Template:"2",
-                                Active:sales_orders == 2 ? true:false,
-                            }
+                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                        SettingName:"Sales Orders",
+                        Description:$('input[name="Sales Orders_2"]').val(),
+                        Template:"2",
+                        Active:sales_orders == 2 ? true:false,
                     }
+                }
 
-                    sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
 
-                      sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                         addVS1Data('TTemplateSettings', JSON.stringify(data));
-
-                      });
-
-                    }).catch(function (err) {
-
-
-
                     });
+
+                }).catch(function (err) {
+
+                });
 
            });
 
 
-           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,3).then(function (data) {
-            templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
-            objDetails =  {
-            type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
-                                EmployeeID:Session.get('mySessionEmployeeLoggedID'),
-                                SettingName:"Sales Orders",
-                                GlobalRef:"Sales Orders",
-                                Description:$('input[name="Sales Orders_3"]').val(),
-                                Template:"3",
-                                Active:sales_orders == 3 ? true:false,
+            sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,3).then(function (data) {
+                templateid = data.ttemplatesettings;
+                var id = templateid[0].fields.ID;
+                objDetails =  {
+                    type:"TTemplateSettings",
+                    fields:{
+                        ID:parseInt(id),
+                        EmployeeID:Session.get('mySessionEmployeeLoggedID'),
+                        SettingName:"Sales Orders",
+                        GlobalRef:"Sales Orders",
+                        Description:$('input[name="Sales Orders_3"]').val(),
+                        Template:"3",
+                        Active:sales_orders == 3 ? true:false,
                     }
-            }
+                }
 
-            sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-              sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
+                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+                    sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
 
-              });
+                    });
 
+                }).catch(function (err) {
 
-            }).catch(function (err) {
-
-
-
-            });
+                });
 
            }).catch(function (err) {
 
@@ -8700,10 +8694,6 @@ Template.new_salesorder.events({
 
             }).catch(function (err) {
               $('.fullScreenSpin').css('display','none');
-
-
-
-
             });
 
            }).catch(function (err) {

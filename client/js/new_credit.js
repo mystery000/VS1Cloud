@@ -5547,12 +5547,12 @@ Template.creditcard.events({
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
                 let lineDescription = "";
-                if (line.Description) {
-                    lineDescription = line.Description;
-                } else {
-                    lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
-                    lineDescription = lineDescription.description;
-                }
+                // if (line.Description) {
+                //     lineDescription = line.Description;
+                // } else {
+                //     lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
+                //     lineDescription = lineDescription.description;
+                // }
 
                 taxDetailTableData.push([
                     lineDescription,
