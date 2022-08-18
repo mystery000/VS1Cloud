@@ -89,7 +89,8 @@ Template.paymentoverviewcardssupplier.onRendered(function() {
                 let customerawaitingpaymentCount = '';
                 let supptotAmount = 0;
                 let supptotAmountOverDue = 0;
-                for (let i = 0; i < data.tapreport.length; i++) {
+                let useData = data.tapreport;
+                for (let i = 0; i < useData.length; i++) {
                     dataListAwaitingSupp = {
                         id: data.tapreport[i].ClientID || '',
                     };
