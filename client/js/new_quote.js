@@ -14,6 +14,7 @@ import 'jquery-editable-select';
 import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
+import { TaxRateService } from "../settings/settings-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -68,6 +69,7 @@ Template.new_quote.onCreated(() => {
 
     templateObject.defaultsaleterm = new ReactiveVar();
     templateObject.displayfields = new ReactiveVar([]);
+    templateObject.subtaxcodes = new ReactiveVar([]);
 
 });
 
@@ -524,6 +526,7 @@ Template.new_quote.onRendered(() => {
     {
         var array_data = [];
         let lineItems = [];
+        let taxItems = {};
         object_invoce = [];
 
 
@@ -572,6 +575,31 @@ Template.new_quote.onRendered(() => {
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
 
+            let targetRow = $('#' + lineID);
+            let targetTaxCode = targetRow.find('.lineTaxCode').val();
+            let qty = targetRow.find(".lineQty").val() || 0
+            let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+            const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+            if (taxDetail) {
+                let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+                let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+                if (taxDetail.Lines) {
+                    taxDetail.Lines.map((line) => {
+                        let taxCode = line.SubTaxCode;
+                        let amount = priceTotal * line.Percentage / 100;
+                        if (taxItems[taxCode]) {
+                            taxItems[taxCode] += amount;
+                        }
+                        else {
+                            taxItems[taxCode] = amount;
+                        }
+                    });
+                }
+                else {
+                    taxItems[targetTaxCode] = taxTotal;
+                }
+            }
 
             array_data.push([
                 tdproduct,
@@ -745,6 +773,7 @@ Template.new_quote.onRendered(() => {
 
             }
 
+            item_quote.taxItems = taxItems;
 
             object_invoce.push(item_quote);
             $("#templatePreviewModal .field_payment").show();
@@ -1227,6 +1256,26 @@ Template.new_quote.onRendered(() => {
         for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
         }
+        if (object_invoce[0]["taxItems"]) {
+            let taxItems = object_invoce[0]["taxItems"];
+            $("#html-2-pdfwrapper_new #tax_list_print").html("");
+            Object.keys(taxItems).map((code) => {
+                let html = `
+                    <div style="width: 100%; display: flex;">
+                        <div style="padding-right: 16px; width: 50%;">
+                            <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                ${code}</p>
+                        </div>
+                        <div style="padding-left: 16px; width: 50%;">
+                            <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                $ ${taxItems[code]}</p>
+                        </div>
+                    </div>
+                `;
+                $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+            });
+        }
+        $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
         }
 
         // table content
@@ -5575,6 +5624,7 @@ Template.new_quote.onRendered(function() {
     let utilityService = new UtilityService();
     let productService = new ProductService();
     let salesService = new SalesBoardService();
+    const taxRateService = new TaxRateService();
     let tableProductList;
     const splashArrayProductList = [];
     const splashArrayTaxRateList = [];
@@ -6089,6 +6139,63 @@ Template.new_quote.onRendered(function() {
         });
     };
     tempObj.getAllTaxCodes();
+
+    tempObj.getSubTaxCodes = function () {
+        let subTaxTableList = [];
+  
+        getVS1Data("TSubTaxVS1")
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+              taxRateService.getSubTaxCode().then(function (data) {
+                for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                  var dataList = {
+                    id: data.tsubtaxcode[i].Id || "",
+                    codename: data.tsubtaxcode[i].Code || "-",
+                    description: data.tsubtaxcode[i].Description || "-",
+                    category: data.tsubtaxcode[i].Category || "-",
+                  };
+  
+                  subTaxTableList.push(dataList);
+                }
+  
+                tempObj.subtaxcodes.set(subTaxTableList);
+              });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              let useData = data.tsubtaxcode;
+              for (let i = 0; i < useData.length; i++) {
+                var dataList = {
+                  id: useData[i].Id || "",
+                  codename: useData[i].Code || "-",
+                  description: useData[i].Description || "-",
+                  category: useData[i].Category || "-",
+                };
+  
+                subTaxTableList.push(dataList);
+              }
+  
+              tempObj.subtaxcodes.set(subTaxTableList);
+            }
+          })
+          .catch(function (err) {
+            taxRateService.getSubTaxCode().then(function (data) {
+              for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                var dataList = {
+                  id: data.tsubtaxcode[i].Id || "",
+                  codename: data.tsubtaxcode[i].Code || "-",
+                  description: data.tsubtaxcode[i].Description || "-",
+                  category: data.tsubtaxcode[i].Category || "-",
+                };
+  
+                subTaxTableList.push(dataList);
+              }
+  
+              tempObj.subtaxcodes.set(subTaxTableList);
+            });
+          });
+    };
+
+    tempObj.getSubTaxCodes();
 
     // custom field displaysettings
     // tempObj.getAllCustomFieldDisplaySettings = function () {
@@ -7232,6 +7339,7 @@ Template.new_quote.events({
         let price = targetRow.find('.colUnitPriceExChange').val() || 0;
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+        const subTaxCodes = tmpObj.subtaxcodes.get();
 
         if (!taxDetail) {
             return;
@@ -7253,8 +7361,16 @@ Template.new_quote.events({
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
+                let lineDescription = "";
+                if (line.Description) {
+                    lineDescription = line.Description;
+                } else {
+                    lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
+                    lineDescription = lineDescription.description;
+                }
+
                 taxDetailTableData.push([
-                    line.Description,
+                    "",
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
