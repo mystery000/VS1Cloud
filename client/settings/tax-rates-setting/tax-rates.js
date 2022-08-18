@@ -1143,7 +1143,7 @@ Template.taxRatesSettings.events({
           PercentageOn: v.PercentageOn,
           CapAmount: v.CapAmount,
           ThresholdAmount: v.ThresholdAmount,
-          Description: v.Description
+          // Description: v.Description
         }
       }
     });
