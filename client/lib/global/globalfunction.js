@@ -369,6 +369,7 @@ batchUpdateCall = async function (url) {
 
                    //Income
                   localStorage.setItem('VS1ReportsDateFrom_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ReportsDateFrom||"");
+                  localStorage.setItem('VS1ReportsDateTo_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ReportsDateTo||"");
                   localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated);
 
                   if(dataReturnRes.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401){
