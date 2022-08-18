@@ -3194,6 +3194,33 @@ Template.productview.onRendered(function() {
         templateObject.getAllProductRecentTransactions();
     }
 
+    
+    $(document).ready(function() {
+        $('#edtRaw').editableSelect();
+        $('#edtProcess').editableSelect();
+    })
+
+    $(document).on('click', '#edtRaw', function(event) {
+        $('#edtRaw').editableSelect()
+        $('#productListModal').modal('toggle');
+    })
+
+    $(document).on('click', '.edtProcess', function(event) {
+        $('.edtProcess').editableSelect();
+        $('#processListModal').modal('toggle');
+    })
+
+    $(document).on('click', '#productListModal table tr', function(event) {
+        let productName = $(event.target).closest('tr').find('.productName').text();
+        $('#edtRaw').val(productName);
+        $('#productListModal').modal('toggle')
+    })
+    $(document).on('click', '#processListModal table tr', function(event) {
+        let processName = $(event.target).closest('tr').find('.colProcessName').text();
+        $('#edtProcess').val(processName);
+        $('#processListModal').modal('toggle')
+    })
+
 });
 
 Template.productview.helpers({
@@ -4487,6 +4514,55 @@ Template.productview.events({
         let getDiscountRate = 100 - (discountPrice * 100 / itemSellPrice);
         $("#" + targetID + ' .edtDiscount').val(getDiscountRate || 0);
 
+    },
+
+    'change #chkBOM': function(event) {
+        if($('#chkBOM').is(':checked')) {
+            $('#BOMSetupModal').modal('toggle')
+        }
+    },
+
+    'click #BOMSetupModal .btnAddProduct': function(event) {
+        let row = $(event.target).closest('.productRow');
+        let colProduct = row.find('.colProduct');
+        let colQty = row.find('.colQty');
+        let colProcess = row.find('.colProcess');
+        let colNote = row.find('.colNote');
+        let colAttachment = row.find('.colAttachment');
+        let colDelete = row.find('.colDelete');
+
+        if($('#edtRaw').val() != '') {
+            if($(colQty).find('.edtQuantity').val() != '') {
+                let quantity = $(colQty).find('.edtQuantity').val();
+                let edtRaw = colProduct.find('.edtProductName')
+                $(event.target).remove();
+                while($('#edtRaw').length) {
+                    $('#edtRaw').removeAttr('id');
+                }
+                let grandParent = row.parent();
+                grandParent.append("<div class='d-flex productRow'>" + 
+                "<div class='colProduct d-flex'>" +
+                    "<button class='btnAddProduct' style='width: 30%; background-color: #00a3d3; border: 2px solid black'>Product+</button>" +
+                    "<select class='edtProductName  edtRaw' id='edtRaw' type='search' value='12345' style='width: 30%'></select>"+
+                "</div>" +
+                "<div class='colQty'>" +
+                    "<input type='text' class='edtQuantity w-100'/>" + 
+                "</div>" +
+                "<div class='colProcess'>" +
+                "</div>" +
+                "<div class='colNote'>" +
+                "</div>" +
+                "<div class='colAttachment'></div>" +
+                "<div class='colDelete'></div>" +
+                "</div>")
+                $(colProduct).prepend("<div style='width: 30%'></div>")
+            }
+        }
+        
+        // let colProductName = $(colProduct).find('.edtProductName');
+        // $(colProductName).attr('id', 'edtRaw');
+      
+       
     },
 
 // add to custom field
