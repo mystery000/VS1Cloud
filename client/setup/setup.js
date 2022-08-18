@@ -1,3 +1,4 @@
+import { Meteor, fetch } from "meteor/meteor";
 import { ReactiveVar } from "meteor/reactive-var";
 import { OrganisationService } from "../js/organisation-service";
 import { CountryService } from "../js/country-service";
@@ -45,23 +46,41 @@ export const getCompanyInfo = async () => {
 
 }
 
-export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
-  // if(isSetupFinished() == true) {
-  //   FlowRouter.go(onSetupFinished);
-  //   window.open(onSetupFinished, '_self');
-  // } else {
-  //   FlowRouter.go(onSetupUnFinished);
-  //   window.open(onSetupUnFinished, '_self');
-  // }
-
-
-  isSetupFinished().then(boolean => {
-    if(boolean == true) {
-     window.open(onSetupFinished, '_self');
-    } else {
-     window.open(onSetupUnFinished, '_self');
-    }
-  });
+export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {    
+    
+    let ERPIPAddress = localStorage.getItem('EIPAddress');
+    let ERPUsername = localStorage.getItem('EUserName');
+    let ERPPassword = localStorage.getItem('EPassword');
+    let ERPDatabase = localStorage.getItem('EDatabase');
+    let ERPPort = localStorage.getItem('EPort');
+    const apiUrl = `https://${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard`;
+    const _headers = {
+        database: ERPDatabase,
+        username: ERPUsername,
+        password: ERPPassword
+    };
+    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+        if (error) {
+          // handle error here
+        } else {
+          if( result.data.tcompanyinfo.length > 0 ){
+            let data = result.data.tcompanyinfo[0];   
+            localStorage.setItem("IS_SETUP_FINISHED", data.IsSetUpWizard)
+            if(data.IsSetUpWizard == true) {
+              window.open(onSetupFinished, '_self');
+            } else {
+              window.open(onSetupUnFinished, '_self');
+            }
+          }
+        }
+    });
+     // isSetupFinished().then(boolean => {
+    //   if(boolean == true) {
+    //    window.open(onSetupFinished, '_self');
+    //   } else {
+    //    window.open(onSetupUnFinished, '_self');
+    //   }
+    // });
 };
 
 
