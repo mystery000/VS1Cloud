@@ -112,7 +112,7 @@ Template.dashboardsalesmanager.onRendered(function () {
                     }
                 }
             });
-            const winRate = convertedQuotesCount ? parseInt((convertedQuotesCount/convertedQuotesCount+nonConvertedQuotesCount) * 100) : 0;
+            const winRate = convertedQuotesCount ? parseInt((convertedQuotesCount/(convertedQuotesCount+nonConvertedQuotesCount)) * 100) : 0;
             const avgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount/30 : convertedQuotesAmount;
             $('#sales-winrate').text(winRate.toFixed(2));
             $('#new-deals-month').text(dealsThisMonthCount);
