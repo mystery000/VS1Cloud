@@ -4519,6 +4519,10 @@ Template.productview.events({
     'change #chkBOM': function(event) {
         if($('#chkBOM').is(':checked')) {
             $('#BOMSetupModal').modal('toggle')
+            let record = templateObject.records.get();
+            if(record == undefined || record.productname== undefined || record.productname == '' ) {
+                $('#edtMainProductName').val($('#edtproductname').val() )
+            }
         }
     },
 
