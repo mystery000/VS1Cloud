@@ -22,10 +22,7 @@ Template.deductionSettings.onCreated(function() {
 });
 
 Template.deductionSettings.onRendered(function() {
-    $('#edtDeductionType').editableSelect('add', function(item){
-        $(this).val(item.id);
-        $(this).text(item.name);
-    });
+
     const templateObject = Template.instance();
     var splashArrayDeductionList = new Array();
 
@@ -497,9 +494,11 @@ Template.deductionSettings.events({
                 Description: deductionDesctiption,
                 Amount: parseInt(deductionAmount),
                 Basedonid:18,
-                Superinc: ExemptSuperannuation,
-                Workcoverexempt: ExemptReportable,
-                Taxexempt: ExemptPAYG
+
+                // DisplayIn: displayName,
+                // Superinc: ExemptSuperannuation,
+                // Workcoverexempt: ExemptReportable,
+                // Payrolltaxexempt: ExemptPAYG
             }
         };
 
@@ -516,18 +515,7 @@ Template.deductionSettings.events({
             await templateObject.saveDataLocalDB();
             await templateObject.getDeductions();
             $('#noneModal').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Deduction has been saved",
-                type: 'success',   
-                showCancelButton: false,
-                confirmButtonText: 'Done'             
-            }).then((result) => {
-                if (result.value) {                    
-                    window.location.reload();
-                }
-            });
+            $('.fullScreenSpin').css('display', 'none')
         }else{
             $('.fullScreenSpin').css('display', 'none');
             swal({

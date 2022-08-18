@@ -4,7 +4,7 @@ import { TaxRateService } from '../settings-service';
 import '../../lib/global/indexdbstorage.js';
 
 const settingService = new TaxRateService();
-const settingFields = ['VS1MailchimpApiKey', 'VS1MailchimpAudienceID', 'VS1MailchimpCampaignID'];
+const settingFields = ['VS1MailchimpApiKey', 'VS1MailchimpAudienceID'];
 const specialSearchKey = "vs1mailchimpsettings"
 
 Template.mailchimp.onCreated(() => {
@@ -16,37 +16,35 @@ Template.mailchimp.onCreated(() => {
 Template.mailchimp.onRendered(function () {
   const templateObject = Template.instance();
 
-    templateObject.getSettingsList = async function () {
-        $('.fullScreenSpin').css('display','inline-block');
-        let data = [];
-        let details = [];
-        let dataObject = await getVS1Data('TERPPreference')
-        if ( dataObject.length > 0) {
-            data = JSON.parse(dataObject[0].data);
-            details = data.terppreference.filter(function( item ){
-                if( settingFields.includes( item.PrefName ) ){
-                    return item;
-                }
-            }); 
-        }
-        if( details.length == 0 ){
-            prefSettings = await settingService.getPreferenceSettings( settingFields );
-            details = prefSettings.terppreference;
-            data.terppreference.push(...details);
-            await addVS1Data('TERPPreference', JSON.stringify(data))
-        }
+  templateObject.getSettingsList = async function () {
+      $('.fullScreenSpin').css('display','none');
+      let data = [];
+      let details = [];
+      let dataObject = await getVS1Data('TERPPreference')
+      if ( dataObject.length > 0) {
+          data = JSON.parse(dataObject[0].data);
+          details = data.terppreference.filter(function( item ){
+              if( settingFields.includes( item.PrefName ) ){
+                  return item;
+              }
+          }); 
+      }
+      if( details.length == 0 ){
+          details = await settingService.getPreferenceSettings( settingFields );
+          data.terppreference.push(...details.terppreference);
+          await addVS1Data('TERPPreference', JSON.stringify(data))
+      }
 
-        if( details.length > 0 ){
-            templateObject.settingDetails.set( details );
-            for (const item of details) {
-                $('#' + item.PrefName).val( item.Fieldvalue );
-            }
-        }
-        $('.fullScreenSpin').css('display', 'none');
-        
-    };
+      if( details.length > 0 ){
+          templateObject.settingDetails.set( details );
+          for (const item of details) {
+              $('#' + item.PrefName).val( item.Fieldvalue );
+          }
+      }
 
-    templateObject.getSettingsList();
+  };
+
+  templateObject.getSettingsList();
 
 });
 

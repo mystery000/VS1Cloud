@@ -173,20 +173,20 @@ Template.refundcard.onRendered(() => {
               if (dataObject.length == 0) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                      
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
+                       
+                   
                             if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                             {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
+                                {       
                                         $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                             $('#Refunds_1').attr('checked','checked');
                                         }
-
+                                        
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -196,7 +196,7 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_2').attr('checked','checked');
                                         }
                                 }
-
+    
                                 if(data.ttemplatesettings[i].fields.Template == 3)
                                 {
                                         $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -205,34 +205,34 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_3').attr('checked','checked');
                                         }
                                 }
-
-
+    
+    
                             }
-
-
+                   
+    
                      }
-
-
+                      
+                          
                       $('.fullScreenSpin').css('display', 'none');
                   }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                   });
-              }else{
-                      let data = JSON.parse(dataObject[0].data);
-
+              }else{ 
+                      let data = JSON.parse(dataObject[0].data);    
+                    
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
+                       
+   
                         if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                         {
                                if(data.ttemplatesettings[i].fields.Template == 1)
-                               {
+                               {       
                                        $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                        if(data.ttemplatesettings[i].fields.Active == true)
                                        {
                                          $('#Refunds_1').attr('checked','checked');
                                        }
-
+                                     
                                }
                                if(data.ttemplatesettings[i].fields.Template == 2)
                                {
@@ -242,7 +242,7 @@ Template.refundcard.onRendered(() => {
                                        $('#Refunds_2').attr('checked','checked');
                                      }
                                }
-
+   
                                if(data.ttemplatesettings[i].fields.Template == 3)
                                {
                                      $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -251,33 +251,33 @@ Template.refundcard.onRendered(() => {
                                        $('#Refunds_3').attr('checked','checked');
                                      }
                                }
-
-
+   
+   
                         }
-
-
-
+                   
+                   
+    
                      }
                       $('.fullScreenSpin').css('display', 'none');
               }
             }).catch(function(err) {
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                    
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
-
+                       
+               
+    
                          if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                          {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
+                                {       
                                         $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                           $('#Refunds_1').attr('checked','checked');
                                         }
-
+                                      
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -287,7 +287,7 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_2').attr('checked','checked');
                                       }
                                 }
-
+    
                                 if(data.ttemplatesettings[i].fields.Template == 3)
                                 {
                                       $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -296,24 +296,24 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_3').attr('checked','checked');
                                       }
                                 }
-
-
+    
+    
                          }
-
-
-
-
-
-
+    
+                      
+                 
+      
+                    
+    
                       }
                       $('.fullScreenSpin').css('display', 'none');
             }).catch(function (err) {
               $('.fullScreenSpin').css('display', 'none');
             });
           });
-
+    
           };
-
+    
         templateObject.getTemplateInfoNew();
 
 
@@ -1393,7 +1393,7 @@ Template.refundcard.onRendered(() => {
                   statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
                   country: data.tcustomervs1[i].fields.Country || ' ',
                   termsName: data.tcustomervs1[i].fields.TermsName || '',
-                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || '',
+                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
                   clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
                   discount: data.tcustomervs1[i].fields.Discount || 0
               };
@@ -3525,7 +3525,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    //$('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
+                    $('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
                 }
             }
         }
@@ -4693,7 +4693,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
               values.forEach(value => {
                   let reportData = JSON.parse(value);
                   let temp = {... reportData};
-
+                  
                   temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                   reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                   temp.attachments = attachment;
@@ -6620,181 +6620,181 @@ Template.refundcard.events({
 
         var refunds = $('input[name="Refunds"]:checked').val();
         let emid = Session.get('mySessionEmployeeLoggedID');
-
+        
          sideBarService.getTemplateNameandEmployeId("Refunds",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_1"]').val(),
                                 Template:"1",
                                 Active:refunds == 1 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                    
                });
-
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
          }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_1"]').val(),
                                 Template:"1",
                                 Active:refunds == 1 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                         
                        });
-
-
+                        
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+    
          });
-
-
+    
+    
           sideBarService.getTemplateNameandEmployeId("Refunds",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_2"]').val(),
                                 Template:"2",
                                 Active:refunds == 2 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                  
               });
-
-
+             
+        
             }).catch(function (err) {
-
-
+        
+             
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_2"]').val(),
                                 Template:"2",
                                 Active:refunds == 2 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                      
                       });
-
-
+                       
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+    
           });
-
-
+    
+    
           sideBarService.getTemplateNameandEmployeId("Refunds",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_3"]').val(),
                                 Template:"3",
                                 Active:refunds == 3 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+               
               });
-
-
+              
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_3"]').val(),
                                 Template:"3",
                                 Active:refunds == 3 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                                
                       });
-
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                       
+                  
+                    });  
+    
           });
 
         $('#html-2-pdfwrapper-new').css('display', 'block');
@@ -7171,6 +7171,10 @@ Template.refundcard.events({
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
+                let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
+
                 if (tdproduct != "") {
 
                     lineItemObjForm = {
@@ -7187,6 +7191,58 @@ Template.refundcard.events({
                             DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
                         }
                     };
+
+                    // Feature/ser-lot number tracking: Save Serial Numbers
+                    if (tdSerialNumber) {
+                        const serialNumbers = tdSerialNumber.split(',');
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "TPQASN",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQASN: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
+                    // Feature/ser-lot number tracking: Save Lot Number
+                    if (tdLotNumber) {
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "PQABatch",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQABatch: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
                     lineItemsForm.push(lineItemObjForm);
                     splashLineArray.push(lineItemObjForm);
                 }
@@ -8554,6 +8610,8 @@ Template.refundcard.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        let selectedunit = $(target).closest('tr').find('.lineQty').val();
+        localStorage.setItem('productItem', selectedunit);
         let productService = new ProductService();
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
@@ -8568,8 +8626,12 @@ Template.refundcard.events({
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#lotNumberModal').attr('data-row', row + 1);
                     $('#lotNumberModal').modal('show');
                 } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#serialNumberModal').attr('data-row', row + 1);
                     $('#serialNumberModal').modal('show');
                 }
             });

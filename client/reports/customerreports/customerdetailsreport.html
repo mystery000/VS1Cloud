@@ -208,37 +208,33 @@
                                                         <td style="font-weight: 800;">{{ value.State }}</td>
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
-                                                        {{#if checkEmptySubAccount item }}
-                                                            <tr>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td>{{ item.Type }}</td>
-                                                                <td class="text-right text-success">{{ formatPrice item.Total_Amount_Ex }}</td>
-                                                                <td class="text-right text-success">{{ formatPrice item.Total_Amount_Inc }}</td>
-                                                                <td class="text-right text-success">{{ formatPrice item.Gross_Profit }}</td>
-                                                                <td class="text-right text-success">0</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                            </tr>
-                                                        {{/if}}
-                                                    {{/each}}
-                                                    {{#if checkEmpty value }}
                                                         <tr>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalEx }}</td>
-                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalInc }}</td>
-                                                            <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalGrossProfit }}</td>
-                                                            <td class="text-right" style="font-weight: 800;">0</td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
-                                                            <td style="font-weight: 800;"></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>{{ item.Type }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice value.Total_Amount_Ex }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice value.Total_Amount_Inc }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice value.Gross_Profit }}</td>
+                                                            <td class="text-right text-success">0</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
                                                         </tr>
-                                                    {{/if}}
+                                                    {{/each}}
+                                                    <tr>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalEx }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalInc }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalGrossProfit }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">0</td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                    </tr>
                                                 {{/each}}
                                             {{/if}}
                                         </tbody>

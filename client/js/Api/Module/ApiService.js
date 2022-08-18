@@ -1,5 +1,3 @@
-import { _ERP_BASE_API, _IPADDRESS, _PORT } from "../../../lib/global/erpconnection";
-
 export default class ApiService {
   constructor() {
     this.erpGet = erpDb();
@@ -10,12 +8,33 @@ export default class ApiService {
    * @param {string} endpoint my-endpoint
    * @returns {URL}
    */
-   static getBaseUrl({ endpoint = null}) {
-    let _url = `https://${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/`;
-    let url = new URL(_url);
+  static getBaseUrl({ endpoint = null}) {
+    let url = new URL(
+      URLRequest +
+        erpDb().ERPIPAddress +
+        ":" +
+        erpDb().ERPPort +
+        "/" +
+        erpDb().ERPApi +
+        "/"
+    );
+
     if(endpoint != null) {
-      url = new URL(`https://${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/${endpoint}`);
+      url = new URL(
+        URLRequest +
+          erpDb().ERPIPAddress +
+          ":" +
+          erpDb().ERPPort +
+          "/" +
+          erpDb().ERPApi +
+          "/" + endpoint
+      );
     }
+
+    // if (endpoint != null) {
+    //   url = url + endpoint;
+    // }
+
     return url;
   }
 

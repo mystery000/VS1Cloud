@@ -126,19 +126,19 @@ Template.new_quote.onRendered(() => {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                  
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
+                   
                     if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
                     {
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
+                           {       
                                    $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Quotes_1').attr('checked','checked');
                                    }
-
+                                 
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -160,30 +160,30 @@ Template.new_quote.onRendered(() => {
 
 
                     }
-
+               
 
                  }
-
-
+                  
+                      
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
+          }else{ 
+                  let data = JSON.parse(dataObject[0].data);    
+                
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
+                  
                     if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
                     {
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
+                           {       
                                    $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Quotes_1').attr('checked','checked');
                                    }
-
+                                 
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -205,28 +205,28 @@ Template.new_quote.onRendered(() => {
 
 
                     }
-
-
+                 
+               
 
                  }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
+                               
                      if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
                      {
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
+                            {       
                                     $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                       $('#Quotes_1').attr('checked','checked');
                                     }
-
+                                  
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -247,7 +247,7 @@ Template.new_quote.onRendered(() => {
                             }
 
 
-                     }
+                     }               
                   }
 
 
@@ -260,7 +260,7 @@ Template.new_quote.onRendered(() => {
     };
 
     templateObject.getTemplateInfoNew();
-
+    
     templateObject.getLastQuoteData = async function() {
         let lastBankAccount = "Bank";
         let lastDepartment = defaultDept || "";
@@ -1362,7 +1362,7 @@ Template.new_quote.onRendered(() => {
                   statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
                   country: data.tcustomervs1[i].fields.Country || ' ',
                   termsName: data.tcustomervs1[i].fields.TermsName || '',
-                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || '',
+                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
                   clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
                   discount: data.tcustomervs1[i].fields.Discount || 0
               };
@@ -4834,7 +4834,7 @@ Template.new_quote.onRendered(() => {
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    //$('#sltTerms').val(clientList[i].termsName ||templateObject.defaultsaleterm.get() ||'');
+                    $('#sltTerms').val(clientList[i].termsName ||templateObject.defaultsaleterm.get() ||'');
                 }
             }
         }
@@ -5385,7 +5385,7 @@ Template.new_quote.onRendered(() => {
               values.forEach(value => {
                   let reportData = JSON.parse(value);
                   let temp = {... reportData};
-
+                  
                   temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                   reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                   temp.attachments = attachment;
@@ -7461,180 +7461,180 @@ Template.new_quote.events({
 
          sideBarService.getTemplateNameandEmployeId("Quotes",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 GlobalRef:"Quotes",
                                 Description:$('input[name="Quotes_1"]').val(),
                                 Template:"1",
                                 Active:quotes == 1 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                      
                });
-
+        
             }).catch(function (err) {
-
-
-
+        
+             
+          
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 Description:$('input[name="Quotes_1"]').val(),
                                 Template:"1",
                                 Active:quotes == 1 ? true:false,
-                            }
+                            }            
                     }
-
+                
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                          
                         });
-
-
+                     
+                
                       }).catch(function (err) {
-
-
-
-                      });
-
+                
+                      
+                  
+                      });  
+    
           });
-
-
+    
+    
           sideBarService.getTemplateNameandEmployeId("Quotes",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 GlobalRef:"Quotes",
                                 Description:$('input[name="Quotes_2"]').val(),
                                 Template:"2",
                                 Active:quotes == 2 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                     
               });
-
-
+              
+        
             }).catch(function (err) {
-
-
-
+        
+             
+          
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Quotes",
                                   Description:$('input[name="Quotes_2"]').val(),
                                   Template:"2",
                                   Active:quotes == 2 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                              
                       });
-
-
+                        
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+    
           });
-
-
+    
+    
           sideBarService.getTemplateNameandEmployeId("Quotes",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 GlobalRef:"Quotes",
                                 Description:$('input[name="Quotes_3"]').val(),
                                 Template:"3",
                                 Active:quotes == 3 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                  
               });
-
-
+              
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 Description:$('input[name="Quotes_3"]').val(),
                                 Template:"3",
                                 Active:quotes == 3 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                              
                       });
-
-
+                        
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+    
           });
 
 
@@ -8108,6 +8108,9 @@ Template.new_quote.events({
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
+                let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
 
                 lineItemObj = {
                     description: tddescription || '',
@@ -8134,6 +8137,58 @@ Template.new_quote.events({
                             DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
                         }
                     };
+
+                    // Feature/ser-lot number tracking: Save Serial Numbers
+                    if (tdSerialNumber) {
+                        const serialNumbers = tdSerialNumber.split(',');
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "TPQASN",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQASN: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
+                    // Feature/ser-lot number tracking: Save Lot Number
+                    if (tdLotNumber) {
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "PQABatch",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQABatch: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
                     lineItemsForm.push(lineItemObjForm);
                     splashLineArray.push(lineItemObjForm);
                 }
@@ -8785,7 +8840,7 @@ Template.new_quote.events({
                                         Meteor.call('sendNormalEmail', reportData);
                                 }
                             }
-                        });
+                        });  
                       if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{
@@ -10905,6 +10960,8 @@ Template.new_quote.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        let selectedunit = $(target).closest('tr').find('.lineQty').val();
+        localStorage.setItem('productItem', selectedunit);
         let productService = new ProductService();
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
@@ -10919,8 +10976,12 @@ Template.new_quote.events({
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#lotNumberModal').attr('data-row', row + 1);
                     $('#lotNumberModal').modal('show');
                 } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#serialNumberModal').attr('data-row', row + 1);
                     $('#serialNumberModal').modal('show');
                 }
             });

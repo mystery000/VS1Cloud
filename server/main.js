@@ -154,9 +154,9 @@ Meteor.startup(() => {
           "Content-Type": "application/json",
           "Accept": "application/json",
           // "CLIENT-ID": "vrfL66wgAgzekdXcv1A58cz4Nn6AA97plgPEiTM",
-          "CLIENT-ID": "vrf9JUep9GWNHCpIKRREbTA9jbrF4LxdoEtiyLO",
+          "CLIENT-ID": "vrfDCGdW8Bg9rKA97mCGuVXuCAEGrmDfhSrDEJR",
           // "AUTHORIZATION": "apikey rasheedariyibi1:d323b9196724528cd72b9f8617db276e",
-          "AUTHORIZATION": "apikey dev.vs1cloud:d56dcb27df3930fccceb8dd4c7e2628d",
+          "AUTHORIZATION": "apikey hmwangyan18:1c49037ebd9694cc140bcf504187b1ae",
           // "Access-Control-Allow-Origin": "*"
         };
         let postData = {

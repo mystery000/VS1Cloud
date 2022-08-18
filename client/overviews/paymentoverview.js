@@ -206,7 +206,7 @@ Template.paymentoverview.onRendered(function() {
 
         getVS1Data('TPaymentList').then(function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(data) {
+                sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                     let lineItems = [];
                     let lineItemObj = {};
 
@@ -391,7 +391,7 @@ Template.paymentoverview.onRendered(function() {
                                         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                         if (checkurlIgnoreDate == 'true') {
-                                            sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
+                                            sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                                 getVS1Data('TPaymentList').then(function(dataObjectold) {
                                                     if (dataObjectold.length == 0) {} else {
                                                         let dataOld = JSON.parse(dataObjectold[0].data);
@@ -415,7 +415,7 @@ Template.paymentoverview.onRendered(function() {
                                                 $('.fullScreenSpin').css('display', 'none');
                                             });
                                         } else {
-                                            sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
+                                            sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                                 getVS1Data('TPaymentList').then(function(dataObjectold) {
                                                     if (dataObjectold.length == 0) {} else {
                                                         let dataOld = JSON.parse(dataObjectold[0].data);
@@ -450,8 +450,8 @@ Template.paymentoverview.onRendered(function() {
                             },
                             "fnInitComplete": function() {
                                 this.fnPageChange('last');
-                                $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
-                                $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                                $("<button class='btn btn-danger btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                                $("<button class='btn btn-primary btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                                 $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
 
@@ -683,7 +683,7 @@ Template.paymentoverview.onRendered(function() {
                                     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                     if (checkurlIgnoreDate == 'true') {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                             getVS1Data('TPaymentList').then(function(dataObjectold) {
                                                 if (dataObjectold.length == 0) {} else {
                                                     let dataOld = JSON.parse(dataObjectold[0].data);
@@ -707,7 +707,7 @@ Template.paymentoverview.onRendered(function() {
                                             $('.fullScreenSpin').css('display', 'none');
                                         });
                                     } else {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                             getVS1Data('TPaymentList').then(function(dataObjectold) {
                                                 if (dataObjectold.length == 0) {} else {
                                                     let dataOld = JSON.parse(dataObjectold[0].data);
@@ -742,8 +742,8 @@ Template.paymentoverview.onRendered(function() {
                         },
                         "fnInitComplete": function() {
                             this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
-                            $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-danger btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-primary btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                             $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
@@ -815,7 +815,7 @@ Template.paymentoverview.onRendered(function() {
                 });
             }
         }).catch(function(err) {
-            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(data) {
+            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                 let lineItems = [];
                 let lineItemObj = {};
 
@@ -1003,7 +1003,7 @@ Template.paymentoverview.onRendered(function() {
                                     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                     if (checkurlIgnoreDate == 'true') {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                             getVS1Data('TPaymentList').then(function(dataObjectold) {
                                                 if (dataObjectold.length == 0) {} else {
                                                     let dataOld = JSON.parse(dataObjectold[0].data);
@@ -1027,7 +1027,7 @@ Template.paymentoverview.onRendered(function() {
                                             $('.fullScreenSpin').css('display', 'none');
                                         });
                                     } else {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                             getVS1Data('TPaymentList').then(function(dataObjectold) {
                                                 if (dataObjectold.length == 0) {} else {
                                                     let dataOld = JSON.parse(dataObjectold[0].data);
@@ -1062,8 +1062,8 @@ Template.paymentoverview.onRendered(function() {
                         },
                         "fnInitComplete": function() {
                             this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
-                            $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-danger btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            $("<button class='btn btn-primary btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
                             $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
@@ -1168,7 +1168,7 @@ Template.paymentoverview.onRendered(function() {
     }, 500);
 
     templateObject.getAllFilterPaymentsData = function(fromDate, toDate, ignoreDate) {
-        sideBarService.getTPaymentList(fromDate, toDate, ignoreDate, initialReportLoad, 0,'').then(function(data) {
+        sideBarService.getTPaymentList(fromDate, toDate, ignoreDate, initialReportLoad, 0).then(function(data) {
             addVS1Data('TPaymentList', JSON.stringify(data)).then(function(datareturn) {
                 location.reload();
             }).catch(function(err) {
@@ -1611,7 +1611,7 @@ Template.paymentoverview.events({
 
           });
 
-        sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(dataPaymentList) {
+        sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
                 sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {

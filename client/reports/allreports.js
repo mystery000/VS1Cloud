@@ -527,7 +527,7 @@ Template.allreports.onRendered(() => {
     //         }
     //         else{
                 let data = JSON.parse(dataObject[0].data);
-
+                
                 // for(let i=0; i<useData.length; i++){
                     var dataInfo = {
                         id: data.Id || '',
@@ -1200,16 +1200,6 @@ Template.allreports.events({
 Template.allreports.helpers({
     isBalanceSheet: function() {
         return Template.instance().isBalanceSheet.get();
-    },
-    lastBatchUpdate: () => {
-      let transactionTableLastUpdated = "";
-      var currentDate = new Date();
-      if(localStorage.getItem('VS1TransTableUpdate')){
-         transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
-      }else{
-        transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
-      }
-      return transactionTableLastUpdated;
     },
     isAccountsLists: function() {
         return Template.instance().isAccountsLists.get();

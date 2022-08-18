@@ -257,8 +257,7 @@ const erpObject = {
     TVS1Superannuation:"TVS1Superannuation",
     TTripGroup: "TTripGroup",
     TTemplateSettings:"TTemplateSettings",
-    TReportsAccountantsCategory:"TReportsAccountantsCategory",
-    TCorrespondence:"TCorrespondence"
+    TReportsAccountantsCategory:"TReportsAccountantsCategory"
 
 };
 

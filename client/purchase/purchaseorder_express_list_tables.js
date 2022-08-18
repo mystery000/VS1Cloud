@@ -1478,10 +1478,10 @@ Template.purchaseorderlist.onRendered(function () {
     let customFieldCount = 11;
     let listType = "ltPurchaseOrderList";
 
-    let reset_data = [
+    let reset_data = [ 
 
       { label: 'Order Date', class: 'colOrderDate', active: true },
-      { label: 'P/O No.', class: 'colPurchaseNo', active: true },
+      { label: 'P/O No.', class: 'colPurchaseNo', active: true }, 
       { label: 'Supplier', class: 'colSupplier', active: true },
       { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
       { label: 'Tax', class: 'colTax', active: true },
@@ -1791,11 +1791,11 @@ Template.purchaseorderlist.events({
   },
   "click .resetTable": function (event) {
     let templateObject = Template.instance();
-    let custFields = templateObject.custfields.get();
+    let custFields = templateObject.custfields.get(); 
 
     let reset_data = [
       { label: 'Order Date', class: 'colOrderDate', active: true },
-      { label: 'P/O No.', class: 'colPurchaseNo', active: true },
+      { label: 'P/O No.', class: 'colPurchaseNo', active: true }, 
       { label: 'Supplier', class: 'colSupplier', active: true },
       { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
       { label: 'Tax', class: 'colTax', active: true },
@@ -2056,7 +2056,7 @@ Template.purchaseorderlist.events({
 
     sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,true,initialReportLoad,0).then(async function (dataPO) {
         addVS1Data("TPurchaseOrderList", JSON.stringify(dataPO)).then(async function (datareturn) {
-          sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(dataPaymentList) {
+          sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
           addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(async function(datareturn) {
               sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataSuppPay) {
                   addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(async function(datareturn) {

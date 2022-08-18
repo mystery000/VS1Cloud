@@ -911,6 +911,107 @@
         </div>
     </div>
     <!-- End Product Customer Type Modal -->
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="BOMSetupModal">
+        <div class="modal-dialog modal-xl modal-centered" role="document">
+            <div class="modal-content" >
+                <div class="modal-header" >
+                    <h4 class="title-header" >BOM Set up</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        .productRow {
+                            margin-bottom: 0.5rem;
+                            gap: 1%;
+                            font-size: 13px;
+                        }
+
+                        .productRow input, .productRow select {
+                            padding-top: 2px; 
+                            padding-bottom: 2px;
+                            font-size: 13px;
+                        }
+
+                        .productRow .colProduct{
+                            width: 40%;
+                            gap: 5px;
+                            text-align: left;
+                        }
+
+                        .productRow .colNote {
+                            width: 20%;
+                            text-align: left;
+                        }
+                        .productRow .colQty, .productRow .colDelete {
+                            width: 4%;
+                            text-align: left;
+                        }
+
+                        .productRow .colProcess, .productRow .colAttachment {
+                            flex: 14%;
+                            text-align: left;
+                        }
+                        
+
+                        .edtProductName, .edtQuantity, .edtProcess, .edtProcessNote {
+                            border: 2px solid black;
+                        }
+
+                    </style>
+                    <div class="d-flex productRow">
+                        <div class="th colProduct">Product</div>
+                        <div class="th colQty">Qty</div>
+                        <div class="thcolProcess">Process</div>
+                        <div class="th colNote">Notes</div>
+                        <div class="th colAttachment"></div>
+                        <div class="th colDelete"></div>
+                    </div>
+                    <div class="d-flex productRow">
+                        <div class="colProduct">
+                            <input class="edtProductName" id="edtMainProductName" style="width: 60%" value="{{productrecord.productname}}"/>
+                        </div>
+                        <div class="colQty">
+                            <input type="text" class="edtQuantity w-100" value="1"/>
+                        </div>
+                        <div class="colProcess">
+                            <select type="search" id="edtProcess" class="edtProcess w-100" name="edtProcess"></select>
+                        </div>
+                        <div class="colNote">
+                            <input type="text" class="edtProcessNote w-100"/>
+                        </div>
+                        <div class="colAttachment">
+                            <button class="btnAddAttachment" style="border: 0; background-color: #00a3d3; padding-top: 2px; padding-bottom: 2px"><i class="fa fa-paperclip" style="padding-right: 5px; "></i>Add Attachments</button>
+                        </div>
+                        <div class="colDelete"></div>
+                    </div>
+                    <div class="d-flex productRow">
+                        <div class="colProduct d-flex">
+                            <button class="btnAddProduct" style="width: 30%; background-color: #00a3d3; border: 2px solid black">Product+</button>
+                            <select class="edtProductName edtRaw" id="edtRaw" type="search" value="12345" style="width: 30%"></select>
+                        </div>
+                        <div class="colQty">
+                            <input type="text" class="edtQuantity w-100" value="1"/>
+                        </div>
+                        <div class="colProcess">
+                        </div>
+                        <div class="colNote">
+                        </div>
+                        <div class="colAttachment"></div>
+                        <div class="colDelete"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+        {{> productlistpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="processListModal">
+        {{> processlistpopup}}
+        <!-- {{> statuspop}} -->
+    </div>
     <script>
         modalDraggable();
     </script>

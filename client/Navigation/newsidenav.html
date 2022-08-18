@@ -40,8 +40,8 @@
             }
 
             #sidebar {
-                min-width: 6.5vw; /* min-width: 6vw; */
-                max-width: 6.5vw; /* min-width: 6vw; */
+                min-width: 6vw;
+                max-width: 6vw;
                 background: #00a3d3;
                 color: rgba(255, 255, 255, 1);
                 transition: all 0.3s;
@@ -73,7 +73,7 @@
             #sidebar ul li a {
                 padding: 10px;
                 padding-top: 16px;
-                font-size: .80rem;  /* font-size: .65rem; */
+                font-size: .65rem;
                 display: block;
                 cursor: pointer;
             }
@@ -115,14 +115,13 @@
             }
 
             .faHeader {
-                font-size: 20px; /* font-size: 15px; */
+                font-size: 15px;
                 margin: 0 auto;
             }
 
             .liHeader {
                 display: grid !important;
                 justify-content: center !important;
-                text-align: center;
             }
 
             .opacityNotActive {
@@ -464,16 +463,13 @@
             {{/if}}
             {{#if includeDashboard}}
                 <li class="dashboardLi" id="sidenavdashbaord">
-                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Accounts</a>
+                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard</a>
                 </li>
                 <li class="dashboardLiExe" id="sidenavdashbaordexe">
                     <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Executive</a>
                 </li>
-                <li class="dashboardLiSalesManager" id="sidenavdashbaordsalesmanager">
-                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br>  Sales Manager</a>
-                </li>
                 <li class="dashboardLiSales" id="sidenavdashbaordsales">
-                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Sales</a>
+                    <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Sales Performance</a>
                 </li>
             {{/if}}
 

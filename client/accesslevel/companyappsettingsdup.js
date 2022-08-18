@@ -463,11 +463,10 @@ Template.companyappsettingsdup.events({
         }
     },
     'click .btnTopGlobalSave': function () {
-        // $('.fullScreenSpin').css('display', 'inline-block');
+        $('.fullScreenSpin').css('display', 'inline-block');
         const templateObject = Template.instance();
         let checkLinkTrueERP = false;
-        let cloudPackageCheck = localStorage.getItem('vs1cloudlicenselevel');  
-        cloudPackageCheck = 'Simple Start';
+        let cloudPackageCheck = localStorage.getItem('vs1cloudlicenselevel');
         var checkEssentials = document.getElementById("formCheck-Essentials");
         var checkPlus = document.getElementById("formCheck-Plus");
         let paymentAmount = 0;
@@ -481,66 +480,77 @@ Template.companyappsettingsdup.events({
         let userQuantity = 1;
         let sumPriceUser = 0;
         var splashLineArray = new Array();
-        let getCurrenUserPack = templateObject.recordpackType.get(); 
-        if( cloudPackageCheck != 'PLUS' ){
-            if ((checkEssentials.checked == true) && (checkPlus.checked == false)) {
-                if (cloudPackageCheck == "Essentials") {
-                    paymentAmount = 0;
-                    accessLevelCheck = 2;
+        let getCurrenUserPack = templateObject.recordpackType.get();
+        if ((checkEssentials.checked == true) && (checkPlus.checked == false)) {
+            if (cloudPackageCheck == "Essentials") {
+                paymentAmount = 0;
+                accessLevelCheck = 2;
+            } else {
+                if (getCurrenUserPack == "trialPack") {
+                    paymentAmount = 50;
+                } else if (getCurrenUserPack == "subPack") {
+                    paymentAmount = 32.5;
                 } else {
-                    let basePrice = 65;                
-                    if (getCurrenUserPack == "trialPack") {
-                        paymentAmount = 30;
-                    } else if (getCurrenUserPack == "subPack") {
-                        paymentAmount = 30;
-                    } else {
-                        paymentAmount = 30;
-                    }
+                    paymentAmount = 32.5;
+                }
 
-                    lineItemObjForm = {
-                        ModuleName: "Essentials" || '',
-                        Price: paymentAmount.toFixed(2),
-                        DiscountedPrice: paymentAmount.toFixed(2),
-                        RenewPrice: basePrice.toFixed(2),
-                        RenewDiscountedPrice: basePrice.toFixed(2),
-                        RenewDiscountDesc: 1,
-                        IsSubPackage: true,
-                        SKU: 'vs1_essentials_sub'
-                    };
-                    lineItemsForm1.push(lineItemObjForm);
+                lineItemObjForm = {
+                    ModuleName: "Essentials" || '',
+                    Price: paymentAmount.toFixed(2),
+                    DiscountedPrice: paymentAmount.toFixed(2),
+                    RenewPrice: paymentAmount.toFixed(2),
+                    RenewDiscountedPrice: paymentAmount.toFixed(2),
+                    RenewDiscountDesc: 1
+
+                };
+                lineItemsForm1.push(lineItemObjForm);
+            }
+
+            accessLevel = 2;
+        } else if ((checkPlus.checked == true)) {
+            if (cloudPackageCheck == "PLUS") {
+                paymentAmount = 0;
+                accessLevelCheck = 3;
+            } else if (cloudPackageCheck == "Essentials") {
+                if (getCurrenUserPack == "trialPack") {
+                    paymentAmount = 75;
+                } else if (getCurrenUserPack == "subPack") {
+                    paymentAmount = 50;
+                } else {
+                    paymentAmount = 50;
                 }
-                accessLevel = 2;
-            } else if ((checkPlus.checked == true)) {
-                if (cloudPackageCheck == "Essentials") {
-                    if (getCurrenUserPack == "trialPack") {
-                        paymentAmount = 95;
-                    } else if (getCurrenUserPack == "subPack") {
-                        paymentAmount = 30;
-                    } else {
-                        paymentAmount = 30;
-                    }
-                }else if (cloudPackageCheck == "Simple Start"){
-                    if (getCurrenUserPack == "trialPack") {
-                        paymentAmount = 95;
-                    } else if (getCurrenUserPack == "subPack") {
-                        paymentAmount = 60;
-                    } else {
-                        paymentAmount = 60;
-                    }
-                }
-                let basePrice = 95;  
                 lineItemObjForm = {
                     ModuleName: "PLUS" || '',
                     Price: paymentAmount.toFixed(2),
                     DiscountedPrice: paymentAmount.toFixed(2),
-                    RenewPrice: basePrice.toFixed(2),
-                    RenewDiscountedPrice: basePrice.toFixed(2),
-                    RenewDiscountDesc: 1,
-                    IsSubPackage: true,
-                    SKU: 'vs1_plus_sub'
+                    RenewPrice: paymentAmount.toFixed(2),
+                    RenewDiscountedPrice: paymentAmount.toFixed(2),
+                    RenewDiscountDesc: 1
+
                 };
                 lineItemsForm1.push(lineItemObjForm);
             }
+            //paymentAmount = 25;
+        } else if (cloudPackageCheck == "Simple Start") {
+            if (getCurrenUserPack == "trialPack") {
+                paymentAmount = 75;
+            } else if (getCurrenUserPack == "subPack") {
+                paymentAmount = 57.5;
+            } else {
+                paymentAmount = 57.5;
+            }
+            lineItemObjForm = {
+                ModuleName: "Simple Start" || '',
+                Price: paymentAmount.toFixed(2),
+                DiscountedPrice: paymentAmount.toFixed(2),
+                RenewPrice: paymentAmount.toFixed(2),
+                RenewDiscountedPrice: paymentAmount.toFixed(2),
+                RenewDiscountDesc: 1
+
+            };
+            lineItemsForm1.push(lineItemObjForm);
+            //paymentAmount = 50;
+
         }
         accessLevel = 3;
 
@@ -557,8 +567,8 @@ Template.companyappsettingsdup.events({
                     DiscountedPrice: sumPriceUser,
                     RenewPrice: sumPriceUser,
                     RenewDiscountedPrice: sumPriceUser,
-                    RenewDiscountDesc: userQuantity,
-                    IsSubPackage: false
+                    RenewDiscountDesc: userQuantity
+
                 };
                 checkLinkTrueERP = true;
             } else {
@@ -568,8 +578,8 @@ Template.companyappsettingsdup.events({
                     DiscountedPrice: sumPriceUser,
                     RenewPrice: sumPriceUser,
                     RenewDiscountedPrice: sumPriceUser,
-                    RenewDiscountDesc: userQuantity,
-                    IsSubPackage: false
+                    RenewDiscountDesc: userQuantity
+
                 };
             }
 
@@ -635,20 +645,18 @@ Template.companyappsettingsdup.events({
                     DiscountedPrice: lineItemsForm[i].DiscountedPrice.toFixed(2),
                     RenewPrice: lineItemsForm[i].RenewPrice.toFixed(2),
                     RenewDiscountedPrice: lineItemsForm[i].RenewDiscountedPrice,
-                    RenewDiscountDesc: lineItemsForm[i].RenewDiscountDesc,
-                    IsSubPackage: lineItemsForm[i].IsSubPackage,
-                    SKU: 'vs1_' + lineItemsForm[i].ModuleName
+                    RenewDiscountDesc: lineItemsForm[i].RenewDiscountDesc
+
                 };
-                lineItemsForm1.push( lineItemObjForm );
+                lineItemsForm1[i] = lineItemObjForm;
             }
         }
 
         for (let l = 0; l < lineItemsForm1.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItemsForm1[l].ModuleName + "&price" + l + "=" + Currency + lineItemsForm1[l].Price + "&qty" + l + "=" + lineItemsForm1[l].RenewDiscountDesc + "&";
-        }        
+        }
         stringQuery = stringQuery + "tax=0" + "&total=" + Currency + grandTotal + "&customer=" + Session.get('vs1companyName') + "&name=" + name + "&surname=" + surname + "&company=" + Session.get('vs1companyName') + "&customeremail=" + localStorage.getItem('mySession') + "&type=VS1 Modules Purchase&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
         newStripePrice = grandTotal.toFixed(2);
-        // return false
         var oPost = new XMLHttpRequest();
         oPost.open("POST", URLRequest + loggedserverIP + ':' + loggedserverPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_AddModules"', true);
         oPost.setRequestHeader("database", vs1loggedDatatbase);
@@ -660,7 +668,7 @@ Template.companyappsettingsdup.events({
 
         var myString = '"JsonIn"' + ':' + JSON.stringify(objDetailsUser);
         oPost.send(myString);
-        // let newStripePrice = grandTotal.toFixed(2);
+        let newStripePrice = grandTotal.toFixed(2);
         oPost.onreadystatechange = function () {
             if (oPost.readyState == 4 && oPost.status == 200) {
                 //Meteor.call('braintreeChargeCard', Session.get('VS1AdminUserName'), parseFloat(grandTotal));
@@ -671,7 +679,8 @@ Template.companyappsettingsdup.events({
 
                 //     }
                 // });
-                if ( newStripePrice ) {
+                if (newStripePrice > 0) {
+
                     let to2Decimal = objDetailsUser.Params.Price.toFixed(2)
                         let amount = to2Decimal.toString().replace(/\./g, '')
 
@@ -1086,13 +1095,13 @@ Template.companyappsettingsdup.events({
                         // cancelButtonClass: "btn-default"
                     }).then((result) => {
                         if (result.value) {
-                            // $('.essentialsdiv .custom-control-input').prop("checked", true);
+                            $('.essentialsdiv .custom-control-input').prop("checked", true);
                             $([document.documentElement, document.body]).animate({
                                 scrollTop: $(".vs1Modules").offset().top
                             }, 2000);
                             $('.btnTopGlobalSave').addClass('btnSaveAlert');
                         } else if (result.dismiss === 'cancel') {
-                            // $('.essentialsdiv .custom-control-input').prop("checked", false);
+                            $('.essentialsdiv .custom-control-input').prop("checked", false);
                             $(event.target).prop("checked", false);
                         }
                     });
@@ -1136,7 +1145,7 @@ Template.companyappsettingsdup.events({
                         // cancelButtonClass: "btn-default"
                     }).then((result) => {
                         if (result.value) {
-                            // $('.essentialsdiv .custom-control-input').prop("checked", true);
+                            $('.essentialsdiv .custom-control-input').prop("checked", true);
                             swal({
                                 title: 'Price per User',
                                 text: "How many users would you like to enable for this feature ?",
@@ -1163,7 +1172,7 @@ Template.companyappsettingsdup.events({
                                 }
                             });
                         } else if (result.dismiss === 'cancel') {
-                            // $('.essentialsdiv .custom-control-input').prop("checked", false);
+                            $('.essentialsdiv .custom-control-input').prop("checked", false);
                             $(event.target).prop("checked", false);
                         }
                     });
@@ -1208,7 +1217,7 @@ Template.companyappsettingsdup.events({
                         // cancelButtonClass: "btn-default"
                     }).then((result) => {
                         if (result.value) {
-                            // $('.plusdiv .custom-control-input').prop("checked", true);
+                            $('.plusdiv .custom-control-input').prop("checked", true);
                             swal({
                                 title: 'Price per User',
                                 text: "How many users would you like to enable for this feature ?",
@@ -1231,7 +1240,7 @@ Template.companyappsettingsdup.events({
                                 }
                             });
                         } else if (result.dismiss === 'cancel') {
-                            // $('.plusdiv .custom-control-input').prop("checked", false);
+                            $('.plusdiv .custom-control-input').prop("checked", false);
                             $(event.target).prop("checked", false);
                         }
                     });
