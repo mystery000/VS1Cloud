@@ -217,20 +217,12 @@ authenticatedRoutes.route('/dashboardexe', {
     }
 });
 
+
 authenticatedRoutes.route('/dashboardsales', {
     name: 'dashboardsales',
     action() {
         BlazeLayout.render('layout', {
             yield: 'dashboardsales'
-        });
-    }
-});
-
-authenticatedRoutes.route('/dashboardsalesmanager', {
-    name: 'dashboardsalesmanager',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'dashboardsalesmanager'
         });
     }
 });
@@ -1983,47 +1975,11 @@ authenticatedRoutes.route('/mailchimpsettings', {
   }
 });
 
-authenticatedRoutes.route('/correspondence-list', {
+authenticatedRoutes.route('/email-list', {
   name: 'mailchimpList',
   action() {
       BlazeLayout.render('layout', {
           yield: 'mailchimpList'
       });
   }
-});
-
-authenticatedRoutes.route('/campaign-list', {
-  name: 'mailchimpCampaignList',
-  action() {
-      BlazeLayout.render('layout', {
-          yield: 'mailchimpCampaignList'
-      });
-  }
-});
-
-authenticatedRoutes.route('/tripgroup', {
-    name: 'tripgroup',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'tripgroup'
-        });
-    }
-});
-
-authenticatedRoutes.route('/receiptcategory', {
-    name: 'receiptcategory',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'receiptcategory'
-        });
-    }
-});
-
-authenticatedRoutes.route('/processlist', {
-    name: 'processList',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'processList'
-        });
-    }
 });

@@ -1391,7 +1391,7 @@ Template.employeelistpop.onRendered(function () {
 
     templateObject.getEmployees();
 
-    tableResize();
+
 
 });
 

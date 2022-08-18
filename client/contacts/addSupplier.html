@@ -1396,18 +1396,6 @@
                                                                 background-color: #ededed;
                                                             }
 
-                                                            th.colDate {
-                                                                width: 15%;
-                                                            }
-
-                                                            th.colTaskName {
-                                                                width: 15%;
-                                                            }
-
-                                                            th.colTaskLabels {
-                                                                width: 15%;
-                                                            }
-
                                                             .table-striped tbody tr:nth-of-type(odd) {
                                                                 background-color: white !important;
                                                             }
@@ -1517,52 +1505,30 @@
                     </div>
                 </div>
             </div>
-        {{/if}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="referenceLetterModal">
-        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header d-flex align-items-center">
-                    <h5 class="modal-title" id="chooseLetterLabel">Choose a reference letter</h5>
-                    <button class="btn btn-primary btnAddLetter" type="button"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Add a template</button>
-                </div>
-                <div class="modal-body p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
-                    {{#each correspondence in correspondences}}
-                        <div>
-                            <input type="radio" name="refTemp" value="{{correspondence.Ref_Type}}" id="{{correspondence.Ref_Type}}" data-subject="{{correspondence.ReferenceTxt}}" data-memo="{{correspondence.MessageAsString}}">
-                            <label for="{{correspondence.label}}">{{correspondence.Ref_Type}}</label>
+            <div class="modal fade" role="dialog" tabindex="-1" id="referenceLetterModal">
+                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="chooseLetterLabel">Choose a reference letter</h5>
                         </div>
-                    {{/each}}
-                </div>
-                <div class="modal-footer">
-                    <div class="d-flex align-items-center justify-content-end">
-                        <button class="btn btn-success float-right btnSaveLetterTemp" id="save-correspondence" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <div class="modal-body p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
+                            {{#each correspondence in correspondences}}
+                                <div>
+                                    <input type="radio" name="refTemp" value="{{correspondence.label}}" id="{{correspondence.label}}" data-subject="{{correspondence.subject}}" data-memo="{{correspondence.memo}}">
+                                    <label for="{{correspondence.label}}">{{correspondence.label}}</label>
+                                </div>
+                            {{/each}}
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <button class="btn btn-success float-right btnSaveLetterTemp" id="save-correspondence" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="modal fade" id="addLetterTemplateModal" role="dialog" tabindex="-1">
-        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addLetterTemplateLabel">Create a Letter Template</h5>
-                </div>
-                <div class="modal-body p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
-                    <input type="text" class="p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateLbl" placeholder="Reference Letter Label"/>
-                    <input type="text" class="p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateSubject" placeholder="Subject"/>
-                    <textarea type="text" class="p-2" style="width: 100%; height: 200px; resize: none; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateContent" placeholder="Enter Message Here"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <div class="d-flex align-items-center justify-content-end">
-                        <button class="btn btn-success float-right btnSaveLetterTemp" id="save-correspondence" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"> <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{/if}}
     </div>
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">

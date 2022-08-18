@@ -17,11 +17,7 @@ export class OCRService {
           if (results.statusCode == 201) {
             resolve(JSON.parse(results.content));
           } else {
-            if (results.response) {
-              reject(results.response.data.error);
-            } else {
-              reject(results.errno);
-            }
+            reject(results.response.data.error);
           }
         }
       });

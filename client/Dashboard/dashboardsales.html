@@ -14,35 +14,7 @@
             background-color: #9ed5f5;
             border-radius: 14px;
             color: black;
-            max-height: 350px;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .card-inner-heading {
-            font-size: 1.2rem;
-            text-align: center;
-            padding: 0;
-            margin: 0;
-        }
-
-        .card-inner-heading > h5 {
-            font-size: 1.3rem;
-        }
-
-        .card-inner-matrics > h5 {
-            font-size: 0.8rem;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .card-inner-matrics > h6 {
-            font-size: 1rem;
-            text-align: center;
-        }
-
-        #calendar {
-          height: 450px;
+            margin-left: -4px;
         }
     </style>
     <div class="container-fluid">
@@ -50,211 +22,182 @@
             <div class="row mb-2">
                 <div class="col-12 col-md-12">
                     <header class="pt-1 pb-1 d-flex justify-content-center">
-                        <h2>My Performance Dashboard</h2>
+                        <h2>Dashboard Sales Performance</h2>
                     </header>
                     <hr>
                 </div>
             </div>
             <div class="row pt-3 pb-3">
-                <div class="col-md-9">
+                <div class="col-md-8" data-default-class="col-md-10">
                     <div class="row">
-                      <div class="col-md-3">
-                        <div class="card shadow custom-sales-card border-left-primary py-2"
-                          data-toggle="tooltip" 
-                          data-bs-tooltip=""
-                          title="is Lead count for last 3 months where status is ”Unqualified” ”My Metric” is Leads with my name Team ”Average” is all leads for the same period"
-                        >
-                          <div class="card-body" style="cursor: pointer;">
-                            <div class="row align-items-center no-gutters">
-                              <div class="col-md-12 card-inner-heading text-dark mb-3">
-                                New Leads
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">My Metric</h5>
-                                <h6 class="text-primary" id="new-leads-my-metric">000</h6>
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">Team Average</h5>
-                                <h6 class="text-primary" id="new-leads-team-avg">000</h6>
-                              </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2">
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0" data-toggle="tooltip" data-bs-tooltip="" title="Close Deals"><span>New Leads this month</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="card shadow custom-sales-card border-left-primary py-2"
-                          data-toggle="tooltip" 
-                          data-bs-tooltip=""
-                          title="is Lead count for last 3 months where status is ”Opportunity” ”My Metric” is Leads with my name ”Team Average” is all leads for the same period"
-                        >
-                          <div class="card-body" style="cursor: pointer;">
-                            <div class="row align-items-center no-gutters">
-                              <div class="col-md-12 card-inner-heading text-dark mb-3">
-                                New Oppertunities
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">My Metric</h5>
-                                <h6 class="text-primary" id="new-opptertunties-my-metric">
-                                  000
-                                </h6>
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">Team Average</h5>
-                                <h6 class="text-primary" id="new-opptertunties-team-avg">
-                                  000
-                                </h6>
-                              </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2">
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center" data-toggle="tooltip" data-bs-tooltip="" title="Close Deals"><span>New Deals this month</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="card shadow custom-sales-card border-left-primary py-2"
-                          data-toggle="tooltip" 
-                          data-bs-tooltip=""
-                          title="is Lead/Customer count for last 3 months where an Invoice has been made ”My Metric” is Lead/Customer with my name ”Team Average” is all Lead/Customer for the same period"
-                        >
-                          <div class="card-body" style="cursor: pointer;">
-                            <div class="row align-items-center no-gutters">
-                              <div class="col-md-12 card-inner-heading text-dark mb-3">
-                                Won Oppertunities
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">My Metric</h5>
-                                <h6 class="text-primary" id="won-opptertunties-my-metric">
-                                  000
-                                </h6>
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">Team Average</h5>
-                                <h6 class="text-primary" id="won-opptertunties-team-avg">
-                                  000
-                                </h6>
-                              </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2">
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center" data-toggle="tooltip" data-bs-tooltip="" title="some text on hover"><span>Closed Deals this month</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-2">
-                        <div class="card shadow custom-sales-card border-left-primary py-2"
-                          data-toggle="tooltip" 
-                          data-bs-tooltip=""
-                          title="is value of Invoices for last 3 months If more than “Quota” on employee card show “In Front” and colour Numbers green. f less than “Quota” on employee card show “Behind” and colour Numbers Red."
-                        >
-                          <div class="card-body" style="cursor: pointer;">
-                            <div class="row align-items-center no-gutters">
-                              <div class="col-md-12 card-inner-heading text-dark mb-3">
-                                Gap to Quota
-                                <h5 class="text-danger mt-3" id="gap-to-quota">$ 86,000</h5>
-                              </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2">
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center"  data-toggle="tooltip" data-bs-tooltip="" title="some text on hover"><span>Closed Deals Total</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="row pt-3">
-                      <div class="col-md-3">
-                        <div class="card shadow custom-sales-card border-left-primary py-2"
-                          data-toggle="tooltip" 
-                          data-bs-tooltip=""
-                          title="is Quote count for last 3 months where it is converted to an invoice “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period"
-                        >
-                          <div class="card-body" style="cursor: pointer;">
-                            <div class="row align-items-center no-gutters">
-                              <div class="col-md-12 card-inner-heading text-dark mb-3">
-                                Win Rate %
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">My Metric</h5>
-                                <h6 class="text-primary" id="win-rate-my-metric">000</h6>
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">Team Average</h5>
-                                <h6 class="text-primary" id="win-rate-team-avg">000</h6>
-                              </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2">
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center" data-toggle="tooltip" data-bs-tooltip="" title="Close Deals"><span>Win Rate</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="card shadow custom-sales-card border-left-primary py-2"
-                          data-toggle="tooltip" 
-                          data-bs-tooltip=""
-                          title="is average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced” “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period"
-                        >
-                          <div class="card-body" style="cursor: pointer;">
-                            <div class="row align-items-center no-gutters">
-                              <div class="col-md-12 card-inner-heading text-dark mb-3">
-                                Average Sales Cycle
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">Avg Sales Cycle</h5>
-                                <h6 class="text-primary" id="avg-sales-cycle-my-metric">
-                                  000
-                                </h6>
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">Team Average</h5>
-                                <h6 class="text-primary" id="avg-sales-cycle-team-avg">
-                                  000
-                                </h6>
-                              </div>
+                        <div class="col-md-2">
+                            <div class="card shadow custom-sales-card border-left-primary py-2">
+                                <div class="card-body" style="cursor: pointer;">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col mr-2">
+                                            <div class="text-uppercase text-dark h5 font-weight-bold mb-3 text-center"><span>000</span></div>
+                                            <div class="text-dark h6 small-heading font-weight-bold mb-0 text-center" data-toggle="tooltip" data-bs-tooltip="" title="Close Deals"><span>Avg. Sales Cycle</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                      <div class="col-md-5">
-                        <div class="card shadow custom-sales-card border-left-primary py-2"
-                          data-toggle="tooltip" 
-                          data-bs-tooltip=""
-                          title="is quotes from Lead/Customer for last 3 months where the quote has not been converted to an invoice. “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period"
-                        >
-                          <div class="card-body" style="cursor: pointer;">
-                            <div class="row align-items-center no-gutters">
-                              <div class="col-md-12 card-inner-heading text-dark mb-3">
-                                Pipeline Amount
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">My Metric</h5>
-                                <h6 class="text-primary" id="pipeline-amount-my-metric">
-                                  000
-                                </h6>
-                              </div>
-                              <div class="col-md-6 card-inner-matrics">
-                                <h5 class="text-dark">Team Average</h5>
-                                <h6 class="text-primary" id="pipeline-amount-team-avg">
-                                  000
-                                </h6>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                 </div>
-                <div class="col-md-3 my-tasks">
-                    {{> myTasksWidget}}
+                <div class="col-md-4 my-tasks">
+                    <h5 class="text-center mb-3 font-weight-bold">My Tasks</h5>
+                    <div class="row text-center">
+                      <div class="col-md-4">
+                        <h5 class="font-weight-bold">Data</h5>
+                      </div>
+                      <div class="col-md-4">
+                        <h5 class="font-weight-bold">Priority</h5>
+                      </div>
+                      <div class="col-md-4">
+                        <h5 class="font-weight-bold">Subject</h5>
+                      </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                          <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                          <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                          <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                          <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                          <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                          <div class="col-md-4">
+                            <p class="mb-0">Data</p>
+                          </div>
+                    </div>
                   </div>
+            </div>
+
+            <hr>
+
+            <div class="row align-items-center pt-3 pb-3">
+                <div class="col-auto col-md-5 no-gutters" data-default-class="col-md-6">
+                    <div id="spd-employee-chart"></div>
+                </div>
+
+                <div class="col-md-3 no-gutters">
+                    <div id="spd-gauge-area1"></div>
+                </div>
+                <div class="col-md-3 no-gutters">
+                    <div id="spd-gauge-area2"></div>
+                </div>
+            </div>
+            <hr>
+            <div class="row align-items-center pt-3 pb-3">
+                <div class="col-md-5 no-gutters">
+                    <div id='calendar'></div>
+                </div>
+                <div class="col-md-6 no-gutters">
+                   <div class="row no-gutters">
+                        <div class="col-md-6 no-gutters">
+                            <div id="spd-gauge-area3"></div>
+                        </div>
+                        <div class="col-md-6 no-gutters">
+                            <div id="spd-gauge-area4"></div>
+                        </div>
+
+                        <div class="col-md-6 no-gutters">
+                            <div id="spd-gauge-area5"></div>
+                        </div>
+                        <div class="col-md-6 no-gutters">
+                            <div id="spd-gauge-area6"></div>
+                        </div>
+                   </div>
+                </div>
             </div>
             <hr>
             <div class="row pt-3 pb-3">
-                <div class="col-auto col-md-6 no-gutters">
-                    <div id="sd-comparison-chart"></div>
-                </div>
-                <div class="col-auto col-md-6 no-gutters">
-                    <div id="opens-oppertunities-chart"></div>
+                <div class="col-md-12">
+                    <h2>Leads Section</h2>
                 </div>
             </div>
-            <hr>
-            <div class="row pb-3">
-                <div class="offset-2 col-md-8">
-                    {{> appointmentsWidget}}
-                </div>
-            </div>
-            <hr>
-            <div class="pt-3 pb-3" style="overflow: hidden;">
-                {{> leadlist}}
-        </div>
         {{/if}}
     </div>
 </template>
+
+

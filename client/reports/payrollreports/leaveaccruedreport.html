@@ -118,7 +118,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>From</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom">
+                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -127,7 +127,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>To</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo">
+                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -166,27 +166,23 @@
                                                 <th>Accrued Date</th>
                                                 <th>Leave Type</th>
                                                 <th>Employee</th>
-                                                <th>Pay No</th>
+                                                <th class="text-right">Pay No</th>
                                                 <th>Accrued Type</th>
-                                                <th>Hours</th>
+                                                <th class="text-right">Hours</th>
                                                 <th class="text-right">Value</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{#if records}}
-                                                {{#each item in records}}
-                                                    <tr>
-                                                        <td>{{ formatDate item.fields.Date }}</td>
-                                                        <td>{{ item.fields.LeaveType }}</td>
-                                                        <td>{{ item.fields.EmployeeName }}</td>
-                                                        <td>{{ item.fields.PayID }}</td>
-                                                        <td>{{ item.fields.AccrualType }}</td>
-                                                        <td class="{{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ floatValue item.fields.AccruedHours }}</td>
-                                                        <td class="text-right {{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ calculateHourPrice item }}</td>
-                                                    </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                            <!-- <tr>
+                                            <tr>
+                                                <td>23/05/2022</td>
+                                                <td>PTO</td>
+                                                <td>Rasheed</td>
+                                                <td class="text-right">1337</td>
+                                                <td></td>
+                                                <td class="text-right">342.5</td>
+                                                <td class="text-right">$ 5,000.00</td>
+                                            </tr>
+                                            <tr>
                                                 <td>23/05/2022</td>
                                                 <td>Annual</td>
                                                 <td>Josef</td>
@@ -194,7 +190,7 @@
                                                 <td></td>
                                                 <td class="text-right">17.5</td>
                                                 <td class="text-right">$ 52,000.00</td>
-                                            </tr> -->
+                                            </tr>
                                             <!-- {{#if records}}
                                                 <tr>
                                                     <td></td>

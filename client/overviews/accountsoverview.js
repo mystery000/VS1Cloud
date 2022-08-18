@@ -34,11 +34,11 @@ Template.accountsoverview.onRendered(function () {
   const dataTableList = [];
   const tableHeaderList = [];
   let categories = [];
-  // categories.push('Materials');
-  // categories.push('Meals & Entertainment');
-  // categories.push('Office Supplies');
-  // categories.push('Travel');
-  // categories.push('Vehicle');
+  categories.push('Materials');
+  categories.push('Meals & Entertainment');
+  categories.push('Office Supplies');
+  categories.push('Travel');
+  categories.push('Vehicle');
 
   templateObject.getReceiptCategoryList = function(){
     getVS1Data('TReceiptCategory').then(function (dataObject) {
@@ -2288,16 +2288,6 @@ Template.accountsoverview.helpers({
       bsbname = "BSB";
     }
     return bsbname;
-  },
-  lastBatchUpdate: () => {
-    let transactionTableLastUpdated = "";
-    var currentDate = new Date();
-    if(localStorage.getItem('VS1TransTableUpdate')){
-       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
-    }else{
-      transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
-    }
-    return transactionTableLastUpdated;
   },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();

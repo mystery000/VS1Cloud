@@ -1,6 +1,5 @@
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
-import '../../lib/global/colResizable.js';
 let sideBarService = new SideBarService();
 modalDraggable = function () {
     $('.modal-dialog').draggable({
@@ -367,8 +366,6 @@ batchUpdateCall = async function (url) {
                   localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx||0);
                   localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx||0);
 
-                  localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated);
-                  
                   if(dataReturnRes.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401){
                     localStorage.setItem('vs1LoggedEmployeeImages_dash','');
                   }else{
@@ -526,34 +523,15 @@ vs1GlobalBackButton = async function () {
     }
  });
 };
-thWidthOnResize = function() {
-  let tableWidth = [];
-  $('#tblcontactoverview th').each(function() {
-    tableWidth.push($(this).outerWidth());
-    tableWidth.push($(this).index());
 
-  });
-};
 tableResize = function() {
   setTimeout(function() {
-//     // $(".dataTable th, .draggingTable th").resizable({
-//     //   handles: "e",
-//     //   resize: function (event, ui) {
-//     //       var sizerID = "." + $(event.target).attr("class").split(" ")[1];
-//     //       $(sizerID).width(ui.size.width);
-//     //   }
-//     // });
-    $(".dataTable").colResizable({
-      liveDrag:true,
-      gripInnerHtml:"<div class='grip'></div>",
-      draggingClass:"dragging",
-      resizeMode:'overflow',
-      onResize: function (e) {
-        var table = $(e.currentTarget); //reference to the resized table
-        // console log this $(e.target).parent().index()
-        thWidthOnResize();
-      },
-      // disabledColumns: [2]
+    $(".dataTable th, .draggingTable th").resizable({
+      handles: "e",
+      resize: function (event, ui) {
+          var sizerID = "." + $(event.target).attr("class").split(" ")[1];
+          $(sizerID).width(ui.size.width);
+      }
     });
   }, 2000);
 };

@@ -691,47 +691,10 @@ Template.emailsettings.onRendered(function () {
 
     templateObject.getScheduleInfo();
 
-    // templateObject.getCorrespondence = () => {
-    //     let temp = localStorage.getItem('correspondence');
-    //     templateObject.correspondences.set(temp ? JSON.parse(temp) : [])
-    // }
-
-    
-templateObject.getCorrespondence = () => {
-    // let temp = localStorage.getItem('correspondence');
-    getVS1Data('TCorrespondence').then(function (dataObject) {
-        if(dataObject.length > 0) {
-            let data = JSON.parse(dataObject[0].data);
-            templateObject.correspondences.set(data)
-        }
-    }).catch(function (){
-        sideBarService.getCorrespondences().then(dataObject => {
-            let tempArray = [];
-            if(dataObject.tcorrespondence.length > 0) {
-                let temp = dataObject.tcorrespondence.filter(item=>{
-                    return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
-                })
-
-                for(let i = 0; i< temp.length; i++) {
-                    for (let j = i+1; j< temp.length; j++ ) {
-                        if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-                            temp[j].fields.dup = true
-                        }
-                    }
-                }
-                
-                temp.map(item=>{
-                    if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
-                        tempArray.push(item.fields)
-                    }
-                })
-            }
-            templateObject.correspondences.set(tempArray)
-        })
-    })
-
-}
-
+    templateObject.getCorrespondence = () => {
+        let temp = localStorage.getItem('correspondence');
+        templateObject.correspondences.set(temp ? JSON.parse(temp) : [])
+    }
     templateObject.getCorrespondence();
 
     $('#tblContactlist tbody').on('click', 'td:not(.chkBox)', function () {
@@ -753,21 +716,9 @@ templateObject.getCorrespondence = () => {
         return new Promise(async (resolve, reject) => {
 
             //TODO: Remove all BasedOnType localstorage variables(No need this part in production mode)
-            let basedOnTypeStorages = Object.keys(localStorage);
-            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => storage.includes('BasedOnType_'));
-            basedOnTypeStorages.forEach(storage => {
-                let formId = storage.split('_')[1];
-                let essentialIDs = ['1', '54', '177', '129'];
-                if(isEssential) {
-                    if(essentialIDs.includes(formId.toString())) {
-                        localStorage.removeItem(storage)
-                    }
-                } else {
-                    if(essentialIDs.includes(formId.toString()) == false) {
-                        localStorage.removeItem(storage)
-                    }
-                }
-            });
+            // let basedOnTypeStorages = Object.keys(localStorage);
+            // basedOnTypeStorages = basedOnTypeStorages.filter((storage) => storage.includes('BasedOnType_'));
+            // basedOnTypeStorages.forEach(storage => localStorage.removeItem(storage));
 
             const oldSettings = templateObject.originScheduleData.get();
             // Filter old settings according to the types of email setting(Essential one or Automated one)
@@ -1115,17 +1066,7 @@ templateObject.getCorrespondence = () => {
 
                             if (formID == '1') {
                                 // if report type is Grouped Reports....
-
-                                let groupedReportsModal = document.getElementById('groupedReportsModal');
-                                let groupedReports = groupedReportsModal.getElementsByClassName('star');
-                                let temp = [];
-                                for (let i = 0; i < groupedReports.length; i++) {
-                                    if (groupedReports[i].checked) {
-                                        temp.push(groupedReports[i])
-                                    }
-                                }
-                                groupedReports = temp;
-
+                                const groupedReports = $('#groupedReportsModal .star:checked').map(() => { return $(this) }).get();
                                 let formIDs = [];
                                 groupedReports.map(async (groupedReport) => {
                                     formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
@@ -1141,7 +1082,7 @@ templateObject.getCorrespondence = () => {
                                 objDetail.fields.FormName = formName;
                                 objDetail.fields.EmployeeEmail = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
-                                objDetail.fields.attachments = documents;
+
                                 //TODO: Set basedon type here
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
@@ -1178,17 +1119,15 @@ templateObject.getCorrespondence = () => {
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
 
-                                
-                                // Add synced cron job here
-                                objDetail.fields.FormName = formName;
-                                objDetail.fields.EmployeeEmail = recipients[index];
-                                objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
                                 //TODO: Set basedon type here
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
                                     BasedOnType: basedOnType,
                                 }));
 
+                                // Add synced cron job here
+                                objDetail.fields.FormName = formName;
+                                objDetail.fields.EmployeeEmail = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                 Meteor.call('addTask', objDetail.fields);
                             }
@@ -1205,6 +1144,177 @@ templateObject.getCorrespondence = () => {
                             && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
                         // Remove all
                         setting.fields.Active = false;
+                        let attachments = [];
+
+                        let targetElement;
+                        let docTitle = 'vs1cloud report.pdf';
+                        let parentElement;
+                        if (setting.fields.FormID == 129) {
+                            parentElement = document.getElementById('profitTemp');
+                        }
+                        if (setting.fields.FormID == 6) {
+                            parentElement = document.getElementById('agedPayablesTemp');
+                        }
+                        if (setting.fields.FormID == 134) {
+                            parentElement = document.getElementById('agedReceivableTemp');
+                        }
+                        if (setting.fields.FormID == 225) {
+                            parentElement = document.getElementById('generalLedgerTemp');
+                        }
+                        if (setting.fields.FormID == 1464) {
+                            parentElement = document.getElementById('productSalesReportTemp');
+                        }
+                        if (setting.fields.FormID == 70) {
+                            parentElement = document.getElementById('purchaseReportTemp');
+                        }
+                        if (setting.fields.FormID == 1364) {
+                            parentElement = document.getElementById('purchaseSummaryTemp');
+                        }
+                        if (setting.fields.FormID == 68) {
+                            parentElement = document.getElementById('salesReportTemp');
+                        }
+                        if (setting.fields.FormID == 278) {
+                            parentElement = document.getElementById('taxSummaryReportTemp');
+                        }
+                        if (setting.fields.FormID == 140) {
+                            parentElement = document.getElementById('trialBalanceTemp');
+                        }
+                        if (setting.fields.FormID == 54) {
+                            parentElement = document.getElementById('invoicePDFTemp');
+                        }
+                        if (setting.fields.FormID == 177 || setting.fields.FormID == 17544) {
+                            parentElement = document.getElementById('statementPDFTemp');
+                        }
+                        if (setting.fields.FormID == 12) {
+                            parentElement = document.getElementById('billPDFTemp');
+                        }
+                        if (setting.fields.FormID == 18) {
+                            parentElement = document.getElementById('chequePDFTemp');
+                        }
+                        if (setting.fields.FormID == 21) {
+                            parentElement = document.getElementById('creditPDFTemp');
+                        }
+
+                        if (setting.fields.FormID == 61) {
+                            parentElement = document.getElementById('paymentsPDFTemp');
+                        }
+                        if (setting.fields.FormID == 69) {
+                            parentElement = document.getElementById('purchaseOrderPDFTemp');
+                        }
+
+                        if (setting.fields.FormID == 71) {
+                            parentElement = document.getElementById('quotePDFTemp');
+                        }
+
+                        if (setting.fields.FormID == 74) {
+                            parentElement = document.getElementById('refundPDFTemp')
+                        }
+
+                        if (setting.fields.FormID == 77) {
+                            parentElement = document.getElementById('salesorderPDFTemp')
+                        }
+
+                        if (setting.fields.FormID == 94) {
+                            parentElement = document.getElementById('supplierpaymentPDFTemp')
+                        }
+
+                        if (setting.fields.FormID != 1) {
+                            targetElement = parentElement.getElementsByClassName('printReport');
+                        } else {
+                            targetElement = [];
+                            // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
+                            let groupedReportsModal = document.getElementById('groupedReportsModal');
+                            let groupedReports = groupedReportsModal.getElementsByClassName('star');
+                            let temp = [];
+                            for (let i = 0; i < groupedReports.length; i++) {
+                                if (groupedReports[i].checked) {
+                                    temp.push(groupedReports[i])
+                                }
+                            }
+                            groupedReports = temp;
+                            // const groupedReports = $('#groupedReportsModal .star:checked').map( ()=> { return $(this) }).get();
+                            let formIDs = [];
+                            groupedReports.map(async (groupedReport) => {
+                                formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
+                            });
+                            let printwrappers = document.getElementsByClassName('print-wrapper');
+                            let parenetElements = [];
+                            formIDs.map(id => {
+                                parenetElements.push(document.getElementsByClassName('print-wrapper-' + id)[0]);
+                            })
+                            parenetElements.map(parentelement => {
+                                let children = parentelement.getElementsByClassName('printReport');
+
+
+                                for (let j = 0; j < children.length; j++) {
+                                    targetElement.push(children[j]);
+                                }
+                            })
+
+                        }
+
+                        function getAttachments() {
+                            return new Promise(async (resolve, reject) => {
+                                if (targetElement && targetElement != null && targetElement != "" && targetElement.length != 0) {
+                                    let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
+                                    // for ( let i = 0;  i< 10; i++ ) {
+                                    for (let i = 0; i < targetElement.length; i++) {
+                                        if (transIDs.includes(setting.fields.FormID.toString()) == false) {
+                                            targetElement[i].style.display = "block";
+                                            targetElement[i].style.width = "210mm";
+                                            targetElement[i].style.backgroundColor = "#ffffff";
+                                            targetElement[i].style.padding = "8px";
+                                            targetElement[i].style.height = "297mm";
+                                            targetElement[i].style.fontSize = "13.33px";
+                                            targetElement[i].style.color = "#000000";
+                                            targetElement[i].style.overflowX = "visible";
+                                        } else {
+                                        }
+
+                                        var opt = {
+                                            margin: 0,
+                                            filename: docTitle,
+                                            image: {
+                                                type: 'jpeg',
+                                                quality: 0.98
+                                            },
+                                            html2canvas: {
+                                                scale: 2
+                                            },
+                                            jsPDF: {
+                                                unit: 'in',
+                                                format: 'a4',
+                                                orientation: 'portrait'
+                                            }
+                                        };
+                                        let source = targetElement[i];
+                                        await (async () => {
+                                            return new Promise((resolve, reject) => {
+                                                html2pdf().set(opt).from(source).toPdf().output('datauristring').then((dataObject) => {
+                                                    let pdfObject = "";
+                                                    let base64data = dataObject.split(',')[1];
+                                                    pdfObject = {
+                                                        filename: 'vs1cloud report.pdf',
+                                                        content: base64data,
+                                                        encoding: 'base64'
+                                                    };
+                                                    attachments.push(pdfObject);
+                                                    resolve()
+                                                });
+                                            })
+                                        })()
+                                    }
+                                    resolve()
+
+                                } else if (targetElement.length == 0) {
+                                    resolve();
+                                }
+                            })
+                        }
+
+                        await getAttachments()
+
+                        setting.fields.attachments = attachments;
                         Meteor.call('addTask', setting.fields);
                         const saveResult = await taxRateService.saveScheduleSettings({
                             type: "TReportSchedules",
@@ -1885,158 +1995,40 @@ Template.emailsettings.events({
 
     'click #save-correspondence': function () {
         const templateObject = Template.instance()
-        $('.fullScreenSpin').css('display', 'inline-block');
-        // let correspondenceData = localStorage.getItem('correspondence');
-        let correspondenceTemp = templateObject.correspondences.get()
+        let correspondenceData = localStorage.getItem('correspondence');
+        let correspondenceTemp = correspondenceData ? JSON.parse(correspondenceData) : [];
         let tempLabel = $("#edtTemplateLbl").val();
         let tempSubject = $('#edtTemplateSubject').val();
         let tempContent = $("#edtTemplateContent").val();
-        if(correspondenceTemp.length > 0 ) {
-            let index = correspondenceTemp.findIndex(item=>{
-                return item.Ref_Type == tempLabel
+        if (correspondenceTemp.length > 0) {
+            let index = correspondenceTemp.findIndex(item => {
+                return item.label == tempLabel
             })
-            if(index > 0) {
-                swal({
-                    title: 'Oooops...',
-                    text: 'There is already a template labeled ' + tempLabel,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') { }
-                });
-                $('.fullScreenSpin').css('display', 'none');
+            if (index > 0) {
+                correspondenceTemp[index] = {
+                    label: tempLabel,
+                    subject: tempSubject,
+                    memo: tempContent,
+                }
             } else {
-               
-                sideBarService.getCorrespondences().then(dObject =>{
-
-                    let temp = {
-                        Active: true,
-                        EmployeeId: Session.get('mySessionEmployeeLoggedID'),
-                        Ref_Type: tempLabel,
-                        MessageAsString: tempContent,
-                        MessageFrom: "",
-                        MessageId : dObject.tcorrespondence.length.toString(),
-                        MessageTo : "",
-                        ReferenceTxt: tempSubject,
-                        Ref_Date: moment().format('YYYY-MM-DD'),
-                        Status: ""
-                    }
-                    let objDetails = {
-                        type: 'TCorrespondence',
-                        fields: temp
-                    }
-    
-                    // let array = [];
-                    // array.push(objDetails)
-                    addVS1Data('TCorrespondence', JSON.stringify(objDetails)).then(function (datareturn) {
-                        getVS1Data('TCorrespondence').then(function (dataObject) {
-                            if(dataObject.length > 0) {
-                                let data = JSON.parse(dataObject[0].data);
-                                templateObject.correspondences.set(data)
-                            }
-                            $('#referenceLetterModal').modal();
-                        })
-                    }).catch(function() {
-                        sideBarService.saveCorrespondence(objDetails).then(data=>{
-                            $('.fullScreenSpin').css('display', 'none');
-                            swal({
-                                title: 'Success',
-                                text: 'Template has been saved successfully ',
-                                type: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Continue'
-                            }).then((result) => {
-                                if (result.value) {
-                                    $('#addLetterTemplateModal').modal('toggle')
-                                    templateObject.getCorrespondence();
-                                    
-                                } else if (result.dismiss === 'cancel') { }
-                            });
-                        }).catch(function () {
-                            swal({
-                                title: 'Oooops...',
-                                text: 'Something went wrong',
-                                type: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                                if (result.value) {
-                                    $('#addLetterTemplateModal').modal('toggle')
-                                    $('.fullScreenSpin').css('display', 'none');
-                                } else if (result.dismiss === 'cancel') { }
-                            });
-                        })
-                    })
-                })
+                let temp = {
+                    label: tempLabel,
+                    subject: tempSubject,
+                    memo: tempContent,
+                }
+                correspondenceTemp = [...correspondenceTemp, temp]
             }
         } else {
-
-            sideBarService.getCorrespondences().then(dObject =>{
-                let temp = {
-                    Active: true,
-                    EmployeeId: Session.get('mySessionEmployeeLoggedID'),
-                    Ref_Type: tempLabel,
-                    MessageAsString: tempContent,
-                    MessageFrom: "",
-                    MessageId : dObject.tcorrespondence.length.toString(),
-                    MessageTo : "",
-                    ReferenceTxt: tempSubject,
-                    Ref_Date: moment().format('YYYY-MM-DD'),
-                    Status: ""
-                }
-                let objDetails = {
-                    type: 'TCorrespondence',
-                    fields: temp
-                }
-    
-                let array = [];
-                    array.push(objDetails)
-    
-                addVS1Data('TCorrespondence', JSON.stringify(objDetails)).then(function (datareturn) {
-                    getVS1Data('TCorrespondence').then(function (dataObject) {
-                        if(dataObject.length > 0) {
-                            let data = JSON.parse(dataObject[0].data);
-                            templateObject.correspondences.set(data)
-                        }
-                        $('#referenceLetterModal').modal();
-                    })
-                }).catch(function() {
-                    sideBarService.saveCorrespondence(objDetails).then(data=>{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: 'Success',
-                            text: 'Template has been saved successfully ',
-                            type: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Continue'
-                        }).then((result) => {
-                            if (result.value) {
-                                $('#addLetterTemplateModal').modal('toggle')
-                                templateObject.getCorrespondence();
-                                
-                            } else if (result.dismiss === 'cancel') { }
-                        });
-                    }).catch(function () {
-                        swal({
-                            title: 'Oooops...',
-                            text: 'Something went wrong',
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Try Again'
-                        }).then((result) => {
-                            if (result.value) {
-                                $('#addLetterTemplateModal').modal('toggle')
-                            } else if (result.dismiss === 'cancel') { }
-                        });
-                    })
-                })
-            })
+            let temp = {
+                label: tempLabel,
+                subject: tempSubject,
+                memo: tempContent,
+            }
+            correspondenceTemp = [...correspondenceTemp, temp]
         }
-        // localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
-        // templateObject.correspondences.set(correspondenceTemp);
-        // $('#addLetterTemplateModal').modal('toggle');
+        localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
+        templateObject.correspondences.set(correspondenceTemp);
+        $('#addLetterTemplateModal').modal('toggle');
     },
 
 

@@ -6,7 +6,6 @@ import { CountryService } from '../js/country-service';
 import { PaymentsService } from '../payments/payments-service';
 import { SideBarService } from '../js/sidebar-service';
 import { AppointmentService } from '../appointments/appointment-service';
-import { ProductService } from "../product/product-service";
 import '../lib/global/indexdbstorage.js';
 import LoadingOverlay from "../LoadingOverlay";
 let sideBarService = new SideBarService();
@@ -143,7 +142,6 @@ Template.addemployeepop.onRendered(function () {
     };
 
     templateObject.getAllProductData = function () {
-        let productService = new ProductService();
         productList = [];
         getVS1Data('TProductVS1').then(function (dataObject) {
             if (dataObject.length == 0) {

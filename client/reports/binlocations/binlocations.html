@@ -122,7 +122,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>From</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom">
+                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -131,7 +131,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>To</label>
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo">
+                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -187,9 +187,9 @@
                                                 <th>Department</th>
                                                 <th>Bin Location</th>
                                                 <th>Bin No</th>
-                                                <th>Volume Available</th>
-                                                <th>Volume Used</th>
-                                                <th>Volume Total</th>
+                                                <th class="text-right">Volume Available</th>
+                                                <th class="text-right">Volume Used</th>
+                                                <th class="text-right">Volume Total</th>
                                                 <!-- <th>Active</th> -->
                                                 <th>Bin ID</th>
                                                 <th>Class ID</th>
@@ -197,33 +197,29 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{#if records}}
-                                                {{#each arrayify records}}
-                                                    <tr>
-                                                        <td colspan="12" style="font-weight: 800;">{{ value.BinClassName }}</td>
-                                                    </tr>
-                                                    {{#each item in value.SubAccounts}}
-                                                        <tr>
-                                                            <td></td>
-                                                            <td>{{ item.fields.BinLocation }}</td>
-                                                            <td>{{ item.fields.BinNumber }}</td>
-                                                            <td class="positiveVolume ">{{#if isZeroValue item.fields.BinVolumeAvailable}} {{ item.fields.BinVolumeAvailable }} {{/if}}</td>
-                                                            <td class="neutralVolume">{{#if isZeroValue item.fields.BinVolumeUsed}} {{ item.fields.BinVolumeUsed }} {{/if}}</td>
-                                                            <td class="positiveVolume">{{#if isZeroValue item.fields.BinVolume}} {{ item.fields.BinVolume }} {{/if}}</td>
-                                                            <td>{{ item.fields.ID }}</td>
-                                                            <td></td>
-                                                            <td>{{ item.fields.GlobalRef }}</td>
-                                                        </tr>
-                                                    {{/each}}
-                                                {{/each}}
-                                            {{/if}}
-                                            <!-- <tr>
+                                            <tr>
+                                                <td colspan="12" style="font-weight: 800;">Default</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>AA</td>
+                                                <td>1</td>
+                                                <td class="text-right positiveVolume">1000</td>
+                                                <td class="text-right neutralVolume">0</td>
+                                                <td class="text-right positiveVolume">1000</td>
+                                                <!-- <td></td> -->
+                                                <td>117</td>
+                                                <td>1</td>
+                                                <td>DEF117</td>
+                                            </tr>
+                                            <tr>
                                                 <td></td>
                                                 <td>AA</td>
                                                 <td>2</td>
                                                 <td class="text-right positiveVolume">430</td>
                                                 <td class="text-right positiveVolume">570</td>
                                                 <td class="text-right positiveVolume">1000</td>
+                                                <!-- <td></td> -->
                                                 <td>111</td>
                                                 <td>1</td>
                                                 <td>DEF111</td>
@@ -235,6 +231,7 @@
                                                 <td class="text-right negativeVolume">-200</td>
                                                 <td class="text-right neutralVolume">0</td>
                                                 <td class="text-right negativeVolume">-200</td>
+                                                <!-- <td></td> -->
                                                 <td>120</td>
                                                 <td>1</td>
                                                 <td>DEF120</td>
@@ -249,6 +246,7 @@
                                                 <td class="text-right positiveVolume">1000</td>
                                                 <td class="text-right neutralVolume">0</td>
                                                 <td class="text-right positiveVolume">1000</td>
+                                                <!-- <td></td> -->
                                                 <td>117</td>
                                                 <td>1</td>
                                                 <td>DEF117</td>
@@ -260,6 +258,7 @@
                                                 <td class="text-right positiveVolume">430</td>
                                                 <td class="text-right positiveVolume">570</td>
                                                 <td class="text-right positiveVolume">1000</td>
+                                                <!-- <td></td> -->
                                                 <td>111</td>
                                                 <td>1</td>
                                                 <td>DEF111</td>
@@ -271,10 +270,11 @@
                                                 <td class="text-right negativeVolume">-200</td>
                                                 <td class="text-right neutralVolume">0</td>
                                                 <td class="text-right negativeVolume">-200</td>
+                                                <!-- <td></td> -->
                                                 <td>120</td>
                                                 <td>1</td>
                                                 <td>DEF120</td>
-                                            </tr> -->
+                                            </tr>
                                             <!-- {{#if records}}
                                                 <tr>
                                                     <td></td>

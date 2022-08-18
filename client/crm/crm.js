@@ -631,17 +631,12 @@ Template.crmoverview.events({
   },
 
   "click .btnMailchimp": function (e) {
-    $('#crmMailchimpModal').modal();
+    FlowRouter.go("/email-list");
     return;
   },
 
   "click #btnCorrespondence": function (e) {
-    FlowRouter.go("/correspondence-list");
-    return;
-  },
-
-  "click #btnCampaign": function (e) {
-    FlowRouter.go("/campaign-list");
+    $('#crmMailchimpModal').modal();
     return;
   },
 
