@@ -38,6 +38,7 @@ Template.addAccountModal.onRendered(function () {
   let templateObject = Template.instance();
   const dataTableListTax = [];
   const tableHeaderListTax = [];
+  let categories = [];
   templateObject.loadAccountTypes = () => {
     let accountTypeList = [];
     getVS1Data("TAccountType")
@@ -848,6 +849,35 @@ Template.addAccountModal.onRendered(function () {
     });
   });
 
+    templateObject.getReceiptCategoryList = function(){
+        getVS1Data('TReceiptCategory').then(function (dataObject) {
+            if(dataObject.length == 0){
+                sideBarService.getReceiptCategory().then(function(data){
+                    setReceiptCategory(data);
+                });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
+                setReceiptCategory(data);
+            }
+        }).catch(function (err) {
+            sideBarService.getReceiptCategory().then(function(data){
+                setReceiptCategory(data);
+            });
+        });
+    };
+    function setReceiptCategory(data) {
+        for (let i in data.treceiptcategory){
+            if (data.treceiptcategory.hasOwnProperty(i)) {
+                if (data.treceiptcategory[i].CategoryName != "") {
+                    categories.push(data.treceiptcategory[i].CategoryName);
+                }
+            }
+        }
+        $('.fullScreenSpin').css('display','none');
+        templateObject.getAllAccounts();
+    }
+    templateObject.getReceiptCategoryList();
+
     templateObject.getAllAccounts = function() {
         getVS1Data('TAccountVS1').then(function(dataObject) {
             if (dataObject.length === 0) {
@@ -866,12 +896,6 @@ Template.addAccountModal.onRendered(function () {
     };
     function getExpenseCategories(data) {
         //'Materials', 'Meals & Entertainment', 'Office Supplies', 'Travel', 'Vehicle'
-        let categories = [];
-        categories.push('Materials');
-        categories.push('Meals & Entertainment');
-        categories.push('Office Supplies');
-        categories.push('Travel');
-        categories.push('Vehicle');
         let usedCategories = [];
         for (let i = 0; i < data.taccountvs1.length; i++) {
             if(data.taccountvs1[i].fields.AccountGroup && data.taccountvs1[i].fields.AccountGroup != ''){
@@ -882,7 +906,6 @@ Template.addAccountModal.onRendered(function () {
         let result = categories.filter((item) => !usedCategories.includes(item));
         templateObject.expenseCategories.set(result);
     }
-    templateObject.getAllAccounts();
 });
 
 Template.addAccountModal.events({
