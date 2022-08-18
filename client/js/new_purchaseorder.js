@@ -15,6 +15,7 @@ import {autoTable} from 'jspdf-autotable';
 import {SideBarService} from '../js/sidebar-service';
 import 'jquery-editable-select';
 import {ContactService} from "../contacts/contact-service";
+import { TaxRateService } from "../settings/settings-service";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -64,6 +65,7 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.includeBOnShippedQty.set(true);
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
+    templateObject.subtaxcodes = new ReactiveVar([]);
 });
 Template.purchaseordercard.onRendered(() => {
 
@@ -4461,6 +4463,7 @@ Template.purchaseordercard.onRendered(function() {
     let utilityService = new UtilityService();
     let productService = new ProductService();
     let purchaseService = new PurchaseBoardService();
+    const taxRateService = new TaxRateService();
     let tableProductList;
     var splashArrayProductList = new Array();
     var splashArrayTaxRateList = new Array();
@@ -4959,6 +4962,63 @@ Template.purchaseordercard.onRendered(function() {
 
     };
     tempObj.getAllTaxCodes();
+
+    tempObj.getSubTaxCodes = function () {
+        let subTaxTableList = [];
+  
+        getVS1Data("TSubTaxVS1")
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+              taxRateService.getSubTaxCode().then(function (data) {
+                for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                  var dataList = {
+                    id: data.tsubtaxcode[i].Id || "",
+                    codename: data.tsubtaxcode[i].Code || "-",
+                    description: data.tsubtaxcode[i].Description || "-",
+                    category: data.tsubtaxcode[i].Category || "-",
+                  };
+  
+                  subTaxTableList.push(dataList);
+                }
+  
+                tempObj.subtaxcodes.set(subTaxTableList);
+              });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              let useData = data.tsubtaxcode;
+              for (let i = 0; i < useData.length; i++) {
+                var dataList = {
+                  id: useData[i].Id || "",
+                  codename: useData[i].Code || "-",
+                  description: useData[i].Description || "-",
+                  category: useData[i].Category || "-",
+                };
+  
+                subTaxTableList.push(dataList);
+              }
+  
+              tempObj.subtaxcodes.set(subTaxTableList);
+            }
+          })
+          .catch(function (err) {
+            taxRateService.getSubTaxCode().then(function (data) {
+              for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                var dataList = {
+                  id: data.tsubtaxcode[i].Id || "",
+                  codename: data.tsubtaxcode[i].Code || "-",
+                  description: data.tsubtaxcode[i].Description || "-",
+                  category: data.tsubtaxcode[i].Category || "-",
+                };
+  
+                subTaxTableList.push(dataList);
+              }
+  
+              tempObj.subtaxcodes.set(subTaxTableList);
+            });
+          });
+      };
+  
+      tempObj.getSubTaxCodes();
 
 });
 
@@ -5795,6 +5855,7 @@ Template.purchaseordercard.events({
         let price = targetRow.find('.colUnitPriceExChange').val() || 0;
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+        const subTaxCodes = tmpObj.subtaxcodes.get();
 
         if (!taxDetail) {
             return;
@@ -5816,8 +5877,16 @@ Template.purchaseordercard.events({
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
+                let lineDescription = "";
+                if (line.Description) {
+                    lineDescription = line.Description;
+                } else {
+                    lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
+                    lineDescription = lineDescription.description;
+                }
+
                 taxDetailTableData.push([
-                    line.Description,
+                    lineDescription,
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
