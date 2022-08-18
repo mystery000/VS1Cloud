@@ -55,16 +55,6 @@ Template.dashboard.helpers({
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
   },
-  lastBatchUpdate: () => {
-    let transactionTableLastUpdated = "";
-    var currentDate = new Date();
-    if(localStorage.getItem('VS1TransTableUpdate')){
-       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
-    }else{
-      transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
-    }
-    return transactionTableLastUpdated;
-  },
 });
 
 // Listen to event to update reactive variable

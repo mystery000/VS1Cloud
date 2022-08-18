@@ -19,7 +19,7 @@ Template.yoodledeveloper.onRendered(function () {
     const templateObject = Template.instance();
 
     templateObject.getSettingsList = async function () {
-        $('.fullScreenSpin').css('display','inline-block');
+        $('.fullScreenSpin').css('display','none');
         let data = [];
         let details = [];
         let dataObject = await getVS1Data('TERPPreference')
@@ -32,8 +32,8 @@ Template.yoodledeveloper.onRendered(function () {
             }); 
         }
         if( details.length == 0 ){
-            prefSettings = await settingService.getPreferenceSettings( settingFields );
-            details = prefSettings.terppreference;
+            dataobj = await settingService.getPreferenceSettings( settingFields );
+            details = dataobj.terppreference;
             data.terppreference.push(...details);
             await addVS1Data('TERPPreference', JSON.stringify(data))
         }
@@ -44,7 +44,6 @@ Template.yoodledeveloper.onRendered(function () {
                 $('#' + item.PrefName).val( item.Fieldvalue );
             }
         }
-        $('.fullScreenSpin').css('display', 'none');
         
     };
 

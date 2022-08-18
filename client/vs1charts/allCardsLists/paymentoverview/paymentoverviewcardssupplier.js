@@ -12,12 +12,6 @@ Template.paymentoverviewcardssupplier.onCreated(function() {
 
 Template.paymentoverviewcardssupplier.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
-    var url = window.location.href;
-    let supplierID = 0;
-    if (url.indexOf("supplierscard?id=") > 0) {
-        newurl = new URL(window.location.href);
-        supplierID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
-    }
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     const customerList = [];
@@ -78,7 +72,7 @@ Template.paymentoverviewcardssupplier.onRendered(function() {
     let OVERDUE_PAYABLES_AMOUNT = localStorage.getItem('VS1OverDuePayablesAmt_dash') || 0;
     let OVERDUE_PAYABLES_QUANTITY = localStorage.getItem('VS1OverDuePayablesQty_dash') || 0;
 
-    // if ((!localStorage.getItem('VS1OutstandingPayablesQty_dash')) && (!localStorage.getItem('VS1OutstandingPayablesAmt_dash'))) {
+    if ((!localStorage.getItem('VS1OutstandingPayablesQty_dash')) && (!localStorage.getItem('VS1OutstandingPayablesAmt_dash'))) {
 
     getVS1Data('TAPReport').then(function(dataObject) {
         if (dataObject.length == 0) {
@@ -89,34 +83,21 @@ Template.paymentoverviewcardssupplier.onRendered(function() {
                 let customerawaitingpaymentCount = '';
                 let supptotAmount = 0;
                 let supptotAmountOverDue = 0;
-                let useData = data.tapreport;
-                for (let i = 0; i < useData.length; i++) {
+                for (let i = 0; i < data.tapreport.length; i++) {
                     dataListAwaitingSupp = {
                         id: data.tapreport[i].ClientID || '',
                     };
-                    if( supplierID != 0 ){
-                        if( useData[i].AmountDue != 0 && useData[i].ClientId == supplierID ) {
-                            // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                            supptotAmount += Number(useData[i].AmountDue);
-                            itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                            let date = new Date(useData[i].DueDate);
-                            if (date < new Date()) {
-                                supptotAmountOverDue += Number(useData[i].AmountDue);
-                                itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                            }
-                        }
-                    }else{
-                        if (useData[i].AmountDue != 0) {
-                            // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                            supptotAmount += Number(useData[i].AmountDue);
-                            itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                            let date = new Date(useData[i].DueDate);
-                            if (date < new Date()) {
-                                supptotAmountOverDue += Number(useData[i].AmountDue);
-                                itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                            }
+                    if (data.tapreport[i].AmountDue != 0) {
+                        // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
+                        supptotAmount += Number(data.tapreport[i].AmountDue);
+                        itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
+                        let date = new Date(data.tapreport[i].DueDate);
+                        if (date < new Date()) {
+                            supptotAmountOverDue += Number(data.tapreport[i].AmountDue);
+                            itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
                         }
                     }
+
                 }
                 $('.SuppOutstandingQTY').text(itemsSuppAwaitingPaymentcount.length);
                 $('.suppOverdueQTY').text(itemsSuppOverduePaymentcount.length);
@@ -137,27 +118,14 @@ Template.paymentoverviewcardssupplier.onRendered(function() {
                 dataListAwaitingSupp = {
                     id: useData[i].ClientID || '',
                 };
-                if( supplierID != 0 ){
-                    if( useData[i].AmountDue != 0 && useData[i].ClientId == supplierID ) {
-                        // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                        supptotAmount += Number(useData[i].AmountDue);
-                        itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                        let date = new Date(useData[i].DueDate);
-                        if (date < new Date()) {
-                            supptotAmountOverDue += Number(useData[i].AmountDue);
-                            itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                        }
-                    }
-                }else{
-                    if (useData[i].AmountDue != 0) {
-                        // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                        supptotAmount += Number(useData[i].AmountDue);
-                        itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                        let date = new Date(useData[i].DueDate);
-                        if (date < new Date()) {
-                            supptotAmountOverDue += Number(useData[i].AmountDue);
-                            itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                        }
+                if (useData[i].AmountDue != 0) {
+                    // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
+                    supptotAmount += Number(useData[i].AmountDue);
+                    itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
+                    let date = new Date(useData[i].DueDate);
+                    if (date < new Date()) {
+                        supptotAmountOverDue += Number(useData[i].AmountDue);
+                        itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
                     }
                 }
 
@@ -180,27 +148,14 @@ Template.paymentoverviewcardssupplier.onRendered(function() {
                 dataListAwaitingSupp = {
                     id: data.tapreport[i].ClientID || '',
                 };
-                if( supplierID != 0 ){
-                    if( useData[i].AmountDue != 0 && useData[i].ClientId == supplierID ) {
-                        // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                        supptotAmount += Number(useData[i].AmountDue);
-                        itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                        let date = new Date(useData[i].DueDate);
-                        if (date < new Date()) {
-                            supptotAmountOverDue += Number(useData[i].AmountDue);
-                            itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                        }
-                    }
-                }else{
-                    if (useData[i].AmountDue != 0) {
-                        // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                        supptotAmount += Number(useData[i].AmountDue);
-                        itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                        let date = new Date(useData[i].DueDate);
-                        if (date < new Date()) {
-                            supptotAmountOverDue += Number(useData[i].AmountDue);
-                            itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                        }
+                if (data.tapreport[i].AmountDue != 0) {
+                    // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
+                    supptotAmount += Number(data.tapreport[i].AmountDue);
+                    itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
+                    let date = new Date(data.tapreport[i].DueDate);
+                    if (date < new Date()) {
+                        supptotAmountOverDue += Number(data.tapreport[i].AmountDue);
+                        itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
                     }
                 }
 
@@ -213,12 +168,12 @@ Template.paymentoverviewcardssupplier.onRendered(function() {
         });
     });
 
-//   }else{
-//     $('.SuppOutstandingQTY').text(OUTSTANDING_PAYABLES_QUANTITY);
-//     $('.suppOverdueQTY').text(OVERDUE_PAYABLES_QUANTITY);
-//     $('.SuppOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(OUTSTANDING_PAYABLES_AMOUNT));
-//     $('.suppOverdueAmount').text(utilityService.modifynegativeCurrencyFormat(OVERDUE_PAYABLES_AMOUNT));
-//   }
+  }else{
+    $('.SuppOutstandingQTY').text(OUTSTANDING_PAYABLES_QUANTITY);
+    $('.suppOverdueQTY').text(OVERDUE_PAYABLES_QUANTITY);
+    $('.SuppOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(OUTSTANDING_PAYABLES_AMOUNT));
+    $('.suppOverdueAmount').text(utilityService.modifynegativeCurrencyFormat(OVERDUE_PAYABLES_AMOUNT));
+  }
 
 });
 

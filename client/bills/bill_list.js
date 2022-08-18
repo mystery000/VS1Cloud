@@ -1042,7 +1042,7 @@ Template.billlist.onRendered(function() {
                     }
                   }
               });
-
+              
               templateObject.getCustomFieldData();
           }).catch(function (err) {
 
@@ -1108,7 +1108,7 @@ Template.billlist.onRendered(function() {
 
   // custom field displaysettings
   templateObject.setCustomFieldDataCheckIndexDB = function(data) {
-
+    console.log('data...........', data)
 
     let custFields = [];
     let dispFields = [];
@@ -1116,10 +1116,10 @@ Template.billlist.onRendered(function() {
     let customFieldCount = 11;
     let listType = "ltBillList";
 
-    let reset_data = [
+    let reset_data = [ 
 
       { label: 'Order Date', class: 'colOrderDate', active: true },
-      { label: 'Bill No.', class: 'colPurchaseNo', active: true },
+      { label: 'Bill No.', class: 'colPurchaseNo', active: true }, 
       { label: 'Supplier', class: 'colSupplier', active: true },
       { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
       { label: 'Tax', class: 'colTax', active: true },
@@ -1344,11 +1344,12 @@ Template.billlist.events({
     'click .resetTable' : function(event){
       let templateObject = Template.instance();
       let custFields = templateObject.custfields.get();
-
-
+      
+      console.log('resetTable...', custFields)
+  
       let reset_data = [
         { label: 'Order Date', class: 'colOrderDate', active: true },
-        { label: 'Bill No.', class: 'colPurchaseNo', active: true },
+        { label: 'Bill No.', class: 'colPurchaseNo', active: true }, 
         { label: 'Supplier', class: 'colSupplier', active: true },
         { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
         { label: 'Tax', class: 'colTax', active: true },
@@ -1362,16 +1363,16 @@ Template.billlist.events({
         { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
         { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
       ];
-
+  
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
-
+  
         // var title = datable.column( index+1 ).header();
         var title = $('#tblpurchaseorderlist').find('th').eq(index + 1);
         $(title).html(reset_data[index].label);
-
+  
         if (reset_data[index].active) {
           $('.' + reset_data[index].class).css('display', 'table-cell');
           $('.' + reset_data[index].class).css('padding', '.75rem');
@@ -1379,7 +1380,7 @@ Template.billlist.events({
         } else {
           $('.' + reset_data[index].class).css('display', 'none');
         }
-
+  
       });
     },
 
@@ -1387,9 +1388,9 @@ Template.billlist.events({
       let lineItems = [];
       let organisationService = new OrganisationService();
       let listType = "ltBillList";
-
+  
       $(".fullScreenSpin").css("display", "inline-block");
-
+  
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
@@ -1409,9 +1410,9 @@ Template.billlist.events({
             width: colWidth,
             thclass: colthClass
         }
-
+  
         lineItems.push(lineItemObj);
-
+  
         if(fieldID && parseInt(fieldID) != 0){
           objDetails1 = {
             type: "TCustomFieldList",
@@ -1434,7 +1435,7 @@ Template.billlist.events({
             },
           };
         }
-
+  
         organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           //Reload Custom Field on Save
@@ -1588,7 +1589,7 @@ Template.billlist.events({
 
       sideBarService.getAllBillListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataBillList) {
           addVS1Data('TBillList',JSON.stringify(dataBillList)).then(function (datareturn) {
-            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0, '').then(function(dataPaymentList) {
+            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
                 sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {

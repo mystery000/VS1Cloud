@@ -35,7 +35,6 @@ Template.balancetransactionlist.onRendered(function() {
         //localStorage.setItem('VS1BalanceTrans_Report', JSON.stringify(data)||'');
         for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
           let childArray = data.taccountrunningbalancereport[i];
-          let accountType = childArray.Type || '';
           if((childArray.AccountName === urlParameters)&&(childArray.Type != '')){
 
           let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
@@ -57,21 +56,11 @@ Template.balancetransactionlist.onRendered(function() {
             transactionNo = childArray.PaymentID;
           }
 
-          if(childArray.Type === "Cheque"){
-            if (Session.get('ERPLoggedCountry') == "Australia") {
-                accountType = "Cheque";
-            } else if (Session.get('ERPLoggedCountry') == "United States of America") {
-                accountType = "Check";
-            } else {
-                accountType = "Cheque";
-            }
-          };
-
           var dataList = {
           date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
           sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
           accountname: childArray.AccountName || '',
-          type: accountType || '',
+          type: childArray.Type || '',
           clientname:childArray.clientname || '',
           debit: debitAmount || 0.00,
           credit: creditAmount || 0.00,
@@ -229,7 +218,6 @@ Template.balancetransactionlist.onRendered(function() {
       let data = JSON.parse(localStorage.getItem('VS1BalanceTrans_Report'));
       for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
         let childArray = data.taccountrunningbalancereport[i];
-        let accountType = childArray.Type || '';
         if((childArray.Type != '')){
 
         let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
@@ -251,21 +239,11 @@ Template.balancetransactionlist.onRendered(function() {
           transactionNo = childArray.PaymentID;
         }
 
-        if(childArray.Type === "Cheque"){
-          if (Session.get('ERPLoggedCountry') == "Australia") {
-              accountType = "Cheque";
-          } else if (Session.get('ERPLoggedCountry') == "United States of America") {
-              accountType = "Check";
-          } else {
-              accountType = "Cheque";
-          }
-        };
-
         var dataList = {
         date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
         sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
         accountname: childArray.AccountName || '',
-        type: accountType || '',
+        type: childArray.Type || '',
         clientname:childArray.clientname || '',
         debit: debitAmount || 0.00,
         credit: creditAmount || 0.00,
@@ -457,7 +435,6 @@ Template.balancetransactionlist.onRendered(function() {
               addVS1Data('TAccountRunningBalanceReport', JSON.stringify(data));
               for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
                 let childArray = data.taccountrunningbalancereport[i];
-                let accountType = childArray.Type || '';
                 if((childArray.Type != '')){
 
                 let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
@@ -479,20 +456,12 @@ Template.balancetransactionlist.onRendered(function() {
                 ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
                   transactionNo = childArray.PaymentID;
                 }
-                if(childArray.Type === "Cheque"){
-                  if (Session.get('ERPLoggedCountry') == "Australia") {
-                      accountType = "Cheque";
-                  } else if (Session.get('ERPLoggedCountry') == "United States of America") {
-                      accountType = "Check";
-                  } else {
-                      accountType = "Cheque";
-                  }
-                };
+
                 var dataList = {
                 date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
                 sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
                 accountname: childArray.AccountName || '',
-                type: accountType || '',
+                type: childArray.Type || '',
                 clientname: childArray.clientname || '',
                 debit: debitAmount || 0.00,
                 credit: creditAmount || 0.00,
@@ -685,7 +654,6 @@ Template.balancetransactionlist.onRendered(function() {
             let data = JSON.parse(dataObject[0].data);
             for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
               let childArray = data.taccountrunningbalancereport[i];
-              let accountType = childArray.Type || '';
               if((childArray.Type != '')){
 
               let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
@@ -708,21 +676,11 @@ Template.balancetransactionlist.onRendered(function() {
                 transactionNo = childArray.PaymentID;
               }
 
-              if(childArray.Type === "Cheque"){
-                if (Session.get('ERPLoggedCountry') == "Australia") {
-                    accountType = "Cheque";
-                } else if (Session.get('ERPLoggedCountry') == "United States of America") {
-                    accountType = "Check";
-                } else {
-                    accountType = "Cheque";
-                }
-              };
-
               var dataList = {
               date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
               sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
               accountname: childArray.AccountName || '',
-              type: accountType || '',
+              type: childArray.Type || '',
               clientname: childArray.clientname || '',
               debit: debitAmount || 0.00,
               credit: creditAmount || 0.00,
@@ -920,7 +878,6 @@ Template.balancetransactionlist.onRendered(function() {
           addVS1Data('TAccountRunningBalanceReport', JSON.stringify(data));
           for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
             let childArray = data.taccountrunningbalancereport[i];
-            let accountType = childArray.Type || '';
             if((childArray.Type != '')){
 
             let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
@@ -943,21 +900,11 @@ Template.balancetransactionlist.onRendered(function() {
               transactionNo = childArray.PaymentID;
             }
 
-            if(childArray.Type === "Cheque"){
-              if (Session.get('ERPLoggedCountry') == "Australia") {
-                  accountType = "Cheque";
-              } else if (Session.get('ERPLoggedCountry') == "United States of America") {
-                  accountType = "Check";
-              } else {
-                  accountType = "Cheque";
-              }
-            };
-
             var dataList = {
             date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
             sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
             accountname: childArray.AccountName || '',
-            type: accountType || '',
+            type: childArray.Type || '',
             clientname: childArray.clientname || '',
             debit: debitAmount || 0.00,
             credit: creditAmount || 0.00,

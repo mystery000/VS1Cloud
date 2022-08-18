@@ -6,7 +6,6 @@ import {AccessLevelService} from './accesslevel-service';
 import {EmployeeProfileService} from './profile-service';
 import '../lib/global/indexdbstorage.js';
 import { SMSService } from '../js/sms-settings-service';
-import { handleSetupRedirection } from '../setup/setup';
 
 let smsService = new SMSService();
 
@@ -176,7 +175,6 @@ Template.vs1login.onRendered(function () {
     Session.setPersistent('myMonthlyErnings', '');
 
     localStorage.setItem('vs1cloudlicenselevel', '');
-    localStorage.setItem('VS1TransTableUpdate', '');
 
     if (FlowRouter.current().queryParams.emailakey) {
         $('#email').val(FlowRouter.current().queryParams.emailakey);
@@ -585,9 +583,7 @@ Template.vs1login.onRendered(function () {
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
 
-                //window.open('/dashboard', '_self');
-            
-                handleSetupRedirection();
+                window.open('/dashboard', '_self');
 
             }
         }
@@ -1172,13 +1168,10 @@ Template.vs1login.onRendered(function () {
                 } else if (isAppointmentLaunch == true) {
                     window.open('/appointments', '_self');
                 } else {
-                    // window.open('/dashboard', '_self');
-                    handleSetupRedirection();
+                    window.open('/dashboard', '_self');
                 }
             } else {
-                //window.open('/dashboard', '_self');
-
-                handleSetupRedirection();
+                window.open('/dashboard', '_self');
             }
 
         } else {
@@ -1601,7 +1594,7 @@ Template.vs1login.onRendered(function () {
                         if (dataObject.length == 0) {
                           if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 
-                          } else {
+                          }else{
                             $('.myVS1Video').css('display', 'inline-block');
                             //$('.fullScreenSpin').css('display','inline-block');
                             myVS1Video.currentTime = 0;
@@ -2055,8 +2048,6 @@ Template.vs1login.onRendered(function () {
                                                         localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalIncomeEx || 0);
                                                         localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                                         localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
-
-                                                        localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
 
                                                         if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                                             localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
@@ -2730,8 +2721,6 @@ Template.vs1login.onRendered(function () {
                                     localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                     localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
-                                    localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
-
                                     if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                         localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                     } else {
@@ -3270,7 +3259,6 @@ Template.vs1login.onRendered(function () {
                                                     localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                                     localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
-                                                    localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                                     if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                                         localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                                     } else {
@@ -4007,7 +3995,6 @@ Template.vs1login.onRendered(function () {
                                                 localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                                 localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
-                                                localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                                 if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                                     localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                                 } else {
@@ -4707,7 +4694,6 @@ Template.vs1login.onRendered(function () {
                                             localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
                                             localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
 
-                                            localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                             if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
                                                 localStorage.setItem('vs1LoggedEmployeeImages_dash', '');
                                             } else {

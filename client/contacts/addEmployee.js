@@ -134,7 +134,6 @@ Template.employeescard.onCreated(function () {
 });
 
 Template.employeescard.onRendered(function () {
- 
     var erpGet = erpDb();
     $('.fullScreenSpin').css('display', 'inline-block');
     Session.setPersistent('cloudCurrentLogonName', '');
@@ -2946,7 +2945,7 @@ Template.employeescard.onRendered(function () {
         setTimeout(function () {
             $('#tblLeaveRequests').DataTable({
                 data: splashArrayList,
-                "sDom": "Rlfrtip",
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
 
                     {

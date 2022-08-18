@@ -1635,7 +1635,7 @@ Template.invoicelist.events({
             addVS1Data('TInvoiceList', JSON.stringify(dataInvoice)).then(function (datareturn) {
               sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
                   addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
-                    sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(async function(dataPaymentList) {
+                    sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
                 sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(async function(dataSuppPay) {
                     addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {

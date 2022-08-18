@@ -721,8 +721,7 @@ Template.taxRatesSettings.onRendered(function () {
           Percentage: v.Percentage,
           PercentageOn: v.PercentageOn,
           CapAmount: v.CapAmount,
-          ThresholdAmount: v.ThresholdAmount,
-          Description: v.Description
+          ThresholdAmount: v.ThresholdAmount
         }));
         templateObject.subtaxlines.set(subTaxLines);
 
@@ -1092,8 +1091,7 @@ Template.taxRatesSettings.events({
         Percentage: subTaxPercent,
         PercentageOn: subTaxPercentageOn,
         CapAmount: subTaxCapAmt,
-        ThresholdAmount: subTaxThresholdAmt,
-        Description: subTaxCode.description
+        ThresholdAmount: subTaxThresholdAmt
       };
   
       subTaxLines.push(newSubTaxLine);
@@ -1106,8 +1104,7 @@ Template.taxRatesSettings.events({
         Percentage: subTaxPercent,
         PercentageOn: subTaxPercentageOn,
         CapAmount: subTaxCapAmt,
-        ThresholdAmount: subTaxThresholdAmt,
-        Description: subTaxCode.description
+        ThresholdAmount: subTaxThresholdAmt
       }) : v);
 
       templateObject.subtaxlines.set(subTaxLines);
@@ -1142,8 +1139,7 @@ Template.taxRatesSettings.events({
           Percentage: v.Percentage,
           PercentageOn: v.PercentageOn,
           CapAmount: v.CapAmount,
-          ThresholdAmount: v.ThresholdAmount,
-          // Description: v.Description
+          ThresholdAmount: v.ThresholdAmount
         }
       }
     });
@@ -1473,8 +1469,7 @@ export const TaxRatesEditListener = (e) => {
         Percentage: v.Percentage,
         PercentageOn: v.PercentageOn,
         CapAmount: v.CapAmount,
-        ThresholdAmount: v.ThresholdAmount,
-        Description: v.Description
+        ThresholdAmount: v.ThresholdAmount
       }));
       templateObject.subtaxlines.set(subTaxLines);
 

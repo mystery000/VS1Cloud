@@ -406,24 +406,8 @@ Template.reimbursementSettings.events({
             await templateObject.getReimbursement();
             $('#newReimbursementModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Superannuation has been saved",
-                type: 'success',   
-                showCancelButton: false,
-                confirmButtonText: 'Done'             
-            }).then((result) => {
-                if (result.value) {                    
-                    window.location.reload();
-                }
-            });
         }else{
             $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Error",
-                text: "Failed to add deduction",
-                type: 'error',
-            })
         }
     },
 });

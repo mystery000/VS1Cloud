@@ -325,7 +325,7 @@
                     if (reportData.BasedOnType.includes("EU"))
                         Meteor.call('sendNormalEmail', reportData);
                 });
-                FlowRouter.go('/vs1greentracklogin');
+                window.open('/vs1greentracklogin', '_self');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
                 }, {
@@ -357,8 +357,7 @@
                     if (reportData.BasedOnType.includes("EU"))
                         Meteor.call('sendNormalEmail', reportData);
                 });
-                // window.open('/', '_self');
-                FlowRouter.go('/');
+                window.open('/', '_self');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
                 }, {

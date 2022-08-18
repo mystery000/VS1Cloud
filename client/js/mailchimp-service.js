@@ -4,7 +4,7 @@ export class MailchimpService extends BaseService {
   getMailchimpSettings() {
     let options = {
       PropertyList: "PrefName,Fieldvalue",
-      select: '[PrefName]="VS1MailchimpApiKey" or [PrefName]="VS1MailchimpAudienceID" or [PrefName]="VS1MailchimpCampaignID"'
+      select: '[PrefName]="VS1MailchimpApiKey" or [PrefName]="VS1MailchimpAudienceID"'
     }
     return this.getList(this.ERPObjects.TERPPreference, options);
   }
