@@ -24,4 +24,25 @@ export class ReceiptService extends BaseService {
     saveTripGroup(data) {
         return this.POST(this.ERPObjects.TTripGroup, data);
     }
+
+    getAllReceiptCategorys() {
+        let options = {
+            PropertyList: "ID,CategoryName,CategoryDesc",
+            select: "[active]=true"
+        };
+        return this.getList(this.ERPObjects.TReceiptCategory, options);
+    }
+
+    getOneReceiptCategoryDataExByName(dataSearchName) {
+        let options = '';
+        options = {
+            ListType: "Detail",
+            select: '[CategoryName]="'+dataSearchName+'"'
+        };
+        return this.getList(this.ERPObjects.TReceiptCategory, options);
+    }
+
+    saveReceiptCategory(data) {
+        return this.POST(this.ERPObjects.TReceiptCategory, data);
+    }
 }

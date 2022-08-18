@@ -23,6 +23,7 @@ Template.receiptsoverview.onCreated(function() {
     templateObject.suppliers = new ReactiveVar([]);
     templateObject.chartAccounts = new ReactiveVar([]);
     templateObject.categoryAccounts = new ReactiveVar([]);
+    templateObject.tripGroups = new ReactiveVar([]);
     templateObject.expenseClaimList = new ReactiveVar([]);
     templateObject.editExpenseClaim = new ReactiveVar();
     templateObject.multiReceiptRecords = new ReactiveVar([]);
@@ -88,6 +89,9 @@ Template.receiptsoverview.onRendered(function() {
     });
     $('.chart-accounts').on('click', function(e, li) {
         templateObject.setCategoryAccountList();
+    });
+    $('.trip-groups').on('click', function(e, li) {
+        templateObject.setTripGroupList();
     });
 
     templateObject.getAllAccounts = function() {
@@ -162,6 +166,72 @@ Template.receiptsoverview.onRendered(function() {
             const datatable = $('#tblCategory').DataTable();
             datatable.draw();
             $('#tblCategory_filter .form-control-sm').trigger("input");
+        }, 200);
+    };
+
+    templateObject.getTripGroup = function() {
+        getVS1Data('TTripGroup').then(function(dataObject) {
+            if (dataObject.length === 0) {
+                sideBarService.getTripGroup().then(function(data) {
+                    setTripGroup(data);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                setTripGroup(data);
+            }
+        }).catch(function(err) {
+            sideBarService.getTripGroup().then(function(data) {
+                setTripGroup(data);
+            });
+        });
+    };
+    function setTripGroup(data) {
+        let tripGroupList = [];
+        for (let i = 0; i < data.ttripgroup.length; i++) {
+            const dataList = [
+                data.ttripgroup[i].TripName|| '',
+                data.ttripgroup[i].Description || '',
+                data.ttripgroup[i].ID || ''
+            ];
+            tripGroupList.push(dataList);
+        }
+        templateObject.tripGroups.set(tripGroupList);
+        if (tripGroupList) {
+            $('#tblTripGroup').dataTable({
+                data: tripGroupList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                paging: true,
+                "aaSorting": [],
+                "orderMulti": true,
+                columnDefs: [
+                    { className: "colTripName", "targets": [0] },
+                    { className: "colDescription", "targets": [1] },
+                    { className: "colID hiddenColumn", "targets": [2] }
+                ],
+                // select: true,
+                // destroy: true,
+                colReorder: true,
+                "order": [
+                    [0, "asc"]
+                ],
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+            });
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        }
+    }
+    templateObject.getTripGroup();
+    templateObject.setTripGroupList = function() {
+        $('#tripGroupListModal').modal('toggle');
+        setTimeout(function() {
+            $('#tblTripGroup_filter .form-control-sm').focus();
+            $('#tblTripGroup_filter .form-control-sm').val('');
+            $('#tblTripGroup_filter .form-control-sm').trigger("input");
+            const datatable = $('#tblTripGroup').DataTable();
+            datatable.draw();
+            $('#tblTripGroup_filter .form-control-sm').trigger("input");
         }, 200);
     };
 
@@ -1779,6 +1849,27 @@ Template.receiptsoverview.events({
             $('#nav-time .chart-accounts').attr('data-id', accountID);
         }
         $('#categoryListModal').modal('toggle');
+    },
+    'click #tblTripGroup tbody tr': function(e) {
+        let tripName = $(e.target).closest('tr').find(".colTripName").text() || '';
+        let description = $(e.target).closest('tr').find(".colDescription").text() || '';
+        let tripGroupID = $(e.target).closest('tr').find(".colID").text() || '';
+        let from = $('#employeeListModal').attr('data-from');
+
+        if (from == 'ViewReceipt') {
+            $('#viewReceiptModal .trip-groups').val(tripName);
+            $('#viewReceiptModal .trip-groups').attr('data-name', description);
+            $('#viewReceiptModal .trip-groups').attr('data-id', tripGroupID);
+        } else if (from == 'NavExpense') {
+            $('#nav-expense .trip-groups').val(tripName);
+            $('#nav-expense .trip-groups').attr('data-name', description);
+            $('#nav-expense .trip-groups').attr('data-id', tripGroupID);
+        } else if (from == 'NavTime') {
+            $('#nav-time .trip-groups').val(tripName);
+            $('#nav-time .trip-groups').attr('data-name', description);
+            $('#nav-time .trip-groups').attr('data-id', tripGroupID);
+        }
+        $('#tripGroupListModal').modal('toggle');
     },
     'click #paymentmethodList tbody tr': function(e) {
         let typeName = $(e.target).closest('tr').find(".colName").text() || '';

@@ -2256,6 +2256,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TTripGroup, options);
   }
 
+  getReceiptCategory() {
+    let options = {
+      PropertyList:"ID,CategoryName,CategoryDesc,Active",
+      select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TReceiptCategory, options);
+  }
+
   getAccountantCategory() {
     let options = {
       PropertyList:"ID,FirstName,LastName,CompanyName,Address,DocName,TownCity,PostalZip,StateRegion,Country,Active",
