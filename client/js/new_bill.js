@@ -4745,60 +4745,60 @@ Template.billcard.onRendered(function() {
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
-  
+
         getVS1Data("TSubTaxVS1")
-          .then(function (dataObject) {
-            if (dataObject.length == 0) {
-              taxRateService.getSubTaxCode().then(function (data) {
-                for (let i = 0; i < data.tsubtaxcode.length; i++) {
-                  var dataList = {
-                    id: data.tsubtaxcode[i].Id || "",
-                    codename: data.tsubtaxcode[i].Code || "-",
-                    description: data.tsubtaxcode[i].Description || "-",
-                    category: data.tsubtaxcode[i].Category || "-",
-                  };
-  
-                  subTaxTableList.push(dataList);
+            .then(function (dataObject) {
+                if (dataObject.length == 0) {
+                    taxRateService.getSubTaxCode().then(function (data) {
+                        for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                            var dataList = {
+                                id: data.tsubtaxcode[i].Id || "",
+                                codename: data.tsubtaxcode[i].Code || "-",
+                                description: data.tsubtaxcode[i].Description || "-",
+                                category: data.tsubtaxcode[i].Category || "-",
+                            };
+
+                            subTaxTableList.push(dataList);
+                        }
+
+                        tempObj.subtaxcodes.set(subTaxTableList);
+                    });
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tsubtaxcode;
+                    for (let i = 0; i < useData.length; i++) {
+                        var dataList = {
+                            id: useData[i].Id || "",
+                            codename: useData[i].Code || "-",
+                            description: useData[i].Description || "-",
+                            category: useData[i].Category || "-",
+                        };
+
+                        subTaxTableList.push(dataList);
+                    }
+
+                    tempObj.subtaxcodes.set(subTaxTableList);
                 }
-  
-                tempObj.subtaxcodes.set(subTaxTableList);
-              });
-            } else {
-              let data = JSON.parse(dataObject[0].data);
-              let useData = data.tsubtaxcode;
-              for (let i = 0; i < useData.length; i++) {
-                var dataList = {
-                  id: useData[i].Id || "",
-                  codename: useData[i].Code || "-",
-                  description: useData[i].Description || "-",
-                  category: useData[i].Category || "-",
-                };
-  
-                subTaxTableList.push(dataList);
-              }
-  
-              tempObj.subtaxcodes.set(subTaxTableList);
-            }
-          })
-          .catch(function (err) {
-            taxRateService.getSubTaxCode().then(function (data) {
-              for (let i = 0; i < data.tsubtaxcode.length; i++) {
-                var dataList = {
-                  id: data.tsubtaxcode[i].Id || "",
-                  codename: data.tsubtaxcode[i].Code || "-",
-                  description: data.tsubtaxcode[i].Description || "-",
-                  category: data.tsubtaxcode[i].Category || "-",
-                };
-  
-                subTaxTableList.push(dataList);
-              }
-  
-              tempObj.subtaxcodes.set(subTaxTableList);
+            })
+            .catch(function (err) {
+                taxRateService.getSubTaxCode().then(function (data) {
+                    for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                        var dataList = {
+                            id: data.tsubtaxcode[i].Id || "",
+                            codename: data.tsubtaxcode[i].Code || "-",
+                            description: data.tsubtaxcode[i].Description || "-",
+                            category: data.tsubtaxcode[i].Category || "-",
+                        };
+
+                        subTaxTableList.push(dataList);
+                    }
+
+                    tempObj.subtaxcodes.set(subTaxTableList);
+                });
             });
-          });
-      };
-  
-      tempObj.getSubTaxCodes();
+    };
+
+    tempObj.getSubTaxCodes();
 });
 
 Template.billcard.helpers({
@@ -5648,15 +5648,15 @@ Template.billcard.events({
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
                 let lineDescription = "";
-                // if (line.Description) {
-                //     lineDescription = line.Description;
-                // } else {
-                //     lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
-                //     lineDescription = lineDescription.description;
-                // }
+                if (line.Description) {
+                    lineDescription = line.Description;
+                } else {
+                    lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
+                    lineDescription = lineDescription.description;
+                }
 
                 taxDetailTableData.push([
-                    lineDescription,
+                    "",
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
