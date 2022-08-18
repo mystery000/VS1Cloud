@@ -976,6 +976,24 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProspect, options);
   }
 
+  getAllTripGroups(limitcount, limitfrom) {
+    let options = "";
+    if (limitcount === "All") {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+      };
+    } else {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TTripGroup, options);
+  }
+
   getCheckLeadData(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {
@@ -1222,7 +1240,7 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "PurchaseOrderNumber desc",
+        // OrderBy: "PurchaseOrderID desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
@@ -1234,7 +1252,7 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        OrderBy: "PurchaseOrderNumber desc",
+        // OrderBy: "PurchaseOrderID desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
@@ -1582,14 +1600,14 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         IsBill: true,
-        OrderBy: "PurchaseOrderNumber desc",
+        // OrderBy: "PurchaseOrderNumber desc",
         Search: "IsBill = true and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "PurchaseOrderNumber desc",
+        // OrderBy: "PurchaseOrderNumber desc",
         IsBill: true,
         Search: "IsBill = true and IsCheque != true",
         IgnoreDates: false,
@@ -2228,6 +2246,14 @@ export class SideBarService extends BaseService {
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TDeptClass, options);
+  }
+
+  getTripGroup() {
+    let options = {
+      PropertyList:"ID,TripName,Description,Active",
+      select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TTripGroup, options);
   }
 
   getAccountantCategory() {

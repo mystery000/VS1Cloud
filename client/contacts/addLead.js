@@ -490,7 +490,7 @@ Template.leadscard.onRendered(function () {
                 totalCorrespondences = totalCorrespondences.filter(item=>{
                     return item.fields.MessageTo == $('#edtLeadEmail').val()
                 })
-                if(totalCorrespondences.length > 0) {
+                if(totalCorrespondences.length > 0 && $('#edtLeadEmail').val() != '') {
                     totalCorrespondences.map(item => {
                         let labels = [];
                         labels.push(item.fields.Ref_Type)
@@ -509,6 +509,9 @@ Template.leadscard.onRendered(function () {
                     })
                 }
                 try {
+                    dataTableList.sort((a, b)=>{
+                        new Date(a.date) - new Date(b.date)
+                    })
                     templateObject.crmRecords.set(dataTableList);
                 }catch (error) {
                 }
@@ -891,7 +894,7 @@ Template.leadscard.onRendered(function () {
         // localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
         // templateObject.correspondences.set(correspondenceTemp);
         // $('#addLetterTemplateModal').modal('toggle');
-    }),
+    })
 
    
 

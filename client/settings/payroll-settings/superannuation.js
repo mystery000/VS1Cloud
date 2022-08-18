@@ -22,7 +22,7 @@ Template.superannuationSettings.onCreated(function() {
 });
 
 Template.superannuationSettings.onRendered(function() {
-    $('.customEditableSelect').editableSelect('add', function(item){
+    $('#edtFundType').editableSelect('add', function(item){
         $(this).val(item.id);
         $(this).text(item.name);
     });

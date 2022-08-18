@@ -6,6 +6,7 @@ import {AccessLevelService} from './accesslevel-service';
 import {EmployeeProfileService} from './profile-service';
 import '../lib/global/indexdbstorage.js';
 import { SMSService } from '../js/sms-settings-service';
+import { handleSetupRedirection } from '../setup/setup';
 
 let smsService = new SMSService();
 
@@ -584,7 +585,9 @@ Template.vs1login.onRendered(function () {
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
 
-                window.open('/dashboard', '_self');
+                //window.open('/dashboard', '_self');
+            
+                handleSetupRedirection();
 
             }
         }
@@ -1169,10 +1172,13 @@ Template.vs1login.onRendered(function () {
                 } else if (isAppointmentLaunch == true) {
                     window.open('/appointments', '_self');
                 } else {
-                    window.open('/dashboard', '_self');
+                    // window.open('/dashboard', '_self');
+                    handleSetupRedirection();
                 }
             } else {
-                window.open('/dashboard', '_self');
+                //window.open('/dashboard', '_self');
+
+                handleSetupRedirection();
             }
 
         } else {
@@ -1595,7 +1601,7 @@ Template.vs1login.onRendered(function () {
                         if (dataObject.length == 0) {
                           if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
 
-                          }else{
+                          } else {
                             $('.myVS1Video').css('display', 'inline-block');
                             //$('.fullScreenSpin').css('display','inline-block');
                             myVS1Video.currentTime = 0;
