@@ -14,7 +14,7 @@ const currentDate = new Date();
 Template.customerdetailsreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
-
+  templateObject.reportOptions = new ReactiveVar([]);
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
@@ -52,8 +52,7 @@ Template.customerdetailsreport.onRendered(() => {
       fromDateDay = "0" + currentDate.getDate();
     }
     // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate =
-      fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
+    var fromDate = fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
       showOn: "button",
@@ -85,11 +84,32 @@ Template.customerdetailsreport.onRendered(() => {
     //--------- END OF DATE ---------------//
   };
 
+  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    $("#dateFrom").val(defaultOptions.fromDate);
+    $("#dateTo").val(defaultOptions.toDate);
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.getCustomerDetailReportData();
+  };
+
   templateObject.getCustomerDetailReportData = async function () {
-    // $(".fullScreenSpin").css("display", "inline-block");
-    let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
-    let dateTo = moment().format("YYYY-MM-DD");
-    let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, false);
+    $(".fullScreenSpin").css("display", "inline-block");
+    const options = await templateObject.reportOptions.get();
+    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let ignoreDate = options.ignoreDate || false;
+    let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
         let reportGroups = []; 
@@ -138,13 +158,13 @@ Template.customerdetailsreport.onRendered(() => {
         });        
     }
     templateObject.records.set(reportData);
+    $(".fullScreenSpin").css("display", "none");
     setTimeout(function() {
         MakeNegative();
     }, 1000);
-    $(".fullScreenSpin").css("display", "none");
   }
 
-  templateObject.getCustomerDetailReportData();
+  templateObject.setReportOptions();
 
   templateObject.initUploadedImage = () => {
     let imageData = localStorage.getItem("Image");
@@ -190,6 +210,66 @@ Template.customerdetailsreport.onRendered(() => {
 });
 
 Template.customerdetailsreport.events({
+  "change .edtReportDates": async function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    await templateObject.setReportOptions(false, dateFrom, dateTo);
+    $(".fullScreenSpin").css("display", "none");
+  },
+  "click #lastMonth": async function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+    await templateObject.setReportOptions(false, fromDate, endDate);
+    $(".fullScreenSpin").css("display", "none");
+  },
+  "click #lastQuarter": async function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+    await templateObject.setReportOptions(false, fromDate, endDate);
+    $(".fullScreenSpin").css("display", "none");
+  },
+  "click #last12Months": async function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    $("#dateFrom").attr("readonly", false);
+    $("#dateTo").attr("readonly", false);
+    var currentDate = new Date();
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+    let fromDateDay = currentDate.getDate();
+    if (currentDate.getMonth() + 1 < 10) {
+      fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+    if (currentDate.getDate() < 10) {
+      fromDateDay = "0" + currentDate.getDate();
+    }
+
+    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
+    templateObject.dateAsAt.set(begunDate);
+    $("#dateFrom").val(fromDate);
+    $("#dateTo").val(begunDate);
+
+    var currentDate2 = new Date();
+    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+    $(".fullScreenSpin").css("display", "none");
+  },
+  "click #ignoreDate": async function () {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    templateObject.dateAsAt.set("Current Date");
+    await templateObject.setReportOptions(true);
+    $(".fullScreenSpin").css("display", "none");
+  },
   "click #btnSummary": function () {
     FlowRouter.go("/customersummaryreport");
   },
