@@ -2264,17 +2264,13 @@ Template.accountsoverview.events({
 
 Template.accountsoverview.helpers({
   datatablerecords: () => {
-    return Template.instance()
-      .datatablerecords.get()
-      .sort(function (a, b) {
+    return Template.instance().datatablerecords.get().sort(function (a, b) {
         if (a.accountname === "NA") {
           return 1;
         } else if (b.accountname === "NA") {
           return -1;
         }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
+        return a.accountname.toUpperCase() > b.accountname.toUpperCase()? 1: -1;
       });
   },
   bsbRegionName: () => {
@@ -2308,17 +2304,13 @@ Template.accountsoverview.helpers({
   //     });
   // },
   taxraterecords: () => {
-    return Template.instance()
-      .taxraterecords.get()
-      .sort(function (a, b) {
+    return Template.instance().taxraterecords.get().sort(function (a, b) {
         if (a.description === "NA") {
           return 1;
         } else if (b.description === "NA") {
           return -1;
         }
-        return a.description.toUpperCase() > b.description.toUpperCase()
-          ? 1
-          : -1;
+        return a.description.toUpperCase() > b.description.toUpperCase()? 1: -1;
       });
   },
   isBankAccount: () => {
@@ -2326,5 +2318,15 @@ Template.accountsoverview.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+  lastBatchUpdate: () => {
+    let transactionTableLastUpdated = "";
+    var currentDate = new Date();
+    if(localStorage.getItem('VS1TransTableUpdate')){
+       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
+    }else{
+      transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
+    }
+    return transactionTableLastUpdated;
   },
 });

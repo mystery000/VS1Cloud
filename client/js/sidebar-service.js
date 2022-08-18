@@ -84,7 +84,7 @@ export class SideBarService extends BaseService {
     return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
 
   }
-  
+
   saveSerialNumber(data)
   {
     return this.POST(this.ERPObjects.TSerialNumberListCurrentReport, data);
@@ -580,17 +580,17 @@ export class SideBarService extends BaseService {
         if (ignoreDate == true) {
           options = {
             IgnoreDates: true,
-            OrderBy: "PaymentID desc",
-            Search: "Deleted <> true",
+            OrderBy: "PaymentDate desc",
+            Search: "Deleted != true",
             LimitCount: '"' + limitcount + '"',
             LimitFrom: '"' + limitfrom + '"',
           };
         } else {
           options = {
-            orderby: '"PaymentID desc"',
+            orderby: '"PaymentDate desc"',
             ListType: "Detail",
             IgnoreDates: false,
-            Search: "Deleted <> true",
+            Search: "Deleted != true",
             // OrderBy: "PaymentDate desc",
             DateFrom: '"' + dateFrom + '"',
             DateTo: '"' + dateTo + '"',
@@ -602,15 +602,15 @@ export class SideBarService extends BaseService {
       if(isDeleted== true){
         options = {
           IgnoreDates: true,
-          OrderBy: "PaymentID desc",
-          Search: "Deleted = true",
+          OrderBy: "PaymentDate desc",
+          Search: "Deleted != true",
           LimitCount: '"' + limitcount + '"',
           LimitFrom: '"' + limitfrom + '"',
         };
       }else{
         options = {
           IgnoreDates: true,
-          OrderBy: "PaymentID desc",
+          OrderBy: "PaymentDate desc",
           LimitCount: '"' + limitcount + '"',
           LimitFrom: '"' + limitfrom + '"',
         };
