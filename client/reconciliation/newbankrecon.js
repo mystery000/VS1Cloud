@@ -73,7 +73,6 @@ Template.newbankrecon.onRendered(function() {
     let statementDate = localStorage.getItem('statementdate')|| '';
 
     templateObject.getAccountNames = function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
         reconService.getAccountNameVS1().then(function(data) {
             if (data.taccountvs1.length > 0) {
                 for (let i = 0; i < data.taccountvs1.length; i++) {
@@ -1124,12 +1123,11 @@ Template.newbankrecon.onRendered(function() {
                     $('#what_' + item.YodleeLineID).val(paymentFields.AccountName);
                     $('#who_' + item.YodleeLineID).val(paymentFields.ClientName);
                     $('#whoID_' + item.YodleeLineID).val(paymentFields.ClientID);
-                    $('#whoDetail_' + item.YodleeLineID).val(paymentFields.ClientName);
                 }
             } else {
                 $('#who_' + item.YodleeLineID).val(item.CompanyName);
                 $('#whoDetail_' + item.YodleeLineID).val(item.CompanyName);
-                if (item.deporwith == "received") {
+                if (item.deporwith == "spent") {
                     let isExistCustomer = false;
                     customerList.forEach(customer => {
                         if (item.CompanyName == customer.customername) {
@@ -1267,7 +1265,7 @@ Template.newbankrecon.onRendered(function() {
             if (item.VS1Notes.trim() != "") {
                 $('#discussNav_'+item.YodleeLineID+ ' a').text('Discuss*');
             }
-            if (item.deporwith == "received") {
+            if (item.deporwith == "spent") {
                 $('#who_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
                 $('#whoDetail_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
             } else {
@@ -1333,7 +1331,7 @@ Template.newbankrecon.onRendered(function() {
     }
     function editableWho(item, $each, e) {
         const offset = $each.offset();
-        if (item.deporwith == "received") {
+        if (item.deporwith == "spent") {
             selectedCustomerFlag = 'ForTab';
             $('#edtCustomerPOPID').val('');
             //$('#edtCustomerCompany').attr('readonly', false);
@@ -1368,7 +1366,7 @@ Template.newbankrecon.onRendered(function() {
                 }
             }
         }
-        if (item.deporwith == "spent") {
+        if (item.deporwith == "received") {
             const supplierDataName = e.target.value || '';
             if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                 openSupplierModal();
@@ -1766,7 +1764,7 @@ Template.newbankrecon.events({
             $(".lineProductName", rowData).val("");
             $(".lineProductDesc", rowData).val("");
             $(".lineQty", rowData).val("");
-            if (DepOrWith == "spent") {
+            if (DepOrWith == "received") {
                 $(".lineAccountName", rowData).val("");
             }
             $(".lineUnitPrice", rowData).val("");
@@ -1774,7 +1772,7 @@ Template.newbankrecon.events({
             $(".lineSubTotal", rowData).text("");
             $(".lineTaxRate", rowData).val("");
             $(".lineTaxAmount", rowData).text("");
-            if (DepOrWith == "received") {
+            if (DepOrWith == "spent") {
                 $(".lineDiscount", rowData).text("");
             }
             $(".btnRemove", rowData).show();
@@ -2661,7 +2659,7 @@ function setCalculated() {
         let grandTotal = 0;
         let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
         let discountRate = 0;
-        if (DepOrWith == "received") {
+        if (DepOrWith == "spent") {
             let customerName = $('#whoDetail_' + selectedYodleeID).val();
             if (customerName != "") {
                 let customerDetail = customerList.filter(customer => {
@@ -2692,7 +2690,7 @@ function setCalculated() {
             $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(lineTaxAmount));
 
             let lineDiscount = (lineQty * lineUnitPrice + lineTaxAmount) * discountRate / 100;
-            if (DepOrWith == "received") {
+            if (DepOrWith == "spent") {
                 $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
             }
             if (taxOption == 'tax_exclusive') {
@@ -2732,7 +2730,7 @@ function setCalculated() {
         });
         $(".sub_total").text(utilityService.modifynegativeCurrencyFormat(subTotal));
         $(".tax_total").text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-        if (DepOrWith == "received") {
+        if (DepOrWith == "spent") {
             $(".discount_total").text(utilityService.modifynegativeCurrencyFormat(discountTotal));
         }
         $(".grand_total").text(utilityService.modifynegativeCurrencyFormat(grandTotal));
@@ -2757,7 +2755,7 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
     if (selectedYodleeID != null) {
         let clientDetail;
         let contactName = '';
-        if (DepOrWith == "received") {
+        if (DepOrWith == "spent") {
             clientDetail = getClientDetail($('#whoDetail_' + selectedYodleeID).val(), 'customer');
             contactName = clientDetail? clientDetail.customername:'';
         } else {
@@ -2765,7 +2763,7 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
             contactName = clientDetail? clientDetail.suppliername:'';
         }
         let discountAmount = 0;
-        if (DepOrWith == "received") {
+        if (DepOrWith == "spent") {
             discountAmount = clientDetail? Amount * clientDetail.discount / 100 : 0;
         }
         let ctax = $('#ctaxRate_'+selectedYodleeID).val();
@@ -2798,11 +2796,11 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineQty').val(1);
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineUnitPrice').val(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineSubTotal').val(utilityService.modifynegativeCurrencyFormat(Amount));
-        if (DepOrWith == "spent") {
+        if (DepOrWith == "received") {
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountID').val($('#whatID_'+selectedYodleeID).val());
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountName').val($('#what_'+selectedYodleeID).val());
         }
-        if (DepOrWith == "received") {
+        if (DepOrWith == "spent") {
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineDiscount').val(utilityService.modifynegativeCurrencyFormat(discountAmount));
         }
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineTaxRate').val(taxrateName);
