@@ -85,6 +85,11 @@ export class SideBarService extends BaseService {
 
   }
 
+  saveSerialNumber(data)
+  {
+    return this.POST(this.ERPObjects.TSerialNumberListCurrentReport, data);
+  }
+
   removeTempateData(data)
   {
     return this.POST(this.ERPObjects.TTemplateSettings,data);
