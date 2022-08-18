@@ -37,6 +37,8 @@ Template.leaveTypeSettings.onRendered(function() {
         $('#edtPayPeriod').editableSelect('add','Daily');
         $('#edtPayPeriod').editableSelect('add','Weekly');
         $('#edtPayPeriod').editableSelect('add','Monthly');
+
+        
         $("#edtFirstPayDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',

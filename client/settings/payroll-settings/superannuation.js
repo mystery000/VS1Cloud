@@ -22,7 +22,10 @@ Template.superannuationSettings.onCreated(function() {
 });
 
 Template.superannuationSettings.onRendered(function() {
-
+    $('#edtFundType').editableSelect('add', function(item){
+        $(this).val(item.id);
+        $(this).text(item.name);
+    });
   const templateObject = Template.instance();
   var splashArraySuperannuationList = new Array();
 
@@ -476,8 +479,24 @@ Template.superannuationSettings.events({
             await templateObject.getSuperannuationData();
             $('#newSuperannuationFundModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Success",
+                text: "Superannuation has been saved",
+                type: 'success',   
+                showCancelButton: false,
+                confirmButtonText: 'Done'             
+            }).then((result) => {
+                if (result.value) {                    
+                    window.location.reload();
+                }
+            });
         }else{
             $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: "Error",
+                text: "Failed to add deduction",
+                type: 'error',
+            })
         }
     },
 });

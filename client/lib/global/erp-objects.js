@@ -186,7 +186,6 @@ const erpObject = {
     VS1_RepeatAppointment: "VS1_RepeatAppointment",
     TRoster: "TRoster",
     TTimeLog: "TTimeLog",
-    TRefundSale: "TRefundSale",
     TSerialNumberListCurrentReport: "TSerialNumberListCurrentReport",
     TRepServices:"TRepServices",
     TCustomFieldList: "TCustomFieldList",
@@ -257,7 +256,9 @@ const erpObject = {
     TVS1Superannuation:"TVS1Superannuation",
     TTripGroup: "TTripGroup",
     TTemplateSettings:"TTemplateSettings",
-    TReportsAccountantsCategory:"TReportsAccountantsCategory"
+    TReportsAccountantsCategory:"TReportsAccountantsCategory",
+    TCorrespondence:"TCorrespondence",
+    TReceiptCategory:"TReceiptCategory"
 
 };
 

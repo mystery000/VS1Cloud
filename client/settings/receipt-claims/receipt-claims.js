@@ -19,7 +19,7 @@ Template.receiptclaims.onRendered(function () {
     const templateObject = Template.instance();
 
     templateObject.getSettingsList = async function () {
-        $('.fullScreenSpin').css('display','none');
+        $('.fullScreenSpin').css('display','inline-block');
         let data = [];
         let details = [];
         let dataObject = await getVS1Data('TERPPreference')
@@ -32,8 +32,8 @@ Template.receiptclaims.onRendered(function () {
             }); 
         }
         if( details.length == 0 ){
-            dataobj = await settingService.getPreferenceSettings( settingFields );
-            details = dataobj.terppreference;
+            prefSettings = await settingService.getPreferenceSettings( settingFields );
+            details = prefSettings.terppreference;
             data.terppreference.push(...details);
             await addVS1Data('TERPPreference', JSON.stringify(data))
         }
@@ -44,7 +44,8 @@ Template.receiptclaims.onRendered(function () {
                 $('#' + item.PrefName).val( item.Fieldvalue );
             }
         }
-
+        $('.fullScreenSpin').css('display', 'none');
+        
     };
 
   templateObject.getSettingsList();

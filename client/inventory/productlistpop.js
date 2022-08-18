@@ -92,19 +92,34 @@ Template.productlistpop.onRendered(function () {
 
                           }
                       }
-                        var dataList = [
+                      var dataList = "";
+                      if (currentLoc == "/purchaseordercard"){
+                        dataList = [
+                             data.tproductvs1[i].fields.ProductName || '-',
+                             data.tproductvs1[i].fields.SalesDescription || '',
+                             data.tproductvs1[i].fields.BARCODE || '',
+                             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                             data.tproductvs1[i].fields.TotalQtyInStock,
+                             data.tproductvs1[i].fields.TaxCodePurchase || '',
+                             data.tproductvs1[i].fields.ID || '',
+                             JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                         ];
 
-                            data.tproductvs1[i].fields.ProductName || '-',
-                            data.tproductvs1[i].fields.SalesDescription || '',
-                            data.tproductvs1[i].fields.BARCODE || '',
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                            data.tproductvs1[i].fields.TotalQtyInStock,
-                            data.tproductvs1[i].fields.TaxCodeSales || '',
-                            data.tproductvs1[i].fields.ID || '',
-                            JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                      }else{
+                        dataList = [
+                             data.tproductvs1[i].fields.ProductName || '-',
+                             data.tproductvs1[i].fields.SalesDescription || '',
+                             data.tproductvs1[i].fields.BARCODE || '',
+                             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                             data.tproductvs1[i].fields.TotalQtyInStock,
+                             data.tproductvs1[i].fields.TaxCodeSales || '',
+                             data.tproductvs1[i].fields.ID || '',
+                             JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                         ];
 
-                        ];
+                      }
 
                       if (currentLoc == "/stockadjustmentcard"){
                         if (data.tproductvs1[i].fields.ProductType == "INV") {
@@ -192,19 +207,36 @@ Template.productlistpop.onRendered(function () {
 
                       }
                   }
-                    var dataList = [
 
-                        data.tproductvs1[i].fields.ProductName || '-',
-                        data.tproductvs1[i].fields.SalesDescription || '',
-                        data.tproductvs1[i].fields.BARCODE || '',
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                        data.tproductvs1[i].fields.TotalQtyInStock,
-                        data.tproductvs1[i].fields.TaxCodeSales || '',
-                        data.tproductvs1[i].fields.ID || '',
-                        JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
 
-                    ];
+                    var dataList = "";
+                    if (currentLoc == "/purchaseordercard"){
+                      dataList = [
+                           data.tproductvs1[i].fields.ProductName || '-',
+                           data.tproductvs1[i].fields.SalesDescription || '',
+                           data.tproductvs1[i].fields.BARCODE || '',
+                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                           data.tproductvs1[i].fields.TotalQtyInStock,
+                           data.tproductvs1[i].fields.TaxCodePurchase || '',
+                           data.tproductvs1[i].fields.ID || '',
+                           JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                       ];
+
+                    }else{
+                      dataList = [
+                           data.tproductvs1[i].fields.ProductName || '-',
+                           data.tproductvs1[i].fields.SalesDescription || '',
+                           data.tproductvs1[i].fields.BARCODE || '',
+                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                           data.tproductvs1[i].fields.TotalQtyInStock,
+                           data.tproductvs1[i].fields.TaxCodeSales || '',
+                           data.tproductvs1[i].fields.ID || '',
+                           JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                       ];
+
+                    }
 
 
                     // splashArrayProductList.push(dataList);
@@ -287,19 +319,34 @@ Template.productlistpop.onRendered(function () {
                                     sideBarService.getNewProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
 
                                       for(let i=0; i<dataObjectnew.tproductvs1.length; i++){
+                                        var dataListDupp = "";
 
-                                         var dataListDupp = [
-                                           data.tproductvs1[i].fields.ProductName || '-',
-                                           data.tproductvs1[i].fields.SalesDescription || '',
-                                           data.tproductvs1[i].fields.BARCODE || '',
-                                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                           data.tproductvs1[i].fields.TotalQtyInStock,
-                                           data.tproductvs1[i].fields.TaxCodeSales || '',
-                                           data.tproductvs1[i].fields.ID || '',
-                                           JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
 
-                                       ];
+                                       if (currentLoc == "/purchaseordercard"){
+                                         dataListDupp = [
+                                          data.tproductvs1[i].fields.ProductName || '-',
+                                          data.tproductvs1[i].fields.SalesDescription || '',
+                                          data.tproductvs1[i].fields.BARCODE || '',
+                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                                          data.tproductvs1[i].fields.TotalQtyInStock,
+                                          data.tproductvs1[i].fields.TaxCodePurchase || '',
+                                          data.tproductvs1[i].fields.ID || '',
+                                          JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                                      ];
+                                       }else{
+                                         dataListDupp = [
+                                          data.tproductvs1[i].fields.ProductName || '-',
+                                          data.tproductvs1[i].fields.SalesDescription || '',
+                                          data.tproductvs1[i].fields.BARCODE || '',
+                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                                          data.tproductvs1[i].fields.TotalQtyInStock,
+                                          data.tproductvs1[i].fields.TaxCodeSales || '',
+                                          data.tproductvs1[i].fields.ID || '',
+                                          JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                                      ];
+                                       }
 
                                        if (currentLoc == "/stockadjustmentcard"){
                                          if (data.tproductvs1[i].fields.ProductType == "INV") {
@@ -382,20 +429,36 @@ Template.productlistpop.onRendered(function () {
 
                       }
                   }
-                    var dataList = [
+                    var dataList = "";
 
-                        data.tproductvs1[i].fields.ProductName || '-',
-                        data.tproductvs1[i].fields.SalesDescription || '',
-                        data.tproductvs1[i].fields.BARCODE || '',
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                        data.tproductvs1[i].fields.TotalQtyInStock,
-                        data.tproductvs1[i].fields.TaxCodeSales || '',
-                        data.tproductvs1[i].fields.ID || '',
-                        JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                    if (currentLoc == "/purchaseordercard"){
+                      dataList = [
 
-                    ];
+                          data.tproductvs1[i].fields.ProductName || '-',
+                          data.tproductvs1[i].fields.SalesDescription || '',
+                          data.tproductvs1[i].fields.BARCODE || '',
+                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                          data.tproductvs1[i].fields.TotalQtyInStock,
+                          data.tproductvs1[i].fields.TaxCodePurchase || '',
+                          data.tproductvs1[i].fields.ID || '',
+                          JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                        ];
 
+                     }else{
+                       dataList = [
+
+                           data.tproductvs1[i].fields.ProductName || '-',
+                           data.tproductvs1[i].fields.SalesDescription || '',
+                           data.tproductvs1[i].fields.BARCODE || '',
+                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                           data.tproductvs1[i].fields.TotalQtyInStock,
+                           data.tproductvs1[i].fields.TaxCodeSales || '',
+                           data.tproductvs1[i].fields.ID || '',
+                           JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                           ];
+                     }
 
                     if (currentLoc == "/stockadjustmentcard"){
                       if (data.tproductvs1[i].fields.ProductType == "INV") {
@@ -520,19 +583,36 @@ Template.productlistpop.events({
         let inventoryData = [];
         if(data.tproductvs1.length > 0){
         for (let i = 0; i < data.tproductvs1.length; i++) {
-            var dataList = [
 
-                data.tproductvs1[i].fields.ProductName || '-',
-                data.tproductvs1[i].fields.SalesDescription || '',
-                data.tproductvs1[i].fields.BARCODE || '',
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                data.tproductvs1[i].fields.TotalQtyInStock,
-                data.tproductvs1[i].fields.TaxCodeSales || '',
-                data.tproductvs1[i].fields.ID || '',
-                JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                var dataList = "";
+              if (currentLoc == "/purchaseordercard"){
+                dataList = [
 
-            ];
+                    data.tproductvs1[i].fields.ProductName || '-',
+                    data.tproductvs1[i].fields.SalesDescription || '',
+                    data.tproductvs1[i].fields.BARCODE || '',
+                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                    data.tproductvs1[i].fields.TotalQtyInStock,
+                    data.tproductvs1[i].fields.TaxCodePurchase || '',
+                    data.tproductvs1[i].fields.ID || '',
+                    JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+
+                ];
+               }else{
+                 dataList = [
+
+                     data.tproductvs1[i].fields.ProductName || '-',
+                     data.tproductvs1[i].fields.SalesDescription || '',
+                     data.tproductvs1[i].fields.BARCODE || '',
+                     utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                     utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                     data.tproductvs1[i].fields.TotalQtyInStock,
+                     data.tproductvs1[i].fields.TaxCodeSales || '',
+                     data.tproductvs1[i].fields.ID || '',
+                     JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                 ];
+               }
 
             if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
                 for (let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++) {
@@ -590,20 +670,37 @@ Template.productlistpop.events({
           let records = [];
           let inventoryData = [];
           for (let i = 0; i < data.tproductvs1.length; i++) {
-              var dataList = [
+              var dataList = "";
 
-                  data.tproductvs1[i].fields.ProductName || '-',
-                  data.tproductvs1[i].fields.SalesDescription || '',
-                  data.tproductvs1[i].fields.BARCODE || '',
-                  utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                  utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                  data.tproductvs1[i].fields.TotalQtyInStock,
-                  data.tproductvs1[i].fields.TaxCodeSales || '',
-                  data.tproductvs1[i].fields.ID || '',
-                  JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+              if (currentLoc == "/purchaseordercard"){
+                dataList = [
 
-              ];
+                    data.tproductvs1[i].fields.ProductName || '-',
+                    data.tproductvs1[i].fields.SalesDescription || '',
+                    data.tproductvs1[i].fields.BARCODE || '',
+                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                    data.tproductvs1[i].fields.TotalQtyInStock,
+                    data.tproductvs1[i].fields.TaxCodePurchase || '',
+                    data.tproductvs1[i].fields.ID || '',
+                    JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
 
+                ];
+               }else{
+                 dataList = [
+
+                     data.tproductvs1[i].fields.ProductName || '-',
+                     data.tproductvs1[i].fields.SalesDescription || '',
+                     data.tproductvs1[i].fields.BARCODE || '',
+                     utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                     utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                     data.tproductvs1[i].fields.TotalQtyInStock,
+                     data.tproductvs1[i].fields.TaxCodeSales || '',
+                     data.tproductvs1[i].fields.ID || '',
+                     JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+
+                 ];
+               }
               if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
                   for (let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++) {
                       let lineExtaSellObj = {
