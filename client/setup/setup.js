@@ -6139,14 +6139,46 @@ Template.setup.events({
             },
           };
 
-          taxRateService
-            .saveTerms(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTermsVS1()
-                .then(function (dataReload) {
-                  addVS1Data("TTermsVS1", JSON.stringify(dataReload))
-                    .then(function (datareturn) {
+          taxRateService.saveTerms(objDetails).then(function (objResponse) {
+              if( isSupplierDefault == true ||  isCustomerDefault == true ){
+                console.log('objResponse', objResponse)
+                updateObjDetails = {
+                  type: "TTerms",
+                  fields: {
+                    ID: parseInt(objResponse.fields.ID),
+                    isPurchasedefault: isSupplierDefault,
+                    isSalesdefault: isCustomerDefault
+                  },
+                };
+                taxRateService.saveTerms(updateObjDetails).then(function () {
+                  sideBarService.getTermsVS1().then(function (dataReload) {
+                    addVS1Data("TTermsVS1", JSON.stringify(dataReload)).then(function (datareturn) {
+                      Meteor._reload.reload();
+                    }).catch(function (err) {
+                      Meteor._reload.reload();
+                    });
+                  }).catch(function (err) {
+                    Meteor._reload.reload();
+                  });
+                })
+                .catch(function (err) {
+                  swal({
+                    title: "Oooops...",
+                    text: err,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "Try Again",
+                  }).then((result) => {
+                    if (result.value) {
+                      Meteor._reload.reload();
+                    } else if (result.dismiss === "cancel") {
+                    }
+                  });
+                  LoadingOverlay.hide();
+                });
+              }
+              sideBarService.getTermsVS1().then(function (dataReload) {
+                  addVS1Data("TTermsVS1", JSON.stringify(dataReload)).then(function (datareturn) {
                       Meteor._reload.reload();
                     })
                     .catch(function (err) {
