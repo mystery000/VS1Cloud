@@ -14,7 +14,7 @@ const currentDate = new Date();
 Template.customersummaryreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
-
+  templateObject.reportOptions = new ReactiveVar([]);
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
@@ -76,6 +76,8 @@ Template.customersummaryreport.onRendered(() => {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
+
+    
     //--------- END OF DATE ---------------//
   };
 
@@ -99,12 +101,31 @@ Template.customersummaryreport.onRendered(() => {
   templateObject.initDate();
   templateObject.initUploadedImage();
   LoadingOverlay.hide();
-
+  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    $("#dateFrom").val(defaultOptions.fromDate);
+    $("#dateTo").val(defaultOptions.toDate);
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.getCustomerDetailsHistory();
+  };
   templateObject.getCustomerDetailsHistory = async function () {
 
-    let dateFrom = moment().subtract(1, "months").format("YYYY-MM-DD");;
-    let dateTo = moment().format("YYYY-MM-DD");
-    let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, false);
+    const options = await templateObject.reportOptions.get();
+    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let ignoreDate = options.ignoreDate || false;
+    let data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
 
     let reportData = [];
     if( data.tcustomersummaryreport.length > 0 ){
@@ -137,7 +158,8 @@ Template.customersummaryreport.onRendered(() => {
     }
     templateObject.records.set(reportData);    
   };
-  templateObject.getCustomerDetailsHistory();
+
+  templateObject.setReportOptions();
 });
 
 Template.customersummaryreport.events({
@@ -258,107 +280,34 @@ Template.customersummaryreport.events({
       $(".table tbody tr").show();
     }
   },
-  "click #lastMonth": function () {
+  "change .edtReportDates": async function () {
+    $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-
-    var prevMonthLastDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      0
-    );
-    var prevMonthFirstDate = new Date(
-      currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1),
-      (currentDate.getMonth() - 1 + 12) % 12,
-      1
-    );
-
-    var formatDateComponent = function (dateComponent) {
-      return (dateComponent < 10 ? "0" : "") + dateComponent;
-    };
-
-    var formatDate = function (date) {
-      return (
-        formatDateComponent(date.getDate()) +
-        "/" +
-        formatDateComponent(date.getMonth() + 1) +
-        "/" +
-        date.getFullYear()
-      );
-    };
-
-    var formatDateERP = function (date) {
-      return (
-        date.getFullYear() +
-        "-" +
-        formatDateComponent(date.getMonth() + 1) +
-        "-" +
-        formatDateComponent(date.getDate())
-      );
-    };
-
-    var fromDate = formatDate(prevMonthFirstDate);
-    var toDate = formatDate(prevMonthLastDate);
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(toDate);
-
-    var getLoadDate = formatDateERP(prevMonthLastDate);
-    let getDateFrom = formatDateERP(prevMonthFirstDate);
-    templateObject.dateAsAt.set(fromDate);
-
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    await templateObject.setReportOptions(false, dateFrom, dateTo);
+    $(".fullScreenSpin").css("display", "none");
   },
-  "click #lastQuarter": function () {
+  "click #lastMonth": async function () {
+    $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-    function getQuarter(d) {
-      d = d || new Date();
-      var m = Math.floor(d.getMonth() / 3) + 2;
-      return m > 4 ? m - 4 : m;
-    }
-
-    var quarterAdjustment = (moment().month() % 3) + 1;
-    var lastQuarterEndDate = moment()
-      .subtract({ months: quarterAdjustment })
-      .endOf("month");
-    var lastQuarterStartDate = lastQuarterEndDate
-      .clone()
-      .subtract({ months: 2 })
-      .startOf("month");
-
-    var lastQuarterStartDateFormat =
-      moment(lastQuarterStartDate).format("DD/MM/YYYY");
-    var lastQuarterEndDateFormat =
-      moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
-    templateObject.dateAsAt.set(lastQuarterStartDateFormat);
-    $("#dateFrom").val(lastQuarterStartDateFormat);
-    $("#dateTo").val(lastQuarterEndDateFormat);
-
-    let fromDateMonth = getQuarter(currentDate);
-    var quarterMonth = getQuarter(currentDate);
-    let fromDateDay = currentDate.getDate();
-
-    var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-    let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+    await templateObject.setReportOptions(false, fromDate, endDate);
+    $(".fullScreenSpin").css("display", "none");
   },
-  "click #last12Months": function () {
+  "click #lastQuarter": async function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+    await templateObject.setReportOptions(false, fromDate, endDate);
+    $(".fullScreenSpin").css("display", "none");
+  },
+  "click #last12Months": async function () {
+    $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -373,34 +322,23 @@ Template.customersummaryreport.events({
       fromDateDay = "0" + currentDate.getDate();
     }
 
-    var fromDate =
-      fromDateDay +
-      "/" +
-      fromDateMonth +
-      "/" +
-      Math.floor(currentDate.getFullYear() - 1);
+    var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
     templateObject.dateAsAt.set(begunDate);
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom =
-      Math.floor(currentDate2.getFullYear() - 1) +
-      "-" +
-      Math.floor(currentDate2.getMonth() + 1) +
-      "-" +
-      currentDate2.getDate();
-    // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+    $(".fullScreenSpin").css("display", "none");
   },
-  "click #ignoreDate": function () {
+  "click #ignoreDate": async function () {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1GeneralLedger_Report", "");
-    $("#dateFrom").attr("readonly", true);
-    $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
-    // templateObject.getGeneralLedgerReports("", "", true);
+    await templateObject.setReportOptions(true);
+    $(".fullScreenSpin").css("display", "none");
   },
 
   // CURRENCY MODULE //
