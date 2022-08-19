@@ -175,20 +175,20 @@ Template.refundcard.onRendered(() => {
               if (dataObject.length == 0) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                       addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                      
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
+                       
+                   
                             if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                             {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
+                                {       
                                         $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                             $('#Refunds_1').attr('checked','checked');
                                         }
-
+                                        
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -198,7 +198,7 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_2').attr('checked','checked');
                                         }
                                 }
-
+    
                                 if(data.ttemplatesettings[i].fields.Template == 3)
                                 {
                                         $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -207,34 +207,34 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_3').attr('checked','checked');
                                         }
                                 }
-
-
+    
+    
                             }
-
-
+                   
+    
                      }
-
-
+                      
+                          
                       $('.fullScreenSpin').css('display', 'none');
                   }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
                   });
-              }else{
-                      let data = JSON.parse(dataObject[0].data);
-
+              }else{ 
+                      let data = JSON.parse(dataObject[0].data);    
+                    
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
+                       
+   
                         if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                         {
                                if(data.ttemplatesettings[i].fields.Template == 1)
-                               {
+                               {       
                                        $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                        if(data.ttemplatesettings[i].fields.Active == true)
                                        {
                                          $('#Refunds_1').attr('checked','checked');
                                        }
-
+                                     
                                }
                                if(data.ttemplatesettings[i].fields.Template == 2)
                                {
@@ -244,7 +244,7 @@ Template.refundcard.onRendered(() => {
                                        $('#Refunds_2').attr('checked','checked');
                                      }
                                }
-
+   
                                if(data.ttemplatesettings[i].fields.Template == 3)
                                {
                                      $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -253,33 +253,33 @@ Template.refundcard.onRendered(() => {
                                        $('#Refunds_3').attr('checked','checked');
                                      }
                                }
-
-
+   
+   
                         }
-
-
-
+                   
+                   
+    
                      }
                       $('.fullScreenSpin').css('display', 'none');
               }
             }).catch(function(err) {
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                    
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
-
+                       
+               
+    
                          if(data.ttemplatesettings[i].fields.SettingName == 'Refunds')
                          {
                                 if(data.ttemplatesettings[i].fields.Template == 1)
-                                {
+                                {       
                                         $('input[name="Refunds_1"]').val(data.ttemplatesettings[i].fields.Description);
                                         if(data.ttemplatesettings[i].fields.Active == true)
                                         {
                                           $('#Refunds_1').attr('checked','checked');
                                         }
-
+                                      
                                 }
                                 if(data.ttemplatesettings[i].fields.Template == 2)
                                 {
@@ -289,7 +289,7 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_2').attr('checked','checked');
                                       }
                                 }
-
+    
                                 if(data.ttemplatesettings[i].fields.Template == 3)
                                 {
                                       $('input[name="Refunds_3"]').val(data.ttemplatesettings[i].fields.Description);
@@ -298,24 +298,24 @@ Template.refundcard.onRendered(() => {
                                         $('#Refunds_3').attr('checked','checked');
                                       }
                                 }
-
-
+    
+    
                          }
-
-
-
-
-
-
+    
+                      
+                 
+      
+                    
+    
                       }
                       $('.fullScreenSpin').css('display', 'none');
             }).catch(function (err) {
               $('.fullScreenSpin').css('display', 'none');
             });
           });
-
+    
           };
-
+    
         templateObject.getTemplateInfoNew();
 
 
@@ -576,6 +576,7 @@ Template.refundcard.onRendered(() => {
 
             var array_data = [];
             let lineItems = [];
+            let taxItems = {};
             object_invoce = [];
             let item_invoices = '';
 
@@ -623,6 +624,32 @@ Template.refundcard.onRendered(() => {
                 let taxamount = $('#' + lineID + " .colTaxAmount").text();
                 let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
+                let targetRow = $('#' + lineID);
+                let targetTaxCode = targetRow.find('.lineTaxCode').val();
+                let qty = targetRow.find(".lineQty").val() || 0
+                let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+                const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+                if (taxDetail) {
+                    let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+                    let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+                    if (taxDetail.Lines) {
+                        taxDetail.Lines.map((line) => {
+                            let taxCode = line.SubTaxCode;
+                            let amount = priceTotal * line.Percentage / 100;
+                            if (taxItems[taxCode]) {
+                                taxItems[taxCode] += amount;
+                            }
+                            else {
+                                taxItems[taxCode] = amount;
+                            }
+                        });
+                    }
+                    else {
+                        taxItems[targetTaxCode] = taxTotal;
+                    }
+                }
+
                 array_data.push([
                     tdproduct,
                     tddescription,
@@ -660,140 +687,141 @@ Template.refundcard.onRendered(() => {
 
 
 
-                if(number == 1)
-                {
-                    item_invoices = {
+            if(number == 1)
+            {
+                item_invoices = {
 
-                        o_url: Session.get('vs1companyURL'),
-                        o_name: Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState'),
-                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
-                        title: 'Refund',
-                        value:invoice_data.id,
-                        date: dtSODate,
-                        invoicenumber:invoice_data.id,
-                        refnumber: ref,
-                        pqnumber: po,
-                        duedate: duedate,
-                        paylink: "Pay Now",
-                        supplier_type: "Customer",
-                        supplier_name : customer,
-                        supplier_addr : txabillingAddress,
-                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal :subtotal_total,
-                        gst : subtotal_tax,
-                        total : grandTotal,
-                        paid_amount : total_paid,
-                        bal_due : balancedue,
-                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                        data: array_data,
-                        customfield1:'NA',
-                        customfield2:'NA',
-                        customfield3:'NA',
-                        customfieldlabel1:'NA',
-                        customfieldlabel2:'NA',
-                        customfieldlabel3:'NA',
-                        applied : "",
-                        showFX:"",
-                        comment:comment,
-                    };
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address: Session.get('vs1companyaddress1'),
+                    o_city: Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                    title: 'Refund',
+                    value:invoice_data.id,
+                    date: dtSODate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: ref,
+                    pqnumber: po,
+                    duedate: duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : txabillingAddress,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal :subtotal_total,
+                    gst : subtotal_tax,
+                    total : grandTotal,
+                    paid_amount : total_paid,
+                    bal_due : balancedue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:'NA',
+                    customfield2:'NA',
+                    customfield3:'NA',
+                    customfieldlabel1:'NA',
+                    customfieldlabel2:'NA',
+                    customfieldlabel3:'NA',
+                    applied : "",
+                    showFX:"",
+                    comment:comment,
+                };
 
-                }
-                else if(number == 2)
-                {
-                    item_invoices = {
-                        o_url: Session.get('vs1companyURL'),
-                        o_name: Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState'),
-                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
-                        title: 'Refund',
-                        value:invoice_data.id,
-                        date: dtSODate,
-                        invoicenumber:invoice_data.id,
-                        refnumber: ref,
-                        pqnumber: po,
-                        duedate: duedate,
-                        paylink: "Pay Now",
-                        supplier_type: "Customer",
-                        supplier_name : customer,
-                        supplier_addr : txabillingAddress,
-                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal :subtotal_total,
-                        gst : subtotal_tax,
-                        total : grandTotal,
-                        paid_amount : total_paid,
-                        bal_due : balancedue,
-                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                        data: array_data,
-                        customfield1:customfield1,
-                        customfield2:customfield2,
-                        customfield3:customfield3,
-                        customfieldlabel1:customfieldlabel1,
-                        customfieldlabel2:customfieldlabel2,
-                        customfieldlabel3:customfieldlabel3,
-                        applied : "",
-                        showFX:"",
-                        comment:comment,
-                    };
+            }
+            else if(number == 2)
+            {
+                item_invoices = {
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address: Session.get('vs1companyaddress1'),
+                    o_city: Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                    title: 'Refund',
+                    value:invoice_data.id,
+                    date: dtSODate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: ref,
+                    pqnumber: po,
+                    duedate: duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : txabillingAddress,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal :subtotal_total,
+                    gst : subtotal_tax,
+                    total : grandTotal,
+                    paid_amount : total_paid,
+                    bal_due : balancedue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:customfield1,
+                    customfield2:customfield2,
+                    customfield3:customfield3,
+                    customfieldlabel1:customfieldlabel1,
+                    customfieldlabel2:customfieldlabel2,
+                    customfieldlabel3:customfieldlabel3,
+                    applied : "",
+                    showFX:"",
+                    comment:comment,
+                };
 
-                }
-                else
-                {
-                    item_invoices = {
-                        o_url: Session.get('vs1companyURL'),
-                        o_name: Session.get('vs1companyName'),
-                        o_address: Session.get('vs1companyaddress1'),
-                        o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState'),
-                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
-                        title: 'Refund',
-                        value:invoice_data.id,
-                        date: dtSODate,
-                        invoicenumber:invoice_data.id,
-                        refnumber: ref,
-                        pqnumber: po,
-                        duedate: duedate,
-                        paylink: "Pay Now",
-                        supplier_type: "Customer",
-                        supplier_name : customer,
-                        supplier_addr : txabillingAddress,
-                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal :subtotal_total,
-                        gst : subtotal_tax,
-                        total : grandTotal,
-                        paid_amount : total_paid,
-                        bal_due : balancedue,
-                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                        data: array_data,
-                        customfield1:customfield1,
-                        customfield2:customfield2,
-                        customfield3:customfield3,
-                        customfieldlabel1:customfieldlabel1,
-                        customfieldlabel2:customfieldlabel2,
-                        customfieldlabel3:customfieldlabel3,
-                        applied : "",
-                        showFX:fx,
-                        comment:comment,
-                    };
+            }
+            else
+            {
+                item_invoices = {
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address: Session.get('vs1companyaddress1'),
+                    o_city: Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                    title: 'Refund',
+                    value:invoice_data.id,
+                    date: dtSODate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: ref,
+                    pqnumber: po,
+                    duedate: duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : txabillingAddress,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal :subtotal_total,
+                    gst : subtotal_tax,
+                    total : grandTotal,
+                    paid_amount : total_paid,
+                    bal_due : balancedue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:customfield1,
+                    customfield2:customfield2,
+                    customfield3:customfield3,
+                    customfieldlabel1:customfieldlabel1,
+                    customfieldlabel2:customfieldlabel2,
+                    customfieldlabel3:customfieldlabel3,
+                    applied : "",
+                    showFX:fx,
+                    comment:comment,
+                };
 
-                }
+            }
 
+            item_invoices.taxItems = taxItems;
 
             object_invoce.push(item_invoices);
 
@@ -1276,6 +1304,27 @@ Template.refundcard.onRendered(() => {
             for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
                     tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
             }
+
+            if (object_invoce[0]["taxItems"]) {
+                let taxItems = object_invoce[0]["taxItems"];
+                $("#html-2-pdfwrapper_new #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $ ${taxItems[code]}</p>
+                            </div>
+                        </div>
+                    `;
+                    $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+                });
+            }
+            $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
             }
 
             // table content
@@ -1395,7 +1444,7 @@ Template.refundcard.onRendered(() => {
                   statecode: data.tcustomervs1[i].fields.State + ' ' + data.tcustomervs1[i].fields.Postcode || ' ',
                   country: data.tcustomervs1[i].fields.Country || ' ',
                   termsName: data.tcustomervs1[i].fields.TermsName || '',
-                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || '',
+                  taxCode: data.tcustomervs1[i].fields.TaxCodeName || 'E',
                   clienttypename: data.tcustomervs1[i].fields.ClientTypeName || 'Default',
                   discount: data.tcustomervs1[i].fields.Discount || 0
               };
@@ -3527,7 +3576,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    //$('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
+                    $('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
                 }
             }
         }
@@ -4695,7 +4744,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
               values.forEach(value => {
                   let reportData = JSON.parse(value);
                   let temp = {... reportData};
-
+                  
                   temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                   reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                   temp.attachments = attachment;
@@ -5331,10 +5380,9 @@ Template.refundcard.onRendered(function() {
               tempObj.subtaxcodes.set(subTaxTableList);
             });
           });
-      };
-  
-      tempObj.getSubTaxCodes();
+    };
 
+    tempObj.getSubTaxCodes();
 
     // custom field displaysettings
     // tempObj.getAllCustomFieldDisplaySettings = function () {
@@ -6477,15 +6525,15 @@ Template.refundcard.events({
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
                 let lineDescription = "";
-                // if (line.Description) {
-                //     lineDescription = line.Description;
-                // } else {
-                //     lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
-                //     lineDescription = lineDescription.description;
-                // }
+                if (line.Description) {
+                    lineDescription = line.Description;
+                } else {
+                    lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
+                    lineDescription = lineDescription.description;
+                }
 
                 taxDetailTableData.push([
-                    lineDescription,
+                    "",
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
@@ -6689,181 +6737,181 @@ Template.refundcard.events({
 
         var refunds = $('input[name="Refunds"]:checked').val();
         let emid = Session.get('mySessionEmployeeLoggedID');
-
+        
          sideBarService.getTemplateNameandEmployeId("Refunds",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_1"]').val(),
                                 Template:"1",
                                 Active:refunds == 1 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));  
+                    
                });
-
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
          }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_1"]').val(),
                                 Template:"1",
                                 Active:refunds == 1 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                         
                        });
-
-
+                        
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+    
          });
-
-
+    
+    
           sideBarService.getTemplateNameandEmployeId("Refunds",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_2"]').val(),
                                 Template:"2",
                                 Active:refunds == 2 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                  
               });
-
-
+             
+        
             }).catch(function (err) {
-
-
+        
+             
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_2"]').val(),
                                 Template:"2",
                                 Active:refunds == 2 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                      
                       });
-
-
+                       
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                        
+                  
+                    });  
+    
           });
-
-
+    
+    
           sideBarService.getTemplateNameandEmployeId("Refunds",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
                                 Description:$('input[name="Refunds_3"]').val(),
                                 Template:"3",
                                 Active:refunds == 3 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+               
               });
-
-
+              
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 Description:$('input[name="Refunds_3"]').val(),
                                 Template:"3",
                                 Active:refunds == 3 ? true:false,
-                            }
+                            }            
                     }
-
+                
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                                
                       });
-
+                
                     }).catch(function (err) {
-
-
-
-                    });
-
+                
+                       
+                  
+                    });  
+    
           });
 
         $('#html-2-pdfwrapper-new').css('display', 'block');
@@ -7240,6 +7288,10 @@ Template.refundcard.events({
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
 
+                let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
+
                 if (tdproduct != "") {
 
                     lineItemObjForm = {
@@ -7256,6 +7308,58 @@ Template.refundcard.events({
                             DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
                         }
                     };
+
+                    // Feature/ser-lot number tracking: Save Serial Numbers
+                    if (tdSerialNumber) {
+                        const serialNumbers = tdSerialNumber.split(',');
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "TPQASN",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQASN: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
+                    // Feature/ser-lot number tracking: Save Lot Number
+                    if (tdLotNumber) {
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "PQABatch",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQABatch: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
                     lineItemsForm.push(lineItemObjForm);
                     splashLineArray.push(lineItemObjForm);
                 }
@@ -8623,6 +8727,8 @@ Template.refundcard.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        let selectedunit = $(target).closest('tr').find('.lineQty').val();
+        localStorage.setItem('productItem', selectedunit);
         let productService = new ProductService();
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
@@ -8637,8 +8743,12 @@ Template.refundcard.events({
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#lotNumberModal').attr('data-row', row + 1);
                     $('#lotNumberModal').modal('show');
                 } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#serialNumberModal').attr('data-row', row + 1);
                     $('#serialNumberModal').modal('show');
                 }
             });

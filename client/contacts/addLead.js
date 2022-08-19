@@ -269,7 +269,7 @@ Template.leadscard.onRendered(function () {
             custfield2: data.fields.CUSTFLD2 || '',
             custfield3: data.fields.CUSTFLD3 || '',
             custfield4: data.fields.CUSTFLD4 || '',
-            status: data.fields.CUSTFLD4 || '',
+            status: data.fields.Status || '',
             rep: data.fields.RepName || '',
             source: data.fields.SourceName || '',
         };
@@ -378,7 +378,7 @@ Template.leadscard.onRendered(function () {
                         }
                     }
                 }
-                
+
                 temp.map(item=>{
                     if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                         tempArray.push(item.fields)
@@ -406,7 +406,7 @@ Template.leadscard.onRendered(function () {
 
     templateObject.getAllCrm = async function (leadName) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+        let employeeID = Session.get("mySessionEmployeeLoggedID");
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
@@ -469,9 +469,9 @@ Template.leadscard.onRendered(function () {
                             description: '',
                             labels: '',
                             category: 'appointment'
-        
+
                         }
-    
+
                         dataTableList.push(obj);
                     })
                 }
@@ -516,7 +516,7 @@ Template.leadscard.onRendered(function () {
                 }catch (error) {
                 }
                 setCrmProjectTasks()
-                
+
             })
             .catch((err)=>{
                 templateObject.crmRecords.set(dataTableList);
@@ -524,12 +524,12 @@ Template.leadscard.onRendered(function () {
                 $('.fullScreenSpin').css('display', 'none');
             })
         }
-  
+
         // await getTask();
         // await getAppointments();
         // await getEmails();
 
-        
+
     };
     function setCrmProjectTasks() {
         let tableHeaderList = [];
@@ -709,7 +709,7 @@ Template.leadscard.onRendered(function () {
             }).then((result) => {
                 if (result.value) {
                     $('#referenceLetterModal').modal('toggle');
-                } 
+                }
             });
         } else {
             let email = $('#edtLeadEmail').val();
@@ -749,7 +749,7 @@ Template.leadscard.onRendered(function () {
                 }).then((result) => {
                     if (result.value) {
                         $('#referenceLetterModal').modal('toggle');
-                    } 
+                    }
                 });
             }
         }
@@ -759,7 +759,7 @@ Template.leadscard.onRendered(function () {
         $('#addLetterTemplateModal').modal('toggle')
     })
 
-    
+
     $(document).on('click','#addLetterTemplateModal #save-correspondence', function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         // let correspondenceData = localStorage.getItem('correspondence');
@@ -784,7 +784,7 @@ Template.leadscard.onRendered(function () {
                 });
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-               
+
                 sideBarService.getCorrespondences().then(dObject =>{
 
                     let temp = {
@@ -803,10 +803,10 @@ Template.leadscard.onRendered(function () {
                         type: 'TCorrespondence',
                         fields: temp
                     }
-    
+
                     // let array = [];
                     // array.push(objDetails)
-                    
+
                     sideBarService.saveCorrespondence(objDetails).then(data=>{
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
@@ -835,7 +835,7 @@ Template.leadscard.onRendered(function () {
                             } else if (result.dismiss === 'cancel') { }
                         });
                     })
-                    
+
                 })
             }
         } else {
@@ -856,10 +856,10 @@ Template.leadscard.onRendered(function () {
                     type: 'TCorrespondence',
                     fields: temp
                 }
-    
+
                 let array = [];
                     array.push(objDetails)
-    
+
                 sideBarService.saveCorrespondence(objDetails).then(data=>{
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -872,7 +872,7 @@ Template.leadscard.onRendered(function () {
                         if (result.value) {
                             $('#addLetterTemplateModal').modal('toggle')
                             templateObject.getReferenceLetters();
-                            
+
                         } else if (result.dismiss === 'cancel') { }
                     });
                 }).catch(function () {
@@ -889,14 +889,14 @@ Template.leadscard.onRendered(function () {
                     });
                 })
             })
-            
+
         }
         // localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
         // templateObject.correspondences.set(correspondenceTemp);
         // $('#addLetterTemplateModal').modal('toggle');
     })
 
-   
+
 
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
         $('#leadStatus').val($(this).find(".colStatusName").text());
@@ -1084,9 +1084,9 @@ Template.leadscard.events({
         let bcountry = '';
         let bsuburb = '';
         let isSupplier = !!$('#chkSameAsSupplier').is(':checked');
-        let sourceName = $('#leadSource').val();
-        let repName = $('#leadRep').val();
-        let status = $('#leadStatus').val();
+        let sourceName = $('#leadSource').val()||'';
+        let repName = $('#leadRep').val()||'';
+        let status = $('#leadStatus').val()||'';
 
         if (employeeName == '') {
             swal('Please provide the lead name !', '', 'warning');
@@ -1188,7 +1188,7 @@ Template.leadscard.events({
                 CUSTFLD1: custField1,
                 CUSTFLD2: custField2,
                 CUSTFLD3: custField3,
-                CUSTFLD4: status,
+                Status: status,
                 SourceName: sourceName,
                 RepName: repName,
             }

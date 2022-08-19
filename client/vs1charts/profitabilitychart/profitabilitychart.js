@@ -17,6 +17,14 @@ Template.profitabilitychart.onCreated(()=>{
 
   templateObject.netincomepercTotal = new ReactiveVar();
   templateObject.netincomeperc = new ReactiveVar();
+
+  templateObject.grossprofitpercTotal = new ReactiveVar();
+  templateObject.grossprofitperc = new ReactiveVar();
+
+  templateObject.totalSales = new ReactiveVar();
+  templateObject.grossProfit = new ReactiveVar();
+  templateObject.totalExpenses = new ReactiveVar();
+  templateObject.nettProfit = new ReactiveVar();
 });
 
 Template.profitabilitychart.onRendered(()=>{
@@ -50,13 +58,22 @@ Template.profitabilitychart.onRendered(()=>{
   let totalCOGS = localStorage.getItem('VS1ProfitandLoss_COGSEx_dash') || 0;
   let totalSales = localStorage.getItem('VS1ProfitandLoss_IncomeEx_dash') || 0;
   let totalNetIncome = localStorage.getItem('VS1ProfitandLoss_netIncomeEx_dash') || 0;
-
+  
   let totalSalesPerc = 0;
+  let totalExpensePerc = 0;
+  let grossProfitPerc = 0;
+  let totalNetIncomePerc = 0;
   let totalSumProfitLoss = 0;
-  let sumTotalExpense = (Number(totalExpense) + Number(totalCOGS)) || 0;
+  let sumTotalExpense = Math.abs(Number(totalExpense) + Number(totalCOGS)) || 0;
+  let grossProfit = (Number(totalSales) + Number(totalExpense) + Number(totalCOGS)) || 0;
+
+  templateObject.totalSales.set(utilityService.modifynegativeCurrencyFormat(totalSales));
+  templateObject.grossProfit.set(utilityService.modifynegativeCurrencyFormat(grossProfit));
+  templateObject.totalExpenses.set(utilityService.modifynegativeCurrencyFormat(sumTotalExpense));
+  templateObject.nettProfit.set(utilityService.modifynegativeCurrencyFormat(totalNetIncome));
 
   $('.spnTotalSales').html(utilityService.modifynegativeCurrencyFormat(totalSales));
-  $('.spnTotalGross').html(utilityService.modifynegativeCurrencyFormat(Number(totalCOGS)));
+  $('.spnGrossProfit').html(utilityService.modifynegativeCurrencyFormat(grossProfit));
   $('.spnTotalExpense').html(utilityService.modifynegativeCurrencyFormat(Math.abs(sumTotalExpense)));
   $('.spnTotalnetincome').html(utilityService.modifynegativeCurrencyFormat(totalNetIncome));
   
@@ -67,12 +84,16 @@ Template.profitabilitychart.onRendered(()=>{
 
       totalExpensePerc = (sumTotalExpense / totalSumProfitLoss) * 100;
       totalSalesPerc = (totalSales / totalSumProfitLoss) * 100;
-      let totalNetIncomePerc = (totalNetIncome / totalSumProfitLoss) * 100;
-      templateObject.netincomeperc.set(Math.abs(totalNetIncomePerc));
-      templateObject.salespercTotal.set(utilityService.modifynegativeCurrencyFormat(totalSalesPerc));
-      templateObject.expensepercTotal.set(utilityService.modifynegativeCurrencyFormat(totalExpensePerc));
+      grossProfitPerc = (grossProfit / totalSumProfitLoss) * 100;
+      totalNetIncomePerc = (totalNetIncome / totalSumProfitLoss) * 100;
 
+      // templateObject.netincomeperc.set(Math.abs(totalNetIncomePerc));
+      templateObject.netincomepercTotal.set(parseInt(Math.abs(totalNetIncomePerc)));
+      templateObject.salespercTotal.set(parseInt(Math.abs(totalSalesPerc)));
+      templateObject.expensepercTotal.set(parseInt(Math.abs(totalExpensePerc)));
+      templateObject.grossprofitpercTotal.set(parseInt(Math.abs(grossProfitPerc)));
       templateObject.salesperc.set(totalSalesPerc);
+
       if(totalExpensePerc < 0 ){
         templateObject.expenseperc.set(Math.abs(totalExpensePerc));
       }else{
@@ -90,9 +111,6 @@ Template.profitabilitychart.helpers({
   dateAsAt: () =>{
       return Template.instance().dateAsAt.get() || '-';
   },
-  companyname: () =>{
-      return loggedCompany;
-  },
   salesperc: () =>{
       return Template.instance().salesperc.get() || 0;
   },
@@ -104,6 +122,12 @@ Template.profitabilitychart.helpers({
   },
   expensepercTotal: () =>{
       return Template.instance().expensepercTotal.get() || 0;
+  },
+  grossprofitpercTotal: () =>{
+      return Template.instance().grossprofitpercTotal.get() || 0;
+  },
+  netincomepercTotal: () =>{
+      return Template.instance().netincomepercTotal.get() || 0;
   },
   netincomeperc: () =>{
       return Template.instance().netincomeperc.get() || 0;

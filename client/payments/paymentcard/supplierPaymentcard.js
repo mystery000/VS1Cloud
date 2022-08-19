@@ -3351,6 +3351,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#addRow").attr("disabled", true);
     var currentSalesID = getsale_id[getsale_id.length - 1];
     if (getsale_id[1]) {
+      let deteled = false;
       currentSalesID = parseInt(currentSalesID);
       getVS1Data("TSupplierPayment")
         .then(function (dataObject) {
@@ -3360,7 +3361,10 @@ Template.supplierpaymentcard.onRendered(() => {
               .then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
-
+                deteled = data.fields.Deleted;
+                if(data.fields.CompanyName != ''){
+                  deteled = true;
+                };
                 let total = utilityService
                   .modifynegativeCurrencyFormat(data.fields.Amount)
                   .toLocaleString(undefined, {
@@ -3472,6 +3476,8 @@ Template.supplierpaymentcard.onRendered(() => {
                     };
                     lineItems.push(lineItemObj);
                   }
+                }else{
+                  deteled = true;
                 }
                 let record = {
                   lid: data.fields.ID || "",
@@ -3483,7 +3489,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   bankAccount: data.fields.AccountName || "",
                   paymentAmount: appliedAmt || 0,
                   notes: data.fields.Notes,
-                  deleted: data.fields.Deleted,
+                  deleted: deteled,
                   LineItems: lineItems,
                   checkpayment: data.fields.PaymentMethodName,
                   department: data.fields.DeptClassName,
@@ -3587,7 +3593,10 @@ Template.supplierpaymentcard.onRendered(() => {
                 added = true;
                 let lineItems = [];
                 let lineItemObj = {};
-
+                deteled = useData[d].fields.Deleted;
+                if(useData[d].fields.CompanyName != ''){
+                  deteled = true;
+                };
                 let total = utilityService
                   .modifynegativeCurrencyFormat(useData[d].fields.Amount)
                   .toLocaleString(undefined, {
@@ -3697,6 +3706,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     lineItems.push(lineItemObj);
                   }
                 } else {
+                  deteled = true;
                   lineItemObj = {
                     id: "",
                     invoiceid: "",
@@ -3723,7 +3733,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   bankAccount: useData[d].fields.AccountName || "",
                   paymentAmount: appliedAmt || 0,
                   notes: useData[d].fields.Notes,
-                  deleted: useData[d].fields.Deleted,
+                  deleted: deteled,
                   LineItems: lineItems,
                   checkpayment: useData[d].fields.PaymentMethodName,
                   department: useData[d].fields.DeptClassName,
@@ -3824,6 +3834,10 @@ Template.supplierpaymentcard.onRendered(() => {
                 .then(function (data) {
                   let lineItems = [];
                   let lineItemObj = {};
+                  deteled = data.fields.Deleted;
+                  if(data.fields.CompanyName != ''){
+                    deteled = true;
+                  };
 
                   let total = utilityService
                     .modifynegativeCurrencyFormat(data.fields.Amount)
@@ -3937,6 +3951,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       lineItems.push(lineItemObj);
                     }
                   } else {
+                    deteled = true;
                     lineItemObj = {
                       id: "",
                       invoiceid: "",
@@ -3962,7 +3977,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     bankAccount: data.fields.AccountName || "",
                     paymentAmount: appliedAmt || 0,
                     notes: data.fields.Notes,
-                    deleted: data.fields.Deleted,
+                    deleted: deteled,
                     LineItems: lineItems,
                     checkpayment: data.fields.PaymentMethodName,
                     department: data.fields.DeptClassName,
@@ -4061,7 +4076,10 @@ Template.supplierpaymentcard.onRendered(() => {
             .then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
-
+              deteled = data.fields.Deleted;
+              if(data.fields.CompanyName != ''){
+                deteled = true;
+              };
               let total = utilityService
                 .modifynegativeCurrencyFormat(data.fields.Amount)
                 .toLocaleString(undefined, {
@@ -4173,6 +4191,8 @@ Template.supplierpaymentcard.onRendered(() => {
                   };
                   lineItems.push(lineItemObj);
                 }
+              }else{
+                deteled = true;
               }
               let record = {
                 lid: data.fields.ID || "",
@@ -4184,7 +4204,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 bankAccount: data.fields.AccountName || "",
                 paymentAmount: appliedAmt || 0,
                 notes: data.fields.Notes,
-                deleted: data.fields.Deleted,
+                deleted: deteled,
                 LineItems: lineItems,
                 checkpayment: data.fields.PaymentMethodName,
                 department: data.fields.DeptClassName,
@@ -12204,11 +12224,7 @@ Template.supplierpaymentcard.events({
   "click .btnBack": function (event) {
     event.preventDefault();
     if (FlowRouter.current().queryParams.trans) {
-      FlowRouter.go(
-        "/customerscard?id=" +
-          FlowRouter.current().queryParams.trans +
-          "&transTab=active"
-      );
+      FlowRouter.go("/customerscard?id=" +FlowRouter.current().queryParams.trans +"&transTab=active");
     } else {
       history.back(1);
     }
@@ -12317,28 +12333,33 @@ Template.supplierpaymentcard.events({
               });
             });
         } else if (result.dismiss === "cancel") {
+          history.back(1);
         }
       });
     } else {
       if (FlowRouter.current().queryParams.trans) {
-        FlowRouter.go(
-          "/customerscard?id=" +
-            FlowRouter.current().queryParams.trans +
-            "&transTab=active"
-        );
+        FlowRouter.go("/customerscard?id=" +FlowRouter.current().queryParams.trans +"&transTab=active");
       } else {
         FlowRouter.go("/paymentoverview?success=true");
       }
     }
   },
   "click .btnDeletePayment": async function (event) {
-    $('.fullScreenSpin').css('display', 'inline-block');
+
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
     var url = FlowRouter.current().path;
     var getso_id = url.split('?id=');
     var currentInvoice = getso_id[getso_id.length - 1];
     var objDetails = '';
+    swal({
+        title: 'Delete Payment',
+        text: "Are you sure you want to Delete this Payment?",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.value) {
     if (getso_id[1]) {
         currentInvoice = parseInt(currentInvoice);
         var objDetails = {
@@ -12349,7 +12370,7 @@ Template.supplierpaymentcard.events({
             }
         };
 
-        await paymentService.deleteSuppDepositData(objDetails).then(function(objDetails) {
+       paymentService.deleteSuppDepositData(objDetails).then(function(objDetails) {
             $('.modal-backdrop').css('display', 'none');
             FlowRouter.go('/paymentoverview?success=true');
         }).catch(function(err) {
@@ -12370,6 +12391,8 @@ Template.supplierpaymentcard.events({
       $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/paymentoverview?success=true');
     }
+    } else {}
+  });
     // $('#deleteLineModal').modal('toggle');
   },
   "click .btnConfirmPayment": function (event) {

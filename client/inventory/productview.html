@@ -967,14 +967,14 @@
                     <div class="d-flex productRow">
                         <div class="th colProduct">Product</div>
                         <div class="th colQty">Qty</div>
-                        <div class="thcolProcess">Process</div>
+                        <div class="th colProcess">Process</div>
                         <div class="th colNote">Notes</div>
                         <div class="th colAttachment"></div>
                         <div class="th colDelete"></div>
                     </div>
                     <div class="d-flex productRow">
                         <div class="colProduct">
-                            <input class="edtProductName" style="width: 60%" value="{{productrecord.productname}}"/>
+                            <input class="edtProductName" id="edtMainProductName" style="width: 60%" value="{{productrecord.productname}}"/>
                         </div>
                         <div class="colQty">
                             <input type="text" class="edtQuantity w-100" value="1"/>
@@ -993,7 +993,7 @@
                     <div class="d-flex productRow">
                         <div class="colProduct d-flex">
                             <button class="btnAddProduct" style="width: 30%; background-color: #00a3d3; border: 2px solid black">Product+</button>
-                            <select class="edtProductName edtRaw" id="edtRaw" type="search" value="12345" style="width: 30%"></select>
+                            <select class="edtProductName edtRaw" id="edtRaw" type="search" style="width: 30%"></select>
                         </div>
                         <div class="colQty">
                             <input type="text" class="edtQuantity w-100" value="1"/>
@@ -1021,4 +1021,3 @@
         modalDraggable();
     </script>
 </template>
-

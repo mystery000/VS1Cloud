@@ -1197,7 +1197,7 @@ $("#erplogin-button").click(function(e){
 
     $('.loginSpinner').css('display','inline-block');
     $('.fullScreenSpin').css('display','inline-block');
-    var serverTest = URLRequest + "165.228.147.127" + ':' + "4420" + '/erpapi/Vs1_Logon?Vs1UserName="'+userLoginEmail+'"&vs1Password="'+userLoginPassword+'"';
+    var serverTest = URLRequest + "110.145.181.218" + ':' + "4420" + '/erpapi/Vs1_Logon?Vs1UserName="'+userLoginEmail+'"&vs1Password="'+userLoginPassword+'"';
 
     var oReq = new XMLHttpRequest();
     oReq.open("GET",serverTest, true);
@@ -1214,7 +1214,7 @@ $("#erplogin-button").click(function(e){
       if (oReq.readyState == 4 && oReq.status == 200) {
         $('.loginSpinner').css('display','inline-block');
         $('.fullScreenSpin').css('display','inline-block');
-        Session.setPersistent('mainEIPAddress', '165.228.147.127');
+        Session.setPersistent('mainEIPAddress', '110.145.181.218');
         Session.setPersistent('mainEPort', '4420');
         localStorage.setItem('mainEIPAddress', licenceIPAddress);
         localStorage.setItem('mainEPort', checkSSLPorts);
@@ -1763,7 +1763,7 @@ $("#erplogin-buttonSimon").click(function(e){
 
     $('.loginSpinner').css('display','inline-block');
     $('.fullScreenSpin').css('display','inline-block');
-    var serverTest = URLRequest + "165.228.147.127" + ':' + "4420" + '/erpapi/Vs1_Logon?Vs1UserName="'+userLoginEmail+'"&vs1Password="'+userLoginPassword+'"';
+    var serverTest = URLRequest + "110.145.181.218" + ':' + "4420" + '/erpapi/Vs1_Logon?Vs1UserName="'+userLoginEmail+'"&vs1Password="'+userLoginPassword+'"';
 
     var oReq = new XMLHttpRequest();
     oReq.open("GET",serverTest, true);
@@ -1780,7 +1780,7 @@ $("#erplogin-buttonSimon").click(function(e){
       if (oReq.readyState == 4 && oReq.status == 200) {
         $('.loginSpinner').css('display','inline-block');
         $('.fullScreenSpin').css('display','inline-block');
-        Session.setPersistent('mainEIPAddress', '165.228.147.127');
+        Session.setPersistent('mainEIPAddress', '110.145.181.218');
         Session.setPersistent('mainEPort', '4420');
 
         localStorage.setItem('mainEIPAddress', licenceIPAddress);

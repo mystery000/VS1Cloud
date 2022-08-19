@@ -217,7 +217,6 @@ Template.organisationsettings.onRendered(function() {
                     suppliers.push(dataList);
                 }
 
-                console.log('suppliers--', suppliers);
 
                 templateObject.suppliersData.set(suppliers);
 

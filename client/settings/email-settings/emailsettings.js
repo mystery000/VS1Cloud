@@ -906,7 +906,7 @@ templateObject.getCorrespondence = () => {
                                             targetElement[i].style.display = "block";
                                             targetElement[i].style.width = "210mm";
                                             targetElement[i].style.backgroundColor = "#ffffff";
-                                            targetElement[i].style.padding = "8px";
+                                            targetElement[i].style.padding = "20px";
                                             targetElement[i].style.height = "297mm";
                                             targetElement[i].style.fontSize = "13.33px";
                                             targetElement[i].style.color = "#000000";
