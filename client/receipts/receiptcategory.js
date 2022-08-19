@@ -93,7 +93,7 @@ Template.receiptcategory.onRendered(function() {
     $('#receiptCategoryList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
         let listData = $(this).closest('tr').attr('id');
         if(listData){
-            $('#add-receiptcategory-title').text('Edit Trip-Group');
+            $('#add-receiptcategory-title').text('Edit Receipt Category');
             if (listData !== '') {
                 listData = Number(listData);
                 const receiptCategoryID = listData || '';
@@ -213,7 +213,7 @@ Template.receiptcategory.events({
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
         let receiptCategoryName = $('#edtReceiptCategoryName').val();
         if (receiptCategoryName == '') {
-            swal('Trip-Group name cannot be blank!', '', 'warning');
+            swal('Receipt Category name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display','none');
             return false;
         }
@@ -290,7 +290,7 @@ Template.receiptcategory.events({
         }
     },
     'click .btnAdd': function () {
-        $('#add-receiptcategory-title').text('Add New Trip-Group');
+        $('#add-receiptcategory-title').text('Add New Receipt Category');
         $('#edtReceiptCategoryID').val('');
         $('#edtReceiptCategoryName').val('');
         $('#edtReceiptCategoryDesc').val('');
