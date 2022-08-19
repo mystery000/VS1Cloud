@@ -7154,7 +7154,7 @@ Template.newsidenav.events({
       $('#seedToSaleSubmenu').collapse('hide');
       $('#settingsSubmenu').collapse('hide');
     },
-    
+
     'click #sidenavpayments': function(event) {
         $('.accountsLi').addClass('opacityNotActive');
         $('.appointmentsLi').addClass('opacityNotActive');
@@ -7187,14 +7187,12 @@ Template.newsidenav.events({
         $('#salesSubmenu').collapse('hide');
         $('#seedToSaleSubmenu').collapse('hide');
         $('#settingsSubmenu').collapse('hide');
-    },
-
-    'click #sidenavprocesses': function(event) {
+    },'click #sidenavprocesses': function(event) {
       event.preventDefault();
       FlowRouter.go('/processlist');
       let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
-    }, 
+    },
     'click .sidenavpayments': function(event) {
 
         event.preventDefault();
@@ -7942,13 +7940,6 @@ Template.newsidenav.events({
 
     },
 
-    'click, #sidenavprocesses':function(event) {
-      event.preventDefault();
-      FlowRouter.go('/processlist');
-      let templateObject = Template.instance();
-      templateObject.getSetSideNavFocus();
-    },
-     
     'click .accountsLiHeader': function(event) {
         event.preventDefault();
         FlowRouter.go('/accountsoverview');

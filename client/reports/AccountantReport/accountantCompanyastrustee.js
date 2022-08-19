@@ -1202,14 +1202,6 @@ Template.accountant_companyastrustee.events({
 });
 
 Template.accountant_companyastrustee.helpers({
-    accountantPanList1: (no) => {
-        return no < 6;
-    },
-
-    accountantPanList2: (no) => {
-        return no >= 6;
-    },
-
     countryList: () => {
         return Template.instance().countryData.get();
     },

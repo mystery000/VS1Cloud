@@ -483,10 +483,18 @@
                                         <div class="col d-xl-flex float-left flex-grow-1 mb-4">
                                             <div class="">
                                                 <label style="margin-top: 30px; margin-right: 16px;" id="labelPaymentType">Received as</label>
-                                                <select class="form-control pointer" style="margin-top: 20px; width: 200px; display: inline-block;">
+                                                <select class="form-control pointer"  id="#sltPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
                                                     <option value="directpayment">Direct Payment</option>
                                                     <option value="prepayment">Prepayment</option>
                                                     <option value="overpayment">Overpayment</option>
+                                                </select>
+                                            </div>
+                                            <div class="suppPaymentType" style="display:none;">
+                                                <label style="margin-top: 30px; margin-right: 16px;" id="labelPaymentType">Received as</label>
+                                                <select class="form-control pointer" id="#sltSuppPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
+                                                    <option value="purchaseOrder">Purchase Order</option>
+                                                    <option value="bill">Bill</option>
+                                                    <option value="cheque">Cheque</option>
                                                 </select>
                                             </div>
                                         </div>
