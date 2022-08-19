@@ -5,7 +5,21 @@
             <style>
                 .tblSNlist{
                     max-height: 320px;
-                    overflow-y: scroll;
+                    overflow-y: auto;
+                    padding-left: 25px;
+                }
+
+                #tblSeriallist td {
+                    padding: 4px 10px !important;
+                    border-top: none;
+                }
+
+                #tblSeriallist td input {
+                    border: 0px solid transparent !important;
+                    background-color: rgba(0, 0, 0, 0) !important;
+                    width: 100% !important;
+                    color: #858796 !important;
+                    font-size: 15px!important;
                 }
 
             </style>
@@ -16,7 +30,23 @@
                 <div class="modal-body" style="padding: 8px 24px;">
                     <div class="row">
                         <div class="col-12 tblSNlist">
-                            <table id="tblSeriallist" class="table"></table>
+                            <table id="tblSeriallist" class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td rowspan="2"></td>
+                                        <td colspan="2" class="text-center">Allocate Serial Numbers</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start">#</td>
+                                        <td class="text-start">Serial number</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td class="serialNo">*</td>
+                                        <td><input id="first-serial-number" type="text"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

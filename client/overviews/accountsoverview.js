@@ -34,11 +34,36 @@ Template.accountsoverview.onRendered(function () {
   const dataTableList = [];
   const tableHeaderList = [];
   let categories = [];
-  categories.push('Materials');
-  categories.push('Meals & Entertainment');
-  categories.push('Office Supplies');
-  categories.push('Travel');
-  categories.push('Vehicle');
+
+  templateObject.getReceiptCategoryList = function(){
+    getVS1Data('TReceiptCategory').then(function (dataObject) {
+      if(dataObject.length == 0){
+        sideBarService.getReceiptCategory().then(function(data){
+          setReceiptCategory(data);
+        });
+      }else{
+        let data = JSON.parse(dataObject[0].data);
+        setReceiptCategory(data);
+      }
+    }).catch(function (err) {
+      sideBarService.getReceiptCategory().then(function(data){
+        setReceiptCategory(data);
+      });
+    });
+  };
+  function setReceiptCategory(data) {
+    for (let i in data.treceiptcategory){
+      if (data.treceiptcategory.hasOwnProperty(i)) {
+        if (data.treceiptcategory[i].CategoryName != "") {
+          categories.push(data.treceiptcategory[i].CategoryName);
+        }
+      }
+    }
+    $('.fullScreenSpin').css('display','none');
+    templateObject.getAccountLists();
+  }
+  templateObject.getReceiptCategoryList();
+
   let usedCategories = [];
   let currentId = FlowRouter.current().context.hash;
 
@@ -773,7 +798,7 @@ Template.accountsoverview.onRendered(function () {
     );
   }
 
-  templateObject.getAccountLists();
+
 
   $("#tblAccountOverview tbody").on(
     "click",
@@ -866,7 +891,7 @@ Template.accountsoverview.onRendered(function () {
             cateogoryHtml += '<option value="' +item +'">' +item +'</option>';
           });
           $("#expenseCategory").empty();
-          if (category != "") {
+          if (category != "" && availableCategories.includes(category)) {
             let selectedCategoryHtml = '<option value="' +category +'" selected="selected">' +category +'</option>';
             cateogoryHtml = selectedCategoryHtml + cateogoryHtml;
           }
@@ -2239,17 +2264,13 @@ Template.accountsoverview.events({
 
 Template.accountsoverview.helpers({
   datatablerecords: () => {
-    return Template.instance()
-      .datatablerecords.get()
-      .sort(function (a, b) {
+    return Template.instance().datatablerecords.get().sort(function (a, b) {
         if (a.accountname === "NA") {
           return 1;
         } else if (b.accountname === "NA") {
           return -1;
         }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
+        return a.accountname.toUpperCase() > b.accountname.toUpperCase()? 1: -1;
       });
   },
   bsbRegionName: () => {
@@ -2258,16 +2279,6 @@ Template.accountsoverview.helpers({
       bsbname = "BSB";
     }
     return bsbname;
-  },
-  lastBatchUpdate: () => {
-    let transactionTableLastUpdated = "";
-    var currentDate = new Date();
-    if(localStorage.getItem('VS1TransTableUpdate')){
-       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
-    }else{
-      transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
-    }
-    return transactionTableLastUpdated;
   },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
@@ -2293,17 +2304,13 @@ Template.accountsoverview.helpers({
   //     });
   // },
   taxraterecords: () => {
-    return Template.instance()
-      .taxraterecords.get()
-      .sort(function (a, b) {
+    return Template.instance().taxraterecords.get().sort(function (a, b) {
         if (a.description === "NA") {
           return 1;
         } else if (b.description === "NA") {
           return -1;
         }
-        return a.description.toUpperCase() > b.description.toUpperCase()
-          ? 1
-          : -1;
+        return a.description.toUpperCase() > b.description.toUpperCase()? 1: -1;
       });
   },
   isBankAccount: () => {
@@ -2311,5 +2318,15 @@ Template.accountsoverview.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+  lastBatchUpdate: () => {
+    let transactionTableLastUpdated = "";
+    var currentDate = new Date();
+    if(localStorage.getItem('VS1TransTableUpdate')){
+       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
+    }else{
+      transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
+    }
+    return transactionTableLastUpdated;
   },
 });

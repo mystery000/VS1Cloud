@@ -53,7 +53,7 @@ Meteor.methods({
         cc: details.cc,
         subject: details.subject,
         text: details.text,
-        html: details.html,
+        html: html,
         attachments: details.attachments
       });
     } catch(e) {

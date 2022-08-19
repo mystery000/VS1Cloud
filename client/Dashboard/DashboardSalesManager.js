@@ -114,9 +114,9 @@ Template.dashboardsalesmanager.onRendered(function () {
             });
             const winRate = convertedQuotesCount ? parseInt((convertedQuotesCount/convertedQuotesCount+nonConvertedQuotesCount) * 100) : 0;
             const avgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount/30 : convertedQuotesAmount;
-            $('#sales-winrate').text(winRate);
+            $('#sales-winrate').text(winRate.toFixed(2));
             $('#new-deals-month').text(dealsThisMonthCount);
-            $('#avg-sales-cycle').text(avgSalesCycle);
+            $('#avg-sales-cycle').text(avgSalesCycle.toFixed(2));
         }
     }).catch(function (err) {
     });
@@ -137,8 +137,8 @@ Template.dashboardsalesmanager.onRendered(function () {
                     closedDealsThisYear += tinvoice.Balance;
                 }
             });
-            $('#closed-deals-month').text(closedDealsThisMonth);
-            $('#closed-deals-year').text(closedDealsThisYear);
+            $('#closed-deals-month').text(closedDealsThisMonth.toFixed(2));
+            $('#closed-deals-year').text(closedDealsThisYear.toFixed(2));
         }
     }).catch(function (err) {
     });

@@ -1395,7 +1395,7 @@
                                                             th {
                                                                 background-color: #ededed;
                                                             }
-
+/* 
                                                             th.colDate {
                                                                 width: 15%;
                                                             }
@@ -1406,7 +1406,7 @@
 
                                                             th.colTaskLabels {
                                                                 width: 15%;
-                                                            }
+                                                            } */
 
                                                             .table-striped tbody tr:nth-of-type(odd) {
                                                                 background-color: white !important;
@@ -1470,11 +1470,11 @@
                                                             <thead>
                                                                 <tr class="dnd-moved">
                                                                     <th class="th colTaskId hiddenColumn"></th>
-                                                                    <!--                                                                <th class="th colCompleteTask" style="width: 2%;"></th>-->
-                                                                    <th class="th colDate">Date</th>
-                                                                    <th class="th colTaskName">Task</th>
-                                                                    <th class="th colTaskDesc">Description</th>
-                                                                    <th class="th colTaskLabels">Labels</th>
+                                                                    <th class="th colCompleteTask" style="width: 2%;"></th>
+                                                                    <th class="th colDate" style="width:100px;">Date</th>
+                                                                    <th class="th colTaskName" style="width:150px;">Task</th>
+                                                                    <th class="th colTaskDesc" style="width:300px;">Description</th>
+                                                                    <th class="th colTaskLabels" style="width:200px;">Labels</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -1482,11 +1482,11 @@
                                                                     {{#each item in crmRecords}}
                                                                         <tr class="dnd-moved" style="cursor: pointer;" id="{{item.id}}" category="{{item.category}}">
                                                                             <td contenteditable="false" class="colTaskId hiddenColumn">{{item.id}}</td>
-                                                                            <!--                                                                        <td contenteditable="false" class="th colCompleteTask" style="width: 2%;">-->
-                                                                            <!--                                                                            <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}"-->
-                                                                            <!--                                                                                 style="width:15px;">-->
-                                                                            <!--                                                                            </div>-->
-                                                                            <!--                                                                        </td>-->
+                                                                                <td contenteditable="false" class="th colCompleteTask" style="width: 2%;">
+                                                                                    <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}"
+                                                                                        style="width:15px;">
+                                                                                    </div>
+                                                                                </td>
                                                                             <td contenteditable="false" class="colDate">{{item.date}}</td>
                                                                             <td contenteditable="false" class="colTaskName">{{item.taskName}}</td>
                                                                             <td contenteditable="false" class="colTaskDesc">{{item.description}}</td>

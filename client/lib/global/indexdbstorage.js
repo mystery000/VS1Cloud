@@ -295,6 +295,7 @@ openDb = function (dbName) {
       db.createObjectStore('TltProductLines',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TCorrespendenceList',{ keyPath: "EmployeeEmail"});
       db.createObjectStore('TCampaignList',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TReceiptCategory',{ keyPath: "EmployeeEmail"});
 
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
@@ -561,7 +562,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 58);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 72);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };

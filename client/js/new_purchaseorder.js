@@ -15,6 +15,7 @@ import {autoTable} from 'jspdf-autotable';
 import {SideBarService} from '../js/sidebar-service';
 import 'jquery-editable-select';
 import {ContactService} from "../contacts/contact-service";
+import { TaxRateService } from "../settings/settings-service";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -64,6 +65,7 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.includeBOnShippedQty.set(true);
     templateObject.accountID = new ReactiveVar();
     templateObject.stripe_fee_method = new ReactiveVar();
+    templateObject.subtaxcodes = new ReactiveVar([]);
 });
 Template.purchaseordercard.onRendered(() => {
 
@@ -542,6 +544,7 @@ templateObject.getLastPOData = async function() {
     {
         var array_data = [];
         let lineItems = [];
+        let taxItems = {};
         object_invoce = [];
         let item_invoices = '';
 
@@ -590,6 +593,32 @@ templateObject.getLastPOData = async function() {
             let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
+
+            let targetRow = $('#' + lineID);
+            let targetTaxCode = targetRow.find('.lineTaxCode').val();
+            let qty = targetRow.find(".lineQty").val() || 0
+            let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+            const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+            if (taxDetail) {
+                let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+                let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+                if (taxDetail.Lines) {
+                    taxDetail.Lines.map((line) => {
+                        let taxCode = line.SubTaxCode;
+                        let amount = priceTotal * line.Percentage / 100;
+                        if (taxItems[taxCode]) {
+                            taxItems[taxCode] += amount;
+                        }
+                        else {
+                            taxItems[taxCode] = amount;
+                        }
+                    });
+                }
+                else {
+                    taxItems[targetTaxCode] = taxTotal;
+                }
+            }
 
 
             array_data.push([
@@ -769,9 +798,7 @@ templateObject.getLastPOData = async function() {
               };
 
         }
-
-
-
+        item_invoices.taxItems = taxItems;
 
         object_invoce.push(item_invoices);
         $("#templatePreviewModal .field_payment").show();
@@ -1254,6 +1281,27 @@ templateObject.getLastPOData = async function() {
         for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
         }
+
+            if (object_invoce[0]["taxItems"]) {
+                let taxItems = object_invoce[0]["taxItems"];
+                $("#html-2-pdfwrapper_new #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $ ${taxItems[code]}</p>
+                            </div>
+                        </div>
+                    `;
+                    $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+                });
+            }
+            $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
         }
 
         // table content
@@ -4461,6 +4509,7 @@ Template.purchaseordercard.onRendered(function() {
     let utilityService = new UtilityService();
     let productService = new ProductService();
     let purchaseService = new PurchaseBoardService();
+    const taxRateService = new TaxRateService();
     let tableProductList;
     var splashArrayProductList = new Array();
     var splashArrayTaxRateList = new Array();
@@ -4959,6 +5008,63 @@ Template.purchaseordercard.onRendered(function() {
 
     };
     tempObj.getAllTaxCodes();
+
+    tempObj.getSubTaxCodes = function () {
+        let subTaxTableList = [];
+  
+        getVS1Data("TSubTaxVS1")
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+              taxRateService.getSubTaxCode().then(function (data) {
+                for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                  var dataList = {
+                    id: data.tsubtaxcode[i].Id || "",
+                    codename: data.tsubtaxcode[i].Code || "-",
+                    description: data.tsubtaxcode[i].Description || "-",
+                    category: data.tsubtaxcode[i].Category || "-",
+                  };
+  
+                  subTaxTableList.push(dataList);
+                }
+  
+                tempObj.subtaxcodes.set(subTaxTableList);
+              });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              let useData = data.tsubtaxcode;
+              for (let i = 0; i < useData.length; i++) {
+                var dataList = {
+                  id: useData[i].Id || "",
+                  codename: useData[i].Code || "-",
+                  description: useData[i].Description || "-",
+                  category: useData[i].Category || "-",
+                };
+  
+                subTaxTableList.push(dataList);
+              }
+  
+              tempObj.subtaxcodes.set(subTaxTableList);
+            }
+          })
+          .catch(function (err) {
+            taxRateService.getSubTaxCode().then(function (data) {
+              for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                var dataList = {
+                  id: data.tsubtaxcode[i].Id || "",
+                  codename: data.tsubtaxcode[i].Code || "-",
+                  description: data.tsubtaxcode[i].Description || "-",
+                  category: data.tsubtaxcode[i].Category || "-",
+                };
+  
+                subTaxTableList.push(dataList);
+              }
+  
+              tempObj.subtaxcodes.set(subTaxTableList);
+            });
+          });
+    };
+
+    tempObj.getSubTaxCodes();
 
 });
 
@@ -5795,6 +5901,7 @@ Template.purchaseordercard.events({
         let price = targetRow.find('.colUnitPriceExChange').val() || 0;
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+        const subTaxCodes = tmpObj.subtaxcodes.get();
 
         if (!taxDetail) {
             return;
@@ -5816,8 +5923,16 @@ Template.purchaseordercard.events({
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
+                let lineDescription = "";
+                if (line.Description) {
+                    lineDescription = line.Description;
+                } else {
+                    lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
+                    lineDescription = lineDescription.description;
+                }
+
                 taxDetailTableData.push([
-                    line.Description,
+                    "",
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
@@ -7103,6 +7218,9 @@ Template.purchaseordercard.events({
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
+                let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+                let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
+                let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
 
                 if (tdproduct != "") {
                     if ($('input[name="chkCreatePOCredit"]').is(":checked")) {
@@ -7152,6 +7270,58 @@ Template.purchaseordercard.events({
                         }
 
                     }
+                    
+                    // Feature/ser-lot number tracking: Save Serial Numbers
+                    if (tdSerialNumber) {
+                        const serialNumbers = tdSerialNumber.split(',');
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "TPQASN",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQASN: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+                    
+                    // Feature/ser-lot number tracking: Save Lot Number
+                    if (tdLotNumber) {
+                        let tpqaList = [];
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            const tpqaObject = {
+                                type: "PQABatch",
+                                fields: {
+                                    Active: true,
+                                    Qty: 1,
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            tpqaList.push(tpqaObject);
+                        }
+                        const pqaObject = {
+                            type: "TPQA",
+                            fields: {
+                                Active: true,
+                                PQABatch: tpqaList,
+                                Qty: serialNumbers.length,
+                            }
+                        }
+                        lineItemObjForm.fields.PQA = pqaObject;
+                    }
+
                     lineItemsForm.push(lineItemObjForm);
                     splashLineArray.push(lineItemObjForm);
                 }
@@ -10534,9 +10704,11 @@ Template.purchaseordercard.events({
         let PurchaseData = templateObject.purchaseorderrecord.get();
         var target = event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        let existProduct = false;
+        let productService = new ProductService();
         PurchaseData.LineItems.forEach(element => {
             if (element.item == selectedProductName) {
-                let productService = new ProductService();
+                existProduct = true;
                 productService.getProductStatus(selectedProductName).then(function(data) {
                     $('.fullScreenSpin').css('display', 'none');
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
@@ -10544,6 +10716,8 @@ Template.purchaseordercard.events({
                         event.preventDefault();
                         return false;
                     } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#lotNumberModal').attr('data-row', row + 1);
                         $('#lotNumberModal').modal('show');
                         if (element.pqaseriallotdata == "null") {
                         } else {
@@ -10554,8 +10728,8 @@ Template.purchaseordercard.events({
                                     let shtml = '';
                                     let i = 0;
                                     shtml += `
-                                    <tr><td colspan="5">Allocate Batches</td><td rowspan="2">CUSTFLD</td></tr>
-                                    <tr><td>Batch No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                                    <tr><td colspan="5">Allocate Lot Number</td><td rowspan="2">CUSTFLD</td></tr>
+                                    <tr><td>Lot No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
                                     `;
                                     for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
                                         if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
@@ -10571,6 +10745,8 @@ Template.purchaseordercard.events({
                             }
                         }
                     } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#serialNumberModal').attr('data-row', row + 1);
                         $('#serialNumberModal').modal('show');
                         if (element.pqaseriallotdata == "null") {
                         } else {
@@ -10602,6 +10778,24 @@ Template.purchaseordercard.events({
                 });
             }
         });
+        if (!existProduct) {
+            productService.getProductStatus(selectedProductName).then(function(data) {
+                $('.fullScreenSpin').css('display', 'none');
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                    swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                    event.preventDefault();
+                    return false;
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#lotNumberModal').attr('data-row', row + 1);
+                    $('#lotNumberModal').modal('show');
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $('#serialNumberModal').attr('data-row', row + 1);
+                    $('#serialNumberModal').modal('show');
+                }
+            });
+        }
         localStorage.setItem('productname', selectedProductName);
         let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
         localStorage.setItem('productItem', selectedunit);

@@ -13,8 +13,6 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accSelected = "";
 let taxSelected = "";
-let setSNTrack = false;
-let setLOTtrack = false;
 
 Template.productview.onCreated(() => {
     const templateObject = Template.instance();
@@ -1447,6 +1445,12 @@ Template.productview.onRendered(function() {
                           $("#sltinventoryacount").val(data.fields.AssetAccount);
                           $("#slttaxcodesales").val(data.fields.TaxCodeSales);
                           $("#slttaxcodepurchase").val(data.fields.TaxCodePurchase);
+
+                            // Feature/ser-lot-tracking: Initializing serial/lot number settings
+                            if (data.fields.SNTracking) $('#chkSNTrack').prop('checked', true);
+                            if (data.fields.Batch) $('#chkLotTrack').prop('checked', true);
+                            if (data.fields.CUSTFLD13 === 'true') $('#chkAddSN').prop('checked', true);
+
                             if (data.fields.CUSTFLD14 == 'true') {
                                 $('.lblPriceEx').addClass('hiddenColumn');
                                 $('.lblPriceEx').removeClass('showColumn');
@@ -1559,6 +1563,7 @@ Template.productview.onRendered(function() {
 
                     for (let i = 0; i < useData.length; i++) {
                         if (parseInt(useData[i].fields.ID) === currentProductID) {
+
                             // add to custom field
                         // tempcode
                             // setTimeout(function () {
@@ -1609,6 +1614,12 @@ Template.productview.onRendered(function() {
                                 $("#sltinventoryacount").val(useData[i].fields.AssetAccount);
                                 $("#slttaxcodesales").val(useData[i].fields.TaxCodeSales);
                                 $("#slttaxcodepurchase").val(useData[i].fields.TaxCodePurchase);
+
+                                // Feature/ser-lot-tracking: Initializing serial/lot number settings
+                                if (useData[i].fields.SNTracking) $('#chkSNTrack').prop('checked', true);
+                                if (useData[i].fields.Batch) $('#chkLotTrack').prop('checked', true);
+                                if (useData[i].fields.CUSTFLD13 === 'true') $('#chkAddSN').prop('checked', true);
+
                                 if (useData[i].fields.CUSTFLD14 == 'true') {
                                     $('.lblPriceEx').addClass('hiddenColumn');
                                     $('.lblPriceEx').removeClass('showColumn');
@@ -1753,6 +1764,12 @@ Template.productview.onRendered(function() {
                               $("#sltinventoryacount").val(data.fields.AssetAccount);
                               $("#slttaxcodesales").val(data.fields.TaxCodeSales);
                               $("#slttaxcodepurchase").val(data.fields.TaxCodePurchase);
+
+                              // Feature/ser-lot-tracking: Initializing serial/lot number settings
+                                if (data.fields.SNTracking) $('#chkSNTrack').prop('checked', true);
+                                if (data.fields.Batch) $('#chkLotTrack').prop('checked', true);
+                                if (data.fields.CUSTFLD13 === 'true') $('#chkAddSN').prop('checked', true);
+
                                 if (data.fields.CUSTFLD14 == 'true') {
                                     $('.lblPriceEx').addClass('hiddenColumn');
                                     $('.lblPriceEx').removeClass('showColumn');
@@ -1900,6 +1917,12 @@ Template.productview.onRendered(function() {
                       $("#sltinventoryacount").val(data.fields.AssetAccount);
                       $("#slttaxcodesales").val(data.fields.TaxCodeSales);
                       $("#slttaxcodepurchase").val(data.fields.TaxCodePurchase);
+
+                        // Feature/ser-lot-tracking: Initializing serial/lot number settings
+                        if (data.fields.SNTracking) $('#chkSNTrack').prop('checked', true);
+                        if (data.fields.Batch) $('#chkLotTrack').prop('checked', true);
+                        if (data.fields.CUSTFLD13 === 'true') $('#chkAddSN').prop('checked', true);
+
                         if (data.fields.CUSTFLD14 == 'true') {
                             $('.lblPriceEx').addClass('hiddenColumn');
                             $('.lblPriceEx').removeClass('showColumn');
@@ -2156,7 +2179,7 @@ Template.productview.onRendered(function() {
                 lotnumberList = [];
                 for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
                     let datet=new Date(data.tserialnumberlistcurrentreport[i].TransDate);
-                    let dateep=new Date(daa.tserialnumberlistcurrentreport[i].BatchExpiryDate);
+                    let dateep=new Date(data.tserialnumberlistcurrentreport[i].BatchExpiryDate);
                     let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
                     let sdateep = `${dateep.getDate()}/${dateep.getMonth()}/${dateep.getFullYear()}`;
                     if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
@@ -3194,6 +3217,32 @@ Template.productview.onRendered(function() {
         templateObject.getAllProductRecentTransactions();
     }
 
+
+    $(document).ready(function() {
+        $('#edtRaw').editableSelect();
+        $('#edtProcess').editableSelect();
+    })
+
+    $(document).on('click', '#edtRaw', function(event) {
+        $('#edtRaw').editableSelect()
+        $('#productListModal').modal('toggle');
+    })
+
+    $(document).on('click', '.edtProcess', function(event) {
+        $('.edtProcess').editableSelect();
+        $('#processListModal').modal('toggle');
+    })
+
+    $(document).on('click', '#productListModal table tr', function(event) {
+        let productName = $(event.target).closest('tr').find('.productName').text();
+        $('#edtRaw').val(productName);
+        $('#productListModal').modal('toggle')
+    })
+    $(document).on('click', '#processListModal table tr', function(event) {
+        let processName = $(event.target).closest('tr').find('.colProcessName').text();
+        $('#edtProcess').val(processName);
+        $('#processListModal').modal('toggle')
+    })
 });
 
 Template.productview.helpers({
@@ -3449,9 +3498,11 @@ Template.productview.events({
         let customField1 = $('#edtSaleCustField1').val()||'';
         let customField2 = $('#edtSaleCustField2').val()||'';
         let customField3 = $('#edtSaleCustField3').val()||'';
-        let getcustomField1 = customField1;
-        let getcustomField2 = customField2;
-        let getcustomField3 = customField3;
+
+        // Feature/ser-lot-tracking: Check if serial and lot number checkboxes and save them
+        let trackSerialNumber = $('#chkSNTrack').prop('checked') ? "true" : "false";
+        let trackLotNumber = $('#chkLotTrack').prop('checked') ? "true" : "false";
+        let allowAddSerialNumber = $('#chkAddSN').prop('checked') ? "true" : "false";
 
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
@@ -3487,9 +3538,12 @@ Template.productview.events({
                         Active: true,
                         ProductType: "INV",
                         PRODUCTCODE: productCode,
+                        Batch: trackLotNumber,
+                        SNTracking: trackSerialNumber,
                         CUSTFLD1: customField1,
                         CUSTFLD2: customField2,
                         CUSTFLD3: customField3,
+                        CUSTFLD13: allowAddSerialNumber,
                         CUSTFLD14: lastPriceSetting,
                         CUSTFLD15: lastCostSetting,
                         ProductPrintName: productName,
@@ -3522,9 +3576,12 @@ Template.productview.events({
                         Active: true,
                         ProductType: "NONINV",
                         PRODUCTCODE: productCode,
+                        Batch: trackLotNumber,
+                        SNTracking: trackSerialNumber,
                         CUSTFLD1: customField1,
                         CUSTFLD2: customField2,
                         CUSTFLD3: customField3,
+                        CUSTFLD13: allowAddSerialNumber,
                         CUSTFLD14: lastPriceSetting,
                         CUSTFLD15: lastCostSetting,
                         ProductPrintName: productName,
@@ -3600,9 +3657,12 @@ Template.productview.events({
                                 Active: true,
                                 ProductType: "INV",
                                 PRODUCTCODE: productCode,
+                                Batch: trackLotNumber,
+                                SNTracking: trackSerialNumber,
                                 CUSTFLD1: customField1,
                                 CUSTFLD2: customField2,
                                 CUSTFLD3: customField3,
+                                CUSTFLD13: allowAddSerialNumber,
                                 CUSTFLD14: lastPriceSetting,
                                 CUSTFLD15: lastCostSetting,
                                 ProductPrintName: productName,
@@ -3635,9 +3695,12 @@ Template.productview.events({
                                 Active: true,
                                 ProductType: "NONINV",
                                 PRODUCTCODE: productCode,
+                                Batch: trackLotNumber,
+                                SNTracking: trackSerialNumber,
                                 CUSTFLD1: customField1,
                                 CUSTFLD2: customField2,
                                 CUSTFLD3: customField3,
+                                CUSTFLD13: allowAddSerialNumber,
                                 CUSTFLD14: lastPriceSetting,
                                 CUSTFLD15: lastCostSetting,
                                 ProductPrintName: productName,
@@ -3711,6 +3774,9 @@ Template.productview.events({
                                 CUSTFLD1: customField1,
                                 CUSTFLD2: customField2,
                                 CUSTFLD3: customField3,
+                                Batch: trackLotNumber,
+                                SNTracking: trackSerialNumber,
+                                CUSTFLD13: allowAddSerialNumber,
                                 CUSTFLD14: lastPriceSetting,
                                 CUSTFLD15: lastCostSetting,
                                 ProductPrintName: productName,
@@ -3746,6 +3812,9 @@ Template.productview.events({
                                 CUSTFLD1: customField1,
                                 CUSTFLD2: customField2,
                                 CUSTFLD3: customField3,
+                                Batch: trackLotNumber,
+                                SNTracking: trackSerialNumber,
+                                CUSTFLD13: allowAddSerialNumber,
                                 CUSTFLD14: lastPriceSetting,
                                 CUSTFLD15: lastCostSetting,
                                 ProductPrintName: productName,
@@ -3823,6 +3892,9 @@ Template.productview.events({
                             CUSTFLD1: customField1,
                             CUSTFLD2: customField2,
                             CUSTFLD3: customField3,
+                            Batch: trackLotNumber,
+                            SNTracking: trackSerialNumber,
+                            CUSTFLD13: allowAddSerialNumber,
                             CUSTFLD14: lastPriceSetting,
                             CUSTFLD15: lastCostSetting,
                             ProductPrintName: productName,
@@ -3858,6 +3930,9 @@ Template.productview.events({
                             CUSTFLD1: customField1,
                             CUSTFLD2: customField2,
                             CUSTFLD3: customField3,
+                            Batch: trackLotNumber,
+                            SNTracking: trackSerialNumber,
+                            CUSTFLD13: allowAddSerialNumber,
                             CUSTFLD14: lastPriceSetting,
                             CUSTFLD15: lastCostSetting,
                             ProductPrintName: productName,
@@ -3983,40 +4058,41 @@ Template.productview.events({
         // }
     },
     'click #chkSNTrack': function(event) {
-        setSNTrack = true;
-        setLOTtrack = false;
         $('#chkSNTrack').attr('checked');
         $('#chkLotTrack').removeAttr('checked');
     },
     'click #chkLotTrack': function(event) {
-        setLOTtrack = true;
-        setSNTrack = false;
         $('#chkSNTrack').removeAttr('checked');
         $('#chkLotTrack').attr('checked');
     },
     'click #btnSNTrack': function(event) {
-        if(setSNTrack == true){
-            $('.fullScreenSpin').css('display', 'inline-block');
-            let templateObject = Template.instance();
-            templateObject.getSerialNumberList();
-            $('#SerialNumberModal').modal('show');
-        } else{
-            swal('You have to set Serial Number Track.', '', 'info');
-            event.preventDefault();
-            return false;
+        const isCheckedSNTrack = $('#chkSNTrack').prop('checked');
+        if (FlowRouter.current().queryParams.id) {
+            if(isCheckedSNTrack){
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let templateObject = Template.instance();
+                templateObject.getSerialNumberList();
+                $('#SerialNumberModal').modal('show');
+            } else{
+                swal('You are not Tracking Serial numbers for this product.', '', 'info');
+                event.preventDefault();
+                return false;
+            }
         }
-
     },
     'click #btnLotTrack': function(event) {
-        if(setLOTtrack==true){
-            $('.fullScreenSpin').css('display', 'inline-block');
-            let templateObject = Template.instance();
-            templateObject.getLotNumberList();
-            $('#LotNumberModal').modal('show');
-        } else{
-            swal('You have to set Lot Number Track.', '', 'info');
-            event.preventDefault();
-            return false;
+        const isCheckedLotTrack = $('#chkLotTrack').prop('checked');
+        if (FlowRouter.current().queryParams.id) {
+            if(isCheckedLotTrack){
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let templateObject = Template.instance();
+                templateObject.getLotNumberList();
+                $('#LotNumberModal').modal('show');
+            } else{
+                swal('You are not Tracking Lot Numbers for this product.', '', 'info');
+                event.preventDefault();
+                return false;
+            }
         }
     },
     'click #chkSellPrice': function(event) {
@@ -4486,6 +4562,59 @@ Template.productview.events({
         let discountPrice = parseFloat($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
         let getDiscountRate = 100 - (discountPrice * 100 / itemSellPrice);
         $("#" + targetID + ' .edtDiscount').val(getDiscountRate || 0);
+
+    },
+
+    'change #chkBOM': function(event) {
+        if($('#chkBOM').is(':checked')) {
+            $('#BOMSetupModal').modal('toggle')
+            let record = templateObject.records.get();
+            if(record == undefined || record.productname== undefined || record.productname == '' ) {
+                $('#edtMainProductName').val($('#edtproductname').val() )
+            }
+        }
+    },
+
+    'click #BOMSetupModal .btnAddProduct': function(event) {
+        let row = $(event.target).closest('.productRow');
+        let colProduct = row.find('.colProduct');
+        let colQty = row.find('.colQty');
+        let colProcess = row.find('.colProcess');
+        let colNote = row.find('.colNote');
+        let colAttachment = row.find('.colAttachment');
+        let colDelete = row.find('.colDelete');
+
+        if($('#edtRaw').val() != '') {
+            if($(colQty).find('.edtQuantity').val() != '') {
+                let quantity = $(colQty).find('.edtQuantity').val();
+                let edtRaw = colProduct.find('.edtProductName')
+                $(event.target).remove();
+                while($('#edtRaw').length) {
+                    $('#edtRaw').removeAttr('id');
+                }
+                let grandParent = row.parent();
+                grandParent.append("<div class='d-flex productRow'>" +
+                "<div class='colProduct d-flex'>" +
+                    "<button class='btnAddProduct' style='width: 30%; background-color: #00a3d3; border: 2px solid black'>Product+</button>" +
+                    "<select class='edtProductName  edtRaw' id='edtRaw' type='search' value='12345' style='width: 30%'></select>"+
+                "</div>" +
+                "<div class='colQty'>" +
+                    "<input type='text' class='edtQuantity w-100'/>" +
+                "</div>" +
+                "<div class='colProcess'>" +
+                "</div>" +
+                "<div class='colNote'>" +
+                "</div>" +
+                "<div class='colAttachment'></div>" +
+                "<div class='colDelete'></div>" +
+                "</div>")
+                $(colProduct).prepend("<div style='width: 30%'></div>")
+            }
+        }
+
+        // let colProductName = $(colProduct).find('.edtProductName');
+        // $(colProductName).attr('id', 'edtRaw');
+
 
     },
 

@@ -43,7 +43,6 @@ Meteor.methods({
 
       }
       catch (err) {
-        console.log(err)
         return err;
       }
     }
@@ -234,43 +233,28 @@ Meteor.methods({
         password: erpGet.ERPPassword,
       };
 
-      const apiKyes = await getApikeyFromVS1(erpGet, _headers);
-
-      const apikey = apiKyes.mailchimpApiKey;
-      // tempcode until backend add mailchimpCampaignID
-      // const campaignId = 'b28d9f0a1a';
-      const campaignId = apiKyes.mailchimpCampaignID;
-
+      const apiKyes = await getApikeyFromVS1(erpGet, _headers); 
+      const apikey = apiKyes.mailchimpApiKey; 
 
       const apiregion = apikey.split('-')[1];
       mailchimp.setConfig({
         apiKey: apikey,
         server: apiregion,
-      });
-
-      email = email ? email : erpGet.ERPUsername;
+      }); 
 
       // this is fetching first campaign id from all campaign list
       const campaigns = await mailchimp.campaigns.list();
 
       let response = [];
-      for (const campaign of campaigns.campaigns) {
-        // campaigns.forEach(campaign => {
+      for (const campaign of campaigns.campaigns) { 
         let opens = await mailchimp.reports.getCampaignOpenDetails(campaign.id);
         response.push({ campaign_name: campaign.recipients.list_name, subject: campaign.settings.subject_line, opens: opens.members });
-      };
-      // // tempcode this can be used if backend install crypto-js
-      // const subscriber_hash = CryptoJS.MD5(email.toLowerCase());
-      // const response = await client.reports.getSubscriberInfoForOpenedCampaign(
-      //   campaignId,
-      //   subscriber_hash
-      // );
+      }; 
 
       return response;
 
     }
     catch (err) {
-      console.log(err)
       return [];
     }
 
@@ -349,47 +333,9 @@ Meteor.methods({
 
     }
     catch (err) {
-      console.log(err)
       return [];
     }
 
   }
-
-  // // this is not using @mailchimp package. for reference
-  // createListMember: function (email, firstname = '', lastname = '') {
-
-  //   let data = {
-  //     "email_address": email,
-  //     "status": "subscribed",
-  //     "merge_fields": { "FNAME": firstname, "LNAME": lastname }
-  //     // "tags": [tag]
-  //   };
-
-  //   const apiregion = apikey.split('-')[1];
-  //   const listAurl = 'https://' + apiregion + '.api.mailchimp.com/3.0/lists/' + listId + '/members';
-  //   Meteor.call('MCApi', 'POST', listAurl, data, function (error, result) { });
-  // },
-
-  // // call mailchimp api
-  // MCApi: function (method, apiUrl, data) {
-
-  //   let options = { 'auth': 'Authorization:' + apikey };
-  //   options['data'] = data || '';
-
-  //   try {
-  //     var response = HTTP.call(method, apiUrl, options).data;
-  //   } catch (error) {
-  //     Meteor.defer(function () {
-  //       Email.send({
-  //         from: data.email_address,
-  //         to: 'bluestars088@gmail.com',
-  //         subject: 'API Error encountered - Mailchimp',
-  //         text: error
-  //       });
-  //     });
-
-  //     return error;
-  //   }
-  // },
 
 });
