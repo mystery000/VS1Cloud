@@ -1818,7 +1818,7 @@ Template.vs1login.onRendered(function () {
                                                     dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                                     dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                                                     var ERPIPAdderess = "";
-                                                    if (dataReturnRes.ProcessLog.ServerName == "110.142.175.245") {
+                                                    if (dataReturnRes.ProcessLog.ServerName == "110.145.181.218") {
                                                         ERPIPAdderess = ERPDatabaseIPAdderess;
                                                     } else if (dataReturnRes.ProcessLog.ServerName == "59.154.69.210") {
                                                         ERPIPAdderess = "gardenscapes.vs1cloud.com";
@@ -1830,8 +1830,6 @@ Template.vs1login.onRendered(function () {
                                                         ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                                     }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                         ERPIPAdderess = "rappaustralia.vs1cloud.com";
-                                                    }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
-                                                        ERPIPAdderess = "vs1connection.vs1cloud.com";
                                                     }else {
                                                         ERPIPAdderess = dataReturnRes.ProcessLog.ServerName;
                                                     }
@@ -1926,7 +1924,7 @@ Template.vs1login.onRendered(function () {
                                                     });
 
                                                     /* Remove licence */
-                                                    if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                                    if (dataReturnRes.ProcessLog.ServerName !== "110.145.181.218") {
                                                       isTrueERPConnection = true;
                                                     }
                                                     Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
@@ -2493,7 +2491,7 @@ Template.vs1login.onRendered(function () {
                                 Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
                                 localStorage.setItem('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
                                 var ERPIPAdderess = "";
-                                if (dataReturnRes.ProcessLog.ServerName == "110.142.175.245") {
+                                if (dataReturnRes.ProcessLog.ServerName == "110.145.181.218") {
                                     ERPIPAdderess = ERPDatabaseIPAdderess;
                                 } else if (dataReturnRes.ProcessLog.ServerName == "59.154.69.210") {
                                     ERPIPAdderess = "gardenscapes.vs1cloud.com";
@@ -2505,8 +2503,6 @@ Template.vs1login.onRendered(function () {
                                     ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                 }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                     ERPIPAdderess = "rappaustralia.vs1cloud.com";
-                                }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
-                                    ERPIPAdderess = "vs1connection.vs1cloud.com";
                                 }else {
                                     ERPIPAdderess = dataReturnRes.ProcessLog.ServerName;
                                 }
@@ -2601,7 +2597,7 @@ Template.vs1login.onRendered(function () {
                                 });
 
                                 /* Remove licence */
-                                if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                if (dataReturnRes.ProcessLog.ServerName !== "110.145.181.218") {
                                   isTrueERPConnection = true;
                                 }
                                 Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
@@ -3031,7 +3027,7 @@ Template.vs1login.onRendered(function () {
                                                 dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                                 dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                                                 var ERPIPAdderess = "";
-                                                if (dataReturnRes.ProcessLog.ServerName == "110.142.175.245") {
+                                                if (dataReturnRes.ProcessLog.ServerName == "110.145.181.218") {
                                                     ERPIPAdderess = ERPDatabaseIPAdderess;
                                                 } else if (dataReturnRes.ProcessLog.ServerName == "59.154.69.210") {
                                                     ERPIPAdderess = "gardenscapes.vs1cloud.com";
@@ -3043,8 +3039,6 @@ Template.vs1login.onRendered(function () {
                                                     ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                                 }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                     ERPIPAdderess = "rappaustralia.vs1cloud.com";
-                                                }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
-                                                    ERPIPAdderess = "vs1connection.vs1cloud.com";
                                                 }else {
                                                     ERPIPAdderess = dataReturnRes.ProcessLog.ServerName;
                                                 }
@@ -3139,7 +3133,7 @@ Template.vs1login.onRendered(function () {
                                                 });
 
                                                 /* Remove licence */
-                                                if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                                if (dataReturnRes.ProcessLog.ServerName !== "110.145.181.218") {
                                                   isTrueERPConnection = true;
                                                 }
                                                 Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
@@ -3731,7 +3725,7 @@ Template.vs1login.onRendered(function () {
                                             dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                             dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                                             var ERPIPAdderess = "";
-                                            if (dataReturnRes.ProcessLog.ServerName == "110.142.175.245") {
+                                            if (dataReturnRes.ProcessLog.ServerName == "110.145.181.218") {
                                                 ERPIPAdderess = ERPDatabaseIPAdderess;
                                             } else if (dataReturnRes.ProcessLog.ServerName == "59.154.69.210") {
                                                 ERPIPAdderess = "gardenscapes.vs1cloud.com";
@@ -3743,8 +3737,6 @@ Template.vs1login.onRendered(function () {
                                                 ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                             }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                 ERPIPAdderess = "rappaustralia.vs1cloud.com";
-                                            }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
-                                                ERPIPAdderess = "vs1connection.vs1cloud.com";
                                             }else {
                                                 ERPIPAdderess = dataReturnRes.ProcessLog.ServerName;
                                             }
@@ -3839,7 +3831,7 @@ Template.vs1login.onRendered(function () {
                                             });
 
                                             /* Remove licence */
-                                            if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                            if (dataReturnRes.ProcessLog.ServerName !== "110.145.181.218") {
                                               isTrueERPConnection = true;
                                             }
 
@@ -4469,7 +4461,7 @@ Template.vs1login.onRendered(function () {
                                         dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                         dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                                         var ERPIPAdderess = "";
-                                        if (dataReturnRes.ProcessLog.ServerName == "110.142.175.245") {
+                                        if (dataReturnRes.ProcessLog.ServerName == "110.145.181.218") {
                                             ERPIPAdderess = ERPDatabaseIPAdderess;
                                         } else if (dataReturnRes.ProcessLog.ServerName == "59.154.69.210") {
                                             ERPIPAdderess = "gardenscapes.vs1cloud.com";
@@ -4481,8 +4473,6 @@ Template.vs1login.onRendered(function () {
                                             ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                         }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                             ERPIPAdderess = "rappaustralia.vs1cloud.com";
-                                        }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
-                                            ERPIPAdderess = "vs1connection.vs1cloud.com";
                                         }else {
                                             ERPIPAdderess = dataReturnRes.ProcessLog.ServerName;
                                         }
@@ -4577,7 +4567,7 @@ Template.vs1login.onRendered(function () {
                                         });
 
                                         /* Remove licence */
-                                        if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                        if (dataReturnRes.ProcessLog.ServerName !== "110.145.181.218") {
                                           isTrueERPConnection = true;
                                         }
                                         Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
