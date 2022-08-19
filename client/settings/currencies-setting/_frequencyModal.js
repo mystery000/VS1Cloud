@@ -168,6 +168,7 @@ Template._frequencyModal.onRendered(function () {
       // cronSetting.type = "Weekly";
       cronSetting.days = fxUpdateObject.selectedDays;
       cronSetting.every = fxUpdateObject.everyWeeks;
+      cronSetting.startAt = fxUpdateObject.getDate();
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
       reportSchedule.fields.Frequency = "D";
 
