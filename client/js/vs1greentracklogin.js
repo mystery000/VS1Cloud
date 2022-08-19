@@ -1278,7 +1278,7 @@ $("#erplogin-button").click(function(e){
                     dataReturnRes.ProcessLog.VS1AdminPassword = userLoginPassword;
                     dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                     var ERPIPAdderess= "";
-                    if(dataReturnRes.ProcessLog.ServerName == "110.142.175.245"){
+                    if(dataReturnRes.ProcessLog.ServerName == "110.145.181.218"){
                       ERPIPAdderess= "www.login.vs1cloud.com";
                     }else{
                       ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
@@ -1826,7 +1826,7 @@ $("#erplogin-button").click(function(e){
          Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
 
          var ERPIPAdderess= "";
-         if(dataReturnRes.ProcessLog.ServerName == "110.142.175.245"){
+         if(dataReturnRes.ProcessLog.ServerName == "110.145.181.218"){
            ERPIPAdderess= "www.login.vs1cloud.com";
          }else{
            ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
@@ -2285,7 +2285,7 @@ $("#erplogin-button").click(function(e){
                   Session.setPersistent('ERPDefaultUOM', '');
                   Session.setPersistent('VS1AdminUserName', dataReturnRes.ProcessLog.VS1AdminUserName);
                   var ERPIPAdderess= "";
-                  if(dataReturnRes.ProcessLog.ServerName == "110.142.175.245"){
+                  if(dataReturnRes.ProcessLog.ServerName == "110.145.181.218"){
                     ERPIPAdderess= "www.login.vs1cloud.com";
                   }else{
                     ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
@@ -2841,7 +2841,7 @@ $("#erplogin-button").click(function(e){
               dataReturnRes.ProcessLog.VS1AdminPassword = userLoginPassword;
               dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
               var ERPIPAdderess= "";
-              if(dataReturnRes.ProcessLog.ServerName == "110.142.175.245"){
+              if(dataReturnRes.ProcessLog.ServerName == "110.145.181.218"){
                 ERPIPAdderess= "www.login.vs1cloud.com";
               }else{
                 ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
@@ -3409,7 +3409,7 @@ $("#erplogin-button").click(function(e){
                   dataReturnRes.ProcessLog.VS1AdminPassword = userLoginPassword;
                   dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                   var ERPIPAdderess= "";
-                  if(dataReturnRes.ProcessLog.ServerName == "110.142.175.245"){
+                  if(dataReturnRes.ProcessLog.ServerName == "110.145.181.218"){
                     ERPIPAdderess= "www.login.vs1cloud.com";
                   }else{
                     ERPIPAdderess= dataReturnRes.ProcessLog.ServerName;
