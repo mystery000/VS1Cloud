@@ -1,3 +1,5 @@
+export const _currentDate = new Date();
+
 /**
  * @type {{cronjob: CallableFunction, id: string, startAt: Date}}
  */
@@ -33,6 +35,7 @@ export default class CronSetting {
     let text = "";
 
     if (this.type == "Monthly") {
+      
       if (this.months.length > 0) {
         let lastMonth = this.months.pop();
         // We on a monthly one
@@ -58,6 +61,7 @@ export default class CronSetting {
         //   date.toDateString().split(" ")[1] +
         //   " in " +
         //   date.toDateString().split(" ")[3];
+        console.log(text);
       }
     } else if (this.type == "Weekly") {
       text += "every " + this.every + " week";
@@ -162,6 +166,17 @@ export default class CronSetting {
         ? "0"
         : "") + minutes;
 
+      if(_currentDate.getDate() == date.getDate()) {
+        // same day
+        text += " on " + this.getDayIndexOfTheWeek(date.toLocaleDateString(undefined, { weekday: 'long' }));
+      } else {
+        // next day
+        text += " on " + this.getNextDay(date);
+      }
+
+      
+
+
       // text +=
       //   " starting on the " +
       //   date.getDay() +
@@ -172,6 +187,7 @@ export default class CronSetting {
     }
 
     this.toParse = text;
+    console.log(text);
   }
 
   /**
@@ -237,5 +253,18 @@ export default class CronSetting {
     } else if (day == "sunday") {
       return 7;
     }
+  }
+
+
+  /**
+   * This function will calculate next day
+   * @param {Date} date 
+   */
+  getNextDay(date = new Date()) {
+    date.setDate(date.getDate() + 1) // We add one day
+
+    let dayName = date.toLocaleDateString(undefined, { weekday: 'long' }); // monday
+
+    return dayName;
   }
 }
