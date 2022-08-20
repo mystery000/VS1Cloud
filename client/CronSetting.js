@@ -66,13 +66,20 @@ export default class CronSetting {
 
       }
     } else if (this.type == "Weekly") {
-      text += "every " + this.every + " week";
-      text += " on " + this.days;
-
       const date = this.convertToDate(this.startAt);
       const minutes = this.convertToDate(this.startAt).getMinutes();
       const hours = this.convertToDate(this.startAt).getHours();
 
+      text += " at " + (
+        hours < 10
+        ? "0"
+        : "") + hours + ":" + (
+        minutes < 10
+        ? "0"
+        : "") + minutes;
+      text += " on " + this.days;
+
+      text += " every " + this.every + " week";
       text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
     } else if (this.type == "Daily") {
       const date = this.convertToDate(this.startAt);
