@@ -45,10 +45,11 @@ Meteor.startup(() => {
    * else do nohing
    */
 
-   futureCrons.forEach(function (setting) {
+   futureCrons.forEach((setting) => {
     // then we compare the dates,
     if (setting.startAt < currentDate) {
       // we came to the day when we have to add the cron job to start starting from now
+      setting.isFuture = false;
       Meteor.call("addCurrencyCron", setting);
     } else {
       // we havent came to the execution date, so we'll be scheduling it again
@@ -190,8 +191,16 @@ Meteor.methods({
    * @returns
    */
   addCurrencyCron: (cronSetting, erpGet) => {
+    // if(cronSetting.isFuture == true) {
+    //   FutureTasks.insert(cronSetting);
+    //   return true;
+    // }
+
+
     const cronId = `currency-update-cron_${cronSetting.id}_${cronSetting.employeeId}`;
     SyncedCron.remove(cronId);
+
+
 
     return SyncedCron.add({
       name: cronId,
@@ -214,6 +223,7 @@ Meteor.methods({
    * @param {Object} cronSetting
    */
   scheduleCron: (cronSetting) => {
+   
     FutureTasks.insert(cronSetting);
   },
 });

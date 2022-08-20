@@ -63,7 +63,7 @@ export default class CronSetting {
         //   date.toDateString().split(" ")[1] +
         //   " in " +
         //   date.toDateString().split(" ")[3];
-        console.log(text);
+
       }
     } else if (this.type == "Weekly") {
       text += "every " + this.every + " week";
@@ -179,13 +179,12 @@ export default class CronSetting {
 
       if(_currentDate.getDate() == date.getDate()) {
         // same day
-        text += " on " + this.getDayIndexOfTheWeek(date.toLocaleDateString(undefined, { weekday: 'long' }));
+        text += " on " + this.getDayIndexOfTheWeek(date.toLocaleDateString(undefined, { weekday: 'long' }).split(',')[0].toLowerCase());
       } else {
         // next day
         text += " on " + this.getNextDay(date);
       }
 
-      
 
 
       // text +=
@@ -198,7 +197,6 @@ export default class CronSetting {
     }
 
     this.toParse = text;
-    console.log(text);
   }
 
   /**

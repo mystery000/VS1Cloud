@@ -5,7 +5,6 @@ export default class TableHandler {
 
   bindEvents() {
     // $(".dataTable").on("DOMSubtreeModified",  () => {
-    //   console.log("changed");
     //   this.refreshDatatableResizable();
     // });
     this.refreshDatatableResizable();
