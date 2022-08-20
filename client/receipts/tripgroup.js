@@ -246,6 +246,7 @@ Template.tripgroup.events({
                     }
                 };
                 // doSaveTripGroup(objDetails);
+                $('.fullScreenSpin').css('display','none');
             });
         } else {
             objDetails = {
@@ -263,11 +264,14 @@ Template.tripgroup.events({
             receiptService.saveTripGroup(objDetails).then(function (objDetails) {
                 sideBarService.getTripGroup().then(function(dataReload) {
                     addVS1Data('TTripGroup',JSON.stringify(dataReload)).then(function (datareturn) {
+                        $('.fullScreenSpin').css('display','none');
                         location.reload(true);
                     }).catch(function (err) {
+                        $('.fullScreenSpin').css('display','none');
                         location.reload(true);
                     });
                 }).catch(function(err) {
+                    $('.fullScreenSpin').css('display','none');
                     location.reload(true);
                 });
             }).catch(function (err) {

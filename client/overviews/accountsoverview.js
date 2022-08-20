@@ -886,18 +886,18 @@ Template.accountsoverview.onRendered(function () {
           }
           let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
           let availableCategories = templateObject.availableCategories.get();
-          let cateogoryHtml = "";
+          let categoryHtml = "";
           availableCategories.forEach(function (item) {
-            cateogoryHtml += '<option value="' +item +'">' +item +'</option>';
+            categoryHtml += '<option value="' +item +'">' +item +'</option>';
           });
           $("#expenseCategory").empty();
-          if (category != "" && availableCategories.includes(category)) {
+          if (category != "" && categories.includes(category)) {
             let selectedCategoryHtml = '<option value="' +category +'" selected="selected">' +category +'</option>';
-            cateogoryHtml = selectedCategoryHtml + cateogoryHtml;
+            categoryHtml = selectedCategoryHtml + categoryHtml;
           }
-          $("#expenseCategory").append(cateogoryHtml);
+          $("#expenseCategory").append(categoryHtml);
           $("#expenseCategory").val(category);
-          if (cateogoryHtml == ""){
+          if (categoryHtml == ""){
             $("#expenseCategory").attr("readonly", true);
             $("#expenseCategory").attr("disabled", "disabled");
           } else {

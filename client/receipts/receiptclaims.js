@@ -10,6 +10,7 @@ import '../lib/global/indexdbstorage.js';
 import moment from 'moment';
 import CurrencyConverter from '../packages/currency/CurrencyConverter';
 import {PurchaseBoardService} from "../js/purchase-service";
+import {ReceiptService} from "./receipt-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -22,6 +23,7 @@ Template.receiptsoverview.onCreated(function() {
     templateObject.employees = new ReactiveVar([]);
     templateObject.suppliers = new ReactiveVar([]);
     templateObject.chartAccounts = new ReactiveVar([]);
+    templateObject.receiptCategories = new ReactiveVar([]);
     templateObject.categoryAccounts = new ReactiveVar([]);
     templateObject.tripGroups = new ReactiveVar([]);
     templateObject.expenseClaimList = new ReactiveVar([]);
@@ -38,6 +40,7 @@ Template.receiptsoverview.onRendered(function() {
         $('.btnRefresh').addClass('btnSearchAlert');
     }
     let sessionCurrency = Session.get('ERPCountryAbbr');
+    let categories = [];
     let multipleRecords = [];
     for (let i = 0; i < 10; i++) {
         let item = {
@@ -88,11 +91,37 @@ Template.receiptsoverview.onRendered(function() {
         setCurrencySelect(e);
     });
     $('.chart-accounts').on('click', function(e, li) {
-        templateObject.setCategoryAccountList();
+        templateObject.setCategoryAccountList(e);
     });
     $('.trip-groups').on('click', function(e, li) {
-        templateObject.setTripGroupList();
+        templateObject.setTripGroupList(e);
     });
+    templateObject.getAllReceiptCategory = function() {
+        getVS1Data('TReceiptCategory').then(function(dataObject) {
+            if (dataObject.length === 0) {
+                sideBarService.getReceiptCategory().then(function(data) {
+                    setReceiptCategory(data);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                setReceiptCategory(data);
+            }
+        }).catch(function(err) {
+            sideBarService.getReceiptCategory().then(function(data) {
+                setReceiptCategory(data);
+            });
+        });
+    };
+    function setReceiptCategory(data) {
+        for (let i in data.treceiptcategory){
+            if (data.treceiptcategory.hasOwnProperty(i)) {
+                categories.push(data.treceiptcategory[i].CategoryName);
+            }
+        }
+        templateObject.receiptCategories.set(categories);
+        templateObject.getAllAccounts();
+    }
+    templateObject.getAllReceiptCategory();
 
     templateObject.getAllAccounts = function() {
         getVS1Data('TAccountVS1').then(function(dataObject) {
@@ -112,6 +141,7 @@ Template.receiptsoverview.onRendered(function() {
     };
     function setAccountListVS1(data) {
         let categoryAccountList = [];
+        let splashArrayAccountList = [];
         for (let i = 0; i < data.taccountvs1.length; i++) {
             const dataList = [
                 data.taccountvs1[i].fields.AccountGroup|| '',
@@ -121,9 +151,26 @@ Template.receiptsoverview.onRendered(function() {
                 data.taccountvs1[i].fields.TaxCode || '',
                 data.taccountvs1[i].fields.ID || ''
             ];
-            if(data.taccountvs1[i].fields.AllowExpenseClaim && data.taccountvs1[i].fields.AccountGroup != ''){
+            // if(data.taccountvs1[i].fields.AllowExpenseClaim && data.taccountvs1[i].fields.AccountGroup != ''){
+            if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
                 categoryAccountList.push(dataList);
             }
+            let accBalance = 0;
+            if (!isNaN(data.taccountvs1[i].fields.Balance)) {
+                accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1[i].fields.Balance) || 0.00;
+            } else {
+                accBalance = Currency + "0.00";
+            }
+            const dataList2 = [
+                data.taccountvs1[i].fields.AccountName || '-',
+                data.taccountvs1[i].fields.Description || '',
+                data.taccountvs1[i].fields.AccountNumber || '',
+                data.taccountvs1[i].fields.AccountTypeName || '',
+                accBalance,
+                data.taccountvs1[i].fields.TaxCode || '',
+                data.taccountvs1[i].fields.ID || ''
+            ];
+            splashArrayAccountList.push(dataList2);
         }
         templateObject.categoryAccounts.set(categoryAccountList);
         //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
@@ -152,22 +199,116 @@ Template.receiptsoverview.onRendered(function() {
                 lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                 info: true,
                 responsive: true,
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
+                    $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
+                }
+            });
+            $('#tblAccountReceipt').dataTable({
+                data: splashArrayAccountList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                paging: true,
+                "aaSorting": [],
+                "orderMulti": true,
+                columnDefs: [
+                    { className: "productName", "targets": [0] },
+                    { className: "productDesc", "targets": [1] },
+                    { className: "accountnumber", "targets": [2] },
+                    { className: "salePrice", "targets": [3] },
+                    { className: "prdqty text-right", "targets": [4] },
+                    { className: "taxrate", "targets": [5] },
+                    { className: "colAccountID hiddenColumn", "targets": [6] }
+                ],
+                colReorder: true,
+                "order": [
+                    [0, "asc"]
+                ],
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAccountReceipt_filter");
+                    $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAccountReceipt_filter");
+                }
+
             });
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
         }
     }
-    templateObject.getAllAccounts();
-    templateObject.setCategoryAccountList = function() {
-        $('#categoryListModal').modal('toggle');
-        setTimeout(function() {
-            $('#tblCategory_filter .form-control-sm').focus();
-            $('#tblCategory_filter .form-control-sm').val('');
-            $('#tblCategory_filter .form-control-sm').trigger("input");
-            const datatable = $('#tblCategory').DataTable();
-            datatable.draw();
-            $('#tblCategory_filter .form-control-sm').trigger("input");
-        }, 200);
+    templateObject.setCategoryAccountList = function(e) {
+        const $each = $(e.target);
+        const offset = $each.offset();
+        $('#edtReceiptCategoryID').val('');
+        const searchDataName = e.target.value || '';
+        if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+            $each.attr('data-id', '');
+            $('#categoryListModal').modal('toggle');
+            setTimeout(function() {
+                $('#tblCategory_filter .form-control-sm').focus();
+                $('#tblCategory_filter .form-control-sm').val('');
+                $('#tblCategory_filter .form-control-sm').trigger("input");
+                const datatable = $('#tblCategory').DataTable();
+                datatable.draw();
+                $('#tblCategory_filter .form-control-sm').trigger("input");
+            }, 200);
+        } else {
+            if (searchDataName.replace(/\s/g, '') != '') {
+                getVS1Data('TReceiptCategory').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                            showEditReceiptCategoryView(data.treceiptcategory[0]);
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let added = false;
+                        for (let i = 0; i < data.treceiptcategory.length; i++) {
+                            if ((data.treceiptcategory[i].CategoryName) === searchDataName) {
+                                added = true;
+                                showEditReceiptCategoryView(data.treceiptcategory[i]);
+                            }
+                        }
+                        if (!added) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                                showEditReceiptCategoryView(data.treceiptcategory[0]);
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }
+                    }
+                }).catch(function(err) {
+                    sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                        showEditReceiptCategoryView(data.treceiptcategory[0]);
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                });
+            } else {
+                $('#categoryListModal').modal('toggle');
+                setTimeout(function() {
+                    $('#tblCategory_filter .form-control-sm').focus();
+                    $('#tblCategory_filter .form-control-sm').val('');
+                    $('#tblCategory_filter .form-control-sm').trigger("input");
+                    const datatable = $('#tblCategory').DataTable();
+                    datatable.draw();
+                    $('#tblCategory_filter .form-control-sm').trigger("input");
+                }, 200);
+            }
+        }
     };
+    function showEditReceiptCategoryView(data) {
+        $("#add-receiptcategory-title").text("Edit Receipt Category");
+        $('#edtReceiptCategoryID').val(data.Id);
+        $('#edtReceiptCategoryName').val(data.CategoryName);
+        $('#edtReceiptCategoryDesc').val(data.CategoryDesc);
+        setTimeout(function() {
+            $('#addReceiptCategoryModal').modal('show');
+        }, 200);
+    }
 
     templateObject.getTripGroup = function() {
         getVS1Data('TTripGroup').then(function(dataObject) {
@@ -191,7 +332,7 @@ Template.receiptsoverview.onRendered(function() {
             const dataList = [
                 data.ttripgroup[i].TripName|| '',
                 data.ttripgroup[i].Description || '',
-                data.ttripgroup[i].ID || ''
+                data.ttripgroup[i].Id || ''
             ];
             tripGroupList.push(dataList);
         }
@@ -218,22 +359,88 @@ Template.receiptsoverview.onRendered(function() {
                 lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
                 info: true,
                 responsive: true,
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddNewTripGroup' data-dismiss='modal' data-toggle='modal' data-target='#addTripGroupModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTripGroup_filter");
+                    $("<button class='btn btn-primary btnRefreshTripGroup' type='button' id='btnRefreshTripGroup' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTripGroup_filter");
+                }
             });
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
         }
     }
     templateObject.getTripGroup();
-    templateObject.setTripGroupList = function() {
-        $('#tripGroupListModal').modal('toggle');
-        setTimeout(function() {
-            $('#tblTripGroup_filter .form-control-sm').focus();
-            $('#tblTripGroup_filter .form-control-sm').val('');
-            $('#tblTripGroup_filter .form-control-sm').trigger("input");
-            const datatable = $('#tblTripGroup').DataTable();
-            datatable.draw();
-            $('#tblTripGroup_filter .form-control-sm').trigger("input");
-        }, 200);
+    templateObject.setTripGroupList = function(e) {
+        const $each = $(e.target);
+        const offset = $each.offset();
+        $('#edtTripGroupID').val('');
+        const searchDataName = e.target.value || '';
+        if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+            $each.attr('data-id', '');
+            $('#tripGroupListModal').modal('toggle');
+            setTimeout(function() {
+                $('#tblTripGroup_filter .form-control-sm').focus();
+                $('#tblTripGroup_filter .form-control-sm').val('');
+                $('#tblTripGroup_filter .form-control-sm').trigger("input");
+                const datatable = $('#tblTripGroup').DataTable();
+                datatable.draw();
+                $('#tblTripGroup_filter .form-control-sm').trigger("input");
+            }, 200);
+        } else {
+            if (searchDataName.replace(/\s/g, '') != '') {
+                getVS1Data('TTripGroup').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getTripGroupByName(searchDataName).then(function(data) {
+                            showEditTripGroupView(data.ttripgroup[0]);
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let added = false;
+                        for (let i = 0; i < data.ttripgroup.length; i++) {
+                            if ((data.ttripgroup[i].TripName) === searchDataName) {
+                                added = true;
+                                showEditTripGroupView(data.ttripgroup[i]);
+                            }
+                        }
+                        if (!added) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getTripGroupByName(searchDataName).then(function(data) {
+                                showEditTripGroupView(data.ttripgroup[0]);
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }
+                    }
+                }).catch(function(err) {
+                    sideBarService.getTripGroupByName(searchDataName).then(function(data) {
+                        showEditTripGroupView(data.ttripgroup[0]);
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                });
+            } else {
+                $('#tripGroupListModal').modal('toggle');
+                setTimeout(function() {
+                    $('#tblTripGroup_filter .form-control-sm').focus();
+                    $('#tblTripGroup_filter .form-control-sm').val('');
+                    $('#tblTripGroup_filter .form-control-sm').trigger("input");
+                    const datatable = $('#tblTripGroup').DataTable();
+                    datatable.draw();
+                    $('#tblTripGroup_filter .form-control-sm').trigger("input");
+                }, 200);
+            }
+        }
     };
+    function showEditTripGroupView(data) {
+        $("#add-tripgroup-title").text("Edit Trip-Group");
+        $('#edtTripGroupID').val(data.Id);
+        $('#edtTripGroupName').val(data.TripName);
+        $('#edtTripGroupDesc').val(data.Description);
+        setTimeout(function() {
+            $('#addTripGroupModal').modal('show');
+        }, 200);
+    }
 
     $('.transactionTypes').on('click', function(e, li) {
         setPaymentMethodSelect(e);
@@ -275,7 +482,6 @@ Template.receiptsoverview.onRendered(function() {
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         let useData = data.temployee;
-
                         for (let i = 0; i < useData.length; i++) {
                             if (useData[i].fields.ID == editId) {
                                 showEditEmployeeView(useData[i].fields);
@@ -590,12 +796,12 @@ Template.receiptsoverview.onRendered(function() {
             $each.attr('data-id', '');
             $('#accountListModal').modal('toggle');
             setTimeout(function() {
-                $('#tblAccount_filter .form-control-sm').focus();
-                $('#tblAccount_filter .form-control-sm').val('');
-                $('#tblAccount_filter .form-control-sm').trigger("input");
-                const datatable = $('#tblAccount').DataTable();
+                $('#tblAccountReceipt_filter .form-control-sm').focus();
+                $('#tblAccountReceipt_filter .form-control-sm').val('');
+                $('#tblAccountReceipt_filter .form-control-sm').trigger("input");
+                const datatable = $('#tblAccountReceipt').DataTable();
                 datatable.draw();
-                $('#tblAccount_filter .form-control-sm').trigger("input");
+                $('#tblAccountReceipt_filter .form-control-sm').trigger("input");
             }, 500);
         } else {
             if (accountDataName.replace(/\s/g, '') != '') { // edit employee
@@ -657,12 +863,12 @@ Template.receiptsoverview.onRendered(function() {
                 const targetID = $(event.target).closest('tr').attr('id');
                 $('#selectLineID').val(targetID);
                 setTimeout(function() {
-                    $('#tblAccount_filter .form-control-sm').focus();
-                    $('#tblAccount_filter .form-control-sm').val('');
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
+                    $('#tblAccountReceipt_filter .form-control-sm').focus();
+                    $('#tblAccountReceipt_filter .form-control-sm').val('');
+                    $('#tblAccountReceipt_filter .form-control-sm').trigger("input");
                     const datatable = $('#tblInventory').DataTable();
                     datatable.draw();
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
+                    $('#tblAccountReceipt_filter .form-control-sm').trigger("input");
                 }, 500);
             }
         }
@@ -1797,7 +2003,7 @@ Template.receiptsoverview.events({
         }
         $('#currencyModal').modal('toggle');
     },
-    'click #tblAccount tbody tr': function(e) {
+    'click #tblAccountReceipt tbody tr': function(e) {
         let accountName = $(e.target).closest('tr').find(".productName").text() || '';
         let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -1829,6 +2035,106 @@ Template.receiptsoverview.events({
         }
         $('#accountListModal').modal('toggle');
     },
+    'click .btnAddNewAccount': function(event) {
+        $('#add-account-title').text('Add New Account');
+        $('#edtAccountID').val('');
+        $('#sltAccountType').val('');
+        $('#sltAccountType').removeAttr('readonly', true);
+        $('#sltAccountType').removeAttr('disabled', 'disabled');
+        $('#edtAccountName').val('');
+        $('#edtAccountName').attr('readonly', false);
+        $('#edtAccountNo').val('');
+        $('#sltTaxCode').val('NT' || '');
+        $('#txaAccountDescription').val('');
+        $('#edtBankAccountName').val('');
+        $('#edtBSB').val('');
+        $('#edtBankAccountNo').val('');
+        $('#routingNo').val('');
+        $('#edtBankName').val('');
+        $('#swiftCode').val('');
+        $('.showOnTransactions').prop('checked', false);
+        $('.isBankAccount').addClass('isNotBankAccount');
+        $('.isCreditAccount').addClass('isNotCreditAccount');
+    },
+    'click .btnRefreshAccount': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        const splashArrayAccountList = [];
+        let utilityService = new UtilityService();
+        let sideBarService = new SideBarService();
+        let dataSearchName = $('#tblAccountReceipt_filter input').val();
+        if (dataSearchName.replace(/\s/g, '') !== '') {
+            sideBarService.getAllAccountDataVS1ByName(dataSearchName).then(function (data) {
+                let lineItems = [];
+                let lineItemObj = {};
+                if (data.taccountvs1.length > 0) {
+                    for (let i = 0; i < data.taccountvs1.length; i++) {
+                        const dataList = [
+                            data.taccountvs1[i].fields.AccountName || '-',
+                            data.taccountvs1[i].fields.Description || '',
+                            data.taccountvs1[i].fields.AccountNumber || '',
+                            data.taccountvs1[i].fields.AccountTypeName || '',
+                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].fields.Balance * 100) / 100) || 0,
+                            data.taccountvs1[i].fields.TaxCode || '',
+                            data.taccountvs1[i].fields.ID || ''
+                        ];
+                        splashArrayAccountList.push(dataList);
+                    }
+                    const datatable = $('#tblAccountReceipt').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(splashArrayAccountList);
+                    datatable.draw(false);
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    $('#accountListModal').modal('toggle');
+                    swal({
+                        title: 'Question',
+                        text: "Account does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#addAccountModal').modal('toggle');
+                            $('#edtAccountName').val(dataSearchName);
+                        } else if (result.dismiss === 'cancel') {
+                            $('#accountListModal').modal('toggle');
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+            sideBarService.getAccountListVS1().then(function(data) {
+                for (let i = 0; i < data.taccountvs1.length; i++) {
+                    const dataList = [
+                        data.taccountvs1[i].fields.AccountName || '-',
+                        data.taccountvs1[i].fields.Description || '',
+                        data.taccountvs1[i].fields.AccountNumber || '',
+                        data.taccountvs1[i].fields.AccountTypeName || '',
+                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].fields.Balance * 100) / 100),
+                        data.taccountvs1[i].fields.TaxCode || '',
+                        data.taccountvs1[i].fields.ID || ''
+                    ];
+                    splashArrayAccountList.push(dataList);
+                }
+                const datatable = $('#tblAccountReceipt').DataTable();
+                datatable.clear();
+                datatable.rows.add(splashArrayAccountList);
+                datatable.draw(false);
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        }
+    },
+    'keyup #tblAccountReceipt_filter input': function (event) {
+        if (event.keyCode === 13) {
+            $(".btnRefreshAccount").trigger("click");
+        }
+    },
     'click #tblCategory tbody tr': function(e) {
         let category = $(e.target).closest('tr').find(".colAccountGroup").text() || '';
         let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
@@ -1850,6 +2156,173 @@ Template.receiptsoverview.events({
         }
         $('#categoryListModal').modal('toggle');
     },
+    'click .btnAddNewReceiptCategory': function(event) {
+        $('#add-receiptcategory-title').text('Add New Receipt Category');
+        $('#edtReceiptCategoryID').val('');
+        $('#edtReceiptCategoryName').val('');
+        $('#edtReceiptCategoryDesc').val('');
+    },
+    'click .btnRefreshCategoryAccount': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        const splashArrayAccountList = [];
+        let sideBarService = new SideBarService();
+        let dataSearchName = $('#tblCategory_filter input').val();
+        let categories = Template.instance().receiptCategories.get();
+        if (dataSearchName.replace(/\s/g, '') !== '') {
+            sideBarService.getAccountListVS1(dataSearchName).then(function (data) {
+                if (data.taccountvs1.length > 0) {
+                    for (let i = 0; i < data.taccountvs1.length; i++) {
+                        const dataList = [
+                            data.taccountvs1[i].fields.AccountGroup|| '',
+                            data.taccountvs1[i].fields.AccountName || '',
+                            data.taccountvs1[i].fields.Description || '',
+                            data.taccountvs1[i].fields.AccountNumber || '',
+                            data.taccountvs1[i].fields.TaxCode || '',
+                            data.taccountvs1[i].fields.ID || ''
+                        ];
+                        if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
+                            splashArrayAccountList.push(dataList);
+                        }
+                    }
+                    const datatable = $('#tblCategory').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(splashArrayAccountList);
+                    datatable.draw(false);
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    $('#categoryListModal').modal('toggle');
+                    swal({
+                        title: 'Question',
+                        text: "Category does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#addReceiptCategoryModal').modal('toggle');
+                            $('#edtReceiptCategoryName').val(dataSearchName);
+                        } else if (result.dismiss === 'cancel') {
+                            $('#categoryListModal').modal('toggle');
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+            sideBarService.getAccountListVS1().then(function(data) {
+                for (let i = 0; i < data.taccountvs1.length; i++) {
+                    const dataList = [
+                        data.taccountvs1[i].fields.AccountGroup|| '',
+                        data.taccountvs1[i].fields.AccountName || '',
+                        data.taccountvs1[i].fields.Description || '',
+                        data.taccountvs1[i].fields.AccountNumber || '',
+                        data.taccountvs1[i].fields.TaxCode || '',
+                        data.taccountvs1[i].fields.ID || ''
+                    ];
+                    if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
+                        splashArrayAccountList.push(dataList);
+                    }
+                }
+                const datatable = $('#tblCategory').DataTable();
+                datatable.clear();
+                datatable.rows.add(splashArrayAccountList);
+                datatable.draw(false);
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        }
+    },
+    'keyup #tblCategory_filter input': function (event) {
+        if (event.keyCode === 13) {
+            $(".btnRefreshCategoryAccount").trigger("click");
+        }
+    },
+    'click #addReceiptCategoryModal .btnSave': function(event) {
+        $('.fullScreenSpin').css('display','inline-block');
+        let receiptService = new ReceiptService();
+        let receiptCategoryID = $('#edtReceiptCategoryID').val();
+        let receiptCategoryName = $('#edtReceiptCategoryName').val();
+        if (receiptCategoryName == '') {
+            swal('Receipt Category name cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            return false;
+        }
+        let receiptCategoryDesc = $('#edtReceiptCategoryDesc').val();
+        let objDetails = '';
+        if (receiptCategoryID == "") {
+            receiptService.getOneReceiptCategoryDataExByName(receiptCategoryName).then(function (data) {
+                if (data.treceiptcategory.length > 0 ) {
+                    swal('Category name duplicated.', '', 'warning');
+                    $('.fullScreenSpin').css('display','none');
+                    return false;
+                } else {
+                    objDetails = {
+                        type: "TReceiptCategory",
+                        fields: {
+                            ID: parseInt(receiptCategoryID)||0,
+                            Active: true,
+                            CategoryName: receiptCategoryName,
+                            CategoryDesc: receiptCategoryDesc
+                        }
+                    };
+                    doSaveReceiptCategory(objDetails);
+                }
+            }).catch(function (err) {
+                objDetails = {
+                    type: "TReceiptCategory",
+                    fields: {
+                        Active: true,
+                        CategoryName: receiptCategoryName,
+                        CategoryDesc: receiptCategoryDesc
+                    }
+                };
+                // doSaveReceiptCategory(objDetails);
+            });
+        } else {
+            objDetails = {
+                type: "TReceiptCategory",
+                fields: {
+                    ID: parseInt(receiptCategoryID),
+                    Active: true,
+                    CategoryName: receiptCategoryName,
+                    CategoryDesc: receiptCategoryDesc
+                }
+            };
+            doSaveReceiptCategory(objDetails);
+        }
+        function doSaveReceiptCategory(objDetails) {
+            receiptService.saveReceiptCategory(objDetails).then(function (objDetails) {
+                sideBarService.getReceiptCategory().then(function(dataReload) {
+                    addVS1Data('TReceiptCategory',JSON.stringify(dataReload)).then(function (datareturn) {
+                        location.reload(true);
+                    }).catch(function (err) {
+                        location.reload(true);
+                    });
+                }).catch(function(err) {
+                    location.reload(true);
+                });
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        // Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display','none');
+            });
+        }
+    },
     'click #tblTripGroup tbody tr': function(e) {
         let tripName = $(e.target).closest('tr').find(".colTripName").text() || '';
         let description = $(e.target).closest('tr').find(".colDescription").text() || '';
@@ -1870,6 +2343,166 @@ Template.receiptsoverview.events({
             $('#nav-time .trip-groups').attr('data-id', tripGroupID);
         }
         $('#tripGroupListModal').modal('toggle');
+    },
+    'click .btnAddNewTripGroup': function(event) {
+        $('#add-tripgroup-title').text('Add New Trip-Group');
+        $('#edtTripGroupID').val('');
+        $('#edtTripGroupName').val('');
+        $('#edtTripGroupDesc').val('');
+    },
+    'click .btnRefreshTripGroup': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        const splashArrayAccountList = [];
+        let utilityService = new UtilityService();
+        let sideBarService = new SideBarService();
+        let dataSearchName = $('#tblTripGroup_filter input').val();
+        if (dataSearchName.replace(/\s/g, '') !== '') {
+            sideBarService.getTripGroupByName(dataSearchName).then(function (data) {
+                if (data.ttripgroup.length > 0) {
+                    for (let i = 0; i < data.ttripgroup.length; i++) {
+                        const dataList = [
+                            data.ttripgroup[i].fields.TripName || '-',
+                            data.ttripgroup[i].fields.Description || '',
+                            data.ttripgroup[i].fields.Id || ''
+                        ];
+                        splashArrayAccountList.push(dataList);
+                    }
+                    const datatable = $('#tblTripGroup').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(splashArrayAccountList);
+                    datatable.draw(false);
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    $('#tripGroupListModal').modal('toggle');
+                    swal({
+                        title: 'Question',
+                        text: "Trip-Group does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#addTripGroupModal').modal('toggle');
+                            $('#edtTripGroupName').val(dataSearchName);
+                        } else if (result.dismiss === 'cancel') {
+                            $('#tripGroupListModal').modal('toggle');
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+            sideBarService.getTripGroup().then(function(data) {
+                for (let i = 0; i < data.ttripgroup.length; i++) {
+                    const dataList = [
+                        data.ttripgroup[i].fields.TripName || '-',
+                        data.ttripgroup[i].fields.Description || '',
+                        data.ttripgroup[i].fields.Id || ''
+                    ];
+                    splashArrayAccountList.push(dataList);
+                }
+                const datatable = $('#tblTripGroup').DataTable();
+                datatable.clear();
+                datatable.rows.add(splashArrayAccountList);
+                datatable.draw(false);
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        }
+    },
+    'keyup #tblTripGroup_filter input': function (event) {
+        if (event.keyCode === 13) {
+            $(".btnRefreshTripGroup").trigger("click");
+        }
+    },
+    'click #addTripGroupModal .btnSave': function(event) {
+        $('.fullScreenSpin').css('display','inline-block');
+        let receiptService = new ReceiptService();
+        let tripGroupID = $('#edtTripGroupID').val();
+        let tripGroupName = $('#edtTripGroupName').val();
+        if (tripGroupName == '') {
+            swal('Trip-Group name cannot be blank!', '', 'warning');
+            $('.fullScreenSpin').css('display','none');
+            return false;
+        }
+        let tripGroupDesc = $('#edtTripGroupDesc').val();
+        let objDetails = '';
+        if (tripGroupID == "") {
+            receiptService.getOneTripGroupDataExByName(tripGroupName).then(function (data) {
+                if (data.ttripgroup.length > 0) {
+                    swal('Trip-Group name duplicated', '', 'warning');
+                    $('.fullScreenSpin').css('display','none');
+                    return false;
+                } else {
+                    objDetails = {
+                        type: "TTripGroup",
+                        fields: {
+                            Active: true,
+                            TripName: tripGroupName,
+                            Description: tripGroupDesc
+                        }
+                    };
+                    doSaveTripGroup(objDetails);
+                }
+            }).catch(function (err) {
+                objDetails = {
+                    type: "TTripGroup",
+                    fields: {
+                        Active: true,
+                        TripName: tripGroupName,
+                        Description: tripGroupDesc
+                    }
+                };
+                // doSaveTripGroup(objDetails);
+                $('.fullScreenSpin').css('display','none');
+            });
+        } else {
+            objDetails = {
+                type: "TTripGroup",
+                fields: {
+                    ID: parseInt(tripGroupID),
+                    Active: true,
+                    TripName: tripGroupName,
+                    Description: tripGroupDesc
+                }
+            };
+            doSaveTripGroup(objDetails);
+        }
+        function doSaveTripGroup(objDetails) {
+            receiptService.saveTripGroup(objDetails).then(function (objDetails) {
+                sideBarService.getTripGroup().then(function(dataReload) {
+                    addVS1Data('TTripGroup',JSON.stringify(dataReload)).then(function (datareturn) {
+                        $('.fullScreenSpin').css('display','none');
+                        location.reload(true);
+                    }).catch(function (err) {
+                        $('.fullScreenSpin').css('display','none');
+                        location.reload(true);
+                    });
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display','none');
+                    location.reload(true);
+                });
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        // Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display','none');
+            });
+        }
     },
     'click #paymentmethodList tbody tr': function(e) {
         let typeName = $(e.target).closest('tr').find(".colName").text() || '';
@@ -1912,7 +2545,6 @@ Template.receiptsoverview.events({
         let hours = parseFloat($('#claimHours').val()) || 0;
         $('#nav-time .edtTotal').val('$' + (numVal * hours));
     },
-    // update receipt record
     'click #viewReceiptModal .btnSave': function(e) {
         let imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
         let imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');

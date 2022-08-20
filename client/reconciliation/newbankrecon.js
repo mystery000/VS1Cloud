@@ -936,8 +936,8 @@ Template.newbankrecon.onRendered(function() {
                 selectedYodleeID = item.YodleeLineID;
                 editableWho(item, $(this), e);
             });
-            $('#whoDetail_'+item.YodleeLineID).editableSelect();
-            $('#whoDetail_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
+            $('#toCustomer_'+item.YodleeLineID).editableSelect();
+            $('#toCustomer_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
                 selectedYodleeID = item.YodleeLineID;
                 editableWho(item, $(this), e);
             });
@@ -1046,7 +1046,6 @@ Template.newbankrecon.onRendered(function() {
                 }
             } else {
                 $('#who_' + item.YodleeLineID).val(item.CompanyName);
-                $('#whoDetail_' + item.YodleeLineID).val(item.CompanyName);
                 if (item.deporwith == "received") {
                     let isExistCustomer = false;
                     customerList.forEach(customer => {
@@ -1187,10 +1186,8 @@ Template.newbankrecon.onRendered(function() {
             }
             if (item.deporwith == "received") {
                 $('#who_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
-                $('#whoDetail_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
             } else {
                 $('#who_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
-                $('#whoDetail_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
             }
 
             $('#btnAddDetail_'+item.YodleeLineID).on('click', function(e, li) {
@@ -1364,7 +1361,6 @@ Template.newbankrecon.onRendered(function() {
             // $('#whatID_'+selectedYodleeID).val(parseInt($(this).find(".colID").text()));
             $('#whoID_'+selectedYodleeID).val($(this).find(".colID").text());
             $('#who_'+selectedYodleeID).val($(this).find(".colCompany").text());
-            $('#whoDetail_' + selectedYodleeID).val($(this).find(".colCompany").text());
         } else {
             if (selectedLineID) {
                 let lineAccountID = $(this).find(".colID").text();
@@ -1379,7 +1375,6 @@ Template.newbankrecon.onRendered(function() {
         $('#supplierListModal').modal('toggle');
         $('#whoID_'+selectedYodleeID).val($(this).find(".colID").text());
         $('#who_'+selectedYodleeID).val($(this).find(".colCompany").text());
-        $('#whoDetail_' + selectedYodleeID).val($(this).find(".colCompany").text());
         setCalculated();
     });
     $(document).on("click", ".newbankrecon #tblTaxRate tbody tr", function (e) {
@@ -1711,7 +1706,7 @@ Template.newbankrecon.events({
             let employeename = Session.get('mySessionEmployee');
             let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
             let clientID = $("#whoID_"+selectedYodleeID).val();
-            let clientName = $("#whoDetail_"+selectedYodleeID).val();
+            let clientName = $("#toCustomer_"+selectedYodleeID).val();
             let reconNote = $("#divLineDetail_"+selectedYodleeID+" #FromWho").val();
             let discussNote = $("#discussText_"+selectedYodleeID).val();
             let reconcileID = $("#reconID_"+selectedYodleeID).val();
@@ -1720,22 +1715,13 @@ Template.newbankrecon.events({
             paymentID = (paymentID && paymentID != '')?parseInt(paymentID):0;
             paymentID = 0; // Now keep 0 ???
             let clientDetail = null;
-            if (DepOrWith == "received") {
+            if (DepOrWith == "spent") {
                 clientDetail = getClientDetail(clientName, 'customer');
                 if (!clientDetail) {
                     swal('Customer must be vaild.', '', 'error');
-                    $("#whoDetail_"+selectedYodleeID).focus();
+                    $("#toCustomer_"+selectedYodleeID).focus();
                     return false;
                 }
-            } else if (DepOrWith == "spent") {
-                clientDetail = getClientDetail(clientName, 'supplier');
-                if (!clientDetail) {
-                    swal('Supplier must be vaild.', '', 'error');
-                    $("#whoDetail_"+selectedYodleeID).focus();
-                    return false;
-                }
-            } else {
-                return false;
             }
 
             let clientShippingAddress = clientName + '\n' + clientDetail.street + '\n' + clientDetail.street2 + ' ' + clientDetail.statecode + '\n' + clientDetail.country;
@@ -2575,7 +2561,7 @@ function setCalculated() {
         let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
         let discountRate = 0;
         if (DepOrWith == "spent") {
-            let customerName = $('#whoDetail_' + selectedYodleeID).val();
+            let customerName = $('#toCustomer_' + selectedYodleeID).val();
             if (customerName != "") {
                 let customerDetail = customerList.filter(customer => {
                     return customer.customername == customerName
@@ -2669,17 +2655,23 @@ function getClientDetail(clientName, clientType) {
 function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
     if (selectedYodleeID != null) {
         let clientDetail;
-        let contactName = '';
+        let toCustomerName = '';
         let suppPaymentType = '';
         if (DepOrWith == "received") {
             $(".suppPaymentType").hide();
-            clientDetail = getClientDetail($('#whoDetail_' + selectedYodleeID).val(), 'customer');
-            contactName = clientDetail? clientDetail.customername:'';
+            $(".transactionTitle").text("New Invoice");
+            $(".toCustomerDiv").hide();
         } else {
-            clientDetail = getClientDetail($('#whoDetail_' + selectedYodleeID).val(), 'supplier');
-            contactName = clientDetail? clientDetail.suppliername:'';
+            clientDetail = getClientDetail($('#toCustomer_' + selectedYodleeID).val(), 'customer');
+            toCustomerName = clientDetail? clientDetail.customername:'';
             $(".suppPaymentType").show();
             suppPaymentType = $('#sltSuppPaymentType_' + selectedYodleeID).val();
+            $(".transactionTitle").text("New "+suppPaymentType);
+            if (suppPaymentType == "Cheque") {
+                $(".toCustomerDiv").hide();
+            } else {
+                $(".toCustomerDiv").show();
+            }
         }
         let discountAmount = 0;
         if (DepOrWith == "received") {
@@ -2697,7 +2689,6 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         selectedLineID = 'firstLine';
         let taxrateName = (taxCodeDetail != undefined)? taxCodeDetail.codename:'';
 
-        $('#whoDetail_'+selectedYodleeID).val(contactName);
         let dateIn_val = (DateIn !='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
         $('#DateIn_'+selectedYodleeID).val(dateIn_val);
 
@@ -2730,6 +2721,19 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
             setCalculated();
             $('#' + selectedLineID + " .btnRemove").hide();
         }, 1000);
+    }
+}
+function changeTblReconInvoice(type) {
+    // Never change field: Description,
+    if (type == "Invoice") {
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").show();
+    } else if (type == "Purchase Order") {
+
+    } else if (type == "Bill") {
+
+    } else if (type == "Cheque") {
+
     }
 }
 
