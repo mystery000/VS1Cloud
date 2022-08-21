@@ -99,7 +99,6 @@ Template.customerscard.onRendered(function () {
                     salestaxcode = result.customFields[1].taxvalue || loggedTaxCodeSalesInc;
                     templateObject.defaultsaletaxcode.set(salestaxcode);
                 }
-
             }
         });
     }, 500);
@@ -191,31 +190,80 @@ Template.customerscard.onRendered(function () {
     }
 
     templateObject.getReferenceLetters = () => {
-        sideBarService.getCorrespondences().then(dataObject => {
-            let tempArray = [];
-            if(dataObject.tcorrespondence.length > 0) {
-                let temp = dataObject.tcorrespondence.filter(item=>{
-                    return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+        getVS1Data('TCorrespondence').then(data => {
+            if(data.length == 0) {
+                sideBarService.getCorrespondences().then(dataObject => {
+                    addVS1Data('TCorrespondence', JSON.stringify(dataObject))
+                    let tempArray = [];
+                    if(dataObject.tcorrespondence.length > 0) {
+                        let temp = dataObject.tcorrespondence.filter(item=>{
+                            return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                        })
+        
+                        for(let i = 0; i< temp.length; i++) {
+                            for (let j = i+1; j< temp.length; j++ ) {
+                                if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                                    temp[j].fields.dup = true
+                                }
+                            }
+                        }
+        
+                        temp.map(item=>{
+                            if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                                tempArray.push(item.fields)
+                            }
+                        })
+                    }
+                    templateObject.correspondences.set(tempArray)
                 })
-
-                for(let i = 0; i< temp.length; i++) {
-                    for (let j = i+1; j< temp.length; j++ ) {
-                        if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-                            temp[j].fields.dup = true
+            }else {
+                let dataObj = JSON.parse(data[0].data);
+                let tempArray = [];
+                if(dataObj.tcorrespondence.length > 0) {
+                    let temp = dataObj.tcorrespondence.filter(item=>{
+                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                    })
+    
+                    for(let i = 0; i< temp.length; i++) {
+                        for (let j = i+1; j< temp.length; j++ ) {
+                            if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                                temp[j].fields.dup = true
+                            }
                         }
                     }
+                    temp.map(item=>{
+                        if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                            tempArray.push(item.fields)
+                        }
+                    })
                 }
-                
-                temp.map(item=>{
-                    if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
-                        tempArray.push(item.fields)
-                    }
-                })
+                templateObject.correspondences.set(tempArray)
             }
-
-            templateObject.correspondences.set(tempArray)
-        }).catch(function(err){
-        })
+        }).catch(function () {
+            sideBarService.getCorrespondences().then(dataObject => {
+                addVS1Data('TCorrespondence', JSON.stringify(dataObject));
+                let tempArray = [];
+                if(dataObject.tcorrespondence.length > 0) {
+                    let temp = dataObject.tcorrespondence.filter(item=>{
+                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                    })
+    
+                    for(let i = 0; i< temp.length; i++) {
+                        for (let j = i+1; j< temp.length; j++ ) {
+                            if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                                temp[j].fields.dup = true
+                            }
+                        }
+                    }
+                    temp.map(item=>{
+                        if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                            tempArray.push(item.fields)
+                        }
+                    })
+                }
+                templateObject.correspondences.set(tempArray)
+            })
+        }) 
     }
 
 
@@ -1908,6 +1956,9 @@ Template.customerscard.onRendered(function () {
                         }
                     }
                     sideBarService.saveCorrespondence(temp).then(data => {
+                        sideBarService.getCorrespondences().then(dataUpdate => {
+                            addVS1Data('TCorrespondence', JSON.stringify(dataUpdate));
+                        })
                         $('#referenceLetterModal').modal('toggle');
                     })
                 })
@@ -1979,20 +2030,38 @@ Template.customerscard.onRendered(function () {
                     // array.push(objDetails)
                     
                     sideBarService.saveCorrespondence(objDetails).then(data=>{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: 'Success',
-                            text: 'Template has been saved successfully ',
-                            type: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Continue'
-                        }).then((result) => {
-                            if (result.value) {
-                                $('#addLetterTemplateModal').modal('toggle')
-                                templateObject.getReferenceLetters();
-                            } else if (result.dismiss === 'cancel') { }
-                        });
+                        sideBarService.getCorrespondences().then(dataUpdate => {
+                            addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function(){
+                                $('.fullScreenSpin').css('display', 'none');
+                                swal({
+                                    title: 'Success',
+                                    text: 'Template has been saved successfully ',
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Continue'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        $('#addLetterTemplateModal').modal('toggle')
+                                        templateObject.getReferenceLetters();
+                                    } else if (result.dismiss === 'cancel') { }
+                                });
+                            })
+                        }).catch(function() {
+                            $('.fullScreenSpin').css('display', 'none');
+                            swal({
+                                title: 'Oooops...',
+                                text: 'Something went wrong',
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $('#addLetterTemplateModal').modal('toggle')
+                                } else if (result.dismiss === 'cancel') { }
+                            });
+                        })
                     }).catch(function () {
+                        $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
                             text: 'Something went wrong',
@@ -2002,7 +2071,6 @@ Template.customerscard.onRendered(function () {
                         }).then((result) => {
                             if (result.value) {
                                 $('#addLetterTemplateModal').modal('toggle')
-                                $('.fullScreenSpin').css('display', 'none');
                             } else if (result.dismiss === 'cancel') { }
                         });
                     })
@@ -2032,20 +2100,37 @@ Template.customerscard.onRendered(function () {
                     array.push(objDetails)
     
                 sideBarService.saveCorrespondence(objDetails).then(data=>{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Success',
-                        text: 'Template has been saved successfully ',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Continue'
-                    }).then((result) => {
-                        if (result.value) {
-                            $('#addLetterTemplateModal').modal('toggle')
-                            templateObject.getReferenceLetters();
-                            
-                        } else if (result.dismiss === 'cancel') { }
-                    });
+                    sideBarService.getCorrespondences().then(function(dataUpdate){
+                        addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
+                            $('.fullScreenSpin').css('display', 'none');
+                            swal({
+                                title: 'Success',
+                                text: 'Template has been saved successfully ',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Continue'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $('#addLetterTemplateModal').modal('toggle')
+                                    templateObject.getReferenceLetters();
+        
+                                } else if (result.dismiss === 'cancel') { }
+                            });
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                            swal({
+                                title: 'Oooops...',
+                                text: 'Something went wrong',
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $('#addLetterTemplateModal').modal('toggle')
+                                } else if (result.dismiss === 'cancel') { }
+                            });
+                        })  
+                    })
                 }).catch(function () {
                     swal({
                         title: 'Oooops...',

@@ -2261,10 +2261,28 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TTripGroup, options);
   }
 
+  getTripGroupByName(dataSearchName) {
+    let options = "";
+    options = {
+      ListType: "Detail",
+      select: '[TripName] f7like "' + dataSearchName + '"',
+    };
+    return this.getList(this.ERPObjects.TTripGroup, options);
+  }
+
   getReceiptCategory() {
     let options = {
       PropertyList:"ID,CategoryName,CategoryDesc,Active",
       select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TReceiptCategory, options);
+  }
+
+  getReceiptCategoryByName(dataSearchName) {
+    let options = "";
+    options = {
+      ListType: "Detail",
+      select: '[CategoryName] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TReceiptCategory, options);
   }
