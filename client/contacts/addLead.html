@@ -408,7 +408,7 @@
                                                 <div class="col-6 col-md-2" style="padding: 0px 8px;">
                                                     <div class="form-group">
                                                         <label for="leadStatus">Status</label>
-                                                        <select type="search" class="form-control" id="leadStatus" name="leadStatus"  style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.status}}">
+                                                        <select type="search" class="form-control" id="leadStatus" name="leadStatus"  style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{setLeadStatus record.status}}">
                                                             <!-- <option>1</option>
                                                             <option>2</option>
                                                             <option>3</option>
@@ -1225,6 +1225,9 @@
             </div>
             <div class="modal fade" role="dialog" tabindex="-1" id="statusPopModal">
                 {{> statuspop}}
+            </div>
+            <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
+                {{> newstatuspop}}
             </div>
             <div class="modal fade" role="dialog" tabindex="-1" id="employeeListPOPModal">
                 <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">

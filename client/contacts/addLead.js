@@ -1082,6 +1082,9 @@ Template.leadscard.onRendered(function () {
     $(document).on('click', '#leadRep', function(e, li){
         $('#employeeListPOPModal').modal('show');
     })
+
+    setTimeout(() => $('#leadStatus').editableSelect(), 500);
+    setTimeout(() => $('#leadStatus').editableSelect(), 3500);
 });
 
 Template.leadscard.events({
@@ -1906,7 +1909,8 @@ Template.leadscard.helpers({
         }
 
         return isMobile;
-    }
+    },
+    setLeadStatus: (status) => status || 'Unqualified' 
 });
 
 function getPreviewFile(uploadedFiles, attachmentID) {
@@ -1960,6 +1964,7 @@ function convertToCustomer(nav) {
     let contactService = new ContactService();
     let currentId = FlowRouter.current().queryParams;
     let objDetails = '';
+    let leadStatus = nav === 'quotecard' ? 'Quoted' : nav === 'invoicecard' ? 'Invoiced' : '';
     if (!isNaN(currentId.id)) {
         let currentLead = parseInt(currentId.id);
         objDetails = {
@@ -1969,8 +1974,15 @@ function convertToCustomer(nav) {
                 IsCustomer: true
             }
         };
+        if(leadStatus) {
+            objDetails.fields.Status = leadStatus;
+        }
         contactService.saveProspectEx(objDetails).then(async function (data) {
             let customerID = data.fields.ID;
+            if (customerID) {
+                const dataReload = await sideBarService.getAllLeads(initialBaseDataLoad,0);
+                await addVS1Data('TProspectEx', JSON.stringify(dataReload));
+            }
             await templateObject.saveCustomerDetails();
             $('.fullScreenSpin').css('display','none');
             FlowRouter.go('/' + nav + '?customerid=' + customerID);
