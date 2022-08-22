@@ -5589,14 +5589,14 @@ Template.payrolloverview.events({
       .then(function (data) {
         addVS1Data("TPayHistory", JSON.stringify(data))
           .then(function (datareturn) {
-            //window.open('/payrolloverview', '_self');
+            window.open('/payrolloverview', '_self');
           })
           .catch(function (err) {
-            //window.open('/payrolloverview', '_self');
+            window.open('/payrolloverview', '_self');
           });
       })
       .catch(function (err) {
-        //window.open('/payrolloverview', '_self');
+        window.open('/payrolloverview', '_self');
       });
 
     sideBarService
@@ -5607,7 +5607,7 @@ Template.payrolloverview.events({
           .catch(function (err) {});
       })
       .catch(function (err) {
-        //window.open('/payrolloverview', '_self');
+        window.open('/payrolloverview', '_self');
       });
 
     sideBarService
