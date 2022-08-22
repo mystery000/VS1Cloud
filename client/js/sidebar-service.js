@@ -574,6 +574,32 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TExpenseClaimEx, options);
   }
 
+  getExpenseClaimList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+        IgnoreDates: true,
+        OrderBy: "ExpenseClaimID desc",
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    } else {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+        OrderBy: "ExpenseClaimID desc",
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TExpenseClaimList, options);
+  }
+
   getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, isDeleted) {
     let options = "";
     if(isDeleted == ""){
