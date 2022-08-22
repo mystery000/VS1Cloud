@@ -14,6 +14,8 @@ Template.performancechart.onCreated(()=>{
   templateObject.grossProfitMargin = new ReactiveVar();
   templateObject.netProfitMargin = new ReactiveVar();
   templateObject.returnOnInvestment = new ReactiveVar();
+  templateObject.titleMonth1 = new ReactiveVar();
+  templateObject.titleMonth2 = new ReactiveVar();
 });
 
 Template.performancechart.onRendered(()=>{
@@ -21,6 +23,22 @@ Template.performancechart.onRendered(()=>{
   let reportService = new ReportService();
   let utilityService = new UtilityService();
   
+  var currentDate = new Date();
+  const monSml = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var currMonth1 = "", currMonth2 = "";
+  if (currentDate.getMonth() == 0) {
+    currMonth1 = monSml[10] + " " + (currentDate.getFullYear() - 1);
+    currMonth2 = monSml[11] + " " + (currentDate.getFullYear() - 1);
+  } else if (currentDate.getMonth() == 1) {
+    currMonth1 = monSml[11] + " " + (currentDate.getFullYear() - 1);
+    currMonth2 = monSml[0] + " " + currentDate.getFullYear();
+  } else {
+    currMonth1 = monSml[currentDate.getMonth() - 2] + " " + currentDate.getFullYear();
+    currMonth2 = monSml[currentDate.getMonth() - 1] + " " + currentDate.getFullYear();
+  }
+  templateObject.titleMonth1.set(currMonth1);
+  templateObject.titleMonth2.set(currMonth2);
+
   let totalExpense = localStorage.getItem('VS1ProfitandLoss_ExpEx_dash') || 0;
   let totalCOGS = localStorage.getItem('VS1ProfitandLoss_COGSEx_dash') || 0;
   let totalSales = localStorage.getItem('VS1ProfitandLoss_IncomeEx_dash') || 0;
@@ -72,6 +90,12 @@ Template.performancechart.events({
 Template.performancechart.helpers({
   dateAsAt: () =>{
       return Template.instance().dateAsAt.get() || '-';
+  },
+  titleMonth1: () =>{
+      return Template.instance().titleMonth1.get();
+  },
+  titleMonth2: () =>{
+      return Template.instance().titleMonth2.get();
   },
   grossProfitMargin: () =>{
       return Template.instance().grossProfitMargin.get() || 0;

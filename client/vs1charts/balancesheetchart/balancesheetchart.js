@@ -14,13 +14,30 @@ Template.balancesheetchart.onCreated(()=>{
   templateObject.totalAgedReceivables = new ReactiveVar();
   templateObject.totalAgedPayables = new ReactiveVar();
   templateObject.totalNettAssets = new ReactiveVar();
-
+  templateObject.titleMonth1 = new ReactiveVar();
+  templateObject.titleMonth2 = new ReactiveVar();
 });
 
 Template.balancesheetchart.onRendered(()=>{
   const templateObject = Template.instance();
   let reportService = new ReportService();
   let utilityService = new UtilityService();
+
+  var currentDate = new Date();
+  const monSml = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var currMonth1 = "", currMonth2 = "";
+  if (currentDate.getMonth() == 0) {
+    currMonth1 = monSml[10] + " " + (currentDate.getFullYear() - 1);
+    currMonth2 = monSml[11] + " " + (currentDate.getFullYear() - 1);
+  } else if (currentDate.getMonth() == 1) {
+    currMonth1 = monSml[11] + " " + (currentDate.getFullYear() - 1);
+    currMonth2 = monSml[0] + " " + currentDate.getFullYear();
+  } else {
+    currMonth1 = monSml[currentDate.getMonth() - 2] + " " + currentDate.getFullYear();
+    currMonth2 = monSml[currentDate.getMonth() - 1] + " " + currentDate.getFullYear();
+  }
+  templateObject.titleMonth1.set(currMonth1);
+  templateObject.titleMonth2.set(currMonth2);
 
   let totalAgedReceivables = 0;
   let totalAgedPayables = 0;
@@ -74,6 +91,12 @@ Template.balancesheetchart.events({
 Template.balancesheetchart.helpers({
   dateAsAt: () =>{
       return Template.instance().dateAsAt.get() || '-';
+  },
+  titleMonth1: () =>{
+      return Template.instance().titleMonth1.get();
+  },
+  titleMonth2: () =>{
+      return Template.instance().titleMonth2.get();
   },
   totalAgedReceivables: () =>{
       return Template.instance().totalAgedReceivables.get() || 0;
