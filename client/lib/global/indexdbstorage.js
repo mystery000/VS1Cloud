@@ -562,7 +562,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 72);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 75);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };

@@ -39,7 +39,6 @@ export default class TableHandler {
       resizeMode: "overflow",
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
-        // console log this $(e.target).parent().index()
         let tableWidth = [];
         $("#tblcontactoverview th").each(function () {
           tableWidth.push($(this).outerWidth());

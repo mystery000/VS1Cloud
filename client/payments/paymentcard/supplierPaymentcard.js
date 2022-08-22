@@ -3353,12 +3353,9 @@ Template.supplierpaymentcard.onRendered(() => {
     if (getsale_id[1]) {
       let deteled = false;
       currentSalesID = parseInt(currentSalesID);
-      getVS1Data("TSupplierPayment")
-        .then(function (dataObject) {
+      getVS1Data("TSupplierPayment").then(function (dataObject) {
           if (dataObject.length == 0) {
-            paymentService
-              .getOneSupplierPayment(currentSalesID)
-              .then(function (data) {
+            paymentService.getOneSupplierPayment(currentSalesID).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 deteled = data.fields.Deleted;
@@ -3477,7 +3474,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     lineItems.push(lineItemObj);
                   }
                 }else{
-                  deteled = true;
+                  //deteled = true;
                 }
                 let record = {
                   lid: data.fields.ID || "",
@@ -3489,7 +3486,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   bankAccount: data.fields.AccountName || "",
                   paymentAmount: appliedAmt || 0,
                   notes: data.fields.Notes,
-                  deleted: deteled,
+                  deleted: data.fields.Deleted||false,
                   LineItems: lineItems,
                   checkpayment: data.fields.PaymentMethodName,
                   department: data.fields.DeptClassName,
@@ -3706,7 +3703,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     lineItems.push(lineItemObj);
                   }
                 } else {
-                  deteled = true;
+                  //deteled = true;
                   lineItemObj = {
                     id: "",
                     invoiceid: "",
@@ -3733,7 +3730,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   bankAccount: useData[d].fields.AccountName || "",
                   paymentAmount: appliedAmt || 0,
                   notes: useData[d].fields.Notes,
-                  deleted: deteled,
+                  deleted: useData[d].fields.Deleted||false,
                   LineItems: lineItems,
                   checkpayment: useData[d].fields.PaymentMethodName,
                   department: useData[d].fields.DeptClassName,
@@ -3951,7 +3948,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       lineItems.push(lineItemObj);
                     }
                   } else {
-                    deteled = true;
+                    //deteled = true;
                     lineItemObj = {
                       id: "",
                       invoiceid: "",
@@ -3977,7 +3974,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     bankAccount: data.fields.AccountName || "",
                     paymentAmount: appliedAmt || 0,
                     notes: data.fields.Notes,
-                    deleted: deteled,
+                    deleted: data.fields.Deleted||false,
                     LineItems: lineItems,
                     checkpayment: data.fields.PaymentMethodName,
                     department: data.fields.DeptClassName,
@@ -4071,9 +4068,7 @@ Template.supplierpaymentcard.onRendered(() => {
           }
         })
         .catch(function (err) {
-          paymentService
-            .getOneSupplierPayment(currentSalesID)
-            .then(function (data) {
+          paymentService.getOneSupplierPayment(currentSalesID).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               deteled = data.fields.Deleted;
@@ -4127,12 +4122,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       invoiceid: data.fields.Lines[i].fields.ID || "",
                       transid: data.fields.Lines[i].fields.ID || "",
                       poid: data.fields.Lines[i].fields.POID || "",
-                      invoicedate:
-                        data.fields.Lines[i].fields.Date != ""
-                          ? moment(data.fields.Lines[i].fields.Date).format(
-                              "DD/MM/YYYY"
-                            )
-                          : data.fields.Lines[i].fields.Date,
+                      invoicedate:data.fields.Lines[i].fields.Date != ""? moment(data.fields.Lines[i].fields.Date).format("DD/MM/YYYY"): data.fields.Lines[i].fields.Date,
                       refno: data.fields.Lines[i].fields.RefNo || "",
                       transtype: data.fields.Lines[i].fields.TrnType || "",
                       amountdue: amountDue || 0,
@@ -4192,7 +4182,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   lineItems.push(lineItemObj);
                 }
               }else{
-                deteled = true;
+                //deteled = true;
               }
               let record = {
                 lid: data.fields.ID || "",
@@ -4204,7 +4194,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 bankAccount: data.fields.AccountName || "",
                 paymentAmount: appliedAmt || 0,
                 notes: data.fields.Notes,
-                deleted: deteled,
+                deleted: data.fields.Deleted||false,
                 LineItems: lineItems,
                 checkpayment: data.fields.PaymentMethodName,
                 department: data.fields.DeptClassName,
@@ -12359,7 +12349,8 @@ Template.supplierpaymentcard.events({
         showCancelButton: true,
         confirmButtonText: 'Yes'
     }).then((result) => {
-        if (result.value) {
+    if (result.value) {
+      $('.fullScreenSpin').css('display', 'inline-block');
     if (getso_id[1]) {
         currentInvoice = parseInt(currentInvoice);
         var objDetails = {

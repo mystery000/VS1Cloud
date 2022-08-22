@@ -204,7 +204,7 @@ Template.accountant_singledirector.onRendered(() => {
                 expirydate: lineData.ExpiryDate || "",
                 cvc: lineData.CVC || "",
                 useReceiptClaim: lineData.AllowExpenseClaim || false,
-                expenseCategory: lineData.AccountGroup || ""
+                expenseCategory: lineData.ReceiptCategory || ""
             };
             dataTableList.push(dataList);
         }

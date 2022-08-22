@@ -529,7 +529,7 @@ Template.accountsoverview.onRendered(function () {
     var cardcvc = data.fields.CVC || "";
     var cardexpiry = data.fields.ExpiryDate || "";
     let useReceiptClaim = data.fields.AllowExpenseClaim || false;
-    let expenseCategory = data.fields.AccountGroup;
+    let expenseCategory = data.fields.ReceiptCategory;
 
     if (accounttype === "BANK") {
       $(".isBankAccount").removeClass("isNotBankAccount");
@@ -634,8 +634,8 @@ Template.accountsoverview.onRendered(function () {
       } else {
         accBalance = Currency + "0.00";
       }
-      if(data.taccountvs1[i].fields.AccountGroup && data.taccountvs1[i].fields.AccountGroup != ''){
-        usedCategories.push(data.taccountvs1[i].fields.AccountGroup);
+      if(data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != ''){
+        usedCategories.push(data.taccountvs1[i].fields.ReceiptCategory);
       }
 
       var dataList = {
@@ -660,7 +660,7 @@ Template.accountsoverview.onRendered(function () {
         expirydate: lineData.ExpiryDate || "",
         cvc: lineData.CVC || "",
         useReceiptClaim: lineData.AllowExpenseClaim || false,
-        expenseCategory: lineData.AccountGroup || ""
+        expenseCategory: lineData.ReceiptCategory || ""
       };
       dataTableList.push(dataList);
     }
@@ -1406,7 +1406,7 @@ Template.accountsoverview.events({
               // AccountName: accountname|| '',
               AccountNumber: accountno || "",
               // AccountTypeName: accounttype|| '',
-              AccountGroup: expenseCategory || "", // Need to check if the field is right later
+              ReceiptCategory: expenseCategory || "",
               Active: true,
               BankAccountName: bankaccountname || "",
               BankAccountNumber: bankacountno || "",
@@ -1527,7 +1527,7 @@ Template.accountsoverview.events({
               AccountName: accountname || "",
               AccountNumber: accountno || "",
               AccountTypeName: accounttype || "",
-              AccountGroup: expenseCategory || "", // Need to check if the field is right later
+              ReceiptCategory: expenseCategory || "",
               Active: true,
               BankAccountName: bankaccountname || "",
               BankAccountNumber: bankacountno || "",
@@ -1653,7 +1653,7 @@ Template.accountsoverview.events({
           AccountName: accountname || "",
           AccountNumber: accountno || "",
           // AccountTypeName: accounttype || '',
-          AccountGroup: expenseCategory || "", // Need to check if the field is right later
+          ReceiptCategory: expenseCategory || "",
           Active: true,
           BankAccountName: bankaccountname || "",
           BankAccountNumber: bankacountno || "",
