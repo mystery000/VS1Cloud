@@ -86,6 +86,7 @@ const erpObject = {
     TUser: "TUser",
     TExpenseClaim: "TExpenseClaim",
     TExpenseClaimEx: "TExpenseClaimEx",
+    TExpenseClaimList: "TExpenseClaimList",
     TFixedAssets: "TFixedAssets",
     TProductSalesDetailsReport:"TProductSalesDetailsReport",
     ERPTaxCode: "TTaxCode",

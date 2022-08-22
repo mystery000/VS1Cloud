@@ -2941,9 +2941,7 @@ Template.paymentcard.onRendered(() => {
                         let lineItems = [];
                         let lineItemObj = {};
                         deteled = data.fields.Deleted;
-                        if(data.fields.CompanyName != ''){
-                          deteled = true;
-                        }
+
                         let total = utilityService.modifynegativeCurrencyFormat(data.fields.Amount).toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
@@ -3010,7 +3008,7 @@ Template.paymentcard.onRendered(() => {
                                 lineItems.push(lineItemObj);
                             }
                         }else{
-                          deteled = true;
+                          //deteled = true;
                         }
                         let record = {
                             lid: data.fields.ID || '',
@@ -3020,7 +3018,7 @@ Template.paymentcard.onRendered(() => {
                             bankAccount: data.fields.AccountName || '',
                             paymentAmount: appliedAmt || 0,
                             notes: data.fields.Notes,
-                            deleted: deteled,
+                            deleted: data.fields.Deleted||false,
                             LineItems: lineItems,
                             checkpayment: data.fields.PaymentMethodName,
                             department: data.fields.DeptClassName,
@@ -3094,9 +3092,7 @@ Template.paymentcard.onRendered(() => {
                         if (parseInt(useData[d].fields.ID) === currentSalesID) {
                             $('.fullScreenSpin').css('display', 'none');
                             deteled = useData[d].fields.Deleted;
-                            if(useData[d].fields.CompanyName != ''){
-                              deteled = true;
-                            }
+
                             added = true;
                             let lineItems = [];
                             let lineItemObj = {};
@@ -3175,7 +3171,7 @@ Template.paymentcard.onRendered(() => {
                                 bankAccount: useData[d].fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: useData[d].fields.Notes,
-                                deleted: deteled,
+                                deleted: useData[d].fields.Deleted||false,
                                 LineItems: lineItems,
                                 checkpayment: useData[d].fields.PaymentMethodName,
                                 department: useData[d].fields.DeptClassName,
@@ -3311,12 +3307,10 @@ Template.paymentcard.onRendered(() => {
                                     lineItems.push(lineItemObj);
                                 }
                             }else{
-                              deteled = true;
+                              //deteled = true;
                             }
                             deteled = data.fields.Deleted;
-                            if(data.fields.CompanyName != ''){
-                              deteled = true;
-                            }
+
                             let record = {
                                 lid: data.fields.ID || '',
                                 customerName: data.fields.CompanyName || '',
@@ -3325,7 +3319,7 @@ Template.paymentcard.onRendered(() => {
                                 bankAccount: data.fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: data.fields.Notes,
-                                deleted: deteled,
+                                deleted: data.fields.Deleted||false,
                                 LineItems: lineItems,
                                 checkpayment: data.fields.PaymentMethodName,
                                 department: data.fields.DeptClassName,
@@ -3402,9 +3396,7 @@ Template.paymentcard.onRendered(() => {
                         minimumFractionDigits: 2
                     });
                     deteled = data.fields.Deleted;
-                    if(data.fields.CompanyName != ''){
-                      deteled = true;
-                    }
+
                     if (data.fields.Lines != null) {
                         if (data.fields.Lines.length) {
                             for (let i = 0; i < data.fields.Lines.length; i++) {
@@ -3464,7 +3456,7 @@ Template.paymentcard.onRendered(() => {
                             lineItems.push(lineItemObj);
                         }
                     }else{
-                      deteled = true;
+                      //deteled = true;
                     }
                     let record = {
                         lid: data.fields.ID || '',
@@ -3474,7 +3466,7 @@ Template.paymentcard.onRendered(() => {
                         bankAccount: data.fields.AccountName || '',
                         paymentAmount: appliedAmt || 0,
                         notes: data.fields.Notes,
-                        deleted: deteled,
+                        deleted: ata.fields.Deleted||false,
                         LineItems: lineItems,
                         checkpayment: data.fields.PaymentMethodName,
                         department: data.fields.DeptClassName,

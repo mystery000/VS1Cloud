@@ -112,8 +112,8 @@ Template.mailchimpCampaignList.onRendered(function () {
 
     data.forEach((item) => {
       td0 = item.send_time ? moment(item.send_time).format("DD/MM/YYYY HH:mm:ss") : '-';
-      td1 = item.opens.unique_opens + " (" + item.opens.open_rate * 100 + "%)";
-      td2 = item.clicks.unique_clicks + " (" + item.clicks.click_rate * 100 + "%)";
+      td1 = item.opens.unique_opens + " (" + (item.opens.open_rate * 100).toFixed(2) + "%)";
+      td2 = item.clicks.unique_clicks + " (" + (item.clicks.click_rate * 100).toFixed(2) + "%)";
       taskRows.push([item.list_name, item.subject_line, item.emails_sent, td0, td1, td2, item.list_id]);
     });
     return taskRows;

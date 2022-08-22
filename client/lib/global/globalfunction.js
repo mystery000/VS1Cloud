@@ -272,7 +272,7 @@ $('.dropdown-toggle').on("click",function(event){
     });
   };
 
-batchUpdateCall = async function (url) {
+batchUpdateCall = function (url) {
     var erpGet = erpDb();
     let dashboardArray = [];
     var oReq = new XMLHttpRequest();
@@ -387,7 +387,7 @@ batchUpdateCall = async function (url) {
                   localStorage.setItem('VS1PNLPeriodReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_pnl_period.items)||'');
                   localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
                   localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
-                  getVS1Data('vscloudlogininfo').then(async function (dataObject) {
+                  getVS1Data('vscloudlogininfo').then(function (dataObject) {
                     if(dataObject.length == 0){
                       setTimeout(function () {
                         if(url){
@@ -418,7 +418,7 @@ batchUpdateCall = async function (url) {
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TVS1_Dashboard_summary = dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary;
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TransactionTableLastUpdated = dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated;
 
-                      await addLoginData(dashboardArray).then(function (datareturnCheck) {
+                      addLoginData(dashboardArray).then(function (datareturnCheck) {
                         setTimeout(function () {
                         if(url){
                           window.open(url,'_self');
@@ -548,7 +548,6 @@ tableResize = function() {
 //     //   }
 //     // });
     // setInterval(() => {
-    //   console.log('datatable update');
     //   /**
     //    * We first need to disable all previous events listeners related
     //    */
@@ -558,8 +557,8 @@ tableResize = function() {
 
     //   /***
     //    * Then we need to add back the listeners
-    //    * 
-    //    * By doing disabling and re-enabling, start fresh events 
+    //    *
+    //    * By doing disabling and re-enabling, start fresh events
     //    * instead of cummulating multiple listeners which is causing issues
     //    */
     //   $(".dataTable").colResizable({
@@ -569,7 +568,6 @@ tableResize = function() {
     //     resizeMode:'overflow',
     //     onResize:  (e) => {
     //       var table = $(e.currentTarget); //reference to the resized table
-    //       // console log this $(e.target).parent().index()
     //       thWidthOnResize();
     //     },
     //     // disabledColumns: [2]
@@ -577,7 +575,7 @@ tableResize = function() {
     // }, 1000);
 
     const tableHandler = new TableHandler();
-    
+
   }, 2000);
 };
 // $(window).load(function() {

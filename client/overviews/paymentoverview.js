@@ -1618,16 +1618,16 @@ Template.paymentoverview.events({
                         sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
-                                //window.open('/paymentoverview', '_self');
+                                window.open('/paymentoverview', '_self');
                               }, 2000);
                             }).catch(function(err) {
                               setTimeout(function () {
-                              //window.open('/paymentoverview', '_self');
+                              window.open('/paymentoverview', '_self');
                               }, 2000);
                             });
                         }).catch(function(err) {
                           setTimeout(function () {
-                            //window.open('/paymentoverview', '_self');
+                            window.open('/paymentoverview', '_self');
                           }, 2000);
                         });
                     }).catch(function(err) {

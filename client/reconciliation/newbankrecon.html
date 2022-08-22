@@ -491,28 +491,30 @@
                                             </div>
                                             <div class="suppPaymentType" style="margin-left: 50px; display:none;">
                                                 <label style="margin-top: 30px; margin-right: 16px;">Supplier Payment Type</label>
-                                                <select class="form-control pointer" id="#sltSuppPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
-                                                    <option value="purchaseOrder" selected="selected">Purchase Order</option>
-                                                    <option value="bill">Bill</option>
-                                                    <option value="cheque">Cheque</option>
+                                                <select class="form-control pointer selectSuppPaymentType" id="#sltSuppPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
+                                                    <option value="PurchaseOrder">Purchase Order</option>
+                                                    <option value="Bill">Bill</option>
+                                                    <option value="Cheque">Cheque</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                                            <div class=".toCustomerDiv" style="display: none;">
-                                                <label style="margin-top: 30px; margin-right: 16px;">Customer</label>
-                                                <select type="search" class="form-control" id="toCustomer_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;margin-top: 20px; width: 200px; display: inline-block;"></select>
-                                            </div>
-                                        </div>
+<!--                                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">-->
+<!--                                            -->
+<!--                                        </div>-->
                                     </div>
                                     <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 10px 20px 0 20px;">
                                         <h1 class="transactionTitle"></h1>
                                     </div>
                                     <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 10px 20px 0 20px;">
                                         <div class="col d-xl-flex float-left flex-grow-1 mb-4">
-                                            <div class="form-group" style="width: 700px;">
-                                                <label for="" id="labelWho">From</label>
-                                                <input type="text" class="form-control" id="FromWho" value="">
+<!--                                            <div class="form-group" style="width: 700px;">-->
+<!--                                                <label for="" id="labelWho">From</label>-->
+<!--                                                <input type="text" class="form-control" id="FromWho" value="">-->
+<!--                                            </div>-->
+                                            <input type="hidden" id="YNote_{{ itemTransaction.YodleeLineID }}" value="">
+                                            <div class="form-group" style="margin-left: 20px;">
+                                                <label id="labelSender_{{ itemTransaction.YodleeLineID }}">Customer</label>
+                                                <select type="search" class="form-control" id="sender_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
                                             </div>
                                             <div class="form-group" style="margin-left: 20px;">
                                                 <label for="">Date</label>
@@ -610,9 +612,11 @@
                                                         <th class="th colDescription">Description</th>
                                                         <th class="th colQty">Qty</th>
                                                         <th class="th colUnitPrice" style="text-align: left!important;">Unit Price</th>
-                                                        <th class="th colUnitPrice" style="text-align: left!important;">Sub Total</th>
+                                                        <th class="th colSubTotal" style="text-align: left!important;">Sub Total</th>
+                                                        <th class="th colAmountInput" style="text-align: left!important;">AmountEx</th>
                                                         <!-- <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Unit Price (Inc) <i class="fas fa-random fa-trans"></i></th>-->
                                                         <th data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="th colDiscount" style="text-align: left!important;">Disc %</th>
+                                                        <th class="th colCustomer">Customer</th>
                                                         <th class="th colTaxRate " style="text-align: left!important;">Tax Code</th>
                                                         <th class="th colTaxAmount " style="text-align: left!important;">Tax Amount</th>
                                                         <th class="th colAmount" style="text-align: left!important;">Amount AUD</th>
@@ -626,7 +630,7 @@
                                                             <input class="es-input highlightSelect lineAccountName" type="search" value="">
                                                             <input class="lineAccountID" type="hidden" value="">
                                                         </td>
-                                                        <td contenteditable="false" class="colProductName">
+                                                        <td contenteditable="false" class="colItem">
                                                             <input class="es-input highlightSelect lineProductName" type="search" value="">
                                                         </td>
                                                         <td contenteditable="false" class="colDescription">
@@ -635,14 +639,21 @@
                                                         <td class="colQty">
                                                             <input class="lineQty colQty highlightInput" type="number" value="">
                                                         </td>
-                                                        <td class="colUnitPriceEx">
+                                                        <td class="colUnitPrice">
                                                             <input class="lineUnitPrice colUnitPrice highlightInput" type="text" value="">
                                                         </td>
                                                         <!--<td class="colUnitPriceInc hiddenColumn">-->
                                                         <!--   <input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="">-->
                                                         <!--</td>-->
-                                                        <td contenteditable="false" class="colUnitPriceEx lineSubTotal" style="text-align: right!important;cursor: pointer;"></td>
+                                                        <td contenteditable="false" class="colSubTotal lineSubTotal" style="text-align: right!important;cursor: pointer;"></td>
+                                                        <td class="colAmountInput">
+                                                            <input class="lineAmountInput colAmountInput highlightInput" type="text" value="">
+                                                        </td>
                                                         <td contenteditable="false" class="lineDiscount colDiscount" style="text-align: right!important;"></td>
+                                                        <td contenteditable="false" class="colCustomer">
+                                                            <input class="es-input highlightSelect lineCustomerName" type="search" value="">
+                                                            <input class="lineCustomerID" type="hidden" value="">
+                                                        </td>
                                                         <td contenteditable="false" class="colTaxRate" style="text-align: right!important;">
                                                             <input class="es-input highlightSelect lineTaxRate" type="search" value="">
                                                         </td>

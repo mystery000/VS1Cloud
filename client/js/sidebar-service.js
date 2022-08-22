@@ -574,12 +574,39 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TExpenseClaimEx, options);
   }
 
+  getExpenseClaimList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+        IgnoreDates: true,
+        OrderBy: "ExpenseClaimID desc",
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    } else {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+        OrderBy: "ExpenseClaimID desc",
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TExpenseClaimList, options);
+  }
+
   getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, isDeleted) {
     let options = "";
     if(isDeleted == ""){
         if (ignoreDate == true) {
           options = {
             IgnoreDates: true,
+            IsDetailReport: true,
             OrderBy: "PaymentDate desc",
             Search: "Deleted != true",
             LimitCount: '"' + limitcount + '"',
@@ -590,6 +617,7 @@ export class SideBarService extends BaseService {
             orderby: '"PaymentDate desc"',
             ListType: "Detail",
             IgnoreDates: false,
+            IsDetailReport: true,
             Search: "Deleted != true",
             // OrderBy: "PaymentDate desc",
             DateFrom: '"' + dateFrom + '"',
@@ -602,6 +630,7 @@ export class SideBarService extends BaseService {
       if(isDeleted== true){
         options = {
           IgnoreDates: true,
+          IsDetailReport: true,
           OrderBy: "PaymentDate desc",
           Search: "Deleted != true",
           LimitCount: '"' + limitcount + '"',
@@ -610,6 +639,7 @@ export class SideBarService extends BaseService {
       }else{
         options = {
           IgnoreDates: true,
+          IsDetailReport: true,
           OrderBy: "PaymentDate desc",
           LimitCount: '"' + limitcount + '"',
           LimitFrom: '"' + limitfrom + '"',
@@ -623,9 +653,10 @@ export class SideBarService extends BaseService {
   getPaymentByNameOrID(dataSearchName) {
     let options = "";
     options = {
-      orderby: '"PaymentID desc"',
+      orderby: '"PaymentDate desc"',
       ListType: "Detail",
       IgnoreDates: true,
+      IsDetailReport: true,
       OrderBy: "PaymentDate desc",
       LimitCount: '"' + initialReportLoad + '"',
       Search: 'ClientName = "' + dataSearchName + '" OR ReceiptNo = "' + dataSearchName + '" OR BankAccount = "' + dataSearchName + '"',
@@ -642,7 +673,7 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        orderby: '"PaymentID desc"',
+        orderby: '"PaymentDate desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
         LimitCount: '"' + limitcount + '"',
@@ -658,7 +689,8 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "PaymentID desc",
+        IsDetailReport: true,
+        OrderBy: "PaymentDate desc",
         Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -666,7 +698,8 @@ export class SideBarService extends BaseService {
     } else {
       options = {
         IgnoreDates: false,
-        OrderBy: "PaymentID desc",
+        IsDetailReport: true,
+        OrderBy: "PaymentDate desc",
         Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -682,7 +715,8 @@ export class SideBarService extends BaseService {
 
     options = {
       IgnoreDates: true,
-      OrderBy: "PaymentID desc",
+      IsDetailReport: true,
+      OrderBy: "PaymentDate desc",
       Search: 'CompanyName = "' + customername + '"',
     };
 
@@ -698,7 +732,7 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        orderby: '"PaymentID desc"',
+        orderby: '"PaymentDate desc"',
         ListType: "Detail",
         select: "[Deleted]=false",
         LimitCount: '"' + limitcount + '"',
@@ -713,7 +747,8 @@ export class SideBarService extends BaseService {
 
     options = {
       IgnoreDates: true,
-      OrderBy: "PaymentID desc",
+      IsDetailReport: true,
+      OrderBy: "PaymentDate desc",
       Search: 'CompanyName = "' + suppliername + '"',
     };
 
@@ -726,7 +761,8 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "PaymentID desc",
+        IsDetailReport: true,
+        OrderBy: "PaymentDate desc",
         Search: 'Deleted != true',
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -734,7 +770,8 @@ export class SideBarService extends BaseService {
     } else {
       options = {
         IgnoreDates: false,
-        OrderBy: "PaymentID desc",
+        IsDetailReport: true,
+        OrderBy: "PaymentDate desc",
         Search: 'Deleted != true',
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
