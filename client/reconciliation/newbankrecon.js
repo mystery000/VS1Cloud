@@ -936,8 +936,8 @@ Template.newbankrecon.onRendered(function() {
                 selectedYodleeID = item.YodleeLineID;
                 editableWho(item, $(this), e);
             });
-            $('#toCustomer_'+item.YodleeLineID).editableSelect();
-            $('#toCustomer_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
+            $('#sender_'+item.YodleeLineID).editableSelect();
+            $('#sender_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
                 selectedYodleeID = item.YodleeLineID;
                 editableWho(item, $(this), e);
             });
@@ -1186,8 +1186,12 @@ Template.newbankrecon.onRendered(function() {
             }
             if (item.deporwith == "received") {
                 $('#who_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
+                $('#labelSender_'+item.YodleeLineID).text("Customer");
+                $('#sender_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
             } else {
                 $('#who_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
+                $('#labelSender_'+item.YodleeLineID).text("Supplier");
+                $('#sender_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
             }
 
             $('#btnAddDetail_'+item.YodleeLineID).on('click', function(e, li) {
@@ -1352,6 +1356,14 @@ Template.newbankrecon.onRendered(function() {
                 $('#what_'+selectedYodleeID).val(accountname);
                 $('#whatTaxCode_' + selectedYodleeID).val($(this).find(".taxrate").text());
             }
+        } else {
+            if (selectedLineID) {
+                let lineAccountID = $(this).find(".colID").text();
+                let lineAccountName = $(this).find(".colCompany").text();
+                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountName").val(lineAccountName);
+                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountID").val(lineAccountID);
+                setCalculated();
+            }
         }
         $('#tblAccount_filter .form-control-sm').val('');
     });
@@ -1361,12 +1373,13 @@ Template.newbankrecon.onRendered(function() {
             // $('#whatID_'+selectedYodleeID).val(parseInt($(this).find(".colID").text()));
             $('#whoID_'+selectedYodleeID).val($(this).find(".colID").text());
             $('#who_'+selectedYodleeID).val($(this).find(".colCompany").text());
+            $('#sender_'+selectedYodleeID).val($(this).find(".colCompany").text());
         } else {
             if (selectedLineID) {
-                let lineAccountID = $(this).find(".colID").text();
-                let lineAccountName = $(this).find(".colCompany").text();
-                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountName").val(lineAccountName);
-                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountID").val(lineAccountID);
+                let lineCustomerID = $(this).find(".colID").text();
+                let lineCustomerName = $(this).find(".colCompany").text();
+                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineCustomerName").val(lineCustomerName);
+                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineCustomerID").val(lineCustomerID);
             }
         }
         setCalculated();
@@ -1375,6 +1388,7 @@ Template.newbankrecon.onRendered(function() {
         $('#supplierListModal').modal('toggle');
         $('#whoID_'+selectedYodleeID).val($(this).find(".colID").text());
         $('#who_'+selectedYodleeID).val($(this).find(".colCompany").text());
+        $('#sender_'+selectedYodleeID).val($(this).find(".colCompany").text());
         setCalculated();
     });
     $(document).on("click", ".newbankrecon #tblTaxRate tbody tr", function (e) {
@@ -1706,8 +1720,8 @@ Template.newbankrecon.events({
             let employeename = Session.get('mySessionEmployee');
             let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
             let clientID = $("#whoID_"+selectedYodleeID).val();
-            let clientName = $("#toCustomer_"+selectedYodleeID).val();
-            let reconNote = $("#divLineDetail_"+selectedYodleeID+" #FromWho").val();
+            let clientName = $("#sender_"+selectedYodleeID).val();
+            let reconNote = $('#YNote_'+selectedYodleeID).val();
             let discussNote = $("#discussText_"+selectedYodleeID).val();
             let reconcileID = $("#reconID_"+selectedYodleeID).val();
             reconcileID = (reconcileID && reconcileID != '')?parseInt(reconcileID):0;
@@ -1719,7 +1733,7 @@ Template.newbankrecon.events({
                 clientDetail = getClientDetail(clientName, 'customer');
                 if (!clientDetail) {
                     swal('Customer must be vaild.', '', 'error');
-                    $("#toCustomer_"+selectedYodleeID).focus();
+                    $("#sender_"+selectedYodleeID).focus();
                     return false;
                 }
             }
@@ -2174,6 +2188,10 @@ Template.newbankrecon.events({
             $("#transactionDataBox").removeClass('compactView');
         }
     },
+    'click .selectSuppPaymentType': function(event) {
+        let type = $(event.target).val() || '';
+        changeTblReconInvoice(type);
+    },
 });
 
 Template.newbankrecon.helpers({
@@ -2559,9 +2577,10 @@ function setCalculated() {
         let taxTotal = 0;
         let grandTotal = 0;
         let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
+        let type = $("#sltSuppPaymentType_"+selectedYodleeID).val();
         let discountRate = 0;
         if (DepOrWith == "spent") {
-            let customerName = $('#toCustomer_' + selectedYodleeID).val();
+            let customerName = $('#sender_' + selectedYodleeID).val();
             if (customerName != "") {
                 let customerDetail = customerList.filter(customer => {
                     return customer.customername == customerName
@@ -2660,18 +2679,18 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         if (DepOrWith == "received") {
             $(".suppPaymentType").hide();
             $(".transactionTitle").text("New Invoice");
-            $(".toCustomerDiv").hide();
+            changeTblReconInvoice('Invoice');
         } else {
-            clientDetail = getClientDetail($('#toCustomer_' + selectedYodleeID).val(), 'customer');
+            clientDetail = getClientDetail($('#sender_' + selectedYodleeID).val(), 'customer');
             toCustomerName = clientDetail? clientDetail.customername:'';
             $(".suppPaymentType").show();
             suppPaymentType = $('#sltSuppPaymentType_' + selectedYodleeID).val();
-            $(".transactionTitle").text("New "+suppPaymentType);
-            if (suppPaymentType == "Cheque") {
-                $(".toCustomerDiv").hide();
-            } else {
-                $(".toCustomerDiv").show();
+            if (suppPaymentType == undefined) {
+                $('#sltSuppPaymentType_' + selectedYodleeID).val("Purchase Order");
+                suppPaymentType = "Purchase Order";
             }
+            $(".transactionTitle").text("New "+suppPaymentType);
+            changeTblReconInvoice('suppPaymentType');
         }
         let discountAmount = 0;
         if (DepOrWith == "received") {
@@ -2694,12 +2713,13 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
 
         $('#divLineDetail_'+selectedYodleeID+' #labelPaymentType').text(DepOrWith=='spent'?'Spent as':'Received as');
         $('#divLineDetail_'+selectedYodleeID+' #labelWho').text(DepOrWith=='spent'?'To':'From');
-        $('#divLineDetail_'+selectedYodleeID+' #FromWho').val(Who);
+        // $('#divLineDetail_'+selectedYodleeID+' #FromWho').val(Who);
         $('#divLineDetail_'+selectedYodleeID+' #TotalAmount').val(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #textSORBottom').text(DepOrWith=='spent'?'spent - Spent':'received - Received');
         $('#divLineDetail_'+selectedYodleeID+' #totalBottom1').text(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #totalBottom2').text(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #textComment').text($('#why_'+selectedYodleeID).val());
+        $('#YNote_'+selectedYodleeID).val($('#YNote_'+selectedYodleeID).text());
 
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductName').val('');
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductDesc').val($('#YNote_'+selectedYodleeID).text());
@@ -2727,13 +2747,76 @@ function changeTblReconInvoice(type) {
     // Never change field: Description,
     if (type == "Invoice") {
         $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colItem").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colQty").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colUnitPrice").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colSubTotal").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAmountInput").hide();
         $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colCustomer").hide();
+
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAccount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colItem").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colQty").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colUnitPrice").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colSubTotal").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAmountInput").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colDiscount").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colCustomer").hide();
     } else if (type == "Purchase Order") {
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colItem").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colQty").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colUnitPrice").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colSubTotal").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAmountInput").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colCustomer").show();
 
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAccount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colItem").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colQty").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colUnitPrice").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colSubTotal").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAmountInput").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colDiscount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colCustomer").show();
     } else if (type == "Bill") {
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colItem").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colQty").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colUnitPrice").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colSubTotal").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAmountInput").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colCustomer").show();
 
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAccount").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colItem").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colQty").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colUnitPrice").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colSubTotal").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAmountInput").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colDiscount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colCustomer").show();
     } else if (type == "Cheque") {
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colItem").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colQty").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colUnitPrice").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colSubTotal").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAmountInput").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colCustomer").hide();
 
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAccount").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colItem").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colQty").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colUnitPrice").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colSubTotal").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAmountInput").show();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colDiscount").hide();
+        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colCustomer").hide();
     }
 }
 
