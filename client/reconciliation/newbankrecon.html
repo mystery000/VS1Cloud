@@ -483,19 +483,30 @@
                                         <div class="col d-xl-flex float-left flex-grow-1 mb-4">
                                             <div class="">
                                                 <label style="margin-top: 30px; margin-right: 16px;" id="labelPaymentType">Received as</label>
-                                                <select class="form-control pointer" style="margin-top: 20px; width: 200px; display: inline-block;">
+                                                <select class="form-control pointer"  id="#sltPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
                                                     <option value="directpayment">Direct Payment</option>
                                                     <option value="prepayment">Prepayment</option>
                                                     <option value="overpayment">Overpayment</option>
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                                            <div class="">
-                                                <label style="margin-top: 30px; margin-right: 16px;">Who</label>
-                                                <select type="search" class="form-control" id="whoDetail_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;margin-top: 20px; width: 200px; display: inline-block;"></select>
+                                            <div class="suppPaymentType" style="margin-left: 50px; display:none;">
+                                                <label style="margin-top: 30px; margin-right: 16px;">Supplier Payment Type</label>
+                                                <select class="form-control pointer" id="#sltSuppPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
+                                                    <option value="purchaseOrder" selected="selected">Purchase Order</option>
+                                                    <option value="bill">Bill</option>
+                                                    <option value="cheque">Cheque</option>
+                                                </select>
                                             </div>
                                         </div>
+                                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                                            <div class=".toCustomerDiv" style="display: none;">
+                                                <label style="margin-top: 30px; margin-right: 16px;">Customer</label>
+                                                <select type="search" class="form-control" id="toCustomer_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;margin-top: 20px; width: 200px; display: inline-block;"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 10px 20px 0 20px;">
+                                        <h1 class="transactionTitle"></h1>
                                     </div>
                                     <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 10px 20px 0 20px;">
                                         <div class="col d-xl-flex float-left flex-grow-1 mb-4">
@@ -592,29 +603,29 @@
                                             </style>
                                             <table id="tblReconInvoice" style="width:100%" class="table table-striped table-bordered tblReconInvoice">
                                                 <thead>
-                                                <tr class="dnd-moved">
-                                                    <th class="th colSortDate hiddenColumn">id</th>
-                                                    <th class="th colItem">Item</th>
-                                                    <th class="th colDescription">Description</th>
-                                                    <th class="th colQty">Qty</th>
-                                                    <th class="th colUnitPrice" style="text-align: left!important;">Unit Price</th>
-                                                    <th class="th colUnitPrice" style="text-align: left!important;">Sub Total</th>
-                                                    <!--                                    <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Unit Price (Inc) <i class="fas fa-random fa-trans"></i></th>-->
-                                                    {{#if equals itemTransaction.deporwith 'received' }}
-                                                    <th class="th colAccount">Account</th>
-                                                    {{/if }}
-                                                    {{#if equals itemTransaction.deporwith 'spent' }}
-                                                    <th data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="th colDiscount" style="text-align: left!important;">Disc %</th>
-                                                    {{/if }}
-                                                    <th class="th colTaxRate " style="text-align: left!important;">Tax Code</th>
-                                                    <th class="th colTaxAmount " style="text-align: left!important;">Tax Amount</th>
-                                                    <th class="th colAmount" style="text-align: left!important;">Amount AUD</th>
-                                                    <!--                                    <th class="th colAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount AUD(Inc) <i class="fas fa-random fa-trans"></i></th>-->
-                                                    <th class="th colStatus"></th>
-                                                </tr>
+                                                    <tr class="dnd-moved">
+                                                        <th class="th colSortDate hiddenColumn">id</th>
+                                                        <th class="th colAccount">Account</th>
+                                                        <th class="th colItem">Item</th>
+                                                        <th class="th colDescription">Description</th>
+                                                        <th class="th colQty">Qty</th>
+                                                        <th class="th colUnitPrice" style="text-align: left!important;">Unit Price</th>
+                                                        <th class="th colUnitPrice" style="text-align: left!important;">Sub Total</th>
+                                                        <!-- <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Unit Price (Inc) <i class="fas fa-random fa-trans"></i></th>-->
+                                                        <th data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="th colDiscount" style="text-align: left!important;">Disc %</th>
+                                                        <th class="th colTaxRate " style="text-align: left!important;">Tax Code</th>
+                                                        <th class="th colTaxAmount " style="text-align: left!important;">Tax Amount</th>
+                                                        <th class="th colAmount" style="text-align: left!important;">Amount AUD</th>
+                                                        <!-- <th class="th colAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount AUD(Inc) <i class="fas fa-random fa-trans"></i></th>-->
+                                                        <th class="th colStatus"></th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr class="dnd-moved" id="firstLine" style="cursor: pointer;">
+                                                        <td contenteditable="false" class="colAccount">
+                                                            <input class="es-input highlightSelect lineAccountName" type="search" value="">
+                                                            <input class="lineAccountID" type="hidden" value="">
+                                                        </td>
                                                         <td contenteditable="false" class="colProductName">
                                                             <input class="es-input highlightSelect lineProductName" type="search" value="">
                                                         </td>
@@ -627,25 +638,17 @@
                                                         <td class="colUnitPriceEx">
                                                             <input class="lineUnitPrice colUnitPrice highlightInput" type="text" value="">
                                                         </td>
-                                                        <!--                                    <td class="colUnitPriceInc hiddenColumn">-->
-                                                        <!--                                        <input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="">-->
-                                                        <!--                                    </td>-->
+                                                        <!--<td class="colUnitPriceInc hiddenColumn">-->
+                                                        <!--   <input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="">-->
+                                                        <!--</td>-->
                                                         <td contenteditable="false" class="colUnitPriceEx lineSubTotal" style="text-align: right!important;cursor: pointer;"></td>
-                                                        {{#if equals itemTransaction.deporwith 'received' }}
-                                                        <td contenteditable="false" class="colAccount">
-                                                            <input class="es-input highlightSelect lineAccountName" type="search" value="">
-                                                            <input class="lineAccountID" type="hidden" value="">
-                                                        </td>
-                                                        {{/if }}
-                                                        {{#if equals itemTransaction.deporwith 'spent' }}
                                                         <td contenteditable="false" class="lineDiscount colDiscount" style="text-align: right!important;"></td>
-                                                        {{/if }}
                                                         <td contenteditable="false" class="colTaxRate" style="text-align: right!important;">
                                                             <input class="es-input highlightSelect lineTaxRate" type="search" value="">
                                                         </td>
                                                         <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;"></td>
                                                         <td contenteditable="false" class="lineAmount colAmount" style="text-align: right!important;"></td>
-                                                        <!--                                    <td contenteditable="false" class="lineAmount colAmountInc colAmount hiddenColumn" style="text-align: right!important;"></td>-->
+                                                        <!--<td contenteditable="false" class="lineAmount colAmountInc colAmount hiddenColumn" style="text-align: right!important;"></td>-->
                                                         <td class="text-center">
                                                             <span class="table-remove btnRemove">
                                                                 <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>

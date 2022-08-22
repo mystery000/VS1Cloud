@@ -547,6 +547,10 @@ Template.bankrecon.onRendered(function() {
             $('.reconbtn').prop("disabled", false);
             $('.btnHold').prop("disabled", false);
         }
+
+        if (data.fields.OnHold == true) {
+         $('.endingbalance').val('');
+        }
         if (data.fields.DepositLines != null) {
             if (data.fields.DepositLines.length > 0) {
                 for (let i in data.fields.DepositLines) {

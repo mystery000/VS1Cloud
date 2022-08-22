@@ -1,6 +1,7 @@
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import '../../lib/global/colResizable.js';
+import TableHandler from '../../js/Table/TableHandler';
 let sideBarService = new SideBarService();
 modalDraggable = function () {
     $('.modal-dialog').draggable({
@@ -361,14 +362,17 @@ batchUpdateCall = async function (url) {
 
                   localStorage.setItem('VS1MonthlyProfitandLoss_dash', '');
 
-                    //Profit & Loss
+                  //Profit & Loss
                   localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_NetIncomeEx||0);
                   localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalIncomeEx||0);
                   localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx||0);
                   localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx||0);
 
+                   //Income
+                  localStorage.setItem('VS1ReportsDateFrom_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ReportsDateFrom||"");
+                  localStorage.setItem('VS1ReportsDateTo_dash', dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ReportsDateTo||"");
                   localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated);
-                  
+
                   if(dataReturnRes.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401){
                     localStorage.setItem('vs1LoggedEmployeeImages_dash','');
                   }else{
@@ -543,18 +547,37 @@ tableResize = function() {
 //     //       $(sizerID).width(ui.size.width);
 //     //   }
 //     // });
-    $(".dataTable").colResizable({
-      liveDrag:true,
-      gripInnerHtml:"<div class='grip'></div>",
-      draggingClass:"dragging",
-      resizeMode:'overflow',
-      onResize: function (e) {
-        var table = $(e.currentTarget); //reference to the resized table
-        // console log this $(e.target).parent().index()
-        thWidthOnResize();
-      },
-      // disabledColumns: [2]
-    });
+    // setInterval(() => {
+    //   console.log('datatable update');
+    //   /**
+    //    * We first need to disable all previous events listeners related
+    //    */
+    //   $(".dataTable").colResizable({
+    //     disable: true,
+    //   });
+
+    //   /***
+    //    * Then we need to add back the listeners
+    //    * 
+    //    * By doing disabling and re-enabling, start fresh events 
+    //    * instead of cummulating multiple listeners which is causing issues
+    //    */
+    //   $(".dataTable").colResizable({
+    //     liveDrag:true,
+    //     gripInnerHtml:"<div class='grip'></div>",
+    //     draggingClass:"dragging",
+    //     resizeMode:'overflow',
+    //     onResize:  (e) => {
+    //       var table = $(e.currentTarget); //reference to the resized table
+    //       // console log this $(e.target).parent().index()
+    //       thWidthOnResize();
+    //     },
+    //     // disabledColumns: [2]
+    //   });
+    // }, 1000);
+
+    const tableHandler = new TableHandler();
+    
   }, 2000);
 };
 // $(window).load(function() {

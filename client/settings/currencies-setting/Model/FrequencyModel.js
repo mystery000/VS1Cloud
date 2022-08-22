@@ -1,3 +1,5 @@
+import { updateAllCurrencies } from "../currencies";
+
 export class MonthlyFrequencyModel {
   constructor({ everyDay, ofMonths, startTime, startDate }) {
     this.everyDay = everyDay;
@@ -90,4 +92,25 @@ export class OnEventFrequencyModel {
     this.onLogin = onLogin;
     this.onLogout = onLogout;
   }
+
+  /**
+   * This function will function on login
+   */
+  static onLogin(employeeId) {
+    updateAllCurrencies({
+      employeeId: employeeId
+    });
+    
+  }
+
+  /**
+   * This function will run on logout
+   */
+  static onLogout(employeeId) {
+    updateAllCurrencies({
+      employeeId: employeeId
+    });
+    
+  }
 }
+

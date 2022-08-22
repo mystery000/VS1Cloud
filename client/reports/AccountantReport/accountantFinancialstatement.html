@@ -83,6 +83,27 @@
                         <p class="text-center dateAdOf" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
                     </div>
                 </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li id="prevPage" class="page-item disabled">
+                            <a class="page-link" href="javascript:go_page('prev')" tabindex="-1">Previous</a>
+                        </li>
+                        <li id="pageNum-1" class="page-item active"><a class="page-link" href="javascript:go_page(1)">1</a></li>
+                        <li id="pageNum-2" class="page-item"><a class="page-link" href="javascript:go_page(2)">2</a></li>
+                        <li id="pageNum-3" class="page-item"><a class="page-link" href="javascript:go_page(3)">3</a></li>
+                        <li id="pageNum-4" class="page-item"><a class="page-link" href="javascript:go_page(4)">4</a></li>
+                        <li id="pageNum-5" class="page-item"><a class="page-link" href="javascript:go_page(5)">5</a></li>
+                        <li id="pageNum-6" class="page-item"><a class="page-link" href="javascript:go_page(6)">6</a></li>
+                        <li id="pageNum-7" class="page-item"><a class="page-link" href="javascript:go_page(7)">7</a></li>
+                        <li id="pageNum-8" class="page-item"><a class="page-link" href="javascript:go_page(8)">8</a></li>
+                        <li id="pageNum-9" class="page-item"><a class="page-link" href="javascript:go_page(9)">9</a></li>
+                        <li id="pageNum-10" class="page-item"><a class="page-link" href="javascript:go_page(10)">10</a></li>
+                        <li id="pageNum-11" class="page-item"><a class="page-link" href="javascript:go_page(11)">11</a></li>
+                        <li id="nextPage" class="page-item">
+                            <a class="page-link" href="javascript:go_page('next')">Next</a>
+                        </li>
+                    </ul>
+                </nav>
                 <div style="padding-top:20px">
                     <div id="page-1" style="display:block">
                         <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px; margin:auto">
@@ -543,7 +564,6 @@
                                             <div style="margin-left:32px;">
                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>Total {{pan.name}}</b></div>
                                                 <div style='float:left; padding-top:4px; width:90px' id="total{{pan.no}}_balance1"><b>1,042.24</b></div>
-                                                <div style='float:left; padding-top:4px; width:90px' id="total{{pan.no}}_balance2"><b>1,856.00</b></div>
                                             </div>
                                         </div>
                                     </div>
@@ -660,27 +680,6 @@
                         </div>
                     </div>
                 </div>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li id="prevPage" class="page-item disabled">
-                            <a class="page-link" href="javascript:go_page('prev')" tabindex="-1">Previous</a>
-                        </li>
-                        <li id="pageNum-1" class="page-item active"><a class="page-link" href="javascript:go_page(1)">1</a></li>
-                        <li id="pageNum-2" class="page-item"><a class="page-link" href="javascript:go_page(2)">2</a></li>
-                        <li id="pageNum-3" class="page-item"><a class="page-link" href="javascript:go_page(3)">3</a></li>
-                        <li id="pageNum-4" class="page-item"><a class="page-link" href="javascript:go_page(4)">4</a></li>
-                        <li id="pageNum-5" class="page-item"><a class="page-link" href="javascript:go_page(5)">5</a></li>
-                        <li id="pageNum-6" class="page-item"><a class="page-link" href="javascript:go_page(6)">6</a></li>
-                        <li id="pageNum-7" class="page-item"><a class="page-link" href="javascript:go_page(7)">7</a></li>
-                        <li id="pageNum-8" class="page-item"><a class="page-link" href="javascript:go_page(8)">8</a></li>
-                        <li id="pageNum-9" class="page-item"><a class="page-link" href="javascript:go_page(9)">9</a></li>
-                        <li id="pageNum-10" class="page-item"><a class="page-link" href="javascript:go_page(10)">10</a></li>
-                        <li id="pageNum-11" class="page-item"><a class="page-link" href="javascript:go_page(11)">11</a></li>
-                        <li id="nextPage" class="page-item">
-                            <a class="page-link" href="javascript:go_page('next')">Next</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
             <div class="printReport" style="display:none;">
                 <div style="display:block; height:1624px; border:1px solid #fff">

@@ -12,25 +12,50 @@ async function asyncForEach(array, callback) {
 Meteor.startup(() => {
   const currentDate = new Date();
 
-  FutureTasks.find().forEach(function (setting) {
-    if (setting.startAt < currentDate) {
-      Meteor.call("addCurrencyCron", setting);
-    } else {
-      Meteor.call("scheduleCron", setting);
-    }
-  });
-  SyncedCron.start();
+
+  // /**
+  //  * We first need to find saved crons
+  //  */
+  // FutureTasks.find().forEach(function (setting) {
+
+  //   // then we compare the dates,
+  //   if (setting.startAt < currentDate) {
+  //     // we came to the day when we have to add the cron job to start starting from now
+  //     Meteor.call("addCurrencyCron", setting);
+  //   } else {
+  //     // we havent came to the execution date, so we'll be scheduling it again
+  //     Meteor.call("scheduleCron", setting);
+  //   }
+  // });
+  // SyncedCron.start();
+
+
+
   /**
    * step 1 : We need to get the list of schedules
    * The future stasks
    */
-  let futureCrons = [];
+  let futureCrons = FutureTasks.find() || [];
+
+  
 
   /**
    * Step 2 : We need to check if their date is reached
    * if reached then run add the cron
    * else do nohing
    */
+
+   futureCrons.forEach((setting) => {
+    // then we compare the dates,
+    if (setting.startAt < currentDate) {
+      // we came to the day when we have to add the cron job to start starting from now
+      setting.isFuture = false;
+      Meteor.call("addCurrencyCron", setting);
+    } else {
+      // we havent came to the execution date, so we'll be scheduling it again
+      Meteor.call("scheduleCron", setting);
+    }
+  });
 
   /**
    * Step 3: Start
@@ -166,15 +191,23 @@ Meteor.methods({
    * @returns
    */
   addCurrencyCron: (cronSetting, erpGet) => {
+    // if(cronSetting.isFuture == true) {
+    //   FutureTasks.insert(cronSetting);
+    //   return true;
+    // }
+
+
     const cronId = `currency-update-cron_${cronSetting.id}_${cronSetting.employeeId}`;
     SyncedCron.remove(cronId);
+
+
 
     return SyncedCron.add({
       name: cronId,
       schedule: function (parser) {
        
-        // const parsed = parser.text(cronSetting.toParse);
-        const parsed = parser.text("every 2 minutes");
+       const parsed = parser.text(cronSetting.toParse);
+        // const parsed = parser.text("every 2 minutes");
         return parsed;
   
       },
@@ -190,6 +223,7 @@ Meteor.methods({
    * @param {Object} cronSetting
    */
   scheduleCron: (cronSetting) => {
+   
     FutureTasks.insert(cronSetting);
   },
 });

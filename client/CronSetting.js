@@ -1,3 +1,5 @@
+export const _currentDate = new Date();
+
 /**
  * @type {{cronjob: CallableFunction, id: string, startAt: Date}}
  */
@@ -10,6 +12,7 @@ export default class CronSetting {
     employeeId,
     toParse,
     startAt = new date(),
+    isFuture = false,
     days = [],
     months = [],
     dayNumberOfMonth = 1,
@@ -24,6 +27,7 @@ export default class CronSetting {
     this.startAt = this.convertToDate(startAt);
     this.cronJob = cronJob;
     this.days = days;
+    this.isFuture = isFuture;
 
     this.months = months;
     this.dayNumberOfMonth = this.dayNumberOfMonth;
@@ -33,6 +37,7 @@ export default class CronSetting {
     let text = "";
 
     if (this.type == "Monthly") {
+      
       if (this.months.length > 0) {
         let lastMonth = this.months.pop();
         // We on a monthly one
@@ -58,22 +63,24 @@ export default class CronSetting {
         //   date.toDateString().split(" ")[1] +
         //   " in " +
         //   date.toDateString().split(" ")[3];
+
       }
     } else if (this.type == "Weekly") {
-      text += "every " + this.every + " week";
-      text += " on " + this.days;
-
       const date = this.convertToDate(this.startAt);
       const minutes = this.convertToDate(this.startAt).getMinutes();
       const hours = this.convertToDate(this.startAt).getHours();
 
-      // text +=
-      //   " starting on the " +
-      //   date.getDay() +
-      //   " day of " +
-      //   date.toDateString().split(" ")[1] +
-      //   " in " +
-      //   date.toDateString().split(" ")[3];
+      text += " at " + (
+        hours < 10
+        ? "0"
+        : "") + hours + ":" + (
+        minutes < 10
+        ? "0"
+        : "") + minutes;
+      text += " on " + this.days;
+
+      text += " every " + this.every + " week";
+      text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
     } else if (this.type == "Daily") {
       const date = this.convertToDate(this.startAt);
       const minutes = this.convertToDate(this.startAt).getMinutes();
@@ -103,6 +110,9 @@ export default class CronSetting {
           //text += " every week";
           //text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
 
+
+          // seems to be working
+          // it will need attention on runnings 
           this.days.forEach((_day, index) => {
             if (index > 0) {
               text += " also ";
@@ -136,10 +146,22 @@ export default class CronSetting {
         text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
       } else {
         // TODO: We must shedule throught database, we cannot schedule by using the parser
-        text += " every " + this.every + " day";
-        // text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
 
-        
+        text += " at " + (
+          hours < 10
+          ? "0"
+          : "") + hours + ":" + (
+          minutes < 10
+          ? "0"
+          : "") + minutes;
+
+        text += " every " + this.every + " day";
+
+        // we cant schedule this in the future.
+        // we must avoid or add a schedule
+        // text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
+        this.isFuture = true; // we cant schedule using the parser, so we shedule it by hand
+
       }
 
       // text += " also at " + (
@@ -161,6 +183,16 @@ export default class CronSetting {
         minutes < 10
         ? "0"
         : "") + minutes;
+
+      if(_currentDate.getDate() == date.getDate()) {
+        // same day
+        text += " on " + this.getDayIndexOfTheWeek(date.toLocaleDateString(undefined, { weekday: 'long' }).split(',')[0].toLowerCase());
+      } else {
+        // next day
+        text += " on " + this.getNextDay(date);
+      }
+
+
 
       // text +=
       //   " starting on the " +
@@ -237,5 +269,31 @@ export default class CronSetting {
     } else if (day == "sunday") {
       return 7;
     }
+  }
+
+
+
+  /**
+   * this will calculate days between two dates
+   * @param {Date} firstDate 
+   * @param {Date} lastDate 
+   */
+  calculateDaysDifferenceBetweenTwoDates(firstDate, lastDate) {
+    let diff = firstDate.getTime() - lastDate.getTime();
+    let days = diff / (1000 * 60 * 60 * 24); 
+    return days;
+  }
+
+
+  /**
+   * This function will calculate next day
+   * @param {Date} date 
+   */
+  getNextDay(date = new Date()) {
+    date.setDate(date.getDate() + 1) // We add one day
+
+    let dayName = date.toLocaleDateString(undefined, { weekday: 'long' }); // monday
+
+    return dayName;
   }
 }

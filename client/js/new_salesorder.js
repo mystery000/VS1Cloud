@@ -14,6 +14,7 @@ import 'jquery-editable-select';
 import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
+import { TaxRateService } from "../settings/settings-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -23,10 +24,9 @@ let isDropDown = false;
 let salesDefaultTerms = "";
 
 var template_list = [
-
     "Sales Order",
     "Delivery Docket",
-  ];
+];
 
   
 Template.new_salesorder.onCreated(() => {
@@ -69,6 +69,7 @@ Template.new_salesorder.onCreated(() => {
     templateObject.record = new ReactiveVar({});
     templateObject.productextrasellrecords = new ReactiveVar([]);
     templateObject.defaultsaleterm = new ReactiveVar();
+    templateObject.subtaxcodes = new ReactiveVar([]);
 });
 
 Template.new_salesorder.onRendered(() => {
@@ -1136,214 +1137,260 @@ Template.new_salesorder.onRendered(() => {
     function updateTemplate(object_invoce) {
 
         if (object_invoce.length > 0) {
-        $('#html-2-pdfwrapper_new #printcomment').text(object_invoce[0]["comment"]);
-        $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
-        $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
-        $("#html-2-pdfwrapper_new .o_address1").text(
-            object_invoce[0]["o_address"]
-        );
-        $("#html-2-pdfwrapper_new .o_city").text(object_invoce[0]["o_city"]);
-        $("#html-2-pdfwrapper_new .o_state").text(object_invoce[0]["o_state"]);
-        $("#html-2-pdfwrapper_new .o_reg").text(object_invoce[0]["o_reg"]);
-        $("#html-2-pdfwrapper_new .o_abn").text(object_invoce[0]["o_abn"]);
-        $("#html-2-pdfwrapper_new .o_phone").text(object_invoce[0]["o_phone"]);
 
-        if(object_invoce[0]["applied"] == ""){
-            $("#html-2-pdfwrapper_new .applied").hide()
-            $("#html-2-pdfwrapper_new .applied").text(object_invoce[0]["applied"]);
-        }else{
-            $("#html-2-pdfwrapper_new .applied").show()
-            $("#html-2-pdfwrapper_new .applied").text("Applied : " +  object_invoce[0]["applied"]);
-        }
+            $("#html-2-pdfwrapper_new #printcomment").text(
+                object_invoce[0]["comment"]
+            );
+            $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
+            $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
+            $("#html-2-pdfwrapper_new .o_address1").text(
+                object_invoce[0]["o_address"]
+            );
+            $("#html-2-pdfwrapper_new .o_city").text(object_invoce[0]["o_city"]);
+            $("#html-2-pdfwrapper_new .o_state").text(
+                object_invoce[0]["o_state"]
+            );
+            $("#html-2-pdfwrapper_new .o_reg").text(object_invoce[0]["o_reg"]);
+            $("#html-2-pdfwrapper_new .o_abn").text(object_invoce[0]["o_abn"]);
+            $("#html-2-pdfwrapper_new .o_phone").text(
+                object_invoce[0]["o_phone"]
+            );
 
+            if (object_invoce[0]["applied"] == "") {
+                $("#html-2-pdfwrapper_new .applied").hide();
+                $("#html-2-pdfwrapper_new .applied").text(
+                object_invoce[0]["applied"]
+                );
+            } else {
+                $("#html-2-pdfwrapper_new .applied").show();
+                $("#html-2-pdfwrapper_new .applied").text(
+                "Applied : " + object_invoce[0]["applied"]
+                );
+            }
 
+            if (object_invoce[0]["supplier_type"] == "") {
+                $("#html-2-pdfwrapper_new .customer").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .customer").show();
+            }
+            $("#html-2-pdfwrapper_new .customer").empty();
+            $("#html-2-pdfwrapper_new .customer").append(
+                object_invoce[0]["supplier_type"]
+            );
 
-        if(object_invoce[0]["supplier_type"] == ""){
-            $("#html-2-pdfwrapper_new .customer").hide()
-        }else{
-            $("#html-2-pdfwrapper_new .customer").show()
-        }
-        $("#html-2-pdfwrapper_new .customer").empty();
-        $("#html-2-pdfwrapper_new .customer").append(object_invoce[0]["supplier_type"]);
+            if (object_invoce[0]["supplier_name"] == "") {
+                $("#html-2-pdfwrapper_new .pdfCustomerName").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .pdfCustomerName").show();
+            }
+            $("#html-2-pdfwrapper_new .pdfCustomerName").empty();
+            $("#html-2-pdfwrapper_new .pdfCustomerName").append(
+                object_invoce[0]["supplier_name"]
+            );
 
-        if(object_invoce[0]["supplier_name"] == ""){
-            $("#html-2-pdfwrapper_new .pdfCustomerName").hide()
-        }else{
-            $("#html-2-pdfwrapper_new .pdfCustomerName").show()
-        }
-        $("#html-2-pdfwrapper_new .pdfCustomerName").empty();
-        $("#html-2-pdfwrapper_new .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
+            if (object_invoce[0]["supplier_addr"] == "") {
+                $("#html-2-pdfwrapper_new .pdfCustomerAddress").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .pdfCustomerAddress").show();
+            }
+            $("#html-2-pdfwrapper_new .pdfCustomerAddress").empty();
+            $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(
+                object_invoce[0]["supplier_addr"]
+            );
 
-        if(object_invoce[0]["supplier_addr"] == ""){
-            $("#html-2-pdfwrapper_new .pdfCustomerAddress").hide()
-        }else{
-            $("#html-2-pdfwrapper_new .pdfCustomerAddress").show()
-        }
-        $("#html-2-pdfwrapper_new .pdfCustomerAddress").empty();
-        $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
+            $("#html-2-pdfwrapper_new .print-header").text(
+                object_invoce[0]["title"]
+            );
 
+            $("#templatePreviewModal .modal-title").text(
+                object_invoce[0]["title"] +
+                " " +
+                object_invoce[0]["value"] +
+                " template"
+            );
 
-        $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
+            if (object_invoce[0]["value"] == "") {
+                $(".print-header-value").text("");
+            } else {
+                $(".print-header-value").text(object_invoce[0]["value"]);
+            }
 
-        $("#templatePreviewModal .modal-title").text(
-            object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
-         );
+            if (object_invoce[0]["bsb"] == "") {
+                $("#html-2-pdfwrapper_new .field_payment").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .field_payment").show();
+            }
 
-        if(object_invoce[0]["value"]=="")
-        {
-              $('.print-header-value').text('');
+            $("#html-2-pdfwrapper_new .bsb").text(
+                "BSB (Branch Number) : " + object_invoce[0]["bsb"]
+            );
+            $("#html-2-pdfwrapper_new .account_number").text(
+                "Account Number : " + object_invoce[0]["account"]
+            );
+            $("#html-2-pdfwrapper_new .swift").text(
+                "Swift Code : " + object_invoce[0]["swift"]
+            );
 
-        }
-        else
-        {
-             $('.print-header-value').text(object_invoce[0]["value"]);
-        }
+            if (object_invoce[0]["date"] == "") {
+                $("#html-2-pdfwrapper_new .dateNumber").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .dateNumber").show();
+            }
 
+            if (object_invoce[0]["showFX"] == "") {
+                $("#html-2-pdfwrapper_new .showFx").hide();
+                $("#html-2-pdfwrapper_new .showFxValue").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .showFx").show();
+                $("#html-2-pdfwrapper_new .showFxValue").show();
+                $("#html-2-pdfwrapper_new .showFxValue").text(
+                object_invoce[0]["showFX"]
+                );
+            }
 
-        if(object_invoce[0]["bsb"]=="")
-        {
-            $('#html-2-pdfwrapper_new .field_payment').hide();
+            $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
 
-        }
-        else{
+            if (object_invoce[0]["pqnumber"] == "") {
+                $("#html-2-pdfwrapper_new .pdfPONumber").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .pdfPONumber").show();
+            }
 
-            $('#html-2-pdfwrapper_new .field_payment').show();
-        }
+            if (object_invoce[0]["customfield1"] == "NA") {
+                $("#customfieldtablenew").css("display", "none");
+                $("#customdatatablenew").css("display", "none");
+                $("#html-2-pdfwrapper_new .customfield1").text("");
+                $("#html-2-pdfwrapper_new .customfield2").text("");
+                $("#html-2-pdfwrapper_new .customfield3").text("");
 
-        $("#html-2-pdfwrapper_new .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
-        $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
-        $("#html-2-pdfwrapper_new .swift").text("Swift Code : " + object_invoce[0]["swift"]);
+                $("#html-2-pdfwrapper_new .customfield1data").text("");
+                $("#html-2-pdfwrapper_new .customfield2data").text("");
+                $("#html-2-pdfwrapper_new .customfield3data").text("");
+            } else {
+                $("#customfieldtablenew").css("display", "block");
+                $("#customdatatablenew").css("display", "block");
 
+                $("#html-2-pdfwrapper_new .customfield1").text(
+                object_invoce[0]["customfieldlabel1"]
+                );
+                $("#html-2-pdfwrapper_new .customfield2").text(
+                object_invoce[0]["customfieldlabel2"]
+                );
+                $("#html-2-pdfwrapper_new .customfield3").text(
+                object_invoce[0]["customfieldlabel3"]
+                );
 
-        if(object_invoce[0]["date"] == ""){
-            $("#html-2-pdfwrapper_new .dateNumber").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .dateNumber").show();
-        }
+                if (
+                object_invoce[0]["customfield1"] == "" ||
+                object_invoce[0]["customfield1"] == 0
+                ) {
+                $("#html-2-pdfwrapper_new .customfield1data").text("");
+                } else {
+                $("#html-2-pdfwrapper_new .customfield1data").text(
+                    object_invoce[0]["customfield1"]
+                );
+                }
 
-        if (object_invoce[0]["showFX"] == "") {
-            $("#html-2-pdfwrapper_new .showFx").hide();
-            $("#html-2-pdfwrapper_new .showFxValue").hide();
-        } else {
-            $("#html-2-pdfwrapper_new .showFx").show();
-            $("#html-2-pdfwrapper_new .showFxValue").show();
-            $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
-        }
+                if (
+                object_invoce[0]["customfield2"] == "" ||
+                object_invoce[0]["customfield2"] == 0
+                ) {
+                $("#html-2-pdfwrapper_new .customfield2data").text("");
+                } else {
+                $("#html-2-pdfwrapper_new .customfield2data").text(
+                    object_invoce[0]["customfield2"]
+                );
+                }
 
-        $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
+                if (
+                object_invoce[0]["customfield3"] == "" ||
+                object_invoce[0]["customfield3"] == 0
+                ) {
+                $("#html-2-pdfwrapper_new .customfield3data").text("");
+                } else {
+                $("#html-2-pdfwrapper_new .customfield3data").text(
+                    object_invoce[0]["customfield3"]
+                );
+                }
+            }
 
-        if(object_invoce[0]["pqnumber"] == ""){
-            $("#html-2-pdfwrapper_new .pdfPONumber").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .pdfPONumber").show();
-        }
+            $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
 
-        if(object_invoce[0]["customfield1"] == "NA")
-        {
-                $('#customfieldtablenew').css('display', 'none');
-                $('#customdatatablenew').css('display', 'none');
-                $('#html-2-pdfwrapper_new .customfield1').text('');
-                $('#html-2-pdfwrapper_new .customfield2').text('');
-                $('#html-2-pdfwrapper_new .customfield3').text('');
+            if (object_invoce[0]["invoicenumber"] == "") {
+                $("#html-2-pdfwrapper_new .invoiceNumber").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .invoiceNumber").show();
+            }
 
+            $("#html-2-pdfwrapper_new .io").text(
+                object_invoce[0]["invoicenumber"]
+            );
 
-                $('#html-2-pdfwrapper_new .customfield1data').text('');
-                $('#html-2-pdfwrapper_new .customfield2data').text('');
-                $('#html-2-pdfwrapper_new .customfield3data').text('');
+            if (object_invoce[0]["refnumber"] == "") {
+                $("#html-2-pdfwrapper_new .refNumber").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .refNumber").show();
+            }
+            $("#html-2-pdfwrapper_new .ro").text(object_invoce[0]["refnumber"]);
 
-        }
-        else
-        {
-              $('#customfieldtablenew').css('display', 'block');
-              $('#customdatatablenew').css('display', 'block');
+            if (object_invoce[0]["duedate"] == "") {
+                $("#html-2-pdfwrapper_new .pdfTerms").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .pdfTerms").show();
+            }
+            $("#html-2-pdfwrapper_new .due").text(object_invoce[0]["duedate"]);
 
-              $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
-              $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
-              $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
+            if (object_invoce[0]["paylink"] == "") {
+                $("#html-2-pdfwrapper_new .link").hide();
+                $("#html-2-pdfwrapper_new .linkText").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .link").show();
+                $("#html-2-pdfwrapper_new .linkText").show();
+            }
 
-              if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
-              {
-                $('#html-2-pdfwrapper_new .customfield1data').text('');
-              }
-              else
-              {
-                $('#html-2-pdfwrapper_new .customfield1data').text(object_invoce[0]["customfield1"]);
-              }
+            if (object_invoce[0]["customfield1"] == "") {
+                $("#customfieldlable").css("display", "none");
+                $("#customfieldlabledata").css("display", "none");
+            } else {
+                $("#customfieldlable").css("display", "block");
+                $("#customfieldlabledata").css("display", "block");
+            }
 
-              if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
-              {
-                $('#html-2-pdfwrapper_new .customfield2data').text('');
-              }
-              else
-              {
-                $('#html-2-pdfwrapper_new .customfield2data').text(object_invoce[0]["customfield2"]);
-              }
+            //   table header
+            var tbl_header = $("#html-2-pdfwrapper_new .tbl_header");
+            tbl_header.empty();
+            for (const [key, value] of Object.entries(
+                object_invoce[0]["fields"]
+            )) {
+                tbl_header.append(
+                "<th style='width:" +
+                    value +
+                    "%'; color: rgb(0 0 0);'>" +
+                    key +
+                    "</th>"
+                );
+            }
 
-              if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
-              {
-                $('#html-2-pdfwrapper_new .customfield3data').text('');
-              }
-              else
-              {
-                $('#html-2-pdfwrapper_new .customfield3data').text(object_invoce[0]["customfield3"]);
-              }
-
-
-
-        }
-
-
-
-        $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
-
-        if(object_invoce[0]["invoicenumber"] == ""){
-            $("#html-2-pdfwrapper_new .invoiceNumber").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .invoiceNumber").show();
-        }
-
-        $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
-
-        if(object_invoce[0]["refnumber"] == ""){
-            $("#html-2-pdfwrapper_new .refNumber").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .refNumber").show();
-        }
-        $("#html-2-pdfwrapper_new .ro").text(object_invoce[0]["refnumber"]);
-
-        if(object_invoce[0]["duedate"] == ""){
-            $("#html-2-pdfwrapper_new .pdfTerms").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .pdfTerms").show();
-        }
-        $("#html-2-pdfwrapper_new .due").text(object_invoce[0]["duedate"]);
-
-        if (object_invoce[0]["paylink"] == "") {
-            $("#html-2-pdfwrapper_new .link").hide();
-            $("#html-2-pdfwrapper_new .linkText").hide();
-        } else {
-            $("#html-2-pdfwrapper_new .link").show();
-            $("#html-2-pdfwrapper_new .linkText").show();
-        }
-
-         if(object_invoce[0]["customfield1"] == "")
-         {
-                    $('#customfieldlable').css('display', 'none');
-                    $('#customfieldlabledata').css('display', 'none');
-
-         }
-         else
-         {
-                    $('#customfieldlable').css('display', 'block');
-                    $('#customfieldlabledata').css('display', 'block');
-         }
-
-        //   table header
-        var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
-        tbl_header.empty()
-        for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
-        }
+            if (object_invoce[0]["taxItems"]) {
+                let taxItems = object_invoce[0]["taxItems"];
+                $("#html-2-pdfwrapper_new #tax_list_print").html("");
+                Object.keys(taxItems).map((code) => {
+                    let html = `
+                        <div style="width: 100%; display: flex;">
+                            <div style="padding-right: 16px; width: 50%;">
+                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    ${code}</p>
+                            </div>
+                            <div style="padding-left: 16px; width: 50%;">
+                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $ ${taxItems[code]}</p>
+                            </div>
+                        </div>
+                    `;
+                    $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+                });
+            }
+            $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
         }
 
         // table content
@@ -1372,8 +1419,8 @@ Template.new_salesorder.onRendered(() => {
             $("#html-2-pdfwrapper_new .field_amount").show();
 
             if(object_invoce[0]["subtotal"] != ""){
-              $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
-              $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+                $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
+                $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
             }
 
             if(object_invoce[0]["gst"] != ""){
@@ -5735,229 +5782,252 @@ Template.new_salesorder.onRendered(() => {
         });
 
 
-       function showSealsOrder(template_title,number) {
-        var array_data = [];
-        let lineItems = [];
-        object_invoce = [];
-        let item_invoices = '';
+        function showSalesOrder(template_title,number) {
+            var array_data = [];
+            let lineItems = [];
+            let taxItems = {};
+            object_invoce = [];
+            let item_invoices = '';
 
-        let invoice_data = templateObject.salesorderrecord.get();
-        let stripe_id = templateObject.accountID.get() || '';
-        let stripe_fee_method = templateObject.stripe_fee_method.get();
-        var erpGet = erpDb();
+            let invoice_data = templateObject.salesorderrecord.get();
+            let stripe_id = templateObject.accountID.get() || '';
+            let stripe_fee_method = templateObject.stripe_fee_method.get();
+            var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+            var customfield1 = $('#edtSaleCustField1').val() || '-';
+            var customfield2 = $('#edtSaleCustField2').val() || '-';
+            var customfield3 = $('#edtSaleCustField3').val() || '-';
 
-        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
-        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
-        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-        let balancedue = $('#totalBalanceDue').html() || 0;
-        let tax = $('#subtotal_tax').html() || 0;
-        let customer = $('#edtCustomerName').val();
-        let name = $('#firstname').val();
-        let surname = $('#lastname').val();
-        let dept = $('#sltDept').val();
-        let fx = $('#sltCurrency').val();
-        var comment = $('#txaComment').val();
-        var parking_instruction = $('#txapickmemo').val();
-        var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
-        var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
-        var ref = $('#edtRef').val() || '-';
-        var txabillingAddress = $('#txabillingAddress').val() || '';
-        var dtSODate = $('#dtSODate').val();
-        var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
-        var grandTotal = $('#grandTotal').text() || '$'+ 0;
-        var duedate = $('#dtDueDate').val();
-        var po = $('#ponumber').val() || '.';
+            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+            let balancedue = $('#totalBalanceDue').html() || 0;
+            let tax = $('#subtotal_tax').html() || 0;
+            let customer = $('#edtCustomerName').val();
+            let name = $('#firstname').val();
+            let surname = $('#lastname').val();
+            let dept = $('#sltDept').val();
+            let fx = $('#sltCurrency').val();
+            var comment = $('#txaComment').val();
+            var parking_instruction = $('#txapickmemo').val();
+            var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
+            var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
+            var ref = $('#edtRef').val() || '-';
+            var txabillingAddress = $('#txabillingAddress').val() || '';
+            var dtSODate = $('#dtSODate').val();
+            var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
+            var grandTotal = $('#grandTotal').text() || '$'+ 0;
+            var duedate = $('#dtDueDate').val();
+            var po = $('#ponumber').val() || '.';
 
 
-        $('#tblSalesOrderLine > tbody > tr').each(function() {
+            $('#tblSalesOrderLine > tbody > tr').each(function() {
 
-            var lineID = this.id;
-            let tdproduct = $('#' + lineID + " .lineProductName").val();
-            let tddescription = $('#' + lineID + " .lineProductDesc").text();
-            let tdQty = $('#' + lineID + " .lineQty").val();
-            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-            let taxamount = $('#'+ lineID+" .lineTaxAmount").text();
-            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
-            let tdlineamt = $('#' + lineID + " .colAmountEx").text();
+                var lineID = this.id;
+                let tdproduct = $('#' + lineID + " .lineProductName").val();
+                let tddescription = $('#' + lineID + " .lineProductDesc").text();
+                let tdQty = $('#' + lineID + " .lineQty").val();
+                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+                let taxamount = $('#'+ lineID+" .lineTaxAmount").text();
+                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodeSalesInc;
+                let tdlineamt = $('#' + lineID + " .colAmountEx").text();
 
-            array_data.push([
+                let targetRow = $('#' + lineID);
+                let targetTaxCode = targetRow.find('.lineTaxCode').val();
+                let qty = targetRow.find(".lineQty").val() || 0
+                let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+                const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
 
-                tdproduct,
-                tddescription,
-                tdQty,
-                tdunitprice,
-                taxamount,
-                tdlineamt,
+                if (taxDetail) {
+                    let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+                    let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+                    if (taxDetail.Lines) {
+                        taxDetail.Lines.map((line) => {
+                            let taxCode = line.SubTaxCode;
+                            let amount = priceTotal * line.Percentage / 100;
+                            if (taxItems[taxCode]) {
+                                taxItems[taxCode] += amount;
+                            }
+                            else {
+                                taxItems[taxCode] = amount;
+                            }
+                        });
+                    }
+                    else {
+                        taxItems[targetTaxCode] = taxTotal;
+                    }
+                }
 
-            ]);
+                array_data.push([
 
-            lineItemObj = {
-                description: tddescription || '',
-                quantity: tdQty || 0,
-                unitPrice: tdunitprice.toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                }) || 0
+                    tdproduct,
+                    tddescription,
+                    tdQty,
+                    tdunitprice,
+                    taxamount,
+                    tdlineamt,
+
+                ]);
+
+                lineItemObj = {
+                    description: tddescription || '',
+                    quantity: tdQty || 0,
+                    unitPrice: tdunitprice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0
+                }
+
+                lineItems.push(lineItemObj);
+            });
+
+            let company = Session.get('vs1companyName');
+            let vs1User = localStorage.getItem('mySession');
+            let customerEmail = $('#edtCustomerEmail').val();
+            let id = $('.printID').attr("id") || "new";
+            let currencyname = (CountryAbbr).toLowerCase();
+            stringQuery = "?";
+            var customerID = $('#edtCustomerEmail').attr('customerid');
+            for (let l = 0; l < lineItems.length; l++) {
+                stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+            }
+            stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+
+
+            if(number == 1)
+            {
+                item_invoices = {
+
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address: Session.get('vs1companyaddress1'),
+                    o_city: Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                    title: 'Sales Order',
+                    value:invoice_data.id,
+                    date: dtSODate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: ref,
+                    pqnumber: po,
+                    duedate: duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : txabillingAddress,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal :subtotal_total,
+                    gst : subtotal_tax,
+                    total : grandTotal,
+                    paid_amount : total_paid,
+                    bal_due : balancedue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:'NA',
+                    customfield2:'NA',
+                    customfield3:'NA',
+                    customfieldlabel1:'NA',
+                    customfieldlabel2:'NA',
+                    customfieldlabel3:'NA',
+                    applied : "",
+                    showFX:"",
+                    comment:comment,
+                };
+
+            }
+            else if(number == 2)
+            {
+                item_invoices = {
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address: Session.get('vs1companyaddress1'),
+                    o_city: Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                    title: 'Sales Order',
+                    value:invoice_data.id,
+                    date: dtSODate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: ref,
+                    pqnumber: po,
+                    duedate: duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : txabillingAddress,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal :subtotal_total,
+                    gst : subtotal_tax,
+                    total : grandTotal,
+                    paid_amount : total_paid,
+                    bal_due : balancedue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:customfield1,
+                    customfield2:customfield2,
+                    customfield3:customfield3,
+                    customfieldlabel1:customfieldlabel1,
+                    customfieldlabel2:customfieldlabel2,
+                    customfieldlabel3:customfieldlabel3,
+                    applied : "",
+                    showFX:"",
+                    comment:comment,
+                };
+            }
+            else
+            {
+                item_invoices = {
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address: Session.get('vs1companyaddress1'),
+                    o_city: Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                    title: 'Sales Order',
+                    value:invoice_data.id,
+                    date: dtSODate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: ref,
+                    pqnumber: po,
+                    duedate: duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : txabillingAddress,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal :subtotal_total,
+                    gst : subtotal_tax,
+                    total : grandTotal,
+                    paid_amount : total_paid,
+                    bal_due : balancedue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:customfield1,
+                    customfield2:customfield2,
+                    customfield3:customfield3,
+                    customfieldlabel1:customfieldlabel1,
+                    customfieldlabel2:customfieldlabel2,
+                    customfieldlabel3:customfieldlabel3,
+                    applied : "",
+                    showFX:fx,
+                    comment:comment,
+                };
             }
 
-            lineItems.push(lineItemObj);
-        });
-
-        let company = Session.get('vs1companyName');
-        let vs1User = localStorage.getItem('mySession');
-        let customerEmail = $('#edtCustomerEmail').val();
-        let id = $('.printID').attr("id") || "new";
-        let currencyname = (CountryAbbr).toLowerCase();
-        stringQuery = "?";
-        var customerID = $('#edtCustomerEmail').attr('customerid');
-        for (let l = 0; l < lineItems.length; l++) {
-            stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
-        }
-        stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
-        $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
-
-
-        if(number == 1)
-        {
-              item_invoices = {
-
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
-                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
-                title: 'Sales Order',
-                value:invoice_data.id,
-                date: dtSODate,
-                invoicenumber:invoice_data.id,
-                refnumber: ref,
-                pqnumber: po,
-                duedate: duedate,
-                paylink: "Pay Now",
-                supplier_type: "Customer",
-                supplier_name : customer,
-                supplier_addr : txabillingAddress,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal :subtotal_total,
-                gst : subtotal_tax,
-                total : grandTotal,
-                paid_amount : total_paid,
-                bal_due : balancedue,
-                bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                data: array_data,
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
-                applied : "",
-                showFX:"",
-                comment:comment,
-              };
-
-        }
-        else if(number == 2)
-        {
-            item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
-                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
-                title: 'Sales Order',
-                value:invoice_data.id,
-                date: dtSODate,
-                invoicenumber:invoice_data.id,
-                refnumber: ref,
-                pqnumber: po,
-                duedate: duedate,
-                paylink: "Pay Now",
-                supplier_type: "Customer",
-                supplier_name : customer,
-                supplier_addr : txabillingAddress,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal :subtotal_total,
-                gst : subtotal_tax,
-                total : grandTotal,
-                paid_amount : total_paid,
-                bal_due : balancedue,
-                bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                data: array_data,
-                customfield1:customfield1,
-                customfield2:customfield2,
-                customfield3:customfield3,
-                customfieldlabel1:customfieldlabel1,
-                customfieldlabel2:customfieldlabel2,
-                customfieldlabel3:customfieldlabel3,
-                applied : "",
-                showFX:"",
-                comment:comment,
-              };
-
-        }
-        else
-        {
-            item_invoices = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
-                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
-                title: 'Sales Order',
-                value:invoice_data.id,
-                date: dtSODate,
-                invoicenumber:invoice_data.id,
-                refnumber: ref,
-                pqnumber: po,
-                duedate: duedate,
-                paylink: "Pay Now",
-                supplier_type: "Customer",
-                supplier_name : customer,
-                supplier_addr : txabillingAddress,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal :subtotal_total,
-                gst : subtotal_tax,
-                total : grandTotal,
-                paid_amount : total_paid,
-                bal_due : balancedue,
-                bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                data: array_data,
-                customfield1:customfield1,
-                customfield2:customfield2,
-                customfield3:customfield3,
-                customfieldlabel1:customfieldlabel1,
-                customfieldlabel2:customfieldlabel2,
-                customfieldlabel3:customfieldlabel3,
-                applied : "",
-                showFX:fx,
-                comment:comment,
-              };
-
-        }
-
-
-
+            item_invoices.taxItems = taxItems;
 
             object_invoce.push(item_invoices);
             $("#templatePreviewModal .field_payment").show();
@@ -6307,7 +6377,7 @@ Template.new_salesorder.onRendered(() => {
 
             if(template_title == 'Sales Order')
             {
-                await showSealsOrder(template_title,number);
+                await showSalesOrder(template_title,number);
 
             }
             else if(template_title == 'Delivery Docket')
@@ -6500,6 +6570,7 @@ Template.new_salesorder.onRendered(function() {
     let utilityService = new UtilityService();
     let productService = new ProductService();
     let salesService = new SalesBoardService();
+    const taxRateService = new TaxRateService();
     let tableProductList;
     const splashArrayProductList = [];
     const splashArrayTaxRateList = [];
@@ -6972,6 +7043,63 @@ Template.new_salesorder.onRendered(function() {
         });
     };
     tempObj.getAllTaxCodes();
+
+    tempObj.getSubTaxCodes = function () {
+        let subTaxTableList = [];
+  
+        getVS1Data("TSubTaxVS1")
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+              taxRateService.getSubTaxCode().then(function (data) {
+                for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                  var dataList = {
+                    id: data.tsubtaxcode[i].Id || "",
+                    codename: data.tsubtaxcode[i].Code || "-",
+                    description: data.tsubtaxcode[i].Description || "-",
+                    category: data.tsubtaxcode[i].Category || "-",
+                  };
+  
+                  subTaxTableList.push(dataList);
+                }
+  
+                tempObj.subtaxcodes.set(subTaxTableList);
+              });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              let useData = data.tsubtaxcode;
+              for (let i = 0; i < useData.length; i++) {
+                var dataList = {
+                  id: useData[i].Id || "",
+                  codename: useData[i].Code || "-",
+                  description: useData[i].Description || "-",
+                  category: useData[i].Category || "-",
+                };
+  
+                subTaxTableList.push(dataList);
+              }
+  
+              tempObj.subtaxcodes.set(subTaxTableList);
+            }
+          })
+          .catch(function (err) {
+            taxRateService.getSubTaxCode().then(function (data) {
+              for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                var dataList = {
+                  id: data.tsubtaxcode[i].Id || "",
+                  codename: data.tsubtaxcode[i].Code || "-",
+                  description: data.tsubtaxcode[i].Description || "-",
+                  category: data.tsubtaxcode[i].Category || "-",
+                };
+  
+                subTaxTableList.push(dataList);
+              }
+  
+              tempObj.subtaxcodes.set(subTaxTableList);
+            });
+          });
+    };
+
+    tempObj.getSubTaxCodes();
 
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
@@ -8086,6 +8214,7 @@ Template.new_salesorder.events({
         let price = targetRow.find('.colUnitPriceExChange').val() || 0;
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+        const subTaxCodes = tmpObj.subtaxcodes.get();
 
         if (!taxDetail) {
             return;
@@ -8107,8 +8236,16 @@ Template.new_salesorder.events({
         ]);
         if (taxDetail.Lines) {
             taxDetail.Lines.map((line) => {
+                let lineDescription = "";
+                if (line.Description) {
+                    lineDescription = line.Description;
+                } else {
+                    lineDescription = subTaxCodes.find((v) => v.codename === line.SubTaxCode);
+                    lineDescription = lineDescription.description;
+                }
+
                 taxDetailTableData.push([
-                    line.Description,
+                    "",
                     line.Id,
                     line.SubTaxCode,
                     `${line.Percentage}%`,
