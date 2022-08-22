@@ -1344,6 +1344,11 @@ Template.addAccountModal.events({
   "click .btnDeleteAccount": (e, template) => {
     template.deleteAccount();
   },
+
+  "click #openEftOptionsModal" : (e) => {
+    $('#eftOptionsModal').modal();
+  }, 
+  
 });
 
 Template.addAccountModal.helpers({
