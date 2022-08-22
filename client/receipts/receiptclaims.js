@@ -144,15 +144,15 @@ Template.receiptsoverview.onRendered(function() {
         let splashArrayAccountList = [];
         for (let i = 0; i < data.taccountvs1.length; i++) {
             const dataList = [
-                data.taccountvs1[i].fields.AccountGroup|| '',
+                data.taccountvs1[i].fields.ReceiptCategory|| '',
                 data.taccountvs1[i].fields.AccountName || '',
                 data.taccountvs1[i].fields.Description || '',
                 data.taccountvs1[i].fields.AccountNumber || '',
                 data.taccountvs1[i].fields.TaxCode || '',
                 data.taccountvs1[i].fields.ID || ''
             ];
-            // if(data.taccountvs1[i].fields.AllowExpenseClaim && data.taccountvs1[i].fields.AccountGroup != ''){
-            if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
+            // if(data.taccountvs1[i].fields.AllowExpenseClaim && data.taccountvs1[i].fields.ReceiptCategory != ''){
+            if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)){
                 categoryAccountList.push(dataList);
             }
             let accBalance = 0;
@@ -182,7 +182,7 @@ Template.receiptsoverview.onRendered(function() {
                 "aaSorting": [],
                 "orderMulti": true,
                 columnDefs: [
-                    { className: "colAccountGroup", "targets": [0] },
+                    { className: "colReceiptCategory", "targets": [0] },
                     { className: "colAccountName", "targets": [1] },
                     { className: "colAccountDesc", "targets": [2] },
                     { className: "colAccountNumber", "targets": [3] },
@@ -2136,7 +2136,7 @@ Template.receiptsoverview.events({
         }
     },
     'click #tblCategory tbody tr': function(e) {
-        let category = $(e.target).closest('tr').find(".colAccountGroup").text() || '';
+        let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
         let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
         let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -2173,14 +2173,14 @@ Template.receiptsoverview.events({
                 if (data.taccountvs1.length > 0) {
                     for (let i = 0; i < data.taccountvs1.length; i++) {
                         const dataList = [
-                            data.taccountvs1[i].fields.AccountGroup|| '',
+                            data.taccountvs1[i].fields.ReceiptCategory|| '',
                             data.taccountvs1[i].fields.AccountName || '',
                             data.taccountvs1[i].fields.Description || '',
                             data.taccountvs1[i].fields.AccountNumber || '',
                             data.taccountvs1[i].fields.TaxCode || '',
                             data.taccountvs1[i].fields.ID || ''
                         ];
-                        if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
+                        if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)){
                             splashArrayAccountList.push(dataList);
                         }
                     }
@@ -2215,14 +2215,14 @@ Template.receiptsoverview.events({
             sideBarService.getAccountListVS1().then(function(data) {
                 for (let i = 0; i < data.taccountvs1.length; i++) {
                     const dataList = [
-                        data.taccountvs1[i].fields.AccountGroup|| '',
+                        data.taccountvs1[i].fields.ReceiptCategory|| '',
                         data.taccountvs1[i].fields.AccountName || '',
                         data.taccountvs1[i].fields.Description || '',
                         data.taccountvs1[i].fields.AccountNumber || '',
                         data.taccountvs1[i].fields.TaxCode || '',
                         data.taccountvs1[i].fields.ID || ''
                     ];
-                    if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
+                    if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)){
                         splashArrayAccountList.push(dataList);
                     }
                 }
