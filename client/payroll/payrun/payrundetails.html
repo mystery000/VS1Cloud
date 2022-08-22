@@ -357,7 +357,16 @@
         </style>
 
         <div class="row" style="margin: 0px 4px;">
-            <div class="col-6">
+            <div class="col-2"> 
+              <div class="row justify-content-center desktopButtons" style="margin-top: 22px;">
+                  <div class="custom-control custom-switch">
+                      <input class="custom-control-input chkEFT" id="chkEFT" type="checkbox" style="cursor: pointer;">
+                      <label class="custom-control-label" style="width:100px;cursor: pointer;" for="chkEFT">Add to EFT</label>
+                  </div>
+              </div>
+            </div>
+            
+            <div class="col-4">
                 <button type="button" class="btn btn-danger btnFooter" style="margin: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete Pay Run</button>
                 <button type="button" class="btn btn-warning btnFooter" style="margin: 16px;"><i class="fas fa-undo" style="margin-right: 5px;"></i> Reset Pay Run</button>
             </div>
