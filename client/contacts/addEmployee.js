@@ -3829,7 +3829,7 @@ Template.employeescard.onRendered(function () {
                     MakeNegative();
                 }, 100);
             });
-        }, 0);
+        }, 300);
 
     };
 
@@ -4706,6 +4706,86 @@ Template.employeescard.events({
                 {
                     title: 'TFN Exempt - Pensioner',
                     value: '3',
+                },
+            ]
+        });
+
+        setTimeout(() => {
+            $('#AppTableModal').modal('toggle');
+            $('#AppTableModal tbody tr').on('click', (event) => {
+                const value = $(event.currentTarget).find('td').attr('value');
+                const text = $(event.currentTarget).find('td').text();
+                $(e.currentTarget).attr('data-value', value);
+                $(e.currentTarget).val(text);
+                $('#AppTableModal').modal('toggle');
+                $('#AppTableModal tbody tr').off('click');
+            });
+        }, 300);
+    },
+    'click #edtLeavePayPeriod': (e, ui) => {
+        ui.AppTableModalData.set({
+            title: 'Leave Pay Period',
+            headers: [
+                {title: 'Title'}
+            ],
+            body: [
+                {
+                    title: 'Hourly',
+                    value: 'hourly',
+                },
+                {
+                    title: 'Fortnightly',
+                    value: 'Fortnightly',
+                },
+                {
+                    title: 'Twice Monthly',
+                    value: 'Twice Monthly',
+                },
+                {
+                    title: 'Four Weekly',
+                    value: 'Four Weekly',
+                },
+                {
+                    title: 'Monthly',
+                    value: 'Monthly',
+                },
+                {
+                    title: 'Quarterly',
+                    value: 'Quarterly',
+                },
+            ]
+        });
+
+        setTimeout(() => {
+            $('#AppTableModal').modal('toggle');
+            $('#AppTableModal tbody tr').on('click', (event) => {
+                const value = $(event.currentTarget).find('td').attr('value');
+                const text = $(event.currentTarget).find('td').text();
+                $(e.currentTarget).attr('data-value', value);
+                $(e.currentTarget).val(text);
+                $('#AppTableModal').modal('toggle');
+                $('#AppTableModal tbody tr').off('click');
+            });
+        }, 300);
+    },
+    'click #edtLeavePayStatus': (e, ui) => {
+        ui.AppTableModalData.set({
+            title: 'Leave Pay Status',
+            headers: [
+                {title: 'Title'}
+            ],
+            body: [
+                {
+                    title: 'Awaiting',
+                    value: 'Awaiting',
+                },
+                {
+                    title: 'Approved',
+                    value: 'Approved',
+                },
+                {
+                    title: 'Denied',
+                    value: 'Denied',
                 },
             ]
         });
@@ -10088,7 +10168,10 @@ Template.employeescard.events({
     setTimeout(()=>{
         $("#edtLeaveTypeofRequest").trigger("click.editable-select");
     }, 200);
-  }
+  },
+//   'click #edtLeaveTypeofRequest': (e, ui) => {
+//     ui.getAssignLeaveTypes();
+//   }
 });
 
 Template.employeescard.helpers({
