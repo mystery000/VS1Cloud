@@ -6787,7 +6787,7 @@ Template.billcard.events({
                     ID: currentInvoice,
                     Deleted: true,
                     OrderStatus: "Deleted",
-                    Lines: null
+                    SupplierName: $('#edtSupplierName').val()||''
                 }
             };
 

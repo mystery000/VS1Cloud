@@ -113,28 +113,28 @@ Template.creditcard.onRendered(() => {
     const termrecords = [];
     const statusList = [];
 
- 
+
       templateObject.getTemplateInfoNew = function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         getVS1Data('TTemplateSettings').then(function(dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-                  
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
-                        
+
+
                      if(data.ttemplatesettings[i].fields.SettingName == 'Credits')
                      {
 
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {       
+                            {
                                     $('input[name="Credits_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                       $('#Credits_1').attr('checked','checked');
                                     }
-                                  
+
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -155,33 +155,33 @@ Template.creditcard.onRendered(() => {
                             }
 
                      }
-               
-               
+
+
 
                  }
-                  
-                      
+
+
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{ 
-                  let data = JSON.parse(dataObject[0].data);    
-                
+          }else{
+                  let data = JSON.parse(dataObject[0].data);
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
-                  
+
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'Credits')
                     {
 
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {       
+                           {
                                    $('input[name="Credits_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Credits_1').attr('checked','checked');
                                    }
-                                 
+
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -202,31 +202,31 @@ Template.creditcard.onRendered(() => {
                            }
 
                     }
-               
-               
+
+
 
                  }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
-                  
+
+
 
                      if(data.ttemplatesettings[i].fields.SettingName == 'Credits')
                      {
 
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {       
+                            {
                                     $('input[name="Credits_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                       $('#Credits_1').attr('checked','checked');
                                     }
-                                  
+
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -248,10 +248,10 @@ Template.creditcard.onRendered(() => {
 
                      }
 
-                  
-                    
-                    
-     
+
+
+
+
 
                   }
                   $('.fullScreenSpin').css('display', 'none');
@@ -5812,173 +5812,173 @@ Template.creditcard.events({
         sideBarService.getTemplateNameandEmployeId("Credits",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
             var id = templateid[0].fields.ID;
-          
+
               objDetails =  {
               type:"TTemplateSettings",
-              fields:{        
-                          ID:parseInt(id),                      
+              fields:{
+                          ID:parseInt(id),
                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                           SettingName:"Credits",
                           GlobalRef:"Credits",
                           Description:$('input[name="Credits_1"]').val(),
                           Template:"1",
                           Active:credits == 1 ? true:false,
-                      }            
+                      }
                }
-          
+
                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-              
+
                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-               addVS1Data('TTemplateSettings', JSON.stringify(data));    
-               
-                  
+               addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+
                });
-              
+
                }).catch(function (err) {
-          
-                
+
+
                });
-          
+
         }).catch(function (err) {
-                      
+
                       objDetails =  {
                       type:"TTemplateSettings",
-                      fields:{                                                                  
+                      fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Credits",
                                   Description:$('input[name="Credits_1"]').val(),
                                   Template:"1",
                                   Active:credits == 1 ? true:false,
-                              }            
+                              }
                       }
-                  
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                      
+
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));     
-                           
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                         });
-                      
-                  
+
+
                       }).catch(function (err) {
-                  
-                 
-                      });  
-        
+
+
+                      });
+
         });
-      
+
         sideBarService.getTemplateNameandEmployeId("Credits",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
             var id = templateid[0].fields.ID;
             objDetails =  {
               type:"TTemplateSettings",
-              fields:{        
-                          ID:parseInt(id),                      
+              fields:{
+                          ID:parseInt(id),
                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                           SettingName:"Credits",
                           GlobalRef:"Credits",
                           Description:$('input[name="Credits_2"]').val(),
                           Template:"2",
                           Active:credits == 2 ? true:false,
-                      }            
+                      }
                }
-          
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                            
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                     });
-               
-          
+
+
               }).catch(function (err) {
-                
+
               });
-          
+
         }).catch(function (err) {
-                      
+
                     objDetails =  {
                       type:"TTemplateSettings",
-                      fields:{                                                                  
+                      fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Credits",
                                   Description:$('input[name="Credits_2"]').val(),
                                   Template:"2",
                                   Active:credits == 2 ? true:false,
-                              }            
+                              }
                       }
-                  
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                  
+
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                                
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                         });
-                        
+
                       }).catch(function (err) {
-                  
-                       
-                      });  
-        
+
+
+                      });
+
         });
-                  
+
         sideBarService.getTemplateNameandEmployeId("Credits",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
             var id = templateid[0].fields.ID;
-          
+
             objDetails =  {
               type:"TTemplateSettings",
-              fields:{        
-                          ID:parseInt(id),                      
+              fields:{
+                          ID:parseInt(id),
                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                           SettingName:"Credits",
                           GlobalRef:"Credits",
                           Description:$('input[name="Credits_3"]').val(),
                           Template:"3",
                           Active:credits == 3 ? true:false,
-                      }            
+                      }
                }
-          
+
                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          
+
                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                       
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                 });
-              
-          
+
+
               }).catch(function (err) {
-          
-               
-             
+
+
+
               });
-          
+
         }).catch(function (err) {
-                      
+
                     objDetails =  {
                       type:"TTemplateSettings",
-                      fields:{                                                                  
+                      fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Credits",
                                   Description:$('input[name="Credits_3"]').val(),
                                   Template:"3",
                                   Active:credits == 3 ? true:false,
-                              }            
+                              }
                       }
-                  
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                  
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));      
-                             
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                       
-                  
+
+
                       }).catch(function (err) {
-                  
-                        
-                    
-                      });  
-        
+
+
+
+                      });
+
         });
 
         if ($('.edtCustomerEmail').val() != "") {
@@ -6027,7 +6027,7 @@ Template.creditcard.events({
             });
         }
 
-        
+
         function generatePdfForMail(creditID) {
             let file = "Credit-" + creditID + ".pdf"
             return new Promise((resolve, reject) => {
@@ -6088,7 +6088,7 @@ Template.creditcard.events({
         values.forEach(value => {
             let reportData = JSON.parse(value);
             let temp = {... reportData};
-            
+
             temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
             temp.attachments = attachment;
@@ -6106,7 +6106,7 @@ Template.creditcard.events({
             }
         });
 
-        
+
 
     },
     'keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount': function(event) {
@@ -6254,8 +6254,7 @@ Template.creditcard.events({
                 fields: {
                     ID: currentInvoice,
                     Deleted: true,
-                    OrderStatus: "Deleted",
-                    Lines: null
+                    OrderStatus: "Deleted"
                 }
             };
 
@@ -6786,7 +6785,7 @@ Template.creditcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') 
+                                return storage.includes('BasedOnType_')
                                 // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;
@@ -6852,7 +6851,7 @@ Template.creditcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') 
+                                return storage.includes('BasedOnType_')
                                 // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;
@@ -6884,7 +6883,7 @@ Template.creditcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') 
+                                return storage.includes('BasedOnType_')
                                 // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;

@@ -951,8 +951,7 @@ Template.accountlistpop.events({
                 fields: {
                     ID: currentInvoice,
                     Deleted: true,
-                    OrderStatus: "Deleted",
-                    Lines: null
+                    OrderStatus: "Deleted"
                 }
             };
 

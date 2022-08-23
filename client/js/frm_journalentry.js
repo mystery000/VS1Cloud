@@ -2816,8 +2816,7 @@ Template.journalentrycard.events({
                 type: "TJournalEntry",
                 fields: {
                     ID: currentInvoice,
-                    Deleted: true,
-                    Lines: null
+                    Deleted: true
                 }
             };
 
@@ -2884,8 +2883,7 @@ Template.journalentrycard.events({
                         type: "TJournalEntry",
                         fields: {
                             ID: currentInvoice,
-                            Deleted: true,
-                            Lines: null
+                            Deleted: true
                         }
                     };
 
