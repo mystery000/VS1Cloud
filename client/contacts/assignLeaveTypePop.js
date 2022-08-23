@@ -52,14 +52,14 @@ Template.assignLeaveTypePop.onCreated(function () {
         //     $(this).val(item.id);
         //     $(this).text(item.name);
         // });
-        $('#leaveCalcMethodSelect').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#onTerminationUnusedBalance').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
+        // $('#leaveCalcMethodSelect').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#onTerminationUnusedBalance').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
         $('#superannuationTypeSelect').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
