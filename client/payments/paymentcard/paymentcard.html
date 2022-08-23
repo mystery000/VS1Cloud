@@ -822,15 +822,7 @@
                                     {{/if}}
                                 </thead>
                                 <tbody>
-                                    <!-- <tr class="dnd-moved tr">
-<td contenteditable="true" class="">2020-02-23</td>
-<td contenteditable="true" class="">P012345</td>
-<td contenteditable="true" class="" style="text-align: right!important;">$ 10,000.34</td>
-<td contenteditable="true" class="" style="text-align: right!important;">$ 12,000.34</td>
-<td contenteditable="true" class="" style="text-align: right!important;">$ 12,000.34</td>
-<td contenteditable="true" class="" style="text-align: right!important;">$ 0.00</td>
-<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
-</tr> -->
+  
                                     {{#each item in record.LineItems}}
                                         <tr class="dnd-moved  dynamic-converter-js" id="{{item.transid}}" name="{{item.transid}}">
                                             <td contenteditable="false" class="colTransDate">{{item.invoicedate}}</td>
@@ -1068,17 +1060,7 @@
                                             </div>
                                         </div>
                                         <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
-                                            <div style="display: flex; width: 100%;">
-                                                <div style="width: 50%; padding-right: 16px;font-weight: bold;">
-                                                    <h4 class="print-header" style="font-weight: bold; font-size: 22.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                                    </h4>
-                                                </div>
-                                                <div style="width: 50%; padding-left: 16px;font-weight: bold;">
-                                                    <h4 class="print-header-value" style="font-weight: bold; font-size: 22.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                                    </h4>
-                                                </div>
-
-                                            </div>
+                                            <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);"></h4>
 
 
                                             <div style="display: flex; width: 100%;">
@@ -1121,11 +1103,6 @@
                                                         <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
 
-
-
-
-
-
                                                 </div>
                                             </div>
                                         </div>
@@ -1135,7 +1112,7 @@
                                         <div style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
                                             <table class="invoice_print" style="width: 100%;  margin: auto;">
                                                 <thead style="color: rgb(251,251,251);">
-                                                    <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0); color: #000000;">
+                                                    <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0,0.1); color: #000000;">
                                                     </tr>
                                                 </thead>
                                                 <tbody class="tbl_content" style="color: rgb(0 0 0);">
@@ -1244,13 +1221,12 @@
                                         <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
 
                                     </div>
-                                    <p class="bottome-text-fix" style="font-size: 10px;
-                                    margin-right: 18px;
+                                    <p class="bottome-text-fix" style="font-size: 10px; margin-right: 18px;
                                     position: absolute;
                                     bottom: 0;
                                     z-index: 1111;
                                     right: 0;
-                                ">Page 1 of 1</p>
+                                    ">Page 1 of 1</p>
 
                                 </div>
                             </div>
@@ -1262,15 +1238,14 @@
                     </div>
                 </div>
 
-                <div style="display:none;width: 90%;position:relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
-                    id="html-2-pdfwrapper_new" name="html-2-pdfwrapper_new">
-                    <div class="d-flex flex-row d-sm-flex d-md-flex ">
-                        <div class="col-7 col-md-7 col-sm-12" style="margin: 0px; padding: 16px;">
-                            <div style="display: flex;" class="col-6 col-md-6 col-sm-12">
-                                <div class="col-4 col-md-4 col-sm-10 p-2" style="max-width: 60mm; max-height: 30mm;">
-                                    <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 150px;margin-bottom: 8px;">
+                <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; display: none; color: #000000; overflow-x: visible;"  id="html-2-pdfwrapper_new" name="html-2-pdfwrapper_new">
+                    <div style="display: flex; height: fit-content; min-height: 30mm;">
+                        <div style="margin: 0px; padding: 16px; width: 120mm; max-width: 120mm;">
+                            <div style="display: flex;">
+                                <div style="max-width: 60mm; max-height: 30mm;">
+                                    <img src="assets/img/VS1.png" class="uploadedImage" style="max-width: 200px; max-height: 30mm; margin-bottom: 8px;">
                                 </div>
-                                <div class="col-lg-12 col-md-8 col-sm-6 p-2">
+                                <div style="width: 70mm;">
                                     <div style="padding-left: 16px;font-weight: bold;">
                                         <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
                                         <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
@@ -1285,28 +1260,19 @@
                                 </div>
                             </div>
                             <div style="font-size: 14px;">
-                                <div class="customer" style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: 600;">
+                                <div class="customer" style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: bold;">
                                 </div>
                                 <div style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName"></div>
                                 <div style="min-height: 50px; width: 50%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress"></div>
                             </div>
                         </div>
                         <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
-                            <div style="display: flex; width: 100%;">
-                                <div style="width: 60%; padding-right: 16px;font-weight: bold;">
-                                    <h4 class="print-header" style="font-weight: bold; font-size: 15.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                    </h4>
-                                </div>
-                                <div style="width: 40%; padding-left: 16px;font-weight: bold;">
-                                    <h4 class="print-header-value" style="font-weight: bold; font-size: 15.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                    </h4>
-                                </div>
-
-                            </div>
+                            
+                            <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Customer Payment</h4>
 
 
                             <div style="display: flex; width: 100%;">
-                                <div style="width: 60%; padding-right: 16px;font-weight: bold;">
+                                <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                     <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
                                     <p class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">P.O Number:</p>
                                     <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
@@ -1323,7 +1289,7 @@
                                         <p class="customfield3" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                     </div>
                                 </div>
-                                <div style="width: 40%; padding-left: 16px;">
+                                <div style="width: 50%; padding-left: 16px;">
                                     <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
                                     <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                     <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
@@ -1341,19 +1307,16 @@
                                         <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                     </div>
 
-
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
                     <hr>
-                    <div style="height: 120mm;">
+                    <div style="height: 185mm;">
                         <div style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
-                            <table class="invoice_print" style="width: 100%;  margin: auto;">
+                            <table class="invoice_print" style="width: 200mm; max-width: 200mm; margin: auto;">
                                 <thead style="color: rgb(251,251,251);">
-                                    <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0); color: #000000;">
+                                    <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0,1); color: #000000;">
                                     </tr>
                                 </thead>
                                 <tbody class="tbl_content" style="color: rgb(0 0 0);">
@@ -1459,7 +1422,7 @@
                     </div>
 
                     <div style="font-size: 10px; margin-right: 8px; float: right;">
-                        <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
+                        <p class="applied" style="font-size: 14px;font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0);">Applied $50.00</p>
 
                     </div>
                     <p class="bottome-text-fix" style="font-size: 10px;
