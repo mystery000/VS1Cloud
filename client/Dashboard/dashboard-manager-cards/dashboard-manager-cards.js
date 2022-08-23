@@ -241,8 +241,8 @@ Template.dashboardManagerCards.onRendered(()=>{
                         closedDealsThisYear += tinvoice.Balance;
                     }
                 });
-                $('#closed-deals-month').text(closedDealsThisMonth.toFixed(2));
-                $('#closed-deals-year').text(closedDealsThisYear.toFixed(2));
+                $('#closed-deals-month').text(`$${closedDealsThisMonth.toFixed(2)}`);
+                $('#closed-deals-year').text(`$${closedDealsThisYear.toFixed(2)}`);
     
                 templateObject.renderSPDCharts();
             }
