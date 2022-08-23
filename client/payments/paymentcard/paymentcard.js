@@ -289,7 +289,6 @@ Template.paymentcard.onRendered(() => {
 
 
             let invoice_data = templateObject.record.get();
-
             var array_data = [];
             object_invoce = [];
             let stripe_id = templateObject.accountID.get() || '';
@@ -310,9 +309,9 @@ Template.paymentcard.onRendered(() => {
 
 
 
-            var customfield1 = $('#edtSaleCustField1').val() || '-';
-            var customfield2 = $('#edtSaleCustField2').val() || '-';
-            var customfield3 = $('#edtSaleCustField3').val() || '-';
+            var customfield1 = $('#edtSaleCustField1').val() || '  ';
+            var customfield2 = $('#edtSaleCustField2').val() || '  ';
+            var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
             var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
             var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -322,10 +321,10 @@ Template.paymentcard.onRendered(() => {
 
             if(ref_daa == " " || ref_daa == "")
             {
-                ref_daa = "-";
+                ref_daa = "  ";
             }
 
-            var dtPaymentDate = $('#dtPaymentDate').val() || '-';
+            var dtPaymentDate = $('#dtPaymentDate').val() || '  ';
 
 
             $('#tblPaymentcard > tbody > tr').each(function () {
@@ -377,7 +376,7 @@ Template.paymentcard.onRendered(() => {
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                     o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
@@ -392,7 +391,7 @@ Template.paymentcard.onRendered(() => {
                     supplier_type: "Customer",
                     supplier_name : customer,
                     supplier_addr : "",
-                    fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal : "",
                     gst : "",
                     total : "",
@@ -402,7 +401,7 @@ Template.paymentcard.onRendered(() => {
                     account : '',
                     swift : '',
                     data: array_data,
-                    applied :"",
+                    applied :applied,
                     customfield1:'NA',
                     customfield2:'NA',
                     customfield3:'NA',
@@ -422,7 +421,7 @@ Template.paymentcard.onRendered(() => {
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                     o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
@@ -437,7 +436,7 @@ Template.paymentcard.onRendered(() => {
                     supplier_type: "Customer",
                     supplier_name : customer,
                     supplier_addr : "",
-                    fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal : "",
                     gst : "",
                     total : "",
@@ -447,7 +446,7 @@ Template.paymentcard.onRendered(() => {
                     account : '',
                     swift : '',
                     data: array_data,
-                    applied :"",
+                    applied :applied,
                     customfield1:customfield1,
                     customfield2:customfield2,
                     customfield3:customfield3,
@@ -465,14 +464,14 @@ Template.paymentcard.onRendered(() => {
 
                 if(fx == '')
                 {
-                    fx = '-';
+                    fx = '  ';
                 }
                 item_payments = {
                     o_url: Session.get('vs1companyURL'),
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                     o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
@@ -487,7 +486,7 @@ Template.paymentcard.onRendered(() => {
                     supplier_type: "Customer",
                     supplier_name : customer,
                     supplier_addr : "",
-                    fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal : "",
                     gst : "",
                     total : "",
@@ -497,7 +496,7 @@ Template.paymentcard.onRendered(() => {
                     account : '',
                     swift : '',
                     data: array_data,
-                    applied :"",
+                    applied :applied,
                     customfield1:customfield1,
                     customfield2:customfield2,
                     customfield3:customfield3,
@@ -544,9 +543,9 @@ Template.paymentcard.onRendered(() => {
             var ref_daa = $('#edtReference').val();
             var txaNotes = $('#txaNotes').val();
 
-            var customfield1 = $('#edtSaleCustField1').val() || '-';
-            var customfield2 = $('#edtSaleCustField2').val() || '-';
-            var customfield3 = $('#edtSaleCustField3').val() || '-';
+            var customfield1 = $('#edtSaleCustField1').val() || '  ';
+            var customfield2 = $('#edtSaleCustField2').val() || '  ';
+            var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
             var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
             var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -557,7 +556,7 @@ Template.paymentcard.onRendered(() => {
             var dtPaymentDate = $('#dtPaymentDate').val() || '-';
            if(ref_daa == " " || ref_daa == "")
             {
-                ref_daa = "-";
+                ref_daa = "  ";
             }
 
 
@@ -610,7 +609,7 @@ Template.paymentcard.onRendered(() => {
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                     o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
@@ -625,7 +624,7 @@ Template.paymentcard.onRendered(() => {
                     supplier_type: "Customer",
                     supplier_name : customer,
                     supplier_addr : "",
-                    fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal : "",
                     gst : "",
                     total : "",
@@ -635,7 +634,7 @@ Template.paymentcard.onRendered(() => {
                     account : '',
                     swift : '',
                     data: array_data,
-                    applied :"",
+                    applied :applied,
                     customfield1:'NA',
                     customfield2:'NA',
                     customfield3:'NA',
@@ -655,7 +654,7 @@ Template.paymentcard.onRendered(() => {
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                     o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
@@ -670,7 +669,7 @@ Template.paymentcard.onRendered(() => {
                     supplier_type: "Customer",
                     supplier_name : customer,
                     supplier_addr : "",
-                    fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal : "",
                     gst : "",
                     total : "",
@@ -680,7 +679,7 @@ Template.paymentcard.onRendered(() => {
                     account : '',
                     swift : '',
                     data: array_data,
-                    applied :"",
+                    applied :applied,
                     customfield1:customfield1,
                     customfield2:customfield2,
                     customfield3:customfield3,
@@ -698,14 +697,14 @@ Template.paymentcard.onRendered(() => {
 
                 if(fx == '')
                 {
-                    fx = '-';
+                    fx = '  ';
                 }
                 item_payments = {
                     o_url: Session.get('vs1companyURL'),
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.paymentcard.__helpers.get('companyReg').call(),
                     o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
@@ -720,7 +719,7 @@ Template.paymentcard.onRendered(() => {
                     supplier_type: "Customer",
                     supplier_name : customer,
                     supplier_addr : "",
-                    fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal : "",
                     gst : "",
                     total : "",
@@ -730,7 +729,7 @@ Template.paymentcard.onRendered(() => {
                     account : '',
                     swift : '',
                     data: array_data,
-                    applied :"",
+                    applied :applied,
                     customfield1:customfield1,
                     customfield2:customfield2,
                     customfield3:customfield3,
@@ -758,8 +757,8 @@ Template.paymentcard.onRendered(() => {
 
 
         function updateTemplate1(object_invoce) {
-            $("#templatePreviewModal").modal("toggle");
-            if (object_invoce.length > 0) {
+             $("#templatePreviewModal").modal("toggle");
+             if (object_invoce.length > 0) {
 
 
               $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
@@ -818,11 +817,11 @@ Template.paymentcard.onRendered(() => {
 
               if(object_invoce[0]["value"]=="")
               {
-                  $('.print-header-value').text('');
+                  $('.print-header').text('Customer Payment');
 
               }
               else{
-                 $('.print-header-value').text(object_invoce[0]["value"]);
+                 $('.print-header-value').text('Customer Payment');
               }
 
               if(object_invoce[0]["bsb"]=="")
@@ -962,27 +961,50 @@ Template.paymentcard.onRendered(() => {
               }
 
             //   table header
-              var tbl_header = $("#templatePreviewModal .tbl_header")
-              tbl_header.empty()
-              for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                    tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
-              }
+            var tbl_header = $("#templatePreviewModal .tbl_header")
+            tbl_header.empty()
+            for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
+                  tbl_header.append("<th style='background:white;width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
             }
+          }
+  
+          // table content
+           var tbl_content = $("#templatePreviewModal .tbl_content")
+           tbl_content.empty()
+           const data = object_invoce[0]["data"]
+           var length = data.length;
+           var i = 0;
+           for(item of data){
+                
+            var html = '';
+            if(i == length-1)
+            {
+                html += "<tr style=''>";
+            }
+            else
+            {
+                html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            }
+           
+            var count = 0;
+            for(item_temp of item){
 
-            // table content
-             var tbl_content = $("#templatePreviewModal .tbl_content")
-             tbl_content.empty()
-             const data = object_invoce[0]["data"]
+               if(count == 1){
+                   html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+               }
+               else
+               {
+                   html = html + "<td>" + item_temp + "</td>";
+               }
+              
 
-             for(item of data){
-                tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-                var content = ""
-                 for(item_temp of item){
-                    content = content + "<td>" + item_temp + "</td>"
-                 }
-                 tbl_content.append(content)
-                 tbl_content.append("</tr>")
-             }
+               count++;
+            }
+           html +="</tr>";
+           tbl_content.append(html);
+           i++;
+          
+        }
 
             // total amount
 
@@ -1081,12 +1103,12 @@ Template.paymentcard.onRendered(() => {
 
             if(object_invoce[0]["value"]=="")
             {
-                  $('.print-header-value').text('');
+                  $('.print-header-value').text(object_invoce[0]["title"]);
 
             }
             else
             {
-                 $('.print-header-value').text(object_invoce[0]["value"]);
+                 $('.print-header-value').text(object_invoce[0]["title"]);
             }
 
 
@@ -1229,27 +1251,70 @@ Template.paymentcard.onRendered(() => {
              }
 
             //   table header
-            var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
-            tbl_header.empty()
-            for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                    tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
-            }
-            }
-
-            // table content
-            var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
-            tbl_content.empty()
-            const data = object_invoce[0]["data"]
-
-            for(item of data){
-                tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-                var content = ""
-                for(item_temp of item){
-                    content = content + "<td>" + item_temp + "</td>"
+                var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
+                tbl_header.empty()
+                var count = 0;
+                for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
+                    
+                        if(count > 2)
+                        {
+                            tbl_header.append("<th class='text-nowrap text-right' style='text-algin:right;background:white;color:rgb(0,0,0);width:" + value + "%'; >" + key + "</th>")
+                        }
+                        else
+                        {
+                            tbl_header.append("<th  class='text-nowrap' style='background:white;color:rgb(0,0,0);width:" + value + "%'; >" + key + "</th>")
+                        }
+                        count++;
+                    
                 }
-                tbl_content.append(content)
-                tbl_content.append("</tr>")
+              }
+    
+            // table content
+           var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
+           tbl_content.empty()
+           const data = object_invoce[0]["data"]
+           var length = data.length;
+           var i = 0;
+           for(item of data){
+                
+            var html = '';
+            if(i == length-1)
+            {
+                html += "<tr style=''>";
             }
+            else
+            {
+                html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            }
+           
+            var count = 0;
+            for(item_temp of item){
+              
+               if(count < 3){
+                   if(count == 1)
+                   {
+                    html = html + "<td class='text-nowrap' style='color:#00a3d3;'>" + item_temp + "</td>";
+                   }
+                   else
+                   {
+                        html = html + "<td class='text-nowrap' >" + item_temp + "</td>";
+
+                   }
+                  
+               }
+               else
+               {
+                   html = html + "<td class='text-right text-nowrap' >" + item_temp + "</td>";
+               }
+              
+
+               count++;
+            }
+           html +="</tr>";
+           tbl_content.append(html);
+           i++;
+          
+        }
 
             // total amount
 
@@ -4548,7 +4613,9 @@ Template.paymentcard.onRendered(() => {
             left: 0,
             width: 100
         };
-        let id = $('.printID').attr("id");
+        let invoice_data_info = templateObject.record.get()
+        let id = invoice_data_info.id || 'new';
+        document.getElementById('html-2-pdfwrapper').style.display ="block";
         var source = document.getElementById('html-2-pdfwrapper');
         let file = "Customer Payment-"+id+".pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -4584,122 +4651,127 @@ Template.paymentcard.onRendered(() => {
 
     exportSalesToPdf = async function(template_title,number) {
 
-        if(template_title == 'Customer Payments')
+        if(template_title == 'Customer Payments' && number == 1)
         {
-              await showCustomerPayment(template_title,number);
+             exportSalesToPdf1();
 
         }
-
-        let margins = {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 100
-        };
-
-        let invoice_data_info = templateObject.record.get()
-        document.getElementById('html-2-pdfwrapper_new').style.display="block";
-        var source = document.getElementById('html-2-pdfwrapper_new');
-
-        let file = "Customer_Payments.pdf";
-        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+        else{
             if(template_title == 'Customer Payments')
             {
-                file = 'Customer Payments-' + invoice_data_info.lid + '.pdf';
+                  await showCustomerPayment(template_title,number);
+    
             }
-
+    
+            let margins = {
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: 100
+            };
+    
+            let invoice_data_info = templateObject.record.get()
+            document.getElementById('html-2-pdfwrapper_new').style.display="block";
+            var source = document.getElementById('html-2-pdfwrapper_new');
+    
+            let file = "Customer_Payments.pdf";
+            if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                if(template_title == 'Customer Payments')
+                {
+                    file = 'Customer Payments-' + invoice_data_info.lid + '.pdf';
+                }
+    
+    
+            }
+    
+            var opt = {
+                margin: 0,
+                filename: file,
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
+            };
+    
+    
+            html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
+    
+                let attachment = [];
+    
+                let paymentId = FlowRouter.current().queryParams.id? FlowRouter.current().queryParams.id : '';
+                let pdfObject = "";
+    
+                let base64data = data.split(',')[1];
+                pdfObject = {
+                    filename: 'Customer Payment-' + paymentId + '.pdf',
+                    content: base64data,
+                    encoding: 'base64'
+                };
+                attachment.push(pdfObject);
+    
+                let values = [];
+                let basedOnTypeStorages = Object.keys(localStorage);
+                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                    let employeeId = storage.split('_')[2];
+                    // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                    return storage.includes('BasedOnType_');
+                });
+                let j = basedOnTypeStorages.length;
+                if (j > 0) {
+                    while (j--) {
+                        values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                    }
+                }
+    
+                values.forEach(value => {
+                    let reportData = JSON.parse(value);
+                    let temp = {... reportData};
+    
+                    temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                    temp.attachments = attachment;
+                    if (temp.BasedOnType.includes("P")) {
+                        if (temp.FormID == 1) {
+                            let formIds = temp.FormIDs.split(',');
+                            if (formIds.includes("61")) {
+                                temp.FormID = 61;
+                                Meteor.call('sendNormalEmail', temp);
+                            }
+                        } else {
+                            if (temp.FormID == 61)
+                                Meteor.call('sendNormalEmail', temp);
+                        }
+                    }
+                });
+    
+                html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                    if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                        //$(".btnSave").trigger("click");
+                        $('#html-2-pdfwrapper').css('display', 'none');
+                        $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                        $('#html-2-pdfwrapper').css('display', 'none');
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+                });
+    
+    
+                return true;
+            })
+           
 
         }
 
-        var opt = {
-            margin: 0,
-            filename: file,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        };
 
-
-        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
-
-            let attachment = [];
-
-            let paymentId = FlowRouter.current().queryParams.id? FlowRouter.current().queryParams.id : '';
-            let pdfObject = "";
-
-            let base64data = data.split(',')[1];
-            pdfObject = {
-                filename: 'Customer Payment-' + paymentId + '.pdf',
-                content: base64data,
-                encoding: 'base64'
-            };
-            attachment.push(pdfObject);
-
-            let values = [];
-            let basedOnTypeStorages = Object.keys(localStorage);
-            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                let employeeId = storage.split('_')[2];
-                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                return storage.includes('BasedOnType_');
-            });
-            let j = basedOnTypeStorages.length;
-            if (j > 0) {
-                while (j--) {
-                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
-                }
-            }
-
-            values.forEach(value => {
-                let reportData = JSON.parse(value);
-                let temp = {... reportData};
-
-                temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                temp.attachments = attachment;
-                if (temp.BasedOnType.includes("P")) {
-                    if (temp.FormID == 1) {
-                        let formIds = temp.FormIDs.split(',');
-                        if (formIds.includes("61")) {
-                            temp.FormID = 61;
-                            Meteor.call('sendNormalEmail', temp);
-                        }
-                    } else {
-                        if (temp.FormID == 61)
-                            Meteor.call('sendNormalEmail', temp);
-                    }
-                }
-            });
-
-            html2pdf().set(opt).from(source).save().then(function (dataObject) {
-                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                    //$(".btnSave").trigger("click");
-                    $('#html-2-pdfwrapper').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
-                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
-                    $('#html-2-pdfwrapper').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-            });
-
-
-            return true;
-        })
-
-
-        // pdf.addHTML(source, function () {
-        //     pdf.save('Customer Payment-'+id+'.pdf');
-        //     $('#html-2-pdfwrapper').css('display','none');
-        // });
     };
 
     $(document).ready(function() {
@@ -9403,7 +9475,7 @@ Template.paymentcard.events({
     {
         if($('#choosetemplate').is(':checked'))
         {
-            $('#confirmprint').modal('show');
+            $('#templateselection').modal('show');
         }
         else
         {
