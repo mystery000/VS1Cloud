@@ -8,6 +8,7 @@ import { SideBarService } from "../js/sidebar-service";
 import { OrganisationService } from "../js/organisation-service";
 import "../lib/global/indexdbstorage.js";
 import XLSX from "xlsx";
+import {ReceiptService} from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 
@@ -34,6 +35,8 @@ Template.accountsoverview.onRendered(function () {
   const dataTableList = [];
   const tableHeaderList = [];
   let categories = [];
+  let usedCategories = [];
+  let categoryAccountList = [];
 
   templateObject.getReceiptCategoryList = function(){
     getVS1Data('TReceiptCategory').then(function (dataObject) {
@@ -64,7 +67,6 @@ Template.accountsoverview.onRendered(function () {
   }
   templateObject.getReceiptCategoryList();
 
-  let usedCategories = [];
   let currentId = FlowRouter.current().context.hash;
 
   if (currentId === "addNewAccount" || currentId === "newaccount") {
@@ -635,7 +637,7 @@ Template.accountsoverview.onRendered(function () {
         accBalance = Currency + "0.00";
       }
       if(data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != ''){
-        usedCategories.push(data.taccountvs1[i].fields.ReceiptCategory);
+        usedCategories.push(data.taccountvs1[i].fields);
       }
 
       var dataList = {
@@ -668,6 +670,31 @@ Template.accountsoverview.onRendered(function () {
     let availableCategories = categories.filter((item) => !usedCategories.includes(item));
     templateObject.availableCategories.set(availableCategories);
     templateObject.datatablerecords.set(dataTableList);
+    categories.forEach((citem, j) => {
+      let cdataList = null;
+      let match = usedCategories.filter((item) => (item.ReceiptCategory == citem));
+      if (match.length > 0) {
+        let temp = match[0];
+        cdataList = [
+          citem,
+          temp.AccountName || '',
+          temp.Description || '',
+          temp.AccountNumber || '',
+          temp.TaxCode || '',
+          temp.ID || ''
+        ];
+      } else {
+        cdataList = [
+          citem,
+          '',
+          '',
+          '',
+          '',
+          ''
+        ];
+      }
+      categoryAccountList.push(cdataList);
+    });
 
     if (templateObject.datatablerecords.get()) {
       setTimeout(function () {
@@ -677,6 +704,35 @@ Template.accountsoverview.onRendered(function () {
 
     $(".fullScreenSpin").css("display", "none");
     setTimeout(function () {
+      $('#tblCategory').dataTable({
+        data: categoryAccountList,
+        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        paging: true,
+        "aaSorting": [],
+        "orderMulti": true,
+        columnDefs: [
+          { className: "colReceiptCategory", "targets": [0] },
+          { className: "colAccountName", "targets": [1] },
+          { className: "colAccountDesc", "targets": [2] },
+          { className: "colAccountNumber", "targets": [3] },
+          { className: "colTaxCode", "targets": [4] },
+          { className: "colAccountID hiddenColumn", "targets": [5] }
+        ],
+        // select: true,
+        // destroy: true,
+        colReorder: true,
+        "order": [
+          [0, "asc"]
+        ],
+        pageLength: initialDatatableLoad,
+        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+        info: true,
+        responsive: true,
+        "fnInitComplete": function () {
+          $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
+          $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
+        }
+      });
       // //$.fn.dataTable.moment('DD/MM/YY');
       $("#tblAccountOverview")
           .DataTable({
@@ -799,6 +855,82 @@ Template.accountsoverview.onRendered(function () {
   }
 
 
+  $('#expenseCategory').on('click', function(e, li) {
+    templateObject.setCategoryAccountList(e);
+  });
+  templateObject.setCategoryAccountList = function(e) {
+    const $each = $(e.target);
+    const offset = $each.offset();
+    $('#edtReceiptCategoryID').val('');
+    const searchDataName = e.target.value || '';
+    if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+      $each.attr('data-id', '');
+      $('#categoryListModal').modal('toggle');
+      setTimeout(function() {
+        $('#tblCategory_filter .form-control-sm').focus();
+        $('#tblCategory_filter .form-control-sm').val('');
+        $('#tblCategory_filter .form-control-sm').trigger("input");
+        const datatable = $('#tblCategory').DataTable();
+        datatable.draw();
+        $('#tblCategory_filter .form-control-sm').trigger("input");
+      }, 200);
+    } else {
+      if (searchDataName.replace(/\s/g, '') != '') {
+        getVS1Data('TReceiptCategory').then(function(dataObject) {
+          if (dataObject.length == 0) {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+              showEditReceiptCategoryView(data.treceiptcategory[0]);
+            }).catch(function(err) {
+              $('.fullScreenSpin').css('display', 'none');
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            let added = false;
+            for (let i = 0; i < data.treceiptcategory.length; i++) {
+              if ((data.treceiptcategory[i].CategoryName) === searchDataName) {
+                added = true;
+                showEditReceiptCategoryView(data.treceiptcategory[i]);
+              }
+            }
+            if (!added) {
+              $('.fullScreenSpin').css('display', 'inline-block');
+              sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                showEditReceiptCategoryView(data.treceiptcategory[0]);
+              }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+              });
+            }
+          }
+        }).catch(function(err) {
+          sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+            showEditReceiptCategoryView(data.treceiptcategory[0]);
+          }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+          });
+        });
+      } else {
+        $('#categoryListModal').modal('toggle');
+        setTimeout(function() {
+          $('#tblCategory_filter .form-control-sm').focus();
+          $('#tblCategory_filter .form-control-sm').val('');
+          $('#tblCategory_filter .form-control-sm').trigger("input");
+          const datatable = $('#tblCategory').DataTable();
+          datatable.draw();
+          $('#tblCategory_filter .form-control-sm').trigger("input");
+        }, 200);
+      }
+    }
+  };
+  function showEditReceiptCategoryView(data) {
+    $("#add-receiptcategory-title").text("Edit Receipt Category");
+    $('#edtReceiptCategoryID').val(data.Id);
+    $('#edtReceiptCategoryName').val(data.CategoryName);
+    $('#edtReceiptCategoryDesc').val(data.CategoryDesc);
+    setTimeout(function() {
+      $('#addReceiptCategoryModal').modal('show');
+    }, 200);
+  }
 
   $("#tblAccountOverview tbody").on(
     "click",
@@ -885,26 +1017,7 @@ Template.accountsoverview.onRendered(function () {
             $(".useReceiptClaim").prop("checked", false);
           }
           let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
-          let availableCategories = templateObject.availableCategories.get();
-          let categoryHtml = "";
-          availableCategories.forEach(function (item) {
-            categoryHtml += '<option value="' +item +'">' +item +'</option>';
-          });
-          $("#expenseCategory").empty();
-          if (category != "" && categories.includes(category)) {
-            let selectedCategoryHtml = '<option value="' +category +'" selected="selected">' +category +'</option>';
-            categoryHtml = selectedCategoryHtml + categoryHtml;
-          }
-          $("#expenseCategory").append(categoryHtml);
           $("#expenseCategory").val(category);
-          if (categoryHtml == ""){
-            $("#expenseCategory").attr("readonly", true);
-            $("#expenseCategory").attr("disabled", "disabled");
-          } else {
-            $("#expenseCategory").removeAttr("readonly", true);
-            $("#expenseCategory").removeAttr("disabled", "disabled");
-          }
-          //});
 
           $(this).closest("tr").attr("data-target", "#addNewAccount");
           $(this).closest("tr").attr("data-toggle", "modal");
@@ -1367,25 +1480,27 @@ Template.accountsoverview.events({
     }
 
     let accountID = $("#edtAccountID").val();
-    var accounttype = $("#sltAccountType").val();
-    var accountname = $("#edtAccountName").val();
-    var accountno = $("#edtAccountNo").val();
-    var taxcode = $("#sltTaxCode").val();
-    var accountdesc = $("#txaAccountDescription").val();
-    var swiftCode = $("#swiftCode").val();
-    var routingNo = $("#routingNo").val();
+    const accounttype = $("#sltAccountType").val();
+    const accountname = $("#edtAccountName").val();
+    const accountno = $("#edtAccountNo").val();
+    const taxcode = $("#sltTaxCode").val();
+    const accountdesc = $("#txaAccountDescription").val();
+    const swiftCode = $("#swiftCode").val();
+    const routingNo = $("#routingNo").val();
     // var comments = $('#txaAccountComments').val();
-    var bankname = $("#edtBankName").val();
-    var bankaccountname = $("#edtBankAccountName").val();
-    var bankbsb = $("#edtBSB").val();
-    var bankacountno = $("#edtBankAccountNo").val();
-    let isBankAccount = templateObject.isBankAccount.get();
-    let expenseCategory = $("#expenseCategory").val();
+    const bankname = $("#edtBankName").val();
+    const bankaccountname = $("#edtBankAccountName").val();
+    const bankbsb = $("#edtBSB").val();
+    const bankacountno = $("#edtBankAccountNo").val();
+    const isBankAccount = templateObject.isBankAccount.get();
+    const expenseCategory = $("#expenseCategory").val();
+    const categoryAccountID = $("#categoryAccountID").val();
+    const categoryAccountName = $("#categoryAccountName").val();
 
-    var expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
-    let cardnumber = $("#edtCardNumber").val();
-    let cardcvc = $("#edtCvc").val();
-    let expiryDate =
+    const expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
+    const cardnumber = $("#edtCardNumber").val();
+    const cardcvc = $("#edtCvc").val();
+    const expiryDate =
       expirydateTime.getFullYear() +
       "-" +
       (expirydateTime.getMonth() + 1) +
@@ -1394,265 +1509,52 @@ Template.accountsoverview.events({
 
     let companyID = 1;
     let data = "";
+    if (categoryAccountID != "" && categoryAccountID != accountID) {
+      data = {
+        type: "TAccount",
+        fields: {
+          ID: categoryAccountID,
+          ReceiptCategory: ""
+        },
+      };
+      accountService.saveAccount(data).then(function (data) {
+
+      }).catch(function(err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => {
+          if (result.value) {
+          } else if (result.dismiss === "cancel") {
+          }
+        });
+        return false;
+      })
+    }
     if (accountID == "") {
       accountService
         .getCheckAccountData(accountname)
         .then(function (data) {
           accountID = parseInt(data.taccount[0].Id) || 0;
-          data = {
-            type: "TAccount",
-            fields: {
-              ID: accountID,
-              // AccountName: accountname|| '',
-              AccountNumber: accountno || "",
-              // AccountTypeName: accounttype|| '',
-              ReceiptCategory: expenseCategory || "",
-              Active: true,
-              BankAccountName: bankaccountname || "",
-              BankAccountNumber: bankacountno || "",
-              BSB: bankbsb || "",
-              Description: accountdesc || "",
-              TaxCode: taxcode || "",
-              PublishOnVS1: true,
-              Extra: swiftCode,
-              BankNumber: routingNo,
-              IsHeader: isHeader,
-              AllowExpenseClaim:useReceiptClaim,
-              Required:forTransaction,
-              CarNumber: cardnumber || "",
-              CVC: cardcvc || "",
-              ExpiryDate: expiryDate || "",
-            },
-          };
-
-          accountService
-            .saveAccount(data)
-            .then(function (data) {
-              if ($("#showOnTransactions").is(":checked")) {
-                var objDetails = {
-                  type: "TCompanyInfo",
-                  fields: {
-                    Id: companyID,
-                    AccountNo: bankacountno,
-                    BankBranch: swiftCode,
-                    BankAccountName: bankaccountname,
-                    BankName: bankname,
-                    Bsb: bankbsb,
-                    SiteCode: routingNo,
-                    FileReference: accountname,
-                  },
-                };
-                organisationService
-                  .saveOrganisationSetting(objDetails)
-                  .then(function (data) {
-                    var accNo = bankacountno || "";
-                    var swiftCode1 = swiftCode || "";
-                    var bankAccName = bankaccountname || "";
-                    var accountName = accountname || "";
-                    var bsb = bankbsb || "";
-                    var routingNo = routingNo || "";
-
-                    localStorage.setItem("vs1companyBankName", bankname);
-                    localStorage.setItem(
-                      "vs1companyBankAccountName",
-                      bankAccName
-                    );
-                    localStorage.setItem("vs1companyBankAccountNo", accNo);
-                    localStorage.setItem("vs1companyBankBSB", bsb);
-                    localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                    localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                    sideBarService.getAccountListVS1().then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function (datareturn) {
-                            window.open("/accountsoverview", "_self");
-                          }).catch(function (err) {
-                            window.open("/accountsoverview", "_self");
-                          });
-                      }).catch(function (err) {
-                        window.open("/accountsoverview", "_self");
-                      });
-                  })
-                  .catch(function (err) {
-                    sideBarService
-                      .getAccountListVS1()
-                      .then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                          .then(function (datareturn) {
-                            window.open("/accountsoverview", "_self");
-                          })
-                          .catch(function (err) {
-                            window.open("/accountsoverview", "_self");
-                          });
-                      })
-                      .catch(function (err) {
-                        window.open("/accountsoverview", "_self");
-                      });
-                  });
-              } else {
-                sideBarService
-                  .getAccountListVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        window.open("/accountsoverview", "_self");
-                      })
-                      .catch(function (err) {
-                        window.open("/accountsoverview", "_self");
-                      });
-                  })
-                  .catch(function (err) {
-                    window.open("/accountsoverview", "_self");
-                  });
-              }
-            })
-            .catch(function (err) {
-              swal({
-                title: "Oooops...",
-                text: err,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-              }).then((result) => {
-                if (result.value) {
-                  // Meteor._reload.reload();
-                } else if (result.dismiss === "cancel") {
-                }
-              });
-              $(".fullScreenSpin").css("display", "none");
-            });
+          doSaveAccount(accountID);
         })
         .catch(function (err) {
-          data = {
-            type: "TAccount",
-            fields: {
-              AccountName: accountname || "",
-              AccountNumber: accountno || "",
-              AccountTypeName: accounttype || "",
-              ReceiptCategory: expenseCategory || "",
-              Active: true,
-              BankAccountName: bankaccountname || "",
-              BankAccountNumber: bankacountno || "",
-              BSB: bankbsb || "",
-              Description: accountdesc || "",
-              TaxCode: taxcode || "",
-              Extra: swiftCode,
-              BankNumber: routingNo,
-              PublishOnVS1: true,
-              IsHeader: isHeader,
-              AllowExpenseClaim:useReceiptClaim,
-              Required:forTransaction,
-              CarNumber: cardnumber || "",
-              CVC: cardcvc || "",
-              ExpiryDate: expiryDate || "",
-            },
-          };
-
-          accountService
-            .saveAccount(data)
-            .then(function (data) {
-              if ($("#showOnTransactions").is(":checked")) {
-                var objDetails = {
-                  type: "TCompanyInfo",
-                  fields: {
-                    Id: companyID,
-                    AccountNo: bankacountno,
-                    BankBranch: swiftCode,
-                    BankAccountName: bankaccountname,
-                    BankName: bankname,
-                    Bsb: bankbsb,
-                    SiteCode: routingNo,
-                    FileReference: accountname,
-                  },
-                };
-                organisationService
-                  .saveOrganisationSetting(objDetails)
-                  .then(function (data) {
-                    var accNo = bankacountno || "";
-                    var swiftCode1 = swiftCode || "";
-                    var bankName = bankaccountname || "";
-                    var accountName = accountname || "";
-                    var bsb = bankbsb || "";
-                    var routingNo = routingNo || "";
-                    localStorage.setItem("vs1companyBankName", bankname);
-                    localStorage.setItem(
-                      "vs1companyBankAccountName",
-                      bankAccName
-                    );
-                    localStorage.setItem("vs1companyBankAccountNo", accNo);
-                    localStorage.setItem("vs1companyBankBSB", bsb);
-                    localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                    localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                    sideBarService
-                      .getAccountListVS1()
-                      .then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                          .then(function (datareturn) {
-                            window.open("/accountsoverview", "_self");
-                          })
-                          .catch(function (err) {
-                            window.open("/accountsoverview", "_self");
-                          });
-                      })
-                      .catch(function (err) {
-                        window.open("/accountsoverview", "_self");
-                      });
-                  })
-                  .catch(function (err) {
-                    sideBarService
-                      .getAccountListVS1()
-                      .then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                          .then(function (datareturn) {
-                            //window.open('/accountsoverview', '_self');
-                          })
-                          .catch(function (err) {
-                            window.open("/accountsoverview", "_self");
-                          });
-                      })
-                      .catch(function (err) {
-                        window.open("/accountsoverview", "_self");
-                      });
-                  });
-              } else {
-                sideBarService
-                  .getAccountListVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        window.open("/accountsoverview", "_self");
-                      })
-                      .catch(function (err) {
-                        window.open("/accountsoverview", "_self");
-                      });
-                  })
-                  .catch(function (err) {
-                    window.open("/accountsoverview", "_self");
-                  });
-              }
-            })
-            .catch(function (err) {
-              swal({
-                title: "Oooops...",
-                text: err,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-              }).then((result) => {
-                if (result.value) {
-                  Meteor._reload.reload();
-                } else if (result.dismiss === "cancel") {
-                }
-              });
-              $(".fullScreenSpin").css("display", "none");
-            });
+          doSaveAccount(0)
         });
     } else {
+      doSaveAccount(accountID);
+    }
+    function doSaveAccount(accountID) {
       data = {
         type: "TAccount",
         fields: {
           ID: accountID,
-          AccountName: accountname || "",
+          // AccountName: accountname|| '',
           AccountNumber: accountno || "",
-          // AccountTypeName: accounttype || '',
+          // AccountTypeName: accounttype|| '',
           ReceiptCategory: expenseCategory || "",
           Active: true,
           BankAccountName: bankaccountname || "",
@@ -1660,10 +1562,9 @@ Template.accountsoverview.events({
           BSB: bankbsb || "",
           Description: accountdesc || "",
           TaxCode: taxcode || "",
+          PublishOnVS1: true,
           Extra: swiftCode,
           BankNumber: routingNo,
-          //Level4: bankname,
-          PublishOnVS1: true,
           IsHeader: isHeader,
           AllowExpenseClaim:useReceiptClaim,
           Required:forTransaction,
@@ -1674,100 +1575,99 @@ Template.accountsoverview.events({
       };
 
       accountService
-        .saveAccount(data)
-        .then(function (data) {
-          if ($("#showOnTransactions").is(":checked")) {
-            var objDetails = {
-              type: "TCompanyInfo",
-              fields: {
-                Id: companyID,
-                AccountNo: bankacountno,
-                BankBranch: swiftCode,
-                BankAccountName: bankaccountname,
-                BankName: bankname,
-                Bsb: bankbsb,
-                SiteCode: routingNo,
-                FileReference: accountname,
-              },
-            };
-            organisationService
-              .saveOrganisationSetting(objDetails)
-              .then(function (data) {
-                var accNo = bankacountno || "";
-                var swiftCode1 = swiftCode || "";
-                var bankAccName = bankaccountname || "";
-                var accountName = accountname || "";
-                var bsb = bankbsb || "";
-                var routingNo = routingNo || "";
-                localStorage.setItem("vs1companyBankName", bankname);
-                localStorage.setItem("vs1companyBankAccountName", bankAccName);
-                localStorage.setItem("vs1companyBankAccountNo", accNo);
-                localStorage.setItem("vs1companyBankBSB", bsb);
-                localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                sideBarService
+          .saveAccount(data)
+          .then(function (data) {
+            if ($("#showOnTransactions").is(":checked")) {
+              const objDetails = {
+                type: "TCompanyInfo",
+                fields: {
+                  Id: companyID,
+                  AccountNo: bankacountno,
+                  BankBranch: swiftCode,
+                  BankAccountName: bankaccountname,
+                  BankName: bankname,
+                  Bsb: bankbsb,
+                  SiteCode: routingNo,
+                  FileReference: accountname,
+                },
+              };
+              organisationService
+                  .saveOrganisationSetting(objDetails)
+                  .then(function (data) {
+                    const accNo = bankacountno || "";
+                    const swiftCode1 = swiftCode || "";
+                    const bankAccName = bankaccountname || "";
+                    const accountName = accountname || "";
+                    const bsb = bankbsb || "";
+                    const routingNo = routingNo || "";
+
+                    localStorage.setItem("vs1companyBankName", bankname);
+                    localStorage.setItem(
+                        "vs1companyBankAccountName",
+                        bankAccName
+                    );
+                    localStorage.setItem("vs1companyBankAccountNo", accNo);
+                    localStorage.setItem("vs1companyBankBSB", bsb);
+                    localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                    localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                    sideBarService.getAccountListVS1().then(function (dataReload) {
+                      addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function (datareturn) {
+                        window.open("/accountsoverview", "_self");
+                      }).catch(function (err) {
+                        window.open("/accountsoverview", "_self");
+                      });
+                    }).catch(function (err) {
+                      window.open("/accountsoverview", "_self");
+                    });
+                  })
+                  .catch(function (err) {
+                    sideBarService
+                        .getAccountListVS1()
+                        .then(function (dataReload) {
+                          addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                              .then(function (datareturn) {
+                                window.open("/accountsoverview", "_self");
+                              })
+                              .catch(function (err) {
+                                window.open("/accountsoverview", "_self");
+                              });
+                        })
+                        .catch(function (err) {
+                          window.open("/accountsoverview", "_self");
+                        });
+                  });
+            } else {
+              sideBarService
                   .getAccountListVS1()
                   .then(function (dataReload) {
                     addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        window.open("/accountsoverview", "_self");
-                      })
-                      .catch(function (err) {
-                        window.open("/accountsoverview", "_self");
-                      });
+                        .then(function (datareturn) {
+                          window.open("/accountsoverview", "_self");
+                        })
+                        .catch(function (err) {
+                          window.open("/accountsoverview", "_self");
+                        });
                   })
                   .catch(function (err) {
                     window.open("/accountsoverview", "_self");
                   });
-              })
-              .catch(function (err) {
-                sideBarService
-                  .getAccountListVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        window.open("/accountsoverview", "_self");
-                      })
-                      .catch(function (err) {
-                        window.open("/accountsoverview", "_self");
-                      });
-                  })
-                  .catch(function (err) {
-                    window.open("/accountsoverview", "_self");
-                  });
-              });
-          } else {
-            sideBarService
-              .getAccountListVS1()
-              .then(function (dataReload) {
-                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                  .then(function (datareturn) {
-                    window.open("/accountsoverview", "_self");
-                  })
-                  .catch(function (err) {
-                    window.open("/accountsoverview", "_self");
-                  });
-              })
-              .catch(function (err) {
-                window.open("/accountsoverview", "_self");
-              });
-          }
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
             }
+          })
+          .catch(function (err) {
+            swal({
+              title: "Oooops...",
+              text: err,
+              type: "error",
+              showCancelButton: false,
+              confirmButtonText: "Try Again",
+            }).then((result) => {
+              if (result.value) {
+                Meteor._reload.reload();
+              } else if (result.dismiss === "cancel") {
+              }
+            });
+            $(".fullScreenSpin").css("display", "none");
           });
-          $(".fullScreenSpin").css("display", "none");
-        });
     }
   },
   "click .btnAddNewAccounts": function () {
@@ -2259,6 +2159,248 @@ Template.accountsoverview.events({
       } else {
       }
     });
+  },
+  'click #tblCategory tbody tr': function(e) {
+    let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
+    let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
+    let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
+
+    $('#expenseCategory').val(category);
+    $('#categoryAccountID').val(accountID);
+    $('#categoryAccountName').val(accountName);
+
+    $('#categoryListModal').modal('toggle');
+  },
+  'click .btnAddNewReceiptCategory': function(event) {
+    $('#add-receiptcategory-title').text('Add New Receipt Category');
+    $('#edtReceiptCategoryID').val('');
+    $('#edtReceiptCategoryName').val('');
+    $('#edtReceiptCategoryDesc').val('');
+  },
+  'click .btnRefreshCategoryAccount': function (event) {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    const splashArrayAccountList = [];
+    let receiptService = new ReceiptService();
+    let sideBarService = new SideBarService();
+    let dataSearchName = $('#tblCategory_filter input').val();
+    let categories = [];
+    if (dataSearchName.replace(/\s/g, '') !== '') {
+      receiptService.getSearchReceiptCategoryByName(dataSearchName).then(function (data) {
+        if (data.treceiptcategory.length > 0) {
+          for (let i in data.treceiptcategory){
+            if (data.treceiptcategory.hasOwnProperty(i)) {
+              categories.push(data.treceiptcategory[i].fields.CategoryName);
+            }
+          }
+          let usedCategories = [];
+          sideBarService.getAccountListVS1().then(function (data) {
+            if (data.taccountvs1.length > 0) {
+              for (let i = 0; i < data.taccountvs1.length; i++) {
+                if (data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != '') {
+                  usedCategories.push(data.taccountvs1[i].fields);
+                }
+              }
+              usedCategories = [...new Set(usedCategories)];
+              categories.forEach((citem, j) => {
+                let cdataList = null;
+                let match = usedCategories.filter((item) => (item.ReceiptCategory == citem));
+                if (match.length > 0) {
+                  let temp = match[0];
+                  cdataList = [
+                    citem,
+                    temp.AccountName || '',
+                    temp.Description || '',
+                    temp.AccountNumber || '',
+                    temp.TaxCode || '',
+                    temp.ID || ''
+                  ];
+                } else {
+                  cdataList = [
+                    citem,
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                  ];
+                }
+                splashArrayAccountList.push(cdataList);
+              });
+              const datatable = $('#tblCategory').DataTable();
+              datatable.clear();
+              datatable.rows.add(splashArrayAccountList);
+              datatable.draw(false);
+            }
+            $('.fullScreenSpin').css('display', 'none');
+          }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+          })
+        } else {
+          $('.fullScreenSpin').css('display', 'none');
+          $('#categoryListModal').modal('toggle');
+          swal({
+            title: 'Question',
+            text: "Category does not exist, would you like to create it?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+          }).then((result) => {
+            if (result.value) {
+              $('#addReceiptCategoryModal').modal('toggle');
+              $('#edtReceiptCategoryName').val(dataSearchName);
+            } else if (result.dismiss === 'cancel') {
+              $('#categoryListModal').modal('toggle');
+            }
+          });
+        }
+      }).catch(function (err) {
+        $('.fullScreenSpin').css('display', 'none');
+      });
+    } else {
+      sideBarService.getReceiptCategory().then(function(data) {
+        if (data.treceiptcategory.length > 0) {
+          for (let i in data.treceiptcategory){
+            if (data.treceiptcategory.hasOwnProperty(i)) {
+              categories.push(data.treceiptcategory[i].CategoryName);
+            }
+          }
+          let usedCategories = [];
+          sideBarService.getAccountListVS1().then(function (data) {
+            if (data.taccountvs1.length > 0) {
+              for (let i = 0; i < data.taccountvs1.length; i++) {
+                if (data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != '') {
+                  usedCategories.push(data.taccountvs1[i].fields);
+                }
+              }
+              usedCategories = [...new Set(usedCategories)];
+              categories.forEach((citem, j) => {
+                let cdataList = null;
+                let match = usedCategories.filter((item) => (item.ReceiptCategory == citem));
+                if (match.length > 0) {
+                  let temp = match[0];
+                  cdataList = [
+                    citem,
+                    temp.AccountName || '',
+                    temp.Description || '',
+                    temp.AccountNumber || '',
+                    temp.TaxCode || '',
+                    temp.ID || ''
+                  ];
+                } else {
+                  cdataList = [
+                    citem,
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                  ];
+                }
+                splashArrayAccountList.push(cdataList);
+              });
+              const datatable = $('#tblCategory').DataTable();
+              datatable.clear();
+              datatable.rows.add(splashArrayAccountList);
+              datatable.draw(false);
+              $('.fullScreenSpin').css('display', 'none');
+            }
+          }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+          })
+        }
+        $('.fullScreenSpin').css('display', 'none');
+      }).catch(function (err) {
+        $('.fullScreenSpin').css('display', 'none');
+      });
+    }
+  },
+  'keyup #tblCategory_filter input': function (event) {
+    if (event.keyCode === 13) {
+      $(".btnRefreshCategoryAccount").trigger("click");
+    }
+  },
+  'click #addReceiptCategoryModal .btnSave': function(event) {
+    $('.fullScreenSpin').css('display','inline-block');
+    let receiptService = new ReceiptService();
+    let receiptCategoryID = $('#edtReceiptCategoryID').val();
+    let receiptCategoryName = $('#edtReceiptCategoryName').val();
+    if (receiptCategoryName == '') {
+      swal('Receipt Category name cannot be blank!', '', 'warning');
+      $('.fullScreenSpin').css('display','none');
+      return false;
+    }
+    let receiptCategoryDesc = $('#edtReceiptCategoryDesc').val();
+    let objDetails = '';
+    if (receiptCategoryID == "") {
+      receiptService.getOneReceiptCategoryDataExByName(receiptCategoryName).then(function (data) {
+        if (data.treceiptcategory.length > 0 ) {
+          swal('Category name duplicated.', '', 'warning');
+          $('.fullScreenSpin').css('display','none');
+          return false;
+        } else {
+          objDetails = {
+            type: "TReceiptCategory",
+            fields: {
+              ID: parseInt(receiptCategoryID)||0,
+              Active: true,
+              CategoryName: receiptCategoryName,
+              CategoryDesc: receiptCategoryDesc
+            }
+          };
+          doSaveReceiptCategory(objDetails);
+        }
+      }).catch(function (err) {
+        objDetails = {
+          type: "TReceiptCategory",
+          fields: {
+            Active: true,
+            CategoryName: receiptCategoryName,
+            CategoryDesc: receiptCategoryDesc
+          }
+        };
+        // doSaveReceiptCategory(objDetails);
+      });
+    } else {
+      objDetails = {
+        type: "TReceiptCategory",
+        fields: {
+          ID: parseInt(receiptCategoryID),
+          Active: true,
+          CategoryName: receiptCategoryName,
+          CategoryDesc: receiptCategoryDesc
+        }
+      };
+      doSaveReceiptCategory(objDetails);
+    }
+    function doSaveReceiptCategory(objDetails) {
+      receiptService.saveReceiptCategory(objDetails).then(function (objDetails) {
+        sideBarService.getReceiptCategory().then(function(dataReload) {
+          addVS1Data('TReceiptCategory',JSON.stringify(dataReload)).then(function (datareturn) {
+            location.reload(true);
+          }).catch(function (err) {
+            location.reload(true);
+          });
+        }).catch(function(err) {
+          location.reload(true);
+        });
+      }).catch(function (err) {
+        swal({
+          title: 'Oooops...',
+          text: err,
+          type: 'error',
+          showCancelButton: false,
+          confirmButtonText: 'Try Again'
+        }).then((result) => {
+          if (result.value) {
+            // Meteor._reload.reload();
+          } else if (result.dismiss === 'cancel') {
+
+          }
+        });
+        $('.fullScreenSpin').css('display','none');
+      });
+    }
   },
 });
 

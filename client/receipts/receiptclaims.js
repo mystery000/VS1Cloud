@@ -1339,6 +1339,9 @@ Template.receiptsoverview.onRendered(function() {
                     lineItem.MetaID = expense.fields.ID;
                     lineItem.LineID = lineItem.ID;
                     lineItem.TripGroup = expense.fields.TripGroup;
+                    if (lineItem.TripGroup == "T") {
+                        lineItem.TripGroup = "";
+                    }
                     lineItems.push(lineItem);
                 })
             } else if (Object.prototype.toString.call(expense.fields.Lines) === "[object Object]") {
@@ -1347,6 +1350,9 @@ Template.receiptsoverview.onRendered(function() {
                 lineItem.MetaID = expense.fields.ID;
                 lineItem.LineID = lineItem.ID;
                 lineItem.TripGroup = expense.fields.TripGroup;
+                if (lineItem.TripGroup == "T") {
+                    lineItem.TripGroup = "";
+                }
                 lineItems.push(lineItem);
             }
         });
@@ -1508,6 +1514,7 @@ Template.receiptsoverview.onRendered(function() {
     templateObject.getOCRResultFromImage = function(imageData, fileName) {
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
+            console.log(data);
             $('.fullScreenSpin').css('display', 'none');
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
@@ -1580,7 +1587,7 @@ Template.receiptsoverview.onRendered(function() {
                                 type: "TSupplier",
                                 fields: {
                                     ClientName: supplier_name,
-                                    FirstName: supplier_name,
+                                    FirstName: 'Unknown',
                                     LastName: '',
                                     Phone: phone_number,
                                     Mobile: '',
@@ -1592,7 +1599,7 @@ Template.receiptsoverview.onRendered(function() {
                                     State: '',
                                     PostCode: '',
                                     Country: '',
-                                    BillStreet: '',
+                                    BillStreet: address,
                                     BillStreet2: '',
                                     BillState: '',
                                     BillPostCode: '',
@@ -1916,7 +1923,7 @@ Template.receiptsoverview.events({
     'click #tblReceiptList tbody tr td:not(:first-child)': function(event) {
         let template = Template.instance();
         const selectedId = $(event.target).closest('tr').attr('id');
-        let selectedClaim = template.expenseClaimList.get().filter(claim => claim.ID == selectedId)[0];
+        let selectedClaim = template.expenseClaimList.get().filter(claim => claim.MetaID == selectedId)[0];
         template.editExpenseClaim.set(selectedClaim);
         let categoryAccountList = template.categoryAccounts.get();
         let categoryName = '';
@@ -1938,8 +1945,8 @@ Template.receiptsoverview.events({
         $('#viewReceiptModal .transactionTypes').val(selectedClaim.Paymethod);
         $('#viewReceiptModal .txaDescription').val(selectedClaim.Description);
         $('#viewReceiptModal .trip-groups').val(selectedClaim.TripGroup);
-        $('#viewReceiptModal #receiptMetaID').html(selectedClaim.MetaID);
-        $('#viewReceiptModal #receiptLineID').html(selectedClaim.LineID);
+        $('#viewReceiptModal #receiptMetaID').val(selectedClaim.MetaID);
+        $('#viewReceiptModal #receiptLineID').val(selectedClaim.LineID);
 
         if (selectedClaim.Attachments) {
             let imageData = selectedClaim.Attachments[0].fields.Description + "," + selectedClaim.Attachments[0].fields.Attachment;
@@ -2177,30 +2184,42 @@ Template.receiptsoverview.events({
     'click .btnRefreshCategoryAccount': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
         const splashArrayAccountList = [];
+        let receiptService = new ReceiptService();
         let sideBarService = new SideBarService();
         let dataSearchName = $('#tblCategory_filter input').val();
-        let categories = Template.instance().receiptCategories.get();
+        let categories = [];
         if (dataSearchName.replace(/\s/g, '') !== '') {
-            sideBarService.getAccountListVS1(dataSearchName).then(function (data) {
-                if (data.taccountvs1.length > 0) {
-                    for (let i = 0; i < data.taccountvs1.length; i++) {
-                        const dataList = [
-                            data.taccountvs1[i].fields.ReceiptCategory|| '',
-                            data.taccountvs1[i].fields.AccountName || '',
-                            data.taccountvs1[i].fields.Description || '',
-                            data.taccountvs1[i].fields.AccountNumber || '',
-                            data.taccountvs1[i].fields.TaxCode || '',
-                            data.taccountvs1[i].fields.ID || ''
-                        ];
-                        if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)){
-                            splashArrayAccountList.push(dataList);
+            receiptService.getSearchReceiptCategoryByName(dataSearchName).then(function (data) {
+                if (data.treceiptcategory.length > 0) {
+                    for (let i in data.treceiptcategory){
+                        if (data.treceiptcategory.hasOwnProperty(i)) {
+                            categories.push(data.treceiptcategory[i].fields.CategoryName);
                         }
                     }
-                    const datatable = $('#tblCategory').DataTable();
-                    datatable.clear();
-                    datatable.rows.add(splashArrayAccountList);
-                    datatable.draw(false);
-                    $('.fullScreenSpin').css('display', 'none');
+                    sideBarService.getAccountListVS1().then(function (data) {
+                        if (data.taccountvs1.length > 0) {
+                            for (let i = 0; i < data.taccountvs1.length; i++) {
+                                const dataList = [
+                                    data.taccountvs1[i].fields.ReceiptCategory || '',
+                                    data.taccountvs1[i].fields.AccountName || '',
+                                    data.taccountvs1[i].fields.Description || '',
+                                    data.taccountvs1[i].fields.AccountNumber || '',
+                                    data.taccountvs1[i].fields.TaxCode || '',
+                                    data.taccountvs1[i].fields.ID || ''
+                                ];
+                                if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)) {
+                                    splashArrayAccountList.push(dataList);
+                                }
+                            }
+                            const datatable = $('#tblCategory').DataTable();
+                            datatable.clear();
+                            datatable.rows.add(splashArrayAccountList);
+                            datatable.draw(false);
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                    }).catch(function (err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    })
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
                     $('#categoryListModal').modal('toggle');
@@ -2224,24 +2243,38 @@ Template.receiptsoverview.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
-            sideBarService.getAccountListVS1().then(function(data) {
-                for (let i = 0; i < data.taccountvs1.length; i++) {
-                    const dataList = [
-                        data.taccountvs1[i].fields.ReceiptCategory|| '',
-                        data.taccountvs1[i].fields.AccountName || '',
-                        data.taccountvs1[i].fields.Description || '',
-                        data.taccountvs1[i].fields.AccountNumber || '',
-                        data.taccountvs1[i].fields.TaxCode || '',
-                        data.taccountvs1[i].fields.ID || ''
-                    ];
-                    if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)){
-                        splashArrayAccountList.push(dataList);
+            sideBarService.getReceiptCategory().then(function(data) {
+                if (data.treceiptcategory.length > 0) {
+                    for (let i in data.treceiptcategory){
+                        if (data.treceiptcategory.hasOwnProperty(i)) {
+                            categories.push(data.treceiptcategory[i].CategoryName);
+                        }
                     }
+                    sideBarService.getAccountListVS1().then(function (data) {
+                        if (data.taccountvs1.length > 0) {
+                            for (let i = 0; i < data.taccountvs1.length; i++) {
+                                const dataList = [
+                                    data.taccountvs1[i].fields.ReceiptCategory || '',
+                                    data.taccountvs1[i].fields.AccountName || '',
+                                    data.taccountvs1[i].fields.Description || '',
+                                    data.taccountvs1[i].fields.AccountNumber || '',
+                                    data.taccountvs1[i].fields.TaxCode || '',
+                                    data.taccountvs1[i].fields.ID || ''
+                                ];
+                                if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)) {
+                                    splashArrayAccountList.push(dataList);
+                                }
+                            }
+                            const datatable = $('#tblCategory').DataTable();
+                            datatable.clear();
+                            datatable.rows.add(splashArrayAccountList);
+                            datatable.draw(false);
+                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    }).catch(function (err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    })
                 }
-                const datatable = $('#tblCategory').DataTable();
-                datatable.clear();
-                datatable.rows.add(splashArrayAccountList);
-                datatable.draw(false);
                 $('.fullScreenSpin').css('display', 'none');
             }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -2576,8 +2609,6 @@ Template.receiptsoverview.events({
             }]
         }
 
-        let template = Template.instance();
-        // let receipt = template.editExpenseClaim.get();
         let metaID = $('#viewReceiptModal #receiptMetaID').val() || 0;
         let lineID = $('#viewReceiptModal #receiptLineID').val() || 0;
         let employeeId = $('#viewReceiptModal .employees').attr('data-id');
@@ -2599,7 +2630,7 @@ Template.receiptsoverview.events({
         let expenseClaimLine = {
             type: "TExpenseClaimLineEx",
             fields: {
-                ID: metaID,
+                ID: lineID,
                 EmployeeID: employeeId ? parseInt(employeeId) : 0,
                 EmployeeName: employeeName,
                 SupplierID: supplierId ? parseInt(supplierId) : 0,
@@ -2623,7 +2654,7 @@ Template.receiptsoverview.events({
         let expenseClaim = {
             type: "TExpenseClaimEx",
             fields: {
-                ID: lineID,
+                ID: metaID,
                 EmployeeID: employeeId ? parseInt(employeeId) : 0,
                 EmployeeName: employeeName,
                 DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
@@ -2634,7 +2665,6 @@ Template.receiptsoverview.events({
                 TripGroup: tripGroupName
             }
         };
-        console.log(JSON.stringify(expenseClaim));
         $('.fullScreenSpin').css('display', 'inline-block');
         accountService.saveReceipt(expenseClaim).then(function(data) {
             // $('.fullScreenSpin').css('display', 'none');
@@ -3246,10 +3276,15 @@ Template.receiptsoverview.events({
         // sideBarService.getAllExpenseCliamExDataVS1().then(function(expenseData) {
         sideBarService.getAllExpenseClaimExData().then(function(expenseData) {
             addVS1Data('TExpenseClaim', JSON.stringify(expenseData)).then(function(datareturn) {
-                //window.open('/receiptsoverview', '_self');
-                setTimeout(() => {
-                    window.open('/receiptsoverview', '_self');
-                }, 200);
+                sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad,0).then(function(dataReload) {
+                    addVS1Data('TSupplierVS1',JSON.stringify(dataReload)).then(function (datareturn) {
+                        window.open('/receiptsoverview','_self');
+                    }).catch(function (err) {
+                        window.open('/receiptsoverview','_self');
+                    });
+                }).catch(function(err) {
+                    window.open('/receiptsoverview','_self');
+                });
             }).catch(function(err) {
                 setTimeout(() => {
                     window.open('/receiptsoverview', '_self');
