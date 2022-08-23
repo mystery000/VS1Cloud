@@ -4717,6 +4717,7 @@ Template.employeescard.events({
                 const text = $(event.currentTarget).find('td').text();
                 $(e.currentTarget).attr('data-value', value);
                 $(e.currentTarget).val(text);
+                $('#edtTaxFileNumber').val(''); // here we clear the value
                 $('#AppTableModal').modal('toggle');
                 $('#AppTableModal tbody tr').off('click');
             });
