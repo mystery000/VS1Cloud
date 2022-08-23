@@ -986,7 +986,7 @@ Template.emailsettings.onRendered(function () {
                                                     };
                                                     let tDate = '';
                                                     let dDate = '';
-                                                    if (transIDs.includes(formID.toString()) == true) {
+                                                    if (transIDs.includes(formID.toString()) == true && formID != 177) {
                                                         tDate = source.querySelector('#saleDate').innerHTML;
                                                         dDate = source.querySelector('#duedate').innerHTML;
                                                     }
@@ -1041,7 +1041,7 @@ Template.emailsettings.onRendered(function () {
                                     EmployeeId: parseInt(recipientId),
                                     Every: 1,
                                     EndDate: "",
-                                    FormID: parseInt(formID),
+                                    FormID: formID,
                                     LastEmaileddate: "",
                                     MonthDays: 0,
                                     StartDate: sDate,
@@ -1053,7 +1053,7 @@ Template.emailsettings.onRendered(function () {
 
                             let transIDs = ['54', '177', '12', '18', '21', '61', '69', '71', '74', '77', '17544', '94'];
                             if(transIDs.includes(formID.toString()) == true) {
-                                attachments.map (attachment => {
+                                attachments.map ((attachment, attachIndex) => {
                                     async function checkBasedOnType() {
                                     let currentTime = new Date()
                                     let transTime = new Date(attachment.tDate)
@@ -1071,12 +1071,13 @@ Template.emailsettings.onRendered(function () {
                                             EmployeeId: parseInt(recipientId),
                                             Every: 1,
                                             EndDate: "",
-                                            FormID: parseInt(formID),
+                                            FormID: formID + '_' + (attachIndex+1).toString(),
                                             LastEmaileddate: "",
                                             MonthDays: 0,
                                             StartDate: sDate,
                                             WeekDay: 1,
                                             NextDueDate: '',
+                                            Frequency: '',
                                             attachments: attaches,
                                             FormName: formName,
                                             EmployeeEmail: recipients[index],
@@ -1086,7 +1087,9 @@ Template.emailsettings.onRendered(function () {
                                     }
     
                                     if(basedOnType.includes('T') == true && attachment.tDate != '') {
-                                        object.fields.StartDate = transTime;
+                                        object.fields.StartDate = moment(transTime).format("YYYY-MM-DD HH:mm");
+                                        object.fields.EndDate = moment(transTime).format("YYYY-MM-DD HH:mm");
+                                        // object.fields.EndDate = object.fields.StartDate;
                                         const nextDueDate = await new Promise((resolve, reject) => {
                                             Meteor.call('calculateNextDate', object.fields, (error, result) => {
                                                 if (error) return reject(error);
@@ -1098,7 +1101,10 @@ Template.emailsettings.onRendered(function () {
                                     }
     
                                     if(basedOnType.includes('D') == true && attachment.dDate != '') {
-                                        object.fields.StartDate = dueTime;
+                                        object.fields.StartDate = moment(dueTime).format("YYYY-MM-DD HH:mm");
+                                        object.fields.EndDate = moment(dueTime).format("YYYY-MM-DD HH:mm");
+                                        // object.fields.StartDate = dueTime;
+                                        // object.fields.EndDate = object.fields.StartDate;
                                         const nextDueDate = await new Promise((resolve, reject) => {
                                             Meteor.call('calculateNextDate', object.fields, (error, result) => {
                                                 if (error) return reject(error);
@@ -1110,7 +1116,7 @@ Template.emailsettings.onRendered(function () {
                                     }
     
                                     if(basedOnType.includes('O') && attachment.dDate != '' && currentTime.getTime() > dueTime.getTime()) {
-                                        object.fields.StartDate = transTime;
+                                        object.fields.StartDate = moment(transTime).format("YYYY-MM-DD HH:mm");
                                         Meteor.call('sendNormalEmail', object.fields);
                                     }
                                     }
@@ -1240,7 +1246,7 @@ Template.emailsettings.onRendered(function () {
                 await Promise.all(promise);
 
                 let promise1 = oldSettings.map(async setting => {
-                    if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 54
+                    if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 1 ||setting.fields.FormID == 54
                         || setting.fields.FormID == 177 || setting.fields.FormID == 129)) || (!isEssential
                             && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
                             && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
@@ -1296,7 +1302,7 @@ Template.emailsettings.onRendered(function () {
                             EmployeeId: parseInt(recipientId),
                             Every: 1,
                             EndDate: "",
-                            FormID: parseInt(formID),
+                            FormID: formID,
                             LastEmaileddate: "",
                             MonthDays: 0,
                             StartDate: sDate,

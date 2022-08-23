@@ -12840,6 +12840,15 @@ Template.supplierpaymentcard.events({
   //   $('.appliedAmount').text(currency + calculatedAppliedAmount);
   //  }, 500);
   // },
+
+
+  "click #chkEFT": function (event) {
+    if ($("#chkEFT").is(":checked")) {
+      $("#eftExportModal").modal("show");
+    } else {
+      $("#eftExportModal").modal("hide");
+    }
+  },
 });
 
 

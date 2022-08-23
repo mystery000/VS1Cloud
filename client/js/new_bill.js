@@ -219,6 +219,14 @@ Template.billcard.onRendered(() => {
 
     templateObject.getTemplateInfoNew();
 
+    templateObject.getOrganisationDetails = function () {
+        let account_id = Session.get('vs1companyStripeID') || '';
+        let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+        templateObject.accountID.set(account_id);
+        templateObject.stripe_fee_method.set(stripe_fee);
+    };
+    templateObject.getOrganisationDetails();
+
     templateObject.getLastBillData = async function() {
         let lastBankAccount = "Bank";
         let lastDepartment = defaultDept || "";
@@ -5004,6 +5012,84 @@ Template.billcard.events({
     // 'click #sltStatus': function(event) {
     //     $('#statusPopModal').modal('toggle');
     // },
+    'click .payNow': async function () {
+        let templateObject = Template.instance();
+        let stripe_id = templateObject.accountID.get() || '';
+        let stripe_fee_method = templateObject.stripe_fee_method.get();
+        if (stripe_id != "") {
+            var url = FlowRouter.current().path;
+            var id_available = url.includes("?supplierid=");
+            if (id_available == true) {
+                if ($('.edtSupplierEmail').val() != "") {
+                    let supplierDataName = $('#edtSupplierName').val();
+                    let data = await sideBarService.getOneSupplierDataExByName(supplierDataName);
+                    let SupplierID = data.tsupplier[0].fields.ID || '';
+                    let name = data.tsupplier[0].fields.FirstName || '';
+                    let surname = data.tsupplier[0].fields.LastName || '';
+                    let lineItems = [];
+                    let total = $('#totalBalanceDue').html() || 0;
+                    let tax = $('#subtotal_tax').html() || 0;
+                    let customer = $('#edtSupplierFirstName').val() + ' ' + $('#edtSupplierLastName').val();
+                    let company = Session.get('vs1companyName');
+                    $('#tblBillLine > tbody > tr').each(function () {
+                        var lineID = this.id;
+                        let tdproduct = $('#' + lineID + " .lineProductName").val();
+                        let tddescription = $('#' + lineID + " .lineMemo").text();
+                        let tdQty = 1;
+                        let tdunitprice = $('#' + lineID + " .colAmountExChange").val();
+                        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                        let tdlineamt = $('#' + lineID + " .lineAmt").text();
+                        let tdlineUnit = $('#' + lineID + " .lineUOM").text()||defaultUOM;
+                        lineItemObj = {
+                            description: tddescription || '',
+                            quantity: tdQty || 0,
+                            unitPrice: tdunitprice.toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            }) || 0
+                        }
+
+                        lineItems.push(lineItemObj);
+                    });
+                    var erpGet = erpDb();
+                    let vs1User = localStorage.getItem('mySession');
+                    let customerEmail = $('#edtSupplierEmail').val();
+                    let currencyname = (CountryAbbr).toLowerCase();
+                    let stringQuery = "?";
+                    let dept = $('#sltDept').val();
+                    var customerID = $('#edtSupplierEmail').attr('customerid');
+                    for (let l = 0; l < lineItems.length; l++) {
+                        stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+                    }
+                    stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + customerID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+                    window.open(stripeGlobalURL + stringQuery, '_self');
+                } else {
+                    swal({
+                        title: 'Supplier Email Required',
+                        text: 'Please enter supplier email',
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {}
+                        else if (result.dismiss === 'cancel') {}
+                    });
+                }
+            }
+        } else {
+            swal({
+                title: 'WARNING',
+                text: "Please Set Up Payment Method To Use This Option, Click Ok to be Redirected to Payment Method page.",
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.value) {
+                    window.open('paymentmethodSettings', '_self');
+                } else if (result.dismiss === 'cancel') {}
+            });
+        }
+    },
     'click #edtSupplierName': function(event) {
         $('#edtSupplierName').select();
         $('#edtSupplierName').editableSelect();
