@@ -623,7 +623,7 @@ Template.chequecard.onRendered(() => {
                   templateObject.CleintName.set(data.fields.SupplierName);
                   $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                   $("#sltStatus").val(data.fields.OrderStatus);
-                  $("#shipvia").val(data.fields.Shipping);
+                  //$("#shipvia").val(data.fields.Shipping);
 
                   if (data.fields.Isreconciled) {
                     $(".btnDeleteCheque").prop("disabled", true);
@@ -1004,7 +1004,7 @@ Template.chequecard.onRendered(() => {
                   templateObject.CleintName.set(useData[d].fields.SupplierName);
                   $("#sltCurrency").val(useData[d].fields.ForeignExchangeCode);
                   $("#sltStatus").val(useData[d].fields.OrderStatus);
-                  $("#shipvia").val(useData[d].fields.Shipping);
+                  //$("#shipvia").val(useData[d].fields.Shipping);
 
                   if (useData[d].fields.Isreconciled) {
                     $(".btnDeleteCheque").prop("disabled", true);
@@ -1358,7 +1358,7 @@ Template.chequecard.onRendered(() => {
                     templateObject.CleintName.set(data.fields.SupplierName);
                     $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                     $("#sltStatus").val(data.fields.OrderStatus);
-                    $("#shipvia").val(data.fields.Shipping);
+                    //$("#shipvia").val(data.fields.Shipping);
 
                     if (data.fields.Isreconciled) {
                       $(".btnDeleteCheque").prop("disabled", true);
@@ -1722,7 +1722,7 @@ Template.chequecard.onRendered(() => {
                 templateObject.CleintName.set(data.fields.SupplierName);
                 $("#sltCurrency").val(data.fields.ForeignExchangeCode);
                 $("#sltStatus").val(data.fields.OrderStatus);
-                $("#shipvia").val(data.fields.Shipping);
+                //$("#shipvia").val(data.fields.Shipping);
 
                 if (data.fields.Isreconciled) {
                   $(".btnDeleteCheque").prop("disabled", true);
@@ -2025,7 +2025,7 @@ Template.chequecard.onRendered(() => {
     $("#sltBankAccountName").editableSelect();
     $("#sltCurrency").editableSelect();
     $("#sltStatus").editableSelect();
-    $("#shipvia").editableSelect();
+    //$("#shipvia").editableSelect();
 
     $("#addRow").on("click", function () {
       var rowData = $("#tblChequeLine tbody>tr:last").clone(true);
@@ -5148,9 +5148,9 @@ Template.chequecard.events({
         width: 100,
       };
       let id = $(".printID").attr("id");
-  
+
       var source = document.getElementById("html-2-pdfwrapper");
-  
+
       let file = "Cheque.pdf";
       if (
           $(".printID").attr("id") != undefined ||
@@ -5158,7 +5158,7 @@ Template.chequecard.events({
       ) {
         file = "Cheque-" + id + ".pdf";
       }
-  
+
       var opt = {
         margin: 0,
         filename: file,
@@ -5203,7 +5203,7 @@ Template.chequecard.events({
           values.forEach(value => {
               let reportData = JSON.parse(value);
               let temp = {... reportData};
-              
+
               temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
               reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
               temp.attachments = attachment;
@@ -5666,7 +5666,7 @@ Template.chequecard.events({
       let reference = $("#edtRef").val();
 
       //let departement = $('#sltDept').val()||'';
-      let shipviaData = $("#shipvia").val() || "";
+      //let shipviaData = $("#shipvia").val() || "";
       let shippingAddress = $("#txaShipingInfo").val();
       let comments = $("#txaComment").val();
       let pickingInfrmation = $("#txapickmemo").val();
@@ -5693,7 +5693,7 @@ Template.chequecard.events({
             OrderDate: saleDate,
             SupplierInvoiceNumber: poNumber,
             ConNote: reference,
-            Shipping: shipviaData,
+            //Shipping: shipviaData,
             ShipTo: shippingAddress,
             Comments: comments,
             RefNo: reference,
@@ -5715,7 +5715,7 @@ Template.chequecard.events({
             OrderDate: saleDate,
             SupplierInvoiceNumber: poNumber,
             ConNote: reference,
-            Shipping: shipviaData,
+            //Shipping: shipviaData,
             ShipTo: shippingAddress,
             Comments: comments,
             RefNo: reference,
@@ -5953,7 +5953,7 @@ Template.chequecard.events({
                 values.forEach(value => {
                     let reportData = JSON.parse(value);
                     let temp = {... reportData};
-                    
+
                     temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     temp.attachments = attachment;
@@ -6027,7 +6027,7 @@ Template.chequecard.events({
                 values.forEach(value => {
                     let reportData = JSON.parse(value);
                     let temp = {... reportData};
-                    
+
                     temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     temp.attachments = attachment;
@@ -6102,7 +6102,7 @@ Template.chequecard.events({
                 values.forEach(value => {
                     let reportData = JSON.parse(value);
                     let temp = {... reportData};
-                    
+
                     temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     temp.attachments = attachment;
@@ -6137,7 +6137,7 @@ Template.chequecard.events({
                 values.forEach(value => {
                     let reportData = JSON.parse(value);
                     let temp = {... reportData};
-                    
+
                     temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     temp.attachments = attachment;

@@ -997,33 +997,33 @@
                                                                 </div>
                                                             </div>
                                                             {{#if includeBOnShippedQty}}
-                                                            <div class="columnSettings displaySettings" custid="{{displayfields.[2].id}}">
+                                                            <div class="columnSettings displaySettings" custid="{{displayfields.[15].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                    <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="{{displayfields.[2].active}}">
-                                                                    <label class="custom-control-label" for="formCheck-03"></label>
-                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}" valueupdate="th.colQty">{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}</div>
+                                                                    <input class="custom-control-input chkOrdered" type="checkbox" id="formCheck-16" checked >
+                                                                    <label class="custom-control-label" for="formCheck-16"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="Ordered" valueupdate="th.colOrdered">Ordered</div>
                                                                 </div>
                                                                 <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                     <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                    <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                    <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[15].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-                                                            <div class="columnSettings displaySettings" custid="{{displayfields.[2].id}}">
+                                                            <div class="columnSettings displaySettings" custid="{{displayfields.[16].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                    <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="{{displayfields.[2].active}}">
-                                                                    <label class="custom-control-label" for="formCheck-03"></label>
-                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}" valueupdate="th.colQty">{{#if displayfields}}{{displayfields.[2].custfieldlabel}}{{else}}Qty{{/if}}</div>
+                                                                    <input class="custom-control-input chkShipped" type="checkbox" id="formCheck-17" checked >
+                                                                    <label class="custom-control-label" for="formCheck-17"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="Shipped" valueupdate="th.colShipped">Shipped</div>
                                                                 </div>
                                                                 <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                     <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                                    <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                    <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[16].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[17].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                    <input class="custom-control-input chkBO" type="checkbox" id="formCheck-03" checked="{{displayfields.[17].active}}">
-                                                                    <label class="custom-control-label" for="formCheck-03"></label>
-                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if displayfields}}{{displayfields.[17].custfieldlabel}}{{else}}BO{{/if}}" valueupdate="th.colBO">{{#if displayfields}}{{displayfields.[17].custfieldlabel}}{{else}}BO{{/if}}</div>
+                                                                    <input class="custom-control-input chkBO" type="checkbox" id="formCheck-18" checked >
+                                                                    <label class="custom-control-label" for="formCheck-18"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="BO" valueupdate="th.colBO">BO</div>
                                                                 </div>
                                                                 <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                     <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
@@ -1361,7 +1361,7 @@
                                       displayfields}}{{displayfields.[1].custfieldlabel}}{{else}}Description{{/if}}</th>
                                     {{#if includeBOnShippedQty}}
                                     <th class="th colOrdered {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" style="width: 75px;">Ordered</th>
-                                    <th class="th colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" style="width: 75px;">Shipped</th>
+                                    <th class="th colShipped {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" style="width: 75px;">Shipped</th>
                                     <th class="th colBO {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" style="width: 75px;">BO</th>
                                    {{else}}
                                     <th class="th colQty {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}" style="width: 75px;">{{#if

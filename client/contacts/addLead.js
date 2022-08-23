@@ -269,7 +269,7 @@ Template.leadscard.onRendered(function () {
             custfield2: data.fields.CUSTFLD2 || '',
             custfield3: data.fields.CUSTFLD3 || '',
             custfield4: data.fields.CUSTFLD4 || '',
-            status: data.fields.CUSTFLD4 || '',
+            status: data.fields.Status || '',
             rep: data.fields.RepName || '',
             source: data.fields.SourceName || '',
         };
@@ -364,29 +364,80 @@ Template.leadscard.onRendered(function () {
     }
 
     templateObject.getReferenceLetters = () => {
-        sideBarService.getCorrespondences().then(dataObject => {
-            let tempArray = [];
-            if(dataObject.tcorrespondence.length > 0) {
-                let temp = dataObject.tcorrespondence.filter(item=>{
-                    return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+        getVS1Data('TCorrespondence').then(data => {
+            if(data.length == 0) {
+                sideBarService.getCorrespondences().then(dataObject => {
+                    addVS1Data('TCorrespondence', JSON.stringify(dataObject))
+                    let tempArray = [];
+                    if(dataObject.tcorrespondence.length > 0) {
+                        let temp = dataObject.tcorrespondence.filter(item=>{
+                            return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                        })
+        
+                        for(let i = 0; i< temp.length; i++) {
+                            for (let j = i+1; j< temp.length; j++ ) {
+                                if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                                    temp[j].fields.dup = true
+                                }
+                            }
+                        }
+        
+                        temp.map(item=>{
+                            if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                                tempArray.push(item.fields)
+                            }
+                        })
+                    }
+                    templateObject.correspondences.set(tempArray)
                 })
-
-                for(let i = 0; i< temp.length; i++) {
-                    for (let j = i+1; j< temp.length; j++ ) {
-                        if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-                            temp[j].fields.dup = true
+            }else {
+                let dataObj = JSON.parse(data[0].data);
+                let tempArray = [];
+                if(dataObj.tcorrespondence.length > 0) {
+                    let temp = dataObj.tcorrespondence.filter(item=>{
+                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                    })
+    
+                    for(let i = 0; i< temp.length; i++) {
+                        for (let j = i+1; j< temp.length; j++ ) {
+                            if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                                temp[j].fields.dup = true
+                            }
                         }
                     }
+                    temp.map(item=>{
+                        if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                            tempArray.push(item.fields)
+                        }
+                    })
                 }
-                
-                temp.map(item=>{
-                    if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
-                        tempArray.push(item.fields)
-                    }
-                })
+                templateObject.correspondences.set(tempArray)
             }
-            templateObject.correspondences.set(tempArray)
-        })
+        }).catch(function () {
+            sideBarService.getCorrespondences().then(dataObject => {
+                addVS1Data('TCorrespondence', JSON.stringify(dataObject));
+                let tempArray = [];
+                if(dataObject.tcorrespondence.length > 0) {
+                    let temp = dataObject.tcorrespondence.filter(item=>{
+                        return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
+                    })
+    
+                    for(let i = 0; i< temp.length; i++) {
+                        for (let j = i+1; j< temp.length; j++ ) {
+                            if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                                temp[j].fields.dup = true
+                            }
+                        }
+                    }
+                    temp.map(item=>{
+                        if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                            tempArray.push(item.fields)
+                        }
+                    })
+                }
+                templateObject.correspondences.set(tempArray)
+            })
+        }) 
     }
 
     if (currentId.id === "undefined") {
@@ -406,7 +457,7 @@ Template.leadscard.onRendered(function () {
 
     templateObject.getAllCrm = async function (leadName) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+        let employeeID = Session.get("mySessionEmployeeLoggedID");
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
@@ -469,9 +520,9 @@ Template.leadscard.onRendered(function () {
                             description: '',
                             labels: '',
                             category: 'appointment'
-        
+
                         }
-    
+
                         dataTableList.push(obj);
                     })
                 }
@@ -516,7 +567,7 @@ Template.leadscard.onRendered(function () {
                 }catch (error) {
                 }
                 setCrmProjectTasks()
-                
+
             })
             .catch((err)=>{
                 templateObject.crmRecords.set(dataTableList);
@@ -524,12 +575,12 @@ Template.leadscard.onRendered(function () {
                 $('.fullScreenSpin').css('display', 'none');
             })
         }
-  
+
         // await getTask();
         // await getAppointments();
         // await getEmails();
 
-        
+
     };
     function setCrmProjectTasks() {
         let tableHeaderList = [];
@@ -709,7 +760,7 @@ Template.leadscard.onRendered(function () {
             }).then((result) => {
                 if (result.value) {
                     $('#referenceLetterModal').modal('toggle');
-                } 
+                }
             });
         } else {
             let email = $('#edtLeadEmail').val();
@@ -736,6 +787,9 @@ Template.leadscard.onRendered(function () {
                         }
                     }
                     sideBarService.saveCorrespondence(temp).then(data => {
+                        sideBarService.getCorrespondences().then(dataUpdate => {
+                            addVS1Data('TCorrespondence', JSON.stringify(dataUpdate));
+                        })
                         $('#referenceLetterModal').modal('toggle');
                     })
                 })
@@ -749,7 +803,7 @@ Template.leadscard.onRendered(function () {
                 }).then((result) => {
                     if (result.value) {
                         $('#referenceLetterModal').modal('toggle');
-                    } 
+                    }
                 });
             }
         }
@@ -759,7 +813,7 @@ Template.leadscard.onRendered(function () {
         $('#addLetterTemplateModal').modal('toggle')
     })
 
-    
+
     $(document).on('click','#addLetterTemplateModal #save-correspondence', function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         // let correspondenceData = localStorage.getItem('correspondence');
@@ -784,7 +838,7 @@ Template.leadscard.onRendered(function () {
                 });
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-               
+
                 sideBarService.getCorrespondences().then(dObject =>{
 
                     let temp = {
@@ -803,25 +857,43 @@ Template.leadscard.onRendered(function () {
                         type: 'TCorrespondence',
                         fields: temp
                     }
-    
+
                     // let array = [];
                     // array.push(objDetails)
-                    
+
                     sideBarService.saveCorrespondence(objDetails).then(data=>{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: 'Success',
-                            text: 'Template has been saved successfully ',
-                            type: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Continue'
-                        }).then((result) => {
-                            if (result.value) {
-                                $('#addLetterTemplateModal').modal('toggle')
-                                templateObject.getReferenceLetters();
-                            } else if (result.dismiss === 'cancel') { }
-                        });
+                        sideBarService.getCorrespondences().then(dataUpdate => {
+                            addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function(){
+                                $('.fullScreenSpin').css('display', 'none');
+                                swal({
+                                    title: 'Success',
+                                    text: 'Template has been saved successfully ',
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Continue'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        $('#addLetterTemplateModal').modal('toggle')
+                                        templateObject.getReferenceLetters();
+                                    } else if (result.dismiss === 'cancel') { }
+                                });
+                            })
+                        }).catch(function() {
+                            $('.fullScreenSpin').css('display', 'none');
+                            swal({
+                                title: 'Oooops...',
+                                text: 'Something went wrong',
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $('#addLetterTemplateModal').modal('toggle')
+                                } else if (result.dismiss === 'cancel') { }
+                            });
+                        })
                     }).catch(function () {
+                        $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Oooops...',
                             text: 'Something went wrong',
@@ -831,11 +903,10 @@ Template.leadscard.onRendered(function () {
                         }).then((result) => {
                             if (result.value) {
                                 $('#addLetterTemplateModal').modal('toggle')
-                                $('.fullScreenSpin').css('display', 'none');
                             } else if (result.dismiss === 'cancel') { }
                         });
                     })
-                    
+
                 })
             }
         } else {
@@ -856,25 +927,42 @@ Template.leadscard.onRendered(function () {
                     type: 'TCorrespondence',
                     fields: temp
                 }
-    
+
                 let array = [];
                     array.push(objDetails)
-    
+
                 sideBarService.saveCorrespondence(objDetails).then(data=>{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Success',
-                        text: 'Template has been saved successfully ',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Continue'
-                    }).then((result) => {
-                        if (result.value) {
-                            $('#addLetterTemplateModal').modal('toggle')
-                            templateObject.getReferenceLetters();
-                            
-                        } else if (result.dismiss === 'cancel') { }
-                    });
+                    sideBarService.getCorrespondences().then(function(dataUpdate){
+                        addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
+                            $('.fullScreenSpin').css('display', 'none');
+                            swal({
+                                title: 'Success',
+                                text: 'Template has been saved successfully ',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Continue'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $('#addLetterTemplateModal').modal('toggle')
+                                    templateObject.getReferenceLetters();
+        
+                                } else if (result.dismiss === 'cancel') { }
+                            });
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                            swal({
+                                title: 'Oooops...',
+                                text: 'Something went wrong',
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $('#addLetterTemplateModal').modal('toggle')
+                                } else if (result.dismiss === 'cancel') { }
+                            });
+                        })  
+                    })
                 }).catch(function () {
                     swal({
                         title: 'Oooops...',
@@ -889,14 +977,14 @@ Template.leadscard.onRendered(function () {
                     });
                 })
             })
-            
+
         }
         // localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
         // templateObject.correspondences.set(correspondenceTemp);
         // $('#addLetterTemplateModal').modal('toggle');
     })
 
-   
+
 
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
         $('#leadStatus').val($(this).find(".colStatusName").text());
@@ -994,6 +1082,9 @@ Template.leadscard.onRendered(function () {
     $(document).on('click', '#leadRep', function(e, li){
         $('#employeeListPOPModal').modal('show');
     })
+
+    setTimeout(() => $('#leadStatus').editableSelect(), 500);
+    setTimeout(() => $('#leadStatus').editableSelect(), 3500);
 });
 
 Template.leadscard.events({
@@ -1084,9 +1175,9 @@ Template.leadscard.events({
         let bcountry = '';
         let bsuburb = '';
         let isSupplier = !!$('#chkSameAsSupplier').is(':checked');
-        let sourceName = $('#leadSource').val();
-        let repName = $('#leadRep').val();
-        let status = $('#leadStatus').val();
+        let sourceName = $('#leadSource').val()||'';
+        let repName = $('#leadRep').val()||'';
+        let status = $('#leadStatus').val()||'';
 
         if (employeeName == '') {
             swal('Please provide the lead name !', '', 'warning');
@@ -1188,7 +1279,7 @@ Template.leadscard.events({
                 CUSTFLD1: custField1,
                 CUSTFLD2: custField2,
                 CUSTFLD3: custField3,
-                CUSTFLD4: status,
+                Status: status,
                 SourceName: sourceName,
                 RepName: repName,
             }
@@ -1818,7 +1909,8 @@ Template.leadscard.helpers({
         }
 
         return isMobile;
-    }
+    },
+    setLeadStatus: (status) => status || 'Unqualified' 
 });
 
 function getPreviewFile(uploadedFiles, attachmentID) {
@@ -1872,6 +1964,7 @@ function convertToCustomer(nav) {
     let contactService = new ContactService();
     let currentId = FlowRouter.current().queryParams;
     let objDetails = '';
+    let leadStatus = nav === 'quotecard' ? 'Quoted' : nav === 'invoicecard' ? 'Invoiced' : '';
     if (!isNaN(currentId.id)) {
         let currentLead = parseInt(currentId.id);
         objDetails = {
@@ -1881,8 +1974,15 @@ function convertToCustomer(nav) {
                 IsCustomer: true
             }
         };
+        if(leadStatus) {
+            objDetails.fields.Status = leadStatus;
+        }
         contactService.saveProspectEx(objDetails).then(async function (data) {
             let customerID = data.fields.ID;
+            if (customerID) {
+                const dataReload = await sideBarService.getAllLeads(initialBaseDataLoad,0);
+                await addVS1Data('TProspectEx', JSON.stringify(dataReload));
+            }
             await templateObject.saveCustomerDetails();
             $('.fullScreenSpin').css('display','none');
             FlowRouter.go('/' + nav + '?customerid=' + customerID);

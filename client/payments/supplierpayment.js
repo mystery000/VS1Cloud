@@ -65,27 +65,7 @@ Template.supplierpayment.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSupplierPayment', function(error, result){
-        if(error){
 
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function(){
@@ -144,7 +124,15 @@ Template.supplierpayment.onRendered(function() {
                 let paystatus = data.tsupplierpaymentlist[i].QuoteStatus || '';
                 if(data.tsupplierpaymentlist[i].Deleted == true){
                   paystatus = "Deleted";
-                }
+                }else if (data.tsupplierpaymentlist[i].Reconciled == true){
+                  paystatus = "Rec";
+                }else if(data.tsupplierpaymentlist[i].Deleted != true){
+                  if (data.tsupplierpaymentlist[i].PaidInFull == "Yes"){
+                   paystatus = "Full";
+                  }else{
+                   paystatus = "Part";
+                  }
+                };
                 var dataList = {
                     id: data.tsupplierpaymentlist[i].PaymentID || '',
                     sortdate: data.tsupplierpaymentlist[i].PaymentDate !=''? moment(data.tsupplierpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tsupplierpaymentlist[i].PaymentDate,
@@ -172,34 +160,7 @@ Template.supplierpayment.onRendered(function() {
             templateObject.datatablerecords.set(dataTableList);
             if(templateObject.datatablerecords.get()){
 
-                Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSupplierPayment', function(error, result){
-                    if(error){
 
-                    }else{
-                        if(result){
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.split('.')[1];
-                                let columnWidth = customcolumn[i].width;
-                                let columnindex = customcolumn[i].index + 1;
-
-                                if(hiddenColumn == true){
-
-                                    $("."+columnClass+"").addClass('hiddenColumn');
-                                    $("."+columnClass+"").removeClass('showColumn');
-                                }else if(hiddenColumn == false){
-                                    $("."+columnClass+"").removeClass('hiddenColumn');
-                                    $("."+columnClass+"").addClass('showColumn');
-                                }
-
-                            }
-                        }
-
-                    }
-                });
 
 
                 setTimeout(function () {
@@ -363,7 +324,15 @@ Template.supplierpayment.onRendered(function() {
                         let paystatus = data.tsupplierpaymentlist[i].QuoteStatus || '';
                         if(data.tsupplierpaymentlist[i].Deleted == true){
                           paystatus = "Deleted";
-                        }
+                        }else if (data.tsupplierpaymentlist[i].Reconciled == true){
+                          paystatus = "Rec";
+                        }else if(data.tsupplierpaymentlist[i].Deleted != true){
+                          if (data.tsupplierpaymentlist[i].PaidInFull == "Yes"){
+                           paystatus = "Full";
+                          }else{
+                           paystatus = "Part";
+                          }
+                        };
                         var dataList = {
                             id: data.tsupplierpaymentlist[i].PaymentID || '',
                             sortdate: data.tsupplierpaymentlist[i].PaymentDate !=''? moment(data.tsupplierpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tsupplierpaymentlist[i].PaymentDate,
@@ -384,34 +353,6 @@ Template.supplierpayment.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
                     if(templateObject.datatablerecords.get()){
 
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSupplierPayment', function(error, result){
-                            if(error){
-
-                            }else{
-                                if(result){
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if(hiddenColumn == true){
-
-                                            $("."+columnClass+"").addClass('hiddenColumn');
-                                            $("."+columnClass+"").removeClass('showColumn');
-                                        }else if(hiddenColumn == false){
-                                            $("."+columnClass+"").removeClass('hiddenColumn');
-                                            $("."+columnClass+"").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
 
 
                         setTimeout(function () {
@@ -656,7 +597,15 @@ Template.supplierpayment.onRendered(function() {
                     let paystatus = data.tsupplierpaymentlist[i].QuoteStatus || '';
                     if(data.tsupplierpaymentlist[i].Deleted == true){
                       paystatus = "Deleted";
-                    }
+                    }else if (data.tsupplierpaymentlist[i].Reconciled == true){
+                      paystatus = "Rec";
+                    }else if(data.tsupplierpaymentlist[i].Deleted != true){
+                      if (data.tsupplierpaymentlist[i].PaidInFull == "Yes"){
+                       paystatus = "Full";
+                      }else{
+                       paystatus = "Part";
+                      }
+                    };
                     var dataList = {
                         id: data.tsupplierpaymentlist[i].PaymentID || '',
                         sortdate: data.tsupplierpaymentlist[i].PaymentDate !=''? moment(data.tsupplierpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tsupplierpaymentlist[i].PaymentDate,
@@ -677,34 +626,6 @@ Template.supplierpayment.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSupplierPayment', function(error, result){
-                        if(error){
-
-                        }else{
-                            if(result){
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if(hiddenColumn == true){
-
-                                        $("."+columnClass+"").addClass('hiddenColumn');
-                                        $("."+columnClass+"").removeClass('showColumn');
-                                    }else if(hiddenColumn == false){
-                                        $("."+columnClass+"").removeClass('hiddenColumn');
-                                        $("."+columnClass+"").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
 
 
                     setTimeout(function () {
@@ -945,7 +866,15 @@ Template.supplierpayment.onRendered(function() {
                   let paystatus = data.tsupplierpaymentlist[i].QuoteStatus || '';
                   if(data.tsupplierpaymentlist[i].Deleted == true){
                     paystatus = "Deleted";
-                  }
+                  }else if (data.tsupplierpaymentlist[i].Reconciled == true){
+                    paystatus = "Rec";
+                  }else if(data.tsupplierpaymentlist[i].Deleted != true){
+                    if (data.tsupplierpaymentlist[i].PaidInFull == "Yes"){
+                     paystatus = "Full";
+                    }else{
+                     paystatus = "Part";
+                    }
+                  };
                   var dataList = {
                       id: data.tsupplierpaymentlist[i].PaymentID || '',
                       sortdate: data.tsupplierpaymentlist[i].PaymentDate !=''? moment(data.tsupplierpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tsupplierpaymentlist[i].PaymentDate,
@@ -966,34 +895,6 @@ Template.supplierpayment.onRendered(function() {
               templateObject.datatablerecords.set(dataTableList);
               if(templateObject.datatablerecords.get()){
 
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSupplierPayment', function(error, result){
-                      if(error){
-
-                      }else{
-                          if(result){
-                              for (let i = 0; i < result.customFields.length; i++) {
-                                  let customcolumn = result.customFields;
-                                  let columData = customcolumn[i].label;
-                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                  let hiddenColumn = customcolumn[i].hidden;
-                                  let columnClass = columHeaderUpdate.split('.')[1];
-                                  let columnWidth = customcolumn[i].width;
-                                  let columnindex = customcolumn[i].index + 1;
-
-                                  if(hiddenColumn == true){
-
-                                      $("."+columnClass+"").addClass('hiddenColumn');
-                                      $("."+columnClass+"").removeClass('showColumn');
-                                  }else if(hiddenColumn == false){
-                                      $("."+columnClass+"").removeClass('hiddenColumn');
-                                      $("."+columnClass+"").addClass('showColumn');
-                                  }
-
-                              }
-                          }
-
-                      }
-                  });
 
 
                   setTimeout(function () {

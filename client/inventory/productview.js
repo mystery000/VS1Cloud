@@ -3217,6 +3217,32 @@ Template.productview.onRendered(function() {
         templateObject.getAllProductRecentTransactions();
     }
 
+
+    $(document).ready(function() {
+        $('#edtRaw').editableSelect();
+        $('#edtProcess').editableSelect();
+    })
+
+    $(document).on('click', '#edtRaw', function(event) {
+        $('#edtRaw').editableSelect()
+        $('#productListModal').modal('toggle');
+    })
+
+    $(document).on('click', '.edtProcess', function(event) {
+        $('.edtProcess').editableSelect();
+        $('#processListModal').modal('toggle');
+    })
+
+    $(document).on('click', '#productListModal table tr', function(event) {
+        let productName = $(event.target).closest('tr').find('.productName').text();
+        $('#edtRaw').val(productName);
+        $('#productListModal').modal('toggle')
+    })
+    $(document).on('click', '#processListModal table tr', function(event) {
+        let processName = $(event.target).closest('tr').find('.colProcessName').text();
+        $('#edtProcess').val(processName);
+        $('#processListModal').modal('toggle')
+    })
 });
 
 Template.productview.helpers({
@@ -3528,7 +3554,9 @@ Template.productview.events({
                         CogsAccount: $("#sltcogsaccount").val(),
                         IncomeAccount: $("#sltsalesacount").val(),
                         BuyQty1Cost: parseFloat($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g, "")) || 0,
+                        BuyQty1CostInc: parseFloat($("#edtbuyqty1costInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                         SellQty1Price: parseFloat($("#edtsellqty1price").val().replace(/[^0-9.-]+/g, "")) || 0,
+                        SellQty1PriceInc: parseFloat($("#edtsellqty1priceInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                         TaxCodePurchase: $("#slttaxcodepurchase").val(),
                         TaxCodeSales: $("#slttaxcodesales").val(),
                         UOMPurchases: defaultUOM,
@@ -3563,7 +3591,9 @@ Template.productview.events({
                         CogsAccount: $("#sltcogsaccount").val(),
                         IncomeAccount: $("#sltsalesacount").val(),
                         BuyQty1Cost: parseFloat($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g, "")) || 0,
+                        BuyQty1CostInc: parseFloat($("#edtbuyqty1costInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                         SellQty1Price: parseFloat($("#edtsellqty1price").val().replace(/[^0-9.-]+/g, "")) || 0,
+                        SellQty1PriceInc: parseFloat($("#edtsellqty1priceInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                         TaxCodePurchase: $("#slttaxcodepurchase").val(),
                         TaxCodeSales: $("#slttaxcodesales").val(),
                         UOMPurchases: defaultUOM,
@@ -3643,7 +3673,9 @@ Template.productview.events({
                                 CogsAccount: $("#sltcogsaccount").val(),
                                 IncomeAccount: $("#sltsalesacount").val(),
                                 BuyQty1Cost: parseFloat($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g, "")) || 0,
+                                BuyQty1CostInc: parseFloat($("#edtbuyqty1costInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                                 SellQty1Price: parseFloat($("#edtsellqty1price").val().replace(/[^0-9.-]+/g, "")) || 0,
+                                SellQty1PriceInc: parseFloat($("#edtsellqty1priceInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                                 TaxCodePurchase: $("#slttaxcodepurchase").val(),
                                 TaxCodeSales: $("#slttaxcodesales").val(),
                                 UOMPurchases: defaultUOM,
@@ -3678,7 +3710,9 @@ Template.productview.events({
                                 CogsAccount: $("#sltcogsaccount").val(),
                                 IncomeAccount: $("#sltsalesacount").val(),
                                 BuyQty1Cost: parseFloat($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g, "")) || 0,
+                                BuyQty1CostInc: parseFloat($("#edtbuyqty1costInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                                 SellQty1Price: parseFloat($("#edtsellqty1price").val().replace(/[^0-9.-]+/g, "")) || 0,
+                                SellQty1PriceInc: parseFloat($("#edtsellqty1priceInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                                 TaxCodePurchase: $("#slttaxcodepurchase").val(),
                                 TaxCodeSales: $("#slttaxcodesales").val(),
                                 UOMPurchases: defaultUOM,
@@ -3754,8 +3788,10 @@ Template.productview.events({
                                 IncomeAccount: $("#sltsalesacount").val(),
                                 BuyQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
                                 BuyQty1Cost: parseFloat($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g, "")) || 0,
+                                BuyQty1CostInc: parseFloat($("#edtbuyqty1costInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                                 SellQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
                                 SellQty1Price: parseFloat($("#edtsellqty1price").val().replace(/[^0-9.-]+/g, "")) || 0,
+                                SellQty1PriceInc: parseFloat($("#edtsellqty1priceInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                                 TaxCodePurchase: $("#slttaxcodepurchase").val(),
                                 TaxCodeSales: $("#slttaxcodesales").val(),
                                 UOMPurchases: defaultUOM,
@@ -3790,8 +3826,10 @@ Template.productview.events({
                                 IncomeAccount: $("#sltsalesacount").val(),
                                 BuyQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
                                 BuyQty1Cost: parseFloat($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g, "")) || 0,
+                                BuyQty1CostInc: parseFloat($("#edtbuyqty1costInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                                 SellQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
                                 SellQty1Price: parseFloat($("#edtsellqty1price").val().replace(/[^0-9.-]+/g, "")) || 0,
+                                SellQty1PriceInc: parseFloat($("#edtsellqty1priceInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                                 TaxCodePurchase: $("#slttaxcodepurchase").val(),
                                 TaxCodeSales: $("#slttaxcodesales").val(),
                                 UOMPurchases: defaultUOM,
@@ -3868,8 +3906,10 @@ Template.productview.events({
                             IncomeAccount: $("#sltsalesacount").val(),
                             BuyQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
                             BuyQty1Cost: parseFloat($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g, "")) || 0,
+                            BuyQty1CostInc: parseFloat($("#edtbuyqty1costInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                             SellQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
                             SellQty1Price: parseFloat($("#edtsellqty1price").val().replace(/[^0-9.-]+/g, "")) || 0,
+                            SellQty1PriceInc: parseFloat($("#edtsellqty1priceInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                             TaxCodePurchase: $("#slttaxcodepurchase").val(),
                             TaxCodeSales: $("#slttaxcodesales").val(),
                             UOMPurchases: defaultUOM,
@@ -3904,8 +3944,10 @@ Template.productview.events({
                             IncomeAccount: $("#sltsalesacount").val(),
                             BuyQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
                             BuyQty1Cost: parseFloat($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g, "")) || 0,
+                            BuyQty1CostInc: parseFloat($("#edtbuyqty1costInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                             SellQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
                             SellQty1Price: parseFloat($("#edtsellqty1price").val().replace(/[^0-9.-]+/g, "")) || 0,
+                            SellQty1PriceInc: parseFloat($("#edtsellqty1priceInc").val().replace(/[^0-9.-]+/g, "")) || 0,
                             TaxCodePurchase: $("#slttaxcodepurchase").val(),
                             TaxCodeSales: $("#slttaxcodesales").val(),
                             UOMPurchases: defaultUOM,
@@ -4032,7 +4074,7 @@ Template.productview.events({
                 templateObject.getSerialNumberList();
                 $('#SerialNumberModal').modal('show');
             } else{
-                swal('You have to set Serial Number Track.', '', 'info');
+                swal('You are not Tracking Serial numbers for this product.', '', 'info');
                 event.preventDefault();
                 return false;
             }
@@ -4047,7 +4089,7 @@ Template.productview.events({
                 templateObject.getLotNumberList();
                 $('#LotNumberModal').modal('show');
             } else{
-                swal('You have to set Lot Number Track.', '', 'info');
+                swal('You are not Tracking Lot Numbers for this product.', '', 'info');
                 event.preventDefault();
                 return false;
             }

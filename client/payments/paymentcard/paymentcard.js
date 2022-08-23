@@ -2934,11 +2934,13 @@ Template.paymentcard.onRendered(() => {
         var currentSalesID = getsale_id[getsale_id.length - 1];
         if (getsale_id[1]) {
             currentSalesID = parseInt(currentSalesID);
+            let deteled = false;
             getVS1Data('TCustomerPayment').then(function(dataObject) {
                 if (dataObject.length == 0) {
                     paymentService.getOneCustomerPayment(currentSalesID).then(function(data) {
                         let lineItems = [];
                         let lineItemObj = {};
+                        deteled = data.fields.Deleted;
 
                         let total = utilityService.modifynegativeCurrencyFormat(data.fields.Amount).toLocaleString(undefined, {
                             minimumFractionDigits: 2
@@ -3005,6 +3007,8 @@ Template.paymentcard.onRendered(() => {
                                 };
                                 lineItems.push(lineItemObj);
                             }
+                        }else{
+                          //deteled = true;
                         }
                         let record = {
                             lid: data.fields.ID || '',
@@ -3014,7 +3018,7 @@ Template.paymentcard.onRendered(() => {
                             bankAccount: data.fields.AccountName || '',
                             paymentAmount: appliedAmt || 0,
                             notes: data.fields.Notes,
-                            deleted: data.fields.Deleted,
+                            deleted: data.fields.Deleted||false,
                             LineItems: lineItems,
                             checkpayment: data.fields.PaymentMethodName,
                             department: data.fields.DeptClassName,
@@ -3087,6 +3091,8 @@ Template.paymentcard.onRendered(() => {
 
                         if (parseInt(useData[d].fields.ID) === currentSalesID) {
                             $('.fullScreenSpin').css('display', 'none');
+                            deteled = useData[d].fields.Deleted;
+
                             added = true;
                             let lineItems = [];
                             let lineItemObj = {};
@@ -3165,7 +3171,7 @@ Template.paymentcard.onRendered(() => {
                                 bankAccount: useData[d].fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: useData[d].fields.Notes,
-                                deleted: useData[d].fields.Deleted,
+                                deleted: useData[d].fields.Deleted||false,
                                 LineItems: lineItems,
                                 checkpayment: useData[d].fields.PaymentMethodName,
                                 department: useData[d].fields.DeptClassName,
@@ -3300,7 +3306,11 @@ Template.paymentcard.onRendered(() => {
                                     };
                                     lineItems.push(lineItemObj);
                                 }
+                            }else{
+                              //deteled = true;
                             }
+                            deteled = data.fields.Deleted;
+
                             let record = {
                                 lid: data.fields.ID || '',
                                 customerName: data.fields.CompanyName || '',
@@ -3309,7 +3319,7 @@ Template.paymentcard.onRendered(() => {
                                 bankAccount: data.fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: data.fields.Notes,
-                                deleted: data.fields.Deleted,
+                                deleted: data.fields.Deleted||false,
                                 LineItems: lineItems,
                                 checkpayment: data.fields.PaymentMethodName,
                                 department: data.fields.DeptClassName,
@@ -3385,6 +3395,7 @@ Template.paymentcard.onRendered(() => {
                     let appliedAmt = utilityService.modifynegativeCurrencyFormat(data.fields.Applied).toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     });
+                    deteled = data.fields.Deleted;
 
                     if (data.fields.Lines != null) {
                         if (data.fields.Lines.length) {
@@ -3444,6 +3455,8 @@ Template.paymentcard.onRendered(() => {
                             };
                             lineItems.push(lineItemObj);
                         }
+                    }else{
+                      //deteled = true;
                     }
                     let record = {
                         lid: data.fields.ID || '',
@@ -3453,7 +3466,7 @@ Template.paymentcard.onRendered(() => {
                         bankAccount: data.fields.AccountName || '',
                         paymentAmount: appliedAmt || 0,
                         notes: data.fields.Notes,
-                        deleted: data.fields.Deleted,
+                        deleted: ata.fields.Deleted||false,
                         LineItems: lineItems,
                         checkpayment: data.fields.PaymentMethodName,
                         department: data.fields.DeptClassName,
@@ -9577,7 +9590,9 @@ Template.paymentcard.events({
                         });
 
                     });
-                } else if (result.dismiss === 'cancel') {}
+                } else if (result.dismiss === 'cancel') {
+                  history.back(1);
+                }
             });
 
 

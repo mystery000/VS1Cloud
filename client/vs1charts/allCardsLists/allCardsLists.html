@@ -137,15 +137,23 @@
             </button>
         </div>
         <div class="row connectedCardSortable" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
-            {{> purchasesaleschart}}
-            {{> bankingoverviewcards}}
-            {{> paymentoverviewcards}}
-            {{> crmoverviewcards }}
-            {{> purchasesoverviewcards }}
-            {{> seedtosalecards }}
-            {{> shippingcards}}
-            {{> paymentoverviewcardssupplier}}
-            {{> paymentoverviewcardscustomer}}
+            {{#if equals type "dashboardSales"}}
+                {{> dashboardSalesCards }}
+                {{else}}
+                {{#if equals type "dashboardSalesManager"}}
+                    {{> dashboardManagerCards }}
+                {{else}}
+                    {{> purchasesaleschart}}
+                    {{> bankingoverviewcards}}
+                    {{> paymentoverviewcards}}
+                    {{> crmoverviewcards }}
+                    {{> purchasesoverviewcards }}
+                    {{> seedtosalecards }}
+                    {{> shippingcards}}
+                    {{> paymentoverviewcardssupplier}}
+                    {{> paymentoverviewcardscustomer}}
+                {{/if}}
+            {{/if}}
         </div>
     </div>
 </template>

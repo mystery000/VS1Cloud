@@ -898,8 +898,8 @@ Template.addAccountModal.onRendered(function () {
         //'Materials', 'Meals & Entertainment', 'Office Supplies', 'Travel', 'Vehicle'
         let usedCategories = [];
         for (let i = 0; i < data.taccountvs1.length; i++) {
-            if(data.taccountvs1[i].fields.AccountGroup && data.taccountvs1[i].fields.AccountGroup != ''){
-                usedCategories.push(data.taccountvs1[i].fields.AccountGroup);
+            if(data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != ''){
+                usedCategories.push(data.taccountvs1[i].fields.ReceiptCategory);
             }
         }
         usedCategories = [...new Set(usedCategories)];
@@ -1344,6 +1344,11 @@ Template.addAccountModal.events({
   "click .btnDeleteAccount": (e, template) => {
     template.deleteAccount();
   },
+
+  "click #openEftOptionsModal" : (e) => {
+    $('#eftOptionsModal').modal();
+  }, 
+  
 });
 
 Template.addAccountModal.helpers({

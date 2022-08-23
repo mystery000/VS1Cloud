@@ -1,0 +1,124 @@
+<template name="dashboardManagerCards">
+    <div class="row">
+        <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="0" position="0" card-active="true" card-key="dashboard-sales-manager-new-leads-month">
+            <div class="card shadow custom-sales-card border-left-primary py-2"
+                data-toggle="tooltip" 
+                data-bs-tooltip=""
+                title="is new Lead/Customer source count for last 30 days."
+            >
+                <div class="hideShowDiv">
+                    <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                </div>
+                <div class="card-body new-leads-month" style="cursor: pointer;">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-dark h5 font-weight-bold mb-3 text-center"><span id="new-leads-month">000</span></div>
+                            <div class="text-uppercase text-primary h5 small-heading font-weight-bold mb-0 text-center"><span>New Leads this month</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="1" position="1" card-active="true" card-key="dashboard-sales-manager-new-deals-month">
+            <div class="card shadow custom-sales-card border-left-primary py-2"
+            data-toggle="tooltip" 
+            data-bs-tooltip=""
+            title="is new Quotes count for this month."
+            >
+                <div class="hideShowDiv">
+                    <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                </div>
+                <div class="card-body" style="cursor: pointer;">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-dark font-weight-bold mb-3 text-center"><span id="new-deals-month">000</span></div>
+                            <div class="text-uppercase text-primary h5 small-heading font-weight-bold mb-0 text-center"><span>New Deals this month</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="2" position="2" card-active="true" card-key="dashboard-sales-manager-closed-deals-month">
+            <div class="card shadow custom-sales-card border-left-primary py-2"
+                data-toggle="tooltip" 
+                data-bs-tooltip=""
+                title="is new Invoice Value for last 30 days."
+            >
+                <div class="hideShowDiv">
+                    <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                </div>
+                <div class="card-body closed-deals-month" style="cursor: pointer;">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-dark h5 font-weight-bold mb-3 text-center"><span id="closed-deals-month">000</span></div>
+                            <div class="text-uppercase text-primary h5 small-heading font-weight-bold mb-0 text-center"><span>Closed Deals this month</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="3" position="3" card-active="true" card-key="dashboard-sales-manager-closed-deals-year">
+            <div class="card shadow custom-sales-card border-left-primary py-2"
+                data-toggle="tooltip" 
+                data-bs-tooltip=""
+                title="is new Invoices value for last 12 months."
+            >
+                <div class="hideShowDiv">
+                    <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                </div>
+                <div class="card-body closed-deals-year" style="cursor: pointer;">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-dark h5 font-weight-bold mb-3 text-center"><span id="closed-deals-year">000</span></div>
+                            <div class="text-uppercase text-primary h5 small-heading font-weight-bold mb-0 text-center"><span>Closed Deals Total</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="4" position="4" card-active="true" card-key="dashboard-sales-manager-sales-winrate">
+            <div class="card shadow custom-sales-card border-left-primary py-2"
+                data-toggle="tooltip" 
+                data-bs-tooltip=""
+                title="is last 30 days converted quotes to invoice count to non-Converted quotes."
+            >
+                <div class="hideShowDiv">
+                    <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                </div>
+                <div class="card-body" style="cursor: pointer;">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-dark h5 font-weight-bold mb-3 text-center"><span id="sales-winrate">000</span></div>
+                            <div class="text-uppercase text-primary h5 small-heading font-weight-bold mb-0 text-center"><span>Win Rate</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSalesManager" data-default-position="5" position="5" card-active="true" card-key="dashboard-sales-manager-avg-sales-cycle">
+            <div class="card shadow custom-sales-card border-left-primary py-2"
+                data-toggle="tooltip" 
+                data-bs-tooltip=""
+                title="Is last 30 days average between quote date and converted to invoice date."
+            >
+                <div class="hideShowDiv">
+                    <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                </div>
+                <div class="card-body" style="cursor: pointer;">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-dark h5 font-weight-bold mb-3 text-center"><span id="avg-sales-cycle">000</span></div>
+                            <div class="text-uppercase text-primary h5 small-heading font-weight-bold mb-0 text-center"><span>Avg. Sales Cycle</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

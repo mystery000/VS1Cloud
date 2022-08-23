@@ -59,10 +59,10 @@ function handleTotalAmount( amountField, totalAmountCont ) {
 Template.employeescard.onCreated(function () {
     const templateObject = Template.instance();
     setTimeout(function () {
-        $('#period').editableSelect('add','Hourly');
-        $('#period').editableSelect('add','Daily');
-        $('#period').editableSelect('add','Weekly');
-        $('#period').editableSelect('add','Monthly');
+        // $('#period').editableSelect('add','Hourly');
+        // $('#period').editableSelect('add','Daily');
+        // $('#period').editableSelect('add','Weekly');
+        // $('#period').editableSelect('add','Monthly');
         $("#paymentDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
@@ -76,6 +76,13 @@ Template.employeescard.onCreated(function () {
             yearRange: "-90:+10",
         });
     }, 1000);
+
+    templateObject.AppTableModalData = new ReactiveVar([]);
+    templateObject.ResidencyStatusList = new ReactiveVar();
+    templateObject.EmploymentBasisList = new ReactiveVar();
+    templateObject.PayPeriodList  = new ReactiveVar();
+    templateObject.TFNExemptionList = new ReactiveVar();
+
     templateObject.records = new ReactiveVar();
     templateObject.payTemplateEarningLineInfo = new ReactiveVar();
     templateObject.openingBalanceInfo = new ReactiveVar();
@@ -4538,8 +4545,169 @@ Template.employeescard.onRendered(function () {
         }
         $('#reimbursementSettingsModal').modal('toggle');
     });
+
 });
 Template.employeescard.events({
+    'click #edtResidencyStatus': (e, ui) => {
+        ui.AppTableModalData.set({
+            title: 'Residency Status',
+            headers: [
+                {title: 'Title'}
+            ],
+            body: [
+                {
+                    title: 'Australian Resident',
+                    value: true,
+                },
+                {
+                    title: 'Foreign Resident',
+                    value: false,
+                },
+                {
+                    value: 'Working Holiday Maker',
+                    title: 'Working Holiday Maker'
+                }
+    
+            ]
+        });
+
+        setTimeout(() => {
+            $('#AppTableModal').modal('toggle');
+            $('#AppTableModal tbody tr').on('click', (event) => {
+                const value = $(event.currentTarget).find('td').attr('value');
+                const text = $(event.currentTarget).find('td').text();
+                $(e.currentTarget).attr('data-value', value);
+                $(e.currentTarget).val(text);
+                $('#AppTableModal').modal('toggle');
+                $('#AppTableModal tbody tr').off('click');
+            });
+        }, 300);
+    },
+    'click #edtEmploymentBasis': (e, ui) => {
+        ui.AppTableModalData.set({
+            title: 'Employment Basis',
+            headers: [
+                {title: 'Title'}
+            ],
+            body: [
+                {
+                    title: 'Full-time employment',
+                    value: 'F',
+                },
+                {
+                    title: 'Part-time employment',
+                    value: 'P',
+                },
+                {
+                    title: 'Casual employment',
+                    value: 'C',
+                },
+                {
+                    title: 'Labour hire',
+                    value: 'L',
+                },
+                {
+                    title: 'Superannuation income stream',
+                    value: 'S',
+                },
+
+    
+            ]
+        });
+
+        
+        setTimeout(() => {
+            $('#AppTableModal').modal('toggle');
+            $('#AppTableModal tbody tr').on('click', (event) => {
+                const value = $(event.currentTarget).find('td').attr('value');
+                const text = $(event.currentTarget).find('td').text();
+                $(e.currentTarget).attr('data-value', value);
+                $(e.currentTarget).val(text);
+                $('#AppTableModal').modal('toggle');
+                $('#AppTableModal tbody tr').off('click');
+            });
+        }, 300);
+    },
+    'click #edtPayPeriod': (e, ui) => {
+        // $('#period').editableSelect('add','Hourly');
+        // $('#period').editableSelect('add','Daily');
+        // $('#period').editableSelect('add','Weekly');
+        // $('#period').editableSelect('add','Monthly');
+        ui.AppTableModalData.set({
+            title: 'Pay Period',
+            headers: [
+                {title: 'Title'}
+            ],
+            body: [
+                {
+                    title: 'Hourly',
+                    value: 'hourly',
+                },
+                {
+                    title: 'Daily',
+                    value: 'daily',
+                },
+                {
+                    title: 'Weekly',
+                    value: 'Weekly',
+                },
+                {
+                    title: 'Monthly',
+                    value: 'Monthly',
+                },
+            ]
+        });
+
+        setTimeout(() => {
+            $('#AppTableModal').modal('toggle');
+            $('#AppTableModal tbody tr').on('click', (event) => {
+                const value = $(event.currentTarget).find('td').attr('value');
+                const text = $(event.currentTarget).find('td').text();
+                $(e.currentTarget).attr('data-value', value);
+                $(e.currentTarget).val(text);
+                $('#AppTableModal').modal('toggle');
+                $('#AppTableModal tbody tr').off('click');
+            });
+        }, 300);
+    },
+    'click #edtTfnExemption': (e, ui) => {
+        ui.AppTableModalData.set({
+            title: 'TFN Exemption',
+            headers: [
+                {title: 'Title'}
+            ],
+            body: [
+                {
+                    title: 'No TFN Quoted',
+                    value: '0',
+                },
+                {
+                    title: 'TFN Pending',
+                    value: '1',
+                },
+                {
+                    title: 'TFN Exempt - Under 18',
+                    value: '2',
+                },
+                {
+                    title: 'TFN Exempt - Pensioner',
+                    value: '3',
+                },
+            ]
+        });
+
+        setTimeout(() => {
+            $('#AppTableModal').modal('toggle');
+            $('#AppTableModal tbody tr').on('click', (event) => {
+                const value = $(event.currentTarget).find('td').attr('value');
+                const text = $(event.currentTarget).find('td').text();
+                $(e.currentTarget).attr('data-value', value);
+                $(e.currentTarget).val(text);
+                $('#AppTableModal').modal('toggle');
+                $('#AppTableModal tbody tr').off('click');
+            });
+        }, 300);
+    },
     'keyup #tblLeaveRequests_filter input': function (event) {
         if($(event.target).val() != ''){
           $(".btnRefreshLeaveRequest").addClass('btnSearchAlert');
@@ -9893,6 +10061,9 @@ Template.employeescard.events({
 });
 
 Template.employeescard.helpers({
+    AppTableModalData: () => {
+        return Template.instance().AppTableModalData.get();
+    },
     isCloudTrueERP: function() {
         let checkCloudTrueERP = Session.get('CloudTrueERPModule') || false;
         return checkCloudTrueERP;

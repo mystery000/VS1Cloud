@@ -168,6 +168,7 @@ Template._frequencyModal.onRendered(function () {
       // cronSetting.type = "Weekly";
       cronSetting.days = fxUpdateObject.selectedDays;
       cronSetting.every = fxUpdateObject.everyWeeks;
+      cronSetting.startAt = fxUpdateObject.getDate();
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
       reportSchedule.fields.Frequency = "D";
 
@@ -219,11 +220,14 @@ Template._frequencyModal.onRendered(function () {
 
       cronSetting.startAt = fxUpdateObject.getDate();
     } else if (fxUpdateObject instanceof OneTimeOnlyFrequencyModel) {
-      fxUpdateObject.startDate = $("#edtDailyStartDate").val();
-      fxUpdateObject.startTime = $("#edtDailyStartTime").val();
+      fxUpdateObject.startDate = $("#edtOneTimeOnlyDate").val();
+      fxUpdateObject.startTime = $("#edtOneTimeOnlyTime").val();
 
       reportSchedule.fields.Frequency = "";
       reportSchedule.fields.EndDate = fxUpdateObject.getDate();
+
+    
+      cronSetting.startAt = fxUpdateObject.getDate();
     } else if (fxUpdateObject instanceof OnEventFrequencyModel) {
       fxUpdateObject.onLogin = $("#settingsOnLogon").prop("checked");
       fxUpdateObject.onLogout = $("#settingsOnLogout").prop("checked");

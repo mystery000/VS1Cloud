@@ -34,11 +34,6 @@ Template.accountsoverview.onRendered(function () {
   const dataTableList = [];
   const tableHeaderList = [];
   let categories = [];
-  categories.push('Materials');
-  categories.push('Meals & Entertainment');
-  categories.push('Office Supplies');
-  categories.push('Travel');
-  categories.push('Vehicle');
 
   templateObject.getReceiptCategoryList = function(){
     getVS1Data('TReceiptCategory').then(function (dataObject) {
@@ -534,7 +529,7 @@ Template.accountsoverview.onRendered(function () {
     var cardcvc = data.fields.CVC || "";
     var cardexpiry = data.fields.ExpiryDate || "";
     let useReceiptClaim = data.fields.AllowExpenseClaim || false;
-    let expenseCategory = data.fields.AccountGroup;
+    let expenseCategory = data.fields.ReceiptCategory;
 
     if (accounttype === "BANK") {
       $(".isBankAccount").removeClass("isNotBankAccount");
@@ -639,8 +634,8 @@ Template.accountsoverview.onRendered(function () {
       } else {
         accBalance = Currency + "0.00";
       }
-      if(data.taccountvs1[i].fields.AccountGroup && data.taccountvs1[i].fields.AccountGroup != ''){
-        usedCategories.push(data.taccountvs1[i].fields.AccountGroup);
+      if(data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != ''){
+        usedCategories.push(data.taccountvs1[i].fields.ReceiptCategory);
       }
 
       var dataList = {
@@ -665,7 +660,7 @@ Template.accountsoverview.onRendered(function () {
         expirydate: lineData.ExpiryDate || "",
         cvc: lineData.CVC || "",
         useReceiptClaim: lineData.AllowExpenseClaim || false,
-        expenseCategory: lineData.AccountGroup || ""
+        expenseCategory: lineData.ReceiptCategory || ""
       };
       dataTableList.push(dataList);
     }
@@ -891,18 +886,18 @@ Template.accountsoverview.onRendered(function () {
           }
           let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
           let availableCategories = templateObject.availableCategories.get();
-          let cateogoryHtml = "";
+          let categoryHtml = "";
           availableCategories.forEach(function (item) {
-            cateogoryHtml += '<option value="' +item +'">' +item +'</option>';
+            categoryHtml += '<option value="' +item +'">' +item +'</option>';
           });
           $("#expenseCategory").empty();
-          if (category != "" && availableCategories.includes(category)) {
+          if (category != "" && categories.includes(category)) {
             let selectedCategoryHtml = '<option value="' +category +'" selected="selected">' +category +'</option>';
-            cateogoryHtml = selectedCategoryHtml + cateogoryHtml;
+            categoryHtml = selectedCategoryHtml + categoryHtml;
           }
-          $("#expenseCategory").append(cateogoryHtml);
+          $("#expenseCategory").append(categoryHtml);
           $("#expenseCategory").val(category);
-          if (cateogoryHtml == ""){
+          if (categoryHtml == ""){
             $("#expenseCategory").attr("readonly", true);
             $("#expenseCategory").attr("disabled", "disabled");
           } else {
@@ -1411,7 +1406,7 @@ Template.accountsoverview.events({
               // AccountName: accountname|| '',
               AccountNumber: accountno || "",
               // AccountTypeName: accounttype|| '',
-              AccountGroup: expenseCategory || "", // Need to check if the field is right later
+              ReceiptCategory: expenseCategory || "",
               Active: true,
               BankAccountName: bankaccountname || "",
               BankAccountNumber: bankacountno || "",
@@ -1532,7 +1527,7 @@ Template.accountsoverview.events({
               AccountName: accountname || "",
               AccountNumber: accountno || "",
               AccountTypeName: accounttype || "",
-              AccountGroup: expenseCategory || "", // Need to check if the field is right later
+              ReceiptCategory: expenseCategory || "",
               Active: true,
               BankAccountName: bankaccountname || "",
               BankAccountNumber: bankacountno || "",
@@ -1658,7 +1653,7 @@ Template.accountsoverview.events({
           AccountName: accountname || "",
           AccountNumber: accountno || "",
           // AccountTypeName: accounttype || '',
-          AccountGroup: expenseCategory || "", // Need to check if the field is right later
+          ReceiptCategory: expenseCategory || "",
           Active: true,
           BankAccountName: bankaccountname || "",
           BankAccountNumber: bankacountno || "",
@@ -2269,17 +2264,13 @@ Template.accountsoverview.events({
 
 Template.accountsoverview.helpers({
   datatablerecords: () => {
-    return Template.instance()
-      .datatablerecords.get()
-      .sort(function (a, b) {
+    return Template.instance().datatablerecords.get().sort(function (a, b) {
         if (a.accountname === "NA") {
           return 1;
         } else if (b.accountname === "NA") {
           return -1;
         }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
+        return a.accountname.toUpperCase() > b.accountname.toUpperCase()? 1: -1;
       });
   },
   bsbRegionName: () => {
@@ -2313,17 +2304,13 @@ Template.accountsoverview.helpers({
   //     });
   // },
   taxraterecords: () => {
-    return Template.instance()
-      .taxraterecords.get()
-      .sort(function (a, b) {
+    return Template.instance().taxraterecords.get().sort(function (a, b) {
         if (a.description === "NA") {
           return 1;
         } else if (b.description === "NA") {
           return -1;
         }
-        return a.description.toUpperCase() > b.description.toUpperCase()
-          ? 1
-          : -1;
+        return a.description.toUpperCase() > b.description.toUpperCase()? 1: -1;
       });
   },
   isBankAccount: () => {
@@ -2331,5 +2318,15 @@ Template.accountsoverview.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+  lastBatchUpdate: () => {
+    let transactionTableLastUpdated = "";
+    var currentDate = new Date();
+    if(localStorage.getItem('VS1TransTableUpdate')){
+       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
+    }else{
+      transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
+    }
+    return transactionTableLastUpdated;
   },
 });

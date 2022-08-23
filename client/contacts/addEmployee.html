@@ -1440,14 +1440,14 @@
                                                                                 <div class="col-12 col-md-3">
                                                                                     <div class="form-group" style="margin: 4px;">
                                                                                         <label>TFN Exemption</label>
-                                                                                        <!-- <input type="text" class="form-control" id="edtTfnExemption" name="edtTfnExemption"> -->
-                                                                                        <select type="search" class="form-control customEditableSelect" id="edtTfnExemption" name="edtTfnExemption" style="cursor: pointer;">
+                                                                                        <input type="text" class="form-control" id="edtTfnExemption" name="edtTfnExemption">
+                                                                                        <!-- <select type="search" class="form-control customEditableSelect" id="edtTfnExemption" name="edtTfnExemption" style="cursor: pointer;">
                                                                                             <option value=""></option>
                                                                                             <option value="0">No TFN Quoted</option>
                                                                                             <option value="1">TFN Pending</option>
                                                                                             <option value="2">TFN Exempt - Under 18</option>
                                                                                             <option value="3">TFN Exempt - Pensioner</option>
-                                                                                        </select>
+                                                                                        </select> -->
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1458,25 +1458,27 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Employment Basis</label>
-                                                                            <!-- <input type="text" class="form-control" id="edtEmploymentBasis" name="edtEmploymentBasis"> -->
-                                                                            <select type="search" class="form-control customEditableSelect" id="edtEmploymentBasis" name="edtEmploymentBasis" style="cursor: pointer;">
+                                                                            <input type="search" class="form-control" id="edtEmploymentBasis" name="edtEmploymentBasis">
+                                                                            <!-- <select type="search" class="form-control customEditableSelect" id="edtEmploymentBasis" name="edtEmploymentBasis" style="cursor: pointer;">
                                                                                 <option value="F">Full-time employment</option>
                                                                                 <option value="P">Part-time employment</option>
                                                                                 <option value="C">Casual employment</option>
                                                                                 <option value="L">Labour hire</option>
                                                                                 <option value="S">Superannuation income stream</option>
-                                                                            </select>
+                                                                            </select> -->
 
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Residency Status</label>
-                                                                            <select type="search" class="form-control customEditableSelect" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
+
+                                                                            <input id="edtResidencyStatus" type="search" class="form-control customEditableSelect" name="edtResidencyStatus"/>
+                                                                            <!-- <select type="search" class="form-control customEditableSelect" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
                                                                                 <option value="true">Australian Resident</option>
                                                                                 <option value="false">Foreign Resident</option>
-                                                                                <!-- <option value="Working Holiday Maker">Working Holiday Maker</option> -->
-                                                                            </select>
+                                                                                <option value="Working Holiday Maker">Working Holiday Maker</option> 
+                                                                            </select> -->
 
                                                                         </div>
                                                                     </div>
@@ -3633,6 +3635,10 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal" style="z-index: 99999999 !important;">
         {{> addaccountpop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="AppTableModal" style="z-index: 99999999 !important;">
+        {{> AppTableModal AppTableModalData=AppTableModalData}}
     </div>
 
     <!-- Start Help Video Modal -->

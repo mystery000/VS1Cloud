@@ -207,20 +207,12 @@
                     <input class="form-control form-control" type="text" id="ponumber" name="ponumber"
                       value="{{chequerecord.invoicenumber}}">
                   </div>
-                  <div class="form-group"><label>Via</label>
+                  {{> currencydropdown}}
+                  <!-- <div class="form-group"><label>Via</label>
                     <select type="search" class="form-control" id="shipvia" name="shipvia"
                       style="background-color:rgb(255, 255, 255); cursor: pointer;">
                     </select>
-                    <!-- <select class="form-control" id="sltDept" name="sltDept" style="cursor: pointer;">
-                                                {{#each item in deptrecords}}
-                                                    {{#if equals item.shippingmethod chequerecord.shipping }}
-                                                        <option value="{{chequerecord.shipping}}" selected="">{{chequerecord.shipping}}</option>
-                                                    {{else}}
-                                                        <option value="{{item.shippingmethod}}">{{item.shippingmethod}}</option>
-                                                    {{/if}}
-                                                {{/each}}
-                                            </select> -->
-                  </div>
+                  </div> -->
                 </div>
                 <div class="col-6 col-md-3">
                   <div class="form-group"><label>Status</label>
@@ -238,7 +230,7 @@
                                                 {{/each}}
                                             </select> -->
                   </div>
-                  {{> currencydropdown}}
+
                 </div>
                 <div class="col-6 col-md-3">
                   <div class="row">
@@ -959,6 +951,16 @@
             </div>
           </div>
           <div class="row justify-content-center desktopButtons">
+              
+            <div class="col-12 col-md-2">
+              <div class="row justify-content-start desktopButtons" style="margin: 8px;">
+                  <div class="custom-control custom-switch">
+                      <input class="custom-control-input chkEFT" id="chkEFT" type="checkbox" style="cursor: pointer;">
+                      <label class="custom-control-label" style="width:100px;cursor: pointer;" for="chkEFT">Add to EFT</label>
+                  </div>
+              </div>
+            </div> 
+            
             <button class="btn btn-success btnSave btnFooter" type="button"
               style="margin: 16px;margin-top: 0px;width: 100px;">
               <i class="fa fa-save" style="padding-right: 8px;"></i>Save

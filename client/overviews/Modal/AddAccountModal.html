@@ -149,8 +149,21 @@
                                     <input type="text" class="form-control" id="routingNo" name="routingNo">
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="custom-control custom-switch" style="margin: 4px;">
+
+                            <div class="col-12 col-md-4">
+                              <div class="form-group" style="margin: 4px;">
+                                  <label>APCA No</label>
+                                  <input type="text" class="form-control" id="apcaNo" name="apcaNo">
+                              </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="form-group" style="margin: 4px;">
+                                  <a id="openEftOptionsModal" class="btn btn-secondary" data-toggle="modal" href="#eftOptionsModal" type="button" style="margin-top: 32px;">EFT Options</a>
+                                </div>
+                            </div>  
+
+                            <div class="col-12 col-md-4">
+                                <div class="custom-control custom-switch" style="margin: 4px; margin-top: 40px;">
                                     <input type="checkbox" class="custom-control-input showOnTransactions" id="showOnTransactions" />
                                     <label class="custom-control-label" for="showOnTransactions">Show On Transactions</label>
                                 </div>
@@ -281,5 +294,5 @@
         </div>
     </div>
 
-
+    {{> eftOptionsModal}}
 </template>

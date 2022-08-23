@@ -377,6 +377,10 @@
                                         <input class="custom-control-input" type="checkbox" id="chkTrack" name="chkTrack" checked="{{#if includeInventory}}{{#if isTrackChecked}}checked{{/if}}{{else}}{{/if}}">
                                         <label class="custom-control-label position-relative {{#if includeInventory}}inventorytracking{{else}}inventorynottracking{{/if}}" for="chkTrack">I Track This Product</label>
                                     </div>
+                                    <div class="custom-control custom-switch d-flex">
+                                        <input class="custom-control-input" type="checkbox" id="chkBOM" name="chkBOM">
+                                        <label class="custom-control-label position-relative" for="chkBOM">Bill Of Materials</label>
+                                    </div>
                                 </div>
                                 {{#if equals isSNTrackChecked true}}
                                     <div class="col-12 col-md-4">
@@ -912,6 +916,7 @@
     </div>
     <!-- End Product Customer Type Modal -->
 
+
     <div class="modal fade" role="dialog" tabindex="-1" id="BOMSetupModal">
         <div class="modal-dialog modal-xl modal-centered" role="document">
             <div class="modal-content" >
@@ -962,7 +967,7 @@
                     <div class="d-flex productRow">
                         <div class="th colProduct">Product</div>
                         <div class="th colQty">Qty</div>
-                        <div class="thcolProcess">Process</div>
+                        <div class="th colProcess">Process</div>
                         <div class="th colNote">Notes</div>
                         <div class="th colAttachment"></div>
                         <div class="th colDelete"></div>
@@ -988,7 +993,7 @@
                     <div class="d-flex productRow">
                         <div class="colProduct d-flex">
                             <button class="btnAddProduct" style="width: 30%; background-color: #00a3d3; border: 2px solid black">Product+</button>
-                            <select class="edtProductName edtRaw" id="edtRaw" type="search" value="12345" style="width: 30%"></select>
+                            <select class="edtProductName edtRaw" id="edtRaw" type="search" style="width: 30%"></select>
                         </div>
                         <div class="colQty">
                             <input type="text" class="edtQuantity w-100" value="1"/>
