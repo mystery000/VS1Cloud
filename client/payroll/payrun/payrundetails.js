@@ -115,6 +115,16 @@ Template.payrundetails.events({
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/payslip');
     },
+
+
+  "click #chkEFT": function (event) {
+    if ($("#chkEFT").is(":checked")) {
+      $("#eftExportModal").modal("show");
+    } else {
+      $("#eftExportModal").modal("hide");
+    }
+  },
+  
 });
 
 Template.payrundetails.helpers({
