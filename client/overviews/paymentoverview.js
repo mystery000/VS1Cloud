@@ -127,7 +127,7 @@ Template.paymentoverview.onRendered(function() {
     }
     var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
-    
+
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth2 = currentBeginDate.getMonth();
@@ -153,7 +153,7 @@ Template.paymentoverview.onRendered(function() {
         fromDate = moment().subtract(12, 'months').startOf('day').format("DD/MM/YYYY");
         begunDate = moment().endOf('day').format("DD/MM/YYYY");
     }
-    
+
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
@@ -244,8 +244,6 @@ Template.paymentoverview.onRendered(function() {
                         if (data.tpaymentlist[i].Deleted == true) {
                             paystatus = "Deleted";
                         } else if (data.tpaymentlist[i].ClientName == '') {
-                            paystatus = "Deleted";
-                        } else if (data.tpaymentlist[i].PaymentAmount == 0) {
                             paystatus = "Deleted";
                         };
                         var dataList = {
@@ -566,8 +564,6 @@ Template.paymentoverview.onRendered(function() {
                         paystatus = "Deleted";
                     } else if (useData[i].ClientName == '') {
                         paystatus = "Deleted";
-                    } else if (useData[i].PaymentAmount == 0) {
-                        paystatus = "Deleted";
                     };
                     var dataList = {
                         id: useData[i].PaymentID || '',
@@ -852,8 +848,6 @@ Template.paymentoverview.onRendered(function() {
                     if (data.tpaymentlist[i].Deleted == true) {
                         paystatus = "Deleted";
                     } else if (data.tpaymentlist[i].ClientName == '') {
-                        paystatus = "Deleted";
-                    } else if (data.tpaymentlist[i].PaymentAmount == 0) {
                         paystatus = "Deleted";
                     };
                     // Currency+''+data.tpaymentlist[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
@@ -1713,8 +1707,6 @@ Template.paymentoverview.events({
                         if (data.tpaymentlist[i].Deleted == true) {
                             paystatus = "Deleted";
                         } else if (data.tpaymentlist[i].ClientName == '') {
-                            paystatus = "Deleted";
-                        } else if (data.tpaymentlist[i].PaymentAmount == 0) {
                             paystatus = "Deleted";
                         };
 

@@ -71,29 +71,6 @@ Template.salesorderslist.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSalesOrderlist', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
-
     function MakeNegative() {
         $('td').each(function(){
             if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
@@ -194,35 +171,6 @@ Template.salesorderslist.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
 
                     if(templateObject.datatablerecords.get()){
-
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSalesOrderlist', function(error, result){
-                            if(error){
-
-                            }else{
-                                if(result){
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if(hiddenColumn == true){
-
-                                            $("."+columnClass+"").addClass('hiddenColumn');
-                                            $("."+columnClass+"").removeClass('showColumn');
-                                        }else if(hiddenColumn == false){
-                                            $("."+columnClass+"").removeClass('hiddenColumn');
-                                            $("."+columnClass+"").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
 
 
                         setTimeout(function () {
@@ -514,36 +462,6 @@ Template.salesorderslist.onRendered(function() {
 
                 if(templateObject.datatablerecords.get()){
 
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSalesOrderlist', function(error, result){
-                        if(error){
-
-                        }else{
-                            if(result){
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if(hiddenColumn == true){
-
-                                        $("."+columnClass+"").addClass('hiddenColumn');
-                                        $("."+columnClass+"").removeClass('showColumn');
-                                    }else if(hiddenColumn == false){
-                                        $("."+columnClass+"").removeClass('hiddenColumn');
-                                        $("."+columnClass+"").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
@@ -830,36 +748,6 @@ Template.salesorderslist.onRendered(function() {
               templateObject.datatablerecords.set(dataTableList);
 
               if(templateObject.datatablerecords.get()){
-
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSalesOrderlist', function(error, result){
-                      if(error){
-
-                      }else{
-                          if(result){
-                              for (let i = 0; i < result.customFields.length; i++) {
-                                  let customcolumn = result.customFields;
-                                  let columData = customcolumn[i].label;
-                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                  let hiddenColumn = customcolumn[i].hidden;
-                                  let columnClass = columHeaderUpdate.split('.')[1];
-                                  let columnWidth = customcolumn[i].width;
-                                  let columnindex = customcolumn[i].index + 1;
-
-                                  if(hiddenColumn == true){
-
-                                      $("."+columnClass+"").addClass('hiddenColumn');
-                                      $("."+columnClass+"").removeClass('showColumn');
-                                  }else if(hiddenColumn == false){
-                                      $("."+columnClass+"").removeClass('hiddenColumn');
-                                      $("."+columnClass+"").addClass('showColumn');
-                                  }
-
-                              }
-                          }
-
-                      }
-                  });
-
 
                   setTimeout(function () {
                       MakeNegative();
@@ -1173,37 +1061,6 @@ Template.salesorderslist.onRendered(function() {
                     templateObject.datatablerecords.set(dataTableList);
 
                     if(templateObject.datatablerecords.get()){
-
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSalesOrderlist', function(error, result){
-                            if(error){
-
-                            }else{
-                                if(result){
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if(hiddenColumn == true){
-
-                                            $("."+columnClass+"").addClass('hiddenColumn');
-                                            $("."+columnClass+"").removeClass('showColumn');
-                                        }else if(hiddenColumn == false){
-                                            $("."+columnClass+"").removeClass('hiddenColumn');
-                                            $("."+columnClass+"").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
-
                         setTimeout(function () {
                             MakeNegative();
                         }, 100);
@@ -1494,37 +1351,6 @@ Template.salesorderslist.onRendered(function() {
                 templateObject.datatablerecords.set(dataTableList);
 
                 if(templateObject.datatablerecords.get()){
-
-                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSalesOrderlist', function(error, result){
-                        if(error){
-
-                        }else{
-                            if(result){
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if(hiddenColumn == true){
-
-                                        $("."+columnClass+"").addClass('hiddenColumn');
-                                        $("."+columnClass+"").removeClass('showColumn');
-                                    }else if(hiddenColumn == false){
-                                        $("."+columnClass+"").removeClass('hiddenColumn');
-                                        $("."+columnClass+"").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
@@ -1814,37 +1640,6 @@ Template.salesorderslist.onRendered(function() {
               templateObject.datatablerecords.set(dataTableList);
 
               if(templateObject.datatablerecords.get()){
-
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblSalesOrderlist', function(error, result){
-                      if(error){
-
-                      }else{
-                          if(result){
-                              for (let i = 0; i < result.customFields.length; i++) {
-                                  let customcolumn = result.customFields;
-                                  let columData = customcolumn[i].label;
-                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                  let hiddenColumn = customcolumn[i].hidden;
-                                  let columnClass = columHeaderUpdate.split('.')[1];
-                                  let columnWidth = customcolumn[i].width;
-                                  let columnindex = customcolumn[i].index + 1;
-
-                                  if(hiddenColumn == true){
-
-                                      $("."+columnClass+"").addClass('hiddenColumn');
-                                      $("."+columnClass+"").removeClass('showColumn');
-                                  }else if(hiddenColumn == false){
-                                      $("."+columnClass+"").removeClass('hiddenColumn');
-                                      $("."+columnClass+"").addClass('showColumn');
-                                  }
-
-                              }
-                          }
-
-                      }
-                  });
-
-
                   setTimeout(function () {
                       MakeNegative();
                   }, 100);
