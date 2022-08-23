@@ -40,18 +40,18 @@ Template.assignLeaveTypePop.onCreated(function () {
         //     $(this).val(item.id);
         //     $(this).text(item.name);
         // });
-        $('#edtTfnExemption').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#edtEmploymentBasis').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#edtResidencyStatus').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
+        // $('#edtTfnExemption').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#edtEmploymentBasis').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#edtResidencyStatus').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
         $('#leaveCalcMethodSelect').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
