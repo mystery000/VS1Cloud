@@ -4723,6 +4723,76 @@ Template.employeescard.events({
             });
         }, 300);
     },
+    'click #leaveCalcMethodSelect': (e, ui) => {
+
+        ui.AppTableModalData.set({
+            title: 'Leave Calculation Method',
+            headers: [
+                {title: 'Title'}
+            ],
+            body: [
+                {
+                    title: 'Fixed Amount Each Period',
+                    value: 'Fixed Amount Each Period',
+                },
+                {
+                    title: 'Manually Recorded Rate',
+                    value: 'Manually Recorded Rate',
+                },
+                {
+                    title: 'No Calculation Required',
+                    value: 'No Calculation Required',
+                },
+                {
+                    title: 'Based on Ordinary Earnings',
+                    value: 'Based on Ordinary Earnings',
+                },
+            ]
+        });
+
+        setTimeout(() => {
+            $('#AppTableModal').modal('toggle');
+            $('#AppTableModal tbody tr').on('click', (event) => {
+                const value = $(event.currentTarget).find('td').attr('value');
+                const text = $(event.currentTarget).find('td').text();
+                $(e.currentTarget).attr('data-value', value);
+                $(e.currentTarget).val(text);
+                $('#AppTableModal').modal('toggle');
+                $('#AppTableModal tbody tr').off('click');
+            });
+        }, 300);
+    }, 
+    'click #onTerminationUnusedBalance': (e, ui) => {
+
+        ui.AppTableModalData.set({
+            title: 'On termination unused balance is:',
+            headers: [
+                {title: 'Title'}
+            ],
+            body: [
+                {
+                    title: 'Not Paid Out',
+                    value: '0',
+                },
+                {
+                    title: 'Paid Out',
+                    value: '1',
+                },
+            ]
+        });
+
+        setTimeout(() => {
+            $('#AppTableModal').modal('toggle');
+            $('#AppTableModal tbody tr').on('click', (event) => {
+                const value = $(event.currentTarget).find('td').attr('value');
+                const text = $(event.currentTarget).find('td').text();
+                $(e.currentTarget).attr('data-value', value);
+                $(e.currentTarget).val(text);
+                $('#AppTableModal').modal('toggle');
+                $('#AppTableModal tbody tr').off('click');
+            });
+        }, 300);
+    },
     'keydown #edtTaxFileNumber': (e, ui) => {
         $('#edtTfnExemption').removeAttr('data-value');
         $('#edtTfnExemption').val('');
