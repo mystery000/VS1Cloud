@@ -7679,7 +7679,7 @@ Template.employeescard.events({
     },
 
     // Save active tab data
-    'click #btnSaveEmployeePayroll': async function(event) {
+    'click #btnSaveEmployeePayroll': async (event) => {
         let activeTab = "";
         if($('div#taxes').attr("class").indexOf("active") >= 0) activeTab = "taxes";
         if($('div#leave').attr("class").indexOf("active") >= 0) activeTab = "leave";
@@ -7764,6 +7764,7 @@ Template.employeescard.events({
                 });
 
                 if (ApiResponse.ok == true) {
+                    console.log(ApiResponse);
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
                     await templateObject.getEmployeePaySettings();
