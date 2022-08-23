@@ -4723,6 +4723,10 @@ Template.employeescard.events({
             });
         }, 300);
     },
+    'keydown #edtTaxFileNumber': (e, ui) => {
+        $('#edtTfnExemption').removeAttr('data-value');
+        $('#edtTfnExemption').val('');
+    },
     'click #edtLeavePayPeriod': (e, ui) => {
         ui.AppTableModalData.set({
             title: 'Leave Pay Period',
