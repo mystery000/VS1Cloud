@@ -601,6 +601,7 @@ export class SideBarService extends BaseService {
   }
 
   getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, isDeleted) {
+    console.log(isDeleted);
     let options = "";
     if(isDeleted == ""){
         if (ignoreDate == true) {
@@ -652,13 +653,13 @@ export class SideBarService extends BaseService {
   getPaymentByNameOrID(dataSearchName) {
     let options = "";
     options = {
-      orderby: '"PaymentDate desc"',
+      // orderby: '"PaymentDate desc"',
       ListType: "Detail",
       IgnoreDates: true,
       IsDetailReport: true,
-      OrderBy: "PaymentDate desc",
-      LimitCount: '"' + initialReportLoad + '"',
-      Search: 'ClientName = "' + dataSearchName + '" OR ReceiptNo = "' + dataSearchName + '" OR BankAccount = "' + dataSearchName + '"',
+      // OrderBy: "PaymentDate desc",
+      // LimitCount: '"' + initialReportLoad + '"',
+      Search: 'PaymentID = "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TPaymentList, options);
   }
