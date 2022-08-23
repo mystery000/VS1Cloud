@@ -58,7 +58,7 @@ Template.receiptsoverview.onRendered(function() {
     templateObject.multiReceiptRecords.set(multipleRecords);
 
     setTimeout(() => {
-        $('.multipleMerchant').editableSelect();
+        $('.multipleSupplier').editableSelect();
         $('.multipleAccount').editableSelect();
         $(".dtMultiple").datepicker({
             showOn: 'button',
@@ -144,15 +144,15 @@ Template.receiptsoverview.onRendered(function() {
         let splashArrayAccountList = [];
         for (let i = 0; i < data.taccountvs1.length; i++) {
             const dataList = [
-                data.taccountvs1[i].fields.AccountGroup|| '',
+                data.taccountvs1[i].fields.ReceiptCategory|| '',
                 data.taccountvs1[i].fields.AccountName || '',
                 data.taccountvs1[i].fields.Description || '',
                 data.taccountvs1[i].fields.AccountNumber || '',
                 data.taccountvs1[i].fields.TaxCode || '',
                 data.taccountvs1[i].fields.ID || ''
             ];
-            // if(data.taccountvs1[i].fields.AllowExpenseClaim && data.taccountvs1[i].fields.AccountGroup != ''){
-            if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
+            // if(data.taccountvs1[i].fields.AllowExpenseClaim && data.taccountvs1[i].fields.ReceiptCategory != ''){
+            if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)){
                 categoryAccountList.push(dataList);
             }
             let accBalance = 0;
@@ -182,7 +182,7 @@ Template.receiptsoverview.onRendered(function() {
                 "aaSorting": [],
                 "orderMulti": true,
                 columnDefs: [
-                    { className: "colAccountGroup", "targets": [0] },
+                    { className: "colReceiptCategory", "targets": [0] },
                     { className: "colAccountName", "targets": [1] },
                     { className: "colAccountDesc", "targets": [2] },
                     { className: "colAccountNumber", "targets": [3] },
@@ -1162,7 +1162,7 @@ Template.receiptsoverview.onRendered(function() {
                 text: '',
                 download: 'open',
                 className: "btntabletocsv hiddenColumn",
-                filename: "Awaiting Customer Payments List - " + moment().format(),
+                filename: "Awaiting Expense Claim List - " + moment().format(),
                 orientation: 'portrait',
                 exportOptions: {
                     columns: ':visible:not(.chkBox)',
@@ -1182,7 +1182,7 @@ Template.receiptsoverview.onRendered(function() {
                 className: "btntabletopdf hiddenColumn",
                 text: '',
                 title: 'Supplier Payment',
-                filename: "Awaiting Customer Payments List - " + moment().format(),
+                filename: "Awaiting Expense Claim List - " + moment().format(),
                 exportOptions: {
                     columns: ':visible:not(.chkBox)',
                     stripHtml: false
@@ -1323,7 +1323,10 @@ Template.receiptsoverview.onRendered(function() {
                 getExpenseClaimList(data);
             }
         }).catch(function(err) {
-            $('.fullScreenSpin').css('display', 'none');
+            accountService.getExpenseClaim().then(function(data) {
+                addVS1Data('TExpenseClaim', JSON.stringify(data));
+                getExpenseClaimList(data);
+            });
         });
     };
     function getExpenseClaimList(data) {
@@ -1333,11 +1336,17 @@ Template.receiptsoverview.onRendered(function() {
                 expense.fields.Lines.forEach(claim => {
                     let lineItem = claim.fields;
                     lineItem.DateTime = claim.fields.DateTime != '' ? moment(claim.fields.DateTime).format("DD/MM/YYYY") : '';
+                    lineItem.MetaID = expense.fields.ID;
+                    lineItem.LineID = lineItem.ID;
+                    lineItem.TripGroup = expense.fields.TripGroup;
                     lineItems.push(lineItem);
                 })
             } else if (Object.prototype.toString.call(expense.fields.Lines) === "[object Object]") {
                 let lineItem = expense.fields.Lines.fields;
                 lineItem.DateTime = lineItem.DateTime != '' ? moment(lineItem.DateTime).format("DD/MM/YYYY") : '';
+                lineItem.MetaID = expense.fields.ID;
+                lineItem.LineID = lineItem.ID;
+                lineItem.TripGroup = expense.fields.TripGroup;
                 lineItems.push(lineItem);
             }
         });
@@ -1358,7 +1367,7 @@ Template.receiptsoverview.onRendered(function() {
                     text: '',
                     download: 'open',
                     className: "btntabletocsv hiddenColumn",
-                    filename: "Awaiting Customer Payments List - " + moment().format(),
+                    filename: "Awaiting Expense Payments Claim - " + moment().format(),
                     orientation: 'portrait',
                     exportOptions: {
                         columns: ':visible:not(.chkBox)',
@@ -1377,8 +1386,8 @@ Template.receiptsoverview.onRendered(function() {
                     download: 'open',
                     className: "btntabletopdf hiddenColumn",
                     text: '',
-                    title: 'Supplier Payment',
-                    filename: "Awaiting Customer Payments List - " + moment().format(),
+                    title: 'Expense Claim',
+                    filename: "Awaiting Expense Claim List - " + moment().format(),
                     exportOptions: {
                         columns: ':visible:not(.chkBox)',
                         stripHtml: false
@@ -1429,7 +1438,7 @@ Template.receiptsoverview.onRendered(function() {
                     text: '',
                     download: 'open',
                     className: "btntabletocsv hiddenColumn",
-                    filename: "Awaiting Customer Payments List - " + moment().format(),
+                    filename: "Awaiting Expense Claim List - " + moment().format(),
                     orientation: 'portrait',
                     exportOptions: {
                         columns: ':visible:not(.chkBoxMerge)',
@@ -1449,7 +1458,7 @@ Template.receiptsoverview.onRendered(function() {
                     className: "btntabletopdf hiddenColumn",
                     text: '',
                     title: 'Supplier Payment',
-                    filename: "Awaiting Customer Payments List - " + moment().format(),
+                    filename: "Awaiting Expense Claim List - " + moment().format(),
                     exportOptions: {
                         columns: ':visible:not(.chkBoxMerge)',
                         stripHtml: false
@@ -1772,8 +1781,8 @@ Template.receiptsoverview.events({
         $('#newReceiptModal .tab-pane#nav-multiple').addClass('show active');
         $('.dtMultiple').val(moment().format('DD/MM/YYYY'));
         $('.multipleAmount').val('$0');
-        $('.multipleMerchant').val('');
-        $('.multipleMerchant').attr('data-id', 0);
+        $('.multipleSupplier').val('');
+        $('.multipleSupplier').attr('data-id', 0);
         $('.multipleAccount').val('');
         $('.multipleAccount').attr('data-id', 0);
         $('.multipleDescription').val('');
@@ -1928,6 +1937,9 @@ Template.receiptsoverview.events({
         $('#viewReceiptModal .chart-accounts').attr('data-name', selectedClaim.AccountName);
         $('#viewReceiptModal .transactionTypes').val(selectedClaim.Paymethod);
         $('#viewReceiptModal .txaDescription').val(selectedClaim.Description);
+        $('#viewReceiptModal .trip-groups').val(selectedClaim.TripGroup);
+        $('#viewReceiptModal #receiptMetaID').html(selectedClaim.MetaID);
+        $('#viewReceiptModal #receiptLineID').html(selectedClaim.LineID);
 
         if (selectedClaim.Attachments) {
             let imageData = selectedClaim.Attachments[0].fields.Description + "," + selectedClaim.Attachments[0].fields.Attachment;
@@ -1969,7 +1981,7 @@ Template.receiptsoverview.events({
         } else if (from == 'NavTime') {
             $('#nav-time .merchants').val(supplierName);
             $('#nav-time .merchants').attr('data-id', supplierID);
-        } else if (from.includes('multipleMerchant-')) {
+        } else if (from.includes('multipleSupplier-')) {
             $('#' + from).val(supplierName);
             $('#' + from).attr('data-id', supplierID);
         } else if (from == 'MergeModal') {
@@ -2136,7 +2148,7 @@ Template.receiptsoverview.events({
         }
     },
     'click #tblCategory tbody tr': function(e) {
-        let category = $(e.target).closest('tr').find(".colAccountGroup").text() || '';
+        let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
         let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
         let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -2173,14 +2185,14 @@ Template.receiptsoverview.events({
                 if (data.taccountvs1.length > 0) {
                     for (let i = 0; i < data.taccountvs1.length; i++) {
                         const dataList = [
-                            data.taccountvs1[i].fields.AccountGroup|| '',
+                            data.taccountvs1[i].fields.ReceiptCategory|| '',
                             data.taccountvs1[i].fields.AccountName || '',
                             data.taccountvs1[i].fields.Description || '',
                             data.taccountvs1[i].fields.AccountNumber || '',
                             data.taccountvs1[i].fields.TaxCode || '',
                             data.taccountvs1[i].fields.ID || ''
                         ];
-                        if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
+                        if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)){
                             splashArrayAccountList.push(dataList);
                         }
                     }
@@ -2215,14 +2227,14 @@ Template.receiptsoverview.events({
             sideBarService.getAccountListVS1().then(function(data) {
                 for (let i = 0; i < data.taccountvs1.length; i++) {
                     const dataList = [
-                        data.taccountvs1[i].fields.AccountGroup|| '',
+                        data.taccountvs1[i].fields.ReceiptCategory|| '',
                         data.taccountvs1[i].fields.AccountName || '',
                         data.taccountvs1[i].fields.Description || '',
                         data.taccountvs1[i].fields.AccountNumber || '',
                         data.taccountvs1[i].fields.TaxCode || '',
                         data.taccountvs1[i].fields.ID || ''
                     ];
-                    if (data.taccountvs1[i].fields.AccountGroup != '' && categories.includes(data.taccountvs1[i].fields.AccountGroup)){
+                    if (data.taccountvs1[i].fields.ReceiptCategory != '' && categories.includes(data.taccountvs1[i].fields.ReceiptCategory)){
                         splashArrayAccountList.push(dataList);
                     }
                 }
@@ -2565,7 +2577,9 @@ Template.receiptsoverview.events({
         }
 
         let template = Template.instance();
-        let receipt = template.editExpenseClaim.get();
+        // let receipt = template.editExpenseClaim.get();
+        let metaID = $('#viewReceiptModal #receiptMetaID').val() || 0;
+        let lineID = $('#viewReceiptModal #receiptLineID').val() || 0;
         let employeeId = $('#viewReceiptModal .employees').attr('data-id');
         let employeeName = $('#viewReceiptModal .employees').val() || ' ';
         let transactionTypeId = $('#viewReceiptModal .transactionTypes').attr('data-id');
@@ -2585,7 +2599,7 @@ Template.receiptsoverview.events({
         let expenseClaimLine = {
             type: "TExpenseClaimLineEx",
             fields: {
-                ID: receipt.ID,
+                ID: metaID,
                 EmployeeID: employeeId ? parseInt(employeeId) : 0,
                 EmployeeName: employeeName,
                 SupplierID: supplierId ? parseInt(supplierId) : 0,
@@ -2603,14 +2617,13 @@ Template.receiptsoverview.events({
                 // TransactionTypeName: transactionTypeName,
                 // CurrencyID: currencyId ? parseInt(currencyId) : 0,
                 // CurrencyName: currencyName,
-                Comments: tripGroupName
             }
         };
 
         let expenseClaim = {
             type: "TExpenseClaimEx",
             fields: {
-                ID: receipt.ExpenseClaimID,
+                ID: lineID,
                 EmployeeID: employeeId ? parseInt(employeeId) : 0,
                 EmployeeName: employeeName,
                 DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
@@ -2618,8 +2631,10 @@ Template.receiptsoverview.events({
                 Lines: [expenseClaimLine],
                 RequestToEmployeeID: employeeId ? parseInt(employeeId) : 0,
                 RequestToEmployeeName: employeeName,
+                TripGroup: tripGroupName
             }
         };
+        console.log(JSON.stringify(expenseClaim));
         $('.fullScreenSpin').css('display', 'inline-block');
         accountService.saveReceipt(expenseClaim).then(function(data) {
             // $('.fullScreenSpin').css('display', 'none');
@@ -2671,7 +2686,6 @@ Template.receiptsoverview.events({
         $(parentElement + ' .img-placeholder').css('opacity', 1);
     },
     'click #newReceiptModal .btnSave': function(e) {
-        let template = Template.instance();
         if ($('#newReceiptModal .tab-pane#nav-multiple').hasClass('active')) {
             const receipts = [];
             let loggedUserName = Session.get('mySessionEmployee');
@@ -2682,8 +2696,8 @@ Template.receiptsoverview.events({
                 if (numAmount > 0) {
                     let accountName = $('#multipleAccount-' + i).val();
                     let accountId = $('#multipleAccount-' + i).attr('data-id');
-                    let merchantName = $('#multipleMerchant-' + i).val();
-                    let merchantId = $('#multipleMerchant-' + i).attr('data-id');
+                    let merchantName = $('#multipleSupplier-' + i).val();
+                    let merchantId = $('#multipleSupplier-' + i).attr('data-id');
                     let description = $('#multipleDescription-' + i).val();
                     let date = $('#multipleDate-' + i).val();
                     if (!accountName || !merchantName) {
@@ -2803,7 +2817,6 @@ Template.receiptsoverview.events({
                     // GroupReport: groupReport,
                     // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                     // TransactionTypeName: transactionTypeName,
-                    Comments: tripGroupName
                 }
             };
             expenseClaimLineItems.push(expenseClaimLine);
@@ -2823,10 +2836,10 @@ Template.receiptsoverview.events({
                     // ForeignExchangeRate: parseFloat(parseFloat(currencyBuyRate).toFixed(2)),
                     ForeignExchangeRate: 1, // why should be 1
                     ForeignExchangeCode: currencyName,
-                    ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate)
+                    ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate),
+                    TripGroup: tripGroupName
                 }
             };
-
             $('.fullScreenSpin').css('display', 'inline-block');
             accountService.saveReceipt(expenseClaim).then(function(data) {
                 // $('.fullScreenSpin').css('display', 'none');
@@ -2904,7 +2917,6 @@ Template.receiptsoverview.events({
                         // TransactionTypeName: transactionTypeName,
                         // CurrencyID: currencyId ? parseInt(currencyId) : 0,
                         // CurrencyName: currencyName,
-                        Comments: tripGroupName
                     }
                 };
 
@@ -3138,7 +3150,7 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         template.setAccountSelect(e);
     },
-    'click input[id^="multipleMerchant-"]': function(e) {
+    'click input[id^="multipleSupplier-"]': function(e) {
         $('#employeeListModal').attr('data-from', e.target.id);
         let template = Template.instance();
         template.setSupplierSelect(e);
@@ -3288,7 +3300,7 @@ Template.receiptsoverview.events({
         template.mergeReceiptSelectedIndex.set(parseInt(selected));
         let selectedExpense = template.mergeReceiptRecords.get()[selected];
         $('#mergedEmployee').val(selectedExpense.EmployeeName);
-        $('#mergedMerchant').val(selectedExpense.SupplierName);
+        $('#mergedSupplier').val(selectedExpense.SupplierName);
         $('#mergedAccount').val(selectedExpense.AccountName);
         $('#mergedDescription').val(selectedExpense.Description);
         if (selectedExpense.Attachments) {
@@ -3465,7 +3477,7 @@ Template.receiptsoverview.events({
                 if (checked == "on") {
                     let tr = $(this);
                     let supplierID = $(this).find(".colSupplierID").text();
-                    let supplierName = $(this).find(".colReceiptMerchant").text();
+                    let supplierName = $(this).find(".colReceiptSupplier").text();
                     let taxCode = $(this).find(".colTaxCode").text();
                     let employeeID = $(this).find(".colEmployeeID").text();
                     let employeeName = $(this).find(".colEmployeeName").text();
@@ -3647,7 +3659,7 @@ Template.receiptsoverview.events({
             } else {
                 let errText = "";
                 if (supplierName == "") {
-                    errText = "Merchant is empty.";
+                    errText = "Supplier is empty.";
                 } else if (taxCode == "") {
                     errText = "Tax Code is empty.";
                 }

@@ -127,7 +127,7 @@ Template.paymentoverview.onRendered(function() {
     }
     var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
-
+    
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth2 = currentBeginDate.getMonth();
@@ -144,6 +144,16 @@ Template.paymentoverview.onRendered(function() {
     var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth2) + "-" + (fromDateDay2);
     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
+    if(FlowRouter.current().queryParams.range == "month") {
+        fromDate = moment().startOf('month').startOf('day').format("DD/MM/YYYY");
+        begunDate = moment().endOf('month').endOf('day').format("DD/MM/YYYY");
+    }
+
+    if(FlowRouter.current().queryParams.range == "year") {
+        fromDate = moment().subtract(12, 'months').startOf('day').format("DD/MM/YYYY");
+        begunDate = moment().endOf('day').format("DD/MM/YYYY");
+    }
+    
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
@@ -1618,16 +1628,16 @@ Template.paymentoverview.events({
                         sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
                             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
                               setTimeout(function () {
-                                //window.open('/paymentoverview', '_self');
+                                window.open('/paymentoverview', '_self');
                               }, 2000);
                             }).catch(function(err) {
                               setTimeout(function () {
-                              //window.open('/paymentoverview', '_self');
+                              window.open('/paymentoverview', '_self');
                               }, 2000);
                             });
                         }).catch(function(err) {
                           setTimeout(function () {
-                            //window.open('/paymentoverview', '_self');
+                            window.open('/paymentoverview', '_self');
                           }, 2000);
                         });
                     }).catch(function(err) {

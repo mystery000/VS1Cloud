@@ -61,27 +61,6 @@ Template.customerpayment.onRendered(function() {
 
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblCustomerPayment', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function(){
@@ -144,10 +123,10 @@ Template.customerpayment.onRendered(function() {
                       }else if (data.tcustomerpaymentlist[i].Reconciled == true){
                         paystatus = "Rec";
                       }else if(data.tcustomerpaymentlist[i].Deleted != true){
-                        if ((data.tcustomerpaymentlist[i].Applied > 0) && (data.tcustomerpaymentlist[i].Balance > data.tcustomerpaymentlist[i].Applied)){
-                          paystatus = "Part";
+                        if (data.tcustomerpaymentlist[i].PaidInFull == "Yes"){
+                         paystatus = "Full";
                         }else{
-                          paystatus = "Full";
+                         paystatus = "Part";
                         }
                       };
 
@@ -178,37 +157,6 @@ Template.customerpayment.onRendered(function() {
                   }
               templateObject.datatablerecords.set(dataTableList);
               if(templateObject.datatablerecords.get()){
-
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblCustomerPayment', function(error, result){
-                      if(error){
-
-                      }else{
-                          if(result){
-                              for (let i = 0; i < result.customFields.length; i++) {
-                                  let customcolumn = result.customFields;
-                                  let columData = customcolumn[i].label;
-                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                  let hiddenColumn = customcolumn[i].hidden;
-                                  let columnClass = columHeaderUpdate.split('.')[1];
-                                  let columnWidth = customcolumn[i].width;
-                                  let columnindex = customcolumn[i].index + 1;
-
-                                  if(hiddenColumn == true){
-
-                                      $("."+columnClass+"").addClass('hiddenColumn');
-                                      $("."+columnClass+"").removeClass('showColumn');
-                                  }else if(hiddenColumn == false){
-                                      $("."+columnClass+"").removeClass('hiddenColumn');
-                                      $("."+columnClass+"").addClass('showColumn');
-                                  }
-
-                              }
-                          }
-
-                      }
-                  });
-
-
                   setTimeout(function () {
                       MakeNegative();
                   }, 100);
@@ -381,10 +329,10 @@ Template.customerpayment.onRendered(function() {
                             }else if (data.tcustomerpaymentlist[i].Reconciled == true){
                               paystatus = "Rec";
                             }else if(data.tcustomerpaymentlist[i].Deleted != true){
-                              if ((data.tcustomerpaymentlist[i].Applied > 0) && (data.tcustomerpaymentlist[i].Balance > data.tcustomerpaymentlist[i].Applied)){
-                                paystatus = "Part";
+                              if (data.tcustomerpaymentlist[i].PaidInFull == "Yes"){
+                               paystatus = "Full";
                               }else{
-                                paystatus = "Full";
+                               paystatus = "Part";
                               }
                             };
 
@@ -407,36 +355,6 @@ Template.customerpayment.onRendered(function() {
                         }
                     templateObject.datatablerecords.set(dataTableList);
                     if(templateObject.datatablerecords.get()){
-
-                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblCustomerPayment', function(error, result){
-                            if(error){
-
-                            }else{
-                                if(result){
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if(hiddenColumn == true){
-
-                                            $("."+columnClass+"").addClass('hiddenColumn');
-                                            $("."+columnClass+"").removeClass('showColumn');
-                                        }else if(hiddenColumn == false){
-                                            $("."+columnClass+"").removeClass('hiddenColumn');
-                                            $("."+columnClass+"").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
 
                         setTimeout(function () {
                             MakeNegative();
@@ -686,10 +604,10 @@ Template.customerpayment.onRendered(function() {
                 }else if (data.tcustomerpaymentlist[i].Reconciled == true){
                   paystatus = "Rec";
                 }else if(data.tcustomerpaymentlist[i].Deleted != true){
-                  if ((data.tcustomerpaymentlist[i].Applied > 0) && (data.tcustomerpaymentlist[i].Balance > data.tcustomerpaymentlist[i].Applied)){
-                    paystatus = "Part";
-                  }else{
+                  if (data.tcustomerpaymentlist[i].PaidInFull == "Yes"){
                     paystatus = "Full";
+                  }else{
+                    paystatus = "Part";
                   }
                 };
 
@@ -712,37 +630,6 @@ Template.customerpayment.onRendered(function() {
             }
             templateObject.datatablerecords.set(dataTableList);
             if(templateObject.datatablerecords.get()){
-
-                Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblCustomerPayment', function(error, result){
-                    if(error){
-
-                    }else{
-                        if(result){
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.split('.')[1];
-                                let columnWidth = customcolumn[i].width;
-                                let columnindex = customcolumn[i].index + 1;
-
-                                if(hiddenColumn == true){
-
-                                    $("."+columnClass+"").addClass('hiddenColumn');
-                                    $("."+columnClass+"").removeClass('showColumn');
-                                }else if(hiddenColumn == false){
-                                    $("."+columnClass+"").removeClass('hiddenColumn');
-                                    $("."+columnClass+"").addClass('showColumn');
-                                }
-
-                            }
-                        }
-
-                    }
-                });
-
-
                 setTimeout(function () {
                     MakeNegative();
                 }, 100);
@@ -989,10 +876,10 @@ Template.customerpayment.onRendered(function() {
                       }else if (data.tcustomerpaymentlist[i].Reconciled == true){
                         paystatus = "Rec";
                       }else if(data.tcustomerpaymentlist[i].Deleted != true){
-                        if ((data.tcustomerpaymentlist[i].Applied > 0) && (data.tcustomerpaymentlist[i].Balance > data.tcustomerpaymentlist[i].Applied)){
-                          paystatus = "Part";
+                        if (data.tcustomerpaymentlist[i].PaidInFull == "Yes"){
+                         paystatus = "Full";
                         }else{
-                          paystatus = "Full";
+                         paystatus = "Part";
                         }
                       };
 
@@ -1015,37 +902,6 @@ Template.customerpayment.onRendered(function() {
                   }
               templateObject.datatablerecords.set(dataTableList);
               if(templateObject.datatablerecords.get()){
-
-                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblCustomerPayment', function(error, result){
-                      if(error){
-
-                      }else{
-                          if(result){
-                              for (let i = 0; i < result.customFields.length; i++) {
-                                  let customcolumn = result.customFields;
-                                  let columData = customcolumn[i].label;
-                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                  let hiddenColumn = customcolumn[i].hidden;
-                                  let columnClass = columHeaderUpdate.split('.')[1];
-                                  let columnWidth = customcolumn[i].width;
-                                  let columnindex = customcolumn[i].index + 1;
-
-                                  if(hiddenColumn == true){
-
-                                      $("."+columnClass+"").addClass('hiddenColumn');
-                                      $("."+columnClass+"").removeClass('showColumn');
-                                  }else if(hiddenColumn == false){
-                                      $("."+columnClass+"").removeClass('hiddenColumn');
-                                      $("."+columnClass+"").addClass('showColumn');
-                                  }
-
-                              }
-                          }
-
-                      }
-                  });
-
-
                   setTimeout(function () {
                       MakeNegative();
                   }, 100);

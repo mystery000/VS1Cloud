@@ -9615,53 +9615,7 @@ Template.new_invoice.onRendered(function () {
           });
     };
 
-    tempObj.getSubTaxCodes();
-
-    // // custom field displaysettings
-    // tempObj.getAllCustomFieldDisplaySettings = function () {
-    //   let custFields = [];
-    //   let customData = {};
-    //   let customFieldCount = 12;
-    //   let ListType = 'ltSaleslines';  // tempcode until InvoiceLines is added on backend
-
-    //   sideBarService.getAllCustomFieldsWithQuery(ListType).then(function (data) {
-    //       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-    //         if (data.tcustomfieldlist[x].fields.ListType == ListType) {
-    //           customData = {
-    //             active: data.tcustomfieldlist[x].fields.Active || false,
-    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
-    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-    //           };
-    //           custFields.push(customData);
-    //         }
-    //       }
-
-    //       if (custFields.length < customFieldCount) {
-    //         let remainder = customFieldCount - custFields.length;
-    //         let getRemCustomFields = parseInt(custFields.length);
-    //         // count = count + remainder;
-    //         for (let r = 0; r < remainder; r++) {
-    //           getRemCustomFields++;
-    //           customData = {
-    //             active: false,
-    //             id: "",
-    //             custfieldlabel: "",
-    //             datatype: "",
-    //             isempty: true,
-    //             iscombo: false,
-    //           };
-    //           // count++;
-    //           custFields.push(customData);
-    //         }
-    //       }
-    //       tempObj.displayfields.set(custFields);
-
-    //     })
-    // }
+    tempObj.getSubTaxCodes(); 
 
     // custom field displaysettings
     function initCustomFieldDisplaySettings(data, listType) {
@@ -9669,24 +9623,48 @@ Template.new_invoice.onRendered(function () {
       let custFields = [];
       let customData = {};
       let customFieldCount = 15;
+      let reset_data = [];
 
-      let reset_data = [
-        { label: 'Product Name', class: 'colProductName', active: true },
-        { label: 'Description', class: 'colDescription', active: true },
-        { label: 'Qty', class: 'colQty', active: true },
-        { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
-        { label: 'Cost Price', class: 'colCostPrice', active: false },
-        { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
-        { label: 'Tax Rate', class: 'colTaxRate', active: false },
-        { label: 'Tax Code', class: 'colTaxCode', active: true },
-        { label: 'Amount (Ex)', class: 'colAmount', active: true },
-        { label: 'Tax Amount', class: 'colTaxAmount', active: true },
-        { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
-        { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
-        { label: 'Disc %', class: 'colDiscount', active: true },
-        { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-        { label: 'Units', class: 'colUOM', active: false }
-       ];
+      if(Session.get('CloudSalesQtyOnly')) {
+        reset_data = [
+          { label: 'Product Name', class: 'colProductName', active: true },
+          { label: 'Description', class: 'colDescription', active: true },
+          { label: 'Qty', class: 'colQty', active: true },
+          { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+          { label: 'Cost Price', class: 'colCostPrice', active: false },
+          { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+          { label: 'Tax Rate', class: 'colTaxRate', active: false },
+          { label: 'Tax Code', class: 'colTaxCode', active: true },
+          { label: 'Amount (Ex)', class: 'colAmount', active: true },
+          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+          { label: 'Disc %', class: 'colDiscount', active: true },
+          { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+          { label: 'Units', class: 'colUOM', active: false }
+        ];
+      } else{
+        customFieldCount = 18;
+        reset_data = [
+          { label: 'Product Name', class: 'colProductName', active: true },
+          { label: 'Description', class: 'colDescription', active: true },
+          { label: 'Ordered', class: 'colOrdered', active: true },
+          { label: 'Shipped', class: 'colShipped', active: true },
+          { label: 'BO', class: 'colBO', active: true },
+          { label: 'Unit Price (Ex)', class: 'colUnitPrice', active: true },
+          { label: 'Cost Price', class: 'colCostPrice', active: false },
+          { label: 'SalesLines CustField1', class: 'colSalesLinesCustField1', active: false },
+          { label: 'Tax Rate', class: 'colTaxRate', active: false },
+          { label: 'Tax Code', class: 'colTaxCode', active: true },
+          { label: 'Amount (Ex)', class: 'colAmount', active: true },
+          { label: 'Tax Amount', class: 'colTaxAmount', active: true },
+          { label: 'Unit Price (Inc)', class: 'colUnitPriceInc', active: false },
+          { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
+          { label: 'Disc %', class: 'colDiscount', active: true },
+          { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
+          { label: 'Units', class: 'colUOM', active: false }
+        ];
+      }
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -13957,6 +13935,35 @@ Template.new_invoice.events({
             $('.colQty').css('display', 'none');
         }
     },
+    'click .chkBO': function (event) {
+        if ($(event.target).is(':checked')) {
+            $('.colBo').css('display', 'table-cell');
+            $('.colBo').css('padding', '.75rem');
+            $('.colBo').css('vertical-align', 'top');
+        } else {
+            $('.colBo').css('display', 'none');
+        }
+    },
+    'click .chkShipped': function (event) {
+        if ($(event.target).is(':checked')) {
+            $('.colShipped').css('display', 'table-cell');
+            $('.colShipped').css('padding', '.75rem');
+            $('.colShipped').css('vertical-align', 'top');
+        } else {
+            $('.colShipped').css('display', 'none');
+        }
+    },
+    'click .chkOrdered': function (event) {
+        if ($(event.target).is(':checked')) {
+            $('.colOrdered').css('display', 'table-cell');
+            $('.colOrdered').css('padding', '.75rem');
+            $('.colOrdered').css('vertical-align', 'top');
+        } else {
+            $('.colOrdered').css('display', 'none');
+        }
+    },
+
+
     'click .chkCostPrice': function (event) {
         if ($(event.target).is(':checked')) {
             $('.colCostPrice').css('display', 'table-cell');
