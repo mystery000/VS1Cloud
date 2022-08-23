@@ -4776,28 +4776,16 @@ Template.employeescard.events({
             ],
             body: [
                 {
-                    title: 'Hourly',
-                    value: 'hourly',
+                    title: 'Awaiting',
+                    value: 'Awaiting',
                 },
                 {
-                    title: 'Fortnightly',
-                    value: 'Fortnightly',
+                    title: 'Approved',
+                    value: 'Approved',
                 },
                 {
-                    title: 'Twice Monthly',
-                    value: 'Twice Monthly',
-                },
-                {
-                    title: 'Four Weekly',
-                    value: 'Four Weekly',
-                },
-                {
-                    title: 'Monthly',
-                    value: 'Monthly',
-                },
-                {
-                    title: 'Quarterly',
-                    value: 'Quarterly',
+                    title: 'Denied',
+                    value: 'Denied',
                 },
             ]
         });
