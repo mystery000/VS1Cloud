@@ -176,6 +176,8 @@ Template.allreports.onRendered(() => {
     let isPrintStatement = Session.get('cloudPrintStatement');
     let isExecutiveSummary = Session.get('cloudExecutiveSummary');
 
+    const taxRateService = new taxRateService();
+
     const accountantList = [];
 
     if (isProfitLoss == true) {
