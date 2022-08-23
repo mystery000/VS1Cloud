@@ -107,19 +107,19 @@ Template.purchaseordercard.onRendered(() => {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-                  
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
                     {
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {       
+                           {
                                    $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Purchase_Orders_1').attr('checked','checked');
                                    }
-                                 
+
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -142,30 +142,30 @@ Template.purchaseordercard.onRendered(() => {
 
                     }
 
-               
+
 
                  }
-                  
-                      
+
+
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{ 
-                  let data = JSON.parse(dataObject[0].data);    
-                
+          }else{
+                  let data = JSON.parse(dataObject[0].data);
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
                     {
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {       
+                           {
                                    $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Purchase_Orders_1').attr('checked','checked');
                                    }
-                                 
+
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -188,30 +188,30 @@ Template.purchaseordercard.onRendered(() => {
 
                     }
 
-           
-               
+
+
 
                  }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
-                    
+
+
 
                      if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
                      {
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {       
+                            {
                                     $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                       $('#Purchase_Orders_1').attr('checked','checked');
                                     }
-                                  
+
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -234,8 +234,8 @@ Template.purchaseordercard.onRendered(() => {
 
                      }
 
-            
-                
+
+
 
                   }
                   $('.fullScreenSpin').css('display', 'none');
@@ -247,7 +247,7 @@ Template.purchaseordercard.onRendered(() => {
       };
 
       templateObject.getTemplateInfoNew();
-   
+
 templateObject.getLastPOData = async function() {
        let lastBankAccount = "Bank";
        let lastDepartment = defaultDept || "";
@@ -1903,6 +1903,7 @@ templateObject.getLastPOData = async function() {
                                 let totalTax = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalTax);
                                 let totalBalance = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalBalance);
                                 let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalPaid);
+                                if(useData[d].fields.Lines != null){
                                 if (useData[d].fields.Lines.length) {
                                     for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                                         let AmountGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmount);
@@ -1964,6 +1965,7 @@ templateObject.getLastPOData = async function() {
                                         TaxRate: TaxRateGbp || 0
                                     };
                                     lineItems.push(lineItemObj);
+                                }
                                 }
 
                                 let lidData = 'Edit Purchase Order' + ' ' + useData[d].fields.ID||'';
@@ -2323,6 +2325,7 @@ templateObject.getLastPOData = async function() {
 
                     }
                 }).catch(function(err) {
+                  console.log(err);
                     purchaseService.getOnePurchaseOrderdataEx(currentPurchaseOrder).then(function(data) {
                         $('.fullScreenSpin').css('display', 'none');
                         let lineItems = [];
@@ -4366,7 +4369,7 @@ templateObject.getLastPOData = async function() {
             values.forEach(value => {
                 let reportData = JSON.parse(value);
                 let temp = {... reportData};
-                
+
                 temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                 reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                 temp.attachments = attachment;
@@ -5011,7 +5014,7 @@ Template.purchaseordercard.onRendered(function() {
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
-  
+
         getVS1Data("TSubTaxVS1")
           .then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -5023,10 +5026,10 @@ Template.purchaseordercard.onRendered(function() {
                     description: data.tsubtaxcode[i].Description || "-",
                     category: data.tsubtaxcode[i].Category || "-",
                   };
-  
+
                   subTaxTableList.push(dataList);
                 }
-  
+
                 tempObj.subtaxcodes.set(subTaxTableList);
               });
             } else {
@@ -5039,10 +5042,10 @@ Template.purchaseordercard.onRendered(function() {
                   description: useData[i].Description || "-",
                   category: useData[i].Category || "-",
                 };
-  
+
                 subTaxTableList.push(dataList);
               }
-  
+
               tempObj.subtaxcodes.set(subTaxTableList);
             }
           })
@@ -5055,10 +5058,10 @@ Template.purchaseordercard.onRendered(function() {
                   description: data.tsubtaxcode[i].Description || "-",
                   category: data.tsubtaxcode[i].Category || "-",
                 };
-  
+
                 subTaxTableList.push(dataList);
               }
-  
+
               tempObj.subtaxcodes.set(subTaxTableList);
             });
           });
@@ -6603,177 +6606,177 @@ Template.purchaseordercard.events({
 
         sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Purchase Orders",
                                 GlobalRef:"Purchase Orders",
                                 Description:$('input[name="Purchase Orders_1"]').val(),
                                 Template:"1",
                                 Active:purchase_order == 1 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                    
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-             
-        
+
+
             }).catch(function (err) {
-        
-              
-          
+
+
+
             });
-        
+
             }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Purchase Orders",
                                 Description:$('input[name="Purchase Orders_1"]').val(),
                                 Template:"1",
                                 Active:purchase_order == 1 ? true:false,
-                            }            
+                            }
                     }
-                
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));                                  
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
                         });
-                      
+
                       }).catch(function (err) {
-                      
-                      });  
-    
+
+                      });
+
             });
-    
-    
+
+
           sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Purchase Orders",
                                 GlobalRef:"Purchase Orders",
                                 Description:$('input[name="Purchase Orders_2"]').val(),
                                 Template:"2",
                                 Active:purchase_order == 2 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                     
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-              
-        
+
+
             }).catch(function (err) {
-        
-              
-          
+
+
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Purchase Orders",
                                   Description:$('input[name="Purchase Orders_2"]').val(),
                                   Template:"2",
                                   Active:purchase_order == 2 ? true:false,
-                            }            
+                            }
                     }
-                
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                              
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                         });
-                      
-                
+
+
                       }).catch(function (err) {
-                
-                        
-                  
-                      });  
-    
+
+
+
+                      });
+
           });
-    
-    
+
+
           sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Purchase Orders",
                                 GlobalRef:"Purchase Orders",
                                 Description:$('input[name="Purchase Orders_3"]').val(),
                                 Template:"3",
                                 Active:purchase_order == 3 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));     
-                   
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-        
+
             }).catch(function (err) {
-        
-              
-          
+
+
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Purchase Orders",
                                   Description:$('input[name="Purchase Orders_3"]').val(),
                                   Template:"3",
                                   Active:purchase_order == 3 ? true:false,
-                            }            
+                            }
                     }
-                
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                                   
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                         });
-                
+
                       }).catch(function (err) {
-                
-                        
-                  
-                      });  
-    
+
+
+
+                      });
+
           });
-      
+
         $('#html-2-pdfwrapper-new').css('display', 'block');
         if ($('.edtCustomerEmail').val() != "") {
             $('.pdfCustomerName').html($('#edtCustomerName').val());
@@ -6990,8 +6993,7 @@ Template.purchaseordercard.events({
                 type: "TPurchaseOrderEx",
                 fields: {
                     ID: currentInvoice,
-                    Deleted: true,
-                    Lines: null
+                    Deleted: true
                 }
             };
 
@@ -7270,7 +7272,7 @@ Template.purchaseordercard.events({
                         }
 
                     }
-                    
+
                     // Feature/ser-lot number tracking: Save Serial Numbers
                     if (tdSerialNumber) {
                         const serialNumbers = tdSerialNumber.split(',');
@@ -7296,7 +7298,7 @@ Template.purchaseordercard.events({
                         }
                         lineItemObjForm.fields.PQA = pqaObject;
                     }
-                    
+
                     // Feature/ser-lot number tracking: Save Lot Number
                     if (tdLotNumber) {
                         let tpqaList = [];
