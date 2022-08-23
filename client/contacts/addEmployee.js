@@ -7764,7 +7764,7 @@ Template.employeescard.events({
                 });
 
                 if (ApiResponse.ok == true) {
-                    console.log(ApiResponse);
+                  
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
                     await templateObject.getEmployeePaySettings();
