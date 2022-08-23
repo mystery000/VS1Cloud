@@ -2027,3 +2027,12 @@ authenticatedRoutes.route('/processlist', {
         });
     }
 });
+
+authenticatedRoutes.route('/processcard', {
+    name: 'new_process',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'new_process'
+        })
+    }
+})
