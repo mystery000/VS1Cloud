@@ -7708,10 +7708,10 @@ Template.employeescard.events({
             const listEmployeePaySettings = {}
 
             let TaxFileNumber = $("#edtTaxFileNumber").val();
-            let TFNExemption = $("#edtTfnExemption").val();
-            let EmploymentBasis = $("#edtEmploymentBasis").val();
-            let ResidencyStatus = $("#edtResidencyStatus").val();
-            let EdtPayPeriod = $("#edtPayPeriod").val();
+            let TFNExemption = $("#edtTfnExemption").attr('data-value') || $("#edtTfnExemption").val();
+            let EmploymentBasis = $("#edtEmploymentBasis").attr('data-value') || $("#edtEmploymentBasis").val();
+            let ResidencyStatus = $("#edtResidencyStatus").attr('data-value') || $("#edtResidencyStatus").val();
+            let EdtPayPeriod = $("#edtPayPeriod").attr('data-value') || $("#edtPayPeriod").val();
             let FirstPayDate = $("#edtFirstPayDate").val();
             let StartingDate = $("#dtStartingDate").val();
             let FirstName = $("#edtFirstName").val();
