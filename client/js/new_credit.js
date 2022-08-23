@@ -113,28 +113,28 @@ Template.creditcard.onRendered(() => {
     const termrecords = [];
     const statusList = [];
 
- 
+
       templateObject.getTemplateInfoNew = function(){
         $('.fullScreenSpin').css('display', 'inline-block');
         getVS1Data('TTemplateSettings').then(function(dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-                  
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
-                        
+
+
                      if(data.ttemplatesettings[i].fields.SettingName == 'Credits')
                      {
 
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {       
+                            {
                                     $('input[name="Credits_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                       $('#Credits_1').attr('checked','checked');
                                     }
-                                  
+
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -155,33 +155,33 @@ Template.creditcard.onRendered(() => {
                             }
 
                      }
-               
-               
+
+
 
                  }
-                  
-                      
+
+
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{ 
-                  let data = JSON.parse(dataObject[0].data);    
-                
+          }else{
+                  let data = JSON.parse(dataObject[0].data);
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
-                  
+
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'Credits')
                     {
 
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {       
+                           {
                                    $('input[name="Credits_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Credits_1').attr('checked','checked');
                                    }
-                                 
+
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -202,31 +202,31 @@ Template.creditcard.onRendered(() => {
                            }
 
                     }
-               
-               
+
+
 
                  }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
-                  
+
+
 
                      if(data.ttemplatesettings[i].fields.SettingName == 'Credits')
                      {
 
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {       
+                            {
                                     $('input[name="Credits_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                       $('#Credits_1').attr('checked','checked');
                                     }
-                                  
+
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -248,10 +248,10 @@ Template.creditcard.onRendered(() => {
 
                      }
 
-                  
-                    
-                    
-     
+
+
+
+
 
                   }
                   $('.fullScreenSpin').css('display', 'none');
@@ -316,9 +316,9 @@ Template.creditcard.onRendered(() => {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+        var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -413,7 +413,7 @@ Template.creditcard.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -457,7 +457,7 @@ Template.creditcard.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -501,7 +501,7 @@ Template.creditcard.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -563,9 +563,9 @@ Template.creditcard.onRendered(() => {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+        var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -635,7 +635,7 @@ Template.creditcard.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -679,7 +679,7 @@ Template.creditcard.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -723,7 +723,7 @@ Template.creditcard.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -2118,11 +2118,11 @@ Template.creditcard.onRendered(() => {
 
           if(object_invoce[0]["value"]=="")
           {
-              $('.print-header-value').text('');
+              $('.print-header').text('');
 
           }
           else{
-             $('.print-header-value').text(object_invoce[0]["value"]);
+             $('.print-header').text(object_invoce[0]["value"]);
           }
 
           if(object_invoce[0]["bsb"]=="")
@@ -2261,11 +2261,10 @@ Template.creditcard.onRendered(() => {
                 $('#customfieldlabledata').css('display', 'block');
           }
 
-        //   table header
           var tbl_header = $("#templatePreviewModal .tbl_header")
           tbl_header.empty()
           for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
+                tbl_header.append("<th style='background:white;width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
           }
         }
 
@@ -2273,15 +2272,18 @@ Template.creditcard.onRendered(() => {
          var tbl_content = $("#templatePreviewModal .tbl_content")
          tbl_content.empty()
          const data = object_invoce[0]["data"]
-
+       
          for(item of data){
-            tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-            var content = ""
+            
+             var html = '';
+             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
-                content = content + "<td>" + item_temp + "</td>"
+                html = html + "<td>" + item_temp + "</td>";
              }
-             tbl_content.append(content)
-             tbl_content.append("</tr>")
+
+             html +="</tr>";
+             tbl_content.append(html);
+           
          }
 
         // total amount
@@ -2378,15 +2380,14 @@ Template.creditcard.onRendered(() => {
             object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
          );
 
-        if(object_invoce[0]["value"]=="")
-        {
-              $('.print-header-value').text('');
+         if(object_invoce[0]["value"]=="")
+         {
+             $('.print-header').text('');
 
-        }
-        else
-        {
-             $('.print-header-value').text(object_invoce[0]["value"]);
-        }
+         }
+         else{
+            $('.print-header').text(object_invoce[0]["value"]);
+         }
 
 
         if(object_invoce[0]["bsb"]=="")
@@ -2530,8 +2531,29 @@ Template.creditcard.onRendered(() => {
         //   table header
         var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
         tbl_header.empty()
+        var count = 0 ;
         for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
+
+                
+            if(count == 0)
+            {
+                tbl_header.append("<th style='width: 200px;background:white;color: rgb(0 0 0);width:" + value + "%';>" + key + "</th>") 
+            }
+            else if(count == 1)
+            {
+                tbl_header.append("<th style='width: 250px;background:white;color: rgb(0 0 0);width:" + value + "%';>" + key + "</th>")
+            }
+            else if(count == 2)
+            {
+                tbl_header.append("<th style='text-align: right; width: 77px;background:white;color: rgb(0 0 0);width:" + value + "%';>" + key + "</th>")
+            }
+            else
+            {
+                tbl_header.append("<th style='text-align: right; width: 100px;background:white;color: rgb(0 0 0);width:" + value + "%';>" + key + "</th>")
+            }
+          
+            count++;
+               
         }
 
             if (object_invoce[0]["taxItems"]) {
@@ -2562,14 +2584,35 @@ Template.creditcard.onRendered(() => {
         const data = object_invoce[0]["data"]
 
         for(item of data){
-            tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-            var content = ""
-            for(item_temp of item){
-                content = content + "<td>" + item_temp + "</td>"
-            }
-            tbl_content.append(content)
-            tbl_content.append("</tr>")
-        }
+            var count = 0;
+            var html = '';
+             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+             for(item_temp of item){
+
+
+                   if(count == 0)
+                    {
+                        html = html + "<td >" + item_temp + "</td>";
+                    }
+                    else if(count == 1)
+                    {
+                        html = html + "<td >" + item_temp + "</td>";
+                    }
+                    else if(count == 2)
+                    {
+                        html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    }
+                    else
+                    {
+                        html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    }            
+                    count++;
+             }
+            html +="</tr>";
+            tbl_content.append(html);
+           
+         }
+
 
         // total amount
 
@@ -4054,35 +4097,79 @@ Template.creditcard.onRendered(() => {
 
     exportSalesToPdf =  async function (template_title,number) {
 
+        
 
         $('.fullScreenSpin').css('display', 'block');
-        if(template_title == 'Credits')
+
+        if(template_title == 'Credits' && number == 1)
         {
-
-
-              await showCreditData(template_title,number);
-
+                   exportSalesToPdf1();
         }
-
-
-
-        let margins = {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 100
-        };
-
-        let invoice_data_info = templateObject.creditrecord.get();
-        document.getElementById('html-2-pdfwrapper_new').style.display="block";
-        var source = document.getElementById('html-2-pdfwrapper_new');
-
-        let file = "Credit.pdf";
-        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            if(template_title == 'Credits')
-            {
-                file = 'Credit -' + invoice_data_info.id + '.pdf';
-            }
+        else
+        {
+                    if(template_title == 'Credits')
+                    {
+            
+            
+                        await showCreditData(template_title,number);
+            
+                    }
+            
+            
+            
+                    let margins = {
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        width: 100
+                    };
+            
+                    let invoice_data_info = templateObject.creditrecord.get();
+                    document.getElementById('html-2-pdfwrapper_new').style.display="block";
+                    var source = document.getElementById('html-2-pdfwrapper_new');
+            
+                    let file = "Credit.pdf";
+                    if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                        if(template_title == 'Credits')
+                        {
+                            file = 'Credit -' + invoice_data_info.id + '.pdf';
+                        }
+            
+            
+                    }
+            
+                    var opt = {
+                        margin: 0,
+                        filename: file,
+                        image: {
+                            type: 'jpeg',
+                            quality: 0.98
+                        },
+                        html2canvas: {
+                            scale: 2
+                        },
+                        jsPDF: {
+                            unit: 'in',
+                            format: 'a4',
+                            orientation: 'portrait'
+                        }
+                    };
+            
+            
+                    html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                        if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                        // $(".btnSave").trigger("click");
+                            $('.fullScreenSpin').css('display', 'none');
+                            document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                        } else {
+                            document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                            $('#html-2-pdfwrapper').css('display', 'none');
+                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    });
+            
+            
+                    return true;
 
 
         }
@@ -4126,13 +4213,16 @@ Template.creditcard.onRendered(() => {
     exportSalesToPdf1 = function() {
 
         $('.fullScreenSpin').css('display', 'block');
+      
         let margins = {
             top: 0,
             bottom: 0,
             left: 0,
             width: 100
         };
+        
         let id = $('.printID').attr("id");
+        document.getElementById('html-2-pdfwrapper').style.display="block";
         var source = document.getElementById('html-2-pdfwrapper');
         let file = "Credit.pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -4657,7 +4747,7 @@ Template.creditcard.onRendered(function() {
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
-
+  
         getVS1Data("TSubTaxVS1")
             .then(function (dataObject) {
                 if (dataObject.length == 0) {
@@ -4863,7 +4953,7 @@ Template.creditcard.events({
     {
         if($('#choosetemplate').is(':checked'))
         {
-            $('#confirmprint').modal('show');
+            $('#templateselection').modal('show');
         }
         else
         {
@@ -5812,173 +5902,173 @@ Template.creditcard.events({
         sideBarService.getTemplateNameandEmployeId("Credits",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
             var id = templateid[0].fields.ID;
-          
+
               objDetails =  {
               type:"TTemplateSettings",
-              fields:{        
-                          ID:parseInt(id),                      
+              fields:{
+                          ID:parseInt(id),
                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                           SettingName:"Credits",
                           GlobalRef:"Credits",
                           Description:$('input[name="Credits_1"]').val(),
                           Template:"1",
                           Active:credits == 1 ? true:false,
-                      }            
+                      }
                }
-          
+
                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-              
+
                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-               addVS1Data('TTemplateSettings', JSON.stringify(data));    
-               
-                  
+               addVS1Data('TTemplateSettings', JSON.stringify(data));
+
+
                });
-              
+
                }).catch(function (err) {
-          
-                
+
+
                });
-          
+
         }).catch(function (err) {
-                      
+
                       objDetails =  {
                       type:"TTemplateSettings",
-                      fields:{                                                                  
+                      fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Credits",
                                   Description:$('input[name="Credits_1"]').val(),
                                   Template:"1",
                                   Active:credits == 1 ? true:false,
-                              }            
+                              }
                       }
-                  
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                      
+
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));     
-                           
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                         });
-                      
-                  
+
+
                       }).catch(function (err) {
-                  
-                 
-                      });  
-        
+
+
+                      });
+
         });
-      
+
         sideBarService.getTemplateNameandEmployeId("Credits",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
             var id = templateid[0].fields.ID;
             objDetails =  {
               type:"TTemplateSettings",
-              fields:{        
-                          ID:parseInt(id),                      
+              fields:{
+                          ID:parseInt(id),
                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                           SettingName:"Credits",
                           GlobalRef:"Credits",
                           Description:$('input[name="Credits_2"]').val(),
                           Template:"2",
                           Active:credits == 2 ? true:false,
-                      }            
+                      }
                }
-          
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
                   sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                            
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                     });
-               
-          
+
+
               }).catch(function (err) {
-                
+
               });
-          
+
         }).catch(function (err) {
-                      
+
                     objDetails =  {
                       type:"TTemplateSettings",
-                      fields:{                                                                  
+                      fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Credits",
                                   Description:$('input[name="Credits_2"]').val(),
                                   Template:"2",
                                   Active:credits == 2 ? true:false,
-                              }            
+                              }
                       }
-                  
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                  
+
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                                
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                         });
-                        
+
                       }).catch(function (err) {
-                  
-                       
-                      });  
-        
+
+
+                      });
+
         });
-                  
+
         sideBarService.getTemplateNameandEmployeId("Credits",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
             var id = templateid[0].fields.ID;
-          
+
             objDetails =  {
               type:"TTemplateSettings",
-              fields:{        
-                          ID:parseInt(id),                      
+              fields:{
+                          ID:parseInt(id),
                           EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                           SettingName:"Credits",
                           GlobalRef:"Credits",
                           Description:$('input[name="Credits_3"]').val(),
                           Template:"3",
                           Active:credits == 3 ? true:false,
-                      }            
+                      }
                }
-          
+
                sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          
+
                sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                       
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                 });
-              
-          
+
+
               }).catch(function (err) {
-          
-               
-             
+
+
+
               });
-          
+
         }).catch(function (err) {
-                      
+
                     objDetails =  {
                       type:"TTemplateSettings",
-                      fields:{                                                                  
+                      fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Credits",
                                   Description:$('input[name="Credits_3"]').val(),
                                   Template:"3",
                                   Active:credits == 3 ? true:false,
-                              }            
+                              }
                       }
-                  
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                  
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));      
-                             
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                       
-                  
+
+
                       }).catch(function (err) {
-                  
-                        
-                    
-                      });  
-        
+
+
+
+                      });
+
         });
 
         if ($('.edtCustomerEmail').val() != "") {
@@ -6027,7 +6117,7 @@ Template.creditcard.events({
             });
         }
 
-        
+
         function generatePdfForMail(creditID) {
             let file = "Credit-" + creditID + ".pdf"
             return new Promise((resolve, reject) => {
@@ -6088,7 +6178,7 @@ Template.creditcard.events({
         values.forEach(value => {
             let reportData = JSON.parse(value);
             let temp = {... reportData};
-            
+
             temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
             reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
             temp.attachments = attachment;
@@ -6106,7 +6196,7 @@ Template.creditcard.events({
             }
         });
 
-        
+
 
     },
     'keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount': function(event) {
@@ -6254,8 +6344,7 @@ Template.creditcard.events({
                 fields: {
                     ID: currentInvoice,
                     Deleted: true,
-                    OrderStatus: "Deleted",
-                    Lines: null
+                    OrderStatus: "Deleted"
                 }
             };
 
@@ -6786,7 +6875,7 @@ Template.creditcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') 
+                                return storage.includes('BasedOnType_')
                                 // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;
@@ -6852,7 +6941,7 @@ Template.creditcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') 
+                                return storage.includes('BasedOnType_')
                                 // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;
@@ -6884,7 +6973,7 @@ Template.creditcard.events({
                             let basedOnTypeStorages = Object.keys(localStorage);
                             basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
                                 let employeeId = storage.split('_')[2];
-                                return storage.includes('BasedOnType_') 
+                                return storage.includes('BasedOnType_')
                                 // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
                             });
                             let i = basedOnTypeStorages.length;

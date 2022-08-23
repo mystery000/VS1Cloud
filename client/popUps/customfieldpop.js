@@ -1063,11 +1063,11 @@ Template.customfieldpop.onRendered(() => {
           templateObject.getTProductExData(currentID);
           }
         } else if (
-          url.includes("/purchaseordercard") ||
-          url.includes("/billcard") ||
-          url.includes("/creditcard") ||
-          url.includes("/chequecard") ||
-          url.includes("/depositcard")) {
+          url.includes("/purchaseordercard") || // TPurchaseOrderEx needs customFields except for Lines's customfields
+          url.includes("/billcard") ||          // TBillEx needs customFields except for Lines's customfields
+          url.includes("/creditcard") ||        // TCredit needs customFields except for Lines's customfields
+          url.includes("/chequecard") ||        // TChequeEx needs customFields except for Lines's customfields
+          url.includes("/depositcard")) {       // TVS1BankDeposit needs customFields except for Lines's customfields
           // customfield tempcode
           listType = "ltOrderLines";
           if (!isNaN(currentID)) {

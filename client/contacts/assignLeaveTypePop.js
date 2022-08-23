@@ -26,12 +26,12 @@ Template.assignLeaveTypePop.onCreated(function () {
             changeYear: true,
             yearRange: "-90:+10",
         });
-        $('#edtLeavePayPeriod').editableSelect('add','Weekly');
-        $('#edtLeavePayPeriod').editableSelect('add','Fortnightly');
-        $('#edtLeavePayPeriod').editableSelect('add','Twice Monthly');
-        $('#edtLeavePayPeriod').editableSelect('add','Four Weekly');
-        $('#edtLeavePayPeriod').editableSelect('add','Monthly');
-        $('#edtLeavePayPeriod').editableSelect('add','Quarterly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Weekly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Fortnightly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Twice Monthly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Four Weekly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Monthly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Quarterly');
         $('#edtLeavePayStatus').editableSelect('add','Awaiting');
         $('#edtLeavePayStatus').editableSelect('add','Approved');
         $('#edtLeavePayStatus').editableSelect('add','Denied');
@@ -40,18 +40,18 @@ Template.assignLeaveTypePop.onCreated(function () {
         //     $(this).val(item.id);
         //     $(this).text(item.name);
         // });
-        $('#edtTfnExemption').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#edtEmploymentBasis').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#edtResidencyStatus').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
+        // $('#edtTfnExemption').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#edtEmploymentBasis').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#edtResidencyStatus').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
         $('#leaveCalcMethodSelect').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);

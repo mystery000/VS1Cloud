@@ -909,6 +909,40 @@ Template.addAccountModal.onRendered(function () {
 });
 
 Template.addAccountModal.events({
+  "blur #apcaNo": function (e) {
+    let apcaNo = $("#apcaNo").val(); 
+    if(apcaNo) {
+      swal({
+        title: `Attention!`,
+        html: `<p>You need to ensure that any Supplier or Employee you wish to pay via EFT, has the banking details setup.</p> <p>Do you wish to add banking details to a Supplier or Employee now?</p>
+              <br>
+              <button type="button" class="btn btn-success btn-add-to-employee swl-cstm-btn-yes-sbmt-rqst">Add to Employee</button> 
+              <button type="button" class="btn btn-success btn-add-to-supplier swl-cstm-btn-no-jst-prceed">Add to Supplier</button> 
+              <button type="button" class="btn btn-secondary btn-apca-cancel swl-cstm-btn-cancel" ><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button><br><br>`,
+        showCancelButton: false,
+        showConfirmButton: false,
+        type: "warning",
+        onBeforeOpen: () => {
+            const employee = document.querySelector('.btn-add-to-employee')
+            const supplier = document.querySelector('.btn-add-to-supplier')
+            const cancel = document.querySelector('.btn-apca-cancel')
+        
+            employee.addEventListener('click', () => {
+                swal.close();
+            })
+        
+            supplier.addEventListener('click', () => {
+                swal.close();
+            })
+        
+            cancel.addEventListener('click', () => {
+                swal.close();
+            })
+        }
+      })
+    }
+  },
+
   "click .btnSaveAccount": function () {
     LoadingOverlay.show();
     let templateObject = Template.instance();

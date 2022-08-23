@@ -601,6 +601,7 @@ export class SideBarService extends BaseService {
   }
 
   getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, isDeleted) {
+    console.log(isDeleted);
     let options = "";
     if(isDeleted == ""){
         if (ignoreDate == true) {
@@ -632,7 +633,6 @@ export class SideBarService extends BaseService {
           IgnoreDates: true,
           IsDetailReport: true,
           OrderBy: "PaymentDate desc",
-          Search: "Deleted != true",
           LimitCount: '"' + limitcount + '"',
           LimitFrom: '"' + limitfrom + '"',
         };
@@ -653,13 +653,13 @@ export class SideBarService extends BaseService {
   getPaymentByNameOrID(dataSearchName) {
     let options = "";
     options = {
-      orderby: '"PaymentDate desc"',
+      // orderby: '"PaymentDate desc"',
       ListType: "Detail",
       IgnoreDates: true,
       IsDetailReport: true,
-      OrderBy: "PaymentDate desc",
-      LimitCount: '"' + initialReportLoad + '"',
-      Search: 'ClientName = "' + dataSearchName + '" OR ReceiptNo = "' + dataSearchName + '" OR BankAccount = "' + dataSearchName + '"',
+      // OrderBy: "PaymentDate desc",
+      // LimitCount: '"' + initialReportLoad + '"',
+      Search: 'PaymentID = "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TPaymentList, options);
   }
@@ -1075,12 +1075,12 @@ export class SideBarService extends BaseService {
     let options = "";
     if (limitcount == "All") {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         PropertyList:"ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         PropertyList:"ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -1094,13 +1094,13 @@ export class SideBarService extends BaseService {
     let options = "";
     if (limitcount == "All") {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         select: "[Deleted]=false",
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         select: "[Deleted]=false",
         LimitCount: '"' + limitcount + '"',
@@ -1116,14 +1116,16 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
+        //Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
         IgnoreDates: false,
+        OrderBy: "SaleDate desc",
+        //Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1139,16 +1141,16 @@ export class SideBarService extends BaseService {
     if (filterData == "true") {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
-        Search: "Converted = " + true + "",
+        //OrderBy: "SaleDate desc",
+        Search: "Deleted != true and Converted = " + true + "",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
-        Search: "Converted != true",
+        //OrderBy: "SaleDate desc",
+        Search: "Deleted != true and Converted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1182,6 +1184,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
         IncludeBO: false,
         IncludeShipped: true,
         IncludeLines: false,
@@ -1191,6 +1194,7 @@ export class SideBarService extends BaseService {
     } else {
       options = {
         OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
         IgnoreDates: false,
         IncludeBO: false,
         IncludeShipped: true,
@@ -1282,25 +1286,25 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        // OrderBy: "PurchaseOrderID desc",
+        OrderBy: "OrderDate desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "SupplierName != '' and IsCheque != true",
+        Search: "Deleted != true and SupplierName != '' and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        // OrderBy: "PurchaseOrderID desc",
+        OrderBy: "OrderDate desc",
         IsPO: true,
         IsBill: true,
         IsCredit: true,
         IsCheque: false,
         IsRA: false,
-        Search: "SupplierName != '' and IsCheque != true",
+        Search: "Deleted != true and SupplierName != '' and IsCheque != true",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -1400,7 +1404,7 @@ export class SideBarService extends BaseService {
       IsDetailReport: false,
       Paid: false,
       Unpaid: true,
-      OrderBy: "SaleID desc",
+      OrderBy: "SaleDate desc",
       Search: 'CustomerName = "' + customerName + '"',
     };
     return this.getList(this.ERPObjects.TSalesList, options);
@@ -1417,7 +1421,7 @@ export class SideBarService extends BaseService {
       IsDetailReport: false,
       Paid: false,
       Unpaid: true,
-      OrderBy: "SaleID desc",
+      OrderBy: "SaleDate desc",
       Search: 'CustomerName like "' + customerData + '" OR SaleId = "' + customerData + '"',
       // select: '[CodeName] f7like "' + dataSearchName + '" and [Active]=true',
     };
@@ -1517,7 +1521,7 @@ export class SideBarService extends BaseService {
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
         Search: "ClientId = "+contactID,
-        OrderBy: "SaleID desc"
+        OrderBy: "SaleDate desc"
       };
     }else{
     if (ignoreDate == true) {
@@ -1531,7 +1535,7 @@ export class SideBarService extends BaseService {
         Paid: false,
         Unpaid: true,
         Search: "Balance != 0",
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1546,7 +1550,7 @@ export class SideBarService extends BaseService {
         Paid: false,
         Unpaid: true,
         Search: "Balance != 0",
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1570,7 +1574,7 @@ export class SideBarService extends BaseService {
         Paid: false,
         Unpaid: true,
         // Search: "Balance != 0",
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         Search: 'dueDate < "' + dateTo + '" and Balance != 0',
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -1586,7 +1590,7 @@ export class SideBarService extends BaseService {
         Paid: false,
         Unpaid: true,
         // Search: "Balance != 0",
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         Search: 'dueDate < "' + dateTo + '" and Balance != 0',
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -1608,7 +1612,7 @@ export class SideBarService extends BaseService {
       IsDetailReport: false,
       Paid: false,
       Unpaid: true,
-      OrderBy: "SaleID desc",
+      OrderBy: "SaleDate desc",
       // Search: 'dueDate < "' + dateTo + '" and Balance != 0',
       Search: 'dueDate < "' + dateTo + '" and Balance != 0 and CustomerName like "' + customerData + '" OR SaleId = "' + customerData + '"',
     };
@@ -1642,16 +1646,16 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         IsBill: true,
-        // OrderBy: "PurchaseOrderNumber desc",
-        Search: "IsBill = true and IsCheque != true",
+        OrderBy: "OrderDate desc",
+        Search: "Deleted != true and IsBill = true and IsCheque != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        // OrderBy: "PurchaseOrderNumber desc",
+        OrderBy: "OrderDate desc",
         IsBill: true,
-        Search: "IsBill = true and IsCheque != true",
+        Search: "Deleted != true and IsBill = true and IsCheque != true",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -1666,13 +1670,13 @@ export class SideBarService extends BaseService {
     let options = "";
     if (limitcount == "All") {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         select: "[Deleted]=false",
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         select: "[Deleted]=false",
         LimitCount: '"' + limitcount + '"',
@@ -1688,14 +1692,16 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
+        Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         IgnoreDates: false,
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1711,23 +1717,23 @@ export class SideBarService extends BaseService {
     if (filterData == "true") {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
-        Search: "Converted = " + true + "",
+        OrderBy: "SaleDate desc",
+        Search: "Deleted != true and Converted = " + true + "",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
-        Search: "Converted != true",
+        OrderBy: "SaleDate desc",
+        Search: "Deleted != true and Converted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     }
     //  }else{
     //    options = {
-    //      OrderBy:"SaleID desc",
+    //      OrderBy:"SaleDate desc",
     //      IgnoreDates:false,
     //      Search:'Converted = '+filterData+'',
     //      DateFrom:'"'+dateFrom+'"',
@@ -1764,6 +1770,7 @@ export class SideBarService extends BaseService {
       options = {
         OrderBy: "PurchaseOrderID desc",
         IgnoreDates: true,
+        Search: "Deleted != true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1771,6 +1778,7 @@ export class SideBarService extends BaseService {
       options = {
         OrderBy: "PurchaseOrderID desc",
         IgnoreDates: false,
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1884,7 +1892,7 @@ export class SideBarService extends BaseService {
     let options = "";
     if (ignoreDate == true) {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         IgnoreDates: true,
         IncludeIsInvoice: true,
         IncludeIsQuote: true,
@@ -1898,7 +1906,7 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -1987,13 +1995,13 @@ export class SideBarService extends BaseService {
     let options = "";
     if (limitcount == "All") {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         select: "[Deleted]=false",
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         select: "[Deleted]=false",
         LimitCount: '"' + limitcount + '"',
@@ -2009,7 +2017,8 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
+        Search: "Deleted != true",
+        OrderBy: "SaleDate desc",
         IncludeBo: false,
         IncludeShipped: true,
         IncludeLines: false,
@@ -2018,8 +2027,9 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         IgnoreDates: false,
+        Search: "Deleted != true",
         IncludeBo: false,
         IncludeShipped: true,
         IncludeLines: false,
@@ -2580,7 +2590,7 @@ export class SideBarService extends BaseService {
 
   getAllInvoiceListUpdate(msTimeStamp) {
     let options = {
-      OrderBy: "SaleID desc",
+      OrderBy: "SaleDate desc",
       ListType: "Detail",
       select: '[Deleted]=false and [MsTimeStamp]>"' + msTimeStamp + '"',
       //LimitCount:'"50"'
@@ -2597,7 +2607,7 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         FilterString: "SaleType='Invoice'",
         select: "[Deleted]=false",
         LimitCount: '"' + limitcount + '"',
@@ -2611,12 +2621,12 @@ export class SideBarService extends BaseService {
   //   let options = '';
   //   if(limitcount == 'All'){
   //    options = {
-  //      OrderBy:"SaleID desc",
+  //      OrderBy:"SaleDate desc",
   //      PropertyList: "Id,ClientName,EmployeeName,SaleClassName,SaleDate",
   //   };
   // }else{
   //   options = {
-  //     OrderBy:"SaleID desc",
+  //     OrderBy:"SaleDate desc",
   //     PropertyList: "Id,ClientName,EmployeeName,SaleClassName,SaleDate",
   //    //  select: "[Deleted]=false",
   //    // //  LimitCount:'"'+limitcount+'"',
@@ -2630,13 +2640,13 @@ export class SideBarService extends BaseService {
     let options = "";
     if (limitcount == "All") {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         // select: '[Deleted]=false'
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         // select: '[Deleted]=false',
         LimitCount: '"' + limitcount + '"',
@@ -2652,7 +2662,8 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
+        Search: "Deleted != true",
+        OrderBy: "SaleDate desc",
         IncludeBo: true,
         IncludeShipped: false,
         IncludeLines: true,
@@ -2661,8 +2672,9 @@ export class SideBarService extends BaseService {
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         IgnoreDates: false,
+        Search: "Deleted != true",
         IncludeBo: true,
         IncludeShipped: false,
         IncludeLines: true,
@@ -2708,6 +2720,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
         IncludeBo: true,
         IncludeShipped: false,
         IncludeLines: true,
@@ -2717,6 +2730,7 @@ export class SideBarService extends BaseService {
     } else {
       options = {
         OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
         IgnoreDates: false,
         IncludeBo: true,
         IncludeShipped: false,
@@ -2970,13 +2984,13 @@ export class SideBarService extends BaseService {
     let options = "";
     if (limitcount == "All") {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         select: "[Deleted]=false",
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         ListType: "Detail",
         select: "[Deleted]=false",
         LimitCount: '"' + limitcount + '"',
@@ -2992,14 +3006,16 @@ export class SideBarService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        OrderBy: "SaleID desc",
+        Search: "Deleted != true",
+        OrderBy: "SaleDate desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "SaleID desc",
+        OrderBy: "SaleDate desc",
         IgnoreDates: false,
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
