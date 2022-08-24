@@ -601,9 +601,8 @@ export class SideBarService extends BaseService {
   }
 
   getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, isDeleted) {
-    console.log(isDeleted);
     let options = "";
-    if(isDeleted == ""){
+    if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
         if (ignoreDate == true) {
           options = {
             IgnoreDates: true,
@@ -628,7 +627,7 @@ export class SideBarService extends BaseService {
           };
         }
     }else{
-      if(isDeleted== true){
+      if (ignoreDate == true) {
         options = {
           IgnoreDates: true,
           IsDetailReport: true,
@@ -638,9 +637,12 @@ export class SideBarService extends BaseService {
         };
       }else{
         options = {
-          IgnoreDates: true,
+          orderby: '"PaymentDate desc"',
+          ListType: "Detail",
+          IgnoreDates: false,
           IsDetailReport: true,
-          OrderBy: "PaymentDate desc",
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
           LimitCount: '"' + limitcount + '"',
           LimitFrom: '"' + limitfrom + '"',
         };
@@ -1864,12 +1866,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAppointmentList, options);
   }
 
-  getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,isDeleted) {
     let options = "";
+    if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
       options = {
         OrderBy: "TransactionDate desc",
         IgnoreDates: true,
+        //Search: "Deleted != true",
         IsDetailReport: true,
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -1878,22 +1882,44 @@ export class SideBarService extends BaseService {
       options = {
         OrderBy: "TransactionDate desc",
         IgnoreDates: false,
+        //Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     }
-
+    }else{
+      if (ignoreDate == true) {
+        options = {
+          OrderBy: "TransactionDate desc",
+          IgnoreDates: true,
+          IsDetailReport: true,
+          LimitCount: '"' + limitcount + '"',
+          LimitFrom: '"' + limitfrom + '"',
+        };
+      } else {
+        options = {
+          OrderBy: "TransactionDate desc",
+          IgnoreDates: false,
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          LimitCount: '"' + limitcount + '"',
+          LimitFrom: '"' + limitfrom + '"',
+        };
+      }
+    }
     return this.getList(this.ERPObjects.TJournalEntryList, options);
   }
 
-  getSalesListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getSalesListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom,isDeleted) {
     let options = "";
+    if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
       options = {
         OrderBy: "SaleDate desc",
         IgnoreDates: true,
+        Search: "Deleted != true",
         IncludeIsInvoice: true,
         IncludeIsQuote: true,
         IncludeIsRefund: true,
@@ -1908,6 +1934,7 @@ export class SideBarService extends BaseService {
       options = {
         OrderBy: "SaleDate desc",
         IgnoreDates: false,
+        Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         IsDetailReport: false,
@@ -1920,6 +1947,41 @@ export class SideBarService extends BaseService {
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
+    }
+    }else{
+      if (ignoreDate == true) {
+        options = {
+          OrderBy: "SaleDate desc",
+          IgnoreDates: true,
+          Search: "",
+          IncludeIsInvoice: true,
+          IncludeIsQuote: true,
+          IncludeIsRefund: true,
+          IncludeISSalesOrder: true,
+          IsDetailReport: false,
+          Paid: true,
+          Unpaid: true,
+          LimitCount: '"' + limitcount + '"',
+          LimitFrom: '"' + limitfrom + '"',
+        };
+      } else {
+        options = {
+          OrderBy: "SaleDate desc",
+          IgnoreDates: false,
+          Search: "",
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          IsDetailReport: false,
+          IncludeIsInvoice: true,
+          IncludeIsQuote: true,
+          IncludeIsRefund: true,
+          IncludeISSalesOrder: true,
+          Paid: true,
+          Unpaid: true,
+          LimitCount: '"' + limitcount + '"',
+          LimitFrom: '"' + limitfrom + '"',
+        };
+      }
     }
 
     return this.getList(this.ERPObjects.TSalesList, options);
@@ -2564,12 +2626,13 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBankDepositList, options);
   }
 
-  getAllBankAccountDetails(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllBankAccountDetails(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, isDeleted) {
     let options = "";
+    if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        select: "[deleted]=false",
+        Search: "Deleted != true",
         OrderBy: "Date desc",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -2577,13 +2640,34 @@ export class SideBarService extends BaseService {
     } else {
       options = {
         IgnoreDates: false,
-        select: "[deleted]=false",
+        Search: "Deleted != true",
         OrderBy: "Date desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
+    }
+    }else{
+      if (ignoreDate == true) {
+        options = {
+          IgnoreDates: true,
+          Search: "",
+          OrderBy: "Date desc",
+          LimitCount: '"' + limitcount + '"',
+          LimitFrom: '"' + limitfrom + '"',
+        };
+      } else {
+        options = {
+          IgnoreDates: false,
+          Search: "",
+          OrderBy: "Date desc",
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          LimitCount: '"' + limitcount + '"',
+          LimitFrom: '"' + limitfrom + '"',
+        };
+      }
     }
     return this.getList(this.ERPObjects.TBankAccountReport, options);
   }

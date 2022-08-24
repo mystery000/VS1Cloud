@@ -273,7 +273,6 @@ Template.paymentoverview.onRendered(function() {
     // $('#tblPaymentOverview').DataTable();
     templateObject.getAllPaymentsData = async function(viewdeleted) {
       var splashArrayPaymentOverviewList = new Array();
-      console.log(viewdeleted);
        $('.fullScreenSpin').css('display', 'inline-block');
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
@@ -659,7 +658,6 @@ Template.paymentoverview.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data);
                 let useData = data.tpaymentlist;
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
@@ -670,7 +668,6 @@ Template.paymentoverview.onRendered(function() {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
-                console.log(data.Params.Search);
                 if(data.Params.Search.replace(/\s/g, "") == ""){
                   viewdeleted = true;
                   //$('.btnViewDeletedPayments').css('display','none');
