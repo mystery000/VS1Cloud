@@ -170,30 +170,10 @@
                                     <thead>
                                         <tr class="table-secondary customDoubleTableHeading">
                                             <th></th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-right alighnMent{{countActive currencyList }}" style="font-weight: 800;">Aug 2022</th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-right alighnMent{{countActive currencyList }}" style="font-weight: 800;">Jul 2022</th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-right alighnMent{{countActive currencyList }}" style="font-weight: 800;">Variance</th>
+                                            <th class="text-nowrap text-right" style="font-weight: 800;">{{titleMonth1}}</th>
+                                            <th class="text-nowrap text-right" style="font-weight: 800;">{{titleMonth2}}</th>
+                                            <th class="text-nowrap text-right" style="font-weight: 800;">Variance</th>
                                         </tr>
-                                        {{#if isOnlyDefaultActive equal "false" }}
-                                            <tr class="table-active tblAvoid customDoubleTableHeading">
-
-                                                {{#if currencyList}}
-                                                    <th class="text-left"></th>
-                                                    {{#each c in currencyList }}
-                                                        {{# if c.active}}
-                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.code }}</th>
-                                                        {{/if}}
-                                                    {{/each}}
-
-                                                    {{#each c in currencyList }}
-                                                        {{# if c.active}}
-                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
-                                                        {{/if}}
-                                                    {{/each}}
-                                                {{/if}}
-
-                                            </tr>
-                                        {{/if}}
                                     </thead>
                                     <tbody>
                                         <tr>
@@ -202,29 +182,29 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Cash Received</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Cash Received</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Cash Spent</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Cash Spent</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Cash Surplus(deficit)</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Cash Surplus(deficit)</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Closing Bank Balance</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Closing Bank Balance</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
 
                                         <tr>
@@ -233,41 +213,41 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Income</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Income</td>
+                                            <td class="text-nowrap text-right">{{totalSales}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Direct Costs</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Direct Costs</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Gross Profit(loss)</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Gross Profit(loss)</td>
+                                            <td class="text-nowrap text-right">{{grossProfit}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Other Income</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Other Income</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Expenses</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Expenses</td>
+                                            <td class="text-nowrap text-right">{{totalExpenses}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Profit(loss)</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Profit(loss)</td>
+                                            <td class="text-nowrap text-right">{{nettProfit}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
 
                                         <tr>
@@ -276,23 +256,23 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Debtors</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Debtors</td>
+                                            <td class="text-nowrap text-right">{{totalAgedReceivables}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Creditors</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Creditors</td>
+                                            <td class="text-nowrap text-right">{{totalAgedPayables}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Net assets</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Net assets</td>
+                                            <td class="text-nowrap text-right">{{totalNettAssets}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
 
                                         <tr>
@@ -301,42 +281,42 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Number of invoices issued</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Number of invoices issued</td>
+                                            <td class="text-nowrap text-right">{{totalInvoiceCount}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Average value of invoices</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Average value of invoices</td>
+                                            <td class="text-nowrap text-right">{{averageInvoiceValue}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
                                         
-                                        <tr>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
                                             <td class="text-primary font-weight-bold" style="font-size: 24px;">Performance</td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Gross profit margin</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Gross profit margin</td>
+                                            <td class="text-nowrap text-right">{{grossProfitMargin}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">New profit margin</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Net profit margin</td>
+                                            <td class="text-nowrap text-right">{{netProfitMargin}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Return on investment (p.a.)</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Return on investment (p.a.)</td>
+                                            <td class="text-nowrap text-right">{{returnOnInvestment}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
 
                                         <tr>
@@ -345,35 +325,35 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Average debtors days</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Average debtors days</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Average creditors days</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Average creditors days</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Short term cash forecast</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Short term cash forecast</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Current assets to liabilities</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Current assets to liabilities</td>
+                                            <td class="text-nowrap text-right">{{currentAsset}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: 800;">Term assets to liabilities</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">0.0%</td>
+                                        <tr class="font-weight-bold" style="font-size: 16px;">
+                                            <td class="text-nowrap text-left">Term assets to liabilities</td>
+                                            <td class="text-nowrap text-right">{{termAsset}}</td>
+                                            <td class="text-nowrap text-right">0</td>
+                                            <td class="text-nowrap text-right">0.0%</td>
                                         </tr>
                                     </tbody>
 
