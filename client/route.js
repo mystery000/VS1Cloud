@@ -1901,6 +1901,14 @@ authenticatedRoutes.route('/customerdetailsreport', {
         });
     }
 });
+authenticatedRoutes.route('/transactionjournal', {
+    name: 'transactionjournallist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'transactionjournallist'
+        });
+    }
+});
 
 authenticatedRoutes.route('/customersummaryreport', {
     name: 'customersummaryreport',
@@ -2027,3 +2035,12 @@ authenticatedRoutes.route('/processlist', {
         });
     }
 });
+
+authenticatedRoutes.route('/processcard', {
+    name: 'new_process',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'new_process'
+        })
+    }
+})

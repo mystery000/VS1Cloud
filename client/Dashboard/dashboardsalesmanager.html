@@ -4,7 +4,7 @@
             padding: 1rem 0.4rem;
         }
         .small-heading {
-            font-size: 0.8rem;
+            font-size: 14px;
         }
 
         .my-tasks {
@@ -44,20 +44,11 @@
             <hr>
 
             <div class="row align-items-center pt-3 pb-3">
-                <div class="col-auto col-md-5 no-gutters" data-default-class="col-md-6">
-                    <div id="spd-employee-chart"></div>
-                </div>
-
-                <div class="col-md-3 no-gutters">
-                    <div id="spd-gauge-area1" style="display: none;"></div>
-                </div>
-                <div class="col-md-3 no-gutters">
-                    <div id="spd-gauge-area2" style="display: none;"></div>
-                </div>
+                {{> dashboardManagerCharts  tabGroupID="10" chartGroup="DSMCharts" }}
             </div>
             <hr>
             <div class="row align-items-center pt-3 pb-3">
-                <div class="col-md-5 no-gutters">
+                <div class="col-md-6 no-gutters">
                     {{> appointmentsWidget}}
                 </div>
                 <div class="col-md-6 no-gutters">

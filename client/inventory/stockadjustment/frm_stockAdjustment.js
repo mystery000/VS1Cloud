@@ -2256,6 +2256,9 @@ Template.stockadjustmentcard.events({
                 let tdproductID = $('#' + lineID + " .lineProductName").attr('productid');
                 let tdproductCost = $('#' + lineID + " .lineProductName").attr('productcost');
                 let tdbarcode = $('#' + lineID + " .lineProductBarCode").html();
+                if( tdbarcode != ''){
+                    JsBarcode('#stockAdjust' + lineID, tdbarcode);
+                }
                 let tddescription = $('#' + lineID + " .lineDescription").html();
                 let tdinstockqty = $('#' + lineID + " .lineInStockQty").text();
                 let tdfinalqty = $('#' + lineID + " .lineFinalQty").val();

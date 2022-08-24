@@ -127,7 +127,7 @@ Template.paymentoverview.onRendered(function() {
     }
     var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
-    
+
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth2 = currentBeginDate.getMonth();
@@ -153,7 +153,7 @@ Template.paymentoverview.onRendered(function() {
         fromDate = moment().subtract(12, 'months').startOf('day').format("DD/MM/YYYY");
         begunDate = moment().endOf('day').format("DD/MM/YYYY");
     }
-    
+
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
@@ -192,12 +192,88 @@ Template.paymentoverview.onRendered(function() {
     };
 
 
-    templateObject.resetData = function(dataVal) {
+    templateObject.resetData = function(data) {
         location.reload();
+        console.log(data);
+        /*
+        const dataTableListDupp = [];
+        var splashArrayPaymentOverviewListDupp = new Array();
+        if (data.tpaymentlist.length > 0) {
+          for (let i = 0; i < data.tpaymentlist.length; i++) {
+            let amount = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].PaymentAmount) || 0.00;
+                let openningBalance = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].OpeningBalance) || 0.00;
+                let bankAccount = data.tpaymentlist[i].BankAccount;
+                if (bankAccount == "Accounts Receivable") {
+                    bankAccount = "A/R";
+                } else if (bankAccount == "Accounts Payables") {
+                    bankAccount = "A/P";
+                }
+                let paystatus = '';
+                if (data.tpaymentlist[i].Deleted == true) {
+                    paystatus = "Deleted";
+                } else if (data.tpaymentlist[i].ClientName == '') {
+                    paystatus = "Deleted";
+                };
+
+                var dataList = {
+                          id: data.tpaymentlist[i].PaymentID || '',
+                          sortdate: data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
+                          paymentdate: data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                          customername: data.tpaymentlist[i].ClientName || '',
+                          paymentamount: amount || 0.00,
+                          openingbalance: openningBalance || 0.00,
+                          bankaccount: bankAccount || '',
+                          department: data.tpaymentlist[i].Department || '',
+                          refno: data.tpaymentlist[i].ReferenceNo || '',
+                          receiptno: data.tpaymentlist[i].ReceiptNo || '',
+                          jobname: data.tpaymentlist[i].jobname || '',
+                          paymentmethod: data.tpaymentlist[i].PaymentMethod || '',
+                          type: data.tpaymentlist[i].TYPE || '',
+                          paystatus: paystatus || "",
+                          notes: data.tpaymentlist[i].Notes || ''
+                      };
+
+                          dataTableListDupp.push(dataList);
+                          var dataListPaymentOverviewList = [
+                              data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
+                              '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                              data.tpaymentlist[i].ClientName || '',
+                              data.tpaymentlist[i].PaymentID || '',
+                              data.tpaymentlist[i].ReferenceNo || '',
+                              amount || 0.00,
+                              bankAccount || '',
+                              data.tpaymentlist[i].TYPE || '',
+                              data.tpaymentlist[i].Department || '',
+                              paystatus || "",
+                              data.tpaymentlist[i].ReceiptNo || '',
+                              data.tpaymentlist[i].jobname || '',
+                              data.tpaymentlist[i].PaymentMethod || '',
+                              data.tpaymentlist[i].Notes || ''
+                          ];
+                          splashArrayPaymentOverviewListDupp.push(dataListPaymentOverviewList);
+            }
+            // templateObject.datatablerecords.set(dataTableList);
+            //
+            // let item = templateObject.datatablerecords.get();
+            $('.fullScreenSpin').css('display', 'none');
+            if (dataTableListDupp) {
+                var datatable = $('#tblPaymentOverview').DataTable();
+                datatable.clear();
+                datatable.rows.add(splashArrayPaymentOverviewListDupp);
+                datatable.draw(false);
+                datatable.fnPageChange('last');
+                $('.fullScreenSpin').css('display', 'none');
+
+            }
+
+        }
+        */
     }
 
     // $('#tblPaymentOverview').DataTable();
-    templateObject.getAllPaymentsData = function() {
+    templateObject.getAllPaymentsData = async function(viewdeleted) {
+      var splashArrayPaymentOverviewList = new Array();
+       $('.fullScreenSpin').css('display', 'inline-block');
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
         let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -214,9 +290,9 @@ Template.paymentoverview.onRendered(function() {
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        getVS1Data('TPaymentList').then(function(dataObject) {
+        getVS1Data('TPaymentList').then(async function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(data) {
+                sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,viewdeleted).then(function(data) {
                     let lineItems = [];
                     let lineItemObj = {};
 
@@ -231,6 +307,17 @@ Template.paymentoverview.onRendered(function() {
                         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                     }
+
+                    if(data.Params.Search.replace(/\s/g, "") == ""){
+                      viewdeleted = true;
+                      //$('.btnViewDeletedPayments').css('display','none');
+                      //$('.btnHideDeletedPayments').css('display','inline-block');
+
+                    }else{
+                      viewdeleted = false;
+                    //  $('.btnViewDeletedPayments').css('display','inline-block');
+                    //  $('.btnHideDeletedPayments').css('display','none');
+                    }
                     for (let i = 0; i < data.tpaymentlist.length; i++) {
                         let amount = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].PaymentAmount) || 0.00;
                         let openningBalance = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].OpeningBalance) || 0.00;
@@ -244,8 +331,6 @@ Template.paymentoverview.onRendered(function() {
                         if (data.tpaymentlist[i].Deleted == true) {
                             paystatus = "Deleted";
                         } else if (data.tpaymentlist[i].ClientName == '') {
-                            paystatus = "Deleted";
-                        } else if (data.tpaymentlist[i].PaymentAmount == 0) {
                             paystatus = "Deleted";
                         };
                         var dataList = {
@@ -266,9 +351,25 @@ Template.paymentoverview.onRendered(function() {
                             paystatus: paystatus || "",
                             notes: data.tpaymentlist[i].Notes || ''
                         };
-                        if (data.tpaymentlist[i].Deleted == false) {
+
                             dataTableList.push(dataList);
-                        }
+                            var dataListPaymentOverviewList = [
+                                data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
+                                '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                                data.tpaymentlist[i].ClientName || '',
+                                data.tpaymentlist[i].PaymentID || '',
+                                data.tpaymentlist[i].ReferenceNo || '',
+                                amount || 0.00,
+                                bankAccount || '',
+                                data.tpaymentlist[i].TYPE || '',
+                                data.tpaymentlist[i].Department || '',
+                                paystatus || "",
+                                data.tpaymentlist[i].ReceiptNo || '',
+                                data.tpaymentlist[i].jobname || '',
+                                data.tpaymentlist[i].PaymentMethod || '',
+                                data.tpaymentlist[i].Notes || ''
+                            ];
+                            splashArrayPaymentOverviewList.push(dataListPaymentOverviewList);
 
                     }
 
@@ -276,37 +377,6 @@ Template.paymentoverview.onRendered(function() {
                     //awaitingpaymentCount
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
-
-                        Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentOverview', function(error, result) {
-                            if (error) {
-
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if (hiddenColumn == true) {
-
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
-
                         setTimeout(function() {
                             MakeNegative();
                         }, 100);
@@ -314,175 +384,223 @@ Template.paymentoverview.onRendered(function() {
 
                     $('.fullScreenSpin').css('display', 'none');
                     setTimeout(function() {
-                        $('#tblPaymentOverview').DataTable({
-                            "columnDefs": [{
-                                "targets": 0,
-                                "type": "date"
-                            }],
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            buttons: [{
-                                extend: 'excelHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Payment List - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible',
-                                    format: {
-                                        body: function(data, row, column) {
-                                            if (data.includes("</span>")) {
-                                                var res = data.split("</span>");
-                                                data = res[1];
-                                            }
+                      $('#tblPaymentOverview').DataTable({
+                          data: splashArrayPaymentOverviewList,
+                          "columnDefs": [{
+                              "targets": 0,
+                              "type": "date",
+                              className: "colSortDate hiddenColumn",
+                              createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).closest("tr").attr("id", rowData[3]);
+                              }
+                          }, {
+                              className: "colPaymentDate",
+                              contenteditable:"false",
+                              type: 'date',
+                              targets: 1
+                          }, {
+                              className: "colCustomerName",
+                              contenteditable:"false",
+                              targets: 2
+                          }, {
+                              className: "colPaymentNo",
+                              contenteditable:"false",
+                              targets: 3
+                          }, {
+                              className: "colRefNo",
+                              contenteditable:"false",
+                              targets: 4
+                          }, {
+                              className: "colPaymentAmount",
+                              targets: 5
+                          }, {
+                              className: "colBankAccount",
+                              targets: 6
+                          }, {
+                              className: "colType",
+                              targets: 7
+                          }, {
+                              className: "colDepartment",
+                              targets: 8
+                          }, {
+                              className: "colStatus",
+                              targets: 9
+                          }, {
+                              className: "colReceiptNo hiddenColumn",
+                              targets: 10
+                          }, {
+                              className: "colJobName hiddenColumn",
+                              targets: 11
+                          }, {
+                              className: "colPaymentMethod hiddenColumn",
+                              targets: 12
+                          }, {
+                              className: "colNotes",
+                              targets: 13
+                          }],
+                          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                          buttons: [{
+                              extend: 'excelHtml5',
+                              text: '',
+                              download: 'open',
+                              className: "btntabletocsv hiddenColumn",
+                              filename: "Payment List - " + moment().format(),
+                              orientation: 'portrait',
+                              exportOptions: {
+                                  columns: ':visible',
+                                  format: {
+                                      body: function(data, row, column) {
+                                          if (data.includes("</span>")) {
+                                              var res = data.split("</span>");
+                                              data = res[1];
+                                          }
 
-                                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+                                          return column === 1 ? data.replace(/<.*?>/ig, "") : data;
 
-                                        }
-                                    }
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Payment Overview',
-                                filename: "Payment List - " + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            }],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            pageLength: initialReportDatatableLoad,
-                            "bLengthChange": false,
-                            searching: true,
-                            lengthMenu: [
-                                [initialReportDatatableLoad, -1],
-                                [initialReportDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true,
-                            "order": [
-                                [0, "desc"],
-                                [2, "desc"]
-                            ],
-                            // "aaSorting": [[1,'desc']],
-                            action: function() {
-                                $('#tblPaymentOverview').DataTable().ajax.reload();
-                            },
-                            "fnDrawCallback": function(oSettings) {
-                                let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                                //if(checkurlIgnoreDate == 'true'){
+                                      }
+                                  }
+                              }
+                          }, {
+                              extend: 'print',
+                              download: 'open',
+                              className: "btntabletopdf hiddenColumn",
+                              text: '',
+                              title: 'Payment Overview',
+                              filename: "Payment List - " + moment().format(),
+                              exportOptions: {
+                                  columns: ':visible',
+                                  stripHtml: false
+                              }
+                          }],
+                          select: true,
+                          destroy: true,
+                          colReorder: true,
+                          pageLength: initialReportDatatableLoad,
+                          "bLengthChange": false,
+                          searching: true,
+                          lengthMenu: [
+                              [initialReportDatatableLoad, -1],
+                              [initialReportDatatableLoad, "All"]
+                          ],
+                          info: true,
+                          responsive: true,
+                          "order": [[0, "desc"],[3, "desc"]],
+                          // "aaSorting": [[1,'desc']],
+                          action: function() {
+                              $('#tblPaymentOverview').DataTable().ajax.reload();
+                          },
+                          "fnDrawCallback": function(oSettings) {
+                              let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                              //if(checkurlIgnoreDate == 'true'){
 
-                                //}else{
-                                $('.paginate_button.page-item').removeClass('disabled');
-                                $('#tblPurchaseOverview_ellipsis').addClass('disabled');
+                              //}else{
+                              $('.paginate_button.page-item').removeClass('disabled');
+                              $('#tblPaymentOverview_ellipsis').addClass('disabled');
 
-                                if (oSettings._iDisplayLength == -1) {
-                                    if (oSettings.fnRecordsDisplay() > 150) {
-                                        $('.paginate_button.page-item.previous').addClass('disabled');
-                                        $('.paginate_button.page-item.next').addClass('disabled');
-                                    }
-                                } else {}
-                                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-                                $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                    .on('click', function() {
-                                        $('.fullScreenSpin').css('display', 'inline-block');
-                                        let dataLenght = oSettings._iDisplayLength;
+                              if (oSettings._iDisplayLength == -1) {
+                                  if (oSettings.fnRecordsDisplay() > 150) {
+                                      $('.paginate_button.page-item.previous').addClass('disabled');
+                                      $('.paginate_button.page-item.next').addClass('disabled');
+                                  }
+                              } else {}
+                              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                  $('.paginate_button.page-item.next').addClass('disabled');
+                              }
+                              $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                  .on('click', function() {
+                                      $('.fullScreenSpin').css('display', 'inline-block');
+                                      let dataLenght = oSettings._iDisplayLength;
 
-                                        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                                        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                                      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                      var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                                        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                                        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                        if (checkurlIgnoreDate == 'true') {
-                                            sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
-                                                getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                                    if (dataObjectold.length == 0) {} else {
-                                                        let dataOld = JSON.parse(dataObjectold[0].data);
-                                                        var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                        let objCombineData = {
-                                                            Params: dataOld.Params,
-                                                            tpaymentlist: thirdaryData
-                                                        }
+                                      let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                      let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                      if(data.Params.IgnoreDates == true){
+                                          sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                              getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                                  if (dataObjectold.length == 0) {} else {
+                                                      let dataOld = JSON.parse(dataObjectold[0].data);
+                                                      var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                      let objCombineData = {
+                                                          Params: dataOld.Params,
+                                                          tpaymentlist: thirdaryData
+                                                      }
 
-                                                        addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                            templateObject.resetData(objCombineData);
-                                                            $('.fullScreenSpin').css('display', 'none');
-                                                        }).catch(function(err) {
-                                                            $('.fullScreenSpin').css('display', 'none');
-                                                        });
+                                                      addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                          templateObject.resetData(objCombineData);
+                                                          $('.fullScreenSpin').css('display', 'none');
+                                                      }).catch(function(err) {
+                                                          $('.fullScreenSpin').css('display', 'none');
+                                                      });
 
-                                                    }
-                                                }).catch(function(err) {});
+                                                  }
+                                              }).catch(function(err) {});
 
-                                            }).catch(function(err) {
-                                                $('.fullScreenSpin').css('display', 'none');
-                                            });
-                                        } else {
-                                            sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
-                                                getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                                    if (dataObjectold.length == 0) {} else {
-                                                        let dataOld = JSON.parse(dataObjectold[0].data);
-                                                        var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                        let objCombineData = {
-                                                            Params: dataOld.Params,
-                                                            tpaymentlist: thirdaryData
-                                                        }
+                                          }).catch(function(err) {
+                                              $('.fullScreenSpin').css('display', 'none');
+                                          });
+                                      } else {
+                                          sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                              getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                                  if (dataObjectold.length == 0) {} else {
+                                                      let dataOld = JSON.parse(dataObjectold[0].data);
+                                                      var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                      let objCombineData = {
+                                                          Params: dataOld.Params,
+                                                          tpaymentlist: thirdaryData
+                                                      }
 
-                                                        addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                            templateObject.resetData(objCombineData);
-                                                            $('.fullScreenSpin').css('display', 'none');
-                                                        }).catch(function(err) {
-                                                            $('.fullScreenSpin').css('display', 'none');
-                                                        });
+                                                      addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                          templateObject.resetData(objCombineData);
+                                                          $('.fullScreenSpin').css('display', 'none');
+                                                      }).catch(function(err) {
+                                                          $('.fullScreenSpin').css('display', 'none');
+                                                      });
 
-                                                    }
-                                                }).catch(function(err) {});
+                                                  }
+                                              }).catch(function(err) {});
 
-                                            }).catch(function(err) {
-                                                $('.fullScreenSpin').css('display', 'none');
-                                            });
+                                          }).catch(function(err) {
+                                              $('.fullScreenSpin').css('display', 'none');
+                                          });
 
-                                        }
+                                      }
 
-                                    });
+                                  });
 
-                                //}
-                                setTimeout(function() {
-                                    MakeNegative();
-                                }, 100);
-                            },
-                            "fnInitComplete": function() {
-                                this.fnPageChange('last');
+                              //}
+                              setTimeout(function() {
+                                  MakeNegative();
+                              }, 100);
+                          },
+                          "fnInitComplete": function() {
+                              this.fnPageChange('last');
+                              if(data.Params.Search.replace(/\s/g, "") == ""){
+                                $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                              }else{
                                 $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
-                                $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
-                                $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
+                              }
+                              $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
+                              $('.myvarFilterForm').appendTo(".colDateFilter");
+                          },
+                          "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                              let countTableData = data.Params.Count || 0; //get count from API data
 
-                                $('.myvarFilterForm').appendTo(".colDateFilter");
-                            },
-                            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                                let countTableData = data.Params.Count || 0; //get count from API data
+                              return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                          }
 
-                                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-                            }
+                      }).on('page', function() {
+                          setTimeout(function() {
+                              MakeNegative();
+                          }, 100);
+                          let draftRecord = templateObject.datatablerecords.get();
+                          templateObject.datatablerecords.set(draftRecord);
 
-                        }).on('page', function() {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
+                      }).on('column-reorder', function() {
 
-                        }).on('column-reorder', function() {
-
-                        });
+                      });
                         $('.fullScreenSpin').css('display', 'none');
 
                     }, 0);
@@ -550,46 +668,70 @@ Template.paymentoverview.onRendered(function() {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
+                if(data.Params.Search.replace(/\s/g, "") == ""){
+                  viewdeleted = true;
+                  //$('.btnViewDeletedPayments').css('display','none');
+                  //$('.btnHideDeletedPayments').css('display','inline-block');
+
+                }else{
+                  viewdeleted = false;
+                  //$('.btnViewDeletedPayments').css('display','inline-block');
+                  //$('.btnHideDeletedPayments').css('display','none');
+                }
                 let lineItems = [];
                 let lineItemObj = {};
-                for (let i = 0; i < useData.length; i++) {
-                    let amount = utilityService.modifynegativeCurrencyFormat(useData[i].PaymentAmount) || 0.00;
-                    let openningBalance = utilityService.modifynegativeCurrencyFormat(useData[i].OpeningBalance) || 0.00;
-                    let bankAccount = useData[i].BankAccount;
+                for (let i = 0; i < data.tpaymentlist.length; i++) {
+                    let amount = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].PaymentAmount) || 0.00;
+                    let openningBalance = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].OpeningBalance) || 0.00;
+                    let bankAccount = data.tpaymentlist[i].BankAccount;
                     if (bankAccount == "Accounts Receivable") {
                         bankAccount = "A/R";
                     } else if (bankAccount == "Accounts Payables") {
                         bankAccount = "A/P";
                     }
                     let paystatus = '';
-                    if (useData[i].Deleted == true) {
+                    if (data.tpaymentlist[i].Deleted == true) {
                         paystatus = "Deleted";
-                    } else if (useData[i].ClientName == '') {
-                        paystatus = "Deleted";
-                    } else if (useData[i].PaymentAmount == 0) {
+                    } else if (data.tpaymentlist[i].ClientName == '') {
                         paystatus = "Deleted";
                     };
                     var dataList = {
-                        id: useData[i].PaymentID || '',
-                        sortdate: useData[i].PaymentDate != '' ? moment(useData[i].PaymentDate).format("YYYY/MM/DD") : useData[i].PaymentDate,
-                        paymentdate: useData[i].PaymentDate != '' ? moment(useData[i].PaymentDate).format("DD/MM/YYYY") : useData[i].PaymentDate,
-                        customername: useData[i].ClientName || '',
+                        id: data.tpaymentlist[i].PaymentID || '',
+                        sortdate: data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
+                        paymentdate: data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                        customername: data.tpaymentlist[i].ClientName || '',
                         paymentamount: amount || 0.00,
                         openingbalance: openningBalance || 0.00,
                         // balance: balance || 0.00,
                         bankaccount: bankAccount || '',
-                        department: useData[i].Department || '',
-                        refno: useData[i].ReferenceNo || '',
-                        receiptno: useData[i].ReceiptNo || '',
-                        jobname: useData[i].jobname || '',
-                        paymentmethod: useData[i].PaymentMethod || '',
-                        type: useData[i].TYPE || '',
+                        department: data.tpaymentlist[i].Department || '',
+                        refno: data.tpaymentlist[i].ReferenceNo || '',
+                        receiptno: data.tpaymentlist[i].ReceiptNo || '',
+                        jobname: data.tpaymentlist[i].jobname || '',
+                        paymentmethod: data.tpaymentlist[i].PaymentMethod || '',
+                        type: data.tpaymentlist[i].TYPE || '',
                         paystatus: paystatus || "",
-                        notes: useData[i].Notes || ''
+                        notes: data.tpaymentlist[i].Notes || ''
                     };
-                    //if(useData[i].Deleted == false){
                     dataTableList.push(dataList);
-                    //}
+
+                    var dataListPaymentOverviewList = [
+                        data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
+                        '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                        data.tpaymentlist[i].ClientName || '',
+                        data.tpaymentlist[i].PaymentID || '',
+                        data.tpaymentlist[i].ReferenceNo || '',
+                        amount || 0.00,
+                        bankAccount || '',
+                        data.tpaymentlist[i].TYPE || '',
+                        data.tpaymentlist[i].Department || '',
+                        paystatus || "",
+                        data.tpaymentlist[i].ReceiptNo || '',
+                        data.tpaymentlist[i].jobname || '',
+                        data.tpaymentlist[i].PaymentMethod || '',
+                        data.tpaymentlist[i].Notes || ''
+                    ];
+                    splashArrayPaymentOverviewList.push(dataListPaymentOverviewList);
 
                 }
 
@@ -607,9 +749,58 @@ Template.paymentoverview.onRendered(function() {
                 $('.fullScreenSpin').css('display', 'none');
                 setTimeout(function() {
                     $('#tblPaymentOverview').DataTable({
+                        data: splashArrayPaymentOverviewList,
                         "columnDefs": [{
                             "targets": 0,
-                            "type": "date"
+                            "type": "date",
+                            className: "colSortDate hiddenColumn",
+                            createdCell: function (td, cellData, rowData, row, col) {
+                              $(td).closest("tr").attr("id", rowData[3]);
+                            }
+                        }, {
+                            className: "colPaymentDate",
+                            contenteditable:"false",
+                            type: 'date',
+                            targets: 1
+                        }, {
+                            className: "colCustomerName",
+                            contenteditable:"false",
+                            targets: 2
+                        }, {
+                            className: "colPaymentNo",
+                            contenteditable:"false",
+                            targets: 3
+                        }, {
+                            className: "colRefNo",
+                            contenteditable:"false",
+                            targets: 4
+                        }, {
+                            className: "colPaymentAmount",
+                            targets: 5
+                        }, {
+                            className: "colBankAccount",
+                            targets: 6
+                        }, {
+                            className: "colType",
+                            targets: 7
+                        }, {
+                            className: "colDepartment",
+                            targets: 8
+                        }, {
+                            className: "colStatus",
+                            targets: 9
+                        }, {
+                            className: "colReceiptNo hiddenColumn",
+                            targets: 10
+                        }, {
+                            className: "colJobName hiddenColumn",
+                            targets: 11
+                        }, {
+                            className: "colPaymentMethod hiddenColumn",
+                            targets: 12
+                        }, {
+                            className: "colNotes",
+                            targets: 13
                         }],
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         buttons: [{
@@ -657,10 +848,7 @@ Template.paymentoverview.onRendered(function() {
                         ],
                         info: true,
                         responsive: true,
-                        "order": [
-                            [0, "desc"],
-                            [2, "desc"]
-                        ],
+                        "order": [[0, "desc"],[3, "desc"]],
                         // "aaSorting": [[1,'desc']],
                         action: function() {
                             $('#tblPaymentOverview').DataTable().ajax.reload();
@@ -671,7 +859,7 @@ Template.paymentoverview.onRendered(function() {
 
                             //}else{
                             $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblPurchaseOverview_ellipsis').addClass('disabled');
+                            $('#tblPaymentOverview_ellipsis').addClass('disabled');
 
                             if (oSettings._iDisplayLength == -1) {
                                 if (oSettings.fnRecordsDisplay() > 150) {
@@ -692,8 +880,8 @@ Template.paymentoverview.onRendered(function() {
 
                                     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                    if (checkurlIgnoreDate == 'true') {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
+                                    if(data.Params.IgnoreDates == true){
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
                                             getVS1Data('TPaymentList').then(function(dataObjectold) {
                                                 if (dataObjectold.length == 0) {} else {
                                                     let dataOld = JSON.parse(dataObjectold[0].data);
@@ -717,7 +905,7 @@ Template.paymentoverview.onRendered(function() {
                                             $('.fullScreenSpin').css('display', 'none');
                                         });
                                     } else {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
                                             getVS1Data('TPaymentList').then(function(dataObjectold) {
                                                 if (dataObjectold.length == 0) {} else {
                                                     let dataOld = JSON.parse(dataObjectold[0].data);
@@ -752,8 +940,12 @@ Template.paymentoverview.onRendered(function() {
                         },
                         "fnInitComplete": function() {
                             this.fnPageChange('last');
-                            $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
-                            $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            if(data.Params.Search.replace(/\s/g, "") == ""){
+                              $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            }else{
+                              $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                            }
+
                             $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
                             $('.myvarFilterForm').appendTo(".colDateFilter");
@@ -825,7 +1017,7 @@ Template.paymentoverview.onRendered(function() {
                 });
             }
         }).catch(function(err) {
-            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(data) {
+            sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,viewdeleted).then(function(data) {
                 let lineItems = [];
                 let lineItemObj = {};
 
@@ -838,6 +1030,17 @@ Template.paymentoverview.onRendered(function() {
                   $('#dateTo').attr('readonly', false);
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+                }
+
+                if(data.Params.Search.replace(/\s/g, "") == ""){
+                  viewdeleted = true;
+                  //$('.btnViewDeletedPayments').css('display','none');
+                  //$('.btnHideDeletedPayments').css('display','inline-block');
+
+                }else{
+                  viewdeleted = false;
+                  //$('.btnViewDeletedPayments').css('display','inline-block');
+                  //$('.btnHideDeletedPayments').css('display','none');
                 }
                 for (let i = 0; i < data.tpaymentlist.length; i++) {
                     let amount = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].PaymentAmount) || 0.00;
@@ -852,8 +1055,6 @@ Template.paymentoverview.onRendered(function() {
                     if (data.tpaymentlist[i].Deleted == true) {
                         paystatus = "Deleted";
                     } else if (data.tpaymentlist[i].ClientName == '') {
-                        paystatus = "Deleted";
-                    } else if (data.tpaymentlist[i].PaymentAmount == 0) {
                         paystatus = "Deleted";
                     };
                     // Currency+''+data.tpaymentlist[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
@@ -878,47 +1079,31 @@ Template.paymentoverview.onRendered(function() {
                         paystatus: paystatus || "",
                         notes: data.tpaymentlist[i].Notes || ''
                     };
-                    if (data.tpaymentlist[i].Deleted == false) {
-                        dataTableList.push(dataList);
-                    }
 
+                        dataTableList.push(dataList);
+                        var dataListPaymentOverviewList = [
+                            data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
+                            '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                            data.tpaymentlist[i].ClientName || '',
+                            data.tpaymentlist[i].PaymentID || '',
+                            data.tpaymentlist[i].ReferenceNo || '',
+                            amount || 0.00,
+                            bankAccount || '',
+                            data.tpaymentlist[i].TYPE || '',
+                            data.tpaymentlist[i].Department || '',
+                            paystatus || "",
+                            data.tpaymentlist[i].ReceiptNo || '',
+                            data.tpaymentlist[i].jobname || '',
+                            data.tpaymentlist[i].PaymentMethod || '',
+                            data.tpaymentlist[i].Notes || ''
+                        ];
+                        splashArrayPaymentOverviewList.push(dataListPaymentOverviewList);
                 }
 
 
                 //awaitingpaymentCount
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentOverview', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
                     setTimeout(function() {
                         MakeNegative();
                     }, 100);
@@ -926,174 +1111,223 @@ Template.paymentoverview.onRendered(function() {
 
                 $('.fullScreenSpin').css('display', 'none');
                 setTimeout(function() {
-                    $('#tblPaymentOverview').DataTable({
-                        "columnDefs": [{
-                            "targets": 0,
-                            "type": "date"
-                        }],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                            extend: 'excelHtml5',
-                            text: '',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "Payment List - " + moment().format(),
-                            orientation: 'portrait',
-                            exportOptions: {
-                                columns: ':visible',
-                                format: {
-                                    body: function(data, row, column) {
-                                        if (data.includes("</span>")) {
-                                            var res = data.split("</span>");
-                                            data = res[1];
-                                        }
+                  $('#tblPaymentOverview').DataTable({
+                      data: splashArrayPaymentOverviewList,
+                      "columnDefs": [{
+                          "targets": 0,
+                          "type": "date",
+                          className: "colSortDate hiddenColumn",
+                          createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[3]);
+                          }
+                      }, {
+                          className: "colPaymentDate",
+                          contenteditable:"false",
+                          type: 'date',
+                          targets: 1
+                      }, {
+                          className: "colCustomerName",
+                          contenteditable:"false",
+                          targets: 2
+                      }, {
+                          className: "colPaymentNo",
+                          contenteditable:"false",
+                          targets: 3
+                      }, {
+                          className: "colRefNo",
+                          contenteditable:"false",
+                          targets: 4
+                      }, {
+                          className: "colPaymentAmount",
+                          targets: 5
+                      }, {
+                          className: "colBankAccount",
+                          targets: 6
+                      }, {
+                          className: "colType",
+                          targets: 7
+                      }, {
+                          className: "colDepartment",
+                          targets: 8
+                      }, {
+                          className: "colStatus",
+                          targets: 9
+                      }, {
+                          className: "colReceiptNo hiddenColumn",
+                          targets: 10
+                      }, {
+                          className: "colJobName hiddenColumn",
+                          targets: 11
+                      }, {
+                          className: "colPaymentMethod hiddenColumn",
+                          targets: 12
+                      }, {
+                          className: "colNotes",
+                          targets: 13
+                      }],
+                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                      buttons: [{
+                          extend: 'excelHtml5',
+                          text: '',
+                          download: 'open',
+                          className: "btntabletocsv hiddenColumn",
+                          filename: "Payment List - " + moment().format(),
+                          orientation: 'portrait',
+                          exportOptions: {
+                              columns: ':visible',
+                              format: {
+                                  body: function(data, row, column) {
+                                      if (data.includes("</span>")) {
+                                          var res = data.split("</span>");
+                                          data = res[1];
+                                      }
 
-                                        return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+                                      return column === 1 ? data.replace(/<.*?>/ig, "") : data;
 
-                                    }
-                                }
-                            }
-                        }, {
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'Payment Overview',
-                            filename: "Payment List - " + moment().format(),
-                            exportOptions: {
-                                columns: ':visible',
-                                stripHtml: false
-                            }
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialReportDatatableLoad,
-                        "bLengthChange": false,
-                        searching: true,
-                        lengthMenu: [
-                            [initialReportDatatableLoad, -1],
-                            [initialReportDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "desc"],
-                            [2, "desc"]
-                        ],
-                        // "aaSorting": [[1,'desc']],
-                        action: function() {
-                            $('#tblPaymentOverview').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                            //if(checkurlIgnoreDate == 'true'){
+                                  }
+                              }
+                          }
+                      }, {
+                          extend: 'print',
+                          download: 'open',
+                          className: "btntabletopdf hiddenColumn",
+                          text: '',
+                          title: 'Payment Overview',
+                          filename: "Payment List - " + moment().format(),
+                          exportOptions: {
+                              columns: ':visible',
+                              stripHtml: false
+                          }
+                      }],
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
+                      pageLength: initialReportDatatableLoad,
+                      "bLengthChange": false,
+                      searching: true,
+                      lengthMenu: [
+                          [initialReportDatatableLoad, -1],
+                          [initialReportDatatableLoad, "All"]
+                      ],
+                      info: true,
+                      responsive: true,
+                      "order": [[0, "desc"],[3, "desc"]],
+                      // "aaSorting": [[1,'desc']],
+                      action: function() {
+                          $('#tblPaymentOverview').DataTable().ajax.reload();
+                      },
+                      "fnDrawCallback": function(oSettings) {
+                          let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                          //if(checkurlIgnoreDate == 'true'){
 
-                            //}else{
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblPurchaseOverview_ellipsis').addClass('disabled');
+                          //}else{
+                          $('.paginate_button.page-item').removeClass('disabled');
+                          $('#tblPaymentOverview_ellipsis').addClass('disabled');
 
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-                                    $('.paginate_button.page-item.previous').addClass('disabled');
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-                            } else {}
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function() {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    let dataLenght = oSettings._iDisplayLength;
+                          if (oSettings._iDisplayLength == -1) {
+                              if (oSettings.fnRecordsDisplay() > 150) {
+                                  $('.paginate_button.page-item.previous').addClass('disabled');
+                                  $('.paginate_button.page-item.next').addClass('disabled');
+                              }
+                          } else {}
+                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                              $('.paginate_button.page-item.next').addClass('disabled');
+                          }
+                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                              .on('click', function() {
+                                  $('.fullScreenSpin').css('display', 'inline-block');
+                                  let dataLenght = oSettings._iDisplayLength;
 
-                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                                  var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                  var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                    if (checkurlIgnoreDate == 'true') {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
-                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                                if (dataObjectold.length == 0) {} else {
-                                                    let dataOld = JSON.parse(dataObjectold[0].data);
-                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                    let objCombineData = {
-                                                        Params: dataOld.Params,
-                                                        tpaymentlist: thirdaryData
-                                                    }
+                                  let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                  let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                  if(data.Params.IgnoreDates == true){
+                                      sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                          getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                              if (dataObjectold.length == 0) {} else {
+                                                  let dataOld = JSON.parse(dataObjectold[0].data);
+                                                  var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                  let objCombineData = {
+                                                      Params: dataOld.Params,
+                                                      tpaymentlist: thirdaryData
+                                                  }
 
-                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                        templateObject.resetData(objCombineData);
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    }).catch(function(err) {
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    });
+                                                  addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                      templateObject.resetData(objCombineData);
+                                                      $('.fullScreenSpin').css('display', 'none');
+                                                  }).catch(function(err) {
+                                                      $('.fullScreenSpin').css('display', 'none');
+                                                  });
 
-                                                }
-                                            }).catch(function(err) {});
+                                              }
+                                          }).catch(function(err) {});
 
-                                        }).catch(function(err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
-                                    } else {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),'').then(function(dataObjectnew) {
-                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                                if (dataObjectold.length == 0) {} else {
-                                                    let dataOld = JSON.parse(dataObjectold[0].data);
-                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                    let objCombineData = {
-                                                        Params: dataOld.Params,
-                                                        tpaymentlist: thirdaryData
-                                                    }
+                                      }).catch(function(err) {
+                                          $('.fullScreenSpin').css('display', 'none');
+                                      });
+                                  } else {
+                                      sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                          getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                              if (dataObjectold.length == 0) {} else {
+                                                  let dataOld = JSON.parse(dataObjectold[0].data);
+                                                  var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                  let objCombineData = {
+                                                      Params: dataOld.Params,
+                                                      tpaymentlist: thirdaryData
+                                                  }
 
-                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                        templateObject.resetData(objCombineData);
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    }).catch(function(err) {
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    });
+                                                  addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                      templateObject.resetData(objCombineData);
+                                                      $('.fullScreenSpin').css('display', 'none');
+                                                  }).catch(function(err) {
+                                                      $('.fullScreenSpin').css('display', 'none');
+                                                  });
 
-                                                }
-                                            }).catch(function(err) {});
+                                              }
+                                          }).catch(function(err) {});
 
-                                        }).catch(function(err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
+                                      }).catch(function(err) {
+                                          $('.fullScreenSpin').css('display', 'none');
+                                      });
 
-                                    }
+                                  }
 
-                                });
+                              });
 
-                            //}
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        "fnInitComplete": function() {
-                            this.fnPageChange('last');
+                          //}
+                          setTimeout(function() {
+                              MakeNegative();
+                          }, 100);
+                      },
+                      "fnInitComplete": function() {
+                          this.fnPageChange('last');
+                          if(data.Params.Search.replace(/\s/g, "") == ""){
+                            $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
+                          }else{
                             $("<button class='btn btn-primary btnViewDeletedPayments' type='button' id='btnViewDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPaymentOverview_filter");
-                            $("<button class='btn btn-danger btnHideDeletedPayments' type='button' id='btnHideDeletedPayments' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important; display:none;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPaymentOverview_filter");
-                            $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
+                          }
+                          $("<button class='btn btn-primary btnRefreshPaymentOverview' type='button' id='btnRefreshPaymentOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPaymentOverview_filter");
 
-                            $('.myvarFilterForm').appendTo(".colDateFilter");
-                        },
-                        "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                            let countTableData = data.Params.Count || 0; //get count from API data
+                          $('.myvarFilterForm').appendTo(".colDateFilter");
+                      },
+                      "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                          let countTableData = data.Params.Count || 0; //get count from API data
 
-                            return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-                        }
+                          return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                      }
 
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
+                  }).on('page', function() {
+                      setTimeout(function() {
+                          MakeNegative();
+                      }, 100);
+                      let draftRecord = templateObject.datatablerecords.get();
+                      templateObject.datatablerecords.set(draftRecord);
 
-                    }).on('column-reorder', function() {
+                  }).on('column-reorder', function() {
 
-                    });
+                  });
                     $('.fullScreenSpin').css('display', 'none');
 
                 }, 0);
@@ -1153,7 +1387,7 @@ Template.paymentoverview.onRendered(function() {
 
     }
 
-    templateObject.getAllPaymentsData();
+    templateObject.getAllPaymentsData('');
 
 
     setTimeout(function() {
@@ -1212,33 +1446,55 @@ Template.paymentoverview.events({
       e.stopImmediatePropagation();
       let templateObject = Template.instance();
       let view_deleted = templateObject.view_deleted.get();
+      await clearData('TPaymentList');
       if (view_deleted == "NO") {
+
+        await templateObject.view_deleted.set("YES");
+        //await templateObject.getAllPaymentsData(true);
         $('.btnViewDeletedPayments').css('display','inline-block');
         $('.btnHideDeletedPayments').css('display','none');
-        await templateObject.view_deleted.set("YES");
-        $('#tblPaymentOverview_filter input').val("").trigger('search');
+        //$('#tblPaymentOverview_filter input').val("").trigger('search');
       } else {
+
+        await templateObject.view_deleted.set("NO");
+        //await templateObject.getAllPaymentsData('');
         $('.btnViewDeletedPayments').css('display','none');
         $('.btnHideDeletedPayments').css('display','inline-block');
-        await templateObject.view_deleted.set("NO");
-        $('#tblPaymentOverview_filter input').val("Deleted").trigger('search');
+        //$('#tblPaymentOverview_filter input').val("Deleted").trigger('search');
       }
+      await templateObject.getAllPaymentsData(true);
      },
      "click .btnHideDeletedPayments": async function (e) {
        e.stopImmediatePropagation();
        let templateObject = Template.instance();
        let view_deleted = templateObject.view_deleted.get();
+       await clearData('TPaymentList');
        if (view_deleted == "NO") {
+
+         await templateObject.view_deleted.set("YES");
+
          $('.btnViewDeletedPayments').css('display','inline-block');
          $('.btnHideDeletedPayments').css('display','none');
-         await templateObject.view_deleted.set("YES");
-         $('#tblPaymentOverview_filter input').val("").trigger('search');
+         //$('#tblPaymentOverview_filter input').val("").trigger('search');
        } else {
+
+         await templateObject.view_deleted.set("NO");
+         //await templateObject.getAllPaymentsData('');
+         // sideBarService.getTPaymentList(fromDate, toDate, ignoreDate, initialReportLoad, 0,'').then(function(data) {
+         //     addVS1Data('TPaymentList', JSON.stringify(data)).then(function(datareturn) {
+         //         location.reload();
+         //     }).catch(function(err) {
+         //         location.reload();
+         //     });
+         // }).catch(function(err) {
+         //     $('.fullScreenSpin').css('display', 'none');
+         // });
          $('.btnViewDeletedPayments').css('display','none');
          $('.btnHideDeletedPayments').css('display','inline-block');
-         await templateObject.view_deleted.set("NO");
-         $('#tblPaymentOverview_filter input').val("Deleted").trigger('search');
+         //$('#tblPaymentOverview_filter input').val("Deleted").trigger('search');
        }
+
+       await templateObject.getAllPaymentsData('');
       },
     'click #newSalesOrder': function(event) {
         FlowRouter.go('/salesordercard');
@@ -1621,46 +1877,32 @@ Template.paymentoverview.events({
 
           });
 
+          sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
+              addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
+
+              }).catch(function(err) {
+
+              });
+          }).catch(function(err) {
+
+          });
+
         sideBarService.getTPaymentList(prevMonth11Date, toDate, true, initialReportLoad, 0,'').then(function(dataPaymentList) {
             addVS1Data('TPaymentList', JSON.stringify(dataPaymentList)).then(function(datareturn) {
-                sideBarService.getAllTSupplierPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataSuppPay) {
-                    addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPay)).then(function(datareturn) {
-                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
-                            addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
-                              setTimeout(function () {
-                                window.open('/paymentoverview', '_self');
-                              }, 2000);
-                            }).catch(function(err) {
-                              setTimeout(function () {
-                              window.open('/paymentoverview', '_self');
-                              }, 2000);
-                            });
-                        }).catch(function(err) {
-                          setTimeout(function () {
-                            window.open('/paymentoverview', '_self');
-                          }, 2000);
-                        });
+                sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
+                    addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
+                      setTimeout(function () {
+                        window.open('/paymentoverview', '_self');
+                      }, 2000);
                     }).catch(function(err) {
-                        sideBarService.getAllTCustomerPaymentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(dataCustPay) {
-                            addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustPay)).then(function(datareturn) {
-                              setTimeout(function () {
-                                window.open('/paymentoverview', '_self');
-                              }, 2000);
-                            }).catch(function(err) {
-                              setTimeout(function () {
-                                window.open('/paymentoverview', '_self');
-                              }, 2000);
-                            });
-                        }).catch(function(err) {
-                          setTimeout(function () {
-                          window.open('/paymentoverview', '_self');
-                          }, 2000);
-                        });
+                      setTimeout(function () {
+                      window.open('/paymentoverview', '_self');
+                      }, 2000);
                     });
                 }).catch(function(err) {
                   setTimeout(function () {
                     window.open('/paymentoverview', '_self');
-                  }, 2000);
+                  }, 1000);
                 });
             }).catch(function(err) {
               setTimeout(function () {
@@ -1690,7 +1932,7 @@ Template.paymentoverview.events({
         let utilityService = new UtilityService();
         let tableProductList;
         const dataTableList = [];
-        var splashArrayInvoiceList = new Array();
+        var splashArrayPaymentOverviewList = new Array();
         const lineExtaSellItems = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         let dataSearchName = $('#tblPaymentOverview_filter input').val();
@@ -1714,8 +1956,6 @@ Template.paymentoverview.events({
                             paystatus = "Deleted";
                         } else if (data.tpaymentlist[i].ClientName == '') {
                             paystatus = "Deleted";
-                        } else if (data.tpaymentlist[i].PaymentAmount == 0) {
-                            paystatus = "Deleted";
                         };
 
                         var dataList = {
@@ -1735,10 +1975,25 @@ Template.paymentoverview.events({
                                   paystatus: paystatus || "",
                                   notes: data.tpaymentlist[i].Notes || ''
                               };
-                              if (data.tpaymentlist[i].Deleted == false) {
-                                  dataTableList.push(dataList);
-                              }
 
+                                  dataTableList.push(dataList);
+                                  var dataListPaymentOverviewList = [
+                                      data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
+                                      '<span style="display:none;">'+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate+'</span> '+data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                                      data.tpaymentlist[i].ClientName || '',
+                                      data.tpaymentlist[i].PaymentID || '',
+                                      data.tpaymentlist[i].ReferenceNo || '',
+                                      amount || 0.00,
+                                      bankAccount || '',
+                                      data.tpaymentlist[i].TYPE || '',
+                                      data.tpaymentlist[i].Department || '',
+                                      paystatus || "",
+                                      data.tpaymentlist[i].ReceiptNo || '',
+                                      data.tpaymentlist[i].jobname || '',
+                                      data.tpaymentlist[i].PaymentMethod || '',
+                                      data.tpaymentlist[i].Notes || ''
+                                  ];
+                                  splashArrayPaymentOverviewList.push(dataListPaymentOverviewList);
                     }
                     templateObject.datatablerecords.set(dataTableList);
 
@@ -1746,28 +2001,11 @@ Template.paymentoverview.events({
                     $('.fullScreenSpin').css('display', 'none');
                     if (dataTableList) {
                         var datatable = $('#tblPaymentOverview').DataTable();
-                        $("#tblPaymentOverview > tbody").empty();
-                        for (let x = 0; x < item.length; x++) {
-                            $("#tblPaymentOverview > tbody").append(
-                                ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
-                                '<td contenteditable="false" class="colSortDate hiddenColumn">' + item[x].sortdate + '</td>' +
-                                '<td contenteditable="false" class="colPaymentDate" ><span style="display:none;">' + item[x].sortdate + '</span>' + item[x].paymentdate + '</td>' +
-                                '<td contenteditable="false" class="colPaymentNo">' + item[x].id + '</td>' +
-                                '<td contenteditable="false" class="colType" >' + item[x].type + '</td>' +
-                                '<td contenteditable="false" class="colRefNo" >' + item[x].refno + '</td>' +
-                                '<td contenteditable="false" class="colPaymentAmount" style="text-align: right!important;">' + item[x].paymentamount + '</td>' +
-                                '<td contenteditable="false" class="colCustomerName">' + item[x].customername + '</td>' +
-                                '<td contenteditable="false" class="colBankAccount">' + item[x].bankaccount + '</td>' +
-                                '<td contenteditable="false" class="colDepartment">' + item[x].department + '</td>' +
-                                '<td contenteditable="false" class="colStatus">' + item[x].paystatus + '</td>' +
-                                '<td contenteditable="false" class="colReceiptNo hiddenColumn">' + item[x].receiptno + '</td>' +
-                                '<td contenteditable="false" class="colJobName hiddenColumn">' + item[x].jobname + '</td>' +
-                                '<td contenteditable="false" class="colPaymentMethod hiddenColumn">' + item[x].paymentmethod + '</td>' +
-                                '<td contenteditable="false" class="colNotes">' + item[x].notes + '</td>' +
-                                '</tr>');
+                        datatable.clear();
+                        datatable.rows.add(splashArrayPaymentOverviewList);
+                        datatable.draw(false);
 
-                        }
-                        $('.dataTables_info').html('Showing ' + data.tpaymentlist.length + ' of ' + data.Params.Count + ' entries');
+                        $('.fullScreenSpin').css('display', 'none');
 
                     }
 
@@ -1794,7 +2032,6 @@ Template.paymentoverview.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
-
           $(".btnRefresh").trigger("click");
         }
 

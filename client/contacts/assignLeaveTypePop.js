@@ -26,40 +26,40 @@ Template.assignLeaveTypePop.onCreated(function () {
             changeYear: true,
             yearRange: "-90:+10",
         });
-        $('#edtLeavePayPeriod').editableSelect('add','Weekly');
-        $('#edtLeavePayPeriod').editableSelect('add','Fortnightly');
-        $('#edtLeavePayPeriod').editableSelect('add','Twice Monthly');
-        $('#edtLeavePayPeriod').editableSelect('add','Four Weekly');
-        $('#edtLeavePayPeriod').editableSelect('add','Monthly');
-        $('#edtLeavePayPeriod').editableSelect('add','Quarterly');
-        $('#edtLeavePayStatus').editableSelect('add','Awaiting');
-        $('#edtLeavePayStatus').editableSelect('add','Approved');
-        $('#edtLeavePayStatus').editableSelect('add','Denied');
+        // $('#edtLeavePayPeriod').editableSelect('add','Weekly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Fortnightly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Twice Monthly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Four Weekly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Monthly');
+        // $('#edtLeavePayPeriod').editableSelect('add','Quarterly');
+        // $('#edtLeavePayStatus').editableSelect('add','Awaiting');
+        // $('#edtLeavePayStatus').editableSelect('add','Approved');
+        // $('#edtLeavePayStatus').editableSelect('add','Denied');
         
         // $('.customEditableSelect').editableSelect('add', function(item){
         //     $(this).val(item.id);
         //     $(this).text(item.name);
         // });
-        $('#edtTfnExemption').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#edtEmploymentBasis').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#edtResidencyStatus').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#leaveCalcMethodSelect').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
-        $('#onTerminationUnusedBalance').editableSelect('add', function(item){
-            $(this).val(item.id);
-            $(this).text(item.name);
-        });
+        // $('#edtTfnExemption').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#edtEmploymentBasis').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#edtResidencyStatus').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#leaveCalcMethodSelect').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
+        // $('#onTerminationUnusedBalance').editableSelect('add', function(item){
+        //     $(this).val(item.id);
+        //     $(this).text(item.name);
+        // });
         $('#superannuationTypeSelect').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
@@ -143,9 +143,12 @@ Template.assignLeaveTypePop.onCreated(function () {
         var table = $(this);
         let name = table.find(".colALTypeLeave").text()||'';
         let ID = table.find(".colALTypeID").text()||'';
+        let Hours = table.find(".colALTypeOpeningBalance").text()||'';
         let searchFilterID = templateObject.currentDrpDownID.get()
         $('#' + searchFilterID).val(name);
         $('#' + searchFilterID + 'ID').val(ID);
+        $('#edtLeaveHours').val(Hours);
+        
         $('#assignLeaveTypeSettingsModal').modal('toggle');
     });
 

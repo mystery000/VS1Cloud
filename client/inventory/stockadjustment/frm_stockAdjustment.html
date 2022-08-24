@@ -685,7 +685,7 @@
                                 {{#each item in record.LineItems}}
                                     <tr style="border-bottom: 1px solid rgba(0, 0, 0, .1);" id={{item.lineID}}>
                                         <td class="lineProductNamePrint colProductNamePrint">{{item.productname}}</td>
-                                        <td class="lineProductBarCodePrint colProductBarCodePrint">{{item.productbarcode}}</td>
+                                        <td class="lineProductBarCodePrint colProductBarCodePrint"> <svg id="stockAdjust{{item.lineID}}"></svg> </td>
                                         <td class="lineDescription colDescription">{{item.description}}</td>
                                         <td class="lineInStockQtyPrint colInStockQtyPrint">{{item.qtyinstock}}</td>
                                         <td class="lineFinalQtyPrint colFinalQtyPrint">{{item.finalqty}}</td>

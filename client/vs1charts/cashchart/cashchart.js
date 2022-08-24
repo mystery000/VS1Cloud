@@ -8,6 +8,10 @@ Template.cashchart.onCreated(()=>{
   const templateObject = Template.instance();
   templateObject.titleMonth1 = new ReactiveVar();
   templateObject.titleMonth2 = new ReactiveVar();
+  templateObject.cashReceived = new ReactiveVar();
+  templateObject.cashSpent = new ReactiveVar();
+  templateObject.cashSurplus = new ReactiveVar();
+  templateObject.bankBalance = new ReactiveVar();
 });
 
 Template.cashchart.onRendered(()=>{
@@ -27,6 +31,35 @@ Template.cashchart.onRendered(()=>{
   }
   templateObject.titleMonth1.set(currMonth1);
   templateObject.titleMonth2.set(currMonth2);
+
+  // getVS1Data('TAccountVS1').then(function(dataObject) {
+  //   if (dataObject.length == 0) {
+  //   } else {
+  //     let data = JSON.parse(dataObject[0].data);
+  //     let useData = data.taccountvs1;
+  //   }
+  // }).catch(function(err) {
+  // });
+  let bankBalance = Number(localStorage.getItem('VS1TAccount_Bank_dash'));
+  let payrollBankClearing = Number(localStorage.getItem('VS1TAccount_Bank_Payroll_Clearing_dash'));
+  let pettyCash = Number(localStorage.getItem('VS1TAccount_Petty_Cash_dash'));
+  let payrollBank = Number(localStorage.getItem('VS1TAccount_Payroll_Bank_dash'));
+  let offsetAccountBalance = Number(localStorage.getItem('VS1TAccount_Offset_Account_dash'));
+
+  let cashReceived = bankBalance + pettyCash + offsetAccountBalance;
+  let cashSpent = Math.abs(payrollBankClearing + payrollBank);
+  let cashSurplus = cashReceived - cashSpent;
+
+  templateObject.cashReceived.set(utilityService.modifynegativeCurrencyFormat(cashReceived));
+  templateObject.cashSpent.set(utilityService.modifynegativeCurrencyFormat(cashSpent));
+  templateObject.cashSurplus.set(utilityService.modifynegativeCurrencyFormat(cashSurplus));
+  templateObject.bankBalance.set(utilityService.modifynegativeCurrencyFormat(bankBalance));
+
+  $('.spnCashReceived').html(utilityService.modifynegativeCurrencyFormat(cashReceived));
+  $('.spnCashSpent').html(utilityService.modifynegativeCurrencyFormat(cashSpent));
+  $('.spnCashSurplus').html(utilityService.modifynegativeCurrencyFormat(cashSurplus));
+  $('.spnBankBalance').html(utilityService.modifynegativeCurrencyFormat(bankBalance));
+
 });
 
 Template.cashchart.events({
@@ -38,6 +71,18 @@ Template.cashchart.helpers({
   },
   titleMonth2: () =>{
       return Template.instance().titleMonth2.get();
+  },
+  cashReceived: () =>{
+      return Template.instance().cashReceived.get() || 0;
+  },
+  cashSpent: () =>{
+      return Template.instance().cashSpent.get() || 0;
+  },
+  cashSurplus: () =>{
+      return Template.instance().cashSurplus.get() || 0;
+  },
+  bankBalance: () =>{
+      return Template.instance().bankBalance.get() || 0;
   }
 });
 

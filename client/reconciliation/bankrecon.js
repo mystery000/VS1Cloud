@@ -1358,6 +1358,7 @@ Template.bankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
+    tableResize();
 });
 
 Template.bankrecon.events({

@@ -107,6 +107,14 @@ Template.supplierpaymentcard.onRendered(() => {
 
   templateObject.loadDefaultCurrency();
 
+  templateObject.getOrganisationDetails = function () {
+      let account_id = Session.get('vs1companyStripeID') || '';
+      let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+      templateObject.accountID.set(account_id);
+      templateObject.stripe_fee_method.set(stripe_fee);
+  };
+  templateObject.getOrganisationDetails();
+
   $(document).on("click", ".templateItem .btnPreviewTemplate", function (e) {
     title = $(this).parent().attr("data-id");
     number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
@@ -114,224 +122,221 @@ Template.supplierpaymentcard.onRendered(() => {
   });
 
 
-   function showSuppliers(template_title,number) {
-        object_invoce = [];
-        var array_data = [];
-        let invoice_data = templateObject.record.get();
-        let stripe_id = templateObject.accountID.get() || '';
-        let stripe_fee_method = templateObject.stripe_fee_method.get();
-        let lineItems = [];
-        let total = $('#totalBalanceDue').html() || 0;
-        let tax = $('#subtotal_tax').html() || 0;
-        let customer = $('#edtCustomerName').val();
-        let name = $('#firstname').val();
-        let surname = $('#lastname').val();
-        let dept = $('#sltDepartment').val();
-        var erpGet = erpDb();
+    function showSuppliers(template_title,number) {
+          object_invoce = [];
+          var array_data = [];
+          let invoice_data = templateObject.record.get();
+          let stripe_id = templateObject.accountID.get() || '';
+          let stripe_fee_method = templateObject.stripe_fee_method.get();
+          let lineItems = [];
+          let total = $('#totalBalanceDue').html() || 0;
+          let tax = $('#subtotal_tax').html() || 0;
+          let customer = $('#edtCustomerName').val();
+          let name = $('#firstname').val();
+          let surname = $('#lastname').val();
+          let dept = $('#sltDepartment').val();
+          var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+          var customfield1 = $('#edtSaleCustField1').val() || '  ';
+          var customfield2 = $('#edtSaleCustField2').val() || '  ';
+          var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
-        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
-        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
-        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+          var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+          var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+          var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
 
-        let fx = $('#sltCurrency').val();
-        if(fx == '')
-        {
-          fx = '-';
-        }
-        var ref_daa = $('#edtReference').val() || '.';
-        var txaNotes = $('#txaNotes').val();
+          let fx = $('#sltCurrency').val();
+          if(fx == '')
+          {
+            fx = '  ';
+          }
+          var ref_daa = $('#edtReference').val() || '  ';
+          var txaNotes = $('#txaNotes').val();
 
-        var applied  = $('.appliedAmount').text();
+          var applied  = $('.appliedAmount').text();
 
-        var dtPaymentDate = $('#dtPaymentDate').val() || '-';
+          var dtPaymentDate = $('#dtPaymentDate').val() || '-';
 
-         for(var i = 0; i < invoice_data.LineItems.length; i++)
-         {
-                array_data.push([
-                                    invoice_data.LineItems[i].invoicedate,
-                                    invoice_data.LineItems[i].transtype,
-                                    invoice_data.LineItems[i].invoiceid,
-                                    invoice_data.LineItems[i].orginalamount,
-                                    invoice_data.LineItems[i].amountdue,
-                                    invoice_data.LineItems[i].paymentamount,
-                                    invoice_data.LineItems[i].ouststandingamount
-                ]);
-         }
+          for(var i = 0; i < invoice_data.LineItems.length; i++)
+          {
+                  array_data.push([
+                                      invoice_data.LineItems[i].invoicedate,
+                                      invoice_data.LineItems[i].transtype,
+                                      invoice_data.LineItems[i].invoiceid,
+                                      invoice_data.LineItems[i].orginalamount,
+                                      invoice_data.LineItems[i].amountdue,
+                                      invoice_data.LineItems[i].paymentamount,
+                                      invoice_data.LineItems[i].ouststandingamount
+                  ]);
+          }
 
-        let company = Session.get('vs1companyName');
-        let vs1User = localStorage.getItem('mySession');
-        let customerEmail = $('#edtCustomerEmail').val();
-        let id = $('.printID').attr("id") || "new";
-        let currencyname = (CountryAbbr).toLowerCase();
-        stringQuery = "?";
-        var customerID = $('#edtCustomerEmail').attr('customerid');
-        for (let l = 0; l < invoice_data.LineItems.length; l++) {
-                stringQuery = stringQuery + "product" + l + "=" + invoice_data.LineItems[l].description + "&price" + l + "=" + invoice_data.LineItems[l].unitPrice + "&qty" + l + "=" + invoice_data.LineItems[l].quantity + "&";
-        }
-        stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
-        $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-        let item_supplier = '';
+          let company = Session.get('vs1companyName');
+          let vs1User = localStorage.getItem('mySession');
+          let customerEmail = $('#edtCustomerEmail').val();
+          let id = $('.printID').attr("id") || "new";
+          let currencyname = (CountryAbbr).toLowerCase();
+          stringQuery = "?";
+          var customerID = $('#edtCustomerEmail').attr('customerid');
+          for (let l = 0; l < invoice_data.LineItems.length; l++) {
+                  stringQuery = stringQuery + "product" + l + "=" + invoice_data.LineItems[l].description + "&price" + l + "=" + invoice_data.LineItems[l].unitPrice + "&qty" + l + "=" + invoice_data.LineItems[l].quantity + "&";
+          }
+          stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+          $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+          let item_supplier = '';
 
-        if(ref_daa==" ")
-        {
-          ref_daa = '-';
-        }
+          if(ref_daa==" ")
+          {
+            ref_daa = '  ';
+          }
 
-        if(number == 1)
-        {
-                item_supplier = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name: Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
-                    o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: "Supplier Payment",
-                    value: invoice_data.lid,
-                    date: dtPaymentDate,
-                    invoicenumber: '',
-                    refnumber: ref_daa,
-                    pqnumber: "",
-                    duedate: '',
-                    paylink: "",
-                    supplier_type: "Supplier",
-                    supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal :"",
-                    gst :  "",
-                    total : "",
-                    paid_amount : "",
-                    bal_due :  "",
-                    bsb : '',
-                    swift : '',
-                    account : '',
-                    data: array_data,
-                    applied : applied,
-                    customfield1:'NA',
-                    customfield2:'NA',
-                    customfield3:'NA',
-                    customfieldlabel1:'NA',
-                    customfieldlabel2:'NA',
-                    customfieldlabel3:'NA',
-                    showFX:"",
-                    comment:"",
-                };
-        }
-        else if(number == 2)
-        {
+          if(number == 1)
+          {
+                  item_supplier = {
+                      o_url: Session.get('vs1companyURL'),
+                      o_name: Session.get('vs1companyName'),
+                      o_address: Session.get('vs1companyaddress1'),
+                      o_city: Session.get('vs1companyCity'),
+                      o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                      o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
+                      o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
+                      o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
+                      title: "Supplier Payment",
+                      value: invoice_data.lid,
+                      date: dtPaymentDate,
+                      invoicenumber: '',
+                      refnumber: ref_daa,
+                      pqnumber: "",
+                      duedate: '',
+                      paylink: "",
+                      supplier_type: "Supplier",
+                      supplier_name : customer,
+                      supplier_addr : invoice_data.shipToDesc,
+                      fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                      subtotal :"",
+                      gst :  "",
+                      total : "",
+                      paid_amount : "",
+                      bal_due :  "",
+                      bsb : '',
+                      swift : '',
+                      account : '',
+                      data: array_data,
+                      applied : applied,
+                      customfield1:'NA',
+                      customfield2:'NA',
+                      customfield3:'NA',
+                      customfieldlabel1:'NA',
+                      customfieldlabel2:'NA',
+                      customfieldlabel3:'NA',
+                      showFX:"",
+                      comment:"",
+                  };
+          }
+          else if(number == 2)
+          {
 
-                item_supplier = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name: Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
-                    o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: "Supplier Payment",
-                    value: invoice_data.lid,
-                    date: dtPaymentDate,
-                    invoicenumber: '',
-                    refnumber: ref_daa,
-                    pqnumber: "",
-                    duedate: '',
-                    paylink: "",
-                    supplier_type: "Supplier",
-                    supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal :"",
-                    gst :  "",
-                    total : "",
-                    paid_amount : "",
-                    bal_due :  "",
-                    bsb : '',
-                    swift : '',
-                    account : '',
-                    data: array_data,
-                    applied : applied,
-                    customfield1:customfield1,
-                    customfield2:customfield2,
-                    customfield3:customfield3,
-                    customfieldlabel1:customfieldlabel1,
-                    customfieldlabel2:customfieldlabel2,
-                    customfieldlabel3:customfieldlabel3,
-                    showFX:"",
-                    comment:"",
+                  item_supplier = {
+                      o_url: Session.get('vs1companyURL'),
+                      o_name: Session.get('vs1companyName'),
+                      o_address: Session.get('vs1companyaddress1'),
+                      o_city: Session.get('vs1companyCity'),
+                      o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                      o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
+                      o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
+                      o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
+                      title: "Supplier Payment",
+                      value: invoice_data.lid,
+                      date: dtPaymentDate,
+                      invoicenumber: '',
+                      refnumber: ref_daa,
+                      pqnumber: "",
+                      duedate: '',
+                      paylink: "",
+                      supplier_type: "Supplier",
+                      supplier_name : customer,
+                      supplier_addr : invoice_data.shipToDesc,
+                      fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                      subtotal :"",
+                      gst :  "",
+                      total : "",
+                      paid_amount : "",
+                      bal_due :  "",
+                      bsb : '',
+                      swift : '',
+                      account : '',
+                      data: array_data,
+                      applied : applied,
+                      customfield1:customfield1,
+                      customfield2:customfield2,
+                      customfield3:customfield3,
+                      customfieldlabel1:customfieldlabel1,
+                      customfieldlabel2:customfieldlabel2,
+                      customfieldlabel3:customfieldlabel3,
+                      showFX:"",
+                      comment:"",
 
-                };
+                  };
 
-        }
-        else
-        {
-            if(fx == '')
-            {
-                fx = '-';
-            }
+          }
+          else
+          {
+              if(fx == '')
+              {
+                  fx = '  ';
+              }
 
-            item_supplier = {
-                o_url: Session.get('vs1companyURL'),
-                    o_name: Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
-                    o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: "Supplier Payment",
-                    value: invoice_data.lid,
-                    date: dtPaymentDate,
-                    invoicenumber: '',
-                    refnumber: ref_daa,
-                    pqnumber: "",
-                    duedate: '',
-                    paylink: "",
-                    supplier_type: "Supplier",
-                    supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal :"",
-                    gst :  "",
-                    total : "",
-                    paid_amount : "",
-                    bal_due :  "",
-                    bsb : '',
-                    swift : '',
-                    account : '',
-                    data: array_data,
-                    applied : applied,
-                    customfield1:customfield1,
-                    customfield2:customfield2,
-                    customfield3:customfield3,
-                    customfieldlabel1:customfieldlabel1,
-                    customfieldlabel2:customfieldlabel2,
-                    customfieldlabel3:customfieldlabel3,
-                    showFX:fx,
-                    comment:"",
+              item_supplier = {
+                  o_url: Session.get('vs1companyURL'),
+                      o_name: Session.get('vs1companyName'),
+                      o_address: Session.get('vs1companyaddress1'),
+                      o_city: Session.get('vs1companyCity'),
+                      o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
+                      o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
+                      o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
+                      o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
+                      title: "Supplier Payment",
+                      value: invoice_data.lid,
+                      date: dtPaymentDate,
+                      invoicenumber: '',
+                      refnumber: ref_daa,
+                      pqnumber: "",
+                      duedate: '',
+                      paylink: "",
+                      supplier_type: "Supplier",
+                      supplier_name : customer,
+                      supplier_addr : invoice_data.shipToDesc,
+                      fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                      subtotal :"",
+                      gst :  "",
+                      total : "",
+                      paid_amount : "",
+                      bal_due :  "",
+                      bsb : '',
+                      swift : '',
+                      account : '',
+                      data: array_data,
+                      applied : applied,
+                      customfield1:customfield1,
+                      customfield2:customfield2,
+                      customfield3:customfield3,
+                      customfieldlabel1:customfieldlabel1,
+                      customfieldlabel2:customfieldlabel2,
+                      customfieldlabel3:customfieldlabel3,
+                      showFX:fx,
+                      comment:"",
 
-            };
-        }
+              };
+          }
 
-        object_invoce.push(item_supplier);
+          object_invoce.push(item_supplier);
 
-        $("#templatePreviewModal .field_payment").hide();
-        $("#templatePreviewModal .field_amount").hide();
-        updateTemplate(object_invoce);
-        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-   }
+          $("#templatePreviewModal .field_payment").hide();
+          $("#templatePreviewModal .field_amount").hide();
+          updateTemplate(object_invoce);
+          saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+    }
 
-
-
-
-     function showSuppliers1(template_title,number) {
+    function showSuppliers1(template_title,number) {
 
         object_invoce = [];
         var array_data = [];
@@ -346,26 +351,26 @@ Template.supplierpaymentcard.onRendered(() => {
         let surname = $('#lastname').val();
         let dept = $('#sltDepartment').val();
         var erpGet = erpDb();
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+        var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
         var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-        let fx = $('#sltCurrency').val() || '-';
-        var ref_daa = $('#edtReference').val() || '-';
+        let fx = $('#sltCurrency').val() || '  ';
+        var ref_daa = $('#edtReference').val() || '  ';
         var txaNotes = $('#txaNotes').val();
 
 
         if(ref_daa==" ")
         {
-          ref_daa = '-';
+          ref_daa = '  ';
         }
 
         var applied  = $('.appliedAmount').text();
 
-        var dtPaymentDate = $('#dtPaymentDate').val() || '-';
+        var dtPaymentDate = $('#dtPaymentDate').val() || '  ';
 
          for(var i = 0; i < invoice_data.LineItems.length; i++)
          {
@@ -402,22 +407,22 @@ Template.supplierpaymentcard.onRendered(() => {
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
+                    o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
                     title: "Supplier Payment",
                     value: invoice_data.lid,
                     date: dtPaymentDate,
                     invoicenumber: '',
-                    refnumber: ref_daa == ''?'-':ref_daa,
+                    refnumber: ref_daa == ''?'  ':ref_daa,
                     pqnumber: "",
                     duedate: '',
                     paylink: "",
                     supplier_type: "Supplier",
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal :"",
                     gst :  "",
                     total : "",
@@ -447,22 +452,22 @@ Template.supplierpaymentcard.onRendered(() => {
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
+                    o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
                     title: "Supplier Payment",
                     value: invoice_data.lid,
                     date: dtPaymentDate,
                     invoicenumber: '',
-                    refnumber: ref_daa == ''?'-':ref_daa,
+                    refnumber: ref_daa == ''?'  ':ref_daa,
                     pqnumber: "",
                     duedate: '',
                     paylink: "",
                     supplier_type: "Supplier",
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal :"",
                     gst :  "",
                     total : "",
@@ -489,7 +494,7 @@ Template.supplierpaymentcard.onRendered(() => {
         {
             if(fx == '')
             {
-                fx = '-';
+                fx = '  ';
             }
 
 
@@ -499,9 +504,9 @@ Template.supplierpaymentcard.onRendered(() => {
                     o_name: Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
+                    o_abn: "ABN: "+Template.paymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
                     title: "Supplier Payment",
                     value: invoice_data.lid,
@@ -514,7 +519,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     supplier_type: "Supplier",
                     supplier_name : customer,
                     supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                    fields: {"Date" : "20", "Type" : "20", "No." : "10", "Amount" : "10", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
                     subtotal :"",
                     gst :  "",
                     total : "",
@@ -546,7 +551,7 @@ Template.supplierpaymentcard.onRendered(() => {
         $("#templatePreviewModal .field_amount").hide();
         updateTemplate1(object_invoce);
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-     }
+    }
 
      templateObject.generateInvoiceData = function (template_title,number) {
 
@@ -561,7 +566,7 @@ Template.supplierpaymentcard.onRendered(() => {
      };
 
 
-        getVS1Data('TemplateSettings').then(function(dataObject) {
+     getVS1Data('TemplateSettings').then(function(dataObject) {
 
             let data = JSON.parse(dataObject[0].data);
             let useData = data;
@@ -795,11 +800,11 @@ Template.supplierpaymentcard.onRendered(() => {
 
           if(object_invoce[0]["value"]=="")
           {
-              $('.print-header-value').text('');
+              $('.print-header').text('Supplier Payment');
 
           }
           else{
-             $('.print-header-value').text(object_invoce[0]["value"]);
+             $('.print-header-value').text('Supplier Payment');
           }
 
           if(object_invoce[0]["bsb"]=="")
@@ -939,27 +944,52 @@ Template.supplierpaymentcard.onRendered(() => {
           }
 
         //   table header
-          var tbl_header = $("#templatePreviewModal .tbl_header")
-          tbl_header.empty()
-          for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
-          }
+        var tbl_header = $("#templatePreviewModal .tbl_header")
+        tbl_header.empty()
+        for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
+              tbl_header.append("<th style='background:white;width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
         }
+      }
 
-        // table content
-         var tbl_content = $("#templatePreviewModal .tbl_content")
-         tbl_content.empty()
-         const data = object_invoce[0]["data"]
+      // table content
+      var tbl_content = $("#templatePreviewModal .tbl_content")
+      tbl_content.empty()
+      const data = object_invoce[0]["data"]
+      var length = data.length;
+      var i = 0;
+      for(item of data){
+           
+       var html = '';
+       if(i == length-1)
+       {
+           html += "<tr style=''>";
+       }
+       else
+       {
+           html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+       }
+      
+       var count = 0;
+       for(item_temp of item){
 
-         for(item of data){
-            tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-            var content = ""
-             for(item_temp of item){
-                content = content + "<td>" + item_temp + "</td>"
-             }
-             tbl_content.append(content)
-             tbl_content.append("</tr>")
-         }
+          if(count == 1){
+              html = html + "<td style='color:#00a3d3;'>" + item_temp + "</td>";
+          }
+          else
+          {
+              html = html + "<td>" + item_temp + "</td>";
+          }
+         
+
+          count++;
+       }
+      html +="</tr>";
+      tbl_content.append(html);
+      i++;
+     
+     }
+
+
 
         // total amount
 
@@ -996,7 +1026,7 @@ Template.supplierpaymentcard.onRendered(() => {
         }
 
 
-      }
+    }
 
     function updateTemplate(object_invoce) {
 
@@ -1058,12 +1088,12 @@ Template.supplierpaymentcard.onRendered(() => {
 
         if(object_invoce[0]["value"]=="")
         {
-              $('.print-header-value').text('');
+              $('.print-header').text('Supplier Payment');
 
         }
         else
         {
-             $('.print-header-value').text(object_invoce[0]["value"]);
+             $('.print-header').text('Supplier Payment');
         }
 
 
@@ -1206,27 +1236,64 @@ Template.supplierpaymentcard.onRendered(() => {
          }
 
         //   table header
-        var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
-        tbl_header.empty()
-        for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
-        }
+          var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
+          tbl_header.empty()
+          var count = 0;
+          for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
+              if(count > 2)
+              {
+                tbl_header.append("<th class='text-right text-nowrap' style='text-algin:right;background:white;color:rgb(0,0,0);width:" + value + "%'; >" + key + "</th>")
+              }
+              else
+              {
+                tbl_header.append("<th style='text-algin:left;background:white;color:rgb(0,0,0);width:" + value + "%'; >" + key + "</th>")
+              }
+              count++;
+          }
         }
 
         // table content
-        var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
-        tbl_content.empty()
-        const data = object_invoce[0]["data"]
-
-        for(item of data){
-            tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-            var content = ""
+           var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
+           tbl_content.empty()
+           const data = object_invoce[0]["data"]
+           var length = data.length;
+           var i = 0;
+           for(item of data){
+                
+            var html = '';
+       
+            html += "<tr style=''>";
+            
+           
+            var count = 0;
             for(item_temp of item){
-                content = content + "<td>" + item_temp + "</td>"
+              
+               if(count < 3){
+                   if(count == 1)
+                   {
+                    html = html + "<td class='text-nowrap' style='color:#00a3d3;'>" + item_temp + "</td>";
+                   }
+                   else
+                   {
+                        html = html + "<td class='text-nowrap' >" + item_temp + "</td>";
+
+                   }
+                  
+               }
+               else
+               {
+                   html = html + "<td class='text-right text-nowrap' >" + item_temp + "</td>";
+               }
+              
+
+               count++;
             }
-            tbl_content.append(content)
-            tbl_content.append("</tr>")
+            html +="</tr>";
+            tbl_content.append(html);
+            i++;
+          
         }
+
 
         // total amount
 
@@ -3353,9 +3420,12 @@ Template.supplierpaymentcard.onRendered(() => {
     if (getsale_id[1]) {
       let deteled = false;
       currentSalesID = parseInt(currentSalesID);
-      getVS1Data("TSupplierPayment").then(function (dataObject) {
+      getVS1Data("TSupplierPayment")
+        .then(function (dataObject) {
           if (dataObject.length == 0) {
-            paymentService.getOneSupplierPayment(currentSalesID).then(function (data) {
+            paymentService
+              .getOneSupplierPayment(currentSalesID)
+              .then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
                 deteled = data.fields.Deleted;
@@ -3493,6 +3563,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: data.fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 //localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -3737,6 +3808,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: useData[d].fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -3981,6 +4053,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     applied: appliedAmt.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     }),
+                    IsPaid: data.fields.IsPaid || false
                   };
                   templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4201,6 +4274,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 applied: appliedAmt.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 }),
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4367,7 +4441,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   amountdue: amountDue || 0,
                   paymentamount: paymentAmt || 0,
                   ouststandingamount: outstandingAmt,
-                  orginalamount: originalAmt,
+                  orginalamount: originalAmt                  
                 };
                 lineItems.push(lineItemObj);
 
@@ -4387,6 +4461,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: data.fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4509,6 +4584,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   ouststandingamount: outstandingAmt,
                   orginalamount: originalAmt,
                   comments: useData[d].fields.Comments || "",
+                  IsPaid: useData[d].fields.IsPaid,
                 };
                 lineItems.push(lineItemObj);
 
@@ -4529,6 +4605,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: useData[d].fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4670,6 +4747,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     applied: appliedAmt.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     }),
+                    IsPaid: data.fields.IsPaid || false
                   };
                   templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4810,6 +4888,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 applied: appliedAmt.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 }),
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4952,6 +5031,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 applied: appliedAmt.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 }),
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5094,6 +5174,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: useData[d].fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5233,6 +5314,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     applied: appliedAmt.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     }),
+                    IsPaid: data.fields.IsPaid || false
                   };
                   templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5371,6 +5453,7 @@ Template.supplierpaymentcard.onRendered(() => {
               applied: appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }),
+              IsPaid: data.fields.IsPaid || false
             };
             templateObject.record.set(record);
             localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5517,6 +5600,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: data.fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5658,6 +5742,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: useData[d].fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5797,6 +5882,7 @@ Template.supplierpaymentcard.onRendered(() => {
               applied: appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }),
+              IsPaid: data.fields.IsPaid || false
             };
             templateObject.record.set(record);
             localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -6000,6 +6086,7 @@ Template.supplierpaymentcard.onRendered(() => {
               appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }) || 0,
+            IsPaid: false
           };
 
           $("#edtSupplierName").val(companyName);
@@ -6283,6 +6370,7 @@ Template.supplierpaymentcard.onRendered(() => {
               appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }) || 0,
+            IsPaid: false
           };
 
           $("#edtSupplierName").val(companyName);
@@ -6413,6 +6501,7 @@ Template.supplierpaymentcard.onRendered(() => {
             applied: appliedAmt.toLocaleString(undefined, {
               minimumFractionDigits: 2,
             }),
+            IsPaid: data.fields.IsPaid || false
           };
           templateObject.record.set(record);
           localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -6553,6 +6642,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(
                       totalGrandAmount
                     ) || 0,
+                  IsPaid: data.fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -6780,6 +6870,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   Session.get("department") || data.fields.DeptClassName,
                 applied:
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -6918,6 +7009,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 Session.get("department") || data.fields.DeptClassName,
               applied:
                 utilityService.modifynegativeCurrencyFormat(amountData) || 0,
+              IsPaid: data.fields.IsPaid || false
             };
             templateObject.record.set(record);
             localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -7058,6 +7150,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   Session.get("department") || data.fields.DeptClassName,
                 applied:
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -7194,6 +7287,7 @@ Template.supplierpaymentcard.onRendered(() => {
             department: Session.get("department") || data.fields.DeptClassName,
             applied:
               utilityService.modifynegativeCurrencyFormat(amountData) || 0,
+            IsPaid: data.fields.IsPaid || false
           };
           templateObject.record.set(record);
           localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -7331,7 +7425,7 @@ Template.supplierpaymentcard.onRendered(() => {
       saleCustField1: "",
       saleCustField2: "",
       totalPaid: Currency + "" + 0.0,
-      ispaid: false,
+      IsPaid: false,
     };
 
     $("#edtSupplierName").val("");
@@ -7373,6 +7467,7 @@ Template.supplierpaymentcard.onRendered(() => {
   }
 
   exportSalesToPdf1 = function () {
+    document.getElementById("html-2-pdfwrapper").style.display="block";
     var source = document.getElementById("html-2-pdfwrapper");
     let id = $(".printID").attr("id");
     var pdf = new jsPDF("p", "pt", "a4");
@@ -7424,73 +7519,82 @@ Template.supplierpaymentcard.onRendered(() => {
   exportSalesToPdf = async function (template_title, number) {
     $(".fullScreenSpin").css("display", "block");
 
-    if (template_title == "Supplier Payments") {
-      await showSuppliers(template_title, number);
+    if(template_title== "Supplier Payments" && number == 1)
+    {
+           exportSalesToPdf1();
     }
+    else{
 
-    let margins = {
-      top: 0,
-      bottom: 0,
-      left: 0,
-      width: 100,
-    };
-
-    let invoice_data_info = templateObject.record.get();
-    document.getElementById("html-2-pdfwrapper_new").style.display = "block";
-    var source = document.getElementById("html-2-pdfwrapper_new");
-
-    let file = "Supplier_payment.pdf";
-    if (
-      $(".printID").attr("id") != undefined ||
-      $(".printID").attr("id") != ""
-    ) {
       if (template_title == "Supplier Payments") {
-        file = "Supplier payment-" + invoice_data_info.lid + ".pdf";
+        await showSuppliers(template_title, number);
       }
-    }
-
-    var opt = {
-      margin: 0,
-      filename: file,
-      image: {
-        type: "jpeg",
-        quality: 0.98,
-      },
-      html2canvas: {
-        scale: 2,
-      },
-      jsPDF: {
-        unit: "in",
-        format: "a4",
-        orientation: "portrait",
-      },
-    };
-
-    html2pdf()
-      .set(opt)
-      .from(source)
-      .save()
-      .then(function (dataObject) {
-        if (
-          $(".printID").attr("id") == undefined ||
-          $(".printID").attr("id") == ""
-        ) {
-          //$(".btnSave").trigger("click");
-          $("#html-2-pdfwrapper_new").css("display", "none");
-          $("#html-2-pdfwrapper").css("display", "none");
-          $("#confirmprint").modal("hide");
-          LoadingOverlay.hide();
-        } else {
-          document.getElementById("html-2-pdfwrapper_new").style.display =
-            "none";
-          $("#html-2-pdfwrapper_new").css("display", "none");
-          $("#html-2-pdfwrapper").css("display", "none");
-          $("#confirmprint").modal("hide");
-          LoadingOverlay.hide();
+  
+      let margins = {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        width: 100,
+      };
+  
+      let invoice_data_info = templateObject.record.get();
+      document.getElementById("html-2-pdfwrapper_new").style.display = "block";
+      var source = document.getElementById("html-2-pdfwrapper_new");
+  
+      let file = "Supplier_payment.pdf";
+      if (
+        $(".printID").attr("id") != undefined ||
+        $(".printID").attr("id") != ""
+      ) {
+        if (template_title == "Supplier Payments") {
+          file = "Supplier payment-" + invoice_data_info.lid + ".pdf";
         }
-      });
+      }
+  
+      var opt = {
+        margin: 0,
+        filename: file,
+        image: {
+          type: "jpeg",
+          quality: 0.98,
+        },
+        html2canvas: {
+          scale: 2,
+        },
+        jsPDF: {
+          unit: "in",
+          format: "a4",
+          orientation: "portrait",
+        },
+      };
+  
+      html2pdf()
+        .set(opt)
+        .from(source)
+        .save()
+        .then(function (dataObject) {
+          if (
+            $(".printID").attr("id") == undefined ||
+            $(".printID").attr("id") == ""
+          ) {
+            //$(".btnSave").trigger("click");
+            $("#html-2-pdfwrapper_new").css("display", "none");
+            $("#html-2-pdfwrapper").css("display", "none");
+            $("#confirmprint").modal("hide");
+            LoadingOverlay.hide();
+          } else {
+            document.getElementById("html-2-pdfwrapper_new").style.display =
+              "none";
+            $("#html-2-pdfwrapper_new").css("display", "none");
+            $("#html-2-pdfwrapper").css("display", "none");
+            $("#confirmprint").modal("hide");
+            LoadingOverlay.hide();
+          }
+        });
+  
+      return true;
 
-    return true;
+    }
+   
   };
 
   $("#tblSupplierPaymentcard tbody").on(
@@ -7936,9 +8040,9 @@ Template.supplierpaymentcard.helpers({
   poBox: () => {
     return Session.get("vs1companyPOBox");
   },
-  companyphone: () => {
-    return Session.get("vs1companyPhone");
-  },
+  // companyphone: () => {
+  //   return Session.get("vs1companyPhone");
+  // },
   companyabn: () => {
     return Session.get("vs1companyABN");
   },
@@ -7974,7 +8078,75 @@ Template.supplierpaymentcard.events({
   // 'click #sltDepartment': function(event) {
   //     $('#departmentModal').modal('toggle');
   // },
+  'click .payNow': async function () {
+    let templateObject = Template.instance();
+    let stripe_id = templateObject.accountID.get() || '';
+    let stripe_fee_method = templateObject.stripe_fee_method.get();
+    if (stripe_id != "") {
+        if ($('.edtSupplierEmail').val() != "") {
+            let supplierDataName = $('#edtSupplierName').val();
+            let data = await sideBarService.getOneSupplierDataExByName(supplierDataName);
+            let SupplierID = data.tsupplier[0].fields.ID || '';
+            let name = data.tsupplier[0].fields.FirstName || '';
+            let surname = data.tsupplier[0].fields.LastName || '';
+            let lineItems = [];
+            let total = $('#balanceDue').html() || 0;
+            let tax = $('#subtotal_tax').html() || 0;
+            let customer = $('#edtSupplierFirstName').val() + ' ' + $('#edtSupplierLastName').val();
+            let company = Session.get('vs1companyName');
+            $('#tblSupplierPaymentcard > tbody > tr').each(function () {
+                var lineID = this.id;
+                let tddescription = $(this).find(".colType").text();
+                let tdQty = 1;
+                let tdunitprice = $(this).find(".lineAmountdue").text();
+                lineItemObj = {
+                    description: tddescription || '',
+                    quantity: tdQty || 0,
+                    unitPrice: tdunitprice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0
+                }
 
+                lineItems.push(lineItemObj);
+            });
+            var erpGet = erpDb();
+            let vs1User = localStorage.getItem('mySession');
+            let customerEmail = $('#edtSupplierEmail').val();
+            let currencyname = (CountryAbbr).toLowerCase();
+            let stringQuery = "?";
+            let dept = $('#sltDept').val();
+            var customerID = $('#edtSupplierEmail').attr('customerid');
+            for (let l = 0; l < lineItems.length; l++) {
+                stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+            }
+            stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + customerID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+            window.open(stripeGlobalURL + stringQuery, '_self');
+        } else {
+            swal({
+                title: 'Supplier Email Required',
+                text: 'Please enter supplier email',
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.value) {}
+                else if (result.dismiss === 'cancel') {}
+            });
+        }
+    } else {
+        swal({
+            title: 'WARNING',
+            text: "Please Set Up Payment Method To Use This Option, Click Ok to be Redirected to Payment Method page.",
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+                window.open('paymentmethodSettings', '_self');
+            } else if (result.dismiss === 'cancel') {}
+        });
+    }
+  },
   "click .printConfirm": async function (event) {
     var printTemplate = [];
     LoadingOverlay.show();
@@ -8202,7 +8374,7 @@ Template.supplierpaymentcard.events({
 
   "click  #open_print_confirm": function (event) {
     if ($("#choosetemplate").is(":checked")) {
-      $("#confirmprint").modal("show");
+        $('#templateselection').modal('show');
     } else {
       LoadingOverlay.show();
       $("#html-2-pdfwrapper").css("display", "block");
@@ -12768,6 +12940,15 @@ Template.supplierpaymentcard.events({
   //   $('.appliedAmount').text(currency + calculatedAppliedAmount);
   //  }, 500);
   // },
+
+
+  "click #chkEFT": function (event) {
+    if ($("#chkEFT").is(":checked")) {
+      $("#eftExportModal").modal("show");
+    } else {
+      $("#eftExportModal").modal("hide");
+    }
+  },
 });
 
 

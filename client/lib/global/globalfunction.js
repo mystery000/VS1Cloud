@@ -277,6 +277,7 @@ batchUpdateCall = function (url) {
     let dashboardArray = [];
     var oReq = new XMLHttpRequest();
     var oReq2 = new XMLHttpRequest();
+    var oReq3 = new XMLHttpRequest();
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -451,6 +452,32 @@ batchUpdateCall = function (url) {
                   }, 10000);
                 }
             }
+            oReq3.open("GET",URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/TAccountVS1?ListType="Detail"&select=[AccountTypeName]="BANK"', true);
+            oReq3.setRequestHeader("database",erpGet.ERPDatabase);
+            oReq3.setRequestHeader("username",erpGet.ERPUsername);
+            oReq3.setRequestHeader("password",erpGet.ERPPassword);
+            oReq3.send();
+            oReq3.onreadystatechange = function() {
+                if(oReq3.readyState == 4 && oReq3.status == 200) {
+                  var dataReturnRes3 = JSON.parse(oReq3.responseText);
+                  if (dataReturnRes3.taccountvs1.length > 0) {
+                    localStorage.setItem('VS1TAccount_Bank_dash', dataReturnRes3.taccountvs1[0].fields.Balance||0);
+                    localStorage.setItem('VS1TAccount_Bank_Payroll_Clearing_dash', dataReturnRes3.taccountvs1[1].fields.Balance||0);
+                    localStorage.setItem('VS1TAccount_Petty_Cash_dash', dataReturnRes3.taccountvs1[2].fields.Balance||0);
+                    localStorage.setItem('VS1TAccount_Payroll_Bank_dash', dataReturnRes3.taccountvs1[3].fields.Balance||0);
+                    localStorage.setItem('VS1TAccount_Offset_Account_dash', dataReturnRes3.taccountvs1[4].fields.Balance||0);
+                  }
+                }else if (oReq3.status != 200){
+
+                  setTimeout(function () {
+                    if(url){
+                      window.open(url,'_self');
+                    }else{
+                      location.reload(true);
+                    }
+                  }, 10000);
+                }
+            }
           }else{
             setTimeout(function () {
               if(url){
@@ -530,52 +557,10 @@ vs1GlobalBackButton = async function () {
     }
  });
 };
-thWidthOnResize = function() {
-  let tableWidth = [];
-  $('#tblcontactoverview th').each(function() {
-    tableWidth.push($(this).outerWidth());
-    tableWidth.push($(this).index());
 
-  });
-};
 tableResize = function() {
   setTimeout(function() {
-//     // $(".dataTable th, .draggingTable th").resizable({
-//     //   handles: "e",
-//     //   resize: function (event, ui) {
-//     //       var sizerID = "." + $(event.target).attr("class").split(" ")[1];
-//     //       $(sizerID).width(ui.size.width);
-//     //   }
-//     // });
-    // setInterval(() => {
-    //   /**
-    //    * We first need to disable all previous events listeners related
-    //    */
-    //   $(".dataTable").colResizable({
-    //     disable: true,
-    //   });
-
-    //   /***
-    //    * Then we need to add back the listeners
-    //    *
-    //    * By doing disabling and re-enabling, start fresh events
-    //    * instead of cummulating multiple listeners which is causing issues
-    //    */
-    //   $(".dataTable").colResizable({
-    //     liveDrag:true,
-    //     gripInnerHtml:"<div class='grip'></div>",
-    //     draggingClass:"dragging",
-    //     resizeMode:'overflow',
-    //     onResize:  (e) => {
-    //       var table = $(e.currentTarget); //reference to the resized table
-    //       thWidthOnResize();
-    //     },
-    //     // disabledColumns: [2]
-    //   });
-    // }, 1000);
-
     const tableHandler = new TableHandler();
-
   }, 2000);
 };
 // $(window).load(function() {

@@ -45,11 +45,9 @@
                     <div class="col-6 col-md-3">
                         <div class="form-group" style="margin: 4px;">
                             <label>Category</label>
-                            <select class="form-control" id="expenseCategory">
-                                {{#each item in expenseCategories}}
-                                    <option value="{{item}}">{{item}}</option>
-                                {{/each}}
-                            </select>
+                            <input type="search" class="form-control" id="expenseCategory" name="expenseCategory" style="background-color: #fff; cursor: pointer;" />
+                            <input type="hidden" id="categoryAccountID" value=""/>
+                            <input type="hidden" id="categoryAccountName" value=""/>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">

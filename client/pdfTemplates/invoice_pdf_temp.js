@@ -90,6 +90,7 @@ Template.invoicePrintTemp.onRendered(function () {
                             id: useData[d].fields.ID,
                             custPONumber: useData[d].fields.CustPONumber,
                             saledate: useData[d].fields.SaleDate ? moment(useData[d].fields.SaleDate).format('DD/MM/YYYY') : "",
+                            duedate: useData[d].fields.DueDate ? moment(useData[d].fields.DueDate).format('DD/MM/YYYY') : "",
                             comments: useData[d].fields.Comments,
                             termsName: useData[d].fields.TermsName,
                             Total: totalInc,

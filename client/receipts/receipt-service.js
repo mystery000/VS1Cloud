@@ -42,6 +42,15 @@ export class ReceiptService extends BaseService {
         return this.getList(this.ERPObjects.TReceiptCategory, options);
     }
 
+    getSearchReceiptCategoryByName(dataSearchName) {
+        let options = '';
+        options = {
+            ListType: "Detail",
+            select: '[CategoryName] f7like "' + dataSearchName + '" and [Active]=true',
+        };
+        return this.getList(this.ERPObjects.TReceiptCategory, options);
+    }
+
     saveReceiptCategory(data) {
         return this.POST(this.ERPObjects.TReceiptCategory, data);
     }

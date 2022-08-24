@@ -53,10 +53,11 @@ Meteor.methods({
         cc: details.cc,
         subject: details.subject,
         text: details.text,
-        html: html,
+        html: details.html,
         attachments: details.attachments
       });
     } catch(e) {
+      console.log(e);
         if (e) {
             throw new Meteor.Error("error", e.response);
         }
@@ -76,7 +77,8 @@ Meteor.methods({
     else if (details.Frequency === '' && details.Active) frequencyType = 'One Time Only';
 
     SSR.compileTemplate("emailtemplate", Assets.getText('email/templates/reportemail.html'));
-    const groupedReports = Meteor.call('groupedReports', details.FormID, details.FormIDs ? details.FormIDs.split(',') : [], details.HostURL);
+    let strID = details.FormID.split('_');
+    const groupedReports = Meteor.call('groupedReports', strID[0], details.FormIDs ? details.FormIDs.split(',') : [], details.HostURL);
     const html = SSR.render("emailtemplate", {groupedReports, name: details.FormName, isGrouped: details.FormID == '1'});
 
     try {

@@ -128,7 +128,7 @@ Template.new_quote.onRendered(() => {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-                  
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
                    
                     if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
@@ -162,30 +162,30 @@ Template.new_quote.onRendered(() => {
 
 
                     }
-               
+
 
                  }
-                  
-                      
+
+
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{ 
-                  let data = JSON.parse(dataObject[0].data);    
-                
+          }else{
+                  let data = JSON.parse(dataObject[0].data);
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                  
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
                     {
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {       
+                           {
                                    $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Quotes_1').attr('checked','checked');
                                    }
-                                 
+
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -207,28 +207,28 @@ Template.new_quote.onRendered(() => {
 
 
                     }
-                 
-               
+
+
 
                  }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                
+                  addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                               
+
                      if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
                      {
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {       
+                            {
                                     $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                       $('#Quotes_1').attr('checked','checked');
                                     }
-                                  
+
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -249,7 +249,7 @@ Template.new_quote.onRendered(() => {
                             }
 
 
-                     }               
+                     }
                   }
 
 
@@ -262,7 +262,7 @@ Template.new_quote.onRendered(() => {
     };
 
     templateObject.getTemplateInfoNew();
-    
+
     templateObject.getLastQuoteData = async function() {
         let lastBankAccount = "Bank";
         let lastDepartment = defaultDept || "";
@@ -299,9 +299,9 @@ Template.new_quote.onRendered(() => {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+        var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -383,7 +383,7 @@ Template.new_quote.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -398,7 +398,7 @@ Template.new_quote.onRendered(() => {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: { "Product Name": "20", "Description": "20", "Qty": "10", "Unit Price": "10", "Tax": "20", "Amount": "20" },
+                fields: { "Product Name": "30", "Description": "30", "Qty": "10", "Unit Price": "10", "Tax": "10", "Amount": "10" },
                 subtotal: subtotal_total,
                 gst: subtotal_tax,
                 total: grandTotal,
@@ -427,7 +427,7 @@ Template.new_quote.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -442,7 +442,7 @@ Template.new_quote.onRendered(() => {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: { "Product Name": "20", "Description": "20", "Qty": "10", "Unit Price": "10", "Tax": "20", "Amount": "20" },
+                fields: { "Product Name": "30", "Description": "30", "Qty": "10", "Unit Price": "10", "Tax": "10", "Amount": "10" },
                 subtotal: subtotal_total,
                 gst: subtotal_tax,
                 total: grandTotal,
@@ -472,7 +472,7 @@ Template.new_quote.onRendered(() => {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                 o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                 o_phone: Template.new_quote.__helpers.get('companyphone').call(),
@@ -487,7 +487,7 @@ Template.new_quote.onRendered(() => {
                 supplier_type: "Customer",
                 supplier_name: customer,
                 supplier_addr: txabillingAddress,
-                fields: { "Product Name": "20", "Description": "20", "Qty": "10", "Unit Price": "10", "Tax": "20", "Amount": "20" },
+                fields: { "Product Name": "30", "Description": "30", "Qty": "10", "Unit Price": "10", "Tax": "10", "Amount": "10" },
                 subtotal: subtotal_total,
                 gst: subtotal_tax,
                 total: grandTotal,
@@ -535,9 +535,9 @@ Template.new_quote.onRendered(() => {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+        var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        var customfield3 = $('#edtSaleCustField3').val() || '  ';
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
         var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
@@ -644,7 +644,7 @@ Template.new_quote.onRendered(() => {
                     o_name:  Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                     o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                     o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -659,7 +659,7 @@ Template.new_quote.onRendered(() => {
                     supplier_type: "Customer",
                     supplier_name : customer,
                     supplier_addr : txabillingAddress,
-                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    fields: { "Product Name": "30", "Description": "30", "Qty": "10", "Unit Price": "10", "Tax": "10", "Amount": "10" },
                     subtotal :subtotal_total,
                     gst : subtotal_tax,
                     total : grandTotal,
@@ -681,15 +681,15 @@ Template.new_quote.onRendered(() => {
 
                 };
 
-    }
-    else if(number == 2)
-    {
+        }
+        else if(number == 2)
+        {
                 item_quote = {
                     o_url: Session.get('vs1companyURL'),
                         o_name:  Session.get('vs1companyName'),
                         o_address: Session.get('vs1companyaddress1'),
                         o_city: Session.get('vs1companyCity'),
-                        o_state: Session.get('companyState'),
+                        o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                         o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                         o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                         o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -704,7 +704,7 @@ Template.new_quote.onRendered(() => {
                         supplier_type: "Customer",
                         supplier_name : customer,
                         supplier_addr : txabillingAddress,
-                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                        fields: { "Product Name": "30", "Description": "30", "Qty": "10", "Unit Price": "10", "Tax": "10", "Amount": "10" },
                         subtotal :subtotal_total,
                         gst : subtotal_tax,
                         total : grandTotal,
@@ -726,15 +726,15 @@ Template.new_quote.onRendered(() => {
 
                 };
 
-    }
-    else{
+        }
+        else{
 
                 item_quote = {
                     o_url: Session.get('vs1companyURL'),
                     o_name:  Session.get('vs1companyName'),
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
+                    o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                     o_reg: Template.new_quote.__helpers.get('companyReg').call(),
                     o_abn: Template.new_quote.__helpers.get('companyabn').call(),
                     o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
@@ -749,7 +749,7 @@ Template.new_quote.onRendered(() => {
                     supplier_type: "Customer",
                     supplier_name : customer,
                     supplier_addr : txabillingAddress,
-                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    fields: { "Product Name": "30", "Description": "30", "Qty": "10", "Unit Price": "10", "Tax": "10", "Amount": "10" },
                     subtotal :subtotal_total,
                     gst : subtotal_tax,
                     total : grandTotal,
@@ -771,7 +771,7 @@ Template.new_quote.onRendered(() => {
                 };
 
 
-            }
+        }
 
             item_quote.taxItems = taxItems;
 
@@ -842,11 +842,11 @@ Template.new_quote.onRendered(() => {
 
           if(object_invoce[0]["value"]=="")
           {
-              $('.print-header-value').text('');
+              $('.print-header').text('');
 
           }
           else{
-             $('.print-header-value').text(object_invoce[0]["value"]);
+             $('.print-header').text(object_invoce[0]["value"]);
           }
 
           if(object_invoce[0]["bsb"]=="")
@@ -989,7 +989,7 @@ Template.new_quote.onRendered(() => {
           var tbl_header = $("#templatePreviewModal .tbl_header")
           tbl_header.empty()
           for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
+                tbl_header.append("<th style='color: rgb(0 0 0);background:white;width:" + value + "%';>" + key + "</th>")
           }
         }
 
@@ -999,14 +999,18 @@ Template.new_quote.onRendered(() => {
          const data = object_invoce[0]["data"]
 
          for(item of data){
-            tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-            var content = ""
+            
+            var html = '';
+             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
-                content = content + "<td>" + item_temp + "</td>"
+                html = html + "<td>" + item_temp + "</td>";
              }
-             tbl_content.append(content)
-             tbl_content.append("</tr>")
+
+            html +="</tr>";
+            tbl_content.append(html);
+           
          }
+
 
         // total amount
 
@@ -1101,15 +1105,14 @@ Template.new_quote.onRendered(() => {
             object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
          );
 
-        if(object_invoce[0]["value"]=="")
-        {
-              $('.print-header-value').text('');
+         if(object_invoce[0]["value"]=="")
+         {
+             $('.print-header').text('');
 
-        }
-        else
-        {
-             $('.print-header-value').text(object_invoce[0]["value"]);
-        }
+         }
+         else{
+            $('.print-header').text(object_invoce[0]["value"]);
+         }
 
 
         if(object_invoce[0]["bsb"]=="")
@@ -1251,31 +1254,61 @@ Template.new_quote.onRendered(() => {
          }
 
         //   table header
-        var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
-        tbl_header.empty()
-        for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
-        }
-        if (object_invoce[0]["taxItems"]) {
+        
+            var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
+            tbl_header.empty()
+            var count = 0;
+            for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
+                    if(count == 0)
+                    {
+                        tbl_header.append("<th style='width:200px;background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                    }
+                    else if(count == 1)
+                    {
+                        tbl_header.append("<th style='width:250px;background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                    }
+                    else if(count == 2)
+                    {
+                        
+                        tbl_header.append("<th style='text-align: right; width: 50px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                    }
+                    else if(count == 3)
+                    {
+                        tbl_header.append("<th style='text-align: right; width: 90px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                    }
+                    else if(count == 4)
+                    {                       
+                        tbl_header.append("<th style='text-align: right; width: 77px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                    }
+                    else
+                    {                       
+                        tbl_header.append("<th style='text-align: right; width: 100px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                    }
+                    
+                    count++;
+            }
+
+            if (object_invoce[0]["taxItems"]) {
             let taxItems = object_invoce[0]["taxItems"];
             $("#html-2-pdfwrapper_new #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
-                let html = `
-                    <div style="width: 100%; display: flex;">
-                        <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
-                                ${code}</p>
-                        </div>
-                        <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $ ${taxItems[code]}</p>
-                        </div>
-                    </div>
-                `;
+                let html =  `<div style="width: 100%; display: flex;">
+                                    <div style="padding-right: 16px; width: 50%;">
+                                        <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                            ${code}</p>
+                                    </div>
+                                    <div style="padding-left: 16px; width: 50%;">
+                                        <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                            $ ${taxItems[code]}</p>
+                                    </div>
+                                </div>
+                           `;
                 $("#html-2-pdfwrapper_new #tax_list_print").append(html);
             });
         }
+        
         $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
+        
         }
 
         // table content
@@ -1284,14 +1317,30 @@ Template.new_quote.onRendered(() => {
         const data = object_invoce[0]["data"]
 
         for(item of data){
-            tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-            var content = ""
-            for(item_temp of item){
-                content = content + "<td>" + item_temp + "</td>"
-            }
-            tbl_content.append(content)
-            tbl_content.append("</tr>")
-        }
+            
+             var html = '';
+             var count = 0;
+             html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+             for(item_temp of item){
+                if(count > 1)
+                {
+                  
+                        html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    
+                   
+                }
+                else
+                {
+                    html = html + "<td>" + item_temp + "</td>";
+                }
+                count++
+             }
+
+            html +="</tr>";
+            tbl_content.append(html);
+           
+         }
+
 
         // total amount
 
@@ -5360,128 +5409,143 @@ Template.new_quote.onRendered(() => {
     {
 
 
-        if(template_title == 'Quotes')
+        if(template_title == 'Quotes' && number == 1)
         {
-            await showQuotes(template_title,number);
+                 exportSalesToPdf1();
+        }
+        else
+        {
+                if(template_title == 'Quotes')
+                {
+                    await showQuotes(template_title,number);
+        
+                }
+        
+        
+                let margins = {
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    width: 100
+                };
+        
+                let quoteData = templateObject.quoterecord.get();
+                document.getElementById('html-2-pdfwrapper_new').style.display="block";
+                var source = document.getElementById('html-2-pdfwrapper_new');
+        
+                let file = "Quotes.pdf";
+                if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                    if(template_title == 'Quotes')
+                    {
+                        file = 'Quote-' + quoteData.id + '.pdf';
+                    }
+        
+        
+                }
+        
+                var opt = {
+                    margin: 0,
+                    filename: file,
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'a4',
+                        orientation: 'portrait'
+                    }
+                };
+        
+        
+        
+                html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
+                    let attachment = [];
+                    let base64data = data.split(',')[1];
+                    let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
+                    pdfObject = {
+                        filename: 'Quote-' + chequeId + '.pdf',
+                        content: base64data,
+                        encoding: 'base64'
+                    };
+                    attachment.push(pdfObject);
+                    let values = [];
+                    let basedOnTypeStorages = Object.keys(localStorage);
+                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                        let employeeId = storage.split('_')[2];
+                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        return storage.includes('BasedOnType_');
+                    });
+                    let j = basedOnTypeStorages.length;
+                    if (j > 0) {
+                        while (j--) {
+                            values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                        }
+                    }
+                    if(values.length > 0) {
+                    values.forEach(value => {
+                        let reportData = JSON.parse(value);
+                        let temp = {... reportData};
+        
+                        temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                        temp.attachments = attachment;
+                        if (temp.BasedOnType.includes("P")) {
+                            if (temp.FormID == 1) {
+                                let formIds = temp.FormIDs.split(',');
+                                if (formIds.includes("71")) {
+                                    temp.FormID = 71;
+                                    Meteor.call('sendNormalEmail', temp);
+                                }
+                            } else {
+                                if (temp.FormID == 71)
+                                    Meteor.call('sendNormalEmail', temp);
+                            }
+                        }
+                    });
+                    }
+                   
+                    html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                        if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                            //$(".btnSave").trigger("click");
+                            $('#html-2-pdfwrapper_new').css('display', 'none');
+                            $('.fullScreenSpin').css('display', 'none');
+                        } else {
+                            document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                            $('#html-2-pdfwrapper_new').css('display', 'none');
+                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    });
+                })
+        
+                return true;
 
         }
-
-
-        let margins = {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 100
-        };
-
-        let quoteData = templateObject.quoterecord.get();
-        document.getElementById('html-2-pdfwrapper_new').style.display="block";
-        var source = document.getElementById('html-2-pdfwrapper_new');
-
-        let file = "Quotes.pdf";
-        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            if(template_title == 'Quotes')
-            {
-                file = 'Quote -' + quoteData.id + '.pdf';
-            }
-
-
-        }
-
-        var opt = {
-            margin: 0,
-            filename: file,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        };
-
-
-
-        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
-            let attachment = [];
-            let base64data = data.split(',')[1];
-            let chequeId  = FlowRouter.current().queryParams.id?FlowRouter.current().queryParams.id: ''
-            pdfObject = {
-                filename: 'Quote-' + chequeId + '.pdf',
-                content: base64data,
-                encoding: 'base64'
-            };
-            attachment.push(pdfObject);
-            let values = [];
-            let basedOnTypeStorages = Object.keys(localStorage);
-            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                let employeeId = storage.split('_')[2];
-                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                return storage.includes('BasedOnType_');
-            });
-            let j = basedOnTypeStorages.length;
-            if (j > 0) {
-                while (j--) {
-                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
-                }
-            }
-            if(values.length > 0) {
-              values.forEach(value => {
-                  let reportData = JSON.parse(value);
-                  let temp = {... reportData};
-                  
-                  temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                  reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                  temp.attachments = attachment;
-                  if (temp.BasedOnType.includes("P")) {
-                      if (temp.FormID == 1) {
-                          let formIds = temp.FormIDs.split(',');
-                          if (formIds.includes("71")) {
-                              temp.FormID = 71;
-                              Meteor.call('sendNormalEmail', temp);
-                          }
-                      } else {
-                          if (temp.FormID == 71)
-                              Meteor.call('sendNormalEmail', temp);
-                      }
-                  }
-              });
-            }
-            html2pdf().set(opt).from(source).save().then(function (dataObject) {
-                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                    //$(".btnSave").trigger("click");
-                    $('#html-2-pdfwrapper_new').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
-                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
-                    $('#html-2-pdfwrapper_new').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-            });
-        })
-
-        return true;
+      
 
 
 
     }
 
-     exportSalesToPdf1= function () {
+    exportSalesToPdf1= function () {
+      
         let margins = {
             top: 0,
             bottom: 0,
             left: 0,
             width: 100
         };
+
         let quoteData = templateObject.quoterecord.get();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         let lineItems = [];
+
+        document.getElementById('html-2-pdfwrapper').style.display = 'block';
+
         let total = $('#grandTotal').html() || 0;
         let tax = $('#subtotal_tax').html() || 0;
         let customer = $('#edtCustomerName').val();
@@ -6564,7 +6628,7 @@ Template.new_quote.events({
     {
         if($('#choosetemplate').is(':checked'))
         {
-            $('#confirmprint').modal('show');
+            $('#templateselection').modal('show');
         }
         else
         {
@@ -7992,8 +8056,7 @@ Template.new_quote.events({
                 type: "TQuoteEx",
                 fields: {
                     ID: currentInvoice,
-                    Deleted: true,
-                    Lines: null
+                    Deleted: true
                 }
             };
 

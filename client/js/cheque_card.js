@@ -6748,6 +6748,15 @@ Template.chequecard.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
+
+
+  "click #chkEFT": function (event) {
+    if ($("#chkEFT").is(":checked")) {
+      $("#eftExportModal").modal("show");
+    } else {
+      $("#eftExportModal").modal("hide");
+    }
+  },
 });
 
 Template.registerHelper("equals", function (a, b) {

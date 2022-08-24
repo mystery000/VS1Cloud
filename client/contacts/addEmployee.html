@@ -1440,7 +1440,7 @@
                                                                                 <div class="col-12 col-md-3">
                                                                                     <div class="form-group" style="margin: 4px;">
                                                                                         <label>TFN Exemption</label>
-                                                                                        <input type="text" class="form-control" id="edtTfnExemption" name="edtTfnExemption">
+                                                                                        <input type="search" class="form-control" id="edtTfnExemption" name="edtTfnExemption">
                                                                                         <!-- <select type="search" class="form-control customEditableSelect" id="edtTfnExemption" name="edtTfnExemption" style="cursor: pointer;">
                                                                                             <option value=""></option>
                                                                                             <option value="0">No TFN Quoted</option>
@@ -1853,12 +1853,7 @@
                                                                                         <div class="form-group">
                                                                                             <label>Leave Calculation Method</label>
                                                                                             <!-- <input type="text" class="form-control" id=""> -->
-                                                                                            <select type="search" class="form-control customEditableSelect" id="leaveCalcMethodSelect" name="leaveCalcMethodSelect" style="cursor: pointer;">
-                                                                                                <option value="Fixed Amount Each Period">Fixed Amount Each Period</option>
-                                                                                                <option value="Manually Recorded Rate">Manually Recorded Rate</option>
-                                                                                                <option value="No Calculation Required">No Calculation Required</option>
-                                                                                                <option value="Based on Ordinary Earnings">Based on Ordinary Earnings</option>
-                                                                                            </select>
+                                                                                            <input type="search" class="form-control customEditableSelect" id="leaveCalcMethodSelect" name="leaveCalcMethodSelect" style="cursor: pointer;">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
@@ -1895,10 +1890,7 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>On termination unused balance is:</label>
-                                                                                            <select type="search" class="form-control customEditableSelect" id="onTerminationUnusedBalance" name="onTerminationUnusedBalance" style="cursor: pointer;">
-                                                                                                <option value="0">Not Paid Out</option>
-                                                                                                <option value="1">Paid Out</option>
-                                                                                            </select>
+                                                                                            <input type="search" class="form-control customEditableSelect" id="onTerminationUnusedBalance" name="onTerminationUnusedBalance" style="cursor: pointer;">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12">
@@ -2870,7 +2862,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Liability Account</label>
-                                                                                                                <input type="text" class="form-control" id="liabilityAccount">
+                                                                                                                <input type="text" class="form-control edtExpenseAccountDropDown" id="liabilityAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div class="col-12 col-md-6">
@@ -2973,7 +2965,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Control of Expense Account</label>
-                                                                                                                <input type="text" class="form-control earningLineDropDown" id="controlExpenseAccount">
+                                                                                                                <input type="text" class="form-control edtExpenseAccountDropDown" id="controlExpenseAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </div>
@@ -3340,6 +3332,7 @@
                                                                                             <div class="col-12">
                                                                                                 <div class="form-group">
                                                                                                     <label>Note</label>
+                                                                                                    <input type="hidden" id="payRollNoteID" value="0">
                                                                                                     <textarea class="form-control" id="payRollNotes" rows="6"></textarea>
                                                                                                 </div>
                                                                                             </div>

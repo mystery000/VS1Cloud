@@ -1,0 +1,157 @@
+<template name="new_process">
+    <div class="container-fluid salesmodule" style="padding-right: 0px; padding-left: 0px">
+        <div class="fullScreenSpin" style="display: none;">
+            <div class="spinner">
+            </div>
+        </div>
+        <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: #ededed; z-index: -1;"></div>
+        {{#if processrecord}}
+            <form>
+                <header style="padding: 16px; padding-right: 0px; margin-top: -24px;">
+                    <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
+                        Edit Process - {{processrecord.id}}
+                        <a class="btnSettings" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                        <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
+                    </h2>
+                </header>
+                <div class="row" style="padding-top: 30px">
+                    <div class="col-12 col-md-10 col-xl-8 col-xxl-6 mx-auto">
+                        <div class="card shadow mb-3">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 font-weight-bold">Process - Resource</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <style>
+                                        .input-box {
+                                            position: relative;
+                                        }
+
+                                        .input-box > input.form-control {
+                                            padding-left: 2rem;
+                                        }
+
+                                        span.prefix {
+                                            position: absolute;
+                                            top: calc(50% - 10px);
+                                            left: 10px;
+                                            font-size: 14px;
+                                        }
+                                    </style>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="form-group">
+                                                <label>Name</label>
+                                                <input type="text" class="form-control edtProcessName" id="edtProcessName" name="edtProcessName"  style="background-color: rgb(255,255,255);" value="{{processrecord.name}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Daily Hours</label>
+                                                <input type="text" class="form-control edtDailyHours" id="edtDailyHours" name="edtDailyHours" style="background-color: rgb(255,255,255);" value="{{processrecord.dailyHours}}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <input type="text" class="form-control edtDescription" id="edtDescription" name="edtDescription" style="background-color: #fff;" value="{{processrecord.description}}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-end">
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Hourly Labour Cost</label>
+                                                <div class="input-box">
+                                                    <span class="prefix">$</span>
+                                                    <input type="text" class="form-control edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" value="{{processrecord.hourlyCost}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Cost of Goods Sold</label>
+                                                <input type="search" class="form-control edtCOGS" id="edtCOGS" name="edtCOGS" value="{{processrecord.cogs}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Expense Account</label>
+                                                <input type="search" class="form-control edtExpenseAccount" id="edtExpenseAccount" name="edtExpenseAccount" value="{{processrecord.expenseAccount}}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row align-items-end">
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Hourly Overhead Cost</label>
+                                                <div class="input-box">
+                                                    <span class="prefix">$</span>
+                                                    <input type="text" class="form-control edtHourlyCost edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" value="{{processrecord.oHourlyCost}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Cost of Goods Sold</label>
+                                                <input type="search" class="form-control edtOverheadCOGS" id="edtOverheadCOGS" name="edtOverheadCOGS" value="{{processrecord.oCOGS}}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Expense Account</label>
+                                                <input type="search" class="form-control edtOverheadExpenseAccount" id="edtOverheadExpenseAccount" name="edtOverheadExpenseAccount" value="{{processrecord.oExpenseAccount}}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="row align-items-end">
+                                        <div class="col-7">
+                                            <div class="row align-items-end">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>Total Hourly Costs</label>
+                                                        <div class="input-box">
+                                                            <span class="prefix">$</span>
+                                                            <input type="text" class="form-control edtTotalHourlyCosts" id="edtTotalHourlyCosts" value="{{processrecord.totalHCost}}" name="edtTotalHourlyCosts" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>Inventory Asset Wastage</label>
+                                                        <input type="search" class="form-control edtWastage" id="edtWastage" name="edtWastage" value="{{processrecord.wastage}}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-5" style="margin-bottom: 1rem;">
+                                            <div class="row align-items-end justify-content-end" style="gap: 20px">
+                                                <button class="btn btn-success btnSaveProcess" id="btnSaveProcess" type="button">
+                                                    <i class="fa fa-save" style="margin-right: 5px;"></i>Save
+                                                </button>
+                                                <button class="btn btn-secondary" id="btnCancel" type="button">
+                                                    <i class="fa fa-remove" style="margin-right: 5px;"></i>Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {{/if}}
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+            {{> accountlistpop}}
+        </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="expenseAccountListModal">
+            {{> expenseaccountlistpop}}
+        </div>
+    </div>
+</template>
