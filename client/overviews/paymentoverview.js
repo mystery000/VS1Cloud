@@ -144,16 +144,6 @@ Template.paymentoverview.onRendered(function() {
     var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth2) + "-" + (fromDateDay2);
     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-    if(FlowRouter.current().queryParams.range == "month") {
-        fromDate = moment().startOf('month').startOf('day').format("DD/MM/YYYY");
-        begunDate = moment().endOf('month').endOf('day').format("DD/MM/YYYY");
-    }
-
-    if(FlowRouter.current().queryParams.range == "year") {
-        fromDate = moment().subtract(12, 'months').startOf('day').format("DD/MM/YYYY");
-        begunDate = moment().endOf('day').format("DD/MM/YYYY");
-    }
-
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
