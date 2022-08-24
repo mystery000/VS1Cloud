@@ -107,19 +107,19 @@ Template.purchaseordercard.onRendered(() => {
           if (dataObject.length == 0) {
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                  
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
+                   
                     if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
                     {
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
+                           {       
                                    $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Purchase_Orders_1').attr('checked','checked');
                                    }
-
+                                 
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -142,30 +142,30 @@ Template.purchaseordercard.onRendered(() => {
 
                     }
 
-
+               
 
                  }
-
-
+                  
+                      
                   $('.fullScreenSpin').css('display', 'none');
               }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
               });
-          }else{
-                  let data = JSON.parse(dataObject[0].data);
-
+          }else{ 
+                  let data = JSON.parse(dataObject[0].data);    
+                
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
+                   
                     if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
                     {
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {
+                           {       
                                    $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Purchase_Orders_1').attr('checked','checked');
                                    }
-
+                                 
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -188,30 +188,30 @@ Template.purchaseordercard.onRendered(() => {
 
                     }
 
-
-
+           
+               
 
                  }
                   $('.fullScreenSpin').css('display', 'none');
           }
         }).catch(function(err) {
         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                  addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                  addVS1Data('TTemplateSettings', JSON.stringify(data)); 
+                
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-
-
+                   
+                    
 
                      if(data.ttemplatesettings[i].fields.SettingName == 'Purchase Orders')
                      {
                             if(data.ttemplatesettings[i].fields.Template == 1)
-                            {
+                            {       
                                     $('input[name="Purchase Orders_1"]').val(data.ttemplatesettings[i].fields.Description);
                                     if(data.ttemplatesettings[i].fields.Active == true)
                                     {
                                       $('#Purchase_Orders_1').attr('checked','checked');
                                     }
-
+                                  
                             }
                             if(data.ttemplatesettings[i].fields.Template == 2)
                             {
@@ -234,8 +234,8 @@ Template.purchaseordercard.onRendered(() => {
 
                      }
 
-
-
+            
+                
 
                   }
                   $('.fullScreenSpin').css('display', 'none');
@@ -247,7 +247,7 @@ Template.purchaseordercard.onRendered(() => {
       };
 
       templateObject.getTemplateInfoNew();
-
+   
 templateObject.getLastPOData = async function() {
        let lastBankAccount = "Bank";
        let lastDepartment = defaultDept || "";
@@ -305,9 +305,9 @@ templateObject.getLastPOData = async function() {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+        var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -397,7 +397,7 @@ templateObject.getLastPOData = async function() {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -412,7 +412,7 @@ templateObject.getLastPOData = async function() {
                 supplier_type: "Supplier",
                 supplier_name : customer,
                 supplier_addr : txabillingAddress,
-                 fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                 fields: {"Product Name" : "30", "Description" : "30", "Qty" : "10", "Unit Price" : "10", "Tax" : "10", "Amount" : "10" },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
                 total : grandTotal,
@@ -442,7 +442,7 @@ templateObject.getLastPOData = async function() {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -457,7 +457,7 @@ templateObject.getLastPOData = async function() {
                 supplier_type: "Supplier",
                 supplier_name : customer,
                 supplier_addr : txabillingAddress,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                fields: {"Product Name" : "30", "Description" : "30", "Qty" : "10", "Unit Price" : "10", "Tax" : "10", "Amount" : "10" },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
                 total : grandTotal,
@@ -487,7 +487,7 @@ templateObject.getLastPOData = async function() {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -502,7 +502,7 @@ templateObject.getLastPOData = async function() {
                 supplier_type: "Supplier",
                 supplier_name : customer,
                 supplier_addr : txabillingAddress,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                fields: {"Product Name" : "30", "Description" : "30", "Qty" : "10", "Unit Price" : "10", "Tax" : "10", "Amount" : "10" },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
                 total : grandTotal,
@@ -553,9 +553,9 @@ templateObject.getLastPOData = async function() {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        var customfield1 = $('#edtSaleCustField1').val() || '-';
-        var customfield2 = $('#edtSaleCustField2').val() || '-';
-        var customfield3 = $('#edtSaleCustField3').val() || '-';
+        var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -671,7 +671,7 @@ templateObject.getLastPOData = async function() {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -686,7 +686,7 @@ templateObject.getLastPOData = async function() {
                 supplier_type: "Supplier",
                 supplier_name : customer,
                 supplier_addr : txabillingAddress,
-                 fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                fields: {"Product Name" : "26.07", "Description" : "33", "Qty" : "6.51", "Unit Price" : "11.73", "Tax" : "10", "Amount" : "13" },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
                 total : grandTotal,
@@ -716,7 +716,7 @@ templateObject.getLastPOData = async function() {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -731,7 +731,7 @@ templateObject.getLastPOData = async function() {
                 supplier_type: "Supplier",
                 supplier_name : customer,
                 supplier_addr : txabillingAddress,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                fields: {"Product Name" : "26.07", "Description" : "33", "Qty" : "6.51", "Unit Price" : "11.73", "Tax" : "10", "Amount" : "13" },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
                 total : grandTotal,
@@ -761,7 +761,7 @@ templateObject.getLastPOData = async function() {
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
+                o_state: Session.get('companyState') + ' ' + Session.get('vs1companyPOBox'),
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
@@ -776,7 +776,7 @@ templateObject.getLastPOData = async function() {
                 supplier_type: "Supplier",
                 supplier_name : customer,
                 supplier_addr : txabillingAddress,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                fields: {"Product Name" : "26.07", "Description" : "33", "Qty" : "6.51", "Unit Price" : "11.73", "Tax" : "10", "Amount" : "13" },
                 subtotal :subtotal_total,
                 gst : subtotal_tax,
                 total : grandTotal,
@@ -809,212 +809,209 @@ templateObject.getLastPOData = async function() {
 
     }
 
-    function updateTemplate1(object_invoce) {
-        $("#templatePreviewModal").modal("toggle");
-        if (object_invoce.length > 0) {
+    function updateTemplate1(object_invoce) {    
+            $("#templatePreviewModal").modal("toggle");
+            if (object_invoce.length > 0) {
+            $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
+            $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
+            $("#templatePreviewModal .o_address1").text(
+                object_invoce[0]["o_address"]
+            );
+            $("#templatePreviewModal .o_city").text(object_invoce[0]["o_city"]);
+            $("#templatePreviewModal .o_state").text(object_invoce[0]["o_state"]);
+            $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
+            $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
+            $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
 
-          $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
-          $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
-          $("#templatePreviewModal .o_address1").text(
-            object_invoce[0]["o_address"]
-          );
-          $("#templatePreviewModal .o_city").text(object_invoce[0]["o_city"]);
-          $("#templatePreviewModal .o_state").text(object_invoce[0]["o_state"]);
-          $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
-          $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
-          $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
-
-          if(object_invoce[0]["applied"] == ""){
-            $("#templatePreviewModal .applied").hide()
-            $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
-          }else{
-            $("#templatePreviewModal .applied").show()
-            $("#templatePreviewModal .applied").text("Applied : " +  object_invoce[0]["applied"]);
-          }
-
-
-
-          if(object_invoce[0]["supplier_type"] == ""){
-            $("#templatePreviewModal .customer").hide()
-          }else{
-            $("#templatePreviewModal .customer").show()
-          }
-          $("#templatePreviewModal .customer").empty();
-          $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
-
-          if(object_invoce[0]["supplier_name"] == ""){
-            $("#templatePreviewModal .pdfCustomerName").hide()
-          }else{
-            $("#templatePreviewModal .pdfCustomerName").show()
-          }
-          $("#templatePreviewModal .pdfCustomerName").empty();
-          $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-
-          if(object_invoce[0]["supplier_addr"] == ""){
-            $("#templatePreviewModal .pdfCustomerAddress").hide()
-          }else{
-            $("#templatePreviewModal .pdfCustomerAddress").show()
-          }
-          $("#templatePreviewModal .pdfCustomerAddress").empty();
-          $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-
-
-          $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
-          $("#templatePreviewModal .modal-title").text(
-            object_invoce[0]["title"] + " "+ " Template"
-          );
-
-          if(object_invoce[0]["value"]=="")
-          {
-              $('.print-header-value').text('');
-
-          }
-          else{
-             $('.print-header-value').text(object_invoce[0]["value"]);
-          }
-
-          if(object_invoce[0]["bsb"]=="")
-          {
-              $('#templatePreviewModal .field_payment').hide();
-
-          }
-          else{
-
-              $('#templatePreviewModal .field_payment').show();
-          }
-
-
-          $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
-          $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
-          $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-
-
-          if(object_invoce[0]["date"] == ""){
-            $("#templatePreviewModal .dateNumber").hide();
-          }else{
-            $("#templatePreviewModal .dateNumber").show();
-          }
-
-          $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
-
-          if(object_invoce[0]["pqnumber"] == ""){
-            $("#templatePreviewModal .pdfPONumber").hide();
-          }else{
-            $("#templatePreviewModal .pdfPONumber").show();
-          }
-
-          $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-
-          if(object_invoce[0]["invoicenumber"] == ""){
-            $("#templatePreviewModal .invoiceNumber").hide();
-          }else{
-            $("#templatePreviewModal .invoiceNumber").show();
-          }
-          $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
-
-          if(object_invoce[0]["refnumber"] == ""){
-            $("#templatePreviewModal .refNumber").hide();
-          }else{
-            $("#templatePreviewModal .refNumber").show();
-          }
-          $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
-
-          if(object_invoce[0]["duedate"] == ""){
-            $("#templatePreviewModal .pdfTerms").hide();
-          }else{
-            $("#templatePreviewModal .pdfTerms").show();
-          }
-          $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
-
-          if (object_invoce[0]["paylink"] == "") {
-                $("#templatePreviewModal .link").hide();
-                $("#templatePreviewModal .linkText").hide();
-          } else {
-                $("#templatePreviewModal .link").show();
-                $("#templatePreviewModal .linkText").show();
-          }
-
-          if (object_invoce[0]["showFX"] == "") {
-                $("#templatePreviewModal .showFx").hide();
-                $("#templatePreviewModal .showFxValue").hide();
-         } else {
-                $("#templatePreviewModal .showFx").show();
-                $("#templatePreviewModal .showFxValue").show();
-                $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
-         }
-
-
-          if(object_invoce[0]["customfield1"] == "NA")
-          {
-                  $('#customfieldtablenew').css('display', 'none');
-                  $('#customdatatablenew').css('display', 'none');
-                  $('#templatePreviewModal .customfield1').text('');
-                  $('#templatePreviewModal .customfield2').text('');
-                  $('#templatePreviewModal .customfield3').text('');
-
-
-                  $('#templatePreviewModal .customfield1data').text('');
-                  $('#templatePreviewModal .customfield2data').text('');
-                  $('#templatePreviewModal .customfield3data').text('');
-
-          }
-          else
-          {
-                $('#customfieldtablenew').css('display', 'block');
-                $('#customdatatablenew').css('display', 'block');
-
-                $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
-                $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
-                $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-
-                if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
-                {
-                  $('#templatePreviewModal .customfield1data').text('');
-                }
-                else
-                {
-                  $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
-                }
-
-                if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
-                {
-                  $('#templatePreviewModal .customfield2data').text('');
-                }
-                else
-                {
-                  $('#templatePreviewModal .customfield2data').text( object_invoce[0]["customfield2"]);
-                }
-
-                if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
-                {
-                  $('#templatePreviewModal .customfield3data').text('');
-                }
-                else
-                {
-                  $('#templatePreviewModal .customfield3data').text( object_invoce[0]["customfield3"]);
-                }
+            if(object_invoce[0]["applied"] == ""){
+                $("#templatePreviewModal .applied").hide()
+                $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
+            }else{
+                $("#templatePreviewModal .applied").show()
+                $("#templatePreviewModal .applied").text("Applied : " +  object_invoce[0]["applied"]);
+            }
 
 
 
-          }
+            if(object_invoce[0]["supplier_type"] == ""){
+                $("#templatePreviewModal .customer").hide()
+            }else{
+                $("#templatePreviewModal .customer").show()
+            }
+            $("#templatePreviewModal .customer").empty();
+            $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
 
-          if(object_invoce[0]["customfield1"] == "NA")
-          {
-                $('#customfieldlable').css('display', 'none');
-                $('#customfieldlabledata').css('display', 'none');
-          }
-          else
-          {
-                $('#customfieldlable').css('display', 'block');
-                $('#customfieldlabledata').css('display', 'block');
-          }
+            if(object_invoce[0]["supplier_name"] == ""){
+                $("#templatePreviewModal .pdfCustomerName").hide()
+            }else{
+                $("#templatePreviewModal .pdfCustomerName").show()
+            }
+            $("#templatePreviewModal .pdfCustomerName").empty();
+            $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
+
+            if(object_invoce[0]["supplier_addr"] == ""){
+                $("#templatePreviewModal .pdfCustomerAddress").hide()
+            }else{
+                $("#templatePreviewModal .pdfCustomerAddress").show()
+            }
+            $("#templatePreviewModal .pdfCustomerAddress").empty();
+            $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
+
+
+            $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
+            $("#templatePreviewModal .modal-title").text(
+                object_invoce[0]["title"] + " "+ " Template"
+            );
+
+            if(object_invoce[0]["value"]=="")
+            {
+                $('.print-header').text('');
+
+            }
+            else{
+                $('.print-header').text(object_invoce[0]["value"]);
+            }
+
+            if(object_invoce[0]["bsb"]=="")
+            {
+                $('#templatePreviewModal .field_payment').hide();
+
+            }
+            else{
+
+                $('#templatePreviewModal .field_payment').show();
+            }
+
+
+            $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
+            $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
+            $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
+
+
+            if(object_invoce[0]["date"] == ""){
+                $("#templatePreviewModal .dateNumber").hide();
+            }else{
+                $("#templatePreviewModal .dateNumber").show();
+            }
+
+            $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
+
+            if(object_invoce[0]["pqnumber"] == ""){
+                $("#templatePreviewModal .pdfPONumber").hide();
+            }else{
+                $("#templatePreviewModal .pdfPONumber").show();
+            }
+
+            $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
+
+            if(object_invoce[0]["invoicenumber"] == ""){
+                $("#templatePreviewModal .invoiceNumber").hide();
+            }else{
+                $("#templatePreviewModal .invoiceNumber").show();
+            }
+            $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
+
+            if(object_invoce[0]["refnumber"] == ""){
+                $("#templatePreviewModal .refNumber").hide();
+            }else{
+                $("#templatePreviewModal .refNumber").show();
+            }
+            $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
+
+            if(object_invoce[0]["duedate"] == ""){
+                $("#templatePreviewModal .pdfTerms").hide();
+            }else{
+                $("#templatePreviewModal .pdfTerms").show();
+            }
+            $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
+
+            if (object_invoce[0]["paylink"] == "") {
+                    $("#templatePreviewModal .link").hide();
+                    $("#templatePreviewModal .linkText").hide();
+            } else {
+                    $("#templatePreviewModal .link").show();
+                    $("#templatePreviewModal .linkText").show();
+            }
+
+            if (object_invoce[0]["showFX"] == "") {
+                    $("#templatePreviewModal .showFx").hide();
+                    $("#templatePreviewModal .showFxValue").hide();
+            } else {
+                    $("#templatePreviewModal .showFx").show();
+                    $("#templatePreviewModal .showFxValue").show();
+                    $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
+            }
+
+
+            if(object_invoce[0]["customfield1"] == "NA")
+            {
+                    $('#customfieldtablenew').css('display', 'none');
+                    $('#customdatatablenew').css('display', 'none');
+                    $('#templatePreviewModal .customfield1').text('');
+                    $('#templatePreviewModal .customfield2').text('');
+                    $('#templatePreviewModal .customfield3').text('')
+                    $('#templatePreviewModal .customfield1data').text('');
+                    $('#templatePreviewModal .customfield2data').text('');
+                    $('#templatePreviewModal .customfield3data').text('');
+
+            }
+            else
+            {
+                    $('#customfieldtablenew').css('display', 'block');
+                    $('#customdatatablenew').css('display', 'block');
+
+                    $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
+                    $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
+                    $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
+
+                    if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
+                    {
+                    $('#templatePreviewModal .customfield1data').text('');
+                    }
+                    else
+                    {
+                    $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
+                    }
+
+                    if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
+                    {
+                    $('#templatePreviewModal .customfield2data').text('');
+                    }
+                    else
+                    {
+                    $('#templatePreviewModal .customfield2data').text( object_invoce[0]["customfield2"]);
+                    }
+
+                    if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
+                    {
+                    $('#templatePreviewModal .customfield3data').text('');
+                    }
+                    else
+                    {
+                    $('#templatePreviewModal .customfield3data').text( object_invoce[0]["customfield3"]);
+                    }
+
+
+
+            }
+
+            if(object_invoce[0]["customfield1"] == "NA")
+            {
+                    $('#customfieldlable').css('display', 'none');
+                    $('#customfieldlabledata').css('display', 'none');
+            }
+            else
+            {
+                    $('#customfieldlable').css('display', 'block');
+                    $('#customfieldlabledata').css('display', 'block');
+            }
 
         //   table header
-          var tbl_header = $("#templatePreviewModal .tbl_header")
-          tbl_header.empty()
-          for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
-          }
+            var tbl_header = $("#templatePreviewModal .tbl_header")
+            tbl_header.empty()
+            for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
+                    tbl_header.append("<th style='background:white;color:rgba(0,0,0);width:" + value + "%';>" + key + "</th>")
+            }
         }
 
         // table content
@@ -1023,14 +1020,17 @@ templateObject.getLastPOData = async function() {
          const data = object_invoce[0]["data"]
 
          for(item of data){
-            tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-            var content = ""
-             for(item_temp of item){
-                content = content + "<td>" + item_temp + "</td>"
-             }
-             tbl_content.append(content)
-             tbl_content.append("</tr>")
-         }
+            
+            var html = '';
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+               html = html + "<td>" + item_temp + "</td>";
+            }
+
+            html +="</tr>";
+            tbl_content.append(html);
+          
+        }
 
         // total amount
 
@@ -1073,216 +1073,296 @@ templateObject.getLastPOData = async function() {
     function updateTemplate(object_invoce) {
 
         if (object_invoce.length > 0) {
-            $('#html-2-pdfwrapper_new #printcomment').text(object_invoce[0]["comment"]);
-        $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
-        $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
-        $("#html-2-pdfwrapper_new .o_address1").text(
-            object_invoce[0]["o_address"]
-        );
-        $("#html-2-pdfwrapper_new .o_city").text(object_invoce[0]["o_city"]);
-        $("#html-2-pdfwrapper_new .o_state").text(object_invoce[0]["o_state"]);
-        $("#html-2-pdfwrapper_new .o_reg").text(object_invoce[0]["o_reg"]);
-        $("#html-2-pdfwrapper_new .o_abn").text(object_invoce[0]["o_abn"]);
-        $("#html-2-pdfwrapper_new .o_phone").text(object_invoce[0]["o_phone"]);
+                $('#html-2-pdfwrapper_new #printcomment').text(object_invoce[0]["comment"]);
+                $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
+                $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
+                $("#html-2-pdfwrapper_new .o_address1").text(
+                    object_invoce[0]["o_address"]
+                );
+                $("#html-2-pdfwrapper_new .o_city").text(object_invoce[0]["o_city"]);
+                $("#html-2-pdfwrapper_new .o_state").text(object_invoce[0]["o_state"]);
+                $("#html-2-pdfwrapper_new .o_reg").text(object_invoce[0]["o_reg"]);
+                $("#html-2-pdfwrapper_new .o_abn").text(object_invoce[0]["o_abn"]);
+                $("#html-2-pdfwrapper_new .o_phone").text(object_invoce[0]["o_phone"]);
 
-        if(object_invoce[0]["applied"] == ""){
-            $("#html-2-pdfwrapper_new .applied").hide()
-            $("#html-2-pdfwrapper_new .applied").text(object_invoce[0]["applied"]);
-        }else{
-            $("#html-2-pdfwrapper_new .applied").show()
-            $("#html-2-pdfwrapper_new .applied").text("Applied : " +  object_invoce[0]["applied"]);
-        }
-
-
-
-        if(object_invoce[0]["supplier_type"] == ""){
-            $("#html-2-pdfwrapper_new .customer").hide()
-        }else{
-            $("#html-2-pdfwrapper_new .customer").show()
-        }
-        $("#html-2-pdfwrapper_new .customer").empty();
-        $("#html-2-pdfwrapper_new .customer").append(object_invoce[0]["supplier_type"]);
-
-        if(object_invoce[0]["supplier_name"] == ""){
-            $("#html-2-pdfwrapper_new .pdfCustomerName").hide()
-        }else{
-            $("#html-2-pdfwrapper_new .pdfCustomerName").show()
-        }
-        $("#html-2-pdfwrapper_new .pdfCustomerName").empty();
-        $("#html-2-pdfwrapper_new .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-
-        if(object_invoce[0]["supplier_addr"] == ""){
-            $("#html-2-pdfwrapper_new .pdfCustomerAddress").hide()
-        }else{
-            $("#html-2-pdfwrapper_new .pdfCustomerAddress").show()
-        }
-        $("#html-2-pdfwrapper_new .pdfCustomerAddress").empty();
-        $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-
-
-        $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
-
-        $("#templatePreviewModal .modal-title").text(
-            object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
-         );
-
-        if(object_invoce[0]["value"]=="")
-        {
-              $('.print-header-value').text('');
-
-        }
-        else
-        {
-             $('.print-header-value').text(object_invoce[0]["value"]);
-        }
-
-
-        if(object_invoce[0]["bsb"]=="")
-        {
-            $('#html-2-pdfwrapper_new .field_payment').hide();
-
-        }
-        else{
-
-            $('#html-2-pdfwrapper_new .field_payment').show();
-        }
-
-        $("#html-2-pdfwrapper_new .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
-        $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
-        $("#html-2-pdfwrapper_new .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-
-        $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
-        if(object_invoce[0]["date"] == ""){
-            $("#html-2-pdfwrapper_new .dateNumber").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .dateNumber").show();
-        }
-
-        if (object_invoce[0]["showFX"] == "") {
-            $("#html-2-pdfwrapper_new .showFx").hide();
-            $("#html-2-pdfwrapper_new .showFxValue").hide();
-        } else {
-            $("#html-2-pdfwrapper_new .showFx").show();
-            $("#html-2-pdfwrapper_new .showFxValue").show();
-            $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
-        }
-
-        $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
-
-        if(object_invoce[0]["pqnumber"] == ""){
-            $("#html-2-pdfwrapper_new .pdfPONumber").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .pdfPONumber").show();
-        }
-
-        if(object_invoce[0]["customfield1"] == "NA")
-        {
-                $('#customfieldtablenew').css('display', 'none');
-                $('#customdatatablenew').css('display', 'none');
-                $('#html-2-pdfwrapper_new .customfield1').text('');
-                $('#html-2-pdfwrapper_new .customfield2').text('');
-                $('#html-2-pdfwrapper_new .customfield3').text('');
-
-
-                $('#html-2-pdfwrapper_new .customfield1data').text('');
-                $('#html-2-pdfwrapper_new .customfield2data').text('');
-                $('#html-2-pdfwrapper_new .customfield3data').text('');
-
-        }
-        else
-        {
-              $('#customfieldtablenew').css('display', 'block');
-              $('#customdatatablenew').css('display', 'block');
-
-              $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
-              $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
-              $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-
-              if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
-              {
-                $('#html-2-pdfwrapper_new .customfield1data').text('');
-              }
-              else
-              {
-                $('#html-2-pdfwrapper_new .customfield1data').text(object_invoce[0]["customfield1"]);
-              }
-
-              if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
-              {
-                $('#html-2-pdfwrapper_new .customfield2data').text('');
-              }
-              else
-              {
-                $('#html-2-pdfwrapper_new .customfield2data').text( object_invoce[0]["customfield2"]);
-              }
-
-              if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
-              {
-                $('#html-2-pdfwrapper_new .customfield3data').text('');
-              }
-              else
-              {
-                $('#html-2-pdfwrapper_new .customfield3data').text( object_invoce[0]["customfield3"]);
-              }
+                if(object_invoce[0]["applied"] == ""){
+                    $("#html-2-pdfwrapper_new .applied").hide()
+                    $("#html-2-pdfwrapper_new .applied").text(object_invoce[0]["applied"]);
+                }else{
+                    $("#html-2-pdfwrapper_new .applied").show()
+                    $("#html-2-pdfwrapper_new .applied").text("Applied : " +  object_invoce[0]["applied"]);
+                }
 
 
 
-        }
+                if(object_invoce[0]["supplier_type"] == ""){
+                    $("#html-2-pdfwrapper_new .customer").hide()
+                }else{
+                    $("#html-2-pdfwrapper_new .customer").show()
+                }
+                $("#html-2-pdfwrapper_new .customer").empty();
+                $("#html-2-pdfwrapper_new .customer").append(object_invoce[0]["supplier_type"]);
+
+                if(object_invoce[0]["supplier_name"] == ""){
+                    $("#html-2-pdfwrapper_new .pdfCustomerName").hide()
+                }else{
+                    $("#html-2-pdfwrapper_new .pdfCustomerName").show()
+                }
+                $("#html-2-pdfwrapper_new .pdfCustomerName").empty();
+                $("#html-2-pdfwrapper_new .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
+
+                if(object_invoce[0]["supplier_addr"] == ""){
+                    $("#html-2-pdfwrapper_new .pdfCustomerAddress").hide()
+                }else{
+                    $("#html-2-pdfwrapper_new .pdfCustomerAddress").show()
+                }
+                $("#html-2-pdfwrapper_new .pdfCustomerAddress").empty();
+                $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
+
+
+                $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
+
+                $("#templatePreviewModal .modal-title").text(
+                    object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
+                );
+
+                if(object_invoce[0]["value"]=="")
+                {
+                    $('.print-header').text('');
+
+                }
+                else{
+                    $('.print-header').text(object_invoce[0]["value"]);
+                }
+
+
+                if(object_invoce[0]["bsb"]=="")
+                {
+                    $('#html-2-pdfwrapper_new .field_payment').hide();
+
+                }
+                else{
+
+                    $('#html-2-pdfwrapper_new .field_payment').show();
+                }
+
+                $("#html-2-pdfwrapper_new .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
+                $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
+                $("#html-2-pdfwrapper_new .swift").text("Swift Code : " + object_invoce[0]["swift"]);
+
+                $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
+                if(object_invoce[0]["date"] == ""){
+                    $("#html-2-pdfwrapper_new .dateNumber").hide();
+                }else{
+                    $("#html-2-pdfwrapper_new .dateNumber").show();
+                }
+
+                if (object_invoce[0]["showFX"] == "") {
+                    $("#html-2-pdfwrapper_new .showFx").hide();
+                    $("#html-2-pdfwrapper_new .showFxValue").hide();
+                } else {
+                    $("#html-2-pdfwrapper_new .showFx").show();
+                    $("#html-2-pdfwrapper_new .showFxValue").show();
+                    $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
+                }
+
+                $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
+
+                if(object_invoce[0]["pqnumber"] == ""){
+                    $("#html-2-pdfwrapper_new .pdfPONumber").hide();
+                }else{
+                    $("#html-2-pdfwrapper_new .pdfPONumber").show();
+                }
+
+                if(object_invoce[0]["customfield1"] == "NA")
+                {
+                        $('#customfieldtablenew').css('display', 'none');
+                        $('#customdatatablenew').css('display', 'none');
+                        $('#html-2-pdfwrapper_new .customfield1').text('');
+                        $('#html-2-pdfwrapper_new .customfield2').text('');
+                        $('#html-2-pdfwrapper_new .customfield3').text('');
+
+
+                        $('#html-2-pdfwrapper_new .customfield1data').text('');
+                        $('#html-2-pdfwrapper_new .customfield2data').text('');
+                        $('#html-2-pdfwrapper_new .customfield3data').text('');
+
+                }
+                else
+                {
+                    $('#customfieldtablenew').css('display', 'block');
+                    $('#customdatatablenew').css('display', 'block');
+
+                    $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
+                    $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
+                    $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
+
+                    if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
+                    {
+                        $('#html-2-pdfwrapper_new .customfield1data').text('');
+                    }
+                    else
+                    {
+                        $('#html-2-pdfwrapper_new .customfield1data').text(object_invoce[0]["customfield1"]);
+                    }
+
+                    if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
+                    {
+                        $('#html-2-pdfwrapper_new .customfield2data').text('');
+                    }
+                    else
+                    {
+                        $('#html-2-pdfwrapper_new .customfield2data').text( object_invoce[0]["customfield2"]);
+                    }
+
+                    if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
+                    {
+                        $('#html-2-pdfwrapper_new .customfield3data').text('');
+                    }
+                    else
+                    {
+                        $('#html-2-pdfwrapper_new .customfield3data').text( object_invoce[0]["customfield3"]);
+                    }
 
 
 
-        $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
+                }
 
-        if(object_invoce[0]["invoicenumber"] == ""){
-            $("#html-2-pdfwrapper_new .invoiceNumber").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .invoiceNumber").show();
-        }
 
-        $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
 
-        if(object_invoce[0]["refnumber"] == ""){
-            $("#html-2-pdfwrapper_new .refNumber").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .refNumber").show();
-        }
-        $("#html-2-pdfwrapper_new .ro").text(object_invoce[0]["refnumber"]);
+                $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
 
-        if(object_invoce[0]["duedate"] == ""){
-            $("#html-2-pdfwrapper_new .pdfTerms").hide();
-        }else{
-            $("#html-2-pdfwrapper_new .pdfTerms").show();
-        }
-        $("#html-2-pdfwrapper_new .due").text(object_invoce[0]["duedate"]);
+                    if(object_invoce[0]["invoicenumber"] == ""){
+                        $("#html-2-pdfwrapper_new .invoiceNumber").hide();
+                    }else{
+                        $("#html-2-pdfwrapper_new .invoiceNumber").show();
+                    }
 
-        if (object_invoce[0]["paylink"] == "") {
-            $("#html-2-pdfwrapper_new .link").hide();
-            $("#html-2-pdfwrapper_new .linkText").hide();
-        } else {
-            $("#html-2-pdfwrapper_new .link").show();
-            $("#html-2-pdfwrapper_new .linkText").show();
-        }
+                    $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
 
-         if(object_invoce[0]["customfield1"] == "")
-         {
-                    $('#customfieldlable').css('display', 'none');
-                    $('#customfieldlabledata').css('display', 'none');
+                    if(object_invoce[0]["refnumber"] == ""){
+                        $("#html-2-pdfwrapper_new .refNumber").hide();
+                    }else{
+                        $("#html-2-pdfwrapper_new .refNumber").show();
+                    }
+                    $("#html-2-pdfwrapper_new .ro").text(object_invoce[0]["refnumber"]);
 
-         }
-         else
-         {
-                    $('#customfieldlable').css('display', 'block');
-                    $('#customfieldlabledata').css('display', 'block');
-         }
+                    if(object_invoce[0]["duedate"] == ""){
+                        $("#html-2-pdfwrapper_new .pdfTerms").hide();
+                    }else{
+                        $("#html-2-pdfwrapper_new .pdfTerms").show();
+                    }
+                    $("#html-2-pdfwrapper_new .due").text(object_invoce[0]["duedate"]);
+
+                    if (object_invoce[0]["paylink"] == "") {
+                        $("#html-2-pdfwrapper_new .link").hide();
+                        $("#html-2-pdfwrapper_new .linkText").hide();
+                    } else {
+                        $("#html-2-pdfwrapper_new .link").show();
+                        $("#html-2-pdfwrapper_new .linkText").show();
+                    }
+
+                    if(object_invoce[0]["customfield1"] == "")
+                    {
+                                $('#customfieldlable').css('display', 'none');
+                                $('#customfieldlabledata').css('display', 'none');
+
+                    }
+                    else
+                    {
+                                $('#customfieldlable').css('display', 'block');
+                                $('#customfieldlabledata').css('display', 'block');
+                    }
+                    
+                    
+                    
+
+
+
+
 
         //   table header
-        var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
-        tbl_header.empty()
-        for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
+                var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
+                tbl_header.empty()
+                    var count = 0;
+                for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
+                        
+                        if(count == 0)
+                            {
+                                tbl_header.append("<th style='width:200px;background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                            }
+                            else if(count == 1)
+                            {
+                                tbl_header.append("<th style='width:250px;background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                            }
+                            else if(count == 2)
+                            {
+                                tbl_header.append("<th style='text-align: right; width: 50px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                            }
+                            else if(count == 3)
+                            {
+                                tbl_header.append("<th style='text-align: right; width: 90px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                            }
+                            else if(count == 4)
+                            {           
+                                tbl_header.append("<th style='text-align: right; width: 77px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                            }
+                            else
+                            {
+                                
+                                tbl_header.append("<th style='text-align: right; width: 100px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
+                            }
+                        
+                            count++;
+                }
+
+                if (object_invoce[0]["taxItems"]) {
+                    let taxItems = object_invoce[0]["taxItems"];
+                    $("#html-2-pdfwrapper_new #tax_list_print").html("");
+                    Object.keys(taxItems).map((code) => {
+                        let html = `
+                            <div style="width: 100%; display: flex;">
+                                <div style="padding-right: 16px; width: 50%;">
+                                    <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                        ${code}</p>
+                                </div>
+                                <div style="padding-left: 16px; width: 50%;">
+                                    <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                        $ ${taxItems[code]}</p>
+                                </div>
+                            </div>
+                        `;
+                        $("#html-2-pdfwrapper_new #tax_list_print").append(html);
+                    });
+                }
+                $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
         }
 
-            if (object_invoce[0]["taxItems"]) {
+         // table content
+        var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
+        tbl_content.empty()
+        const data = object_invoce[0]["data"]
+
+        for(item of data){
+            
+            var html = '';
+            var count = 0;
+            html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
+            for(item_temp of item){
+               
+                if(count > 1)
+                {
+                  
+                        html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
+                    
+                   
+                }
+                else
+                {
+                    html = html + "<td>" + item_temp + "</td>";
+                }
+                count++
+                if (object_invoce[0]["taxItems"]) {
                 let taxItems = object_invoce[0]["taxItems"];
                 $("#html-2-pdfwrapper_new #tax_list_print").html("");
                 Object.keys(taxItems).map((code) => {
@@ -1302,23 +1382,13 @@ templateObject.getLastPOData = async function() {
                 });
             }
             $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
-        }
 
-        // table content
-        var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
-        tbl_content.empty()
-        const data = object_invoce[0]["data"]
-
-        for(item of data){
-            tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
-            var content = ""
-            for(item_temp of item){
-                content = content + "<td>" + item_temp + "</td>"
             }
-            tbl_content.append(content)
-            tbl_content.append("</tr>")
-        }
 
+            html +="</tr>";
+            tbl_content.append(html);
+          
+        }
         // total amount
 
         if(object_invoce[0]["subtotal"] == "")
@@ -2325,7 +2395,6 @@ templateObject.getLastPOData = async function() {
 
                     }
                 }).catch(function(err) {
-                  console.log(err);
                     purchaseService.getOnePurchaseOrderdataEx(currentPurchaseOrder).then(function(data) {
                         $('.fullScreenSpin').css('display', 'none');
                         let lineItems = [];
@@ -4290,116 +4359,126 @@ templateObject.getLastPOData = async function() {
     exportSalesToPdf = async function (template_title,number)
     {
 
-
-        if(template_title == 'Purchase Orders')
+        if(template_title == 'Purchase Orders' && number == 1)
         {
-            await showPurchaseOrder(template_title,number);
-
+               exportSalesToPdf1();
         }
-
-
-        let margins = {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 100
-        };
-
-        let quoteData =  templateObject.purchaseorderrecord.get();
-        document.getElementById('html-2-pdfwrapper_new').style.display="block";
-        var source = document.getElementById('html-2-pdfwrapper_new');
-
-        let file = "Purchase order.pdf";
-        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+        else
+        {
             if(template_title == 'Purchase Orders')
-            {
-                file = 'Purchase Order-' + quoteData.id + '.pdf';
-            }
+                {
+                    await showPurchaseOrder(template_title,number);
+
+                }
+
+
+                let margins = {
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    width: 100
+                };
+
+                let quoteData =  templateObject.purchaseorderrecord.get();
+                document.getElementById('html-2-pdfwrapper_new').style.display="block";
+                var source = document.getElementById('html-2-pdfwrapper_new');
+
+                let file = "Purchase order.pdf";
+                if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                    if(template_title == 'Purchase Orders')
+                    {
+                        file = 'Purchase Order-' + quoteData.id + '.pdf';
+                    }
+
+
+                }
+
+                var opt = {
+                    margin: 0,
+                    filename: file,
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 2
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'a4',
+                        orientation: 'portrait'
+                    }
+                };
+
+
+
+                html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data=>{
+                    let attachment = [];
+                    let templateObject = Template.instance();
+
+                    let purchaseOrderId = FlowRouter.current().queryParams.id? parseInt(FlowRouter.current().queryParams.id) : 0;
+                    let pdfObject = "";
+
+                    let base64data = data.split(',')[1];
+                    pdfObject = {
+                        filename: 'Purchase Order-' + purchaseOrderId + '.pdf',
+                        content: base64data,
+                        encoding: 'base64'
+                    };
+                    attachment.push(pdfObject);
+
+                    let values = [];
+                    let basedOnTypeStorages = Object.keys(localStorage);
+                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                        let employeeId = storage.split('_')[2];
+                        // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        return storage.includes('BasedOnType_');
+                    });
+                    let j = basedOnTypeStorages.length;
+                    if (j > 0) {
+                        while (j--) {
+                            values.push(localStorage.getItem(basedOnTypeStorages[j]));
+                        }
+                    }
+                    values.forEach(value => {
+                        let reportData = JSON.parse(value);
+                        let temp = {... reportData};
+                        
+                        temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                        temp.attachments = attachment;
+                        if (temp.BasedOnType.includes("P")) {
+                            if (temp.FormID == 1) {
+                                let formIds = temp.FormIDs.split(',');
+                                if (formIds.includes("69")) {
+                                    temp.FormID = 69;
+                                    Meteor.call('sendNormalEmail', temp);
+                                }
+                            } else {
+                                if (temp.FormID == 69)
+                                    Meteor.call('sendNormalEmail', temp);
+                            }
+                        }
+                    });
+                    html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                        if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                            //$(".btnSave").trigger("click");
+                            $('#html-2-pdfwrapper_new').css('display', 'none');
+                            $('.fullScreenSpin').css('display', 'none');
+                        } else {
+                            document.getElementById('html-2-pdfwrapper_new').style.display="none";
+                            $('#html-2-pdfwrapper_new').css('display', 'none');
+                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    });
+                })
+
+                return true;
 
 
         }
 
-        var opt = {
-            margin: 0,
-            filename: file,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        };
-
-
-
-        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data=>{
-            let attachment = [];
-            let templateObject = Template.instance();
-
-            let purchaseOrderId = FlowRouter.current().queryParams.id? parseInt(FlowRouter.current().queryParams.id) : 0;
-            let pdfObject = "";
-
-            let base64data = data.split(',')[1];
-            pdfObject = {
-                filename: 'Purchase Order-' + purchaseOrderId + '.pdf',
-                content: base64data,
-                encoding: 'base64'
-            };
-            attachment.push(pdfObject);
-
-            let values = [];
-            let basedOnTypeStorages = Object.keys(localStorage);
-            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                let employeeId = storage.split('_')[2];
-                // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-                return storage.includes('BasedOnType_');
-            });
-            let j = basedOnTypeStorages.length;
-            if (j > 0) {
-                while (j--) {
-                    values.push(localStorage.getItem(basedOnTypeStorages[j]));
-                }
-            }
-            values.forEach(value => {
-                let reportData = JSON.parse(value);
-                let temp = {... reportData};
-
-                temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                temp.attachments = attachment;
-                if (temp.BasedOnType.includes("P")) {
-                    if (temp.FormID == 1) {
-                        let formIds = temp.FormIDs.split(',');
-                        if (formIds.includes("69")) {
-                            temp.FormID = 69;
-                            Meteor.call('sendNormalEmail', temp);
-                        }
-                    } else {
-                        if (temp.FormID == 69)
-                            Meteor.call('sendNormalEmail', temp);
-                    }
-                }
-            });
-            html2pdf().set(opt).from(source).save().then(function (dataObject) {
-                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                    //$(".btnSave").trigger("click");
-                    $('#html-2-pdfwrapper_new').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
-                    document.getElementById('html-2-pdfwrapper_new').style.display="none";
-                    $('#html-2-pdfwrapper_new').css('display', 'none');
-                    $('.fullScreenSpin').css('display', 'none');
-                }
-            });
-        })
-
-        return true;
+        
 
 
 
@@ -4408,7 +4487,7 @@ templateObject.getLastPOData = async function() {
 
     exportSalesToPdf1 = function() {
         let id = $('.printID').attr("id");
-
+        document.getElementById('html-2-pdfwrapper').style.display = "block";
         var source = document.getElementById('html-2-pdfwrapper');
         let file = "Purchase Order.pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -6634,7 +6713,7 @@ Template.purchaseordercard.events({
     {
         if($('#choosetemplate').is(':checked'))
         {
-            $('#confirmprint').modal('show');
+            $('#templateselection').modal('show');
         }
         else
         {
@@ -6679,177 +6758,177 @@ Template.purchaseordercard.events({
 
         sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Purchase Orders",
                                 GlobalRef:"Purchase Orders",
                                 Description:$('input[name="Purchase Orders_1"]').val(),
                                 Template:"1",
                                 Active:purchase_order == 1 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                    
               });
-
-
+             
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
             }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Purchase Orders",
                                 Description:$('input[name="Purchase Orders_1"]').val(),
                                 Template:"1",
                                 Active:purchase_order == 1 ? true:false,
-                            }
+                            }            
                     }
-
+                
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));                                  
                         });
-
+                      
                       }).catch(function (err) {
-
-                      });
-
+                      
+                      });  
+    
             });
-
-
+    
+    
           sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Purchase Orders",
                                 GlobalRef:"Purchase Orders",
                                 Description:$('input[name="Purchase Orders_2"]').val(),
                                 Template:"2",
                                 Active:purchase_order == 2 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                     
               });
-
-
+              
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Purchase Orders",
                                   Description:$('input[name="Purchase Orders_2"]').val(),
                                   Template:"2",
                                   Active:purchase_order == 2 ? true:false,
-                            }
+                            }            
                     }
-
+                
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));    
+                              
                         });
-
-
+                      
+                
                       }).catch(function (err) {
-
-
-
-                      });
-
+                
+                        
+                  
+                      });  
+    
           });
-
-
+    
+    
           sideBarService.getTemplateNameandEmployeId("Purchase Orders",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;
+            var id = templateid[0].fields.ID;    
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{
-                                ID:parseInt(id),
+            fields:{        
+                                ID:parseInt(id),                      
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Purchase Orders",
                                 GlobalRef:"Purchase Orders",
                                 Description:$('input[name="Purchase Orders_3"]').val(),
                                 Template:"3",
                                 Active:purchase_order == 3 ? true:false,
-                    }
+                    }            
             }
-
+        
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+        
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                addVS1Data('TTemplateSettings', JSON.stringify(data));     
+                   
               });
-
+        
             }).catch(function (err) {
-
-
-
+        
+              
+          
             });
-
+        
           }).catch(function (err) {
-
+                    
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{
+                    fields:{                                                                  
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Purchase Orders",
                                   Description:$('input[name="Purchase Orders_3"]').val(),
                                   Template:"3",
                                   Active:purchase_order == 3 ? true:false,
-                            }
+                            }            
                     }
-
+                
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-
+                
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));
-
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));   
+                                   
                         });
-
+                
                       }).catch(function (err) {
-
-
-
-                      });
-
+                
+                        
+                  
+                      });  
+    
           });
-
+      
         $('#html-2-pdfwrapper-new').css('display', 'block');
         if ($('.edtCustomerEmail').val() != "") {
             $('.pdfCustomerName').html($('#edtCustomerName').val());
