@@ -6334,6 +6334,15 @@ Template.employeescard.events({
         $('.fullScreenSpin').css('display', 'none');
     },
 
+    'click .btnEditPayNote': async function( event ){
+        event.target.data
+        let ID = $(event.target).data('id');
+        let NotesDesc = $(event.target).closest('tr').find('.colEmpPayrollNotesDesc').text();
+        $('#payRollNoteID').val(ID);
+        $('#payRollNotes').val(NotesDesc);
+        $('#newNoteModal').modal('show');
+    },
+
     'click #saveobReimbursement': async function(event) {
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -6708,6 +6717,7 @@ Template.employeescard.events({
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let Notes = $('#payRollNotes').val();
+        let ID = $('#payRollNoteID').val();
         if(Notes == ''){
             swal({
                 title: "Error",
@@ -6719,6 +6729,7 @@ Template.employeescard.events({
             let noteSetting = new PayNotes({
                 type: "TPayNotes",
                 fields: new PayNotesFields({
+                    ID: parseInt(ID),
                     EmployeeID: parseInt(employeeID),
                     Notes: Notes,
                     CreatedAt: moment(),
@@ -6738,6 +6749,7 @@ Template.employeescard.events({
                     await templateObject.saveNotesLocalDB();
                     await templateObject.getPayNotesTypes();
                     $('#payRollNotes').val('');
+                    $('#payRollNoteID').val(0)
                     $('#newNoteModal').modal('hide');
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
