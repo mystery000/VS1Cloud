@@ -1,3 +1,4 @@
+import { ContactService } from "../../contacts/contact-service";
 import { ReportService } from "../report-service";
 import 'jQuery.print/jQuery.print.js';
 import { UtilityService } from "../../utility-service";
@@ -8,8 +9,8 @@ import { AccountService } from "../../accounts/account-service";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
-let sideBarService = new SideBarService();
 
+let sideBarService = new SideBarService();
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 
@@ -18,7 +19,8 @@ Template.accountant_companyastrustee.onCreated(() => {
     templateObject.countryList = new ReactiveVar([]);
     templateObject.countryData = new ReactiveVar();
     templateObject.datatablerecords = new ReactiveVar([]);
-    templateObject.accountantPanList = new ReactiveVar([]);
+    templateObject.accountPanList = new ReactiveVar([]);
+    templateObject.accountPanList1 = new ReactiveVar([]);
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.currentYear = new ReactiveVar();
     templateObject.currentMonth = new ReactiveVar();
@@ -29,17 +31,56 @@ Template.accountant_companyastrustee.onCreated(() => {
     templateObject.balancesheetList = new ReactiveVar([]);
     templateObject.profitList = new ReactiveVar([]);
     templateObject.reportOptions = new ReactiveVar();
+
+    templateObject.availableCategories = new ReactiveVar([]);
+    templateObject.isBankAccount = new ReactiveVar();
+    templateObject.totalEquity = new ReactiveVar();
+    templateObject.isBankAccount.set(false);
 });
 
 Template.accountant_companyastrustee.onRendered(() => {
 
     const templateObject = Template.instance();
     let accountService = new AccountService();
+    let contactService = new ContactService();
     let countries = [];
     const accountTypeList = [];
     const dataTableList = [];
+    let categories = [];
+    let categoryAccountList = [];
 
-    templateObject.accountantPanList.set([{
+    templateObject.getReceiptCategoryList = function() {
+        getVS1Data('TReceiptCategory').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getReceiptCategory().then(function(data) {
+                    setReceiptCategory(data);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                setReceiptCategory(data);
+            }
+        }).catch(function(err) {
+            sideBarService.getReceiptCategory().then(function(data) {
+                setReceiptCategory(data);
+            });
+        });
+    };
+
+    function setReceiptCategory(data) {
+        for (let i in data.treceiptcategory) {
+            if (data.treceiptcategory.hasOwnProperty(i)) {
+                if (data.treceiptcategory[i].CategoryName != "") {
+                    categories.push(data.treceiptcategory[i].CategoryName);
+                }
+            }
+        }
+
+        $('.fullScreenSpin').css('display', 'none');
+        templateObject.getAccountLists();
+    }
+    templateObject.getReceiptCategoryList();
+
+    templateObject.accountPanList.set([{
         no: 2,
         name: "Cash and Cash Equivalents",
     }, {
@@ -65,6 +106,17 @@ Template.accountant_companyastrustee.onRendered(() => {
         name: "Payables",
     }]);
 
+    templateObject.accountPanList1.set([{
+        no: 11,
+        name: "Current Year Earnings",
+    }, {
+        no: 12,
+        name: "Net Trust Income for Distribution",
+    }, {
+        no: 13,
+        name: "Undistributed Trust Income",
+    }]);
+
 
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
@@ -80,6 +132,17 @@ Template.accountant_companyastrustee.onRendered(() => {
                 temp.className = "colBalance text-danger";
             }
         }
+    }
+
+    let usedCategories = [];
+    let currentId = FlowRouter.current().context.hash;
+    if (currentId === "addNewAccount" || currentId === "newaccount") {
+        setTimeout(function() {
+            $(".isBankAccount").addClass("isNotBankAccount");
+            $(".isCreditAccount").addClass("isNotCreditAccount");
+            $("#addNewAccount").modal("show");
+            //$('#btnAddNewAccounts').click();
+        }, 500);
     }
 
     var countryService = new CountryService();
@@ -174,13 +237,13 @@ Template.accountant_companyastrustee.onRendered(() => {
                 }
             }
 
-            if (!isNaN(data.taccountvs1[i].Balance)) {
-                accBalance =
-                    utilityService.modifynegativeCurrencyFormat(
-                        lineData.Balance
-                    ) || 0.0;
+            if (!isNaN(lineData.Balance)) {
+                accBalance = utilityService.modifynegativeCurrencyFormat(lineData.Balance) || 0.0;
             } else {
                 accBalance = Currency + "0.00";
+            }
+            if (data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != '') {
+                usedCategories.push(data.taccountvs1[i].fields);
             }
 
             var dataList = {
@@ -198,53 +261,50 @@ Template.accountant_companyastrustee.onRendered(() => {
                 swiftcode: lineData.Extra || "",
                 routingNo: lineData.BankCode || "",
                 apcanumber: lineData.BankNumber || "",
+                balanceNumber: lineData.Balance || 0.0,
                 balance: accBalance || 0.0,
                 isheader: lineData.IsHeader || false,
                 cardnumber: lineData.CarNumber || "",
                 expirydate: lineData.ExpiryDate || "",
                 cvc: lineData.CVC || "",
                 useReceiptClaim: lineData.AllowExpenseClaim || false,
-                expenseCategory: lineData.ReceiptCategory || ""
+                expenseCategory: lineData.AccountGroup || ""
             };
             dataTableList.push(dataList);
         }
 
+        usedCategories = [...new Set(usedCategories)];
+        let availableCategories = categories.filter((item) => !usedCategories.includes(item));
+        templateObject.availableCategories.set(availableCategories);
         templateObject.datatablerecords.set(dataTableList);
 
+        categories.forEach((citem, j) => {
+            let cdataList = null;
+            let match = usedCategories.filter((item) => (item.ReceiptCategory == citem));
+            if (match.length > 0) {
+                let temp = match[0];
+                cdataList = [
+                    citem,
+                    temp.AccountName || '',
+                    temp.Description || '',
+                    temp.AccountNumber || '',
+                    temp.TaxCode || '',
+                    temp.ID || ''
+                ];
+            } else {
+                cdataList = [
+                    citem,
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                ];
+            }
+            categoryAccountList.push(cdataList);
+        });
+
         if (templateObject.datatablerecords.get()) {
-            Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "tblAccountOverview",
-                function(error, result) {
-                    if (error) {} else {
-                        if (result) {
-                            for (let i = 0; i < result.customFields.length; i++) {
-                                let customcolumn = result.customFields;
-                                let columData = customcolumn[i].label;
-                                let columHeaderUpdate = customcolumn[
-                                    i
-                                ].thclass.replace(/ /g, ".");
-                                let hiddenColumn = customcolumn[i].hidden;
-                                let columnClass = columHeaderUpdate.split(".")[1];
-                                let columnWidth = customcolumn[i].width;
-                                let columnindex = customcolumn[i].index + 1;
-
-                                if (hiddenColumn == true) {
-                                    $("." + columnClass + "").addClass("hiddenColumn");
-                                    $("." + columnClass + "").removeClass("showColumn");
-                                } else if (hiddenColumn == false) {
-                                    $("." + columnClass + "").removeClass(
-                                        "hiddenColumn"
-                                    );
-                                    $("." + columnClass + "").addClass("showColumn");
-                                }
-                            }
-                        }
-                    }
-                }
-            );
-
             setTimeout(function() {
                 MakeNegative();
             }, 100);
@@ -252,7 +312,41 @@ Template.accountant_companyastrustee.onRendered(() => {
 
         $(".fullScreenSpin").css("display", "none");
         setTimeout(function() {
-            // //$.fn.dataTable.moment('DD/MM/YY');
+            if (categoryAccountList.length > 0) {
+                $('#tblCategory').dataTable({
+                    data: categoryAccountList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    paging: true,
+                    "aaSorting": [],
+                    "orderMulti": true,
+                    columnDefs: [
+                        { className: "colReceiptCategory", "targets": [0] },
+                        { className: "colAccountName", "targets": [1] },
+                        { className: "colAccountDesc", "targets": [2] },
+                        { className: "colAccountNumber", "targets": [3] },
+                        { className: "colTaxCode", "targets": [4] },
+                        { className: "colAccountID hiddenColumn", "targets": [5] }
+                    ],
+                    // select: true,
+                    // destroy: true,
+                    colReorder: true,
+                    "order": [
+                        [0, "asc"]
+                    ],
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [
+                        [initialDatatableLoad, -1],
+                        [initialDatatableLoad, "All"]
+                    ],
+                    info: true,
+                    responsive: true,
+                    "fnInitComplete": function() {
+                        $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
+                        $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
+                    }
+                });
+            }
+
             $("#tblAccountOverview")
                 .DataTable({
                     columnDefs: [
@@ -380,53 +474,190 @@ Template.accountant_companyastrustee.onRendered(() => {
         var currentDate = new Date();
         var begunDate = moment(currentDate).format("DD/MM/YYYY");
         templateObject.dateAsAt.set(begunDate);
+        let supplierID = localStorage.getItem('VS1Accountant');
 
-        let accountantID = FlowRouter.getParam("_id");
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let endMonth = "06";
+        templateObject.endMonth.set(endMonth);
+        templateObject.currentYear.set(new Date().getFullYear());
+        templateObject.currentMonth.set(new Date().getMonth());
+        templateObject.currentDate.set(new Date().getDate() + " " + months[new Date().getMonth()] + " " + new Date().getFullYear());
 
-        getVS1Data('TReportsAccountantsCategory').then(function(dataObject) {
+        var currentDate2 = new Date(new Date().getFullYear(), (parseInt(endMonth)), 0);
+        templateObject.endDate.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
+        var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+
+        getVS1Data('TSupplierVS1').then(function(dataObject) {
+            if (dataObject.length === 0) {
+                contactService.getOneSupplierDataEx(supplierID).then(function(data) {
+                    setOneSupplierDataEx(data);
+                });
+            } else {
                 let data = JSON.parse(dataObject[0].data);
-                var dataInfo = {
-                    id: data.Id || '',
-                    firstname: data.FirstName || '-',
-                    lastname: data.LastName || '-',
-                    companyname: data.CompanyName || '-',
-                    address: data.Address || '-',
-                    towncity: data.TownCity || '-',
-                    postalzip: data.PostalZip || '-',
-                    stateregion: data.StateRegion || '-',
-                    country: data.Country || '-',
-                };
 
-                let headerHtml = "<div style='border-top:1px solid #858796; width:172px; margin-bottom:12px'></div>";
-                headerHtml += "<span style='float:left; padding-bottom:8px'>" + dataInfo.firstname + " " + dataInfo.lastname + ", CPA</span>";
-                headerHtml += "<span style='float:left; padding-bottom:8px'><b>OnPoint Advisory</b></span>";
-                headerHtml += "<span style='float:left; padding-bottom:20px'>" + dataInfo.address + "<br/>" + dataInfo.towncity + ", " + dataInfo.postalzip + ", " + dataInfo.stateregion + ", " + dataInfo.country + "</span>";
-                headerHtml += "<span style='float:left;'>Dated: 31 August 2021</span>";
-
-                $("#reportsAccountantHeader").html(headerHtml);
-            })
-            .catch(function(err) {
-                // taxRateService.getAccountantCategory().then(function (data) {
-                //     for(let i=0; i<data.tdeptclass.length; i++){
-                //         var dataList = {
-                //             id: data.tdeptclass[i].Id || '',
-                //             firstname: data.tdeptclass[i].FirstName || '-',
-                //             lastname: data.tdeptclass[i].LastName || '-',
-                //             companyname: data.tdeptclass[i].CompanyName || '-',
-                //             address: data.tdeptclass[i].Address || '-',
-                //             docname: data.tdeptclass[i].DocName || '-',
-                //             towncity: data.tdeptclass[i].TownCity || '-',
-                //             postalzip: data.tdeptclass[i].PostalZip || '-',
-                //             stateregion: data.tdeptclass[i].StateRegion || '-',
-                //             country: data.tdeptclass[i].Country || '-',
-                //             status:data.tdeptclass[i].Active || 'false',
-                //         };
-                //     }
-                // }).catch(function (err) {
-                // });
+                let useData = data.tsuppliervs1;
+                let added = false;
+                for (let i = 0; i < useData.length; i++) {
+                    if (parseInt(useData[i].fields.ID) === parseInt(supplierID)) {
+                        added = true;
+                        setOneSupplierDataEx(useData[i]);
+                    }
+                }
+                if (!added) {
+                    contactService.getOneSupplierDataEx(supplierID).then(function(data) {
+                        setOneSupplierDataEx(data);
+                    });
+                }
+            }
+        }).catch(function(err) {
+            contactService.getOneSupplierDataEx(supplierID).then(function(data) {
+                setOneSupplierDataEx(data);
             });
+        });
+
+        function setOneSupplierDataEx(data) {
+            let lineItemObj = {
+                id: data.fields.ID,
+                lid: 'Edit Supplier',
+                company: data.fields.ClientName || '',
+                email: data.fields.Email || '',
+                title: data.fields.Title || '',
+                firstname: data.fields.FirstName || '',
+                middlename: data.fields.CUSTFLD10 || '',
+                lastname: data.fields.LastName || '',
+                tfn: '' || '',
+                phone: data.fields.Phone || '',
+                mobile: data.fields.Mobile || '',
+                fax: data.fields.Faxnumber || '',
+                skype: data.fields.SkypeName || '',
+                website: data.fields.URL || '',
+                shippingaddress: data.fields.Street || '',
+                scity: data.fields.Street2 || '',
+                sstate: data.fields.State || '',
+                spostalcode: data.fields.Postcode || '',
+                scountry: data.fields.Country || LoggedCountry,
+                billingaddress: data.fields.BillStreet || '',
+                bcity: data.fields.BillStreet2 || '',
+                bstate: data.fields.BillState || '',
+                bpostalcode: data.fields.BillPostcode || '',
+                bcountry: data.fields.Billcountry || '',
+                custfield1: data.fields.CUSTFLD1 || '',
+                custfield2: data.fields.CUSTFLD2 || '',
+                custfield3: data.fields.CUSTFLD3 || '',
+                custfield4: data.fields.CUSTFLD4 || '',
+                notes: data.fields.Notes || '',
+                preferedpayment: data.fields.PaymentMethodName || '',
+                terms: data.fields.TermsName || '',
+                deliverymethod: data.fields.ShippingMethodName || '',
+                accountnumber: data.fields.ClientNo || 0.00,
+                isContractor: data.fields.Contractor || false,
+                issupplier: data.fields.IsSupplier || false,
+                iscustomer: data.fields.IsCustomer || false,
+            };
+
+            let headerHtml = "<div style='border-top:1px solid #858796; width:172px; margin-bottom:12px'></div>";
+            headerHtml += "<span style='float:left; padding-bottom:8px'>" + lineItemObj.firstname + " " + lineItemObj.lastname + ", CPA</span>";
+            headerHtml += "<span style='float:left; padding-bottom:8px; clear:both'><b>" + lineItemObj.company + "</b></span>";
+            var address = "";
+            if (lineItemObj.scity != "") {
+                address += lineItemObj.scity + ", ";
+            }
+            if (lineItemObj.spostalcode != "") {
+                address += lineItemObj.spostalcode + ", ";
+            }
+            if (lineItemObj.sstate != "") {
+                address += lineItemObj.sstate + ", ";
+            }
+            if (lineItemObj.scountry != "") {
+                address += lineItemObj.scountry + ", ";
+            }
+
+            headerHtml += "<span style='float:left; padding-bottom:20px; clear:both'>" + lineItemObj.shippingaddress + "<br/>" + address.slice(0, -2) + "</span>";
+            headerHtml += "<span style='float:left; clear:both'>Dated: " + templateObject.currentDate.get() + "</span>";
+
+            $("#reportsAccountantHeader, #reportsAccountantHeaderPrt").html(headerHtml);
+        }
 
     });
+
+    $('#expenseCategory').on('click', function(e, li) {
+        templateObject.setCategoryAccountList(e);
+        $(".dt-buttons").hide();
+    });
+    templateObject.setCategoryAccountList = function(e) {
+        const $each = $(e.target);
+        const offset = $each.offset();
+        $('#edtReceiptCategoryID').val('');
+        const searchDataName = e.target.value || '';
+        if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+            $each.attr('data-id', '');
+            $('#categoryListModal').modal('toggle');
+            setTimeout(function() {
+                $('#tblCategory_filter .form-control-sm').focus();
+                $('#tblCategory_filter .form-control-sm').val('');
+                $('#tblCategory_filter .form-control-sm').trigger("input");
+                const datatable = $('#tblCategory').DataTable();
+                datatable.draw();
+                $('#tblCategory_filter .form-control-sm').trigger("input");
+            }, 200);
+        } else {
+            if (searchDataName.replace(/\s/g, '') != '') {
+                getVS1Data('TReceiptCategory').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                            showEditReceiptCategoryView(data.treceiptcategory[0]);
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let added = false;
+                        for (let i = 0; i < data.treceiptcategory.length; i++) {
+                            if ((data.treceiptcategory[i].CategoryName) === searchDataName) {
+                                added = true;
+                                showEditReceiptCategoryView(data.treceiptcategory[i]);
+                            }
+                        }
+                        if (!added) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                                showEditReceiptCategoryView(data.treceiptcategory[0]);
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }
+                    }
+                }).catch(function(err) {
+                    sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                        showEditReceiptCategoryView(data.treceiptcategory[0]);
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                });
+            } else {
+                $('#categoryListModal').modal('toggle');
+                setTimeout(function() {
+                    $('#tblCategory_filter .form-control-sm').focus();
+                    $('#tblCategory_filter .form-control-sm').val('');
+                    $('#tblCategory_filter .form-control-sm').trigger("input");
+                    const datatable = $('#tblCategory').DataTable();
+                    datatable.draw();
+                    $('#tblCategory_filter .form-control-sm').trigger("input");
+                }, 200);
+            }
+        }
+    };
+
+    function showEditReceiptCategoryView(data) {
+        $("#add-receiptcategory-title").text("Edit Receipt Category");
+        $('#edtReceiptCategoryID').val(data.Id);
+        $('#edtReceiptCategoryName').val(data.CategoryName);
+        $('#edtReceiptCategoryDesc').val(data.CategoryDesc);
+        setTimeout(function() {
+            $('#addReceiptCategoryModal').modal('show');
+        }, 200);
+    }
 
     templateObject.getBalanceSheetReports = async(dateAsOf) => {
         LoadingOverlay.show();
@@ -700,6 +931,9 @@ Template.accountant_companyastrustee.onRendered(() => {
                         },
                     ];
                 } else if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
+
+                    templateObject.totalEquity.set(data.balancesheetreport[i]["Total Current Asset & Liability"]);
+
                     recordObj.value = TotalCurrentAsset_Liability || "";
                     recordObj.amount = utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "";
                     recordObj.dataArrTotal1 = [
@@ -707,8 +941,7 @@ Template.accountant_companyastrustee.onRendered(() => {
                         {
                             type: "amount",
                             value: SubAccountTotal || "",
-                            amount: utilityService.convertSubstringParseFloat(SubAccountTotal) ||
-                                "",
+                            amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || "",
                         },
                         {
                             type: "amount",
@@ -835,16 +1068,6 @@ Template.accountant_companyastrustee.onRendered(() => {
         LoadingOverlay.hide();
     };
 
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    let endMonth = "06";
-    templateObject.endMonth.set(endMonth);
-    templateObject.currentYear.set(new Date().getFullYear());
-    templateObject.currentMonth.set(new Date().getMonth());
-    templateObject.currentDate.set(new Date().getDate() + " " + months[new Date().getMonth()] + " " + new Date().getFullYear());
-
-    var currentDate2 = new Date(new Date().getFullYear(), (parseInt(endMonth)), 0);
-    templateObject.endDate.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     templateObject.getBalanceSheetReports(getLoadDate);
 
     templateObject.setReportOptions = async function(
@@ -1111,72 +1334,515 @@ Template.accountant_companyastrustee.events({
         FlowRouter.go("/reportsAccountantSettings");
     },
 
-    // 'click .custom-control-input': function(event) {
-    //     const templateObject = Template.instance();
-    //     let accountantList = templateObject.datatablerecords.curValue;
+    "click .btnAddNewAccounts": function() {
+        $("#add-account-title").text("Add New Account");
+        $("#edtAccountID").val("");
+        $("#sltAccountType").val("");
+        $("#sltAccountType").removeAttr("readonly", true);
+        $("#sltAccountType").removeAttr("disabled", "disabled");
+        $("#edtAccountName").val("");
+        $("#edtAccountName").attr("readonly", false);
+        $("#edtAccountNo").val("");
+        $("#sltTaxCode").val("NT" || "");
+        $("#txaAccountDescription").val("");
+        $("#edtBankAccountName").val("");
+        $("#edtBSB").val("");
+        $("#edtBankAccountNo").val("");
+        $("#routingNo").val("");
+        $("#edtBankName").val("");
+        $("#swiftCode").val("");
+        $(".showOnTransactions").prop("checked", false);
+        $(".useReceiptClaim").prop("checked", false);
+        $("#expenseCategory").val("");
+        let availableCategories = Template.instance().availableCategories.get();
+        let cateogoryHtml = "";
+        availableCategories.forEach(function(item) {
+            cateogoryHtml += '<option value="' + item + '">' + item + '</option>';
+        });
+        $("#expenseCategory").empty();
+        $("#expenseCategory").append(cateogoryHtml);
+        if (cateogoryHtml == "") {
+            $("#expenseCategory").attr("readonly", true);
+            $("#expenseCategory").attr("disabled", "disabled");
+        } else {
+            $("#expenseCategory").removeAttr("readonly", true);
+            $("#expenseCategory").removeAttr("disabled", "disabled");
+        }
+        $(".isBankAccount").addClass("isNotBankAccount");
+        $(".isCreditAccount").addClass("isNotCreditAccount");
+    },
 
-    //     let innerHtml = "";
-    //     let accountantItemID = $("#" + $(event.target).attr('id')).val();
-    //     let accountantPanID = $(event.target).attr('id').split("-")[1];
+    "click .btnSaveAccount": function() {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let templateObject = Template.instance();
+        let accountService = new AccountService();
+        let organisationService = new OrganisationService();
+        let forTransaction = false;
+        let isHeader = false;
+        let useReceiptClaim = false;
 
-    //     for (var i = 0; i < accountantList.length; i++) {
-    //         if (accountantList[i].id == accountantItemID) {
-    //             if ($("#" + $(event.target).attr('id')).prop('checked') == true) {
-    //                 innerHtml += "<div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0' id='row-" + accountantPanID + "-" + accountantList[i].id + "'>";
-    //                 innerHtml += "<div style='width:calc(100% - 180px); float:left; padding-top:4px'>" + accountantList[i].accountname + "</div>";
-    //                 innerHtml += "<div style='float:left; padding-top:4px; width:90px'>" + accountantList[i].balance + "</div>";
-    //                 innerHtml += "<div style='float:left; padding-top:4px; width:90px'>" + accountantList[i].balance + "</div>";
-    //                 innerHtml += "</div>";
+        if ($("#showOnTransactions").is(":checked")) {
+            forTransaction = true;
+        }
+        if ($("#useReceiptClaim").is(":checked")) {
+            useReceiptClaim = true;
+        }
 
-    //                 $("#reportAccPan" + accountantPanID).append(innerHtml);
-    //             } else {
-    //                 $("#row-" + accountantPanID + "-" + accountantList[i].id).remove();
-    //             }
-    //         }
-    //     }
-    // },
+        if ($("#accountIsHeader").is(":checked")) {
+            isHeader = true;
+        }
+
+        let accountID = $("#edtAccountID").val();
+        var accounttype = $("#sltAccountType").val();
+        var accountname = $("#edtAccountName").val();
+        var accountno = $("#edtAccountNo").val();
+        var taxcode = $("#sltTaxCode").val();
+        var accountdesc = $("#txaAccountDescription").val();
+        var swiftCode = $("#swiftCode").val();
+        var routingNo = $("#routingNo").val();
+        // var comments = $('#txaAccountComments').val();
+        var bankname = $("#edtBankName").val();
+        var bankaccountname = $("#edtBankAccountName").val();
+        var bankbsb = $("#edtBSB").val();
+        var bankacountno = $("#edtBankAccountNo").val();
+        let isBankAccount = templateObject.isBankAccount.get();
+        let expenseCategory = $("#expenseCategory").val();
+
+        var expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
+        let cardnumber = $("#edtCardNumber").val();
+        let cardcvc = $("#edtCvc").val();
+        let expiryDate =
+            expirydateTime.getFullYear() +
+            "-" +
+            (expirydateTime.getMonth() + 1) +
+            "-" +
+            expirydateTime.getDate();
+
+        let companyID = 1;
+        let data = "";
+        if (accountID == "") {
+            accountService
+                .getCheckAccountData(accountname)
+                .then(function(data) {
+                    accountID = parseInt(data.taccount[0].Id) || 0;
+                    data = {
+                        type: "TAccount",
+                        fields: {
+                            ID: accountID,
+                            // AccountName: accountname|| '',
+                            AccountNumber: accountno || "",
+                            // AccountTypeName: accounttype|| '',
+                            AccountGroup: expenseCategory || "", // Need to check if the field is right later
+                            Active: true,
+                            BankAccountName: bankaccountname || "",
+                            BankAccountNumber: bankacountno || "",
+                            BSB: bankbsb || "",
+                            Description: accountdesc || "",
+                            TaxCode: taxcode || "",
+                            PublishOnVS1: true,
+                            Extra: swiftCode,
+                            BankNumber: routingNo,
+                            IsHeader: isHeader,
+                            AllowExpenseClaim: useReceiptClaim,
+                            Required: forTransaction,
+                            CarNumber: cardnumber || "",
+                            CVC: cardcvc || "",
+                            ExpiryDate: expiryDate || "",
+                        },
+                    };
+
+                    accountService
+                        .saveAccount(data)
+                        .then(function(data) {
+                            if ($("#showOnTransactions").is(":checked")) {
+                                var objDetails = {
+                                    type: "TCompanyInfo",
+                                    fields: {
+                                        Id: companyID,
+                                        AccountNo: bankacountno,
+                                        BankBranch: swiftCode,
+                                        BankAccountName: bankaccountname,
+                                        BankName: bankname,
+                                        Bsb: bankbsb,
+                                        SiteCode: routingNo,
+                                        FileReference: accountname,
+                                    },
+                                };
+                                organisationService
+                                    .saveOrganisationSetting(objDetails)
+                                    .then(function(data) {
+                                        var accNo = bankacountno || "";
+                                        var swiftCode1 = swiftCode || "";
+                                        var bankAccName = bankaccountname || "";
+                                        var accountName = accountname || "";
+                                        var bsb = bankbsb || "";
+                                        var routingNo = routingNo || "";
+
+                                        localStorage.setItem("vs1companyBankName", bankname);
+                                        localStorage.setItem(
+                                            "vs1companyBankAccountName",
+                                            bankAccName
+                                        );
+                                        localStorage.setItem("vs1companyBankAccountNo", accNo);
+                                        localStorage.setItem("vs1companyBankBSB", bsb);
+                                        localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                                        localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                                        sideBarService.getAccountListVS1().then(function(dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
+                                                window.open("/accountsoverview", "_self");
+                                            }).catch(function(err) {
+                                                window.open("/accountsoverview", "_self");
+                                            });
+                                        }).catch(function(err) {
+                                            window.open("/accountsoverview", "_self");
+                                        });
+                                    })
+                                    .catch(function(err) {
+                                        sideBarService
+                                            .getAccountListVS1()
+                                            .then(function(dataReload) {
+                                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                    .then(function(datareturn) {
+                                                        window.open("/accountsoverview", "_self");
+                                                    })
+                                                    .catch(function(err) {
+                                                        window.open("/accountsoverview", "_self");
+                                                    });
+                                            })
+                                            .catch(function(err) {
+                                                window.open("/accountsoverview", "_self");
+                                            });
+                                    });
+                            } else {
+                                sideBarService
+                                    .getAccountListVS1()
+                                    .then(function(dataReload) {
+                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                            .then(function(datareturn) {
+                                                window.open("/accountsoverview", "_self");
+                                            })
+                                            .catch(function(err) {
+                                                window.open("/accountsoverview", "_self");
+                                            });
+                                    })
+                                    .catch(function(err) {
+                                        window.open("/accountsoverview", "_self");
+                                    });
+                            }
+                        })
+                        .catch(function(err) {
+                            swal({
+                                title: "Oooops...",
+                                text: err,
+                                type: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "Try Again",
+                            }).then((result) => {
+                                if (result.value) {
+                                    // Meteor._reload.reload();
+                                } else if (result.dismiss === "cancel") {}
+                            });
+                            $(".fullScreenSpin").css("display", "none");
+                        });
+                })
+                .catch(function(err) {
+                    data = {
+                        type: "TAccount",
+                        fields: {
+                            AccountName: accountname || "",
+                            AccountNumber: accountno || "",
+                            AccountTypeName: accounttype || "",
+                            AccountGroup: expenseCategory || "", // Need to check if the field is right later
+                            Active: true,
+                            BankAccountName: bankaccountname || "",
+                            BankAccountNumber: bankacountno || "",
+                            BSB: bankbsb || "",
+                            Description: accountdesc || "",
+                            TaxCode: taxcode || "",
+                            Extra: swiftCode,
+                            BankNumber: routingNo,
+                            PublishOnVS1: true,
+                            IsHeader: isHeader,
+                            AllowExpenseClaim: useReceiptClaim,
+                            Required: forTransaction,
+                            CarNumber: cardnumber || "",
+                            CVC: cardcvc || "",
+                            ExpiryDate: expiryDate || "",
+                        },
+                    };
+
+                    accountService
+                        .saveAccount(data)
+                        .then(function(data) {
+                            if ($("#showOnTransactions").is(":checked")) {
+                                var objDetails = {
+                                    type: "TCompanyInfo",
+                                    fields: {
+                                        Id: companyID,
+                                        AccountNo: bankacountno,
+                                        BankBranch: swiftCode,
+                                        BankAccountName: bankaccountname,
+                                        BankName: bankname,
+                                        Bsb: bankbsb,
+                                        SiteCode: routingNo,
+                                        FileReference: accountname,
+                                    },
+                                };
+                                organisationService
+                                    .saveOrganisationSetting(objDetails)
+                                    .then(function(data) {
+                                        var accNo = bankacountno || "";
+                                        var swiftCode1 = swiftCode || "";
+                                        var bankName = bankaccountname || "";
+                                        var accountName = accountname || "";
+                                        var bsb = bankbsb || "";
+                                        var routingNo = routingNo || "";
+                                        localStorage.setItem("vs1companyBankName", bankname);
+                                        localStorage.setItem(
+                                            "vs1companyBankAccountName",
+                                            bankAccName
+                                        );
+                                        localStorage.setItem("vs1companyBankAccountNo", accNo);
+                                        localStorage.setItem("vs1companyBankBSB", bsb);
+                                        localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                                        localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                                        sideBarService
+                                            .getAccountListVS1()
+                                            .then(function(dataReload) {
+                                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                    .then(function(datareturn) {
+                                                        window.open("/accountsoverview", "_self");
+                                                    })
+                                                    .catch(function(err) {
+                                                        window.open("/accountsoverview", "_self");
+                                                    });
+                                            })
+                                            .catch(function(err) {
+                                                window.open("/accountsoverview", "_self");
+                                            });
+                                    })
+                                    .catch(function(err) {
+                                        sideBarService
+                                            .getAccountListVS1()
+                                            .then(function(dataReload) {
+                                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                    .then(function(datareturn) {
+                                                        //window.open('/accountsoverview', '_self');
+                                                    })
+                                                    .catch(function(err) {
+                                                        window.open("/accountsoverview", "_self");
+                                                    });
+                                            })
+                                            .catch(function(err) {
+                                                window.open("/accountsoverview", "_self");
+                                            });
+                                    });
+                            } else {
+                                sideBarService
+                                    .getAccountListVS1()
+                                    .then(function(dataReload) {
+                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                            .then(function(datareturn) {
+                                                window.open("/accountsoverview", "_self");
+                                            })
+                                            .catch(function(err) {
+                                                window.open("/accountsoverview", "_self");
+                                            });
+                                    })
+                                    .catch(function(err) {
+                                        window.open("/accountsoverview", "_self");
+                                    });
+                            }
+                        })
+                        .catch(function(err) {
+                            swal({
+                                title: "Oooops...",
+                                text: err,
+                                type: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "Try Again",
+                            }).then((result) => {
+                                if (result.value) {
+                                    Meteor._reload.reload();
+                                } else if (result.dismiss === "cancel") {}
+                            });
+                            $(".fullScreenSpin").css("display", "none");
+                        });
+                });
+        } else {
+            data = {
+                type: "TAccount",
+                fields: {
+                    ID: accountID,
+                    AccountName: accountname || "",
+                    AccountNumber: accountno || "",
+                    // AccountTypeName: accounttype || '',
+                    AccountGroup: expenseCategory || "", // Need to check if the field is right later
+                    Active: true,
+                    BankAccountName: bankaccountname || "",
+                    BankAccountNumber: bankacountno || "",
+                    BSB: bankbsb || "",
+                    Description: accountdesc || "",
+                    TaxCode: taxcode || "",
+                    Extra: swiftCode,
+                    BankNumber: routingNo,
+                    //Level4: bankname,
+                    PublishOnVS1: true,
+                    IsHeader: isHeader,
+                    AllowExpenseClaim: useReceiptClaim,
+                    Required: forTransaction,
+                    CarNumber: cardnumber || "",
+                    CVC: cardcvc || "",
+                    ExpiryDate: expiryDate || "",
+                },
+            };
+
+            accountService
+                .saveAccount(data)
+                .then(function(data) {
+                    if ($("#showOnTransactions").is(":checked")) {
+                        var objDetails = {
+                            type: "TCompanyInfo",
+                            fields: {
+                                Id: companyID,
+                                AccountNo: bankacountno,
+                                BankBranch: swiftCode,
+                                BankAccountName: bankaccountname,
+                                BankName: bankname,
+                                Bsb: bankbsb,
+                                SiteCode: routingNo,
+                                FileReference: accountname,
+                            },
+                        };
+                        organisationService
+                            .saveOrganisationSetting(objDetails)
+                            .then(function(data) {
+                                var accNo = bankacountno || "";
+                                var swiftCode1 = swiftCode || "";
+                                var bankAccName = bankaccountname || "";
+                                var accountName = accountname || "";
+                                var bsb = bankbsb || "";
+                                var routingNo = routingNo || "";
+                                localStorage.setItem("vs1companyBankName", bankname);
+                                localStorage.setItem("vs1companyBankAccountName", bankAccName);
+                                localStorage.setItem("vs1companyBankAccountNo", accNo);
+                                localStorage.setItem("vs1companyBankBSB", bsb);
+                                localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                                localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                                sideBarService
+                                    .getAccountListVS1()
+                                    .then(function(dataReload) {
+                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                            .then(function(datareturn) {
+                                                window.open("/accountsoverview", "_self");
+                                            })
+                                            .catch(function(err) {
+                                                window.open("/accountsoverview", "_self");
+                                            });
+                                    })
+                                    .catch(function(err) {
+                                        window.open("/accountsoverview", "_self");
+                                    });
+                            })
+                            .catch(function(err) {
+                                sideBarService
+                                    .getAccountListVS1()
+                                    .then(function(dataReload) {
+                                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                            .then(function(datareturn) {
+                                                window.open("/accountsoverview", "_self");
+                                            })
+                                            .catch(function(err) {
+                                                window.open("/accountsoverview", "_self");
+                                            });
+                                    })
+                                    .catch(function(err) {
+                                        window.open("/accountsoverview", "_self");
+                                    });
+                            });
+                    } else {
+                        sideBarService
+                            .getAccountListVS1()
+                            .then(function(dataReload) {
+                                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                    .then(function(datareturn) {
+                                        window.open("/accountsoverview", "_self");
+                                    })
+                                    .catch(function(err) {
+                                        window.open("/accountsoverview", "_self");
+                                    });
+                            })
+                            .catch(function(err) {
+                                window.open("/accountsoverview", "_self");
+                            });
+                    }
+                })
+                .catch(function(err) {
+                    swal({
+                        title: "Oooops...",
+                        text: err,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Try Again",
+                    }).then((result) => {
+                        if (result.value) {
+                            Meteor._reload.reload();
+                        } else if (result.dismiss === "cancel") {}
+                    });
+                    $(".fullScreenSpin").css("display", "none");
+                });
+        }
+    },
+
+    "change #sltAccountType": function(e) {
+        let templateObject = Template.instance();
+        var accountTypeName = $("#sltAccountType").val();
+
+        if (accountTypeName === "BANK") {
+            $(".isBankAccount").removeClass("isNotBankAccount");
+            $(".isCreditAccount").addClass("isNotCreditAccount");
+        } else if (accountTypeName === "CCARD") {
+            $(".isCreditAccount").removeClass("isNotCreditAccount");
+            $(".isBankAccount").addClass("isNotBankAccount");
+        } else {
+            $(".isBankAccount").addClass("isNotBankAccount");
+            $(".isCreditAccount").addClass("isNotCreditAccount");
+        }
+    },
 
     'click .btnselAccountant': function(event) {
         const templateObject = Template.instance();
-        let accountantList = templateObject.datatablerecords.curValue;
+        let accountantList = templateObject.datatablerecords.get();
 
         let innerHtml = "";
         let accountantPanID = $(event.target).attr('id').split("-")[1];
+
+        var total_balance = 0;
         for (var i = 0; i < accountantList.length; i++) {
             if ($("#f-" + accountantPanID + "-" + accountantList[i].id).prop('checked') == true) {
                 innerHtml += "<div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0' id='row-" + accountantPanID + "-" + accountantList[i].id + "'>";
-                innerHtml += "<div style='width:calc(100% - 180px); float:left; padding-top:4px'>" + accountantList[i].accountname + "</div>";
-                innerHtml += "<div style='float:left; padding-top:4px; width:90px'>" + accountantList[i].balance + "</div>";
-                innerHtml += "<div style='float:left; padding-top:4px; width:90px'>" + accountantList[i].balance + "</div>";
+                innerHtml += "<div style='width:calc(100% - 100px); float:left; padding-top:4px'>" + accountantList[i].accountname + "</div>";
+                innerHtml += "<div style='float:left; padding-top:4px; width:100px'>" + accountantList[i].balance + "</div>";
                 innerHtml += "</div>";
+
+                total_balance += accountantList[i].balanceNumber;
             }
         }
+
+        if (accountantPanID == 13) {
+            let beneficiaryPercent = total_balance / parseFloat(templateObject.totalEquity.get()) * 100;
+            $("#beneficiaryPercent").html("<b>" + beneficiaryPercent.toFixed(2) + "%</b>");
+            $("#beneficiaryPercentPrt").html("<b>" + beneficiaryPercent.toFixed(2) + "%</b>");
+        }
+
+        total_balance = utilityService.modifynegativeCurrencyFormat(total_balance) || 0.0;
         $("#reportAccPan" + accountantPanID).html(innerHtml);
         $("#reportAccPanPrt" + accountantPanID).html(innerHtml);
-        $("#accountantList_" + accountantPanID).modal('toggle');
+        $("#total" + accountantPanID + "_balance").html("<b>" + total_balance + "</b>");
+        $("#total" + accountantPanID + "_prt_balance").html("<b>" + total_balance + "</b>");
+        $("#accountList_" + accountantPanID).modal('toggle');
     },
 
-    "click .update_search": function() {
-        let templateObject = Template.instance();
-        let balanceDate = templateObject.$("#balanceDate").val();
-        let compareTo = templateObject.$("#compareTo").val();
-        let comparePeriod = templateObject.$("#comparePeriod").val();
-        let sort = templateObject.$("#sort").val();
-        let Date = moment(balanceDate).clone().endOf("month").format("YYYY-MM-DD");
-        templateObject.getBalanceSheetReports(Date);
-        let url =
-            "/reports/balance-sheet?balanceDate=" +
-            moment(balanceDate).clone().endOf("month").format("YYYY-MM-DD") +
-            "&compareTo=" +
-            compareTo +
-            "&comparePeriod=" +
-            comparePeriod +
-            "&sort=" +
-            sort;
-        if (!Session.get("AgedReceivablesTemplate")) {
-            FlowRouter.go(url);
-        }
-    },
     "click .btnPrintReport": function(event) {
         $(".printReport").show();
         $("a").attr("href", "/");
@@ -1192,12 +1858,25 @@ Template.accountant_companyastrustee.events({
             $(".printReport").hide();
         }, 100);
     },
+
     "click .btnExportReport": function() {
         $(".fullScreenSpin").css("display", "inline-block");
         let utilityService = new UtilityService();
 
         const filename = loggedCompany + "-Balance Sheet" + ".csv";
         utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+    },
+
+    'click #tblCategory tbody tr': function(e) {
+        let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
+        let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
+        let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
+
+        $('#expenseCategory').val(category);
+        $('#categoryAccountID').val(accountID);
+        $('#categoryAccountName').val(accountName);
+
+        $('#categoryListModal').modal('toggle');
     },
 });
 
@@ -1220,16 +1899,16 @@ Template.accountant_companyastrustee.helpers({
             });
     },
 
-    accountantPanList: () => {
-        return Template.instance().accountantPanList.get();
+    accountPanList: () => {
+        return Template.instance().accountPanList.get();
+    },
+
+    accountPanList1: () => {
+        return Template.instance().accountPanList1.get();
     },
 
     companyname: () => {
         return loggedCompany;
-    },
-
-    fiscalYearEnding: () => {
-        return Template.instance().currentYear.get();
     },
 
     dateAsAt: () => {
@@ -1317,5 +1996,8 @@ Template.accountant_companyastrustee.helpers({
             `${currencyData.symbol} ${amount}`;
 
         return convertedAmount;
+    },
+    isBankAccount: () => {
+        return Template.instance().isBankAccount.get();
     },
 });

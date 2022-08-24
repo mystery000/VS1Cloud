@@ -277,6 +277,7 @@ batchUpdateCall = function (url) {
     let dashboardArray = [];
     var oReq = new XMLHttpRequest();
     var oReq2 = new XMLHttpRequest();
+    var oReq3 = new XMLHttpRequest();
     var currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -441,6 +442,32 @@ batchUpdateCall = function (url) {
                   });
 
                 }else if (oReq2.status != 200){
+
+                  setTimeout(function () {
+                    if(url){
+                      window.open(url,'_self');
+                    }else{
+                      location.reload(true);
+                    }
+                  }, 10000);
+                }
+            }
+            oReq3.open("GET",URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/TAccountVS1?ListType="Detail"&select=[AccountTypeName]="BANK"', true);
+            oReq3.setRequestHeader("database",erpGet.ERPDatabase);
+            oReq3.setRequestHeader("username",erpGet.ERPUsername);
+            oReq3.setRequestHeader("password",erpGet.ERPPassword);
+            oReq3.send();
+            oReq3.onreadystatechange = function() {
+                if(oReq3.readyState == 4 && oReq3.status == 200) {
+                  var dataReturnRes3 = JSON.parse(oReq3.responseText);
+                  if (dataReturnRes3.taccountvs1.length > 0) {
+                    localStorage.setItem('VS1TAccount_Bank_dash', dataReturnRes3.taccountvs1[0].fields.Balance||0);
+                    localStorage.setItem('VS1TAccount_Bank_Payroll_Clearing_dash', dataReturnRes3.taccountvs1[1].fields.Balance||0);
+                    localStorage.setItem('VS1TAccount_Petty_Cash_dash', dataReturnRes3.taccountvs1[2].fields.Balance||0);
+                    localStorage.setItem('VS1TAccount_Payroll_Bank_dash', dataReturnRes3.taccountvs1[3].fields.Balance||0);
+                    localStorage.setItem('VS1TAccount_Offset_Account_dash', dataReturnRes3.taccountvs1[4].fields.Balance||0);
+                  }
+                }else if (oReq3.status != 200){
 
                   setTimeout(function () {
                     if(url){

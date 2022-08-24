@@ -1488,6 +1488,9 @@ Template.header.onRendered(function() {
             let companyState = data.tcompanyinfo[0].PoState || '';
             let routingNo = data.tcompanyinfo[0].SiteCode || '';
             let companyReg = data.tcompanyinfo[0].CompanyNumber || '';
+
+            let companyAccountant = data.tcompanyinfo[0].Contact || '';
+
             let bankDetails = "Bank Name: " + bankName + "\n" + "Account Name: " + accountName + "\n Bank Account: " + accNo + "\nBSB: " + bsb + "\n Swift Code: " + swiftCode + "\n" + "Routing No: " + routingNo;
             Session.setPersistent('vs1companyName', companyName);
             Session.setPersistent('vs1companyaddress1', companyaddress1);
@@ -1510,6 +1513,10 @@ Template.header.onRendered(function() {
             localStorage.setItem('vs1companyBankBSB', bsb);
             localStorage.setItem('vs1companyBankSwiftCode', swiftCode);
             localStorage.setItem('vs1companyBankRoutingNo', routingNo);
+
+            localStorage.setItem('VS1Accountant', companyAccountant);
+            // localStorage.setItem('VS1YearEnd', routingNo);
+
             if (data.tcompanyinfo[0].TrackEmails) {
                 localStorage.setItem('VS1OrgEmail', data.tcompanyinfo[0].Email || localStorage.getItem('VS1AdminUserName'));
             } else {
