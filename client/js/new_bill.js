@@ -5027,7 +5027,7 @@ Template.billcard.events({
                     let name = data.tsupplier[0].fields.FirstName || '';
                     let surname = data.tsupplier[0].fields.LastName || '';
                     let lineItems = [];
-                    let total = $('#totalBalanceDue').html() || 0;
+                    let total = $('#balanceDue').html() || 0;
                     let tax = $('#subtotal_tax').html() || 0;
                     let customer = $('#edtSupplierFirstName').val() + ' ' + $('#edtSupplierLastName').val();
                     let company = Session.get('vs1companyName');
