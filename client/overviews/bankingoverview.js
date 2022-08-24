@@ -1390,6 +1390,9 @@ Template.bankingoverview.onRendered(function() {
 });
 
 Template.bankingoverview.events({
+    'click .btnEft': function() {
+      FlowRouter.go('/eft');
+    },
     'click .btnRefresh': function() {
       var currentBeginDate = new Date();
       var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
