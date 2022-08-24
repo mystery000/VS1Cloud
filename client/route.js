@@ -1901,6 +1901,14 @@ authenticatedRoutes.route('/customerdetailsreport', {
         });
     }
 });
+authenticatedRoutes.route('/transactionjournal', {
+    name: 'transactionjournallist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'transactionjournallist'
+        });
+    }
+});
 
 authenticatedRoutes.route('/customersummaryreport', {
     name: 'customersummaryreport',
