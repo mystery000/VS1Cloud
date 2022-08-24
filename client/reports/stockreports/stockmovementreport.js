@@ -108,10 +108,11 @@ Template.stockmovementreport.onRendered(() => {
     let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
     let ignoreDate = options.ignoreDate || false;
     let data = await reportService.getStockMovementReport( dateFrom, dateTo, ignoreDate);
+    console.log(data);
     let movementReport = [];
     if( data.t_vs1_report_productmovement.length > 0 ){
-        let reportGroups = []; 
-        for (const item of data.t_vs1_report_productmovement) {   
+        let reportGroups = [];
+        for (const item of data.t_vs1_report_productmovement) {
             let isExist = reportGroups.filter((subitem) => {
                 if( subitem.ID == item.fields.ProductID ){
                     subitem.SubAccounts.push(item)
@@ -120,6 +121,7 @@ Template.stockmovementreport.onRendered(() => {
             });
 
             if( isExist.length == 0 ){
+              if(item.fields.TranstypeDesc != 'Opening Balance'){
                 reportGroups.push({
                     ID: item.fields.ProductID,
                     ProductName: item.fields.ProductName,
@@ -128,6 +130,7 @@ Template.stockmovementreport.onRendered(() => {
                     TotalCurrentQty: 0,
                     TotalUnitCost: 0
                 });
+              }
             }
         }
 
@@ -144,8 +147,9 @@ Template.stockmovementreport.onRendered(() => {
             item.TotalCurrentQty = TotalCurrentQty;
             item.TotalUnitCost = TotalUnitCost;
             return item;
-        });        
+        });
     }
+
     templateObject.records.set(movementReport);
     setTimeout(function() {
         MakeNegative();
