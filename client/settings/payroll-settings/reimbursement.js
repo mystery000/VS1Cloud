@@ -171,7 +171,7 @@ Template.reimbursementSettings.onRendered(function() {
                     }, 100);
                 },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddordinaryTimeReimbursement' data-dismiss='modal' data-toggle='modal' data-target='#newReimbursementFundModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblReimbursements_filter");
+                    $("<button class='btn btn-primary newReimbursementModal' data-dismiss='modal' data-toggle='modal' data-target='#newReimbursementModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblReimbursements_filter");
                     $("<button class='btn btn-primary btnRefreshReimbursement type='button' id='btnRefreshReimbursement' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReimbursements_filter");
                 }
 
