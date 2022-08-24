@@ -6768,6 +6768,9 @@ Template.newsidenav.events({
     'click #sidenavbankreconciliation': function(event) {
         window.open('/bankrecon', '_self');
     },
+    'click #sidenaveft': function(event) {
+        window.open('/eft', '_self');
+    },
     'click #sidenavnewreconcile': function(event) {
 
         event.preventDefault();
