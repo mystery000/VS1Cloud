@@ -3921,6 +3921,7 @@ Template.employeescard.onRendered(function () {
                 let ePaySettings = await contactService.getOneEmployeeDataEx(employeeID);
                 if( ePaySettings ){
                     objEmployeePaySettings = {
+                        ID: 0,
                         EmployeeName: ePaySettings.fields.EmployeeName,
                         BankAccountName: "",
                         BankAccountBSB: "",
@@ -3948,6 +3949,7 @@ Template.employeescard.onRendered(function () {
             }else{
                 employeePaySettings = useData[0]
                 objEmployeePaySettings = {
+                    ID: employeePaySettings.fields.ID,
                     EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
                     BankAccountName: employeePaySettings.fields.BankAccountName,
                     BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
@@ -7011,14 +7013,10 @@ Template.employeescard.events({
                             ReducesSGC: ReducesSGC,
                             CalculationType: parseInt(CalculationType),
                             MinimumMonthlyEarnings: parseInt(MinimumMonthlyEarnings),
-                            // NEED TO UPDATE API FOR ExpenseAccount
-                            // ExpenseAccount: ExpenseAccount,
-                            ExpenseAccount: 0,
-                            // NEED TO ADD API FOR ExpenseAccount
-                            // LiabilityAccount: LiabilityAccount,
+                            ExpenseAccount: ExpenseAccount,
+                            LiabilityAccount: LiabilityAccount,
                             PaymentFrequency: PaymentFrequency,
-                            // NEED TO UPDATE API FOR PERIODPAYMENTDATE
-                            // PeriodPaymentDate: moment(PeriodPaymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
+                            PeriodPaymentDate: moment(PeriodPaymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
                             PeriodPaymentDate: 0,
                             Percentage: 0,
                             Amount: 0,
@@ -7881,9 +7879,11 @@ Template.employeescard.events({
             let UpwardvariationRequested = $("#taxesUpwardVariationRequested").is(':checked') ? true : false;
             let SeniorandPensionersTaxOffsetClaimed = $("#taxesSeniorPensionersTaxOffsetClaimed").is(':checked') ? true : false;
             let HasApprovedWithholdingVariation = $("#taxesHasApprovedWithholdingVariation").is(':checked') ? true : false;
+            let ePaySettings = templateObject.employeePaySettings.get();
             let employeePaySettings = {
                 type: 'TEmployeepaysettings',
                 fields: {
+                    ID: ePaySettings.ID,
                     Employeeid: parseInt(employeeID),
                     Payperiod: EdtPayPeriod,
                     FirstPayDate: moment(FirstPayDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
@@ -7918,14 +7918,26 @@ Template.employeescard.events({
                     body: JSON.stringify(employeePaySettings),
                 });
 
-                if (ApiResponse.ok == true) {
-                  
+                if (ApiResponse.ok == true) {                  
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
                     await templateObject.getEmployeePaySettings();
                     $('.statusUnsaved').hide();
                     $('.statusSaved').show();
                     $('.fullScreenSpin').css('display', 'none');
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                            //Meteor._reload.reload();
+                        } else if (result.dismiss === 'cancel') {}
+                    });
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -7989,6 +8001,7 @@ Template.employeescard.events({
             let EdtPayPeriod = $("#edtPayPeriod").val();
             let FirstPayDate = $("#edtFirstPayDate").val();
             if( FirstPayDate == "" ){
+                $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Validation Error',
                     text: 'Please select first pay date',
@@ -7998,6 +8011,7 @@ Template.employeescard.events({
                 return false
             }
             if( EdtPayPeriod == "" ){
+                $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Validation Error',
                     text: 'Please select pay period',
@@ -8007,9 +8021,12 @@ Template.employeescard.events({
                 return false
             }
 
+            let employeePaySettings = templateObject.employeePaySettings.get();
+
             let employeeBankPaySettings = {
                 type: 'TEmployeepaysettings',
                 fields: {
+                    ID: employeePaySettings.ID,
                     Employeeid: parseInt(employeeID),
                     BankAccountBSB: bankAccountBSB,
                     BankAccountName: bankAccountName,
@@ -8319,7 +8336,7 @@ Template.employeescard.events({
                                 ID: item.fields.ID,
                                 DeductionType: DeductionType,
                                 Amount: parseFloat( amount ),
-                                // Percent: percentVal,
+                                Percent: percentVal,
                                 Active: true,
                             },
                         });
