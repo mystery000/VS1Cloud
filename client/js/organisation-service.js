@@ -42,8 +42,7 @@ export class OrganisationService extends BaseService {
 
   getCompanyInfo() {
     let options = {
-      PropertyList:
-        "SiteCode,LastName,Firstname,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,BankName,BankAccountName,abn,CompanyName,TradingName,PhoneNumber,Address,Address2,Address3,Url,Email,Apcano,DvaABN,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,CompanyNumber",
+      PropertyList:"SiteCode,LastName,Firstname,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,BankName,BankAccountName,abn,CompanyName,TradingName,PhoneNumber,Address,Address2,Address3,Url,Email,Apcano,DvaABN,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,CompanyNumber,Contact",
     };
     return this.getList(this.ERPObjects.TCompanyInfo, options);
   }
