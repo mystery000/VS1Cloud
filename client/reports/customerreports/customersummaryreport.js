@@ -432,6 +432,8 @@ Template.customersummaryreport.helpers({
   formatDate: ( date ) => {
       return ( date )? moment(date).format("DD/MM/YYYY") : '';
   },
+
+  // FX Module //
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 

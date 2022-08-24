@@ -3,6 +3,8 @@ import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
+import GlobalFunctions from "../../GlobalFunctions";
+
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -14,10 +16,12 @@ Template.stockmovementreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.reportOptions = new ReactiveVar([]);
-  templateObject.currencyList = new ReactiveVar([]);
-  templateObject.activeCurrencyList = new ReactiveVar([]);
-  templateObject.tcurrencyratehistory = new ReactiveVar([]);
   templateObject.records = new ReactiveVar([]);
+
+   // Currency related vars //
+   templateObject.currencyList = new ReactiveVar([]);
+   templateObject.activeCurrencyList = new ReactiveVar([]);
+   templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
 function MakeNegative() {
@@ -163,14 +167,23 @@ Template.stockmovementreport.onRendered(() => {
     }
   };
 
-  //----------- CURRENCY MODULE ------------------//
-  templateObject.loadCurrency = async () => {
-    await loadCurrency();
-  };
+    /**
+   * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
+   * So we have a showable list of currencies to toggle
+   */
 
-  templateObject.loadCurrencyHistory = async () => {
-    await loadCurrencyHistory();
-  };
+    templateObject.loadCurrency = async () => {
+      await loadCurrency();
+    };
+
+  //templateObject.loadCurrency();
+
+    templateObject.loadCurrencyHistory = async () => {
+      await loadCurrencyHistory();
+    };
+
+  //templateObject.loadCurrencyHistory();
+
 
   templateObject.initDate();
   templateObject.initUploadedImage();
@@ -427,50 +440,53 @@ Template.stockmovementreport.helpers({
   formatDate: ( date ) => {
       return ( date )? moment(date).format("DD/MM/YYYY") : '';
   },
+
+  // FX Module //
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    if (!amount || amount.trim() == "") {
-      return "";
+    if(isNaN(amount)) {
+      if (!amount || amount.trim() == "") {
+        return "";
+      }
+      amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
     }
-    if (currencyData.code == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
+    // if (currencyData.code == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
 
-    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
     // Lets remove the minus character
     const isMinus = amount < 0;
-    if (isMinus == true) amount = amount * -1; // Make it positive
+    if (isMinus == true) amount = amount * -1; // make it positive for now
 
-    // get default currency symbol
+    // // get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
     // )[0];
 
-    //amount = amount.replace(_defaultCurrency.symbol, "");
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
 
     // amount =
     //   isNaN(amount) == true
     //     ? parseFloat(amount.substring(1))
     //     : parseFloat(amount);
 
+
+
     // Get the selected date
-    let dateTo = $("#balancedate").val();
+    let dateTo = $("#dateTo").val();
     const day = dateTo.split("/")[0];
     const m = dateTo.split("/")[1];
     const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
 
+
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-
-    // if(currencyList.length == 0) {
-    //   currencyList = Template.instance().currencyList.get();
-    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-    // }
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -499,20 +515,24 @@ Template.stockmovementreport.helpers({
 
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
 
+
+
     let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
-    //amount = amount + 0.36;
+
+
+
+
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }); // Add commas
 
-    // amount = amount.toLocaleString();
-
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
         : `${currencyData.symbol} ${amount}`;
+
 
     return convertedAmount;
   },
@@ -531,6 +551,7 @@ Template.stockmovementreport.helpers({
   },
   isNegativeAmount(amount) {
     if (Math.sign(amount) === -1) {
+
       return true;
     }
     return false;
@@ -543,6 +564,7 @@ Template.stockmovementreport.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
+
       if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
@@ -558,7 +580,7 @@ Template.stockmovementreport.helpers({
 
     return activeArray.length > 0;
   },
-  isObject: (variable) => {
+  isObject(variable) {
     return typeof variable === "object" && variable !== null;
   },
   currency: () => {
