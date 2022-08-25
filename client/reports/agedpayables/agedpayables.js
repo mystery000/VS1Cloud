@@ -158,6 +158,8 @@ Template.agedpayables.onRendered(() => {
                 }
                 records = _.sortBy(records, 'SupplierName');
                 records = _.groupBy(records, 'SupplierName');
+
+                // i dont understand this...
                 for (let key in records) {
                     let obj = [{
                             key: key
@@ -186,6 +188,8 @@ Template.agedpayables.onRendered(() => {
                         threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
                         Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
                     }
+
+                    // wont be used anymore
                     let val = ['Total ' + allRecords[i][0].key + '', '', '', '', 
                     utilityService.modifynegativeCurrencyFormat(amountduetotal), 
                     utilityService.modifynegativeCurrencyFormat(Currenttotal),
@@ -238,14 +242,15 @@ Template.agedpayables.onRendered(() => {
 
                 }
 
-                let grandval = ['Grand Total ' + '', '', '', '',
-                    utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
-                    // utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
-                    utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
-                    utilityService.modifynegativeCurrencyFormat(grandoneMonth),
-                    utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
-                    utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
-                    utilityService.modifynegativeCurrencyFormat(grandOlder)];
+                // old code
+                // let grandval = ['Grand Total ' + '', '', '', '',
+                //     utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+                //     // utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+                //     utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
+                //     utilityService.modifynegativeCurrencyFormat(grandoneMonth),
+                //     utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
+                //     utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
+                //     utilityService.modifynegativeCurrencyFormat(grandOlder)];
 
                 let grandValObj = {
                     Title: 'Grand Total ',
@@ -257,6 +262,7 @@ Template.agedpayables.onRendered(() => {
                     OlderMonth: grandOlder
                 };
 
+                // i dont understand this
                 for (let key in records) {
                     let dataArr = current[iterator]
                         let obj = [{
