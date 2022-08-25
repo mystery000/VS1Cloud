@@ -665,7 +665,6 @@ Template.newbankrecon.onRendered(function() {
     function setMatchTransactionData(matchData) {
         let thirdaryData = sortTransactionData(matchData, 'SortDate');
         VS1TransactionList = thirdaryData;
-        console.log(thirdaryData);
         templateObject.matchTransactionData.set(thirdaryData);
     }
 
@@ -1947,11 +1946,11 @@ Template.newbankrecon.events({
                                             spentVS1Amount: utilityService.modifynegativeCurrencyFormat(0),
                                             receivedVS1Amount: utilityService.modifynegativeCurrencyFormat(grand_total),
                                         };
-                                        console.log(paymentID);
-                                        console.log(resultPaymentID);
-                                        console.log(reconcileID);
-                                        console.log(resultRecon.fields.ID);
-                                        console.log(resultRecon);
+                                        // console.log(paymentID);
+                                        // console.log(resultPaymentID);
+                                        // console.log(reconcileID);
+                                        // console.log(resultRecon.fields.ID);
+                                        // console.log(resultRecon);
                                         openFindMatchAfterSave(resultRecon.fields.ID);
                                         $('.fullScreenSpin').css('display', 'none');
                                     } else {
