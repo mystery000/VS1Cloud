@@ -1,4 +1,32 @@
 <template name="accountant_financialstatement">
+    <style>
+        .dimmedChart>div {
+            background-color: #dddfeb !important;
+        }
+
+        .hideelement {
+            display: none !important;
+        }
+
+        .showelement {
+            display: block;
+        }
+
+        .card.hovered {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+            cursor: move;
+            transition-duration: 300ms;
+
+        }
+
+        .isNotBankAccount {
+            display: none !important;
+        }
+
+        .isNotCreditAccount {
+            display: none !important;
+        }        
+    </style>
     <div style="margin-top: -24px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
@@ -8,30 +36,92 @@
                 <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help 
                     <i class="fa fa-question-circle-o " style="font-size: 20px;"></i>
                 </a>
-                <button id="btnaddAccountant" name="btnaddAccountant" class="btn btn-primary float-right" type="button" style="width: 160px; text-align: center; padding: 6px;" autocomplete="off">
-                    <i class="icon ion-plus"></i>
-                    Add Accountant
-                </button>&nbsp;
+                <a class="btn btnNav btn-primary float-right btnAddNewAccounts" role="button" data-toggle="modal" href="#addNewAccount" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add Account</a>
             </h2>
+            <div>
+                <div class="modal fade" role="dialog" tabindex="-1" id="addNewAccount">
+                    {{> addAccountModal}}
+                </div>
+                <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
+                    {{> taxratelistpop}}
+                </div>
+                <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
+                    {{> newtaxratepop}}
+                </div>
+                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="padding-bottom: 8px;">
+                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a>
+                                </p>
+                                <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=30" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                                <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                                <p class="text-center text-muted" style="margin: 0;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a> </p>
+                            </div>
+                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade categoryListModal" role="dialog" tabindex="-1" id="categoryListModal">
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>Category List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                                <div class="card-body p-1 rounded" >
+                                    <div class="table-responsive">
+                                        <style>
+                                            .thCategory {
+                                                width: 20% !important;
+                                            }
+                                            .thAccountName {
+                                                width: 20% !important;
+                                            }
+                                            .thDescription {
+                                                width: 40% !important;
+                                            }
+                                            .thAccountNo {
+                                                width: 10% !important;
+                                            }
+                                            .thTaxRate {
+                                                width: 10% !important;
+                                            }
+                                        </style>
+                                        <table id="tblCategory" style="width:100%" class="table table-striped table-bordered tblCategory">
+                                            <thead>
+                                            <tr class="dnd-moved">
+                                                <th class="thCategory">Category</th>
+                                                <th class="thAccountName">Account Name</th>
+                                                <th class="thDescription">Description</th>
+                                                <th class="thAccountNo">Account No</th>
+                                                <th class="thTaxRate" style="text-align: left!important;">Tax Rate</th>
+                                                <th class="thAccountID hiddenColumn">Account ID</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
     </div>
     <div id="editReportsAccountant" style="display: block; padding: 30px 100px 0 40px">
         <div class="card-body">
-            <div class="row">
+            <div class="row" style="margin-bottom:25px;">
                 <div class="col-12 col-md-5">
-                    <!-- <div class="row no-gutters">
-
-                    </div> -->
-                    <div class="row no-gutters">
-                        <div class="form-group" style="margin: 8px;">
-                            <label>Search:</label>
-                            <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                        <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                        <button class="btn btn-primary fx-rate-btn" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 5px"></i>FX Rates</button>
-                    </div>
                 </div>
                 <div class="col-12 col-md-2">
                     <style>
@@ -43,33 +133,7 @@
                     <img class="imageUpload img-fluid mb-3 mt-4" id="uploadedImage" src="assets/img/VS1.png">
                 </div>
                 <div class="col-12 col-md-5">
-                    <div class="row no-gutters justify-content-end">
-                        <div class="dropdown" style="margin: 8px;">
-                            <style>
-                                .dropdown-toggle::after {
-                                    display: none;
-                                }
-                            </style>
-                            <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
-                            <div class="dropdown-menu" role="menu">
-                                <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                <a class="dropdown-item lastMonth"  id="lastMonth" role="presentation" href="#">Last Month</a>
-                                <a class="dropdown-item lastQuarter"  id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                <a class="dropdown-item last12Months"  id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                <a class="dropdown-item ignoreDate"  id="ignoreDate" role="presentation" href="#">Ignore Date</a>
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin: 8px;">
-                            <label>Balance Date</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control balancedate" id="balancedate" name="balancedate" value="">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-gutters justify-content-end">
+                    <div class="row no-gutters justify-content-end" style="position:absolute; bottom:0; right:0">
                         <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
                         <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                     </div>
@@ -235,8 +299,8 @@
                                         <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
                                             <div style='width: 100%; padding:0'>
                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>NOTES</b></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>{{currentYear}}</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
                                             </div>
                                         </div>
                                         <div style="margin-top:10px; float:left; width:100%">
@@ -246,24 +310,24 @@
                                                         <div class="row" style="margin-left:10px">
                                                             <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px'>{{item.accountname}}</div>
-                                                                <div style='float:left; padding-top:4px; width:90px'></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'>{{item.totalamountex}}</div>
+                                                                <div style='float:left; padding-top:4px; width:100px'></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'>{{item.totalamountex}}</div>
                                                             </div>
                                                         </div>
                                                     {{else if containsequals item.accounttype "Total"}}
                                                         <div class="row" style="margin-left:10px;">
                                                             <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>{{item.accounttype}}</b></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'><b>{{item.totalamountex}}</b></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'><b>{{item.totalamountex}}</b></div>
                                                             </div>
                                                         </div>
                                                     {{else}}
                                                         <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
                                                             <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>{{item.accounttype}}</b></div>
                                                             {{#unless equals item.totalamountex ""}}
-                                                                <div style='float:left; padding-top:4px; width:90px'></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'><b>{{item.totalamountex}}</b></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'><b>{{item.totalamountex}}</b></div>
                                                             {{/unless}}
                                                         </div>
                                                     {{/if}}
@@ -299,8 +363,8 @@
                                         <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
                                             <div style='width: 100%; padding:0'>
                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>NOTES</b></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>{{currentYear}}</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
                                             </div>
                                         </div>
                                         <div style="margin-top:10px; float:left; width:100%">
@@ -310,22 +374,22 @@
                                             <div class="row" style="margin-left:10px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Retained Earnings at Start of Year</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'>{{retainedEarnings}}</div>
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-left:10px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Profit/(Loss) Before Taxation</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(10,186.24)</div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'>{{netIncome}}</div>
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-left:10px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Retained Earnings After Appropriation</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>(12,042.24)</div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'>{{totalRetainedEarnings}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -358,8 +422,8 @@
                                         <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
                                             <div style='width: 100%; padding:0'>
                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>NOTES</b></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>{{endDate}}</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>{{endDate}}</b></div>
                                             </div>
                                         </div>
                                         <div style="margin-top:10px; float:left; width:100%">
@@ -379,8 +443,8 @@
                                                         <div class="row" style="margin-left:20px">
                                                             <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px'>{{item.dispName}}</div>
-                                                                <div style='float:left; padding-top:4px; width:90px'></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'>{{item.value}}</div>
+                                                                <div style='float:left; padding-top:4px; width:100px'></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'>{{item.value}}</div>
                                                             </div>
                                                         </div>
                                                     {{/if}}
@@ -388,8 +452,8 @@
                                                         <div class="row" style="margin-left:20px">
                                                             <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>{{item.dispName}}</b></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'><b>{{item.value}}</b></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'><b>{{item.value}}</b></div>
                                                             </div>
                                                         </div>
                                                     {{/if}}
@@ -397,8 +461,8 @@
                                                         <div class="row" style="margin-left:10px">
                                                             <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>{{item.dispName}}</b></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'></div>
-                                                                <div style='float:left; padding-top:4px; width:90px'><b>{{item.value}}</b></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'></div>
+                                                                <div style='float:left; padding-top:4px; width:100px'><b>{{item.value}}</b></div>
                                                             </div>
                                                         </div>
                                                     {{/if}}
@@ -541,45 +605,47 @@
                             </div>
                         </div>
                     </div>
-                    <div id="page-10" style="display:none; font-size:13px">
+                    <div id="page-10" style="display:none;">
                         <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                             <div class="card-body">
-                                {{#each pan in accountantPanList}}
-                                <div class="row">
+                                {{#each pan in accountPanList}}
+                                <div class="row" style="font-size:13px">
                                     <div class="col" style="margin-bottom:20px">
                                         <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
                                             <div style='width: 100%; padding:0'>
-                                                <div style='width:calc(100% - 90px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                                <div style='float:left; padding-top:4px; width:90px'><b>{{currentYear}}</b></div>
+                                                <div style='width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
                                             </div>
                                         </div>
                                         <div style="margin-top:10px; float:left; width:100%">
                                             <div style="border-bottom: 1px solid #858796;">
-                                                <a role="button" data-toggle="modal" href="#accountantList_{{pan.no}}" class="btn btn-primary helpModal" style="width: 24px; height: 24px; text-align: center; padding: 0;">
+                                                <a role="button" data-toggle="modal" href="#accountList_{{pan.no}}" class="btn btn-primary helpModal" style="width: 24px; height: 24px; text-align: center; padding: 0;">
                                                     <i class="icon ion-plus"></i>
                                                 </a>&nbsp;
                                                 <b>{{pan.no}} {{pan.name}}</b>
                                             </div>
                                             <div id="reportAccPan{{pan.no}}" class="row" style="margin-left:32px"></div>
                                             <div style="margin-left:32px;">
-                                                <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>Total {{pan.name}}</b></div>
-                                                <div style='float:left; padding-top:4px; width:90px' id="total{{pan.no}}_balance1"><b>1,042.24</b></div>
+                                                <div style='width:calc(100% - 100px); float:left; padding-top:4px'><b>Total {{pan.name}}</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px' id="total{{pan.no}}_balance"><b>$0</b></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                 
-                                <div class="modal fade" role="dialog" tabindex="-1" id="accountantList_{{pan.no}}">
-                                    <div class="modal-dialog" role="document" style="max-width: 800px!important;">
+                                <div class="modal fade" role="dialog" tabindex="-1" id="accountList_{{pan.no}}">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="title-header">Account List</h4>
-                                                <button id="sel-{{pan.no}}" name="sel-{{pan.no}}" class="btn btn-primary float-right btnselAccountant" type="button" style="width: 80px; text-align: center; padding: 6px; margin-left:50px;" autocomplete="off">
+                                                <h5 class="modal-title" id="exampleModalLabel">Account List</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <!-- <button id="sel-{{pan.no}}" name="sel-{{pan.no}}" class="btn btn-primary float-right btnselAccountant" type="button" style="width: 80px; text-align: center; padding: 6px; margin-left:50px;" autocomplete="off">
                                                     Select
-                                                </button>&nbsp;
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                </button>&nbsp; -->
                                             </div>
-                                            <div class="modal-body" style="height:650px; overflow:auto;">
+                                            <div class="modal-body">
                                                 <table id="tblAccountOverview" style="width:100%" class="dataTable table table-striped table-bordered tblAccountOverview">
                                                     <thead>
                                                         <tr class="dnd-moved">
@@ -588,7 +654,7 @@
                                                             <th class="th colDescription" style="width:320px">Description</th>
                                                             <th class="th colAccountNo">Account No</th>
                                                             <th class="th colType">Type</th>
-                                                            <th class="th colBalance hiddenColumn" style="width:80px;">Balance</th>
+                                                            <th class="th colBalance" style="width:80px;">Balance</th>
                                                             <th class="th colTaxCode hiddenColumn" style="width:80px;">Tax Code</th>
                                                             <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
                                                             <th class="th colBankAccountName hiddenColumn" style="width:120px;">Bank Acc Name</th>
@@ -619,7 +685,7 @@
                                                                     <td contenteditable="false" class="colType" accounttype="{{item.accounttypeshort}}">
                                                                         {{item.accounttypename}}
                                                                     </td>
-                                                                    <td contenteditable="false" class="colBalance hiddenColumn" style="text-align: right!important;">
+                                                                    <td contenteditable="false" class="colBalance" style="text-align: right!important;">
                                                                         {{item.balance}}
                                                                     </td>
                                                                     <td contenteditable="false" class="colTaxCode hiddenColumn">{{item.taxcode}}</td>
@@ -640,6 +706,10 @@
                                                     </tbody>
                                                 </table>
                                                 <input type="hidden" id="selItems" value="">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button id="sel-{{pan.no}}" name="sel-{{pan.no}}" class="btn btn-primary btnselAccountant" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                             </div>
                                         </div>
                                     </div>
@@ -681,8 +751,15 @@
                     </div>
                 </div>
             </div>
+
+            <style>
+                @media print {
+                    .pagebreak { page-break-before: always; } /* page-break-after works, as well */
+                }
+            </style>
+
             <div class="printReport" style="display:none;">
-                <div style="display:block; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:250px">
                         <div class="col">
                             <h1><b>Financial Statements</b></h1>
@@ -690,7 +767,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:50px">
                         <div class="col">
                             <ul class="list-group">
@@ -705,7 +782,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                         <div class="col">
                             <h3><b>Compilation Report</b></h3>
@@ -727,7 +804,7 @@
                         </div>
                     </div>
                     <div class="row" style="margin-top:40px; width:250px">
-                        <div class="col" id="reportsAccountantHeader">
+                        <div class="col" id="reportsAccountantHeaderPrt">
                             <div style="border-top:1px solid #858796; width:172px; margin-bottom:12px"></div>
                             <span style="float:left; padding-bottom:8px">Ashley Summerville, CPA</span>
                             <span style="float:left; padding-bottom:8px"><b>OnPoint Advisory</b></span>
@@ -736,7 +813,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                         <div class="col">
                             <h3><b>Directors Declaration</b></h3>
@@ -763,7 +840,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                         <div class="col">
                             <h3><b>Income Statement</b></h3>
@@ -776,35 +853,35 @@
                             <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
                                 <div style='width: 100%; padding:0'>
                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                    <div style='float:left; padding-top:4px; width:90px'><b>NOTES</b></div>
-                                    <div style='float:left; padding-top:4px; width:90px'><b>{{currentYear}}</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
                                 </div>
                             </div>
                             <div style="margin-top:10px; float:left; width:100%">
                                 {{#if profitList}}
                                     {{#each item in profitList}}
                                         {{#if equals item.accounttype ""}}
-                                            <div class="row" style="margin-left:10px">
+                                            <div class="row" style="margin-left:10px; clear: both;">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px'>{{item.accountname}}</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>{{item.totalamountex}}</div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'>{{item.totalamountex}}</div>
                                                 </div>
                                             </div>
                                         {{else if containsequals item.accounttype "Total"}}
-                                            <div class="row" style="margin-left:10px;">
+                                            <div class="row" style="margin-left:10px; clear: both;">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>{{item.accounttype}}</b></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'><b>{{item.totalamountex}}</b></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'><b>{{item.totalamountex}}</b></div>
                                                 </div>
                                             </div>
                                         {{else}}
                                             <div style="float:left; width:100%; border-bottom: 1px solid #858796; font-size:15px">
                                                 <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>{{item.accounttype}}</b></div>
                                                 {{#unless equals item.totalamountex ""}}
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'><b>{{item.totalamountex}}</b></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'><b>{{item.totalamountex}}</b></div>
                                                 {{/unless}}
                                             </div>
                                         {{/if}}
@@ -814,7 +891,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                         <div class="col">
                             <h3><b>Appropriation Statement</b></h3>
@@ -827,8 +904,8 @@
                             <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
                                 <div style='width: 100%; padding:0'>
                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                    <div style='float:left; padding-top:4px; width:90px'><b>NOTES</b></div>
-                                    <div style='float:left; padding-top:4px; width:90px'><b>{{currentYear}}</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
                                 </div>
                             </div>
                             <div style="margin-top:10px; float:left; width:100%">
@@ -838,29 +915,29 @@
                                 <div class="row" style="margin-left:10px">
                                     <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                         <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Retained Earnings at Start of Year</div>
-                                        <div style='float:left; padding-top:4px; width:90px'></div>
-                                        <div style='float:left; padding-top:4px; width:90px'>(1,856.00)</div>
+                                        <div style='float:left; padding-top:4px; width:100px'></div>
+                                        <div style='float:left; padding-top:4px; width:100px'>{{retainedEarnings}}</div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-left:10px">
                                     <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                         <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Profit/(Loss) Before Taxation</div>
-                                        <div style='float:left; padding-top:4px; width:90px'></div>
-                                        <div style='float:left; padding-top:4px; width:90px'>(10,186.24)</div>
+                                        <div style='float:left; padding-top:4px; width:100px'></div>
+                                        <div style='float:left; padding-top:4px; width:100px'>{{netIncome}}</div>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-left:10px">
                                     <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                         <div style='width:calc(100% - 180px); float:left; padding-top:4px'>Retained Earnings After Appropriation</div>
-                                        <div style='float:left; padding-top:4px; width:90px'></div>
-                                        <div style='float:left; padding-top:4px; width:90px'>(12,042.24)</div>
+                                        <div style='float:left; padding-top:4px; width:100px'></div>
+                                        <div style='float:left; padding-top:4px; width:100px'>{{totalRetainedEarnings}}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                         <div class="col">
                             <h3><b>Balance Sheet - Summarised</b></h3>
@@ -873,8 +950,8 @@
                             <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
                                 <div style='width: 100%; padding:0'>
                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                    <div style='float:left; padding-top:4px; width:90px'><b>NOTES</b></div>
-                                    <div style='float:left; padding-top:4px; width:90px'><b>{{endDate}}</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>{{endDate}}</b></div>
                                 </div>
                             </div>
                             <div style="margin-top:10px; float:left; width:100%">
@@ -894,8 +971,8 @@
                                             <div class="row" style="margin-left:20px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px'>{{item.dispName}}</div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'>{{item.value}}</div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'>{{item.value}}</div>
                                                 </div>
                                             </div>
                                         {{/if}}
@@ -903,8 +980,8 @@
                                             <div class="row" style="margin-left:20px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>{{item.dispName}}</b></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'><b>{{item.value}}</b></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'><b>{{item.value}}</b></div>
                                                 </div>
                                             </div>
                                         {{/if}}
@@ -912,8 +989,8 @@
                                             <div class="row" style="margin-left:10px">
                                                 <div style='width: calc(100% - 12px); border-bottom: 1px solid #ccc; padding:0'>
                                                     <div style='width:calc(100% - 180px); float:left; padding-top:4px'><b>{{item.dispName}}</b></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'></div>
-                                                    <div style='float:left; padding-top:4px; width:90px'><b>{{item.value}}</b></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'></div>
+                                                    <div style='float:left; padding-top:4px; width:100px'><b>{{item.value}}</b></div>
                                                 </div>
                                             </div>
                                         {{/if}}
@@ -923,7 +1000,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                         <div class="col">
                             <h3><b>Notes to the Financial Statements</b></h3>
@@ -965,17 +1042,6 @@
                             <span style="float:left; padding-bottom:12px">Investments held are originally recognised at cost, which includes transaction costs. They are subsequently measured at fair
                                 value which is equivalent to their market bid price at the end of the reporting period. Movements in fair value are recognised
                                 through an equity reserve.</span>
-                        </div>
-                    </div>
-                </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
-                    <div class="row" style="margin-bottom:40px">
-                        <div class="col">
-                            <span style="border-bottom: 1px solid #858796; float:left;">Notes to the Financial Statements</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col" style="margin-bottom:20px">
                             <span style="float:left; padding-bottom:8px"><b>Trade and Other Payables</b></span>
                             <span style="float:left; padding-bottom:12px">Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at 
                                 {{endDate}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
@@ -989,7 +1055,7 @@
                             <span style="float:left; padding-bottom:8px"><b>Cash and Cash Equivalents</b></span>
                             <span style="float:left; padding-bottom:12px">Cash and cash equivalents include cash on hand, deposits held on call with banks, other short-term highly liquid investments
                                 with original maturities of three months or less, and bank overdrafts.</span>
-                            <span style="float:left; padding-bottom:8px"><b>Revenue Recognition</b></span>
+                            <span style="float:left; padding-bottom:8px; clear:both;"><b>Revenue Recognition</b></span>
                             <span style="float:left; padding-bottom:12px; clear:both">Revenue from the sale of goods is recognised upon the delivery of goods to customers.<br>
                                 Revenue from the rendering of services is recognised upon the delivery of the services to customers.<br>
                                 Revenue from commissions is recognised upon delivery of services to customers.<br>
@@ -1019,14 +1085,14 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
-                    {{#each pan in accountantPanList}}
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    {{#each pan in accountPanList}}
                     <div class="row">
                         <div class="col" style="margin-bottom:20px">
                             <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
                                 <div style='width: 100%; padding:0'>
-                                    <div style='width:calc(100% - 90px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
-                                    <div style='float:left; padding-top:4px; width:90px'><b>{{currentYear}}</b></div>
+                                    <div style='width:calc(100% - 100px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
                                 </div>
                             </div>
                             <div style="margin-top:10px; float:left; width:100%">
@@ -1035,15 +1101,15 @@
                                 </div>
                                 <div id="reportAccPanPrt{{pan.no}}" class="row" style="margin-left:32px"></div>
                                 <div style="margin-left:32px;">
-                                    <div style='width:calc(100% - 90px); float:left; padding-top:4px'><b>Total {{pan.name}}</b></div>
-                                    <div style='float:left; padding-top:4px; width:90px' id="total{{pan.no}}_balance1"><b>1,042.24</b></div>
+                                    <div style='width:calc(100% - 100px); float:left; padding-top:4px'><b>Total {{pan.name}}</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px' id="total{{pan.no}}_prt_balance"><b>$0</b></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {{/each}}
                 </div>
-                <div style="display:block; font-size:13px; height:1624px; border:1px solid #fff">
+                <div class="pagebreak" style="display:block; border:1px solid #fff">
                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                         <div class="col">
                             <h3><b>Depreciation Schedule</b></h3>

@@ -321,6 +321,10 @@ Template.stockadjustmentcard.onRendered(() => {
                             $('.colProcessed').css('display', 'block');
                             $("#form :input").prop("disabled", true);
                             $(".btnDeleteStock").prop("disabled", false);
+                            $("#dtCreationDate").prop("disabled", false);
+                            $("#edtCustomerEmail").prop("disabled", false);
+                            $("#formCheck-1").prop("disabled", false);
+                            $(".btnProcess").prop("disabled", false);
                             $(".btnDeleteStockAdjust").prop("disabled", false);
                             $(".printConfirm").prop("disabled", false);
                             $(".btnBack").prop("disabled", false);
@@ -473,6 +477,10 @@ Template.stockadjustmentcard.onRendered(() => {
                                 $('.colProcessed').css('display', 'block');
                                 $("#form :input").prop("disabled", true);
                                 $(".btnDeleteStock").prop("disabled", false);
+                                $("#dtCreationDate").prop("disabled", false);
+                                $("#edtCustomerEmail").prop("disabled", false);
+                                $("#formCheck-1").prop("disabled", false);
+                                $(".btnProcess").prop("disabled", false);
                                 $(".btnDeleteStockAdjust").prop("disabled", false);
                                 $(".printConfirm").prop("disabled", false);
                                 $(".btnBack").prop("disabled", false);
@@ -584,6 +592,10 @@ Template.stockadjustmentcard.onRendered(() => {
                         $('.colProcessed').css('display', 'block');
                         $("#form :input").prop("disabled", true);
                         $(".btnDeleteStock").prop("disabled", false);
+                        $("#dtCreationDate").prop("disabled", false);
+                        $("#edtCustomerEmail").prop("disabled", false);
+                        $("#formCheck-1").prop("disabled", false);
+                        $(".btnProcess").prop("disabled", false);
                         $(".btnDeleteStockAdjust").prop("disabled", false);
                         $(".printConfirm").prop("disabled", false);
                         $(".btnBack").prop("disabled", false);
@@ -2256,9 +2268,6 @@ Template.stockadjustmentcard.events({
                 let tdproductID = $('#' + lineID + " .lineProductName").attr('productid');
                 let tdproductCost = $('#' + lineID + " .lineProductName").attr('productcost');
                 let tdbarcode = $('#' + lineID + " .lineProductBarCode").html();
-                if( tdbarcode != ''){
-                    JsBarcode('#stockAdjust' + lineID, tdbarcode);
-                }
                 let tddescription = $('#' + lineID + " .lineDescription").html();
                 let tdinstockqty = $('#' + lineID + " .lineInStockQty").text();
                 let tdfinalqty = $('#' + lineID + " .lineFinalQty").val();
@@ -2440,6 +2449,7 @@ Template.stockadjustmentcard.events({
                     let templateObject = Template.instance();
 
                     let invoiceId = objDetails.fields.ID;
+                    await JsBarcode('#stockAdjustmentBarCode', 'SA-' + invoiceId);
                     let encodedPdf = await generatePdfForMail(invoiceId);
                     // var base64data = reader.result;
                     let base64data = encodedPdf.split(',')[1];

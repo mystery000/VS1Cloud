@@ -557,52 +557,10 @@ vs1GlobalBackButton = async function () {
     }
  });
 };
-thWidthOnResize = function() {
-  let tableWidth = [];
-  $('#tblcontactoverview th').each(function() {
-    tableWidth.push($(this).outerWidth());
-    tableWidth.push($(this).index());
 
-  });
-};
 tableResize = function() {
   setTimeout(function() {
-//     // $(".dataTable th, .draggingTable th").resizable({
-//     //   handles: "e",
-//     //   resize: function (event, ui) {
-//     //       var sizerID = "." + $(event.target).attr("class").split(" ")[1];
-//     //       $(sizerID).width(ui.size.width);
-//     //   }
-//     // });
-    // setInterval(() => {
-    //   /**
-    //    * We first need to disable all previous events listeners related
-    //    */
-    //   $(".dataTable").colResizable({
-    //     disable: true,
-    //   });
-
-    //   /***
-    //    * Then we need to add back the listeners
-    //    *
-    //    * By doing disabling and re-enabling, start fresh events
-    //    * instead of cummulating multiple listeners which is causing issues
-    //    */
-    //   $(".dataTable").colResizable({
-    //     liveDrag:true,
-    //     gripInnerHtml:"<div class='grip'></div>",
-    //     draggingClass:"dragging",
-    //     resizeMode:'overflow',
-    //     onResize:  (e) => {
-    //       var table = $(e.currentTarget); //reference to the resized table
-    //       thWidthOnResize();
-    //     },
-    //     // disabledColumns: [2]
-    //   });
-    // }, 1000);
-
     const tableHandler = new TableHandler();
-
   }, 2000);
 };
 // $(window).load(function() {

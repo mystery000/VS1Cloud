@@ -264,6 +264,13 @@ templateObject.getEarnings();
         let $search = $(this);
         let dropDownID = $search.attr('id')
         $('#selectLineID').val(dropDownID);
+        if( dropDownID == 'liabilityAccount'){
+            $('#tblAccount_filter input').val('liability');
+            $('#tblAccount_filter input').trigger('keyup');
+        }else{
+            $('#tblAccount_filter input').val('');
+            $('#tblAccount_filter input').trigger('keyup');
+        }
         let offset = $search.offset();
         let searchName = e.target.value || '';
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?

@@ -249,6 +249,8 @@ Template.organisationsettings.onRendered(function() {
         const dataListRet = await organisationService.getOrganisationDetail();
         let mainData = dataListRet.tcompanyinfo[0];
 
+        console.log('mainData', mainData);
+
         templateObject.showSkype.set(mainData.ContactEmail);
         templateObject.showMob.set(mainData.MobileNumber);
         templateObject.showFax.set(mainData.FaxNumber);
@@ -273,7 +275,7 @@ Template.organisationsettings.onRendered(function() {
         $("#ownerfirstname").val(mainData.Firstname);
         $("#ownerlastname").val(mainData.LastName);
         $("#edtCompanyNumber").val(mainData.CompanyNumber);
-        $("#edtABNNumber").val(mainData.abn);
+        // $("#edtABNNumber").val(mainData.abn);
         $("#edtAddress").val(mainData.Address);
         $("#edtCity").val(mainData.City);
         $("#edtState").val(mainData.State);
@@ -323,7 +325,9 @@ Template.organisationsettings.onRendered(function() {
             $("#chkIsDefailtEmail").removeAttr("checked");
         }
 
-        $("#pocontact").val(mainData.Contact);
+        $("#sltAccountant").val(mainData.Contact);
+        // YearEnd: sltYearEnd,
+        $("#sltCompanyType").val(mainData.CompanyCategory);
         $("#contact").val(mainData.ContactName);
         $("#edtphonenumber").val(mainData.PhoneNumber);
         $("#edtemailaddress").val(mainData.Email);
@@ -564,10 +568,12 @@ Template.organisationsettings.events({
         let ownerFistName = $("#ownerfirstname").val() || "";
         let ownerlastName = $("#ownerlastname").val() || "";
         // let companyCategory = $('#org_type').val();
-        let companyABNNumber = $("#edtABNNumber").val();
+        // let companyABNNumber = $("#edtABNNumber").val();
         let companyNumber = $("#edtCompanyNumber").val();
+        let sltCompanyType = $("#sltCompanyType").val();
         let sltAccountant = $("#sltAccountant").val();
-        let pocontact = $("#pocontact").val();
+        let sltYearEnd = $("#sltYearEnd").val();
+        // let pocontact = $("#pocontact").val();
         let contact = $("#contact").val();
         let phone = $("#edtphonenumber").val();
         let emailAddress =
@@ -615,13 +621,14 @@ Template.organisationsettings.events({
                 TradingName: tradingName,
                 Firstname: ownerFistName,
                 LastName: ownerlastName,
-                // CompanyCategory: companyCategory,
-                abn: companyABNNumber,
+                CompanyCategory: sltCompanyType,
+                // abn: companyABNNumber,
                 CompanyNumber: companyNumber,
-                Accountant: sltAccountant,
-                ReportMonth: sltReportMonth,
+                // OrgType: sltCompanyType,
+                // Accountant: sltAccountant,
+                // YearEnd: sltYearEnd,
                 ContactName: contact,
-                Contact: pocontact,
+                Contact: sltAccountant,
                 PhoneNumber: phone,
                 Email: emailAddress,
                 Url: websiteURL,

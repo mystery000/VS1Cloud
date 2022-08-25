@@ -75,12 +75,24 @@ Template.dashboardManagerCards.onRendered(()=>{
         FlowRouter.go('/leadlist?range=month');
     });
 
+    $('.new-deals-month').on('click', function() {
+        FlowRouter.go('/quoteslist?range=month');
+    });
+
     $('.closed-deals-month').on('click', function() {
-        FlowRouter.go('/paymentoverview?range=month');
+        FlowRouter.go('/invoicelist?range=month');
     });
 
     $('.closed-deals-year').on('click', function() {
-        FlowRouter.go('/paymentoverview?range=year');
+        FlowRouter.go('/invoicelist?range=year');
+    });
+
+    $('.sales-winrate').on('click', function() {
+        FlowRouter.go('/quoteslist?filter=converted');
+    });
+
+    $('.avg-sales-cycle').on('click', function() {
+        FlowRouter.go('/quoteslist');
     });
 });
 
