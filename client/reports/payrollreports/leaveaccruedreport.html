@@ -171,6 +171,27 @@
                                                 <th>Hours</th>
                                                 <th class="text-right">Value</th>
                                             </tr>
+
+                                            {{#if isOnlyDefaultActive equal "false" }}
+                                                <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+
+                                                
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+                                                
+                                                </tr>
+                                            {{/if}}
                                         </thead>
                                         <tbody>
                                             {{#if records}}
@@ -182,7 +203,19 @@
                                                         <td>{{ item.fields.PayID }}</td>
                                                         <td>{{ item.fields.AccrualType }}</td>
                                                         <td class="{{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ floatValue item.fields.AccruedHours }}</td>
-                                                        <td class="text-right {{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ calculateHourPrice item }}</td>
+                                                    
+                                                        {{#if isOnlyDefaultActive }}
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ convertAmount calculateHourPrice item }}</td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+                                                        {{else}}
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.AccruedHours}} text-danger {{/if}}">{{ calculateHourPrice item }}</td>
+                                                        {{/if}}
+                                                    
                                                     </tr>
                                                 {{/each}}
                                             {{/if}}
