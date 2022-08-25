@@ -2037,10 +2037,19 @@ authenticatedRoutes.route('/processlist', {
 });
 
 authenticatedRoutes.route('/processcard', {
-    name: 'new_process',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'new_process'
-        })
-    }
+  name: 'new_process',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'new_process'
+      })
+  }
+})
+
+authenticatedRoutes.route('/eft', {
+  name: 'eft_export',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'eft_export'
+      })
+  }
 })

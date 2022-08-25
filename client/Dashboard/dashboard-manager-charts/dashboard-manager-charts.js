@@ -402,7 +402,7 @@ Template.dashboardManagerCharts.onRendered(function () {
     };
 
     function renderSPMEmployeeChart(employeeNames, employeeSalesQuota) {
-        const chart = highCharts.chart('spd-employee-chart', {
+        highCharts.chart('spd-employee-chart', {
             series: [{
                 name: 'Employees',
                 data: employeeSalesQuota
@@ -691,5 +691,26 @@ Template.dashboardManagerCharts.events({
         await ChartHandler.saveChartsInLocalDB();
         await templateObject.checkChartToDisplay();
         $(".fullScreenSpin").css("display", "none");
+    },
+    "click #spd-employee-chart": () => {
+        FlowRouter.go('/employeelist');
+    },
+    "click #spd-gauge-area1": () => {
+        FlowRouter.go('/invoicelist?range=lastMonth');
+    },
+    "click #spd-gauge-area2": () => {
+        FlowRouter.go('/invoicelist?range=lastMonth');
+    },
+    "click #spd-gauge-area3": () => {
+        FlowRouter.go('/invoicelist?range=lastMonth');
+    },
+    "click #spd-gauge-area4": () => {
+        FlowRouter.go('/invoicelist?range=lastMonth');
+    },
+    "click #spd-gauge-area5": () => {
+        FlowRouter.go('/invoicelist?range=lastMonth');
+    },
+    "click #spd-gauge-area6": () => {
+        FlowRouter.go('/invoicelist?range=lastMonth');
     },
 });

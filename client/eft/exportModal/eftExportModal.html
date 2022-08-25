@@ -1,0 +1,162 @@
+<template name="eftExportModal">
+  <style>
+    .btnRemoveAll {
+      font-size: 20px;
+      color: #e74a3a;
+      cursor: pointer;
+    }
+
+    .colIdx,
+    .colApply {
+      text-align: center;
+    }
+
+    .eftInput {
+      border: none;
+    }
+
+    #eftExportTable {
+      border: solid 1px #e3e3e3;
+    }
+
+    #eftExportTableBody td {
+      padding: 0;
+    }
+
+    #eftExportTableBody .colIdx,
+    #eftExportTableBody .colApply {
+      padding: 0.5rem;
+    }
+  </style>
+  <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered generated-id" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 style="">
+          <div style="float: left;">Electronic Funds Transfer</div>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6 col-md-10">
+            <div class="row" style="margin-top: 56px;">
+              <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Account</label>
+                  <select class="form-control pointer" id="sltAccountType" name="sltAccountType">
+                    {{#each item in accountTypes}}
+                    <option value="{{item.accounttypename}}">{{item.description}}
+                    </option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+              <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
+                  <input type="text" class="form-control" id="edtAccountName" name="edtAccountName">
+                </div>
+              </div>
+              <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Processing Date</label>
+                  <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo">
+                </div>
+              </div>
+              <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Name of User</label>
+                  <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo">
+                </div>
+              </div>
+              <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;"><label>Number of User</label>
+                  <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo">
+                </div>
+              </div>
+              <div class="col-6 col-md-4">
+                <div class="form-group" style="margin: 4px;">
+                  <label>Transaction Description</label>
+                  <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <div class="row justify-content-end">
+              <button class="btn btn-success btnDoEftExport" type="button" style="margin: 8px; width: 120px;"><i
+                  class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-danger btnCancelEftExport" type="button" style="margin: 8px; width: 120px;"><i
+                  class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-primary btnOptionsEft" type="button"
+                style="margin: 8px; width: 120px;">Options</button>
+            </div>
+            <div class="row justify-content-end">
+              <button class="btn btn-primary btnSelectAllEft" type="button" style="margin: 8px; width: 120px;">Select
+                All</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="table-responsive" style="margin: 0 8px 8px 16px; min-height: 120px;">
+            <table id="eftExportTable" name="eftExportTable"
+              class="dataTable table table-hover table-striped table-bordered eftExportTable">
+              <thead>
+                <tr class="dasnd-moved">
+                  <th class="th colIdx btnRemoveAll" style="width: 2%;">
+                    <i class="fa fa-close"></i>
+                  </th>
+                  <th class="th colApply">Apply?</th>
+                  <th class="th colAccountName">Account Name</th>
+                  <th class="th colBsb">BSB</th>
+                  <th class="th colAccountNo">Account No</th>
+                  <th class="th colTransactionCode">Transaction Code</th>
+                  <th class="th colLodgement">Lodgement References</th>
+                  <th class="th colAmount">Amount</th>
+                  <th class="th colFromBsb">From BSB</th>
+                  <th class="th colFromAccountNo">From Account No</th>
+                </tr>
+              </thead>
+              <tbody id="eftExportTableBody">
+                <tr>
+                  <td class="colIdx addNewRow" style="width: 2%;">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </td>
+                  <td class="colApply">
+                    <input type="checkbox" class="isApply" />
+                  </td>
+                  <td class="colAccountName">
+                    <input type="text" class="form-control eftInput" />
+                  </td>
+                  <td class="colBsb">
+                    <input type="text" class="form-control eftInput" value="-" />
+                  </td>
+                  <td class="colAccountNo">
+                    <input type="text" class="form-control eftInput" />
+                  </td>
+                  <td class="colTransactionCode">
+                    <input type="text" class="form-control eftInput" />
+                  </td>
+                  <td class="colLodgement">
+                    <input type="text" class="form-control eftInput" />
+                  </td>
+                  <td class="colAmount">
+                    <input type="text" class="form-control eftInput text-right" />
+                  </td>
+                  <td class="colFromBsb">
+                    <input type="text" class="form-control eftInput" value="-" />
+                  </td>
+                  <td class="colFromAccountNo">
+                    <input type="text" class="form-control eftInput" />
+                  </td>
+                </tr> 
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{> eftOptionsModal}}
+</template>

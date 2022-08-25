@@ -335,7 +335,7 @@ Template.bankingoverview.onRendered(function() {
     }
 
     // $('#tblBankingOverview').DataTable();
-    templateObject.getAllBankAccountData = function() {
+    templateObject.getAllBankAccountData = async function(viewdeleted) {
       var currentBeginDate = new Date();
       var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
       let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -609,9 +609,11 @@ Template.bankingoverview.onRendered(function() {
                                 }, 100);
                             },
                             "fnInitComplete": function () {
-                              let urlParametersPage = FlowRouter.current().queryParams.page;
-                              if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                                  this.fnPageChange('last');
+                              this.fnPageChange('last');
+                              if(data.Params.Search.replace(/\s/g, "") == ""){
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                              }else{
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                               }
                                 $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -937,9 +939,11 @@ Template.bankingoverview.onRendered(function() {
                             }, 100);
                         },
                         "fnInitComplete": function () {
-                          let urlParametersPage = FlowRouter.current().queryParams.page;
-                          if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                              this.fnPageChange('last');
+                          this.fnPageChange('last');
+                          if(data.Params.Search.replace(/\s/g, "") == ""){
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                          }else{
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                           }
                             $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -1027,7 +1031,7 @@ Template.bankingoverview.onRendered(function() {
 
             }
         }).catch(function(err) {
-            sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
+            sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0,viewdeleted).then(function(data) {
                 addVS1Data('TBankAccountReport', JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
@@ -1252,9 +1256,11 @@ Template.bankingoverview.onRendered(function() {
                             }, 100);
                         },
                         "fnInitComplete": function () {
-                          let urlParametersPage = FlowRouter.current().queryParams.page;
-                          if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                              this.fnPageChange('last');
+                          this.fnPageChange('last');
+                          if(data.Params.Search.replace(/\s/g, "") == ""){
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                          }else{
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
                           }
                             $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -1348,7 +1354,7 @@ Template.bankingoverview.onRendered(function() {
         });
 
     }
-    templateObject.getAllBankAccountData();
+    templateObject.getAllBankAccountData('');
 
     templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate) {
       sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0).then(function(data) {
@@ -1384,6 +1390,9 @@ Template.bankingoverview.onRendered(function() {
 });
 
 Template.bankingoverview.events({
+    'click .btnEft': function() {
+      FlowRouter.go('/eft');
+    },
     'click .btnRefresh': function() {
       var currentBeginDate = new Date();
       var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");

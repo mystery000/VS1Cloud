@@ -50,6 +50,8 @@ Template.newbankrecon.onCreated(function() {
     templateObject.taxraterecords = new ReactiveVar([]);
     templateObject.baselinedata = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.defaultCustomerTerms = new ReactiveVar();
+    templateObject.defaultSupplierTerms = new ReactiveVar();
 });
 
 Template.newbankrecon.onRendered(function() {
@@ -374,17 +376,17 @@ Template.newbankrecon.onRendered(function() {
                 getVS1Data('TReconciliationList').then(function (dataObject) {
                     if(dataObject.length == 0){
                         sideBarService.getAllTReconcilationByName(fromDate, toDate, bankaccountname).then(function (data) {
-                            setAllTReconcilation(data, yodleeData);
+                            setAllTReconciliation(data, yodleeData);
                         }).catch(function (err) {
                             $('.fullScreenSpin').css('display','none');
                         });
                     }else{
                         let data = JSON.parse(dataObject[0].data);
-                        setAllTReconcilation(data, yodleeData);
+                        setAllTReconciliation(data, yodleeData);
                     }
                 }).catch(function (err) {
                     sideBarService.getAllTReconcilationByName(fromDate, toDate, bankaccountname).then(function (data) {
-                        setAllTReconcilation(data, yodleeData);
+                        setAllTReconciliation(data, yodleeData);
                     }).catch(function (err) {
                         $('.fullScreenSpin').css('display','none');
                     });
@@ -406,7 +408,7 @@ Template.newbankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         });
     };
-    function setAllTReconcilation(data, yodleeData) {
+    function setAllTReconciliation(data, yodleeData) {
         let reconList = [];
         for(let i=0; i<data.treconciliation.length; i++){
             if (bankaccountname == data.treconciliation[i].fields.AccountName ) {
@@ -618,7 +620,7 @@ Template.newbankrecon.onRendered(function() {
                         StatementTransactionDate: data.ttobereconcileddeposit[i].StatementTransactionDate != '' ? moment(data.ttobereconcileddeposit[i].StatementTransactionDate).format("DD/MM/YYYY") : '',
                         StatementAmount: data.ttobereconcileddeposit[i].StatementAmount,
                         StatementDescription: data.ttobereconcileddeposit[i].StatementDescription || ' ',
-                        deporwith: 'spent',
+                        deporwith: 'received',
                         spentVS1Amount: utilityService.modifynegativeCurrencyFormat(0),
                         receivedVS1Amount: utilityService.modifynegativeCurrencyFormat(data.ttobereconcileddeposit[i].Amount),
                     };
@@ -645,7 +647,7 @@ Template.newbankrecon.onRendered(function() {
                             StatementTransactionDate: data.ttobereconciledwithdrawal[j].StatementTransactionDate != '' ? moment(data.ttobereconciledwithdrawal[j].StatementTransactionDate).format("DD/MM/YYYY") : '',
                             StatementAmount: data.ttobereconciledwithdrawal[j].StatementAmount,
                             StatementDescription: data.ttobereconciledwithdrawal[j].StatementDescription || ' ',
-                            deporwith: 'received',
+                            deporwith: 'spent',
                             spentVS1Amount: utilityService.modifynegativeCurrencyFormat(data.ttobereconciledwithdrawal[j].Amount),
                             receivedVS1Amount: utilityService.modifynegativeCurrencyFormat(0),
                         };
@@ -663,6 +665,7 @@ Template.newbankrecon.onRendered(function() {
     function setMatchTransactionData(matchData) {
         let thirdaryData = sortTransactionData(matchData, 'SortDate');
         VS1TransactionList = thirdaryData;
+        console.log(thirdaryData);
         templateObject.matchTransactionData.set(thirdaryData);
     }
 
@@ -684,23 +687,23 @@ Template.newbankrecon.onRendered(function() {
         getVS1Data('TReconciliationList').then(function (dataObject) {
             if(dataObject.length == 0){
                 sideBarService.getAllTReconcilationList(fromDate, toDate).then(function (data) {
-                    setAllTReconcilationList(data);
+                    setAllTReconciliationList(data);
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display','none');
                 });
             }else{
                 let data = JSON.parse(dataObject[0].data);
-                setAllTReconcilationList(data);
+                setAllTReconciliationList(data);
             }
         }).catch(function (err) {
             sideBarService.getAllTReconcilationList(fromDate, toDate).then(function (data) {
-                setAllTReconcilationList(data);
+                setAllTReconciliationList(data);
             }).catch(function (err) {
                 $('.fullScreenSpin').css('display','none');
             });
         });
     };
-    function setAllTReconcilationList(data) {
+    function setAllTReconciliationList(data) {
         let reconList = [];
         for(let i=0; i<data.treconciliationlist.length; i++){
             let openBalance = utilityService.modifynegativeCurrencyFormat(data.treconciliationlist[i].OpenBalance)|| 0.00;
@@ -772,12 +775,41 @@ Template.newbankrecon.onRendered(function() {
         });
     };
 
+    templateObject.getDefaultCustomerTerms = function() {
+        sideBarService.getDefaultCustomerTerms().then(function(data) {
+            if (data.ttermsvs1.length > 0) {
+                const val = data.ttermsvs1[0].TermsName;
+                // templateObject.defaultCustomerTerms.set(val);
+                templateObject.defaultCustomerTerms.set('test');
+            } else {
+                templateObject.defaultCustomerTerms.set('test');
+            }
+        // }).catch(function(err) {
+        //     console.log(err);
+        });
+    };
+    templateObject.getDefaultSupplierTerms = function() {
+        sideBarService.getDefaultSupplierTerms().then(function(data) {
+            if (data.ttermsvs1.length > 0) {
+                const val = data.ttermsvs1[0].TermsName;
+                // templateObject.defaultSupplierTerms.set(val);
+                templateObject.defaultSupplierTerms.set('test');
+            } else {
+                templateObject.defaultSupplierTerms.set('test');
+            }
+        });
+    };
+
     setTimeout(function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         templateObject.getAccountNames();
         templateObject.getAllTaxCodes();
         templateObject.getAllCustomers();
         templateObject.getAllSuppliers();
+        templateObject.defaultCustomerTerms.set('test');
+        templateObject.defaultSupplierTerms.set('test');
+        // templateObject.getDefaultCustomerTerms();
+        // templateObject.getDefaultSupplierTerms();
         // templateObject.getAllReconListData();
     }, 100);
 
@@ -1042,6 +1074,7 @@ Template.newbankrecon.onRendered(function() {
                     $('#what_' + item.YodleeLineID).val(paymentFields.AccountName);
                     $('#who_' + item.YodleeLineID).val(paymentFields.ClientName);
                     $('#whoID_' + item.YodleeLineID).val(paymentFields.ClientID);
+                    $('#sender_' + item.YodleeLineID).val(paymentFields.ClientName);
                 }
             } else {
                 $('#who_' + item.YodleeLineID).val(item.CompanyName);
@@ -1056,12 +1089,13 @@ Template.newbankrecon.onRendered(function() {
                     if (!isExistCustomer) {
                         contactService.getOneCustomerDataExByName(item.CompanyName).then(function (data) {
                             if (data.tcustomer.length == 0) {
+                                const termsName = templateObject.defaultCustomerTerms.get();
                                 let objDetails = {
                                     type: "TCustomer",
                                     fields: {
                                         ClientName: item.CompanyName,
                                         FirstName: item.CompanyName,
-                                        LastName: '(LastName)',
+                                        LastName: 'Unknown',
                                         Phone: '',
                                         Mobile: '',
                                         Email: '',
@@ -1077,6 +1111,7 @@ Template.newbankrecon.onRendered(function() {
                                         BillState: '',
                                         BillPostCode: '',
                                         Billcountry: '',
+                                        TermsName: termsName || '',
                                         PublishOnVS1: true
                                     }
                                 };
@@ -1125,12 +1160,13 @@ Template.newbankrecon.onRendered(function() {
                     if (!isExistSupplier) {
                         contactService.getOneSupplierDataExByName(item.CompanyName).then(function (data) {
                             if (data.tsupplier.length == 0) {
+                                const termsName = templateObject.defaultSupplierTerms.get();
                                 let objDetails = {
                                     type: "TSupplier",
                                     fields: {
                                         ClientName: item.CompanyName,
                                         FirstName: item.CompanyName,
-                                        LastName: '',
+                                        LastName: 'Unknown',
                                         Phone: '',
                                         Mobile: '',
                                         Email: '',
@@ -1146,6 +1182,7 @@ Template.newbankrecon.onRendered(function() {
                                         BillState: '',
                                         BillPostCode: '',
                                         Billcountry: '',
+                                        TermsName: termsName || '',
                                         PublishOnVS1: true
                                     }
                                 };
@@ -1192,7 +1229,6 @@ Template.newbankrecon.onRendered(function() {
                 $('#labelSender_'+item.YodleeLineID).text("Supplier");
                 $('#sender_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
             }
-
             $('#btnAddDetail_'+item.YodleeLineID).on('click', function(e, li) {
                 openTransactionDetail(item);
             });
@@ -1727,8 +1763,20 @@ Template.newbankrecon.events({
             let paymentID = $("#paymentID_"+selectedYodleeID).val();
             paymentID = (paymentID && paymentID != '')?parseInt(paymentID):0;
             paymentID = 0; // Now keep 0 ???
+            let resultPaymentID;
             let clientDetail = null;
+            let defaultTermsName = '';
             if (DepOrWith == "spent") {
+                defaultTermsName = Template.instance().defaultSupplierTerms.get();
+                clientDetail = getClientDetail(clientName, 'supplier');
+                if (!clientDetail) {
+                    swal('Supplier must be vaild.', '', 'error');
+                    $("#sender_"+selectedYodleeID).focus();
+                    return false;
+                }
+            }
+            if (DepOrWith == "received") {
+                defaultTermsName = Template.instance().defaultCustomerTerms.get();
                 clientDetail = getClientDetail(clientName, 'customer');
                 if (!clientDetail) {
                     swal('Customer must be vaild.', '', 'error');
@@ -1739,7 +1787,7 @@ Template.newbankrecon.events({
 
             let clientShippingAddress = clientName + '\n' + clientDetail.street + '\n' + clientDetail.street2 + ' ' + clientDetail.statecode + '\n' + clientDetail.country;
             let clientBillingAddress = clientName + '\n' + clientDetail.billstreet + '\n' + clientDetail.billstreet2 + ' ' + clientDetail.billstatecode + '\n' + clientDetail.billcountry;
-            let clientTermsName = clientDetail.termsName;
+            let clientTermsName = clientDetail.termsName?clientDetail.termsName:defaultTermsName;
             $('.fullScreenSpin').css('display', 'inline-block');
             let bankaccountid = parseInt(Session.get('bankaccountid'));
             let bankAccountName = (Session.get("bankaccountname") != undefined && Session.get("bankaccountname") != '')?Session.get("bankaccountname"):null;
@@ -1754,7 +1802,7 @@ Template.newbankrecon.events({
 
             let lineItems = [];
             let lineItemsObj = {};
-            if (DepOrWith == "Received") {
+            if (DepOrWith == "received") {
                 // Received: invoice->customer payment->reconciliation deposit
                 $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice > tbody > tr").each(function () {
                     let lineID = this.id;
@@ -1834,6 +1882,7 @@ Template.newbankrecon.events({
                         };
                         paymentService.saveDepositData(objPaymentDetails).then(function(resultPayment) {
                             if (resultPayment.fields.ID) {
+                                resultPaymentID = resultPayment.fields.ID;
                                 let lineReconObj = {
                                     type: "TReconciliationDepositLines",
                                     fields: {
@@ -1877,6 +1926,32 @@ Template.newbankrecon.events({
                                 };
                                 reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
                                     if (resultRecon.fields.ID) {
+                                        let reconciledepositObj = {
+                                            ID: 'dnew',
+                                            VS1Date: moment(invoiceDate).format("DD/MM/YYYY"),
+                                            SortDate: moment(invoiceDate).format("YYYY-MM-DD"),
+                                            CompanyName: clientName,
+                                            PaymentType: data.ttobereconcileddeposit[i].Notes || ' ',
+                                            Amount: grand_total,
+                                            DepositID: '',
+                                            ReferenceNo: '',
+                                            Seqno: 0,
+                                            PaymentID: paymentID,
+                                            DepositLineID: 0,
+                                            CusID: clientID,
+                                            StatementLineID: 0,
+                                            StatementTransactionDate: '',
+                                            StatementAmount: 0,
+                                            StatementDescription: '',
+                                            deporwith: 'received',
+                                            spentVS1Amount: utilityService.modifynegativeCurrencyFormat(0),
+                                            receivedVS1Amount: utilityService.modifynegativeCurrencyFormat(grand_total),
+                                        };
+                                        console.log(paymentID);
+                                        console.log(resultPaymentID);
+                                        console.log(reconcileID);
+                                        console.log(resultRecon.fields.ID);
+                                        console.log(resultRecon);
                                         openFindMatchAfterSave(resultRecon.fields.ID);
                                         $('.fullScreenSpin').css('display', 'none');
                                     } else {
