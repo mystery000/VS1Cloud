@@ -1540,7 +1540,7 @@ Template.header.onRendered(function() {
 
         organizationService.getCheckTcompLogoData().then(function(dataLogo) {
 
-            console.log(dataLogo.tcomplogo[0].MIMEEncodedPicture);
+           
             if (dataLogo.tcomplogo.length) {
               let logoImagePicture = dataLogo.tcomplogo[0].MIMEEncodedPicture || '';
               let logoPictureType = dataLogo.tcomplogo[0].Pictype || '';

@@ -84,6 +84,21 @@ Template.invoicelist.onRendered(function () {
        }
     });
 
+    if(FlowRouter.current().queryParams.range == "month") {
+      fromDate = moment().startOf('month').startOf('day').format("DD/MM/YYYY");
+      begunDate = moment().endOf('month').endOf('day').format("DD/MM/YYYY");
+    }
+
+    if(FlowRouter.current().queryParams.range == "year") {
+      fromDate = moment().subtract(12, 'months').startOf('day').format("DD/MM/YYYY");
+      begunDate = moment().endOf('day').format("DD/MM/YYYY");
+    }
+
+    if(FlowRouter.current().queryParams.range == "lastMonth") {
+      fromDate = moment().subtract(1, 'month').startOf('day').format("DD/MM/YYYY");
+      begunDate = moment().endOf('day').format("DD/MM/YYYY");
+    }
+
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
@@ -471,6 +486,7 @@ Template.invoicelist.onRendered(function () {
                 });
                 templateObject.getCustomFieldData();
             } else {
+            
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data;
                 let lineItems = [];

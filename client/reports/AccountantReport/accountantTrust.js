@@ -487,10 +487,6 @@ Template.accountant_trust.onRendered(() => {
         templateObject.endDate.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
-        console.log("===", localStorage.getItem('VS1Accountant'));
-
-        // console.log("===", localStorage);
-
         getVS1Data('TSupplierVS1').then(function(dataObject) {
             if (dataObject.length === 0) {
                 contactService.getOneSupplierDataEx(supplierID).then(function(data) {

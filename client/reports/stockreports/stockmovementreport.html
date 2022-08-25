@@ -170,6 +170,9 @@
                                     .text-right {
                                         text-align: right !important;
                                     }
+                                    .table-active th {
+                                        white-space: nowrap;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
@@ -182,11 +185,42 @@
                                                 <th class="text-right">Opening Qty</th>
                                                 <th class="text-right">Trans Qty</th>
                                                 <th class="text-right">Running Qty</th>
-                                                <th class="text-right">Unit Cost</th>
-                                                <th class="text-right">Cost</th>
-                                                <!-- <th class="text-right">Unit Cost (Ex)</th> -->
-                                                <th class="text-right">Total Cost (Ex)</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">Unit Cost</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">Total Cost</th>
+                                                <!-- <th class="text-center" colspan="{{countActive currencyList}}">Unit Cost (Ex)</th> -->
+                                                <!-- <th class="text-center" colspan="{{countActive currencyList}}">Total Cost (Ex)</th> -->
                                             </tr>
+
+                                            {{#if isOnlyDefaultActive equal "false" }}
+                                                <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+
+                                                
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+                                                  
+                                                </tr>
+                                            {{/if}}
                                         </thead>
                                         <tbody>
                                             {{#if records}}
@@ -204,22 +238,43 @@
                                                         <td style="font-weight: 800;"></td>
                                                         <td style="font-weight: 800;"></td>
                                                         <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
+                                                        
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
 
                                                         <tr>
                                                             <td></td>
-                                                            <td>{{ item.fields.TransactionDate }}</td>
+                                                            <td>{{ formatDate item.fields.TransactionDate }}</td>
                                                             <td>{{ item.fields.TranstypeDesc }}</td>
-                                                            <td>{{ item.fields.TransactionNo }}</td>
-                                                            <td class="text-right">{{ item.fields.Qty }}</td>
-                                                            <td class="text-right">{{ item.fields.Qty }}</td>
-                                                            <td class="text-right">{{ item.fields.Qty }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td>
+                                                            <td class="text-right">{{ checkZero item.fields.TransactionNo }}</td>
+                                                            <td class="text-right">{{ checkZero item.fields.Qty }}</td>
+                                                            <td class="text-right">{{ checkZero item.fields.Qty }}</td>
+                                                            <td class="text-right">{{ checkZero item.fields.Qty }}</td>
+                                                            <!-- <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td> -->
 
-                                                            <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td>
+                                                            {{#if isOnlyDefaultActive }}
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Cost }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.Cost c}}</td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.TotalCost }} text-danger {{else}} text-success {{/if}}">{{ convertAmount item.fields.TotalCost c}}</td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                    
+                                                                    
+                                                                {{/if}}
+                                                            {{else}}
+                                                                <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
+                                                                <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td>
+                                                                <!-- <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
+                                                                <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td> -->
+
+                                                            {{/if}}
                                                         </tr>
 
                                                     {{/each}}

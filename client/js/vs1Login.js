@@ -2022,37 +2022,37 @@ Template.vs1login.onRendered(function () {
                                                     localStorage.setItem('mainEIPAddress', licenceIPAddress);
                                                     localStorage.setItem('mainEPort', checkSSLPorts);
 
-                                                    if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields) {
-                                                        Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName || '');
-                                                        Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address || '');
-                                                        Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2 || '');
-                                                        Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN || '');
-                                                        Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber || '');
-                                                        Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL || '');
+                                                    if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields) {
+                                                        Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_CompanyName || '');
+                                                        Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address || '');
+                                                        Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address2 || '');
+                                                        Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_ABN || '');
+                                                        Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_PhoneNumber || '');
+                                                        Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_URL || '');
 
-                                                        Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass || '');
-                                                        Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM || '');
+                                                        Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultClass || '');
+                                                        Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultUOM || '');
 
-                                                        Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault || '');
-                                                        Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
-                                                        Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc || '');
+                                                        Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_ForeignExDefault || '');
+                                                        Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
+                                                        Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodeSalesInc || '');
 
-                                                        localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
-                                                        localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
-                                                        localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
-                                                        localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
+                                                        localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
+                                                        localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
+                                                        localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
+                                                        localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
 
-                                                        localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
-                                                        localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
-                                                        localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
-                                                        localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
+                                                        localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
+                                                        localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
+                                                        localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
+                                                        localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
 
                                                         localStorage.setItem('VS1MonthlyProfitandLoss_dash', '');
 
-                                                        localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_NetIncomeEx || 0);
-                                                        localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalIncomeEx || 0);
-                                                        localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
-                                                        localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
+                                                        localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_NetIncomeEx || 0);
+                                                        localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalIncomeEx || 0);
+                                                        localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalExpenseEx || 0);
+                                                        localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalCOGSEx || 0);
 
                                                         localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
 
@@ -2693,38 +2693,38 @@ Template.vs1login.onRendered(function () {
                                 localStorage.setItem('mainEIPAddress', licenceIPAddress);
                                 localStorage.setItem('mainEPort', checkSSLPorts);
 
-                                if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields) {
-                                    Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName || '');
-                                    Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address || '');
-                                    Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2 || '');
-                                    Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN || '');
-                                    Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber || '');
-                                    Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL || '');
+                                if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields) {
+                                    Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_CompanyName || '');
+                                    Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address || '');
+                                    Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address2 || '');
+                                    Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_ABN || '');
+                                    Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_PhoneNumber || '');
+                                    Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_URL || '');
 
-                                    Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass || '');
-                                    Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM || '');
+                                    Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultClass || '');
+                                    Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultUOM || '');
 
-                                    Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault || '');
-                                    Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
-                                    Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc || '');
+                                    Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_ForeignExDefault || '');
+                                    Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
+                                    Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodeSalesInc || '');
 
-                                    localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
-                                    localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
-                                    localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
-                                    localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
+                                    localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
+                                    localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
+                                    localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
+                                    localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
 
-                                    localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
-                                    localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
-                                    localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
-                                    localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
+                                    localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
+                                    localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
+                                    localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
+                                    localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
 
 
                                     localStorage.setItem('VS1MonthlyProfitandLoss_dash', '');
 
-                                    localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_NetIncomeEx || 0);
-                                    localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalIncomeEx || 0);
-                                    localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
-                                    localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
+                                    localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_NetIncomeEx || 0);
+                                    localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalIncomeEx || 0);
+                                    localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalExpenseEx || 0);
+                                    localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalCOGSEx || 0);
 
                                     localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
 
@@ -3231,38 +3231,38 @@ Template.vs1login.onRendered(function () {
                                                 localStorage.setItem('mainEIPAddress', licenceIPAddress);
                                                 localStorage.setItem('mainEPort', checkSSLPorts);
 
-                                                if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields) {
-                                                    Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName || '');
-                                                    Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address || '');
-                                                    Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2 || '');
-                                                    Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN || '');
-                                                    Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber || '');
-                                                    Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL || '');
+                                                if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields) {
+                                                    Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_CompanyName || '');
+                                                    Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address || '');
+                                                    Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address2 || '');
+                                                    Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_ABN || '');
+                                                    Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_PhoneNumber || '');
+                                                    Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_URL || '');
 
-                                                    Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass || '');
-                                                    Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM || '');
+                                                    Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultClass || '');
+                                                    Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultUOM || '');
 
-                                                    Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault || '');
-                                                    Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
-                                                    Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc || '');
+                                                    Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_ForeignExDefault || '');
+                                                    Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
+                                                    Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodeSalesInc || '');
 
-                                                    localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
-                                                    localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
-                                                    localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
-                                                    localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
+                                                    localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
+                                                    localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
+                                                    localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
+                                                    localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
 
-                                                    localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
-                                                    localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
-                                                    localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
-                                                    localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
+                                                    localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
+                                                    localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
+                                                    localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
+                                                    localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
 
 
                                                     localStorage.setItem('VS1MonthlyProfitandLoss_dash', '');
 
-                                                    localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_NetIncomeEx || 0);
-                                                    localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalIncomeEx || 0);
-                                                    localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
-                                                    localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
+                                                    localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_NetIncomeEx || 0);
+                                                    localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalIncomeEx || 0);
+                                                    localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalExpenseEx || 0);
+                                                    localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalCOGSEx || 0);
 
                                                     localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                                     if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
@@ -3967,37 +3967,37 @@ Template.vs1login.onRendered(function () {
                                             localStorage.setItem('mainEIPAddress', licenceIPAddress);
                                             localStorage.setItem('mainEPort', checkSSLPorts);
 
-                                            if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields) {
-                                                Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName || '');
-                                                Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address || '');
-                                                Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2 || '');
-                                                Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN || '');
-                                                Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber || '');
-                                                Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL || '');
+                                            if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields) {
+                                                Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_CompanyName || '');
+                                                Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address || '');
+                                                Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address2 || '');
+                                                Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_ABN || '');
+                                                Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_PhoneNumber || '');
+                                                Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_URL || '');
 
-                                                Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass || '');
-                                                Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM || '');
+                                                Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultClass || '');
+                                                Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultUOM || '');
 
-                                                Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault || '');
-                                                Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
-                                                Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc || '');
+                                                Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_ForeignExDefault || '');
+                                                Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
+                                                Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodeSalesInc || '');
 
-                                                localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
-                                                localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
-                                                localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
-                                                localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
+                                                localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
+                                                localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
+                                                localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
+                                                localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
 
-                                                localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
-                                                localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
-                                                localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
-                                                localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
+                                                localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
+                                                localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
+                                                localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
+                                                localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
 
                                                 localStorage.setItem('VS1MonthlyProfitandLoss_dash', '');
 
-                                                localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_NetIncomeEx || 0);
-                                                localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalIncomeEx || 0);
-                                                localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
-                                                localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
+                                                localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_NetIncomeEx || 0);
+                                                localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalIncomeEx || 0);
+                                                localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalExpenseEx || 0);
+                                                localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalCOGSEx || 0);
 
                                                 localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                                 if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
@@ -4665,37 +4665,37 @@ Template.vs1login.onRendered(function () {
                                         localStorage.setItem('mainEIPAddress', licenceIPAddress);
                                         localStorage.setItem('mainEPort', checkSSLPorts);
 
-                                        if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields) {
-                                            Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_CompanyName || '');
-                                            Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address || '');
-                                            Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_Address2 || '');
-                                            Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_ABN || '');
-                                            Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_PhoneNumber || '');
-                                            Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.Companyinfo_URL || '');
+                                        if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields) {
+                                            Session.setPersistent('vs1companyName', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_CompanyName || '');
+                                            Session.setPersistent('vs1companyaddress1', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address || '');
+                                            Session.setPersistent('vs1companyaddress2', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_Address2 || '');
+                                            Session.setPersistent('vs1companyABN', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_ABN || '');
+                                            Session.setPersistent('vs1companyPhone', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_PhoneNumber || '');
+                                            Session.setPersistent('vs1companyURL', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.Companyinfo_URL || '');
 
-                                            Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultClass || '');
-                                            Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.ColumnHeadings_DefaultUOM || '');
+                                            Session.setPersistent('ERPDefaultDepartment', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultClass || '');
+                                            Session.setPersistent('ERPDefaultUOM', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.ColumnHeadings_DefaultUOM || '');
 
-                                            Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_ForeignExDefault || '');
-                                            Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
-                                            Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc || '');
+                                            Session.setPersistent('ERPCountryAbbr', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_ForeignExDefault || '');
+                                            Session.setPersistent('ERPTaxCodePurchaseInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodePurchaseInc || '');
+                                            Session.setPersistent('ERPTaxCodeSalesInc', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodeSalesInc || '');
 
-                                            localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
-                                            localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
-                                            localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
-                                            localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
+                                            localStorage.setItem('VS1OverDueInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_AMOUNT || Currency + '0');
+                                            localStorage.setItem('VS1OverDueInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_INVOICES_QUANTITY || 0);
+                                            localStorage.setItem('VS1OutstandingPayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_AMOUNT || Currency + '0');
+                                            localStorage.setItem('VS1OutstandingPayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_PAYABLES_QUANTITY || 0);
 
-                                            localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
-                                            localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
-                                            localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
-                                            localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
+                                            localStorage.setItem('VS1OutstandingInvoiceAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_AMOUNT || Currency + '0');
+                                            localStorage.setItem('VS1OutstandingInvoiceQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OUTSTANDING_INVOICES_QUANTITY || 0);
+                                            localStorage.setItem('VS1OverDuePayablesAmt_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_AMOUNT || Currency + '0');
+                                            localStorage.setItem('VS1OverDuePayablesQty_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.OVERDUE_PAYABLES_QUANTITY || 0);
 
                                             localStorage.setItem('VS1MonthlyProfitandLoss_dash', '');
 
-                                            localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_NetIncomeEx || 0);
-                                            localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalIncomeEx || 0);
-                                            localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalExpenseEx || 0);
-                                            localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.PnL_TotalCOGSEx || 0);
+                                            localStorage.setItem('VS1ProfitandLoss_netIncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_NetIncomeEx || 0);
+                                            localStorage.setItem('VS1ProfitandLoss_IncomeEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalIncomeEx || 0);
+                                            localStorage.setItem('VS1ProfitandLoss_ExpEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalExpenseEx || 0);
+                                            localStorage.setItem('VS1ProfitandLoss_COGSEx_dash', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.PnL_TotalCOGSEx || 0);
 
                                             localStorage.setItem('VS1TransTableUpdate', dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TransactionTableLastUpdated);
                                             if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeePicture.ResponseNo == 401) {
