@@ -45,6 +45,7 @@ Template.accountant_soletradernontrading.onRendered(() => {
     const accountTypeList = [];
     const dataTableList = [];
     let categories = [];
+    let categoryAccountList = [];
 
     templateObject.getReceiptCategoryList = function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
@@ -228,9 +229,8 @@ Template.accountant_soletradernontrading.onRendered(() => {
             } else {
                 accBalance = Currency + "0.00";
             }
-
-            if (data.taccountvs1[i].fields.AccountGroup && data.taccountvs1[i].fields.AccountGroup != '') {
-                usedCategories.push(data.taccountvs1[i].fields.AccountGroup);
+            if (data.taccountvs1[i].fields.ReceiptCategory && data.taccountvs1[i].fields.ReceiptCategory != '') {
+                usedCategories.push(data.taccountvs1[i].fields);
             }
 
             var dataList = {
@@ -265,6 +265,32 @@ Template.accountant_soletradernontrading.onRendered(() => {
         templateObject.availableCategories.set(availableCategories);
         templateObject.datatablerecords.set(dataTableList);
 
+        categories.forEach((citem, j) => {
+            let cdataList = null;
+            let match = usedCategories.filter((item) => (item.ReceiptCategory == citem));
+            if (match.length > 0) {
+                let temp = match[0];
+                cdataList = [
+                    citem,
+                    temp.AccountName || '',
+                    temp.Description || '',
+                    temp.AccountNumber || '',
+                    temp.TaxCode || '',
+                    temp.ID || ''
+                ];
+            } else {
+                cdataList = [
+                    citem,
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                ];
+            }
+            categoryAccountList.push(cdataList);
+        });
+
         if (templateObject.datatablerecords.get()) {
             setTimeout(function() {
                 MakeNegative();
@@ -273,7 +299,41 @@ Template.accountant_soletradernontrading.onRendered(() => {
 
         $(".fullScreenSpin").css("display", "none");
         setTimeout(function() {
-            // //$.fn.dataTable.moment('DD/MM/YY');
+            if (categoryAccountList.length > 0) {
+                $('#tblCategory').dataTable({
+                    data: categoryAccountList,
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    paging: true,
+                    "aaSorting": [],
+                    "orderMulti": true,
+                    columnDefs: [
+                        { className: "colReceiptCategory", "targets": [0] },
+                        { className: "colAccountName", "targets": [1] },
+                        { className: "colAccountDesc", "targets": [2] },
+                        { className: "colAccountNumber", "targets": [3] },
+                        { className: "colTaxCode", "targets": [4] },
+                        { className: "colAccountID hiddenColumn", "targets": [5] }
+                    ],
+                    // select: true,
+                    // destroy: true,
+                    colReorder: true,
+                    "order": [
+                        [0, "asc"]
+                    ],
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [
+                        [initialDatatableLoad, -1],
+                        [initialDatatableLoad, "All"]
+                    ],
+                    info: true,
+                    responsive: true,
+                    "fnInitComplete": function() {
+                        $("<button class='btn btn-primary btnAddNewReceiptCategory' data-dismiss='modal' data-toggle='modal' data-target='#addReceiptCategoryModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCategory_filter");
+                        $("<button class='btn btn-primary btnRefreshCategoryAccount' type='button' id='btnRefreshCategoryAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCategory_filter");
+                    }
+                });
+            }
+
             $("#tblAccountOverview")
                 .DataTable({
                     columnDefs: [
@@ -507,6 +567,84 @@ Template.accountant_soletradernontrading.onRendered(() => {
 
     });
 
+    $('#expenseCategory').on('click', function(e, li) {
+        templateObject.setCategoryAccountList(e);
+        $(".dt-buttons").hide();
+    });
+    templateObject.setCategoryAccountList = function(e) {
+        const $each = $(e.target);
+        const offset = $each.offset();
+        $('#edtReceiptCategoryID').val('');
+        const searchDataName = e.target.value || '';
+        if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+            $each.attr('data-id', '');
+            $('#categoryListModal').modal('toggle');
+            setTimeout(function() {
+                $('#tblCategory_filter .form-control-sm').focus();
+                $('#tblCategory_filter .form-control-sm').val('');
+                $('#tblCategory_filter .form-control-sm').trigger("input");
+                const datatable = $('#tblCategory').DataTable();
+                datatable.draw();
+                $('#tblCategory_filter .form-control-sm').trigger("input");
+            }, 200);
+        } else {
+            if (searchDataName.replace(/\s/g, '') != '') {
+                getVS1Data('TReceiptCategory').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                            showEditReceiptCategoryView(data.treceiptcategory[0]);
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let added = false;
+                        for (let i = 0; i < data.treceiptcategory.length; i++) {
+                            if ((data.treceiptcategory[i].CategoryName) === searchDataName) {
+                                added = true;
+                                showEditReceiptCategoryView(data.treceiptcategory[i]);
+                            }
+                        }
+                        if (!added) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                                showEditReceiptCategoryView(data.treceiptcategory[0]);
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }
+                    }
+                }).catch(function(err) {
+                    sideBarService.getReceiptCategoryByName(searchDataName).then(function(data) {
+                        showEditReceiptCategoryView(data.treceiptcategory[0]);
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                });
+            } else {
+                $('#categoryListModal').modal('toggle');
+                setTimeout(function() {
+                    $('#tblCategory_filter .form-control-sm').focus();
+                    $('#tblCategory_filter .form-control-sm').val('');
+                    $('#tblCategory_filter .form-control-sm').trigger("input");
+                    const datatable = $('#tblCategory').DataTable();
+                    datatable.draw();
+                    $('#tblCategory_filter .form-control-sm').trigger("input");
+                }, 200);
+            }
+        }
+    };
+
+    function showEditReceiptCategoryView(data) {
+        $("#add-receiptcategory-title").text("Edit Receipt Category");
+        $('#edtReceiptCategoryID').val(data.Id);
+        $('#edtReceiptCategoryName').val(data.CategoryName);
+        $('#edtReceiptCategoryDesc').val(data.CategoryDesc);
+        setTimeout(function() {
+            $('#addReceiptCategoryModal').modal('show');
+        }, 200);
+    }
 
     templateObject.getBalanceSheetReports = async(dateAsOf) => {
         LoadingOverlay.show();
@@ -1702,27 +1840,6 @@ Template.accountant_soletradernontrading.events({
         $("#accountList_" + accountantPanID).modal('toggle');
     },
 
-    "click .update_search": function() {
-        let templateObject = Template.instance();
-        let balanceDate = templateObject.$("#balanceDate").val();
-        let compareTo = templateObject.$("#compareTo").val();
-        let comparePeriod = templateObject.$("#comparePeriod").val();
-        let sort = templateObject.$("#sort").val();
-        let Date = moment(balanceDate).clone().endOf("month").format("YYYY-MM-DD");
-        templateObject.getBalanceSheetReports(Date);
-        let url =
-            "/reports/balance-sheet?balanceDate=" +
-            moment(balanceDate).clone().endOf("month").format("YYYY-MM-DD") +
-            "&compareTo=" +
-            compareTo +
-            "&comparePeriod=" +
-            comparePeriod +
-            "&sort=" +
-            sort;
-        if (!Session.get("AgedReceivablesTemplate")) {
-            FlowRouter.go(url);
-        }
-    },
     "click .btnPrintReport": function(event) {
         $(".printReport").show();
         $("a").attr("href", "/");
@@ -1738,12 +1855,25 @@ Template.accountant_soletradernontrading.events({
             $(".printReport").hide();
         }, 100);
     },
+
     "click .btnExportReport": function() {
         $(".fullScreenSpin").css("display", "inline-block");
         let utilityService = new UtilityService();
 
         const filename = loggedCompany + "-Balance Sheet" + ".csv";
         utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+    },
+
+    'click #tblCategory tbody tr': function(e) {
+        let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
+        let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
+        let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
+
+        $('#expenseCategory').val(category);
+        $('#categoryAccountID').val(accountID);
+        $('#categoryAccountName').val(accountName);
+
+        $('#categoryListModal').modal('toggle');
     },
 });
 
