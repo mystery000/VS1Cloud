@@ -648,6 +648,7 @@
                         <div style="font-size: 14px;">
                             <p style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: bold;">Department</p>
                             <p style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName">{{record.department}}</p>
+                            <p><svg id="stockAdjustmentBarCode"></svg></p>
                         </div>
                     </div>
                     <div style="margin: 0px; padding: 16px; border: none !important; width: 70mm; max-width: 70mm;">
@@ -685,7 +686,7 @@
                                 {{#each item in record.LineItems}}
                                     <tr style="border-bottom: 1px solid rgba(0, 0, 0, .1);" id={{item.lineID}}>
                                         <td class="lineProductNamePrint colProductNamePrint">{{item.productname}}</td>
-                                        <td class="lineProductBarCodePrint colProductBarCodePrint"> <svg id="stockAdjust{{item.lineID}}"></svg> </td>
+                                        <td class="lineProductBarCodePrint colProductBarCodePrint"> {{item.productbarcode}} </td>
                                         <td class="lineDescription colDescription">{{item.description}}</td>
                                         <td class="lineInStockQtyPrint colInStockQtyPrint">{{item.qtyinstock}}</td>
                                         <td class="lineFinalQtyPrint colFinalQtyPrint">{{item.finalqty}}</td>

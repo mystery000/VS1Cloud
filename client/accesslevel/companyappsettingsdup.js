@@ -297,16 +297,22 @@ Template.companyappsettingsdup.onRendered(function () {
 
                 if (cloudPackage === "Simple Start") {
                     // Hide Simple Start
-                    $('#settingsCard1').hide();
+                    $('#settingsCard1').addClass('fadeColorNew');
+                    $('#settingsCard1 input').attr("disabled", true);
                 } else if (cloudPackage === "Essentials") {
                     // Hide Essentials
-                    $('#settingsCard1').hide();
-                    $('#settingsCard2').hide();
+                    $('#settingsCard1').addClass('fadeColorNew');
+                    $('#settingsCard2').addClass('fadeColorNew');
+                    $('#settingsCard1 input').attr("disabled", true);
+                    $('#settingsCard2 input').attr("disabled", true);
                 } else if (cloudPackage === "PLUS") {
                     // Hide PLUS
-                    $('#settingsCard1').hide();
-                    $('#settingsCard2').hide();
-                    $('#settingsCard3').hide();
+                    $('#settingsCard1').addClass('fadeColorNew');
+                    $('#settingsCard2').addClass('fadeColorNew');
+                    $('#settingsCard3').addClass('fadeColorNew');
+                    $('#settingsCard1 input').attr("disabled", true);
+                    $('#settingsCard2 input').attr("disabled", true);
+                    $('#settingsCard3 input').attr("disabled", true);
                 }
                 // $('.fullScreenSpin').css('display','none');
             }, 500);
@@ -316,16 +322,16 @@ Template.companyappsettingsdup.onRendered(function () {
         setTimeout(function () {
             if (cloudPackage === "Simple Start") {
                 // Hide Simple Start
-                $('#settingsCard1').hide();
+                $('#settingsCard1').addClass('fadeColorNew');
             } else if (cloudPackage === "Essentials") {
                 // Hide Essentials
-                $('#settingsCard1').hide();
-                $('#settingsCard2').hide();
+                $('#settingsCard1').addClass('fadeColorNew');
+                $('#settingsCard2').addClass('fadeColorNew');
             } else if (cloudPackage === "PLUS") {
                 // Hide PLUS
-                $('#settingsCard1').hide();
-                $('#settingsCard2').hide();
-                $('#settingsCard3').hide();
+                $('#settingsCard1').addClass('fadeColorNew');
+                $('#settingsCard2').addClass('fadeColorNew');
+                $('#settingsCard3').addClass('fadeColorNew');
             }
             // $('.fullScreenSpin').css('display','none');
         }, 1000);
