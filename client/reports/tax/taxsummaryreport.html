@@ -295,22 +295,48 @@
                                             {{#if grandrecords}}
                                                 <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
                                                    
-                                                    {{#if currencyList}}
-                                                        
-
+                                                    {{#if isOnlyDefaultActive }}
+                                                   
                                                         {{#each item in grandrecords}}
-                                                            {{#if isEmpty item}}
-                                                                {{#each c in currencyList }}
-                                                                    {{# if c.active}}
-                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}">{{ convertAmount item c}}</td>
+                                                            {{#if isPercent item}}
+                                                                <td></td>
+
+                                                            {{else}}
+
+                                                                {{#if isText item}}
+                                                                    <td>{{item}}</td>
+                                                                {{ else }}
+
+                                                                    {{#if  currencyList}}
+                                                                        {{#each c in currencyList }}
+                                                                            {{# if c.active}}
+                                                                                
+                                                                                    {{#if isEmpty item}}
+                                                                                        <td></td>
+                                                                                    {{else}}
+
+                                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}">{{ convertAmount item c}}</td>
+
+                                                                                    {{/if}}
+                                                                                
+                                                                            {{/if}}
+                                                                        {{/each}}
                                                                     {{/if}}
-                                                                {{/each}}
+
+                                                                {{/if}}
+                                                                
+                                                                
+                                                               
                                                             {{/if}}
                                                         {{/each}}
                                                     {{else}}
                                                        
                                                         {{#each item in grandrecords}}
-                                                            <td>{{item}}</td>
+                                                            {{#if isPercent item}}
+                                                                <td></td>
+                                                            {{else}}
+                                                                <td>{{item}}</td>
+                                                            {{/if}}
                                                         {{/each}}
                                                     {{/if}}
                                                 </tr>

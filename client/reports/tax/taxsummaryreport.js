@@ -190,7 +190,7 @@ Template.taxsummaryreport.onRendered(()=>{
       utilityService.modifynegativeCurrencyFormat(nettotal),
 
       // taxratetotal.toFixed(2) + '%' || 0,
-      '',
+      '%',
       utilityService.modifynegativeCurrencyFormat(taxtotal)];
       // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
 
@@ -363,7 +363,7 @@ Template.taxsummaryreport.onRendered(()=>{
     utilityService.modifynegativeCurrencyFormat(nettotal),
 
     // taxratetotal.toFixed(2) + '%' || 0,
-    '',
+    '%',
     utilityService.modifynegativeCurrencyFormat(taxtotal)];
     // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
 
@@ -1035,6 +1035,19 @@ Template.taxsummaryreport.onRendered(()=>{
       } else {
         return true;
       }
+    },
+    isText: (amount) => {
+      if(GlobalFunctions.hasNumber(amount)) {
+        return false;
+      }
+
+      if(amount == '') {
+        return false;
+      }
+      return true;
+    },
+    isPercent: (amount) => {
+      return amount.includes('%');
     }
   });
   Template.registerHelper('equals', function (a, b) {
