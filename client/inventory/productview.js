@@ -13,6 +13,23 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accSelected = "";
 let taxSelected = "";
+var subStructure = {
+    process: 'Lath Type C',
+    mats: [
+        {
+            name: 'Payment',
+            qty: '0.75'
+        },
+        {
+            name: 'Rounding',
+            qty: '3'
+        },
+        {
+            name: '$Discount',
+            qty: '2.5'
+        },
+    ]
+}
 
 Template.productview.onCreated(() => {
     const templateObject = Template.instance();
@@ -3219,28 +3236,34 @@ Template.productview.onRendered(function() {
 
 
     $(document).ready(function() {
-        $('#edtRaw').editableSelect();
+        $('.edtProductName').editableSelect();
         $('#edtProcess').editableSelect();
     })
 
-    $(document).on('click', '#edtRaw', function(event) {
-        $('#edtRaw').editableSelect()
+    $(document).on('click', '.edtProductName', function(event) {
+        let colProduct = $(this).closest('div.colProduct');
+        $(this).editableSelect()
+        templateObject.selectedProductField.set($(colProduct).children('.edtProductName'))
         $('#productListModal').modal('toggle');
     })
 
     $(document).on('click', '.edtProcess', function(event) {
-        $('.edtProcess').editableSelect();
+        let colProcess = $(this).closest('div.colProcess');
+        $(this).editableSelect();
+        templateObject.selectedProcessField.set($(colProcess).children('.edtProcess'))
         $('#processListModal').modal('toggle');
     })
 
     $(document).on('click', '#productListModal table tr', function(event) {
         let productName = $(event.target).closest('tr').find('.productName').text();
-        $('#edtRaw').val(productName);
+        let selEle = templateObject.selectedProductField.get()
+        $(selEle).val(productName);
         $('#productListModal').modal('toggle')
     })
     $(document).on('click', '#processListModal table tr', function(event) {
         let processName = $(event.target).closest('tr').find('.colProcessName').text();
-        $('#edtProcess').val(processName);
+        let selEle = templateObject.selectedProcessField.get();
+        selEle.val(processName);
         $('#processListModal').modal('toggle')
     })
 });
@@ -4589,26 +4612,73 @@ Template.productview.events({
                 let quantity = $(colQty).find('.edtQuantity').val();
                 let edtRaw = colProduct.find('.edtProductName')
                 $(event.target).remove();
-                while($('#edtRaw').length) {
-                    $('#edtRaw').removeAttr('id');
-                }
+                    $(colDelete).append("<i class='fas fa-window-close btn-remove-raw' style='color: red; font-size: 16px; cursor: pointer'></i>")
                 let grandParent = row.parent();
-                grandParent.append("<div class='d-flex productRow'>" +
-                "<div class='colProduct d-flex'>" +
-                    "<button class='btnAddProduct' style='width: 30%; background-color: #00a3d3; border: 2px solid black'>Product+</button>" +
-                    "<select class='edtProductName  edtRaw' id='edtRaw' type='search' value='12345' style='width: 30%'></select>"+
-                "</div>" +
-                "<div class='colQty'>" +
-                    "<input type='text' class='edtQuantity w-100'/>" +
-                "</div>" +
-                "<div class='colProcess'>" +
-                "</div>" +
-                "<div class='colNote'>" +
-                "</div>" +
-                "<div class='colAttachment'></div>" +
-                "<div class='colDelete'></div>" +
-                "</div>")
-                $(colProduct).prepend("<div style='width: 30%'></div>")
+                if($('#edtRaw').val() == 'Rounding' || $('#edtRaw').val() == 'Payment'){
+                    while($('#edtRaw').length) {
+                        $('#edtRaw').removeAttr('id');
+                    }
+                    grandParent.append("<div class='d-flex productRow'>" +
+                    "<div class='colProduct d-flex'>" +
+                        "<button class='btnAddProduct' style='width: 29%; background-color: #00a3d3; border: 2px solid black'>Product+</button>" +
+                        "<input class='edtProductName  edtRaw' id='edtRaw' type='search' style='width: 30%'/>"+
+                    "</div>" +
+                    "<div class='colQty'>" +
+                        "<input type='text' class='edtQuantity w-100' value='1'/>" +
+                    "</div>" +
+                    "<div class='colProcess'>" +
+                    "</div>" +
+                    "<div class='colNote'>" +
+                    "</div>" +
+                    "<div class='colAttachment'></div>" +
+                    "<div class='colDelete'>"+
+                    "</div>" +
+                    "</div>")
+                } else {
+                    while($('#edtRaw').length) {
+                        $('#edtRaw').removeAttr('id');
+                    }
+                    $(colQty).find('.edtQuantity').val('1');
+                    $(colProcess).append("<input class='edtProcessName w-100' type='search' style='background-color: gray; border: 2px solid black' disabled/>")
+                    $(colProcess).find('.edtProcessName').val(subStructure.process)
+                    $(colNote).append("<input class='w-100' type='text' style='border: 2px solid black'/>");
+                    $(colAttachment).append(" <button class='btnAddAttachment' style='border: 0; background-color: #00a3d3; padding-top: 2px; padding-bottom: 2px'><i class='fa fa-paperclip' style='padding-right: 5px; '></i>Add Attachments</button>")
+                   
+                    for(let i = 0; i< subStructure.mats.length; i++) {
+                        grandParent.append("<div class='d-flex productRow'>"+
+                            "<div class= 'd-flex colProduct'>"+
+                                "<div style='width: 60%'></div>"+
+                                "<input class='edtProductName edtRaw' type='search' style='border: 2px solid black; width: 40%'/>"+
+                            "</div>"+
+                            "<div class='colQty'>"+
+                                "<input type='text' class='edtQuantity w-100' value='"+subStructure.mats[i].qty+"'/>"+
+                            "</div>"+
+                            "<div class='colProcess'></div>"+
+                            "<div class='colNote'></div>"+
+                            "<div class='colAttachment'></div>"+
+                            "<div class='colDelete'><i class='fas fa-window-close btn-remove-raw' style='color: red; font-size: 16px; cursor: pointer'></i></div>" +
+                        "</div>")
+                        let elements = grandParent.find('.edtProductName')
+                        $(elements[elements.length-1]).val(subStructure.mats[i].name)
+                    }
+                    grandParent.append("<div class='d-flex productRow'>" +
+                    "<div class='colProduct d-flex'>" +
+                        "<button class='btnAddProduct' style='width: 29%; background-color: #00a3d3; border: 2px solid black'>Product+</button>" +
+                        "<input class='edtProductName  edtRaw' id='edtRaw' type='search'  style='width: 30%'/>"+
+                    "</div>" +
+                    "<div class='colQty'>" +
+                        "<input type='text' class='edtQuantity w-100' value='1'/>" +
+                    "</div>" +
+                    "<div class='colProcess'>" +
+                    "</div>" +
+                    "<div class='colNote'>" +
+                    "</div>" +
+                    "<div class='colAttachment'></div>" +
+                    "<div class='colDelete'></div>" +
+                    "</div>")
+                
+                }
+                $(colProduct).prepend("<div style='width: 29%'></div>")
             }
         }
 
