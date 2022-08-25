@@ -155,6 +155,7 @@
                 <div class="col float-left flex-grow-1 mb-4">
                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                     <button id="btnNewJournalEntry" name="btnNewJournalEntry" class="btn btn-primary" type="button" style="margin: 16px;"><i class="fa fa-book" style="padding-right: 5px;"></i>New Journal Entry</button>
+                    {{>FxRatesButton}}
                 </div>
 
                 <div class="col">
@@ -212,7 +213,7 @@
                                             display: none;
                                         }
                                     </style>
-                                    {{>FxRatesButton}}
+                                    
                                     <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
                                     {{> daterangedropdownoption}}
                                     
