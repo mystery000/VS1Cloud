@@ -96,8 +96,7 @@ Template.new_process.onRendered(() => {
     })
 
     $(document).on('click', '#edtWastage', function(e){
-        $('#accountListModal').modal();
-        templateObject.selectedAccount.set('wastage');
+        $('#assetAccountListModal').modal();
     })
     $(document).on('click', '#accountListModal table tr', function(e) {
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();
@@ -110,10 +109,6 @@ Template.new_process.onRendered(() => {
                 $('#edtOverheadCOGS').val(columnDataValue);
                 break;
            
-            case 'wastage':
-                // templateObject.selectedInventoryAssetAccount.set(columnDataValue);
-                $('#edtWastage').val(columnDataValue);
-                break;
             default:
                 break;
         }
@@ -134,6 +129,11 @@ Template.new_process.onRendered(() => {
         $('#expenseAccountListModal').modal('toggle');
     }) 
 
+    $(document).on('click', '#assetAccountListModal table tr', function(e) {
+        let columnDataValue = $(e.target).closest('tr').find('.productName').text();
+        $('#edtWastage').val(columnDataValue);
+        $('#assetAccountListModal').modal('toggle');
+    })
     $(document).on('keyup', '.edtHourlyCost', function(e) {
         if($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() == '') {
             $('#edtTotalHourlyCosts').val($('#edtHourlyCost').val())
