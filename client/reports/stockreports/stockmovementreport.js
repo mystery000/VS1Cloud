@@ -108,7 +108,6 @@ Template.stockmovementreport.onRendered(() => {
     let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
     let ignoreDate = options.ignoreDate || false;
     let data = await reportService.getStockMovementReport( dateFrom, dateTo, ignoreDate);
-    console.log(data);
     let movementReport = [];
     if( data.t_vs1_report_productmovement.length > 0 ){
         let reportGroups = [];
@@ -427,6 +426,9 @@ Template.stockmovementreport.helpers({
         amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
     }
       return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  checkZero( value ){
+     return ( value == 0 )? '': value;
   },
   formatDate: ( date ) => {
       return ( date )? moment(date).format("DD/MM/YYYY") : '';
