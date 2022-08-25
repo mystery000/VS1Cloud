@@ -193,9 +193,11 @@ Template.agedpayables.onRendered(() => {
                         utilityService.modifynegativeCurrencyFormat(twoMonth), 
                         utilityService.modifynegativeCurrencyFormat(threeMonth), 
                         utilityService.modifynegativeCurrencyFormat(Older)];
-                    //current.push(val);
 
-                    current.push({
+
+                    //current.push(val); // OLD
+
+                    current.push({ // new
                         Title: 'Total ' + allRecords[i][0].key,
                         TotalAmountDue: amountduetotal,
                         TotalCurrent: Currenttotal,
