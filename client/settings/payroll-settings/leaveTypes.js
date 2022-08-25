@@ -33,10 +33,10 @@ Template.leaveTypeSettings.onRendered(function() {
         $('#edtTypeOfUnits').editableSelect('add','Days');
         $('#edtTypeOfUnits').editableSelect('add','Weeks');
         $('#edtTypeOfUnits').editableSelect('add','Monthly');
-        // $('#edtPayPeriod').editableSelect('add','Hourly');
-        // $('#edtPayPeriod').editableSelect('add','Daily');
-        // $('#edtPayPeriod').editableSelect('add','Weekly');
-        // $('#edtPayPeriod').editableSelect('add','Monthly');
+        $('#edtPayPeriod').editableSelect('add','Hourly');
+        $('#edtPayPeriod').editableSelect('add','Daily');
+        $('#edtPayPeriod').editableSelect('add','Weekly');
+        $('#edtPayPeriod').editableSelect('add','Monthly');
 
         
         $("#edtFirstPayDate").datepicker({
