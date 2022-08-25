@@ -127,8 +127,8 @@ Template.customersummaryreport.onRendered(() => {
         ignoreDate: true
       };
     }
-    $("#dateFrom").val(defaultOptions.fromDate);
-    $("#dateTo").val(defaultOptions.toDate);
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format("YYYY-MM-DD"));
+    $("#dateTo").val(moment(defaultOptions.toDate).format("YYYY-MM-DD"));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getCustomerDetailsHistory();
   };

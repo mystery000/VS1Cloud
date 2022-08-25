@@ -114,7 +114,7 @@ Template.journalentrylist.onRendered(function() {
     var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-    getVS1Data('TJournalEntryList1').then(function (dataObject) {
+    getVS1Data('TJournalEntryList').then(function (dataObject) {
         if(dataObject.length == 0){
           sideBarService.getTJournalEntryListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
             let lineItems = [];

@@ -441,6 +441,9 @@ Template.stockmovementreport.helpers({
     }
       return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
   },
+  checkZero( value ){
+     return ( value == 0 )? '': value;
+  },
   formatDate: ( date ) => {
       return ( date )? moment(date).format("DD/MM/YYYY") : '';
   },

@@ -52,6 +52,7 @@ Template.stocktransfercard.onCreated(function() {
     templateObject.hasPrintPrint = new ReactiveVar();
     templateObject.record = new ReactiveVar({});
     templateObject.stocktransferrecord = new ReactiveVar({});
+    templateObject.originstocktransferrecord = new ReactiveVar({});
     templateObject.shipviarecords = new ReactiveVar();
 
     templateObject.productquantityrecord = new ReactiveVar([]);
@@ -387,6 +388,7 @@ Template.stocktransfercard.onRendered(function() {
                     if (dataObject.length == 0) {
                         stockTransferService.getOneStockTransferData(currentStockTransfer).then(function(data) {
                             $('.fullScreenSpin').css('display', 'none');
+                            let previuosProductName = '';
                             let lineItems = [];
                             let lineItemObj = {};
                             let lineItemsTable = [];
@@ -395,16 +397,42 @@ Template.stocktransfercard.onRendered(function() {
                           if(data.fields.Lines != null){
                             if (data.fields.Lines.length) {
                                 for (let i = 0; i < data.fields.Lines.length; i++) {
-                                  if(data.fields.Lines[i].fields.TransferSerialnos){
+                                    if (previuosProductName !== data.fields.Lines[i].fields.ProductName) {
+                                        const filterProducts = useData[d].fields.Lines.filter(product => product.fields.ProductId === useData[d].fields.Lines[i].fields.ProductId);
+                                        const serialNumbers = filterProducts.map(product => product.fields.SerialNumber).join(',');
+                                        const transferSerialNumbers = filterProducts.map(product => product.fields.TransferSerialnos).join(',');
+                                        const lotNumbers = filterProducts.map(product => product.fields.BatchNoFrom).join(',');
+                                        const transferLotNumbers = filterProducts.map(product => product.fields.BatchNoTo).join(',');
+                                        lineItemObj = {
+                                            lineID: Random.id(),
+                                            id: useData[d].fields.Lines[i].fields.ID || '',
+                                            pqa: useData[d].fields.Lines[i].fields.TransferSerialnos || '',
+                                            serialnumbers: serialNumbers || '',
+                                            transferserialnumbers: transferSerialNumbers || '',
+                                            lotnumbers: lotNumbers || '',
+                                            transferlotnumbers: transferLotNumbers || '',
+                                            productname: useData[d].fields.Lines[i].fields.ProductName || '',
+                                            item: useData[d].fields.Lines[i].fields.ProductName || '',
+                                            productid: useData[d].fields.Lines[i].fields.ProductID || '',
+                                            productbarcode: useData[d].fields.Lines[i].fields.PartBarcode || '',
+                                            description: useData[d].fields.Lines[i].fields.ProductDesc || '',
+                                            department: useData[d].fields.Lines[0].fields.ClassNameTo || defaultDept,
+                                            qtyordered: useData[d].fields.Lines[i + filterProducts.length - 1].fields.AvailableQty || 0,
+                                            qtyshipped: filterProducts.length || 0,
+                                            initaltransfer: useData[d].fields.Lines[i].fields.TransferQty || 0,
+                                            qtybo: useData[d].fields.Lines[i].fields.BOQty || 0
 
-                                  }else{
-                                    initialTransferData = data.fields.Lines[i].fields.TransferQty || 0;
-                                  }
-                                    lineItemObj = {
+                                        };
+                                        lineItems.push(lineItemObj);
+                                    }
+                                    lineItemTableObj = {
                                         lineID: Random.id(),
                                         id: data.fields.Lines[i].fields.ID || '',
                                         pqa: data.fields.Lines[i].fields.TransferSerialnos || '',
-                                        serialnumber: data.fields.Lines[i].fields.TransferSerialnos || '',
+                                        serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
+                                        batchNumberFrom: useData[d].fields.Lines[i].fields.BatchNoFrom || '',
+                                        batchNumberTo: useData[d].fields.Lines[i].fields.BatchNoTo || '',
+                                        transferSerialnos: useData[d].fields.Lines[i].fields.TransferSerialnos || '',
                                         productname: data.fields.Lines[i].fields.ProductName || '',
                                         item: data.fields.Lines[i].fields.ProductName || '',
                                         productid: data.fields.Lines[i].fields.ProductID || '',
@@ -415,10 +443,9 @@ Template.stocktransfercard.onRendered(function() {
                                         qtyshipped: data.fields.Lines[i].fields.TransferQty || 0,
                                         initaltransfer: initialTransferData || 0,
                                         qtybo: data.fields.Lines[i].fields.BOQty || 0
-
-                                    };
-
-                                    lineItems.push(lineItemObj);
+                                    }
+                                    lineItemsTable.push(lineItemTableObj);
+                                    previuosProductName = data.fields.Lines[i].fields.ProductName;
                                 }
                             }
                           }
@@ -432,6 +459,17 @@ Template.stocktransfercard.onRendered(function() {
                                 descriptions: data.fields.Description,
                                 transdate: data.fields.DateTransferred ? moment(data.fields.DateTransferred).format('DD/MM/YYYY') : ""
                             };
+
+                            templateObject.originstocktransferrecord.set({
+                                id: data.fields.ID,
+                                lid: 'Edit Stock Transfer' + ' ' + data.fields.ID,
+                                LineItems: lineItemsTable,
+                                accountname: data.fields.AccountName,
+                                department: data.fields.TransferFromClassName || defaultDept,
+                                notes: data.fields.Notes,
+                                descriptions: data.fields.Description,
+                                transdate: data.fields.DateTransferred ? moment(data.fields.DateTransferred).format('DD/MM/YYYY') : ""
+                            });
 
                             let getDepartmentVal = data.fields.Lines[0].fields.TransferFromClassName || defaultDept;
 
@@ -566,19 +604,49 @@ Template.stocktransfercard.onRendered(function() {
                                 let lineItemsTable = [];
                                 let lineItemTableObj = {};
                                 let initialTransferData = 0;
+                                let previuosProductName = '';
+                                let previousProductNumber = 1;
                                 if (useData[d].fields.Lines.length) {
                                     for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                                      if(useData[d].fields.Lines[i].fields.TransferSerialnos){
+                                        if (previuosProductName !== useData[d].fields.Lines[i].fields.ProductName) {
+                                            const filterProducts = useData[d].fields.Lines.filter(product => product.fields.ProductId === useData[d].fields.Lines[i].fields.ProductId);
+                                            const serialNumbers = filterProducts.map(product => product.fields.SerialNumber).join(',');
+                                            const transferSerialNumbers = filterProducts.map(product => product.fields.TransferSerialnos).join(',');
+                                            const lotNumbers = filterProducts.map(product => product.fields.BatchNoFrom).join(',');
+                                            const transferLotNumbers = filterProducts.map(product => product.fields.BatchNoTo).join(',');
+                                            lineItemObj = {
+                                                lineID: Random.id(),
+                                                id: useData[d].fields.Lines[i].fields.ID || '',
+                                                pqa: useData[d].fields.Lines[i].fields.TransferSerialnos || '',
+                                                serialnumbers: serialNumbers || '',
+                                                transferserialnumbers: transferSerialNumbers || '',
+                                                lotnumbers: lotNumbers || '',
+                                                transferlotnumbers: transferLotNumbers || '',
+                                                productname: useData[d].fields.Lines[i].fields.ProductName || '',
+                                                item: useData[d].fields.Lines[i].fields.ProductName || '',
+                                                productid: useData[d].fields.Lines[i].fields.ProductID || '',
+                                                productbarcode: useData[d].fields.Lines[i].fields.PartBarcode || '',
+                                                description: useData[d].fields.Lines[i].fields.ProductDesc || '',
+                                                department: useData[d].fields.Lines[0].fields.ClassNameTo || defaultDept,
+                                                qtyordered: useData[d].fields.Lines[i + filterProducts.length - 1].fields.AvailableQty || 0,
+                                                qtyshipped: filterProducts.length || 0,
+                                                initaltransfer: useData[d].fields.Lines[i].fields.TransferQty || 0,
+                                                qtybo: useData[d].fields.Lines[i].fields.BOQty || 0
 
-                                      }else{
-                                        initialTransferData = useData[d].fields.Lines[i].fields.TransferQty || 0;
-                                      }
+                                            };
 
-                                        lineItemObj = {
+                                            lineItems.push(lineItemObj);
+                                        } else {
+                                            previousProductNumber++;
+                                        }
+                                        lineItemTableObj = {
                                             lineID: Random.id(),
                                             id: useData[d].fields.Lines[i].fields.ID || '',
                                             pqa: useData[d].fields.Lines[i].fields.TransferSerialnos || '',
-                                            serialnumber: useData[d].fields.Lines[i].fields.TransferSerialnos || '',
+                                            serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
+                                            batchNumberFrom: useData[d].fields.Lines[i].fields.BatchNoFrom || '',
+                                            batchNumberTo: useData[d].fields.Lines[i].fields.BatchNoTo || '',
+                                            transferSerialnos: useData[d].fields.Lines[i].fields.TransferSerialnos || '',
                                             productname: useData[d].fields.Lines[i].fields.ProductName || '',
                                             item: useData[d].fields.Lines[i].fields.ProductName || '',
                                             productid: useData[d].fields.Lines[i].fields.ProductID || '',
@@ -589,10 +657,9 @@ Template.stocktransfercard.onRendered(function() {
                                             qtyshipped: useData[d].fields.Lines[i].fields.TransferQty || 0,
                                             initaltransfer: initialTransferData || 0,
                                             qtybo: useData[d].fields.Lines[i].fields.BOQty || 0
-
-                                        };
-
-                                        lineItems.push(lineItemObj);
+                                        }
+                                        lineItemsTable.push(lineItemTableObj);
+                                        previuosProductName = useData[d].fields.Lines[i].fields.ProductName;
                                     }
                                 } else {
                                   if(useData[d].fields.Lines.fields.TransferSerialnos){
@@ -604,7 +671,10 @@ Template.stocktransfercard.onRendered(function() {
                                         lineID: Random.id(),
                                         id: useData[d].fields.Lines.fields.ID || '',
                                         pqa: useData[d].fields.Lines.fields.TransferSerialnos || '',
-                                        serialnumber: useData[d].fields.Lines.fields.TransferSerialnos || '',
+                                        serialnumber: useData[d].fields.Lines.fields.SerialNumber || '',
+                                        batchNumberFrom: useData[d].fields.Lines.fields.BatchNoFrom || '',
+                                        batchNumberTo: useData[d].fields.Lines.fields.BatchNoTo || '',
+                                        transferSerialnos: useData[d].fields.Lines.fields.TransferSerialnos || '',
                                         productname: useData[d].fields.Lines.fields.ProductName || '',
                                         item: useData[d].fields.Lines.fields.ProductName || '',
                                         productid: useData[d].fields.Lines.fields.ProductID || '',
@@ -630,6 +700,17 @@ Template.stocktransfercard.onRendered(function() {
                                     descriptions: useData[d].fields.Description,
                                     transdate: useData[d].fields.DateTransferred ? moment(useData[d].fields.DateTransferred).format('DD/MM/YYYY') : ""
                                 };
+
+                                templateObject.originstocktransferrecord.set({
+                                    id: useData[d].fields.ID,
+                                    lid: 'Edit Stock Transfer' + ' ' + useData[d].fields.ID,
+                                    LineItems: lineItemsTable,
+                                    accountname: useData[d].fields.AccountName,
+                                    department: useData[d].fields.TransferFromClassName || defaultDept,
+                                    notes: useData[d].fields.Notes,
+                                    descriptions: useData[d].fields.Description,
+                                    transdate: useData[d].fields.DateTransferred ? moment(useData[d].fields.DateTransferred).format('DD/MM/YYYY') : ""
+                                });
 
                                 let getDepartmentVal = useData[d].fields.Lines[0].fields.TransferFromClassName || defaultDept;
                                 $('.shippingHeader').html('Edit Stock Transfer #' + useData[d].fields.ID + ' <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;"> Help<i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 5px;"></i></a> ');
@@ -2837,7 +2918,7 @@ Template.stocktransfercard.events({
             //$('table tr').css('background','#ffffff');
             $('table tr').css('background', 'transparent');
             $('#serailscanlist').find('tbody').remove();
-            
+
             $('input[name="salesLineRow"]').val(targetID);
             prodPQALine = $('#' + targetID + " .lineID").text();
             var segsSerial = prodPQALine.split(',');
@@ -3129,47 +3210,45 @@ Template.stocktransfercard.events({
 
             let tdavailqty = $('#' + lineID + " .lineOrdere").val();
             let tdtransferqty = $('#' + lineID + " .lineUOMQtyShipped").val();
+            let transferSerialNos = $('#' + lineID + ' .colSerialFrom').attr('data-serialnumbers');
+            let newSerialNos = $('#' + lineID + ' .colSerialTo').attr('data-serialnumbers');
+
             if (tdproduct != "") {
-              if(segsSerialLenght.length == tdtransferqty){
-                //if (tdserialNumber != '') {
-                    lineItemObjForm = {
-                        type: "TSTELinesFlat",
-                        fields: {
-                            ProductName: tdproduct || '',
-                            AccountName: 'Inventory Asset',
-                            TransferQty: parseFloat(tdtransferqty) || 0,
-                            ClassNameTo: tdDepartment || defaultDept,
-                            TransferSerialnos: tdserialNumber || '',
-                            PartBarcode: tdbarcode || '',
+                lineItemObjForm = {
+                    type: "TSTELinesFlat",
+                    fields: {
+                        ProductName: tdproduct || '',
+                        AccountName: 'Inventory Asset',
+                        TransferQty: parseInt(tdtransferqty) || 0,
+                        ClassNameTo: tdDepartment || defaultDept,
+                        PartBarcode: tdbarcode || '',
+                        OrderQty: parseInt(tdtransferqty) || 0,
+                    }
+                };
+
+                if (newSerialNos) {
+                    newSerialNos = newSerialNos.split(',');
+                    for (let i = 0; i < newSerialNos.length; i++) {
+                        lineItemObjForm.fields.SerialNumber = newSerialNos[i];
+                        if (transferSerialNos) {
+                            lineItemObjForm.fields.TransferSerialnos = transferSerialNos.split(',')[i] || '';
                         }
-                    };
-                //}
-                // else {
-                //     lineItemObjForm = {
-                //         type: "TSTELinesFlat",
-                //         fields: {
-                //             ProductName: tdproduct || '',
-                //             AccountName: 'Inventory Asset',
-                //             TransferQty: parseFloat(tdtransferqty) || 0,
-                //             ClassNameTo: tdDepartment || defaultDept,
-                //             PartBarcode: tdbarcode || '',
-                //         }
-                //     };
-                // }
+                        splashLineArray.push(lineItemObjForm);
+                    }
+                } else {
+                    splashLineArray.push(lineItemObjForm);
+                }
 
-
-                //lineItemsForm.push(lineItemObjForm);
-                splashLineArray.push(lineItemObjForm);
                 isReadyToSave = true;
-              }else{
-                isReadyToSave = false;
-                Bert.alert('<strong>WARNING:</strong> Your serial number scanned quantity does not match your transfer quantity. Please scan in the correct quantity.', 'now-danger');
-                DangerSound();
-                $('.fullScreenSpin').css('display', 'none');
-                event.preventDefault();
-                return false;
-              }
             }
+
+            // }else{
+            //   isReadyToSave = false;
+            //   swal('', 'Your serial number scanned quantity does not match your transfer quantity. Please scan in the correct quantity.', 'danger');
+            //   $('.fullScreenSpin').css('display', 'none');
+            //   event.preventDefault();
+            //   return false;
+            // }
         });
 
         let selectAccount = $('#sltAccountName').val();
@@ -3452,46 +3531,45 @@ Template.stocktransfercard.events({
           let tdavailqty = $('#' + lineID + " .lineOrdere").val();
           let tdtransferqty = $('#' + lineID + " .lineUOMQtyShipped").val() || 0;
           let tdInitialTransfer = $('#' + lineID + " .InitTransfer").text()||0;
-          if(segsSerialLenght.length == tdtransferqty){
-          if (tdproduct != "") {
-              //if (tdserialNumber != '') {
-                  lineItemObjForm = {
-                      type: "TSTELinesFlat",
-                      fields: {
-                          ProductName: tdproduct || '',
-                          AccountName: 'Inventory Asset',
-                          TransferQty: parseFloat(tdtransferqty) || 0,
-                          ClassNameTo: tdDepartment || defaultDept,
-                          TransferSerialnos: tdserialNumber || '',
-                          PartBarcode: tdbarcode || '',
-                      }
-                  };
-              //}
-              // else {
-              //     lineItemObjForm = {
-              //         type: "TSTELinesFlat",
-              //         fields: {
-              //             ProductName: tdproduct || '',
-              //             AccountName: 'Inventory Asset',
-              //             TransferQty: parseFloat(tdtransferqty) || 0,
-              //             ClassNameTo: tdDepartment || defaultDept,
-              //             PartBarcode: tdbarcode || '',
-              //         }
-              //     };
-              // }
+          let transferSerialNos = $('#' + lineID + ' .colSerialFrom').attr('data-serialnumbers');
+        let newSerialNos = $('#' + lineID + ' .colSerialTo').attr('data-serialnumbers');
 
-              //lineItemsForm.push(lineItemObjForm);
-              splashLineArray.push(lineItemObjForm);
-              isReadyToSave = true;
-          }
-          }else{
-            isReadyToSave = false;
-            Bert.alert('<strong>WARNING:</strong> Your serial number scanned quantity does not match your transfer quantity. Please scan in the correct quantity.', 'now-danger');
-            DangerSound();
-            $('.fullScreenSpin').css('display', 'none');
-            event.preventDefault();
-            return false;
-          }
+        if (tdproduct != "") {
+            lineItemObjForm = {
+                type: "TSTELinesFlat",
+                fields: {
+                    ProductName: tdproduct || '',
+                    AccountName: 'Inventory Asset',
+                    TransferQty: parseInt(tdtransferqty) || 0,
+                    ClassNameTo: tdDepartment || defaultDept,
+                    PartBarcode: tdbarcode || '',
+                    OrderQty: parseInt(tdtransferqty) || 0,
+                }
+            };
+
+            if (newSerialNos) {
+                newSerialNos = newSerialNos.split(',');
+                for (let i = 0; i < newSerialNos.length; i++) {
+                    lineItemObjForm.fields.SerialNumber = newSerialNos[i];
+                    if (transferSerialNos) {
+                        lineItemObjForm.fields.TransferSerialnos = transferSerialNos.split(',')[i] || '';
+                    }
+                    splashLineArray.push(lineItemObjForm);
+                }
+            } else {
+                splashLineArray.push(lineItemObjForm);
+            }
+
+            isReadyToSave = true;
+        }
+
+        // }else{
+        //   isReadyToSave = false;
+        //   swal('', 'Your serial number scanned quantity does not match your transfer quantity. Please scan in the correct quantity.', 'danger');
+        //   $('.fullScreenSpin').css('display', 'none');
+        //   event.preventDefault();
+        //   return false;
+        // }
       });
 
       let selectAccount = $('#sltAccountName').val();
@@ -3790,101 +3868,45 @@ Template.stocktransfercard.events({
             let tdtransferqty = $('#' + lineID + " .lineUOMQtyShipped").val() || 0;
             let tdInitialTransfer = $('#' + lineID + " .InitTransfer").text()||0;
 
-            let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
-            let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumber');
-            let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
+            let transferSerialNos = $('#' + lineID + ' .colSerialFrom').attr('data-serialnumbers');
+            let newSerialNos = $('#' + lineID + ' .colSerialTo').attr('data-serialnumbers');
 
-            if(segsSerialLenght.length == tdtransferqty){
             if (tdproduct != "") {
-                //if (tdserialNumber != '') {
-                    lineItemObjForm = {
-                        type: "TSTELinesFlat",
-                        fields: {
-                            ProductName: tdproduct || '',
-                            AccountName: 'Inventory Asset',
-                            TransferQty: parseFloat(tdtransferqty) || 0,
-                            ClassNameTo: tdDepartment || defaultDept,
-                            TransferSerialnos: tdserialNumber || '',
-                            PartBarcode: tdbarcode || '',
-                        }
-                    };
-                //}
-                // else {
-                //     lineItemObjForm = {
-                //         type: "TSTELinesFlat",
-                //         fields: {
-                //             ProductName: tdproduct || '',
-                //             AccountName: 'Inventory Asset',
-                //             TransferQty: parseFloat(tdtransferqty) || 0,
-                //             ClassNameTo: tdDepartment || defaultDept,
-                //             PartBarcode: tdbarcode || '',
-                //         }
-                //     };
-                // }
+                lineItemObjForm = {
+                    type: "TSTELinesFlat",
+                    fields: {
+                        ProductName: tdproduct || '',
+                        AccountName: 'Inventory Asset',
+                        TransferQty: parseInt(tdtransferqty) || 0,
+                        ClassNameTo: tdDepartment || defaultDept,
+                        PartBarcode: tdbarcode || '',
+                        OrderQty: parseInt(tdtransferqty) || 0,
+                    }
+                };
 
-                // Feature/ser-lot number tracking: Save Serial Numbers
-                if (tdSerialNumber) {
-                    const serialNumbers = tdSerialNumber.split(',');
-                    let tpqaList = [];
-                    for (let i = 0; i < serialNumbers.length; i++) {
-                        const tpqaObject = {
-                            type: "TPQASN",
-                            fields: {
-                                Active: true,
-                                Qty: 1,
-                                SerialNumber: serialNumbers[i],
-                            }
-                        };
-                        tpqaList.push(tpqaObject);
-                    }
-                    const pqaObject = {
-                        type: "TPQA",
-                        fields: {
-                            Active: true,
-                            PQASN: tpqaList,
-                            Qty: serialNumbers.length,
+                if (newSerialNos) {
+                    newSerialNos = newSerialNos.split(',');
+                    for (let i = 0; i < newSerialNos.length; i++) {
+                        lineItemObjForm.fields.SerialNumber = newSerialNos[i];
+                        if (transferSerialNos) {
+                            lineItemObjForm.fields.TransferSerialnos = transferSerialNos.split(',')[i] || '';
                         }
+                        splashLineArray.push(lineItemObjForm);
                     }
-                    lineItemObjForm.fields.PQA = pqaObject;
-                }
-                
-                // Feature/ser-lot number tracking: Save Lot Number
-                if (tdLotNumber) {
-                    let tpqaList = [];
-                    for (let i = 0; i < serialNumbers.length; i++) {
-                        const tpqaObject = {
-                            type: "PQABatch",
-                            fields: {
-                                Active: true,
-                                Qty: 1,
-                                SerialNumber: serialNumbers[i],
-                            }
-                        };
-                        tpqaList.push(tpqaObject);
-                    }
-                    const pqaObject = {
-                        type: "TPQA",
-                        fields: {
-                            Active: true,
-                            PQABatch: tpqaList,
-                            Qty: serialNumbers.length,
-                        }
-                    }
-                    lineItemObjForm.fields.PQA = pqaObject;
+                } else {
+                    splashLineArray.push(lineItemObjForm);
                 }
 
-                //lineItemsForm.push(lineItemObjForm);
-                splashLineArray.push(lineItemObjForm);
                 isReadyToSave = true;
             }
-            }else{
-              isReadyToSave = false;
-              Bert.alert('<strong>WARNING:</strong> Your serial number scanned quantity does not match your transfer quantity. Please scan in the correct quantity.', 'now-danger');
-              DangerSound();
-              $('.fullScreenSpin').css('display', 'none');
-              event.preventDefault();
-              return false;
-            }
+
+            // }else{
+            //   isReadyToSave = false;
+            //   swal('', 'Your serial number scanned quantity does not match your transfer quantity. Please scan in the correct quantity.', 'danger');
+            //   $('.fullScreenSpin').css('display', 'none');
+            //   event.preventDefault();
+            //   return false;
+            // }
         });
 
         let selectAccount = $('#sltAccountName').val();
@@ -4314,9 +4336,14 @@ Template.stocktransfercard.events({
     },
     'click .btnSnLotmodal': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
+        const snLotType = $(event.target).closest('td').hasClass('colSerialFrom') ? "from" : "to";
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        let selectedunit = $(target).closest('tr').find('.lineUOMQtyShipped').val();
+        localStorage.setItem('productItem', selectedunit);
+        localStorage.setItem('selectedProductName', selectedProductName);
         let productService = new ProductService();
+        const serialNumbers = $(event.target).closest('td').attr('data-serialnumbers');
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
             swal('You have to select Product.', '', 'info');
@@ -4332,10 +4359,38 @@ Template.stocktransfercard.events({
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                     var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                     $('#lotNumberModal').attr('data-row', row + 1);
+                    $('#serialNumberModal').attr('data-type', snLotType);
                     $('#lotNumberModal').modal('show');
                 } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
                     var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                     $('#serialNumberModal').attr('data-row', row + 1);
+                    $('#serialNumberModal').attr('data-type', snLotType);
+                    if (serialNumbers) {
+                        const sns = serialNumbers.split(',');
+                        let shtml = `
+                            <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                            <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
+                        `;
+                        for (let i = 0; i < sns.length; i++) {
+                            if (i === 0) {
+                                shtml += `
+                                <tr><td></td><td class="lineNo">${i + 1}</td><td contenteditable="true" class="lineSerialnumbers" id="first-serial-number">${sns[i]}</td></tr>
+                                `;
+                            } else {
+                                shtml += `
+                                <tr><td></td><td class="lineNo">${i + 1}</td><td contenteditable="true" class="lineSerialnumbers">${sns[i]}</td></tr>
+                                `;
+                            }
+                        }
+                        $('#tblSeriallist tbody').html(shtml);
+                    } else {
+                        let shtml = `
+                            <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                            <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
+                            <tr><td></td><td class="serialNo">*</td><td contenteditable="true" class="lineSerialnumbers" id="first-serial-number"></td></tr>
+                        `;
+                        $('#tblSeriallist tbody').html(shtml);
+                    }
                     $('#serialNumberModal').modal('show');
                 }
             });
