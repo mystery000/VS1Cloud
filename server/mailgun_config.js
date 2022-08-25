@@ -53,10 +53,11 @@ Meteor.methods({
         cc: details.cc,
         subject: details.subject,
         text: details.text,
-        html: html,
+        html: details.html,
         attachments: details.attachments
       });
     } catch(e) {
+      console.log(e);
         if (e) {
             throw new Meteor.Error("error", e.response);
         }

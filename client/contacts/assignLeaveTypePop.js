@@ -32,9 +32,9 @@ Template.assignLeaveTypePop.onCreated(function () {
         // $('#edtLeavePayPeriod').editableSelect('add','Four Weekly');
         // $('#edtLeavePayPeriod').editableSelect('add','Monthly');
         // $('#edtLeavePayPeriod').editableSelect('add','Quarterly');
-        $('#edtLeavePayStatus').editableSelect('add','Awaiting');
-        $('#edtLeavePayStatus').editableSelect('add','Approved');
-        $('#edtLeavePayStatus').editableSelect('add','Denied');
+        // $('#edtLeavePayStatus').editableSelect('add','Awaiting');
+        // $('#edtLeavePayStatus').editableSelect('add','Approved');
+        // $('#edtLeavePayStatus').editableSelect('add','Denied');
         
         // $('.customEditableSelect').editableSelect('add', function(item){
         //     $(this).val(item.id);
@@ -143,9 +143,12 @@ Template.assignLeaveTypePop.onCreated(function () {
         var table = $(this);
         let name = table.find(".colALTypeLeave").text()||'';
         let ID = table.find(".colALTypeID").text()||'';
+        let Hours = table.find(".colALTypeOpeningBalance").text()||'';
         let searchFilterID = templateObject.currentDrpDownID.get()
         $('#' + searchFilterID).val(name);
         $('#' + searchFilterID + 'ID').val(ID);
+        $('#edtLeaveHours').val(Hours);
+        
         $('#assignLeaveTypeSettingsModal').modal('toggle');
     });
 

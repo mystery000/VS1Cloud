@@ -1,10 +1,10 @@
-<template name="stockmovementreport">
+<template name="transactionjournallist">
     <div style="margin-top: -24px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Stock Movement Report <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
+            <h2 style="margin: 16px;">Transaction Journal <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
         </header>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -15,7 +15,7 @@
                     </div>
                     <div class="modal-body">
                         <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=39" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
                         <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
                     </div>
@@ -28,7 +28,7 @@
             <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="title-header">Stock Movement Report</h4>
+                        <h4 class="title-header">Transaction Journal</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
@@ -56,7 +56,7 @@
             <div class="col-12 col-md-8">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <p class="text-primary m-0 font-weight-bold">Stock Movement Report</p>
+                        <p class="text-primary m-0 font-weight-bold">Transaction Journal</p>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -147,7 +147,7 @@
                         <div class="printReport">
                             <div class="row">
                                 <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Stock Movement Report</p>
+                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Transaction Journal</p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
                                     <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
                                 </div>
@@ -167,64 +167,178 @@
                                         border-top: 2px #858999 solid;
                                     }
 
-                                    .text-right {
-                                        text-align: right !important;
+                                    .negativeVolume {
+                                        color: #e74a3b !important;
+                                        font-weight: 700 !important;
+                                    }
+                                    .positiveVolume {
+                                        color: #1cc88a !important;
+                                        font-weight: 700 !important;
+                                    }
+                                    .neutralVolume {
+                                        color: #f6c23e !important;
+                                        font-weight: 700 !important;
                                     }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active">
-                                                <th>Product</th>
-                                                <th>Trans Date</th>
-                                                <th>Trans Type</th>
-                                                <th>Trans No</th>
-                                                <th class="text-right">Opening Qty</th>
-                                                <th class="text-right">Trans Qty</th>
-                                                <th class="text-right">Running Qty</th>
-                                                <th class="text-right">Unit Cost</th>
-                                                <th class="text-right">Cost</th>
-                                                <!-- <th class="text-right">Unit Cost (Ex)</th> -->
-                                                <th class="text-right">Total Cost (Ex)</th>
+                                                <th>Account Name</th>
+                                                <th>Date</th>
+                                                <th>Product ID</th>
+                                                <th>Type</th>
+                                                <th>Debit (Ex)</th>
+                                                <th>Credit (Ex)</th>
+                                                <th>Debit (Inc)</th>
+                                                <th>Credit (Inc)</th>
+                                                <th>Global Ref</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{#if records}}
-                                                {{#each arrayify records}}
-                                                    <tr>
-                                                       <td style="font-weight: 800;">{{ value.ProductName }}</td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <!-- <td class="text-right" style="font-weight: 800;">{{ value.TotalRunningQty }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ value.TotalCurrentQty }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalUnitCost }}</td> -->
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                    </tr>
-                                                    {{#each item in value.SubAccounts}}
-
-                                                        <tr>
-                                                            <td></td>
-                                                            <td>{{ item.fields.TransactionDate }}</td>
-                                                            <td>{{ item.fields.TranstypeDesc }}</td>
-                                                            <td>{{ item.fields.TransactionNo }}</td>
-                                                            <td class="text-right">{{ item.fields.Qty }}</td>
-                                                            <td class="text-right">{{ item.fields.Qty }}</td>
-                                                            <td class="text-right">{{ item.fields.Qty }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
-                                                            <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td>
-
-                                                            <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td>
-                                                        </tr>
-
-                                                    {{/each}}
-                                                {{/each}}
-                                            {{/if}}
+                                            <tr>
+                                                <td>Inventory Asset</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>18/08/2022</td>
+                                                <td>Batch product</td>
+                                                <td>PO</td>
+                                                <td>$9.29</td>
+                                                <td>$0.00</td>
+                                                <td>$9.29</td>
+                                                <td>$0.00</td>
+                                                <td>DEF1118</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>18/08/2022</td>
+                                                <td>Batch product</td>
+                                                <td>PO</td>
+                                                <td>$23.23</td>
+                                                <td>$0.00</td>
+                                                <td>$23.23</td>
+                                                <td>$0.00</td>
+                                                <td>DEF1119</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td>Accounts Payable</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>18/08/2022</td>
+                                                <td></td>
+                                                <td>Supplier Payment</td>
+                                                <td class="text-danger">-$2,000.00</td>
+                                                <td>$0.00</td>
+                                                <td class="text-danger">-$2,000.00</td>
+                                                <td>$0.00</td>
+                                                <td>DEF57</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>16/08/2022</td>
+                                                <td></td>
+                                                <td>Supplier Payment</td>
+                                                <td>$1,089.00</td>
+                                                <td>$0.00</td>
+                                                <td>$1,089.00</td>
+                                                <td>$0.00</td>
+                                                <td>DEF56</td>
+                                            </tr>
+                                            <!-- <tr>
+                                                <td></td>
+                                                <td>AA</td>
+                                                <td>2</td>
+                                                <td class="text-right positiveVolume">430</td>
+                                                <td class="text-right positiveVolume">570</td>
+                                                <td class="text-right positiveVolume">1000</td>
+                                                <td>111</td>
+                                                <td>1</td>
+                                                <td>DEF111</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>AA</td>
+                                                <td>3</td>
+                                                <td class="text-right negativeVolume">-200</td>
+                                                <td class="text-right neutralVolume">0</td>
+                                                <td class="text-right negativeVolume">-200</td>
+                                                <td>120</td>
+                                                <td>1</td>
+                                                <td>DEF120</td>
+                                            </tr>
+                                            <tr  class="departmentHeader">
+                                                <td colspan="12" style="font-weight: 800;">Warehouse</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>BB</td>
+                                                <td>1</td>
+                                                <td class="text-right positiveVolume">1000</td>
+                                                <td class="text-right neutralVolume">0</td>
+                                                <td class="text-right positiveVolume">1000</td>
+                                                <td>117</td>
+                                                <td>1</td>
+                                                <td>DEF117</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>BB</td>
+                                                <td>2</td>
+                                                <td class="text-right positiveVolume">430</td>
+                                                <td class="text-right positiveVolume">570</td>
+                                                <td class="text-right positiveVolume">1000</td>
+                                                <td>111</td>
+                                                <td>1</td>
+                                                <td>DEF111</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>BB</td>
+                                                <td>3</td>
+                                                <td class="text-right negativeVolume">-200</td>
+                                                <td class="text-right neutralVolume">0</td>
+                                                <td class="text-right negativeVolume">-200</td>
+                                                <td>120</td>
+                                                <td>1</td>
+                                                <td>DEF120</td>
+                                            </tr> -->
+                                            <!-- {{#if records}}
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            {{else}}
+                                                <tr class="odd" style="text-align: center;">
+                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
+                                                </tr>
+                                            {{/if}} -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -237,7 +351,7 @@
         </div>
     </div>
 
+
     <!-- Start Currency Modal -->
-    {{> FxRateModal currencies=currencyList}}
      <!-- End Currency Modal -->
 </template>

@@ -107,6 +107,14 @@ Template.supplierpaymentcard.onRendered(() => {
 
   templateObject.loadDefaultCurrency();
 
+  templateObject.getOrganisationDetails = function () {
+      let account_id = Session.get('vs1companyStripeID') || '';
+      let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
+      templateObject.accountID.set(account_id);
+      templateObject.stripe_fee_method.set(stripe_fee);
+  };
+  templateObject.getOrganisationDetails();
+
   $(document).on("click", ".templateItem .btnPreviewTemplate", function (e) {
     title = $(this).parent().attr("data-id");
     number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
@@ -3555,6 +3563,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: data.fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 //localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -3799,6 +3808,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: useData[d].fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4043,6 +4053,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     applied: appliedAmt.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     }),
+                    IsPaid: data.fields.IsPaid || false
                   };
                   templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4263,6 +4274,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 applied: appliedAmt.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 }),
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4429,7 +4441,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   amountdue: amountDue || 0,
                   paymentamount: paymentAmt || 0,
                   ouststandingamount: outstandingAmt,
-                  orginalamount: originalAmt,
+                  orginalamount: originalAmt                  
                 };
                 lineItems.push(lineItemObj);
 
@@ -4449,6 +4461,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: data.fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4571,6 +4584,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   ouststandingamount: outstandingAmt,
                   orginalamount: originalAmt,
                   comments: useData[d].fields.Comments || "",
+                  IsPaid: useData[d].fields.IsPaid,
                 };
                 lineItems.push(lineItemObj);
 
@@ -4591,6 +4605,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: useData[d].fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4732,6 +4747,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     applied: appliedAmt.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     }),
+                    IsPaid: data.fields.IsPaid || false
                   };
                   templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -4872,6 +4888,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 applied: appliedAmt.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 }),
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5014,6 +5031,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 applied: appliedAmt.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 }),
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5156,6 +5174,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: useData[d].fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5295,6 +5314,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     applied: appliedAmt.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     }),
+                    IsPaid: data.fields.IsPaid || false
                   };
                   templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5433,6 +5453,7 @@ Template.supplierpaymentcard.onRendered(() => {
               applied: appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }),
+              IsPaid: data.fields.IsPaid || false
             };
             templateObject.record.set(record);
             localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5579,6 +5600,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: data.fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5720,6 +5742,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   applied: appliedAmt.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   }),
+                  IsPaid: useData[d].fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -5859,6 +5882,7 @@ Template.supplierpaymentcard.onRendered(() => {
               applied: appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }),
+              IsPaid: data.fields.IsPaid || false
             };
             templateObject.record.set(record);
             localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -6062,6 +6086,7 @@ Template.supplierpaymentcard.onRendered(() => {
               appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }) || 0,
+            IsPaid: false
           };
 
           $("#edtSupplierName").val(companyName);
@@ -6345,6 +6370,7 @@ Template.supplierpaymentcard.onRendered(() => {
               appliedAmt.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
               }) || 0,
+            IsPaid: false
           };
 
           $("#edtSupplierName").val(companyName);
@@ -6475,6 +6501,7 @@ Template.supplierpaymentcard.onRendered(() => {
             applied: appliedAmt.toLocaleString(undefined, {
               minimumFractionDigits: 2,
             }),
+            IsPaid: data.fields.IsPaid || false
           };
           templateObject.record.set(record);
           localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -6615,6 +6642,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(
                       totalGrandAmount
                     ) || 0,
+                  IsPaid: data.fields.IsPaid || false
                 };
                 templateObject.record.set(record);
                 localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -6842,6 +6870,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   Session.get("department") || data.fields.DeptClassName,
                 applied:
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -6980,6 +7009,7 @@ Template.supplierpaymentcard.onRendered(() => {
                 Session.get("department") || data.fields.DeptClassName,
               applied:
                 utilityService.modifynegativeCurrencyFormat(amountData) || 0,
+              IsPaid: data.fields.IsPaid || false
             };
             templateObject.record.set(record);
             localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -7120,6 +7150,7 @@ Template.supplierpaymentcard.onRendered(() => {
                   Session.get("department") || data.fields.DeptClassName,
                 applied:
                   utilityService.modifynegativeCurrencyFormat(amountData) || 0,
+                IsPaid: data.fields.IsPaid || false
               };
               templateObject.record.set(record);
               localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -7256,6 +7287,7 @@ Template.supplierpaymentcard.onRendered(() => {
             department: Session.get("department") || data.fields.DeptClassName,
             applied:
               utilityService.modifynegativeCurrencyFormat(amountData) || 0,
+            IsPaid: data.fields.IsPaid || false
           };
           templateObject.record.set(record);
           localStorage.setItem('APPLIED_AMOUNT', record.applied);
@@ -7393,7 +7425,7 @@ Template.supplierpaymentcard.onRendered(() => {
       saleCustField1: "",
       saleCustField2: "",
       totalPaid: Currency + "" + 0.0,
-      ispaid: false,
+      IsPaid: false,
     };
 
     $("#edtSupplierName").val("");
@@ -8046,7 +8078,75 @@ Template.supplierpaymentcard.events({
   // 'click #sltDepartment': function(event) {
   //     $('#departmentModal').modal('toggle');
   // },
+  'click .payNow': async function () {
+    let templateObject = Template.instance();
+    let stripe_id = templateObject.accountID.get() || '';
+    let stripe_fee_method = templateObject.stripe_fee_method.get();
+    if (stripe_id != "") {
+        if ($('.edtSupplierEmail').val() != "") {
+            let supplierDataName = $('#edtSupplierName').val();
+            let data = await sideBarService.getOneSupplierDataExByName(supplierDataName);
+            let SupplierID = data.tsupplier[0].fields.ID || '';
+            let name = data.tsupplier[0].fields.FirstName || '';
+            let surname = data.tsupplier[0].fields.LastName || '';
+            let lineItems = [];
+            let total = $('#balanceDue').html() || 0;
+            let tax = $('#subtotal_tax').html() || 0;
+            let customer = $('#edtSupplierFirstName').val() + ' ' + $('#edtSupplierLastName').val();
+            let company = Session.get('vs1companyName');
+            $('#tblSupplierPaymentcard > tbody > tr').each(function () {
+                var lineID = this.id;
+                let tddescription = $(this).find(".colType").text();
+                let tdQty = 1;
+                let tdunitprice = $(this).find(".lineAmountdue").text();
+                lineItemObj = {
+                    description: tddescription || '',
+                    quantity: tdQty || 0,
+                    unitPrice: tdunitprice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0
+                }
 
+                lineItems.push(lineItemObj);
+            });
+            var erpGet = erpDb();
+            let vs1User = localStorage.getItem('mySession');
+            let customerEmail = $('#edtSupplierEmail').val();
+            let currencyname = (CountryAbbr).toLowerCase();
+            let stringQuery = "?";
+            let dept = $('#sltDept').val();
+            var customerID = $('#edtSupplierEmail').attr('customerid');
+            for (let l = 0; l < lineItems.length; l++) {
+                stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+            }
+            stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + customerID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+            window.open(stripeGlobalURL + stringQuery, '_self');
+        } else {
+            swal({
+                title: 'Supplier Email Required',
+                text: 'Please enter supplier email',
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.value) {}
+                else if (result.dismiss === 'cancel') {}
+            });
+        }
+    } else {
+        swal({
+            title: 'WARNING',
+            text: "Please Set Up Payment Method To Use This Option, Click Ok to be Redirected to Payment Method page.",
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+                window.open('paymentmethodSettings', '_self');
+            } else if (result.dismiss === 'cancel') {}
+        });
+    }
+  },
   "click .printConfirm": async function (event) {
     var printTemplate = [];
     LoadingOverlay.show();

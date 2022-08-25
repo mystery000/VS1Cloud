@@ -1,200 +1,211 @@
 <template name="dashboardSalesCards">
-    <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales" data-default-position="0" position="0" card-active="true" card-key="dashboard-sales-performance-new-leads">
-      <div class="card shadow custom-sales-card border-left-primary py-2"
-        data-toggle="tooltip" 
-        data-bs-tooltip=""
-        title="is Lead count for last 3 months where status is ”Unqualified” ”My Metric” is Leads with my name Team ”Average” is all leads for the same period"
-      >
-        <div class="hideShowDiv">
-            <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-            <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-        </div>
-        <div class="card-body sp-new-leads" style="cursor: pointer;">
-          <div class="row align-items-center no-gutters">
-            <div class="col-md-12 card-inner-heading text-dark mb-3">
-              New Leads
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">My Metric</h5>
-              <h6 class="text-primary" id="new-leads-my-metric">000</h6>
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">Team Average</h5>
-              <h6 class="text-primary" id="new-leads-team-avg">000</h6>
-            </div>
+  <style>
+    .card-inner-heading {
+      font-size: 1.2rem;
+      text-align: center;
+      font-weight: bold;
+      padding: 0;
+      margin: 0;
+    }
+
+    .card-inner-heading>h5 {
+      font-size: 1.3rem;
+    }
+
+    .card-inner-matrics>h5 {
+      font-size: 0.9rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .card-inner-matrics>h6 {
+      font-size: 1.2rem;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+  <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
+    data-default-position="0" position="0" card-active="true" card-key="dashboard-sales-performance-new-leads">
+    <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
+      title="is Lead count for last 3 months where status is ”Unqualified” ”My Metric” is Leads with my name Team ”Average” is all leads for the same period">
+      <div class="hideShowDiv">
+        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+      </div>
+      <div class="card-body" style="cursor: pointer;">
+        <div class="row align-items-center no-gutters">
+          <div class="col-md-12 card-inner-heading mb-3">
+            New Leads
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>My Metric</h5>
+            <h6 class="text-primary" id="new-leads-my-metric">000</h6>
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>Team Average</h5>
+            <h6 class="text-dark" id="new-leads-team-avg">000</h6>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales" data-default-position="1" position="1" card-active="true" card-key="dashboard-sales-performance-new-oppertunities">
-      <div class="card shadow custom-sales-card border-left-primary py-2"
-        data-toggle="tooltip" 
-        data-bs-tooltip=""
-        title="is Lead count for last 3 months where status is ”Opportunity” ”My Metric” is Leads with my name ”Team Average” is all leads for the same period"
-      >
-        <div class="hideShowDiv">
-            <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-            <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-        </div>
-        <div class="card-body sp-new-oppertunities" style="cursor: pointer;">
-          <div class="row align-items-center no-gutters">
-            <div class="col-md-12 card-inner-heading text-dark mb-3">
-              New Oppertunities
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">My Metric</h5>
-              <h6 class="text-primary" id="new-opptertunties-my-metric">
-                000
-              </h6>
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">Team Average</h5>
-              <h6 class="text-primary" id="new-opptertunties-team-avg">
-                000
-              </h6>
-            </div>
+  </div>
+  <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
+    data-default-position="1" position="1" card-active="true" card-key="dashboard-sales-performance-new-oppertunities">
+    <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
+      title="is Lead count for last 3 months where status is ”Opportunity” ”My Metric” is Leads with my name ”Team Average” is all leads for the same period">
+      <div class="hideShowDiv">
+        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+      </div>
+      <div class="card-body" style="cursor: pointer;">
+        <div class="row align-items-center no-gutters">
+          <div class="col-md-12 card-inner-heading mb-3">
+            New Oppertunities
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>My Metric</h5>
+            <h6 class="text-primary" id="new-opptertunties-my-metric">
+              000
+            </h6>
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>Team Average</h5>
+            <h6 class="text-dark" id="new-opptertunties-team-avg">
+              000
+            </h6>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales" data-default-position="2" position="2" card-active="true" card-key="dashboard-sales-performance-won-oppertunities">
-      <div class="card shadow custom-sales-card border-left-primary py-2"
-        data-toggle="tooltip" 
-        data-bs-tooltip=""
-        title="is Lead/Customer count for last 3 months where an Invoice has been made ”My Metric” is Lead/Customer with my name ”Team Average” is all Lead/Customer for the same period"
-      >
-        <div class="hideShowDiv">
-            <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-            <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-        </div>
-        <div class="card-body sp-won-oppertunities" style="cursor: pointer;">
-          <div class="row align-items-center no-gutters">
-            <div class="col-md-12 card-inner-heading text-dark mb-3">
-              Won Oppertunities
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">My Metric</h5>
-              <h6 class="text-primary" id="won-opptertunties-my-metric">
-                000
-              </h6>
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">Team Average</h5>
-              <h6 class="text-primary" id="won-opptertunties-team-avg">
-                000
-              </h6>
-            </div>
+  </div>
+  <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
+    data-default-position="2" position="2" card-active="true" card-key="dashboard-sales-performance-won-oppertunities">
+    <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
+      title="is Lead/Customer count for last 3 months where an Invoice has been made ”My Metric” is Lead/Customer with my name ”Team Average” is all Lead/Customer for the same period">
+      <div class="hideShowDiv">
+        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+      </div>
+      <div class="card-body sp-won-oppertunities" style="cursor: pointer;">
+        <div class="row align-items-center no-gutters">
+          <div class="col-md-12 card-inner-heading mb-3">
+            Won Oppertunities
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>My Metric</h5>
+            <h6 class="text-primary" id="won-opptertunties-my-metric">
+              000
+            </h6>
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>Team Average</h5>
+            <h6 class="text-dark" id="won-opptertunties-team-avg">
+              000
+            </h6>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-2 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales" data-default-position="3" position="3" card-active="true" card-key="dashboard-sales-performance-gap-to-quota">
-      <div class="card shadow custom-sales-card border-left-primary py-2"
-        data-toggle="tooltip" 
-        data-bs-tooltip=""
-        title="is value of Invoices for last 3 months If more than “Quota” on employee card show “In Front” and colour Numbers green. f less than “Quota” on employee card show “Behind” and colour Numbers Red."
-      >
-        <div class="hideShowDiv">
-            <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-            <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-        </div>
-        <div class="card-body" style="cursor: pointer;">
-          <div class="row align-items-center no-gutters">
-            <div class="col-md-12 card-inner-heading text-dark mb-3">
-              Gap to Quota
-              <h5 class="text-danger mt-3" id="gap-to-quota">$ 86,000</h5>
-            </div>
+  </div>
+  <div class="col-md-2 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
+    data-default-position="3" position="3" card-active="true" card-key="dashboard-sales-performance-gap-to-quota">
+    <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
+      title="is value of Invoices for last 3 months If more than “Quota” on employee card show “In Front” and colour Numbers green. f less than “Quota” on employee card show “Behind” and colour Numbers Red.">
+      <div class="hideShowDiv">
+        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+      </div>
+      <div class="card-body" style="cursor: pointer;">
+        <div class="row align-items-center no-gutters">
+          <div class="col-md-12 card-inner-heading mb-3">
+            Gap to Quota
+            <h5 class="text-danger mt-3" id="gap-to-quota">$ 86,000</h5>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales" data-default-position="4" position="4" card-active="true" card-key="dashboard-sales-performance-win-rate">
-      <div class="card shadow custom-sales-card border-left-primary py-2"
-        data-toggle="tooltip" 
-        data-bs-tooltip=""
-        title="is Quote count for last 3 months where it is converted to an invoice “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period"
-      >
-        <div class="hideShowDiv">
-            <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-            <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-        </div>
-        <div class="card-body" style="cursor: pointer;">
-          <div class="row align-items-center no-gutters">
-            <div class="col-md-12 card-inner-heading text-dark mb-3">
-              Win Rate %
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">My Metric</h5>
-              <h6 class="text-primary" id="win-rate-my-metric">000</h6>
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">Team Average</h5>
-              <h6 class="text-primary" id="win-rate-team-avg">000</h6>
-            </div>
+  </div>
+  <div class="col-md-3 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
+    data-default-position="4" position="4" card-active="true" card-key="dashboard-sales-performance-win-rate">
+    <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
+      title="is Quote count for last 3 months where it is converted to an invoice “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period">
+      <div class="hideShowDiv">
+        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+      </div>
+      <div class="card-body" style="cursor: pointer;">
+        <div class="row align-items-center no-gutters">
+          <div class="col-md-12 card-inner-heading mb-3">
+            Win Rate %
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>My Metric</h5>
+            <h6 class="text-primary" id="win-rate-my-metric">000</h6>
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>Team Average</h5>
+            <h6 class="text-dark" id="win-rate-team-avg">000</h6>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales" data-default-position="5" position="5" card-active="true" card-key="dashboard-sales-performance-avg-sale">
-      <div class="card shadow custom-sales-card border-left-primary py-2"
-        data-toggle="tooltip" 
-        data-bs-tooltip=""
-        title="is average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced” “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period"
-      >
-        <div class="hideShowDiv">
-            <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-            <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-        </div>
-        <div class="card-body" style="cursor: pointer;">
-          <div class="row align-items-center no-gutters">
-            <div class="col-md-12 card-inner-heading text-dark mb-3">
-              Average Sales Cycle
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">Avg Sales Cycle</h5>
-              <h6 class="text-primary" id="avg-sales-cycle-my-metric">
-                000
-              </h6>
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">Team Average</h5>
-              <h6 class="text-primary" id="avg-sales-cycle-team-avg">
-                000
-              </h6>
-            </div>
+  </div>
+  <div class="col-md-4 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
+    data-default-position="5" position="5" card-active="true" card-key="dashboard-sales-performance-avg-sale">
+    <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
+      title="is average time taken where Lead/Customer status is converted from “Unqualified” to “Invoiced” “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period">
+      <div class="hideShowDiv">
+        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+      </div>
+      <div class="card-body" style="cursor: pointer;">
+        <div class="row align-items-center no-gutters">
+          <div class="col-md-12 card-inner-heading mb-3">
+            Average Sales Cycle
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>Avg Sales Cycle</h5>
+            <h6 class="text-primary" id="avg-sales-cycle-my-metric">
+              000
+            </h6>
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>Team Average</h5>
+            <h6 class="text-dark" id="avg-sales-cycle-team-avg">
+              000
+            </h6>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-5 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales" data-default-position="6" position="6" card-active="true" card-key="dashboard-sales-performance-pipeline">
-      <div class="card shadow custom-sales-card border-left-primary py-2"
-        data-toggle="tooltip" 
-        data-bs-tooltip=""
-        title="is quotes from Lead/Customer for last 3 months where the quote has not been converted to an invoice. “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period"
-      >
-        <div class="hideShowDiv">
-            <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-            <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-        </div>
-        <div class="card-body" style="cursor: pointer;">
-          <div class="row align-items-center no-gutters">
-            <div class="col-md-12 card-inner-heading text-dark mb-3">
-              Pipeline Amount
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">My Metric</h5>
-              <h6 class="text-primary" id="pipeline-amount-my-metric">
-                000
-              </h6>
-            </div>
-            <div class="col-md-6 card-inner-matrics">
-              <h5 class="text-dark">Team Average</h5>
-              <h6 class="text-primary" id="pipeline-amount-team-avg">
-                000
-              </h6>
-            </div>
+  </div>
+  <div class="col-md-5 mb-4 card-visibility hideelement" card-id="0" chartgroup="dashboardSales"
+    data-default-position="6" position="6" card-active="true" card-key="dashboard-sales-performance-pipeline">
+    <div class="card shadow custom-sales-card border-left-primary py-2" data-toggle="tooltip" data-bs-tooltip=""
+      title="is quotes from Lead/Customer for last 3 months where the quote has not been converted to an invoice. “My Metric” is Lead/Customer with my name “Team Average” is all Lead/Customer for the same period">
+      <div class="hideShowDiv">
+        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+      </div>
+      <div class="card-body" style="cursor: pointer;">
+        <div class="row align-items-center no-gutters">
+          <div class="col-md-12 card-inner-heading mb-3">
+            Pipeline Amount
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>My Metric</h5>
+            <h6 class="text-primary" id="pipeline-amount-my-metric">
+              000
+            </h6>
+          </div>
+          <div class="col-md-6 card-inner-matrics">
+            <h5>Team Average</h5>
+            <h6 class="text-dark" id="pipeline-amount-team-avg">
+              000
+            </h6>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>

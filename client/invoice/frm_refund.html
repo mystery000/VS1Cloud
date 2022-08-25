@@ -1268,17 +1268,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
-                                                <div style="display: flex; width: 100%;">
-                                                    <div style="width: 50%; padding-right: 16px;font-weight: bold;">
-                                                         <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                                         </h4>
-                                                    </div>
-                                                    <div style="width: 50%; padding-left: 16px;font-weight: bold;">
-                                                        <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                                        </h4>
-                                                    </div>
-    
-                                                </div>
+                                                <h4  style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Invoice&nbsp;&nbsp;&nbsp; <span class="print-header"></span></h4>
     
     
                                                 <div style="display: flex; width: 100%;">
@@ -1336,7 +1326,7 @@
                                             <div style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
                                                 <table class="invoice_print" style="width: 100%;  margin: auto;">
                                                     <thead style="color: rgb(251,251,251);">
-                                                        <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0); color: #000000;">
+                                                        <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0,0.1); color: #000000;">
                                                         </tr>
                                                     </thead>
                                                     <tbody class="tbl_content" style="color: rgb(0 0 0);">
@@ -1355,11 +1345,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-6 ">
-                                                        <div class="row field_payment" style="border: 1px solid;">
+                                                    <div class="col-6 " style="border: 1px solid;">
+                                                        <div class="row">
                                                             <div class="col-12">
                                                                 <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                                             </div>
+                                                         </div>
+                                                        <div class="row field_payment" >
+                                                            
                                                             <!-- <div class="bankDetails" style="margin: 16px;">
     
                                                 </div> -->
@@ -1462,15 +1455,14 @@
                         </div>
                     </div>
             
-                    <div style="display:none;width: 90%;position:relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;" id="html-2-pdfwrapper_new"
-                    name="html-2-pdfwrapper_new">
-                    <div class="d-flex flex-row d-sm-flex d-md-flex ">
-                        <div class="col-7 col-md-7 col-sm-12" style="margin: 0px; padding: 16px;">
-                            <div style="display: flex;" class="col-6 col-md-6 col-sm-12">
-                                <div class="col-4 col-md-4 col-sm-10 p-2" style="max-width: 60mm; max-height: 30mm;">
-                                    <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 150px;margin-bottom: 8px;">
+                   <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; display:none; overflow-x: visible;" id="html-2-pdfwrapper_new" name="html-2-pdfwrapper_new">
+                      <div style="display: flex; height: fit-content; min-height: 30mm;">
+                        <div style="margin: 0px; padding: 16px; width: 130mm; max-width: 130mm;">
+                            <div style="display: flex;">
+                                <div style="max-width: 60mm; max-height: 30mm;">
+                                    <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm;max-width: 200px;margin-bottom: 8px;">
                                 </div>
-                                <div class="col-lg-12 col-md-8 col-sm-6 p-2">
+                                <div  style="width:70mm;">
                                     <div style="padding-left: 16px;font-weight: bold;">
                                         <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
                                         <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
@@ -1484,25 +1476,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div style="font-size: 14px;">
-                                <div class="customer" style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: 600;">
-                                </div>
-                                <div style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName"></div>
-                                <div style="min-height: 50px; width: 50%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress"></div>
+                            <div style="font-size: 14px; width:90%;">
+                                <p style="margin-bottom: 0px; color: rgb(0 0 0);font-weight: 600;">Customer</p>
+                                <p style="margin-bottom: 0px; color: rgb(0 0 0); display:none;" class="pdfCustomerName"></p>
+                                <div style="min-height:50px; width: 50%; margin-bottom: 0px; color: rgb(0 0 0);" class="pdfCustomerAddress"></div>
                             </div>
                         </div>
                         <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
-                            <div style="display: flex; width: 100%;">
-                                <div style="width: 50%; padding-right: 16px;font-weight: bold;">
-                                    <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                    </h4>
-                                </div>
-                                <div style="width: 50%; padding-left: 16px;font-weight: bold;">
-                                    <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
-                                    </h4>
-                                </div>
-        
-                            </div>
+                            <h4  style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Invoice&nbsp;&nbsp;&nbsp; <span class="print-header"></span></h4>
         
         
                             <div style="display: flex; width: 100%;">
@@ -1552,9 +1533,10 @@
                     <hr>
                     <div style="height: 120mm;">
                         <div style="margin: 8px; border: none !important; background-color: rgba(0,0,0,0);">
-                            <table class="invoice_print" style="width: 100%;  margin: auto;">
-                                <thead style="color: rgb(251,251,251);">
-                                    <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0); color: #000000;">
+                            <table class="invoice_print" style="width: 200mm; max-width: 200mm; margin: auto;">
+                                <thead  style="color: rgb(251,251,251);">
+
+                                    <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0, 1);">
                                     </tr>
                                 </thead>
                                 <tbody class="tbl_content" style="color: rgb(0 0 0);">
@@ -1562,7 +1544,7 @@
                             </table>
                         </div>
 
-                        <div style="display: flex; margin-top: 15px;">
+                        <!-- <div style="display: flex; margin-top: 15px;">
                             <div style="margin: 8px; width: 100%">
                                 <div class="row">
                                     <div class="col-6 ">
@@ -1600,7 +1582,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <hr>
                     <div style="display: flex;">
@@ -1613,11 +1595,18 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6 ">
-                                    <div class="row field_payment" style="border: 1px solid;">
+                                <div class="col-6 "  style="border: 1px solid;">
+
+                                     <div class="row">
                                         <div class="col-12">
                                             <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                         </div>
+                                     </div>
+                                  
+
+
+                                    <div class="row field_payment">
+                                       
                                         <!-- <div class="bankDetails" style="margin: 16px;">
         
                                 </div> -->
@@ -1724,6 +1713,7 @@
                             <textarea class="form-control" rows="4" id="txapickmemo" name="txapickmemo">{{invoicerecord.pickmemo}}</textarea>
                         </div>
                     </div> -->
+
                     <div class="col-12 col-md-6 col-lg-4 col-xl-2" id="totalSection" style="padding-right: 1.5rem; padding-left: 1.5rem;">
                         <div class="row">
                             <div class="col-4" style="padding: 0px;">
@@ -1842,7 +1832,7 @@
                 </style>
 
 
-<!--
+               <!--
                 <div class="d-xl-flex justify-content-xl-center"><button class="btn btn-success btnSave" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
                  <button class="btn btn-primary printConfirm" type="button" style="margin: 16px;margin-top: 0px;width: 100px;"><i class="fa fa-print" style="padding-right: 8px;"></i>Print</button>
@@ -1851,7 +1841,7 @@
                     </a>
                     <button class="btn btn-secondary btnBack" type="button" style="margin: 16px;margin-top: 0px;width: 100px;"><i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel</button>
                 </div>
--->
+                -->
             </form>
             <!-- Start PDF -->
             <!-- A4 -->
@@ -1887,7 +1877,7 @@
                         </div>
                     </div>
                     <div style="margin: 0px; padding: 16px; border: none !important; width: 60mm; max-width: 60mm;">
-                        <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Invoice&nbsp;&nbsp;&nbsp; {{invoicerecord.id}}</h4>
+                        <h4 class="print-headers" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Invoice&nbsp;&nbsp;&nbsp; {{invoicerecord.id}}</h4>
                         <div style="display: flex; width: 100%;">
                             <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                 <label style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</label>

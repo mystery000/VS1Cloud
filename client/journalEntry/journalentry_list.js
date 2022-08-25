@@ -64,27 +64,6 @@ Template.journalentrylist.onRendered(function() {
   $("#dateFrom").val(fromDate);
   $("#dateTo").val(begunDate);
 
-  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblJournalList', function(error, result){
-  if(error){
-
-  }else{
-    if(result){
-      for (let i = 0; i < result.customFields.length; i++) {
-        let customcolumn = result.customFields;
-        let columData = customcolumn[i].label;
-        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-        let hiddenColumn = customcolumn[i].hidden;
-        let columnClass = columHeaderUpdate.split('.')[1];
-        let columnWidth = customcolumn[i].width;
-         $("th."+columnClass+"").html(columData);
-          $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-      }
-    }
-
-  }
-  });
-
   function MakeNegative() {
 
         $('td').each(function(){
@@ -120,7 +99,7 @@ Template.journalentrylist.onRendered(function() {
     var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-    getVS1Data('TJournalEntryList').then(function (dataObject) {
+    getVS1Data('TJournalEntryList1').then(function (dataObject) {
         if(dataObject.length == 0){
           sideBarService.getTJournalEntryListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
             let lineItems = [];
@@ -172,37 +151,6 @@ Template.journalentrylist.onRendered(function() {
                 }
 
             if(templateObject.datatablerecords.get()){
-
-              Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblJournalList', function(error, result){
-              if(error){
-
-              }else{
-                if(result){
-                  for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    let columnindex = customcolumn[i].index + 1;
-
-                    if(hiddenColumn == true){
-
-                      $("."+columnClass+"").addClass('hiddenColumn');
-                      $("."+columnClass+"").removeClass('showColumn');
-                    }else if(hiddenColumn == false){
-                      $("."+columnClass+"").removeClass('hiddenColumn');
-                      $("."+columnClass+"").addClass('showColumn');
-                    }
-
-                  }
-                }
-
-              }
-              });
-
-
               setTimeout(function () {
                 MakeNegative();
               }, 100);
@@ -347,10 +295,12 @@ Template.journalentrylist.onRendered(function() {
                           }, 100);
                       },
                       "fnInitComplete": function () {
-                        let urlParametersPage = FlowRouter.current().queryParams.page;
-                        //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                            this.fnPageChange('last');
-                        //}
+                        this.fnPageChange('last');
+                        if(data.Params.Search.replace(/\s/g, "") == ""){
+                          $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                        }else{
+                          $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                        }
                          $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
                          $('.myvarFilterForm').appendTo(".colDateFilter");
                       },
@@ -469,36 +419,6 @@ Template.journalentrylist.onRendered(function() {
               }
 
           if(templateObject.datatablerecords.get()){
-
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblJournalList', function(error, result){
-            if(error){
-
-            }else{
-              if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                  let customcolumn = result.customFields;
-                  let columData = customcolumn[i].label;
-                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                  let hiddenColumn = customcolumn[i].hidden;
-                  let columnClass = columHeaderUpdate.split('.')[1];
-                  let columnWidth = customcolumn[i].width;
-                  let columnindex = customcolumn[i].index + 1;
-
-                  if(hiddenColumn == true){
-
-                    $("."+columnClass+"").addClass('hiddenColumn');
-                    $("."+columnClass+"").removeClass('showColumn');
-                  }else if(hiddenColumn == false){
-                    $("."+columnClass+"").removeClass('hiddenColumn');
-                    $("."+columnClass+"").addClass('showColumn');
-                  }
-
-                }
-              }
-
-            }
-            });
-
 
             setTimeout(function () {
               MakeNegative();
@@ -644,10 +564,12 @@ Template.journalentrylist.onRendered(function() {
                         }, 100);
                     },
                     "fnInitComplete": function () {
-                      let urlParametersPage = FlowRouter.current().queryParams.page;
-                      //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                          this.fnPageChange('last');
-                      //}
+                      this.fnPageChange('last');
+                      if(data.Params.Search.replace(/\s/g, "") == ""){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                      }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                      }
                        $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
                        $('.myvarFilterForm').appendTo(".colDateFilter");
                     },
@@ -905,10 +827,12 @@ Template.journalentrylist.onRendered(function() {
                         }, 100);
                     },
                     "fnInitComplete": function () {
-                      let urlParametersPage = FlowRouter.current().queryParams.page;
-                      //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                          this.fnPageChange('last');
-                      //}
+                      this.fnPageChange('last');
+                      if(data.Params.Search.replace(/\s/g, "") == ""){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                      }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                      }
                        $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
                        $('.myvarFilterForm').appendTo(".colDateFilter");
                     },

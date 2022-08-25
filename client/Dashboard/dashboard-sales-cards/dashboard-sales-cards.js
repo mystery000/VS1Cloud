@@ -116,38 +116,57 @@ Template.dashboardSalesCards.onRendered(function () {
             });
             const myWinRate = myConvertedQuotesCount;
             const teamWinRate = convertedQuotesCount;
-            $('#win-rate-my-metric').text(myWinRate);
-            $('#win-rate-team-avg').text(teamWinRate);
+            $('#win-rate-my-metric').text(`${myWinRate} %`);
+            $('#win-rate-team-avg').text(`${teamWinRate} %`);
 
             const myAvgSalesCycle = myConvertedQuotesAmount ? myConvertedQuotesAmount/30 : myConvertedQuotesAmount; 
             const teamAvgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount/30 : convertedQuotesAmount;
-            $('#avg-sales-cycle-my-metric').text(myAvgSalesCycle.toFixed(2));
-            $('#avg-sales-cycle-team-avg').text(teamAvgSalesCycle.toFixed(2));
+            $('#avg-sales-cycle-my-metric').text(`${parseInt(myAvgSalesCycle)} day(s)`);
+            $('#avg-sales-cycle-team-avg').text(`${parseInt(teamAvgSalesCycle)} day(s)`);
 
-            $('#pipeline-amount-my-metric').text(myPipeLineAmount.toFixed(2));
-            $('#pipeline-amount-team-avg').text(teamPipeLineAmount.toFixed(2));
+            $('#pipeline-amount-my-metric').text(`$ ${myPipeLineAmount.toFixed(2)}`);
+            $('#pipeline-amount-team-avg').text(`$ ${teamPipeLineAmount.toFixed(2)}`);
         }
     }).catch(function (err) {
     });
 
   }
   templateObject.getDashboardData();
-
-  $('.sp-new-leads').on('click', function() {
-      FlowRouter.go('/leadlist?range=month');
-    });
-
-  $('.sp-new-oppertunities').on('click', function() {
-      FlowRouter.go('/leadlist?status=oppertunities');
-  });
-
-  $('.sp-won-oppertunities').on('click', function() {
-      FlowRouter.go('/leadlist?status=approved');
-  });
-
 });
 
 // Listen to event to update reactive variable
 Template.dashboardSalesCards.events({
-  
+    "click #new-leads-my-metric": (e) => {
+        FlowRouter.go('/leadlist?range=month&type=employee');
+    },
+    "click #new-leads-team-avg": (e) => {
+        FlowRouter.go('/leadlist?range=month');
+    },
+    "click #new-opptertunties-my-metric": (e) => {
+        FlowRouter.go('/leadlist?range=month&type=employee');
+    },
+    "click #new-opptertunties-team-avg": (e) => {
+        FlowRouter.go('/leadlist?range=month');
+    },
+    "click #won-opptertunties-my-metric": (e) => {
+        FlowRouter.go('/invoicelist?range=month&type=employee');
+    },
+    "click #won-opptertunties-team-avg": (e) => {
+        FlowRouter.go('/invoicelist?range=month');
+    },
+    "click #gap-to-quota": (e) => {
+        FlowRouter.go('/invoicelist?range=month');
+    },
+    "click #avg-sales-cycle-my-metric": (e) => {
+        FlowRouter.go('/quotelist?range=month&type=employee');
+    },
+    "click #avg-sales-cycle-team-avg": (e) => {
+        FlowRouter.go('/quotelist?range=month');
+    },
+    "click #pipeline-amount-my-metric": (e) => {
+        FlowRouter.go('/quotelist?range=month&type=employee');
+    },
+    "click #pipeline-amount-team-avg": (e) => {
+        FlowRouter.go('/quotelist?range=month');
+    },
 });
