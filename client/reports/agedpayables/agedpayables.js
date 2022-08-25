@@ -100,6 +100,7 @@ Template.agedpayables.onRendered(() => {
               $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
             }
             if (data.tapreport.length) {
+               
                 //localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
                 let records = [];
                 let allRecords = [];
@@ -185,9 +186,25 @@ Template.agedpayables.onRendered(() => {
                         threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
                         Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
                     }
-                    let val = ['Total ' + allRecords[i][0].key + '', '', '', '', utilityService.modifynegativeCurrencyFormat(amountduetotal), utilityService.modifynegativeCurrencyFormat(Currenttotal),
-                        utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
-                    current.push(val);
+                    let val = ['Total ' + allRecords[i][0].key + '', '', '', '', 
+                    utilityService.modifynegativeCurrencyFormat(amountduetotal), 
+                    utilityService.modifynegativeCurrencyFormat(Currenttotal),
+                        utilityService.modifynegativeCurrencyFormat(oneMonth), 
+                        utilityService.modifynegativeCurrencyFormat(twoMonth), 
+                        utilityService.modifynegativeCurrencyFormat(threeMonth), 
+                        utilityService.modifynegativeCurrencyFormat(Older)];
+                    //current.push(val);
+
+                    current.push({
+                        Title: 'Total ' + allRecords[i][0].key,
+                        TotalAmountDue: amountduetotal,
+                        TotalCurrent: Currenttotal,
+                        OneMonth: oneMonth,
+                        TwoMonth: twoMonth,
+                        ThreeMonth: threeMonth,
+                        OlderMonth: Older
+                    });
+
 
                 }
 
@@ -228,6 +245,16 @@ Template.agedpayables.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
                     utilityService.modifynegativeCurrencyFormat(grandOlder)];
 
+                let grandValObj = {
+                    Title: 'Grand Total ',
+                    TotalAmountDue: grandamountduetotal,
+                    TotalCurrent: grandCurrenttotal,
+                    OneMonth: grandoneMonth,
+                    TwoMonth: grandtwoMonth,
+                    ThreeMonth: grandthreeMonth,
+                    OlderMonth: grandOlder
+                };
+
                 for (let key in records) {
                     let dataArr = current[iterator]
                         let obj = [{
@@ -235,20 +262,18 @@ Template.agedpayables.onRendered(() => {
                             }, {
                                 data: records[key]
                             }, {
-                                total: [{
-                                        dataArr: dataArr
-                                    }
-                                ]
+                                total: dataArr
                             }
                         ];
                     totalRecord.push(obj);
                     iterator += 1;
                 }
-
+                console.log(totalRecord);
                 templateObject.records.set(totalRecord);
-                templateObject.grandrecords.set(grandval);
-
+                templateObject.grandrecords.set(grandValObj);
+               
                 if (templateObject.records.get()) {
+                    
                     setTimeout(function () {
                         $('td a').each(function () {
                             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -311,6 +336,52 @@ Template.agedpayables.onRendered(() => {
             $('.fullScreenSpin').css('display', 'none');
         });
     };
+
+    templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+        LoadingOverlay.show();
+        let data = await sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID);
+        const accountData = data.tapreport;
+        let _table = [];
+
+        let records;
+        records = _.sortBy(accountData, 'Name');
+        records = _.groupBy(accountData, 'Name');
+
+        console.log('Data', data.tapreport, records);
+
+        accountData.forEach((d) => {
+            _table.push(buildSingleGroup(d));
+        })
+
+        let datatable = [
+            {
+                header: {
+                    title: ''
+                },
+                body: [
+                    {}
+                ],
+                total: {}
+            }
+        ];
+
+        function buildSingleGroup(data) {
+
+        }
+
+
+
+        function buildBody() {
+
+        }
+
+        function buildTotalFromBody() {
+
+        }
+
+
+
+    }
 
     var currentDate2 = new Date();
     let url = location.href;
@@ -1005,12 +1076,15 @@ Template.agedpayables.helpers({
     return ( date )? moment(date).format("DD/MM/YYYY") : '';
     },
   // FX Module
-  convertAmount: (amount, currencyData) => {
+  convertAmount: (amount = 0.00, currencyData, days = null) => {
+    if(days != null) {
+        amount = amount[days + 'Days'];
+    }
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
     if (isNaN(amount)) {
       if (!amount || amount.trim() == "") {
-        return "";
+        return '';
       }
       amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
     }
@@ -1103,7 +1177,10 @@ Template.agedpayables.helpers({
   currencyList: () => {
     return Template.instance().currencyList.get();
   },
-  isNegativeAmount(amount) {
+  isNegativeAmount(amount, days = null) {
+    if(days != null) {
+        amount = amount[days + 'Days'];
+    }
     if (Math.sign(amount) === -1) {
       return true;
     }
@@ -1137,6 +1214,9 @@ Template.agedpayables.helpers({
   },
   currency: () => {
     return Currency;
+  },
+  getDays: (object, number = 30) => {
+    return object[number + 'Days'];
   }
 });
 Template.registerHelper('equals', function (a, b) {
