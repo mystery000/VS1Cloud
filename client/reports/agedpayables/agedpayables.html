@@ -75,6 +75,7 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    {{>FxRatesButton}}
                                 </div>
                             </div>
                             <div class="col-12 col-md-2">
@@ -155,13 +156,74 @@
                                                 <th style="width: 130px;">Type</th>
                                                 <th class="text-right">PO No.</th>
                                                 <th>Due Date</th>
-                                                <th class="text-right">Amount Due</th>
-                                                <th class="text-right">Current</th>
-                                                <th class="text-right">1 - 30 Days</th>
-                                                <th class="text-right">30 - 60 Days</th>
-                                                <th class="text-right">60 - 90 Days</th>
-                                                <th class="text-right">&gt; 90 Days</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">Amount Due</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">Current</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">1 - 30 Days</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">30 - 60 Days</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">60 - 90 Days</th>
+                                                <th class="text-center" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
                                             </tr>
+
+                                            {{#if isOnlyDefaultActive equal "false" }}
+                                                <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                   
+
+                                                
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+                                                
+                                                </tr>
+                                            {{/if}}
                                         </thead>
                                         <tbody>
                                             {{#if records}}
@@ -183,18 +245,109 @@
                                                 <td></td>
                                             </tr>
                                             {{/if}}
+
                                             {{#each item in recordItem.data}}
-                                            <tr class="{{item.type}}" id="{{item.Id}}">
-                                                <div style="display:none;">{{item.SupplierName}}</div>
-                                                {{#each subItem in item.dataArr}}
-                                                <td class="Total1Indented MenuLeft text-nowrap Indent1"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
-                                                {{/each}}
-                                            </tr>
+                                                <tr data-type="{{item.type}}" id="{{item.Id}}">
+                                                    <div style="display:none;">{{item.SupplierName}}</div>
+                                                    <td></td>
+                                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                        <a href="#" style="text-decoration:none!important;">{{item.entries.Type}}</a>
+                                                    </td>
+                                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                        <a href="#" style="text-decoration:none!important;">{{item.entries.PurchaseOrderID}}</a>
+                                                    </td>
+                                                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                        <a href="#" style="text-decoration:none!important;">{{ formatDate item.entries.DueDate}}</a>
+                                                    </td>
+
+                                                    {{#if isOnlyDefaultActive }}
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries.AmountDue }} text-danger {{else}} text-success {{/if}}">
+                                                                                <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.AmountDue c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries.Current }} text-danger {{else}} text-success {{/if}}">
+                                                                                <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.Current c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries.Current }} text-danger {{else}} text-success {{/if}}">
+                                                                                <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.['30Days'] c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries.Current }} text-danger {{else}} text-success {{/if}}">
+                                                                                <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.['60Days'] c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries.Current }} text-danger {{else}} text-success {{/if}}">
+                                                                                <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.['90Days'] c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries.Current }} text-danger {{else}} text-success {{/if}}">
+                                                                                <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries.['120Days'] c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                    
+                                                                    
+                                                                    
+                                                                {{/if}}
+                                                    {{else}}
+                                                    
+                                                        <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                            <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.AmountDue}}</a>
+                                                        </td>
+                                                        <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                            <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.Current}}</a>
+                                                        </td>
+                                                        <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                            <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.['30Days']}}</a>
+                                                        </td>
+                                                        <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                            <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.['60Days']}}</a>
+                                                        </td>
+                                                        <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                            <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.['90Days']}}</a>
+                                                        </td>
+                                                        <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                            <a href="#" style="text-decoration:none!important;">{{ formatPrice item.entries.['120Days']}}</a>
+                                                        </td>
+
+                                                    {{/if}}
+                                                    
+                                                   
+
+                                                    <!-- {{#each subItem in item.dataArr}}
+                                                        <td class="Total1Indented MenuLeft text-nowrap Indent1"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
+                                                    {{/each}} -->
+                                                </tr>
                                             {{/each}}
+
                                             {{#each total in recordItem.total}}
                                             <tr class="TotalField">
                                                 {{#each items in total.dataArr}}
-                                                <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td>
+                                                    <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td>
                                                 {{/each}}
                                             </tr>
                                             {{/each}}
@@ -248,5 +401,9 @@
     </div>
 
     <!-- End Help Video Modal -->
+
+     <!-- Start Currency Modal -->
+     {{> FxRateModal currencies=currencyList}}
+     <!-- End Currency Modal -->
 
 </template>
