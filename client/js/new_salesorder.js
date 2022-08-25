@@ -1581,17 +1581,17 @@ Template.new_salesorder.onRendered(() => {
          const data = object_invoce[0]["data"]
 
          for(item of data){
-            
+
             var html = '';
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 html = html + "<td>" + item_temp + "</td>";
              }
 
-           
+
             html +="</tr>";
             tbl_content.append(html);
-           
+
          }
 
         // total amount
@@ -1639,7 +1639,7 @@ Template.new_salesorder.onRendered(() => {
 
     function updateTemplate(object_invoce) {
 
-            
+
 
             if (object_invoce.length > 0) {
             $("#html-2-pdfwrapper_new #printcomment").text(
@@ -1769,7 +1769,7 @@ Template.new_salesorder.onRendered(() => {
               $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
               $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
               $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-             
+
               if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
               {
                 $('#html-2-pdfwrapper_new .customfield1data').text('');
@@ -1852,7 +1852,7 @@ Template.new_salesorder.onRendered(() => {
         tbl_header.empty()
         var count = 0;
         for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                
+
                             if(count == 0)
                             {
                                 tbl_header.append("<th style='width:200px;background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
@@ -1863,7 +1863,7 @@ Template.new_salesorder.onRendered(() => {
                             }
                             else if(count == 2)
                             {
-                                
+
                                 tbl_header.append("<th style='text-align: right; width: 50px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                             }
                             else if(count == 3)
@@ -1872,18 +1872,18 @@ Template.new_salesorder.onRendered(() => {
                             }
                             else if(count == 4)
                             {
-                                
+
                                 tbl_header.append("<th style='text-align: right; width: 77px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                             }
                             else
                             {
-                                
+
                                 tbl_header.append("<th style='text-align: right; width: 100px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                             }
-                            
+
                             count++;
                 }
-            
+
                 if (object_invoce[0]["taxItems"]) {
                 let taxItems = object_invoce[0]["taxItems"];
                 $("#html-2-pdfwrapper_new #tax_list_print").html("");
@@ -1912,17 +1912,17 @@ Template.new_salesorder.onRendered(() => {
             const data = object_invoce[0]["data"]
 
             for(item of data){
-            
+
              var html = '';
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              var count = 0;
              for(item_temp of item){
                 if(count > 1)
                 {
-                   
+
                         html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-                    
-                   
+
+
                 }
                 else
                 {
@@ -1931,10 +1931,10 @@ Template.new_salesorder.onRendered(() => {
                 count++
              }
 
-            
+
             html +="</tr>";
             tbl_content.append(html);
-           
+
          }
 
         // total amount
@@ -4178,8 +4178,8 @@ Template.new_salesorder.onRendered(() => {
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
-                                            DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0
-
+                                            DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0,
+                                            pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
                                         };
                                         var dataListTable = [
                                             useData[d].fields.Lines[i].fields.ProductName || '',
@@ -4217,8 +4217,9 @@ Template.new_salesorder.onRendered(() => {
                                         //TotalAmt: AmountGbp || 0,
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
-                                        TaxRate: TaxRateGbp || 0
-                                    };
+                                        TaxRate: TaxRateGbp || 0,
+                                        pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
+                                   };
                                     lineItems.push(lineItemObj);
                                 }
 
@@ -4448,8 +4449,8 @@ Template.new_salesorder.onRendered(() => {
                                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                     TaxTotal: TaxTotalGbp || 0,
                                     TaxRate: TaxRateGbp || 0,
-                                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
-
+                                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                                    pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
                                 };
                                 var dataListTable = [
                                     data.fields.Lines[i].fields.ProductName || '',
@@ -6317,7 +6318,7 @@ Template.new_salesorder.onRendered(() => {
         });
 
 
-      
+
 
 
         exportSalesToPdf1 = function() {
@@ -6424,14 +6425,14 @@ Template.new_salesorder.onRendered(() => {
 
             if(template_title== 'Sales Order' && number==1)
             {
-          
+
                              exportSalesToPdf1();
             }
             else
             {
-                 
-                            
-                            
+
+
+
                             if(template_title == 'Sales Order')
                             {
                                 await showSealsOrder(template_title,number);
@@ -6441,7 +6442,7 @@ Template.new_salesorder.onRendered(() => {
                             {
                                 await showDeliveryDocket(template_title,number);
                             }
-                            
+
 
 
                             let margins = {
@@ -6540,8 +6541,8 @@ Template.new_salesorder.onRendered(() => {
                             //     }
                             // });
                             // }
-                           
-                           
+
+
                             // html2pdf().set(opt).from(source).save().then(function (dataObject) {
                             //         if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                             //             //$(".btnSave").trigger("click");
@@ -7117,7 +7118,7 @@ Template.new_salesorder.onRendered(function() {
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
-  
+
         getVS1Data("TSubTaxVS1")
           .then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -7129,10 +7130,10 @@ Template.new_salesorder.onRendered(function() {
                     description: data.tsubtaxcode[i].Description || "-",
                     category: data.tsubtaxcode[i].Category || "-",
                   };
-  
+
                   subTaxTableList.push(dataList);
                 }
-  
+
                 tempObj.subtaxcodes.set(subTaxTableList);
               });
             } else {
@@ -7145,10 +7146,10 @@ Template.new_salesorder.onRendered(function() {
                   description: useData[i].Description || "-",
                   category: useData[i].Category || "-",
                 };
-  
+
                 subTaxTableList.push(dataList);
               }
-  
+
               tempObj.subtaxcodes.set(subTaxTableList);
             }
           })
@@ -7161,10 +7162,10 @@ Template.new_salesorder.onRendered(function() {
                   description: data.tsubtaxcode[i].Description || "-",
                   category: data.tsubtaxcode[i].Category || "-",
                 };
-  
+
                 subTaxTableList.push(dataList);
               }
-  
+
               tempObj.subtaxcodes.set(subTaxTableList);
             });
           });
@@ -7193,7 +7194,7 @@ Template.new_salesorder.onRendered(function() {
         { label: 'Amount (Inc)', class: 'colAmountInc', active: false },
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
-      ]; 
+      ];
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
@@ -11875,29 +11876,106 @@ Template.new_salesorder.events({
         let selectedunit = $(target).closest('tr').find('.lineQty').val();
         localStorage.setItem('productItem', selectedunit);
         let productService = new ProductService();
-        if (selectedProductName == '') {
-            $('.fullScreenSpin').css('display', 'none');
-            swal('You have to select Product.', '', 'info');
-            event.preventDefault();
-            return false;
-        } else {
-            productService.getProductStatus(selectedProductName).then(function(data) {
+        const templateObject = Template.instance();
+        const SalesOrderData = templateObject.salesorderrecord.get();
+        let existProduct = false;
+        SalesOrderData.LineItems.forEach(element => {
+            if (element.item == selectedProductName) {
+                existProduct = true;
+                productService.getProductStatus(selectedProductName).then(function(data) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                        event.preventDefault();
+                        return false;
+                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#lotNumberModal').attr('data-row', row + 1);
+                        $('#lotNumberModal').modal('show');
+                        if (element.pqaseriallotdata == "null") {
+                        } else {
+                            if (element.pqaseriallotdata.fields.PQABatch == "null") {
+                            } else {
+                                if (element.pqaseriallotdata.fields.PQABatch.length == 0) {
+                                } else {
+                                    let shtml = '';
+                                    let i = 0;
+                                    shtml += `
+                                    <tr><td colspan="5">Allocate Lot Number</td><td rowspan="2">CUSTFLD</td></tr>
+                                    <tr><td>Lot No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                                    `;
+                                    for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                                        if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
+                                        } else {
+                                            i++;
+                                            shtml += `
+                                            <tr><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.UOMQty}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BOUOMQty}</td><td></td><td></td></tr>
+                                            `;
+                                        }
+                                    }
+                                    $('#tblSeriallist tbody').html(shtml);
+                                }
+                            }
+                        }
+                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#serialNumberModal').attr('data-row', row + 1);
+                        $('#serialNumberModal').modal('show');
+                        if (element.pqaseriallotdata == "null") {
+                        } else {
+                            if (element.pqaseriallotdata.fields.PQASN == "null") {
+                            } else {
+                                if (element.pqaseriallotdata.fields.PQASN.length == 0) {
+                                } else {
+                                    let shtml = '';
+                                    let i = 0;
+                                    shtml += `
+                                    <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
+                                    `;
+                                    for (let k = 0; k < element.pqaseriallotdata.fields.PQASN.length; k++) {
+                                        if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") {
+
+                                        } else {
+                                            i++;
+                                            shtml += `
+                                            <tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber)}</td></tr>
+                                            `;
+                                        }
+                                    }
+                                    $('#tblSeriallist tbody').html(shtml);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        if (!existProduct) {
+            if (selectedProductName == '') {
                 $('.fullScreenSpin').css('display', 'none');
-                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
-                    event.preventDefault();
-                    return false;
-                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $('#lotNumberModal').attr('data-row', row + 1);
-                    $('#lotNumberModal').modal('show');
-                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $('#serialNumberModal').attr('data-row', row + 1);
-                    $('#serialNumberModal').modal('show');
-                }
-            });
-        }
+                swal('You have to select Product.', '', 'info');
+                event.preventDefault();
+                return false;
+            } else {
+                productService.getProductStatus(selectedProductName).then(function(data) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                        event.preventDefault();
+                        return false;
+                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#lotNumberModal').attr('data-row', row + 1);
+                        $('#lotNumberModal').modal('show');
+                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#serialNumberModal').attr('data-row', row + 1);
+                        $('#serialNumberModal').modal('show');
+                    }
+                });
+            }
+       }
     },
 
 

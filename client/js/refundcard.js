@@ -264,8 +264,8 @@ Template.refundcard.onRendered(() => {
               }
             }).catch(function(err) {
             sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                      addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                    
+                      addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       for (let i = 0; i < data.ttemplatesettings.length; i++) {
 
 
@@ -1046,16 +1046,16 @@ Template.refundcard.onRendered(() => {
              const data = object_invoce[0]["data"]
 
              for(item of data){
-            
+
                 var html = '';
                  html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
                  for(item_temp of item){
                     html = html + "<td>" + item_temp + "</td>";
                  }
-    
+
                 html +="</tr>";
                 tbl_content.append(html);
-               
+
              }
 
             // total amount
@@ -1155,7 +1155,7 @@ Template.refundcard.onRendered(() => {
                     if(object_invoce[0]["value"]=="")
                     {
                         $('.print-header').text('');
-      
+
                     }
                     else{
                        $('.print-header').text(object_invoce[0]["value"]);
@@ -1303,7 +1303,7 @@ Template.refundcard.onRendered(() => {
             //   table header
             var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
             tbl_header.empty()
-       
+
             var count = 0;
             for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
 
@@ -1317,7 +1317,7 @@ Template.refundcard.onRendered(() => {
                 }
                 else if(count == 2)
                 {
-                    
+
                     tbl_header.append("<th style='text-align: right; width: 50px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                 }
                 else if(count == 3)
@@ -1326,15 +1326,15 @@ Template.refundcard.onRendered(() => {
                 }
                 else if(count == 4)
                 {
-                    
+
                     tbl_header.append("<th style='text-align: right; width: 77px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                 }
                 else
                 {
-                    
+
                     tbl_header.append("<th style='text-align: right; width: 100px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                 }
-                 
+
                 count++;
             }
 
@@ -1366,30 +1366,30 @@ Template.refundcard.onRendered(() => {
             const data = object_invoce[0]["data"]
 
             for(item of data){
-            
+
                  var html = '';
                  html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
                  var count = 0;
                  for(item_temp of item){
-                   
+
                     if(count > 1)
                     {
-                      
+
                             html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-                        
-                       
+
+
                     }
                     else
                     {
                         html = html + "<td>" + item_temp + "</td>";
                     }
                     count++
-                   
+
                  }
-    
+
                 html +="</tr>";
                 tbl_content.append(html);
-               
+
              }
 
             // total amount
@@ -2124,6 +2124,7 @@ Template.refundcard.onRendered(() => {
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
                                                 DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0,
+                                                pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
 
                                             };
                                             var dataListTable = [
@@ -2164,6 +2165,7 @@ Template.refundcard.onRendered(() => {
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
                                             DiscountPercent: useData[d].fields.Lines.fields.DiscountPercent || 0,
+                                            pqaseriallotdata: useData[d].fields.Lines.fields.PQA || '',
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -4729,31 +4731,31 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             if(template_title == 'Refunds')
             {
                 await showRefund(template_title,number);
-    
+
             }
-    
-    
+
+
             let margins = {
                 top: 0,
                 bottom: 0,
                 left: 0,
                 width: 100
             };
-    
+
             let invoice_data = templateObject.invoicerecord.get();
             document.getElementById('html-2-pdfwrapper_new').style.display="block";
             var source = document.getElementById('html-2-pdfwrapper_new');
-    
+
             let file = "Refunds.pdf";
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 if(template_title == 'Refunds')
                 {
                     file = 'Refunds-' + invoice_data.id + '.pdf';
                 }
-    
-    
+
+
             }
-    
+
             var opt = {
                 margin: 0,
                 filename: file,
@@ -4770,8 +4772,8 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     orientation: 'portrait'
                 }
             };
-    
-    
+
+
             html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
                 let attachment = [];
                 let base64data = data.split(',')[1];
@@ -4799,7 +4801,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                   values.forEach(value => {
                       let reportData = JSON.parse(value);
                       let temp = {... reportData};
-    
+
                       temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                       reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                       temp.attachments = attachment;
@@ -4829,11 +4831,11 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     }
                 });
             })
-    
-    
-    
+
+
+
            // $('.fullScreenSpin').css('display', 'none');
-    
+
             return true;
 
         }
@@ -5389,7 +5391,7 @@ Template.refundcard.onRendered(function() {
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
-  
+
         getVS1Data("TSubTaxVS1")
           .then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -5401,10 +5403,10 @@ Template.refundcard.onRendered(function() {
                     description: data.tsubtaxcode[i].Description || "-",
                     category: data.tsubtaxcode[i].Category || "-",
                   };
-  
+
                   subTaxTableList.push(dataList);
                 }
-  
+
                 tempObj.subtaxcodes.set(subTaxTableList);
               });
             } else {
@@ -5417,10 +5419,10 @@ Template.refundcard.onRendered(function() {
                   description: useData[i].Description || "-",
                   category: useData[i].Category || "-",
                 };
-  
+
                 subTaxTableList.push(dataList);
               }
-  
+
               tempObj.subtaxcodes.set(subTaxTableList);
             }
           })
@@ -5433,10 +5435,10 @@ Template.refundcard.onRendered(function() {
                   description: data.tsubtaxcode[i].Description || "-",
                   category: data.tsubtaxcode[i].Category || "-",
                 };
-  
+
                 subTaxTableList.push(dataList);
               }
-  
+
               tempObj.subtaxcodes.set(subTaxTableList);
             });
           });
@@ -6797,14 +6799,14 @@ Template.refundcard.events({
 
         var refunds = $('input[name="Refunds"]:checked').val();
         let emid = Session.get('mySessionEmployeeLoggedID');
-        
+
          sideBarService.getTemplateNameandEmployeId("Refunds",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Refunds",
                                 GlobalRef:"Refunds",
@@ -8784,34 +8786,111 @@ Template.refundcard.events({
 
     'click .btnSnLotmodal': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
+        const templateObject = Template.instance();
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let selectedunit = $(target).closest('tr').find('.lineQty').val();
         localStorage.setItem('productItem', selectedunit);
+        let existProduct = false;
         let productService = new ProductService();
-        if (selectedProductName == '') {
-            $('.fullScreenSpin').css('display', 'none');
-            swal('You have to select Product.', '', 'info');
-            event.preventDefault();
-            return false;
-        } else {
-            productService.getProductStatus(selectedProductName).then(function(data) {
+        const InvoiceData = templateObject.invoicerecord.get();
+        InvoiceData.LineItems.forEach(element => {
+            if (element.item == selectedProductName) {
+                existProduct = true;
+                productService.getProductStatus(selectedProductName).then(function(data) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                        event.preventDefault();
+                        return false;
+                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#lotNumberModal').attr('data-row', row + 1);
+                        $('#lotNumberModal').modal('show');
+                        if (element.pqaseriallotdata == "null") {
+                        } else {
+                            if (element.pqaseriallotdata.fields.PQABatch == "null") {
+                            } else {
+                                if (element.pqaseriallotdata.fields.PQABatch.length == 0) {
+                                } else {
+                                    let shtml = '';
+                                    let i = 0;
+                                    shtml += `
+                                    <tr><td colspan="5">Allocate Lot Number</td><td rowspan="2">CUSTFLD</td></tr>
+                                    <tr><td>Lot No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                                    `;
+                                    for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                                        if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
+                                        } else {
+                                            i++;
+                                            shtml += `
+                                            <tr><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.UOMQty}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BOUOMQty}</td><td></td><td></td></tr>
+                                            `;
+                                        }
+                                    }
+                                    $('#tblSeriallist tbody').html(shtml);
+                                }
+                            }
+                        }
+                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#serialNumberModal').attr('data-row', row + 1);
+                        $('#serialNumberModal').modal('show');
+                        if (element.pqaseriallotdata == "null") {
+                        } else {
+                            if (element.pqaseriallotdata.fields.PQASN == "null") {
+                            } else {
+                                if (element.pqaseriallotdata.fields.PQASN.length == 0) {
+                                } else {
+                                    let shtml = '';
+                                    let i = 0;
+                                    shtml += `
+                                    <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
+                                    `;
+                                    for (let k = 0; k < element.pqaseriallotdata.fields.PQASN.length; k++) {
+                                        if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") {
+
+                                        } else {
+                                            i++;
+                                            shtml += `
+                                            <tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber)}</td></tr>
+                                            `;
+                                        }
+                                    }
+                                    $('#tblSeriallist tbody').html(shtml);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        if (!existProduct) {
+            if (selectedProductName == '') {
                 $('.fullScreenSpin').css('display', 'none');
-                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
-                    event.preventDefault();
-                    return false;
-                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $('#lotNumberModal').attr('data-row', row + 1);
-                    $('#lotNumberModal').modal('show');
-                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $('#serialNumberModal').attr('data-row', row + 1);
-                    $('#serialNumberModal').modal('show');
-                }
-            });
-        }
+                swal('You have to select Product.', '', 'info');
+                event.preventDefault();
+                return false;
+            } else {
+                productService.getProductStatus(selectedProductName).then(function(data) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                        event.preventDefault();
+                        return false;
+                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#lotNumberModal').attr('data-row', row + 1);
+                        $('#lotNumberModal').modal('show');
+                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                        $('#serialNumberModal').attr('data-row', row + 1);
+                        $('#serialNumberModal').modal('show');
+                    }
+                });
+            }
+       }
      },
 
      // add to custom field
