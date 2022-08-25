@@ -486,7 +486,7 @@ Template.invoicelist.onRendered(function () {
                 });
                 templateObject.getCustomFieldData();
             } else {
-              console.log('$$data.Params', data.Params);
+            
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data;
                 let lineItems = [];

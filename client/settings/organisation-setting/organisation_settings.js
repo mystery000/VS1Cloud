@@ -249,7 +249,6 @@ Template.organisationsettings.onRendered(function() {
         const dataListRet = await organisationService.getOrganisationDetail();
         let mainData = dataListRet.tcompanyinfo[0];
 
-        console.log('mainData', mainData);
 
         templateObject.showSkype.set(mainData.ContactEmail);
         templateObject.showMob.set(mainData.MobileNumber);

@@ -112,7 +112,7 @@ Template.stockmovementreport.onRendered(() => {
     let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
     let ignoreDate = options.ignoreDate || false;
     let data = await reportService.getStockMovementReport( dateFrom, dateTo, ignoreDate);
-    console.log(data);
+
     let movementReport = [];
     if( data.t_vs1_report_productmovement.length > 0 ){
         let reportGroups = [];
