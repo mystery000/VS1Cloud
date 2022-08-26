@@ -990,9 +990,9 @@ Template.taxRatesSettings.events({
           ) {
             loginDataArray = dataObject[0].data;
 
-            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodePurchaseInc =
+            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodePurchaseInc =
               purchasetaxcode;
-            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_Summary.fields.RegionalOptions_TaxCodeSalesInc =
+            loginDataArray.ProcessLog.ClientDetails.ProcessLog.TUser.TVS1_Dashboard_summary.fields.RegionalOptions_TaxCodeSalesInc =
               salestaxcode;
             addLoginData(loginDataArray)
               .then(function (datareturnCheck) {

@@ -62,6 +62,8 @@ Template.productview.onCreated(() => {
     templateObject.includeInventory = new ReactiveVar();
     templateObject.includeInventory.set(false);
     templateObject.clienttypeList = new ReactiveVar();
+    templateObject.selectedProductField = new ReactiveVar();
+    templateObject.selectedProcessField = new ReactiveVar();
 
 });
 
@@ -4589,6 +4591,7 @@ Template.productview.events({
     },
 
     'change #chkBOM': function(event) {
+        let templateObject = Template.instance();
         if($('#chkBOM').is(':checked')) {
             $('#BOMSetupModal').modal('toggle')
             let record = templateObject.records.get();

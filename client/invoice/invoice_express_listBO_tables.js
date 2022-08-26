@@ -379,6 +379,11 @@ Template.invoicelistBO.onRendered(function() {
                             },
                             "fnInitComplete": function () {
                               this.fnPageChange('last');
+                              if(data.Params.Search.replace(/\s/g, "") == ""){
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+                              }else{
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+                              };
                                  $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
                                  $('.myvarFilterForm').appendTo(".colDateFilter");
                              },
@@ -700,6 +705,11 @@ Template.invoicelistBO.onRendered(function() {
                         },
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
+                          if(data.Params.Search.replace(/\s/g, "") == ""){
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+                          }else{
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+                          };
                              $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
                              $('.myvarFilterForm').appendTo(".colDateFilter");
                          },
@@ -1017,6 +1027,11 @@ Template.invoicelistBO.onRendered(function() {
                         },
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
+                          if(data.Params.Search.replace(/\s/g, "") == ""){
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+                          }else{
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+                          };
                              $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
                              $('.myvarFilterForm').appendTo(".colDateFilter");
                          },
