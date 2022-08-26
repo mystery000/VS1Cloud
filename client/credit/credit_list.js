@@ -351,6 +351,11 @@ Template.creditlist.onRendered(function() {
                           },
                            "fnInitComplete": function () {
                              this.fnPageChange('last');
+                             if(data.Params.Search.replace(/\s/g, "") == ""){
+                               $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblcreditlist_filter");
+                             }else{
+                               $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblcreditlist_filter");
+                             };
                                  $("<button class='btn btn-primary btnRefreshCreditList' type='button' id='btnRefreshCreditList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcreditlist_filter");
                                  // $('.myvarFilterCreditForm').appendTo(".colDateFilter");
                                  setTimeout(function () {
@@ -665,7 +670,12 @@ Template.creditlist.onRendered(function() {
                             }, 100);
                         },
                          "fnInitComplete": function () {
-                          this.fnPageChange('last');
+                           this.fnPageChange('last');
+                           if(data.Params.Search.replace(/\s/g, "") == ""){
+                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblcreditlist_filter");
+                           }else{
+                             $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblcreditlist_filter");
+                           };
                                $("<button class='btn btn-primary btnRefreshCreditList' type='button' id='btnRefreshCreditList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcreditlist_filter");
                                setTimeout(function () {
                                    $('.myvarFilterCreditForm').appendTo(".colDateFilter");
@@ -977,6 +987,11 @@ Template.creditlist.onRendered(function() {
                       },
                        "fnInitComplete": function () {
                          this.fnPageChange('last');
+                         if(data.Params.Search.replace(/\s/g, "") == ""){
+                           $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblcreditlist_filter");
+                         }else{
+                           $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblcreditlist_filter");
+                         };
                              $("<button class='btn btn-primary btnRefreshCreditList' type='button' id='btnRefreshCreditList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcreditlist_filter");
                              setTimeout(function () {
                                  $('.myvarFilterCreditForm').appendTo(".colDateFilter");
@@ -1121,10 +1136,10 @@ Template.creditlist.onRendered(function() {
     let customFieldCount = 11;
     let listType = "ltCreditList";
 
-    let reset_data = [ 
+    let reset_data = [
 
       { label: 'Order Date', class: 'colOrderDate', active: true },
-      { label: 'Credit No.', class: 'colPurchaseNo', active: true }, 
+      { label: 'Credit No.', class: 'colPurchaseNo', active: true },
       { label: 'Supplier', class: 'colSupplier', active: true },
       { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
       { label: 'Tax', class: 'colTax', active: true },
@@ -1349,11 +1364,11 @@ Template.creditlist.events({
     },
     'click .resetTable' : function(event){
       let templateObject = Template.instance();
-      let custFields = templateObject.custfields.get(); 
-  
+      let custFields = templateObject.custfields.get();
+
       let reset_data = [
         { label: 'Order Date', class: 'colOrderDate', active: true },
-        { label: 'Credit No.', class: 'colPurchaseNo', active: true }, 
+        { label: 'Credit No.', class: 'colPurchaseNo', active: true },
         { label: 'Supplier', class: 'colSupplier', active: true },
         { label: 'Amount(Ex)', class: 'colAmountEx', active: true },
         { label: 'Tax', class: 'colTax', active: true },
@@ -1367,16 +1382,16 @@ Template.creditlist.events({
         { label: custFields[1].custfieldlabel, class: 'colSaleCustField2', active: custFields[1].active },
         { label: custFields[2].custfieldlabel, class: 'colSaleCustField3', active: custFields[2].active }
       ];
-  
+
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         $tblrow.find(".divcolumn").text(reset_data[index].label);
         $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
-  
+
         // var title = datable.column( index+1 ).header();
         var title = $('#tblpurchaseorderlist').find('th').eq(index + 1);
         $(title).html(reset_data[index].label);
-  
+
         if (reset_data[index].active) {
           $('.' + reset_data[index].class).css('display', 'table-cell');
           $('.' + reset_data[index].class).css('padding', '.75rem');
@@ -1384,16 +1399,16 @@ Template.creditlist.events({
         } else {
           $('.' + reset_data[index].class).css('display', 'none');
         }
-  
+
       });
     },
     'click .saveTable' : function(event){
       let lineItems = [];
       let organisationService = new OrganisationService();
       let listType = "ltCreditList";
-  
+
       $(".fullScreenSpin").css("display", "inline-block");
-  
+
       $('.displaySettings').each(function(index) {
         var $tblrow = $(this);
         var fieldID = $tblrow.attr("custid") || 0;
@@ -1413,9 +1428,9 @@ Template.creditlist.events({
             width: colWidth,
             thclass: colthClass
         }
-  
+
         lineItems.push(lineItemObj);
-  
+
         if(fieldID && parseInt(fieldID) != 0){
           objDetails1 = {
             type: "TCustomFieldList",
@@ -1438,7 +1453,7 @@ Template.creditlist.events({
             },
           };
         }
-  
+
         organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           $(".fullScreenSpin").css("display", "none");
           //Reload Custom Field on Save
