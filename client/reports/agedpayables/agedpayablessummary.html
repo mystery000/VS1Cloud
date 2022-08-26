@@ -75,6 +75,7 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    {{>FxRatesButton}}
                                 </div>
                             </div>
                             <div class="col-12 col-md-2">
@@ -180,22 +181,24 @@
                                             {{#if reportrecords}}
                                             {{#each items in reportrecords}}
                                             <!-- <tr class="totalhr">
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-<td style="font-weight: 800;"></td>
-</tr> -->
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                </tr> -->
                                             <tr class="totalhr">
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="/supplierscard?id={{items.clientid}}" style="text-decoration:none!important;">{{items.contact}}</a></strong></span></td>
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="#" style="text-decoration:none!important;">{{items.type}}</a></strong></span></td>
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="#" style="text-decoration:none!important;">{{items.invoiceno}}</a></strong></span></td>
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="#" style="text-decoration:none!important;">{{items.duedate}}</a></strong></span></td>
+
+
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.amountdue}}</a></strong></span></td>
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.current}}</a></strong></span></td>
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day30}}</a></strong></span></td>
@@ -253,4 +256,9 @@
     </div>
 
     <!-- End Help Video Modal -->
+
+
+    <!-- Start Currency Modal -->
+    {{> FxRateModal currencies=currencyList}}
+    <!-- End Currency Modal -->
 </template>

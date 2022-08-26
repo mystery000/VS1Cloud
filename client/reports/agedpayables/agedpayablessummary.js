@@ -4,13 +4,14 @@ import {UtilityService} from "../../utility-service";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
-Template.agedpayablessummary.onCreated(()=>{
-const templateObject = Template.instance();
-templateObject.records = new ReactiveVar([]);
-templateObject.reportrecords = new ReactiveVar([]);
-templateObject.grandrecords = new ReactiveVar();
-templateObject.dateAsAt = new ReactiveVar();
-templateObject.deptrecords = new ReactiveVar();
+
+Template.agedpayablessummary.onCreated(() => {
+  const templateObject = Template.instance();
+  templateObject.records = new ReactiveVar([]);
+  templateObject.reportrecords = new ReactiveVar([]);
+  templateObject.grandrecords = new ReactiveVar();
+  templateObject.dateAsAt = new ReactiveVar();
+  templateObject.deptrecords = new ReactiveVar();
 });
 
 Template.agedpayablessummary.onRendered(()=>{

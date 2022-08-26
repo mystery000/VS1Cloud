@@ -263,11 +263,11 @@
                     <tbody>
                       {{#if records}}
                         {{#each record in records}}
-                          {{#each recordItem in record}}
-                            {{#if recordItem.key}}
+                          <!-- {{#each recordItem in record}} -->
+                            {{#if record.title}}
                               <tr class="totalhr">
                                 <td style="font-weight: 800;">
-                                  <div class="SectionTitle2 report-heading-last">{{recordItem.key}}</div>
+                                  <div class="SectionTitle2 report-heading-last">{{record.title}}</div>
                                 </td>
                                 <td></td>
                                 <td></td>
@@ -281,12 +281,12 @@
                               </tr>
                             {{/if}}
 
-                            {{#each item in recordItem.data}}
+                            {{#each item in record.entries}}
                               <tr data-type="{{item.type}}" id="{{item.Id}}">
                                 <div style="display:none;">{{item.SupplierName}}</div>
                                 <td></td>
                                 <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                  <a href="#" style="text-decoration:none!important;">{{item.entries.Type}}</a>
+                                  <a href="#" style="text-decoration:none!important;">{{item.type}}</a>
                                 </td>
                                 <td class="Total1Indented MenuLeft text-nowrap Indent1">
                                   <a href="#" style="text-decoration:none!important;">{{item.entries.PurchaseOrderID}}</a>
@@ -323,7 +323,7 @@
 
                                     {{#each c in currencyList }}
                                       {{# if c.active}}
-                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries.Current 60}} text-danger {{else}} text-success {{/if}}">
+                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.Current 60}} text-danger {{else}} text-success {{/if}}">
                                           <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries c 60}}</a>
                                         </td>
                                       {{/if}}
@@ -331,7 +331,7 @@
 
                                     {{#each c in currencyList }}
                                       {{# if c.active}}
-                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries 90 }} text-danger {{else}} text-success {{/if}}">
+                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item 90 }} text-danger {{else}} text-success {{/if}}">
                                           <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries c 90}}</a>
                                         </td>
                                       {{/if}}
@@ -339,7 +339,7 @@
 
                                     {{#each c in currencyList }}
                                       {{# if c.active}}
-                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item.entries 120 }} text-danger {{else}} text-success {{/if}}">
+                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount item 120 }} text-danger {{else}} text-success {{/if}}">
                                           <a href="#" style="text-decoration:none!important;">{{ convertAmount item.entries c 120}}</a>
                                         </td>
                                       {{/if}}
@@ -373,14 +373,14 @@
                               </tr>
                             {{/each}}
 
-                            {{#each total in recordItem.total}}
+                            <!-- {{#each total in record.total}} -->
                               <tr class="TotalField">
                                 <!-- {{#each items in total.dataArr}} -->
                                   <!-- <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td> -->
 
                                   <td class="Total1Indented MenuLeft TotalField">
                                     <span class="table-cells">
-                                      <strong>{{total.dataArr.Title}}</strong></span></td>
+                                      <strong>{{record.total.Title}}</strong></span></td>
                                   <td></td>
                                   <td></td>
                                   <td></td>
@@ -392,7 +392,7 @@
                                         {{#if c.active}}
                                           <td class="Total1Indented MenuLeft TotalField">
                                             <span class="table-cells">
-                                              <strong>{{ convertAmount total.dataArr.TotalAmountDue c null}}</strong></span></td>
+                                              <strong>{{ convertAmount record.total.TotalAmountDue c null}}</strong></span></td>
                                         {{/if}}
                                       {{/each}}
 
@@ -400,7 +400,7 @@
                                         {{#if c.active}}
                                           <td class="Total1Indented MenuLeft TotalField">
                                             <span class="table-cells">
-                                              <strong>{{ convertAmount total.dataArr.TotalCurrent c null}}</strong></span></td>
+                                              <strong>{{ convertAmount record.total.TotalCurrent c null}}</strong></span></td>
                                         {{/if}}
                                       {{/each}}
 
@@ -408,7 +408,7 @@
                                         {{#if c.active}}
                                           <td class="Total1Indented MenuLeft TotalField">
                                             <span class="table-cells">
-                                              <strong>{{ convertAmount total.dataArr.OneMonth c null}}</strong></span></td>
+                                              <strong>{{ convertAmount record.total.OneMonth c null}}</strong></span></td>
                                         {{/if}}
                                       {{/each}}
 
@@ -416,7 +416,7 @@
                                         {{#if c.active}}
                                           <td class="Total1Indented MenuLeft TotalField">
                                             <span class="table-cells">
-                                              <strong>{{ convertAmount total.dataArr.TwoMonth c null}}</strong></span></td>
+                                              <strong>{{ convertAmount record.total.TwoMonth c null}}</strong></span></td>
                                         {{/if}}
                                       {{/each}}
 
@@ -424,14 +424,15 @@
                                         {{#if c.active}}
                                           <td class="Total1Indented MenuLeft TotalField">
                                             <span class="table-cells">
-                                              <strong>{{ convertAmount total.dataArr.ThreeMonth c null}}</strong></span></td>
+                                              <strong>{{ convertAmount record.total.ThreeMonth c null}}</strong></span></td>
                                         {{/if}}
                                       {{/each}}
+
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
                                           <td class="Total1Indented MenuLeft TotalField">
                                             <span class="table-cells">
-                                              <strong>{{ convertAmount total.dataArr.OlderMonth c null}}</strong></span></td>
+                                              <strong>{{ convertAmount record.total.OlderMonth c null}}</strong></span></td>
                                         {{/if}}
                                       {{/each}}
 
@@ -439,30 +440,30 @@
                                   {{else}}
                                     <td class="Total1Indented MenuLeft TotalField">
                                       <span class="table-cells">
-                                        <strong>{{total.dataArr.TotalAmountDue}}</strong></span></td>
+                                        <strong>{{ formatPrice record.total.TotalAmountDue}}</strong></span></td>
                                     <td class="Total1Indented MenuLeft TotalField">
                                       <span class="table-cells">
-                                        <strong>{{total.dataArr.TotalCurrent}}</strong></span></td>
+                                        <strong>{{ formatPrice record.total.TotalCurrent}}</strong></span></td>
                                     <td class="Total1Indented MenuLeft TotalField">
                                       <span class="table-cells">
-                                        <strong>{{total.dataArr.OneMonth}}</strong></span></td>
+                                        <strong>{{ formatPrice record.total.OneMonth}}</strong></span></td>
                                     <td class="Total1Indented MenuLeft TotalField">
                                       <span class="table-cells">
-                                        <strong>{{total.dataArr.TwoMonth}}</strong></span></td>
+                                        <strong>{{ formatPrice record.total.TwoMonth}}</strong></span></td>
                                     <td class="Total1Indented MenuLeft TotalField">
                                       <span class="table-cells">
-                                        <strong>{{total.dataArr.ThreeMonth}}</strong></span></td>
+                                        <strong>{{ formatPrice record.total.ThreeMonth}}</strong></span></td>
                                     <td class="Total1Indented MenuLeft TotalField">
                                       <span class="table-cells">
-                                        <strong>{{total.dataArr.OlderMonth}}</strong></span></td>
+                                        <strong>{{ formatPrice record.total.OlderMonth}}</strong></span></td>
 
                                   {{/if}}
 
                                 <!-- {{/each}} -->
                               </tr>
-                            {{/each}}
-                          {{/each}}
+                            <!-- {{/each}} -->
                         {{/each}}
+                        <!-- {{/each}} -->
                         {{#if grandrecords}}
                           <!-- {{#each item in grandrecords}} -->
                           <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
@@ -472,12 +473,58 @@
                             <td></td>
                             <td></td>
 
-                            <td>{{grandrecords.TotalAmountDue}}</td>
-                            <td>{{grandrecords.TotalCurrent}}</td>
-                            <td>{{grandrecords.OneMonth}}</td>
-                            <td>{{grandrecords.TwoMonth}}</td>
-                            <td>{{grandrecords.ThreeMonth}}</td>
-                            <td>{{grandrecords.OlderMonth}}</td>
+                            {{#if isOnlyDefaultActive }}
+                                    {{#if currencyList}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.TotalAmountDue c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.TotalCurrent c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.OneMonth c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.TwoMonth c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.ThreeMonth c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.OlderMonth c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+
+
+                                    {{/if}}
+                            {{else}}
+
+                              <td>{{ formatPrice grandrecords.TotalAmountDue}}</td>
+                              <td>{{ formatPrice grandrecords.TotalCurrent}}</td>
+                              <td>{{ formatPrice grandrecords.OneMonth}}</td>
+                              <td>{{ formatPrice grandrecords.TwoMonth}}</td>
+                              <td>{{ formatPrice grandrecords.ThreeMonth}}</td>
+                              <td>{{ formatPrice grandrecords.OlderMonth}}</td>
+
+                            {{/if}}
 
                           </tr>
                         {{/if}}
