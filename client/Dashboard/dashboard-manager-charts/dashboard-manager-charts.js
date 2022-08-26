@@ -696,21 +696,33 @@ Template.dashboardManagerCharts.events({
         FlowRouter.go('/employeelist');
     },
     "click #spd-gauge-area1": () => {
-        FlowRouter.go('/invoicelist?range=lastMonth');
+        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
+        const toDate = moment().format('DD-MM-YYYY');
+        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
     },
     "click #spd-gauge-area2": () => {
-        FlowRouter.go('/invoicelist?range=lastMonth');
+        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
+        const toDate = moment().format('DD-MM-YYYY');
+        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
     },
     "click #spd-gauge-area3": () => {
-        FlowRouter.go('/invoicelist?range=lastMonth');
+        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
+        const toDate = moment().format('DD-MM-YYYY');
+        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
     },
     "click #spd-gauge-area4": () => {
-        FlowRouter.go('/invoicelist?range=lastMonth');
+        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
+        const toDate = moment().format('DD-MM-YYYY');
+        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
     },
     "click #spd-gauge-area5": () => {
-        FlowRouter.go('/invoicelist?range=lastMonth');
+        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
+        const toDate = moment().format('DD-MM-YYYY');
+        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
     },
     "click #spd-gauge-area6": () => {
-        FlowRouter.go('/invoicelist?range=lastMonth');
+        const fromDate = moment().subtract(1, 'month').format('DD-MM-YYYY');
+        const toDate = moment().format('DD-MM-YYYY');
+        FlowRouter.go(`/invoicelist?fromDate${fromDate}&toDate=${toDate}`);
     },
 });
