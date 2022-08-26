@@ -304,6 +304,7 @@
                 <input type="hidden" id="reconID_{{ itemTransaction.YodleeLineID }}" value="">
                 <input type="hidden" id="paymentID_{{ itemTransaction.YodleeLineID }}" value="">
                 <input type="hidden" id="DepOrWith_{{ itemTransaction.YodleeLineID }}" value="">
+                <input type="hidden" id="PaymentType_{{ itemTransaction.YodleeLineID }}" value="">
                 <div class="justify-content-center" id="divItemBox_{{ itemTransaction.YodleeLineID }}">
                     <div class="row justify-content-center mb-1" id="divLine_{{ itemTransaction.YodleeLineID }}">
                         <div class="col-12 col-md-5">
@@ -482,17 +483,17 @@
                                     <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 0 20px; background-color: #ededed;">
                                         <div class="col d-xl-flex float-left flex-grow-1 mb-4">
                                             <div class="">
-                                                <label style="margin-top: 30px; margin-right: 16px;" id="labelPaymentType">Received as</label>
-                                                <select class="form-control pointer"  id="#sltPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
+                                                <label style="margin-top: 30px; margin-right: 16px;" id="labelPaymentMethod_{{ itemTransaction.YodleeLineID }}">Received as</label>
+                                                <select class="form-control pointer"  id="#sltPaymentMethod_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
                                                     <option value="directpayment">Direct Payment</option>
                                                     <option value="prepayment">Prepayment</option>
                                                     <option value="overpayment">Overpayment</option>
                                                 </select>
                                             </div>
-                                            <div class="suppPaymentType" style="margin-left: 50px; display:none;">
+                                            <div class="suppPaymentType" id="suppPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-left: 50px; display:none;">
                                                 <label style="margin-top: 30px; margin-right: 16px;">Supplier Payment Type</label>
                                                 <select class="form-control pointer selectSuppPaymentType" id="#sltSuppPaymentType_{{ itemTransaction.YodleeLineID }}" style="margin-top: 20px; width: 200px; display: inline-block;">
-                                                    <option value="PurchaseOrder">Purchase Order</option>
+                                                    <option value="Purchase Order">Purchase Order</option>
                                                     <option value="Bill">Bill</option>
                                                     <option value="Cheque">Cheque</option>
                                                 </select>
@@ -503,7 +504,7 @@
 <!--                                        </div>-->
                                     </div>
                                     <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 10px 20px 0 20px;">
-                                        <h1 class="transactionTitle"></h1>
+                                        <h1 class="transactionTitle" id="transactionTitle_{{ itemTransaction.YodleeLineID }}"></h1>
                                     </div>
                                     <div class="card-body d-xl-flex flex-row justify-content-xl-center" style="padding: 10px 20px 0 20px;">
                                         <div class="col d-xl-flex float-left flex-grow-1 mb-4">
@@ -647,7 +648,7 @@
                                                         <!--</td>-->
                                                         <td contenteditable="false" class="colSubTotal lineSubTotal" style="text-align: right!important;cursor: pointer;"></td>
                                                         <td class="colAmountInput">
-                                                            <input class="lineAmountInput colAmountInput highlightInput" type="text" value="">
+                                                            <input class="lineAmountInput colAmountInput highlightInput" type="number" value="">
                                                         </td>
                                                         <td contenteditable="false" class="lineDiscount colDiscount" style="text-align: right!important;"></td>
                                                         <td contenteditable="false" class="colCustomer">
@@ -712,7 +713,7 @@
                                                         <hr style="margin: 16px;" />
                                                     </div>
                                                 </div>
-                                                {{#if equals itemTransaction.deporwith 'spent' }}
+                                                {{#if equals itemTransaction.deporwith 'received' }}
                                                 <div class="col-12 row">
                                                     <div class="col-6">
                                                         <p style="margin: 0; margin-left: 16px; font-size: 19px; font-weight: 400;">Discount</p>
@@ -1142,7 +1143,7 @@
     <div class="modal fade newbankrecon" role="dialog" tabindex="-1" id="bankAccountListModal">
         {{> accountlistpop}}
     </div>
-    <div class="modal fade newbankrecon_full" role="dialog" tabindex="-1" id="fullAccountListModal">
+    <div class="modal fade newbankrecon" role="dialog" tabindex="-1" id="fullAccountListModal">
         <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
             <div class="modal-content">
                 <div class="modal-header">
