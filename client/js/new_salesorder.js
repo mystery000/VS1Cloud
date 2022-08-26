@@ -1605,7 +1605,6 @@ Template.new_salesorder.onRendered(() => {
                 
             let taxItems = object_invoce[0]["taxItems"];
             $("#htemplatePreviewModal #tax_list_print").html("");
-            $("#html-2-pdfwrapper #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
                     <div style="width: 100%; display: flex;">
@@ -1620,7 +1619,6 @@ Template.new_salesorder.onRendered(() => {
                     </div>
                 `;
                 $("#templatePreviewModal #tax_list_print").append(html);
-                $("#html-2-pdfwrapper #tax_list_print").append(html);
             });
         }
         $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
