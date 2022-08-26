@@ -61,10 +61,10 @@ function handleTotalAmount( amountField, totalAmountCont ) {
 Template.employeescard.onCreated(function () {
     const templateObject = Template.instance();
     setTimeout(function () {
-        // $('#period').editableSelect('add','Hourly');
-        // $('#period').editableSelect('add','Daily');
-        // $('#period').editableSelect('add','Weekly');
-        // $('#period').editableSelect('add','Monthly');
+        $('#period').editableSelect('add','Hourly');
+        $('#period').editableSelect('add','Daily');
+        $('#period').editableSelect('add','Weekly');
+        $('#period').editableSelect('add','Monthly');
         $("#paymentDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
@@ -4564,328 +4564,328 @@ Template.employeescard.onRendered(function () {
 
 });
 Template.employeescard.events({
-    'click #edtResidencyStatus': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'Residency Status',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Australian Resident',
-                    value: true,
-                },
-                {
-                    title: 'Foreign Resident',
-                    value: false,
-                },
-                {
-                    value: 'Working Holiday Maker',
-                    title: 'Working Holiday Maker'
-                }
+    // 'click #edtResidencyStatus': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'Residency Status',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Australian Resident',
+    //                 value: true,
+    //             },
+    //             {
+    //                 title: 'Foreign Resident',
+    //                 value: false,
+    //             },
+    //             {
+    //                 value: 'Working Holiday Maker',
+    //                 title: 'Working Holiday Maker'
+    //             }
     
-            ]
-        });
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #edtEmploymentBasis': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'Employment Basis',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Full-time employment',
-                    value: 'F',
-                },
-                {
-                    title: 'Part-time employment',
-                    value: 'P',
-                },
-                {
-                    title: 'Casual employment',
-                    value: 'C',
-                },
-                {
-                    title: 'Labour hire',
-                    value: 'L',
-                },
-                {
-                    title: 'Superannuation income stream',
-                    value: 'S',
-                },
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #edtEmploymentBasis': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'Employment Basis',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Full-time employment',
+    //                 value: 'F',
+    //             },
+    //             {
+    //                 title: 'Part-time employment',
+    //                 value: 'P',
+    //             },
+    //             {
+    //                 title: 'Casual employment',
+    //                 value: 'C',
+    //             },
+    //             {
+    //                 title: 'Labour hire',
+    //                 value: 'L',
+    //             },
+    //             {
+    //                 title: 'Superannuation income stream',
+    //                 value: 'S',
+    //             },
 
     
-            ]
-        });
+    //         ]
+    //     });
 
         
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #edtPayPeriod': (e, ui) => {
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #edtPayPeriod': (e, ui) => {
         // $('#period').editableSelect('add','Hourly');
         // $('#period').editableSelect('add','Daily');
         // $('#period').editableSelect('add','Weekly');
         // $('#period').editableSelect('add','Monthly');
-        ui.AppTableModalData.set({
-            title: 'Pay Period',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Hourly',
-                    value: 'hourly',
-                },
-                {
-                    title: 'Daily',
-                    value: 'daily',
-                },
-                {
-                    title: 'Weekly',
-                    value: 'Weekly',
-                },
-                {
-                    title: 'Monthly',
-                    value: 'Monthly',
-                },
-            ]
-        });
+        // ui.AppTableModalData.set({
+        //     title: 'Pay Period',
+        //     headers: [
+        //         {title: 'Title'}
+        //     ],
+        //     body: [
+        //         {
+        //             title: 'Hourly',
+        //             value: 'hourly',
+        //         },
+        //         {
+        //             title: 'Daily',
+        //             value: 'daily',
+        //         },
+        //         {
+        //             title: 'Weekly',
+        //             value: 'Weekly',
+        //         },
+        //         {
+        //             title: 'Monthly',
+        //             value: 'Monthly',
+        //         },
+        //     ]
+        // });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #edtTfnExemption': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'TFN Exemption',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'No TFN Quoted',
-                    value: '0',
-                },
-                {
-                    title: 'TFN Pending',
-                    value: '1',
-                },
-                {
-                    title: 'TFN Exempt - Under 18',
-                    value: '2',
-                },
-                {
-                    title: 'TFN Exempt - Pensioner',
-                    value: '3',
-                },
-            ]
-        });
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #edtTfnExemption': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'TFN Exemption',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'No TFN Quoted',
+    //                 value: '0',
+    //             },
+    //             {
+    //                 title: 'TFN Pending',
+    //                 value: '1',
+    //             },
+    //             {
+    //                 title: 'TFN Exempt - Under 18',
+    //                 value: '2',
+    //             },
+    //             {
+    //                 title: 'TFN Exempt - Pensioner',
+    //                 value: '3',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#edtTaxFileNumber').val(''); // here we clear the value
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #leaveCalcMethodSelect': (e, ui) => {
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#edtTaxFileNumber').val(''); // here we clear the value
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #leaveCalcMethodSelect': (e, ui) => {
 
-        ui.AppTableModalData.set({
-            title: 'Leave Calculation Method',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Fixed Amount Each Period',
-                    value: 'Fixed Amount Each Period',
-                },
-                {
-                    title: 'Manually Recorded Rate',
-                    value: 'Manually Recorded Rate',
-                },
-                {
-                    title: 'No Calculation Required',
-                    value: 'No Calculation Required',
-                },
-                {
-                    title: 'Based on Ordinary Earnings',
-                    value: 'Based on Ordinary Earnings',
-                },
-            ]
-        });
+    //     ui.AppTableModalData.set({
+    //         title: 'Leave Calculation Method',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Fixed Amount Each Period',
+    //                 value: 'Fixed Amount Each Period',
+    //             },
+    //             {
+    //                 title: 'Manually Recorded Rate',
+    //                 value: 'Manually Recorded Rate',
+    //             },
+    //             {
+    //                 title: 'No Calculation Required',
+    //                 value: 'No Calculation Required',
+    //             },
+    //             {
+    //                 title: 'Based on Ordinary Earnings',
+    //                 value: 'Based on Ordinary Earnings',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    }, 
-    'click #onTerminationUnusedBalance': (e, ui) => {
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // }, 
+    // 'click #onTerminationUnusedBalance': (e, ui) => {
 
-        ui.AppTableModalData.set({
-            title: 'On termination unused balance is:',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Not Paid Out',
-                    value: '0',
-                },
-                {
-                    title: 'Paid Out',
-                    value: '1',
-                },
-            ]
-        });
+    //     ui.AppTableModalData.set({
+    //         title: 'On termination unused balance is:',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Not Paid Out',
+    //                 value: '0',
+    //             },
+    //             {
+    //                 title: 'Paid Out',
+    //                 value: '1',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                if( value == '1' ){
-                    $('.eftLeaveTypeCont').removeClass('hideelement')
-                    $("#eftLeaveType").attr('checked', false)
-                }else{
-                    $('.eftLeaveTypeCont').addClass('hideelement')
-                    $('.superannuationGuaranteeCont').addClass('hideelement')
-                }
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             if( value == '1' ){
+    //                 $('.eftLeaveTypeCont').removeClass('hideelement')
+    //                 $("#eftLeaveType").attr('checked', false)
+    //             }else{
+    //                 $('.eftLeaveTypeCont').addClass('hideelement')
+    //                 $('.superannuationGuaranteeCont').addClass('hideelement')
+    //             }
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
     'keydown #edtTaxFileNumber': (e, ui) => {
         $('#edtTfnExemption').removeAttr('data-value');
         $('#edtTfnExemption').val('');
     },
-    'click #edtLeavePayPeriod': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'Leave Pay Period',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Hourly',
-                    value: 'hourly',
-                },
-                {
-                    title: 'Fortnightly',
-                    value: 'Fortnightly',
-                },
-                {
-                    title: 'Twice Monthly',
-                    value: 'Twice Monthly',
-                },
-                {
-                    title: 'Four Weekly',
-                    value: 'Four Weekly',
-                },
-                {
-                    title: 'Monthly',
-                    value: 'Monthly',
-                },
-                {
-                    title: 'Quarterly',
-                    value: 'Quarterly',
-                },
-            ]
-        });
+    // 'click #edtLeavePayPeriod': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'Leave Pay Period',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Hourly',
+    //                 value: 'hourly',
+    //             },
+    //             {
+    //                 title: 'Fortnightly',
+    //                 value: 'Fortnightly',
+    //             },
+    //             {
+    //                 title: 'Twice Monthly',
+    //                 value: 'Twice Monthly',
+    //             },
+    //             {
+    //                 title: 'Four Weekly',
+    //                 value: 'Four Weekly',
+    //             },
+    //             {
+    //                 title: 'Monthly',
+    //                 value: 'Monthly',
+    //             },
+    //             {
+    //                 title: 'Quarterly',
+    //                 value: 'Quarterly',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #edtLeavePayStatus': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'Leave Pay Status',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Awaiting',
-                    value: 'Awaiting',
-                },
-                {
-                    title: 'Approved',
-                    value: 'Approved',
-                },
-                {
-                    title: 'Denied',
-                    value: 'Denied',
-                },
-            ]
-        });
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #edtLeavePayStatus': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'Leave Pay Status',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Awaiting',
+    //                 value: 'Awaiting',
+    //             },
+    //             {
+    //                 title: 'Approved',
+    //                 value: 'Approved',
+    //             },
+    //             {
+    //                 title: 'Denied',
+    //                 value: 'Denied',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
     'keyup #tblLeaveRequests_filter input': function (event) {
         if($(event.target).val() != ''){
           $(".btnRefreshLeaveRequest").addClass('btnSearchAlert');
@@ -7896,7 +7896,16 @@ Template.employeescard.events({
         await addVS1Data('TOpeningBalances', JSON.stringify(updatedOpeningBalances));
         $('.fullScreenSpin').css('display', 'none');
     },
-
+    // hide save button
+    'click .nav-link': function(e){
+        console.log('clicked');
+        if($(e.target).hasClass('hideSaveButton')) {
+            $('#btnSaveEmployeePayroll').hide(); 
+        }  else {
+            $('#btnSaveEmployeePayroll').show();
+        }
+        console.log('else');
+    },
     // Save active tab data
     'click #btnSaveEmployeePayroll': async (event) => {
         let activeTab = "";
