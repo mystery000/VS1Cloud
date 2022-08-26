@@ -1095,7 +1095,7 @@ Template.taxRatesSettings.events({
         ThresholdAmount: subTaxThresholdAmt,
         Description: subTaxCode.description
       };
-  
+
       subTaxLines.push(newSubTaxLine);
       templateObject.subtaxlines.set(subTaxLines);
     }

@@ -19,6 +19,7 @@ var times = 0;
 Template.stockadjustmentcard.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
+    templateObject.originrecord = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
     templateObject.accountnamerecords = new ReactiveVar();
     templateObject.record = new ReactiveVar({});
@@ -291,8 +292,8 @@ Template.stockadjustmentcard.onRendered(() => {
                                     department: data.fields.Lines[i].fields.DeptName || defaultDept,
                                     qtyinstock: data.fields.Lines[i].fields.InStockQty || 0,
                                     finalqty: data.fields.Lines[i].fields.FinalUOMQty || 0,
-                                    adjustqty: data.fields.Lines[i].fields.AdjustQty || 0
-
+                                    adjustqty: data.fields.Lines[i].fields.AdjustQty || 0,
+                                    pqaseriallotdata: data.fields.Lines[i].fields.PQA || '',
                                 };
 
                                 lineItems.push(lineItemObj);
@@ -321,10 +322,6 @@ Template.stockadjustmentcard.onRendered(() => {
                             $('.colProcessed').css('display', 'block');
                             $("#form :input").prop("disabled", true);
                             $(".btnDeleteStock").prop("disabled", false);
-                            $("#dtCreationDate").prop("disabled", false);
-                            $("#edtCustomerEmail").prop("disabled", false);
-                            $("#formCheck-1").prop("disabled", false);
-                            $(".btnProcess").prop("disabled", false);
                             $(".btnDeleteStockAdjust").prop("disabled", false);
                             $(".printConfirm").prop("disabled", false);
                             $(".btnBack").prop("disabled", false);
@@ -405,16 +402,14 @@ Template.stockadjustmentcard.onRendered(() => {
                             $('.fullScreenSpin').css('display', 'none');
                             let lineItems = [];
                             let lineItemObj = {};
-                            let lineItemsTable = [];
-                            let lineItemTableObj = {};
+                            let lineItemsOrigin = [];
+                            let lineItemOriginObj = {};
 
                             if (useData[d].fields.Lines.length) {
+                                let previousProductName = '';
                                 for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                                    productcost = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.Cost).toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    });
-                                    lineItemObj = {
-                                        lineID: Random.id(),
+                                    lineItemOriginObj = {
+                                         lineID: Random.id(),
                                         id: useData[d].fields.Lines[i].fields.ID || '',
                                         productname: useData[d].fields.Lines[i].fields.ProductName || '',
                                         productid: useData[d].fields.Lines[i].fields.ProductID || '',
@@ -424,12 +419,37 @@ Template.stockadjustmentcard.onRendered(() => {
                                         department: useData[d].fields.Lines[0].fields.DeptName || defaultDept,
                                         qtyinstock: useData[d].fields.Lines[i].fields.InStockQty || 0,
                                         finalqty: useData[d].fields.Lines[i].fields.FinalUOMQty || 0,
-                                        adjustqty: useData[d].fields.Lines[i].fields.AdjustQty || 0
-
+                                        adjustqty: useData[d].fields.Lines[i].fields.AdjustQty || 0,
+                                        batchnumber: useData[d].fields.Lines[i].fields.BatchNo || '',
+                                        serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
                                     };
+                                    lineItemsOrigin.push(lineItemOriginObj);
 
-                                    lineItems.push(lineItemObj);
-                                }
+                                    if (previousProductName !== useData[d].fields.Lines[i].fields.ProductName) {
+                                        previousProductName = useData[d].fields.Lines[i].fields.ProductName;
+                                        productcost = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.Cost).toLocaleString(undefined, {
+                                            minimumFractionDigits: 2
+                                        });
+                                        lineItemObj = {
+                                            lineID: Random.id(),
+                                            id: useData[d].fields.Lines[i].fields.ID || '',
+                                            productname: useData[d].fields.Lines[i].fields.ProductName || '',
+                                            productid: useData[d].fields.Lines[i].fields.ProductID || '',
+                                            productcost: productcost,
+                                            productbarcode: useData[d].fields.Lines[i].fields.PartBarcode || '',
+                                            description: useData[d].fields.Lines[i].fields.Description || '',
+                                            department: useData[d].fields.Lines[0].fields.DeptName || defaultDept,
+                                            qtyinstock: useData[d].fields.Lines[i].fields.InStockQty || 0,
+                                            finalqty: useData[d].fields.Lines[i].fields.FinalUOMQty || 0,
+                                            adjustqty: useData[d].fields.Lines[i].fields.AdjustQty || 0,
+                                            batchnumber: useData[d].fields.Lines[i].fields.BatchNo || '',
+                                            serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
+
+                                        };
+
+                                        lineItems.push(lineItemObj);
+                                    }
+                               }
                             } else {
                                 lineItemObj = {
                                     lineID: Random.id(),
@@ -442,8 +462,9 @@ Template.stockadjustmentcard.onRendered(() => {
                                     department: useData[d].fields.Lines.fields.DeptName || defaultDept,
                                     qtyinstock: useData[d].fields.Lines.fields.InStockQty || 0,
                                     finalqty: useData[d].fields.Lines.fields.FinalUOMQty || 0,
-                                    adjustqty: useData[d].fields.Lines.fields.AdjustQty || 0
-
+                                    adjustqty: useData[d].fields.Lines.fields.AdjustQty || 0,
+                                    batchnumber: useData[d].fields.Lines[i].fields.BatchNo || '',
+                                    serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
                                 };
 
                                 lineItems.push(lineItemObj);
@@ -458,6 +479,16 @@ Template.stockadjustmentcard.onRendered(() => {
                                 notes: useData[d].fields.Notes,
                                 balancedate: useData[d].fields.AdjustmentDate ? moment(useData[d].fields.AdjustmentDate).format('DD/MM/YYYY') : ""
                             };
+
+                            templateObject.originrecord.set({
+                                id: useData[d].fields.ID,
+                                lid: 'Edit Stock Adjustment' + ' ' + useData[d].fields.ID,
+                                LineItems: lineItemsOrigin,
+                                accountname: useData[d].fields.AccountName,
+                                department: useData[d].fields.Lines[0].fields.DeptName || defaultDept,
+                                notes: useData[d].fields.Notes,
+                                balancedate: useData[d].fields.AdjustmentDate ? moment(useData[d].fields.AdjustmentDate).format('DD/MM/YYYY') : ""
+                            })
 
                             let getDepartmentVal = useData[d].fields.Lines[0].fields.DeptName || defaultDept;
 
@@ -477,10 +508,6 @@ Template.stockadjustmentcard.onRendered(() => {
                                 $('.colProcessed').css('display', 'block');
                                 $("#form :input").prop("disabled", true);
                                 $(".btnDeleteStock").prop("disabled", false);
-                                $("#dtCreationDate").prop("disabled", false);
-                                $("#edtCustomerEmail").prop("disabled", false);
-                                $("#formCheck-1").prop("disabled", false);
-                                $(".btnProcess").prop("disabled", false);
                                 $(".btnDeleteStockAdjust").prop("disabled", false);
                                 $(".printConfirm").prop("disabled", false);
                                 $(".btnBack").prop("disabled", false);
@@ -563,8 +590,9 @@ Template.stockadjustmentcard.onRendered(() => {
                                 department: data.fields.Lines[i].fields.DeptName || defaultDept,
                                 qtyinstock: data.fields.Lines[i].fields.InStockQty || 0,
                                 finalqty: data.fields.Lines[i].fields.FinalUOMQty || 0,
-                                adjustqty: data.fields.Lines[i].fields.AdjustQty || 0
-
+                                adjustqty: data.fields.Lines[i].fields.AdjustQty || 0,
+                                batchnumber: useData[d].fields.Lines[i].fields.BatchNo || '',
+                                serialnumber: useData[d].fields.Lines[i].fields.SerialNumber || '',
                             };
 
                             lineItems.push(lineItemObj);
@@ -592,10 +620,6 @@ Template.stockadjustmentcard.onRendered(() => {
                         $('.colProcessed').css('display', 'block');
                         $("#form :input").prop("disabled", true);
                         $(".btnDeleteStock").prop("disabled", false);
-                        $("#dtCreationDate").prop("disabled", false);
-                        $("#edtCustomerEmail").prop("disabled", false);
-                        $("#formCheck-1").prop("disabled", false);
-                        $(".btnProcess").prop("disabled", false);
                         $(".btnDeleteStockAdjust").prop("disabled", false);
                         $(".printConfirm").prop("disabled", false);
                         $(".btnBack").prop("disabled", false);
@@ -688,8 +712,10 @@ Template.stockadjustmentcard.onRendered(() => {
             department: defaultDept || '',
             qtyinstock: 0,
             finalqty: 0,
-            adjustqty: 0
-        };
+            adjustqty: 0,
+            batchnumber: '',
+            serialnumber: '',
+       };
 
         var dataListTable = [
             ' ' || '',
@@ -2278,82 +2304,82 @@ Template.stockadjustmentcard.events({
                 let tdLotExpiryDate = $('#' + lineID + " .colSerialNo").attr('data-lotexpirydate');
 
                 if (tdproduct != "") {
-
-                    lineItemObjForm = {
-                        type: "TSAELinesFlat",
-                        fields: {
-                            ProductName: tdproduct || '',
-                            //AccountName: accountname.val() || '',
-                            //ProductID: tdproductID || '',
-                            Cost: parseFloat(tdproductCost.replace(/[^0-9.-]+/g, "")) || 0,
-                            AdjustQty: parseFloat(tdadjustqty) || 0,
-                            AdjustUOMQty: parseFloat(tdadjustqty) || 0,
-                            Qty: parseFloat(tdadjustqty) || 0,
-                            UOMQty: parseFloat(tdadjustqty) || 0,
-                            FinalQty: parseFloat(tdfinalqty) || 0,
-                            FinalUOMQty: parseFloat(tdfinalqty) || 0,
-                            InStockUOMQty: parseFloat(tdinstockqty) || 0,
-                            DeptName: tdDepartment || defaultDept,
-                            ProductPrintName: tdproduct || '',
-                            PartBarcode: tdbarcode || '',
-                            Description: tddescription || ''
-
-                        }
-                    };
-
                     // Feature/ser-lot number tracking: Save Serial Numbers
                     if (tdSerialNumber) {
                         const serialNumbers = tdSerialNumber.split(',');
-                        let tpqaList = [];
                         for (let i = 0; i < serialNumbers.length; i++) {
-                            const tpqaObject = {
-                                type: "TPQASN",
+                            lineItemObjForm = {
+                                type: "TSAELinesFlat",
                                 fields: {
-                                    Active: true,
-                                    Qty: 1,
-                                    SerialNumber: serialNumbers[i],
+                                    ProductName: tdproduct || '',
+                                    //AccountName: accountname.val() || '',
+                                    //ProductID: tdproductID || '',
+                                    Cost: parseFloat(tdproductCost.replace(/[^0-9.-]+/g, "")) || 0,
+                                    AdjustQty: parseFloat(tdadjustqty) || 0,
+                                    AdjustUOMQty: parseFloat(tdadjustqty) || 0,
+                                    Qty: parseFloat(tdadjustqty) || 0,
+                                    UOMQty: parseFloat(tdadjustqty) || 0,
+                                    FinalQty: parseFloat(tdfinalqty) || 0,
+                                    FinalUOMQty: parseFloat(tdfinalqty) || 0,
+                                    InStockUOMQty: parseFloat(tdinstockqty) || 0,
+                                    DeptName: tdDepartment || defaultDept,
+                                    ProductPrintName: tdproduct || '',
+                                    PartBarcode: tdbarcode || '',
+                                    Description: tddescription || '',
+                                   SerialNumber: serialNumbers[i],
                                 }
                             };
-                            tpqaList.push(tpqaObject);
+                            splashLineArray.push(lineItemObjForm);
                         }
-                        const pqaObject = {
-                            type: "TPQA",
-                            fields: {
-                                Active: true,
-                                PQASN: tpqaList,
-                                Qty: serialNumbers.length,
-                            }
-                        }
-                        lineItemObjForm.fields.PQA = pqaObject;
-                    }
-                    
-                    // Feature/ser-lot number tracking: Save Lot Number
-                    if (tdLotNumber) {
-                        let tpqaList = [];
-                        for (let i = 0; i < serialNumbers.length; i++) {
-                            const tpqaObject = {
-                                type: "PQABatch",
+                    } else if (tdLotNumber) {
+                        const lotNumbers = tdLotNumber.split(',');
+                        for (let i = 0; i < lotNumbers.length; i++) {
+                            lineItemObjForm = {
+                                type: "TSAELinesFlat",
                                 fields: {
-                                    Active: true,
-                                    Qty: 1,
-                                    SerialNumber: serialNumbers[i],
-                                }
+                                    ProductName: tdproduct || '',
+                                    //AccountName: accountname.val() || '',
+                                    //ProductID: tdproductID || '',
+                                    Cost: parseFloat(tdproductCost.replace(/[^0-9.-]+/g, "")) || 0,
+                                    AdjustQty: parseFloat(tdadjustqty) || 0,
+                                    AdjustUOMQty: parseFloat(tdadjustqty) || 0,
+                                    Qty: parseFloat(tdadjustqty) || 0,
+                                    UOMQty: parseFloat(tdadjustqty) || 0,
+                                    FinalQty: parseFloat(tdfinalqty) || 0,
+                                    FinalUOMQty: parseFloat(tdfinalqty) || 0,
+                                    InStockUOMQty: parseFloat(tdinstockqty) || 0,
+                                    DeptName: tdDepartment || defaultDept,
+                                    ProductPrintName: tdproduct || '',
+                                    PartBarcode: tdbarcode || '',
+                                    Description: tddescription || '',
+                                    BatchNo: lotNumbers[i],
+                               }
                             };
-                            tpqaList.push(tpqaObject);
+                            splashLineArray.push(lineItemObjForm);
                         }
-                        const pqaObject = {
-                            type: "TPQA",
+                    } else {
+                        lineItemObjForm = {
+                            type: "TSAELinesFlat",
                             fields: {
-                                Active: true,
-                                PQABatch: tpqaList,
-                                Qty: serialNumbers.length,
+                                ProductName: tdproduct || '',
+                                //AccountName: accountname.val() || '',
+                                //ProductID: tdproductID || '',
+                                Cost: parseFloat(tdproductCost.replace(/[^0-9.-]+/g, "")) || 0,
+                                AdjustQty: parseFloat(tdadjustqty) || 0,
+                                AdjustUOMQty: parseFloat(tdadjustqty) || 0,
+                                Qty: parseFloat(tdadjustqty) || 0,
+                                UOMQty: parseFloat(tdadjustqty) || 0,
+                                FinalQty: parseFloat(tdfinalqty) || 0,
+                                FinalUOMQty: parseFloat(tdfinalqty) || 0,
+                                InStockUOMQty: parseFloat(tdinstockqty) || 0,
+                                DeptName: tdDepartment || defaultDept,
+                                ProductPrintName: tdproduct || '',
+                                PartBarcode: tdbarcode || '',
+                                Description: tddescription || ''
                             }
-                        }
-                        lineItemObjForm.fields.PQA = pqaObject;
+                        };
+                        splashLineArray.push(lineItemObjForm);
                     }
-
-                    //lineItemsForm.push(lineItemObjForm);
-                    splashLineArray.push(lineItemObjForm);
                 }
             });
 
@@ -2634,32 +2660,83 @@ Template.stockadjustmentcard.events({
                 let tdadjustqty = $('#' + lineID + " .lineAdjustQty").val();
                 let tdDepartment = $('#' + lineID + " .lineDepartment").val();
                 if (tdproduct != "") {
-
-                    lineItemObjForm = {
-                        type: "TSAELinesFlat",
-                        fields: {
-                            ProductName: tdproduct || '',
-                            //AccountName: accountname.val() || '',
-                            //ProductID: tdproductID || '',
-                            Cost: parseFloat(tdproductCost.replace(/[^0-9.-]+/g, "")) || 0,
-                            AdjustQty: parseFloat(tdadjustqty) || 0,
-                            AdjustUOMQty: parseFloat(tdadjustqty) || 0,
-                            Qty: parseFloat(tdadjustqty) || 0,
-                            UOMQty: parseFloat(tdadjustqty) || 0,
-                            FinalQty: parseFloat(tdfinalqty) || 0,
-                            FinalUOMQty: parseFloat(tdfinalqty) || 0,
-                            InStockUOMQty: parseFloat(tdinstockqty) || 0,
-                            DeptName: tdDepartment || defaultDept,
-                            ProductPrintName: tdproduct || '',
-                            PartBarcode: tdbarcode || '',
-                            Description: tddescription || ''
-
+                    // Feature/ser-lot number tracking: Save Serial Numbers
+                    if (tdSerialNumber) {
+                        const serialNumbers = tdSerialNumber.split(',');
+                        for (let i = 0; i < serialNumbers.length; i++) {
+                            lineItemObjForm = {
+                                type: "TSAELinesFlat",
+                                fields: {
+                                    ProductName: tdproduct || '',
+                                    //AccountName: accountname.val() || '',
+                                    //ProductID: tdproductID || '',
+                                    Cost: parseFloat(tdproductCost.replace(/[^0-9.-]+/g, "")) || 0,
+                                    AdjustQty: parseFloat(tdadjustqty) || 0,
+                                    AdjustUOMQty: parseFloat(tdadjustqty) || 0,
+                                    Qty: parseFloat(tdadjustqty) || 0,
+                                    UOMQty: parseFloat(tdadjustqty) || 0,
+                                    FinalQty: parseFloat(tdfinalqty) || 0,
+                                    FinalUOMQty: parseFloat(tdfinalqty) || 0,
+                                    InStockUOMQty: parseFloat(tdinstockqty) || 0,
+                                    DeptName: tdDepartment || defaultDept,
+                                    ProductPrintName: tdproduct || '',
+                                    PartBarcode: tdbarcode || '',
+                                    Description: tddescription || '',
+                                    SerialNumber: serialNumbers[i],
+                                }
+                            };
+                            splashLineArray.push(lineItemObjForm);
                         }
-                    };
-
-                    //lineItemsForm.push(lineItemObjForm);
-                    splashLineArray.push(lineItemObjForm);
-                }
+                    } else if (tdLotNumber) {
+                        const lotNumbers = tdLotNumber.split(',');
+                        for (let i = 0; i < lotNumbers.length; i++) {
+                            lineItemObjForm = {
+                                type: "TSAELinesFlat",
+                                fields: {
+                                    ProductName: tdproduct || '',
+                                    //AccountName: accountname.val() || '',
+                                    //ProductID: tdproductID || '',
+                                    Cost: parseFloat(tdproductCost.replace(/[^0-9.-]+/g, "")) || 0,
+                                    AdjustQty: parseFloat(tdadjustqty) || 0,
+                                    AdjustUOMQty: parseFloat(tdadjustqty) || 0,
+                                    Qty: parseFloat(tdadjustqty) || 0,
+                                    UOMQty: parseFloat(tdadjustqty) || 0,
+                                    FinalQty: parseFloat(tdfinalqty) || 0,
+                                    FinalUOMQty: parseFloat(tdfinalqty) || 0,
+                                    InStockUOMQty: parseFloat(tdinstockqty) || 0,
+                                    DeptName: tdDepartment || defaultDept,
+                                    ProductPrintName: tdproduct || '',
+                                    PartBarcode: tdbarcode || '',
+                                    Description: tddescription || '',
+                                    BatchNo: lotNumbers[i],
+                                }
+                            };
+                            splashLineArray.push(lineItemObjForm);
+                        }
+                    } else {
+                        lineItemObjForm = {
+                            type: "TSAELinesFlat",
+                            fields: {
+                                ProductName: tdproduct || '',
+                                //AccountName: accountname.val() || '',
+                                //ProductID: tdproductID || '',
+                                Cost: parseFloat(tdproductCost.replace(/[^0-9.-]+/g, "")) || 0,
+                                AdjustQty: parseFloat(tdadjustqty) || 0,
+                                AdjustUOMQty: parseFloat(tdadjustqty) || 0,
+                                Qty: parseFloat(tdadjustqty) || 0,
+                                UOMQty: parseFloat(tdadjustqty) || 0,
+                                FinalQty: parseFloat(tdfinalqty) || 0,
+                                FinalUOMQty: parseFloat(tdfinalqty) || 0,
+                                InStockUOMQty: parseFloat(tdinstockqty) || 0,
+                                DeptName: tdDepartment || defaultDept,
+                                ProductPrintName: tdproduct || '',
+                                PartBarcode: tdbarcode || '',
+                                Description: tddescription || ''
+                            }
+                        };
+                        splashLineArray.push(lineItemObjForm);
+                    }
+               }
             });
 
             let selectAccount = $('#sltAccountName').val();
@@ -3422,11 +3499,67 @@ Template.stockadjustmentcard.events({
     },
     'click .btnSnLotmodal': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
+        const templateObject = Template.instance();
         var target=event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let selectedunit = $(target).closest('tr').find('.colAdjustQty').val();
         localStorage.setItem('productItem', selectedunit);
         let productService = new ProductService();
+        let StockAdjustmentRecord = templateObject.originrecord.get();
+        let existingSerialNumbers = [];
+        let existingLotNumbers = [];
+        if (StockAdjustmentRecord && StockAdjustmentRecord.LineItems) {
+            StockAdjustmentRecord.LineItems.forEach(element => {
+                if (element.productname == selectedProductName) {
+                    if (element.serialnumber) existingSerialNumbers.push(element.serialnumber);
+                    else if (element.batchnumber) existingLotNumbers.push(element.batchnumber);
+                }
+            });
+        }
+
+        productService.getProductStatus(selectedProductName).then(function(data) {
+            $('.fullScreenSpin').css('display', 'none');
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                event.preventDefault();
+                return false;
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                $('#lotNumberModal').attr('data-row', row + 1);
+                $('#lotNumberModal').modal('show');
+                if (existingLotNumbers.length === 0) {
+                } else {
+                    let shtml = '';
+                    shtml += `
+                    <tr><td colspan="5">Allocate Lot Number</td><td rowspan="2">CUSTFLD</td></tr>
+                    <tr><td>Lot No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                    `;
+                    for (let k = 0; k < existingLotNumbers.length; k++) {
+                        shtml += `
+                        <tr><td>${existingLotNumbers[k]}</td><td></td><td></td><td></td><td></td><td></td></tr>
+                        `;
+                    }
+                    $('#tblSeriallist tbody').html(shtml);
+                }
+            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                $('#serialNumberModal').attr('data-row', row + 1);
+                $('#serialNumberModal').modal('show');
+                if (existingSerialNumbers.length > 0) {
+                    let shtml = '';
+                    shtml += `
+                    <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                    <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
+                    `;
+                    for (let k = 0; k < existingSerialNumbers.length; k++) {
+                        shtml += `
+                        <tr><td></td><td class="lineNo">${(k + 1)}</td><td contenteditable="true" class="lineSerialnumbers">${existingSerialNumbers[k]}</td></tr>
+                        `;
+                    }
+                    $('#tblSeriallist tbody').html(shtml);
+                }
+            }
+        });
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
             swal('You have to select Product.', '', 'info');
