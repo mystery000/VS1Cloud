@@ -1490,12 +1490,12 @@ Template.accountant_company.events({
                                         localStorage.setItem("vs1companyBankRoutingNo", routingNo);
                                         sideBarService.getAccountListVS1().then(function(dataReload) {
                                             addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             }).catch(function(err) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             });
                                         }).catch(function(err) {
-                                            window.open("/accountant/company", "_self");
+                                            window.open("/accountant_company", "_self");
                                         });
                                     })
                                     .catch(function(err) {
@@ -1504,14 +1504,14 @@ Template.accountant_company.events({
                                             .then(function(dataReload) {
                                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                                     .then(function(datareturn) {
-                                                        window.open("/accountant/company", "_self");
+                                                        window.open("/accountant_company", "_self");
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountant/company", "_self");
+                                                        window.open("/accountant_company", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             });
                                     });
                             } else {
@@ -1520,14 +1520,14 @@ Template.accountant_company.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant/company", "_self");
+                                        window.open("/accountant_company", "_self");
                                     });
                             }
                         })
@@ -1612,14 +1612,14 @@ Template.accountant_company.events({
                                             .then(function(dataReload) {
                                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                                     .then(function(datareturn) {
-                                                        window.open("/accountant/company", "_self");
+                                                        window.open("/accountant_company", "_self");
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountant/company", "_self");
+                                                        window.open("/accountant_company", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             });
                                     })
                                     .catch(function(err) {
@@ -1631,11 +1631,11 @@ Template.accountant_company.events({
                                                         //window.open('/accountsoverview', '_self');
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountant/company", "_self");
+                                                        window.open("/accountant_company", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             });
                                     });
                             } else {
@@ -1644,14 +1644,14 @@ Template.accountant_company.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant/company", "_self");
+                                        window.open("/accountant_company", "_self");
                                     });
                             }
                         })
@@ -1735,14 +1735,14 @@ Template.accountant_company.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant/company", "_self");
+                                        window.open("/accountant_company", "_self");
                                     });
                             })
                             .catch(function(err) {
@@ -1751,14 +1751,14 @@ Template.accountant_company.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant/company", "_self");
+                                                window.open("/accountant_company", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant/company", "_self");
+                                        window.open("/accountant_company", "_self");
                                     });
                             });
                     } else {
@@ -1767,14 +1767,14 @@ Template.accountant_company.events({
                             .then(function(dataReload) {
                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                     .then(function(datareturn) {
-                                        window.open("/accountant/company", "_self");
+                                        window.open("/accountant_company", "_self");
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant/company", "_self");
+                                        window.open("/accountant_company", "_self");
                                     });
                             })
                             .catch(function(err) {
-                                window.open("/accountant/company", "_self");
+                                window.open("/accountant_company", "_self");
                             });
                     }
                 })

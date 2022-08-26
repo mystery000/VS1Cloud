@@ -134,7 +134,7 @@ Template.inventorassetaccountspop.onRendered(function() {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.taccountvs1;
                 useData = useData.filter (account => {
-                    return account.fields.AccountTypeName === 'EXP';
+                    return account.fields.AccountTypeName === 'OCASSET';
                 })
                 let records = [];
                 let inventoryData = [];
@@ -201,7 +201,7 @@ Template.inventorassetaccountspop.onRendered(function() {
                 let inventoryData = [];
                 let tempArray = data.taccountvs1;
                 tempArray = tempArray.filter(account => {
-                    return account.fields.AccountTypeName === 'EXP'
+                    return account.fields.AccountTypeName === 'OCASSET'
                 })
                 for (let i = 0; i < tempArray.length; i++) {
                    if (!isNaN(tempArray[i].fields.Balance)) {

@@ -137,36 +137,58 @@ Template.dashboardSalesCards.onRendered(function () {
 // Listen to event to update reactive variable
 Template.dashboardSalesCards.events({
     "click #new-leads-my-metric": (e) => {
-        FlowRouter.go('/leadlist?range=month&type=employee');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/leadlist?fromDate=${fromDate}&toDate=${toDate}&type=employee`);
     },
     "click #new-leads-team-avg": (e) => {
-        FlowRouter.go('/leadlist?range=month');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/leadlist?fromDate=${fromDate}&toDate=${toDate}`);
     },
     "click #new-opptertunties-my-metric": (e) => {
-        FlowRouter.go('/leadlist?range=month&type=employee');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/leadlist?${fromDate}&toDate=${toDate}&type=employee`);
     },
     "click #new-opptertunties-team-avg": (e) => {
-        FlowRouter.go('/leadlist?range=month');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/leadlist?${fromDate}&toDate=${toDate}`);
     },
     "click #won-opptertunties-my-metric": (e) => {
-        FlowRouter.go('/invoicelist?range=month&type=employee');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}&type=employee`);
     },
     "click #won-opptertunties-team-avg": (e) => {
-        FlowRouter.go('/invoicelist?range=month');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
     },
     "click #gap-to-quota": (e) => {
-        FlowRouter.go('/invoicelist?range=month');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/invoicelist?fromDate=${fromDate}&toDate=${toDate}`);
     },
     "click #avg-sales-cycle-my-metric": (e) => {
-        FlowRouter.go('/quotelist?range=month&type=employee');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/quoteslist?fromDate=${fromDate}&toDate=${toDate}&type=employee`);
     },
     "click #avg-sales-cycle-team-avg": (e) => {
-        FlowRouter.go('/quotelist?range=month');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/quoteslist?fromDate=${fromDate}&toDate=${toDate}`);
     },
     "click #pipeline-amount-my-metric": (e) => {
-        FlowRouter.go('/quotelist?range=month&type=employee');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/quoteslist?fromDate=${fromDate}&toDate=${toDate}&type=employee`);
     },
     "click #pipeline-amount-team-avg": (e) => {
-        FlowRouter.go('/quotelist?range=month');
+        const fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD');
+        const toDate = moment().format('YYYY-MM-DD');
+        FlowRouter.go(`/quoteslist?fromDate=${fromDate}&toDate=${toDate}`);
     },
 });

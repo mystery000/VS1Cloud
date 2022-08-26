@@ -1158,16 +1158,16 @@
                                                                                     <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}"  style="cursor: pointer;">
                                                                                     {{/if}}
                                                                             {{/if}}
-    
+
                                                                             {{#if equals title 'Quotes'}}
                                                                             <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
                                                                             {{/if}}
 
                                                                             <input type="text" name="{{title}}_{{index}}" style="border: 1px solid rgb(209 211 226 / 0%);" value="Template {{index}}" />
-    
-    
+
+
                                                                         </div>
-    
+
                                                                         <i id="btnPreviewTemplate" data-id="{{title}}" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
                                                                     </li>
                                                                 {{/each}}
@@ -1178,12 +1178,12 @@
                                                         <div class="custom-control custom-switch">
                                                             <input class="custom-control-input chkGlobalSettings" name="print_quote" checked type="checkbox" id="print_quote" autocomplete="off">
                                                             <label style="cursor: pointer;" class="custom-control-label" for="print_quote">Print Quote</label>
-                                                        </div> 
+                                                        </div>
                                                     </div>
                                                 </div>
                                             {{/each}}
                                         </div>
-    
+
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="padding: 6px;">
@@ -1191,7 +1191,7 @@
                                     <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                             </div>
                         </div>
-    
+
                     </div>
 
                     <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
@@ -1209,7 +1209,7 @@
                                     <div class="custom-control custom-checkbox">
                                         <input class="custom-control-input favCheckBox chkBankingReport" name="print_quote_second" checked type="checkbox" id="print_quote_second" autocomplete="off">
                                         <label style="cursor: pointer;" class="custom-control-label" for="print_quote_second">Print Quote</label>
-                                    </div>                      
+                                    </div>
 
                                 </div>
 
@@ -1577,52 +1577,52 @@
                             <hr>
                             <div style="display: flex;">
                                 <div style="margin: 8px; width: 100%">
-                    
+
                                     <div class="row">
                                         <div class="col-12">
                                             <p style="font-weight: bold; color: rgb(0 0 0);">Comments</p>
                                             <div id="printcomment" style="color: rgb(0 0 0);  height: 3em; line-height: 1em; overflow: hidden;">
                                             </div>
                                         </div>
-                                        
+
                                     </div>
-                    
+
                                     <div class="row">
                                         <div class="col-6" style="border: 1px solid;">
                                             <div class="col-12">
                                                 <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                             </div>
                                             <div class="field_payment">
-                                         
+
                                                 <!-- <div class="bankDetails" style="margin: 16px;">
-                    
+
                                         </div> -->
                                                 <div class="col-12">
                                                     <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                                 </div>
-                    
+
                                                 <div class="col-12">
-                    
+
                                                     <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                         BSB (Branch Number) :
                                                         <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                     </p>
-                    
+
                                                     <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                         Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                     </p>
-                    
+
                                                     <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                         Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                     </p>
-                    
-                    
+
+
                                                 </div>
 
                                             </div>
-                                           
-                                        
-                    
+
+
+
                                          </div>
                                          <div class="col-6">
                                                <div class="row">
@@ -1672,29 +1672,29 @@
                                                                 </p>
                                                                 <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 </p>
-                            
+
                                                             </div>
-                            
-                            
+
+
                                                         </div>
                                                     </div>
                                                 </div>
-                    
+
                                                </div>
                                         </div>
-                    
+
                                     </div>
-                    
-                                  
-                                  
+
+
+
                                 </div>
-                    
-                    
+
+
                             </div>
 
                             <div style="font-size: 10px; margin-right: 8px; float: right;">
                                 <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-                              
+
                             </div>
 
                             <p class="bottome-text-fix" style="font-size: 10px;
@@ -1794,7 +1794,7 @@
                 <table class="quote_print" style="width: 200mm; max-width: 200mm; margin: auto;">
                     <thead style="color: rgb(251,251,251);">
                          <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0,1);">
-                      
+
                         </tr>
                     </thead>
                     <tbody class="tbl_content" style="color: rgb(0 0 0);">
@@ -1812,7 +1812,7 @@
                         <div id="printcomment" style="color: rgb(0 0 0);  height: 3em; line-height: 1em; overflow: hidden;">
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div class="row">
@@ -1821,7 +1821,7 @@
                             <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                         </div>
                         <div class="field_payment">
-                        
+
                             <!-- <div class="bankDetails" style="margin: 16px;">
 
                     </div> -->
@@ -1848,8 +1848,8 @@
                             </div>
 
                         </div>
-                       
-                    
+
+
 
                      </div>
                      <div class="col-6">
@@ -1900,10 +1900,10 @@
                                             </p>
                                             <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             </p>
-        
+
                                         </div>
-        
-        
+
+
                                     </div>
                                 </div>
                             </div>
@@ -1913,8 +1913,8 @@
 
                 </div>
 
-              
-              
+
+
             </div>
 
 

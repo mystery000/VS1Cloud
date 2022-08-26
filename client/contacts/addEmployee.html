@@ -1391,13 +1391,13 @@
                                                                 <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#taxes" role="tab" aria-controls="contact" aria-selected="false">Taxes</a>
                                                             </li>
                                                             <li class="nav-item">
-                                                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#leave" role="tab" aria-controls="contact" aria-selected="false">Leave</a>
+                                                                <a class="nav-link hideSaveButton" id="contact-tab" data-toggle="tab" href="#leave" role="tab" aria-controls="contact" aria-selected="false">Leave</a>
                                                             </li>
                                                             <li class="nav-item">
                                                                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#bankaccounts" role="tab" aria-controls="contact" aria-selected="false">Bank Accounts</a>
                                                             </li>
                                                             <li class="nav-item">
-                                                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#payslips" role="tab" aria-controls="contact" aria-selected="false">Payslips</a>
+                                                                <a class="nav-link hideSaveButton" id="contact-tab" data-toggle="tab" href="#payslips" role="tab" aria-controls="contact" aria-selected="false">Payslips</a>
                                                             </li>
                                                             <li class="nav-item">
                                                                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#paytemplate" role="tab" aria-controls="contact" aria-selected="false">Pay Template</a>
@@ -1406,7 +1406,7 @@
                                                                 <a class="nav-link" id="contact-tab" data-toggle="tab" href="#openingbalances" role="tab" aria-controls="contact" aria-selected="false">Opening Balances</a>
                                                             </li>
                                                             <li class="nav-item">
-                                                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#notes" role="tab" aria-controls="contact" aria-selected="false">Notes</a>
+                                                                <a class="nav-link hideSaveButton" id="contact-tab" data-toggle="tab" href="#notes" role="tab" aria-controls="contact" aria-selected="false">Notes</a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -1440,14 +1440,14 @@
                                                                                 <div class="col-12 col-md-3">
                                                                                     <div class="form-group" style="margin: 4px;">
                                                                                         <label>TFN Exemption</label>
-                                                                                        <input type="search" class="form-control" id="edtTfnExemption" name="edtTfnExemption">
-                                                                                        <!-- <select type="search" class="form-control customEditableSelect" id="edtTfnExemption" name="edtTfnExemption" style="cursor: pointer;">
+                                                                                        <!-- <input type="search" class="form-control" id="edtTfnExemption" name="edtTfnExemption"> -->
+                                                                                        <select type="search" class="form-control customEditableSelect" id="edtTfnExemption" name="edtTfnExemption" style="cursor: pointer;">
                                                                                             <option value=""></option>
                                                                                             <option value="0">No TFN Quoted</option>
                                                                                             <option value="1">TFN Pending</option>
                                                                                             <option value="2">TFN Exempt - Under 18</option>
                                                                                             <option value="3">TFN Exempt - Pensioner</option>
-                                                                                        </select> -->
+                                                                                        </select>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1458,14 +1458,14 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Employment Basis</label>
-                                                                            <input type="search" class="form-control" id="edtEmploymentBasis" name="edtEmploymentBasis">
-                                                                            <!-- <select type="search" class="form-control customEditableSelect" id="edtEmploymentBasis" name="edtEmploymentBasis" style="cursor: pointer;">
+                                                                            <!-- <input type="search" class="form-control" id="edtEmploymentBasis" name="edtEmploymentBasis"> -->
+                                                                            <select type="search" class="form-control customEditableSelect" id="edtEmploymentBasis" name="edtEmploymentBasis" style="cursor: pointer;">
                                                                                 <option value="F">Full-time employment</option>
                                                                                 <option value="P">Part-time employment</option>
                                                                                 <option value="C">Casual employment</option>
                                                                                 <option value="L">Labour hire</option>
                                                                                 <option value="S">Superannuation income stream</option>
-                                                                            </select> -->
+                                                                            </select>
 
                                                                         </div>
                                                                     </div>
@@ -1473,12 +1473,12 @@
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Residency Status</label>
 
-                                                                            <input id="edtResidencyStatus" type="search" class="form-control customEditableSelect" name="edtResidencyStatus"/>
-                                                                            <!-- <select type="search" class="form-control customEditableSelect" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
+                                                                            <!-- <input id="edtResidencyStatus" type="search" class="form-control customEditableSelect" name="edtResidencyStatus"/> -->
+                                                                            <select type="search" class="form-control customEditableSelect" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
                                                                                 <option value="true">Australian Resident</option>
                                                                                 <option value="false">Foreign Resident</option>
                                                                                 <option value="Working Holiday Maker">Working Holiday Maker</option> 
-                                                                            </select> -->
+                                                                            </select>
 
                                                                         </div>
                                                                     </div>
@@ -1853,7 +1853,12 @@
                                                                                         <div class="form-group">
                                                                                             <label>Leave Calculation Method</label>
                                                                                             <!-- <input type="text" class="form-control" id=""> -->
-                                                                                            <input type="search" class="form-control customEditableSelect" id="leaveCalcMethodSelect" name="leaveCalcMethodSelect" style="cursor: pointer;">
+                                                                                            <select  type="search" class="form-control customEditableSelect" id="leaveCalcMethodSelect" name="leaveCalcMethodSelect">
+                                                                                                <option value="Fixed Amount Each Period">Fixed Amount Each Period</option>
+                                                                                                <option value="Manually Recorded Rate">Manually Recorded Rate</option>
+                                                                                                <option value="No Calculation Required">No Calculation Required</option>
+                                                                                                <option value="Based on Ordinary Earnings">Based on Ordinary Earnings</option>
+                                                                                            </select>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
@@ -1890,7 +1895,10 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>On termination unused balance is:</label>
-                                                                                            <input type="search" class="form-control customEditableSelect" id="onTerminationUnusedBalance" name="onTerminationUnusedBalance" style="cursor: pointer;">
+                                                                                            <select type="search" class="form-control customEditableSelect" id="onTerminationUnusedBalance" name="onTerminationUnusedBalance" style="cursor: pointer;">
+                                                                                                <option value="Not Paid Out">Not Paid Out </option>
+                                                                                                <option value="Paid Out">Paid Out</option>
+                                                                                            </select>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12">
@@ -2449,10 +2457,13 @@
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
-                                                                                        <div class="input-group date" style="cursor: pointer;">
-                                                                                            <input type="text" class="form-control formClassDate paymentDate" id="paymentDate" name="paymentDate" value="">
-                                                                                            <div class="input-group-addon" style="">
-                                                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                                        <div class="form-group">
+                                                                                            <label>Payment Date</label>
+                                                                                            <div class="input-group date" style="cursor: pointer;">
+                                                                                                <input type="text" class="form-control formClassDate paymentDate" id="paymentDate" name="paymentDate" value="">
+                                                                                                <div class="input-group-addon" style="">
+                                                                                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>

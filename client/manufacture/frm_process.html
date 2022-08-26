@@ -22,22 +22,6 @@
                             </div>
                             <div class="card-body">
                                 <div class="container-fluid">
-                                    <style>
-                                        .input-box {
-                                            position: relative;
-                                        }
-
-                                        .input-box > input.form-control {
-                                            padding-left: 2rem;
-                                        }
-
-                                        span.prefix {
-                                            position: absolute;
-                                            top: calc(50% - 10px);
-                                            left: 10px;
-                                            font-size: 14px;
-                                        }
-                                    </style>
                                     <div class="row">
                                         <div class="col-8">
                                             <div class="form-group">
@@ -65,7 +49,6 @@
                                             <div class="form-group">
                                                 <label>Hourly Labour Cost</label>
                                                 <div class="input-box">
-                                                    <span class="prefix">$</span>
                                                     <input type="text" class="form-control edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" value="{{processrecord.hourlyCost}}"/>
                                                 </div>
                                             </div>
@@ -89,7 +72,6 @@
                                             <div class="form-group">
                                                 <label>Hourly Overhead Cost</label>
                                                 <div class="input-box">
-                                                    <span class="prefix">$</span>
                                                     <input type="text" class="form-control edtHourlyCost edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" value="{{processrecord.oHourlyCost}}"/>
                                                 </div>
                                             </div>
@@ -115,8 +97,7 @@
                                                     <div class="form-group">
                                                         <label>Total Hourly Costs</label>
                                                         <div class="input-box">
-                                                            <span class="prefix">$</span>
-                                                            <input type="text" class="form-control edtTotalHourlyCosts" id="edtTotalHourlyCosts" value="{{processrecord.totalHCost}}" name="edtTotalHourlyCosts" />
+                                                            <input type="text" class="form-control edtTotalHourlyCosts" id="edtTotalHourlyCosts" value="{{processrecord.totalHCost}}" name="edtTotalHourlyCosts" disabled/>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -61,10 +61,10 @@ function handleTotalAmount( amountField, totalAmountCont ) {
 Template.employeescard.onCreated(function () {
     const templateObject = Template.instance();
     setTimeout(function () {
-        // $('#period').editableSelect('add','Hourly');
-        // $('#period').editableSelect('add','Daily');
-        // $('#period').editableSelect('add','Weekly');
-        // $('#period').editableSelect('add','Monthly');
+        $('#period').editableSelect('add','Hourly');
+        $('#period').editableSelect('add','Daily');
+        $('#period').editableSelect('add','Weekly');
+        $('#period').editableSelect('add','Monthly');
         $("#paymentDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
@@ -143,10 +143,10 @@ Template.employeescard.onCreated(function () {
 });
 
 Template.employeescard.onRendered(function () {
- 
+
     var erpGet = erpDb();
     LoadingOverlay.show();
-    
+
 
     Session.setPersistent('cloudCurrentLogonName', '');
 
@@ -3573,7 +3573,7 @@ Template.employeescard.onRendered(function () {
                     $(`#ptReimbursementAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.fields.Amount)|| 0.00 );
                 });
             }, 500);
-            
+
         }
 
     };
@@ -4564,328 +4564,328 @@ Template.employeescard.onRendered(function () {
 
 });
 Template.employeescard.events({
-    'click #edtResidencyStatus': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'Residency Status',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Australian Resident',
-                    value: true,
-                },
-                {
-                    title: 'Foreign Resident',
-                    value: false,
-                },
-                {
-                    value: 'Working Holiday Maker',
-                    title: 'Working Holiday Maker'
-                }
-    
-            ]
-        });
+    // 'click #edtResidencyStatus': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'Residency Status',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Australian Resident',
+    //                 value: true,
+    //             },
+    //             {
+    //                 title: 'Foreign Resident',
+    //                 value: false,
+    //             },
+    //             {
+    //                 value: 'Working Holiday Maker',
+    //                 title: 'Working Holiday Maker'
+    //             }
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #edtEmploymentBasis': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'Employment Basis',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Full-time employment',
-                    value: 'F',
-                },
-                {
-                    title: 'Part-time employment',
-                    value: 'P',
-                },
-                {
-                    title: 'Casual employment',
-                    value: 'C',
-                },
-                {
-                    title: 'Labour hire',
-                    value: 'L',
-                },
-                {
-                    title: 'Superannuation income stream',
-                    value: 'S',
-                },
+    //         ]
+    //     });
 
-    
-            ]
-        });
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #edtEmploymentBasis': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'Employment Basis',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Full-time employment',
+    //                 value: 'F',
+    //             },
+    //             {
+    //                 title: 'Part-time employment',
+    //                 value: 'P',
+    //             },
+    //             {
+    //                 title: 'Casual employment',
+    //                 value: 'C',
+    //             },
+    //             {
+    //                 title: 'Labour hire',
+    //                 value: 'L',
+    //             },
+    //             {
+    //                 title: 'Superannuation income stream',
+    //                 value: 'S',
+    //             },
 
-        
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #edtPayPeriod': (e, ui) => {
+
+    //         ]
+    //     });
+
+
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #edtPayPeriod': (e, ui) => {
         // $('#period').editableSelect('add','Hourly');
         // $('#period').editableSelect('add','Daily');
         // $('#period').editableSelect('add','Weekly');
         // $('#period').editableSelect('add','Monthly');
-        ui.AppTableModalData.set({
-            title: 'Pay Period',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Hourly',
-                    value: 'hourly',
-                },
-                {
-                    title: 'Daily',
-                    value: 'daily',
-                },
-                {
-                    title: 'Weekly',
-                    value: 'Weekly',
-                },
-                {
-                    title: 'Monthly',
-                    value: 'Monthly',
-                },
-            ]
-        });
+        // ui.AppTableModalData.set({
+        //     title: 'Pay Period',
+        //     headers: [
+        //         {title: 'Title'}
+        //     ],
+        //     body: [
+        //         {
+        //             title: 'Hourly',
+        //             value: 'hourly',
+        //         },
+        //         {
+        //             title: 'Daily',
+        //             value: 'daily',
+        //         },
+        //         {
+        //             title: 'Weekly',
+        //             value: 'Weekly',
+        //         },
+        //         {
+        //             title: 'Monthly',
+        //             value: 'Monthly',
+        //         },
+        //     ]
+        // });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #edtTfnExemption': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'TFN Exemption',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'No TFN Quoted',
-                    value: '0',
-                },
-                {
-                    title: 'TFN Pending',
-                    value: '1',
-                },
-                {
-                    title: 'TFN Exempt - Under 18',
-                    value: '2',
-                },
-                {
-                    title: 'TFN Exempt - Pensioner',
-                    value: '3',
-                },
-            ]
-        });
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #edtTfnExemption': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'TFN Exemption',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'No TFN Quoted',
+    //                 value: '0',
+    //             },
+    //             {
+    //                 title: 'TFN Pending',
+    //                 value: '1',
+    //             },
+    //             {
+    //                 title: 'TFN Exempt - Under 18',
+    //                 value: '2',
+    //             },
+    //             {
+    //                 title: 'TFN Exempt - Pensioner',
+    //                 value: '3',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#edtTaxFileNumber').val(''); // here we clear the value
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #leaveCalcMethodSelect': (e, ui) => {
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#edtTaxFileNumber').val(''); // here we clear the value
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #leaveCalcMethodSelect': (e, ui) => {
 
-        ui.AppTableModalData.set({
-            title: 'Leave Calculation Method',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Fixed Amount Each Period',
-                    value: 'Fixed Amount Each Period',
-                },
-                {
-                    title: 'Manually Recorded Rate',
-                    value: 'Manually Recorded Rate',
-                },
-                {
-                    title: 'No Calculation Required',
-                    value: 'No Calculation Required',
-                },
-                {
-                    title: 'Based on Ordinary Earnings',
-                    value: 'Based on Ordinary Earnings',
-                },
-            ]
-        });
+    //     ui.AppTableModalData.set({
+    //         title: 'Leave Calculation Method',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Fixed Amount Each Period',
+    //                 value: 'Fixed Amount Each Period',
+    //             },
+    //             {
+    //                 title: 'Manually Recorded Rate',
+    //                 value: 'Manually Recorded Rate',
+    //             },
+    //             {
+    //                 title: 'No Calculation Required',
+    //                 value: 'No Calculation Required',
+    //             },
+    //             {
+    //                 title: 'Based on Ordinary Earnings',
+    //                 value: 'Based on Ordinary Earnings',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    }, 
-    'click #onTerminationUnusedBalance': (e, ui) => {
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #onTerminationUnusedBalance': (e, ui) => {
 
-        ui.AppTableModalData.set({
-            title: 'On termination unused balance is:',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Not Paid Out',
-                    value: '0',
-                },
-                {
-                    title: 'Paid Out',
-                    value: '1',
-                },
-            ]
-        });
+    //     ui.AppTableModalData.set({
+    //         title: 'On termination unused balance is:',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Not Paid Out',
+    //                 value: '0',
+    //             },
+    //             {
+    //                 title: 'Paid Out',
+    //                 value: '1',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                if( value == '1' ){
-                    $('.eftLeaveTypeCont').removeClass('hideelement')
-                    $("#eftLeaveType").attr('checked', false)
-                }else{
-                    $('.eftLeaveTypeCont').addClass('hideelement')
-                    $('.superannuationGuaranteeCont').addClass('hideelement')
-                }
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             if( value == '1' ){
+    //                 $('.eftLeaveTypeCont').removeClass('hideelement')
+    //                 $("#eftLeaveType").attr('checked', false)
+    //             }else{
+    //                 $('.eftLeaveTypeCont').addClass('hideelement')
+    //                 $('.superannuationGuaranteeCont').addClass('hideelement')
+    //             }
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
     'keydown #edtTaxFileNumber': (e, ui) => {
         $('#edtTfnExemption').removeAttr('data-value');
         $('#edtTfnExemption').val('');
     },
-    'click #edtLeavePayPeriod': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'Leave Pay Period',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Hourly',
-                    value: 'hourly',
-                },
-                {
-                    title: 'Fortnightly',
-                    value: 'Fortnightly',
-                },
-                {
-                    title: 'Twice Monthly',
-                    value: 'Twice Monthly',
-                },
-                {
-                    title: 'Four Weekly',
-                    value: 'Four Weekly',
-                },
-                {
-                    title: 'Monthly',
-                    value: 'Monthly',
-                },
-                {
-                    title: 'Quarterly',
-                    value: 'Quarterly',
-                },
-            ]
-        });
+    // 'click #edtLeavePayPeriod': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'Leave Pay Period',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Hourly',
+    //                 value: 'hourly',
+    //             },
+    //             {
+    //                 title: 'Fortnightly',
+    //                 value: 'Fortnightly',
+    //             },
+    //             {
+    //                 title: 'Twice Monthly',
+    //                 value: 'Twice Monthly',
+    //             },
+    //             {
+    //                 title: 'Four Weekly',
+    //                 value: 'Four Weekly',
+    //             },
+    //             {
+    //                 title: 'Monthly',
+    //                 value: 'Monthly',
+    //             },
+    //             {
+    //                 title: 'Quarterly',
+    //                 value: 'Quarterly',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
-    'click #edtLeavePayStatus': (e, ui) => {
-        ui.AppTableModalData.set({
-            title: 'Leave Pay Status',
-            headers: [
-                {title: 'Title'}
-            ],
-            body: [
-                {
-                    title: 'Awaiting',
-                    value: 'Awaiting',
-                },
-                {
-                    title: 'Approved',
-                    value: 'Approved',
-                },
-                {
-                    title: 'Denied',
-                    value: 'Denied',
-                },
-            ]
-        });
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
+    // 'click #edtLeavePayStatus': (e, ui) => {
+    //     ui.AppTableModalData.set({
+    //         title: 'Leave Pay Status',
+    //         headers: [
+    //             {title: 'Title'}
+    //         ],
+    //         body: [
+    //             {
+    //                 title: 'Awaiting',
+    //                 value: 'Awaiting',
+    //             },
+    //             {
+    //                 title: 'Approved',
+    //                 value: 'Approved',
+    //             },
+    //             {
+    //                 title: 'Denied',
+    //                 value: 'Denied',
+    //             },
+    //         ]
+    //     });
 
-        setTimeout(() => {
-            $('#AppTableModal').modal('toggle');
-            $('#AppTableModal tbody tr').on('click', (event) => {
-                const value = $(event.currentTarget).find('td').attr('value');
-                const text = $(event.currentTarget).find('td').text();
-                $(e.currentTarget).attr('data-value', value);
-                $(e.currentTarget).val(text);
-                $('#AppTableModal').modal('toggle');
-                $('#AppTableModal tbody tr').off('click');
-            });
-        }, 300);
-    },
+    //     setTimeout(() => {
+    //         $('#AppTableModal').modal('toggle');
+    //         $('#AppTableModal tbody tr').on('click', (event) => {
+    //             const value = $(event.currentTarget).find('td').attr('value');
+    //             const text = $(event.currentTarget).find('td').text();
+    //             $(e.currentTarget).attr('data-value', value);
+    //             $(e.currentTarget).val(text);
+    //             $('#AppTableModal').modal('toggle');
+    //             $('#AppTableModal tbody tr').off('click');
+    //         });
+    //     }, 300);
+    // },
     'keyup #tblLeaveRequests_filter input': function (event) {
         if($(event.target).val() != ''){
           $(".btnRefreshLeaveRequest").addClass('btnSearchAlert');
@@ -4896,7 +4896,7 @@ Template.employeescard.events({
            $(".btnRefreshLeaveRequest").trigger("click");
         }
     },
-    'click .btnRefreshLeaveRequest':function(event){      
+    'click .btnRefreshLeaveRequest':function(event){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4908,7 +4908,7 @@ Template.employeescard.events({
 
             employeePayrollServices.getLeaveRequestByName(dataSearchName).then(function (data) {
                 $(".btnRefreshLeaveRequest").removeClass('btnSearchAlert');
-                let lineItems = []; 
+                let lineItems = [];
                 let splashArrayList = [];
                 let useData = LeaveRequest.fromList(
                     data.tleavrequest
@@ -4916,7 +4916,7 @@ Template.employeescard.events({
                     if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
                         return item;
                     }
-                });            
+                });
                 if (useData.length > 0) {
                     for (let i = 0; i < useData.length; i++) {
                         let dataListAllowance = [
@@ -4938,10 +4938,10 @@ Template.employeescard.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     swal({
                         title: 'Question',
                         text: "Leave Request does not exist, would you like to create it?",
@@ -4975,7 +4975,7 @@ Template.employeescard.events({
            $(".btnRefreshAssignLeave").trigger("click");
         }
     },
-    'click .btnRefreshAssignLeave':function(event){      
+    'click .btnRefreshAssignLeave':function(event){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4987,14 +4987,14 @@ Template.employeescard.events({
 
             employeePayrollServices.getAssignLeaveTypeByName(dataSearchName).then(function (data) {
                 $(".btnRefreshAssignLeave").removeClass('btnSearchAlert');
-                let lineItems = [];    
+                let lineItems = [];
                 let useData = AssignLeaveType.fromList(
                     data.tassignleavetype
                 ).filter((item) => {
                     if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
                         return item;
                     }
-                });            
+                });
                 if (useData.length > 0) {
                     for (let i = 0; i < useData.length; i++) {
                         let dataListAllowance = [
@@ -5022,10 +5022,10 @@ Template.employeescard.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     swal({
                         title: 'Question',
                         text: "Assign Leave does not exist, would you like to create it?",
@@ -7896,7 +7896,15 @@ Template.employeescard.events({
         await addVS1Data('TOpeningBalances', JSON.stringify(updatedOpeningBalances));
         $('.fullScreenSpin').css('display', 'none');
     },
+    // hide save button
+    'click .nav-link': function(e){
+        if($(e.target).hasClass('hideSaveButton')) {
+            $('#btnSaveEmployeePayroll').hide();
+        }  else {
+            $('#btnSaveEmployeePayroll').show();
+        }
 
+    },
     // Save active tab data
     'click #btnSaveEmployeePayroll': async (event) => {
         let activeTab = "";
@@ -7984,7 +7992,7 @@ Template.employeescard.events({
                     body: JSON.stringify(employeePaySettings),
                 });
 
-                if (ApiResponse.ok == true) {                  
+                if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
                     await templateObject.getEmployeePaySettings();
@@ -8066,6 +8074,46 @@ Template.employeescard.events({
             let bankAccountNo = $("#bankAccountNo").val();
             let EdtPayPeriod = $("#edtPayPeriod").val();
             let FirstPayDate = $("#edtFirstPayDate").val();
+            if( bankAccountStatement == "" ){
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter account statement',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+            if( bankAccountName == "" ){
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter account name',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+            if( bankAccountNo == "" ){
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter account number',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+            if( bankAccountBSB == "" ){
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter account BSB',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
             if( FirstPayDate == "" ){
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
@@ -8115,9 +8163,32 @@ Template.employeescard.events({
                     await templateObject.saveEmployeePaySettingsLocalDB();
                     await templateObject.getEmployeePaySettings();
                     $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Success",
+                        text: "Banking details has been saved",
+                        type: 'success',
+                    })
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to save banking details",
+                        type: 'error',
+                    })
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        //Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {}
+                });
             }
 
             return false;
@@ -8347,7 +8418,7 @@ Template.employeescard.events({
             let deductionLines = await templateObject.filterPayTemplates("deductionLines");
             let reiumbursementLines = await templateObject.filterPayTemplates("reiumbursementLines");
 
-            if( earningLines ){
+            if( earningLines.length > 0 ){
                 for (const item of earningLines) {
                     if( item.fields.Active == true ){
                         let EarningRate = $(`#ptEarningRate${item.fields.ID}`).val();
@@ -8386,7 +8457,7 @@ Template.employeescard.events({
                 }
             }
             // Fetch deduction lines values
-            if( deductionLines ){
+            if( deductionLines.length > 0 ){
                 for (const item of deductionLines) {
                     if( item.fields.Active == true ){
                         let DeductionType = $(`#ptDeductionType${item.fields.ID}`).val();
@@ -8428,7 +8499,7 @@ Template.employeescard.events({
                 }
             }
             // Fetch superannuation funds values
-            if( superannuationLines ){
+            if( superannuationLines.length > 0 ){
                 for (const item of superannuationLines) {
                     if( item.fields.Active == true ){
                         let SuperannuationFund = $(`#ptSuperannuationFund${item.fields.ID}`).val();
@@ -8472,7 +8543,7 @@ Template.employeescard.events({
                 }
             }
             // Fetch reiumbursement funds values
-            if( reiumbursementLines ){
+            if( reiumbursementLines.length > 0 ){
                 for (const item of reiumbursementLines) {
                     if( item.fields.Active == true ){
                         let ReiumbursementType = $(`#ptReimbursementType${item.fields.ID}`).val();
@@ -8512,21 +8583,14 @@ Template.employeescard.events({
                 }
             }
 
-            // if (ApiResponse.ok == true) {
+            if( deductionLines.length > 0 || earningLines.length > 0 || superannuationLines.length > 0 || reiumbursementLines.length > 0 ){
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: "Success",
                     text: "Pay template has been saved",
                     type: 'success',
                 })
-            // }else{
-            //     $('.fullScreenSpin').css('display', 'none');
-            //     swal({
-            //         title: "Error",
-            //         text: "Failed to save pay template",
-            //         type: 'error',
-            //     })
-            // }
+            }
 
         }else if(activeTab == "openingbalances") {
             $('.fullScreenSpin').show();
@@ -8540,7 +8604,7 @@ Template.employeescard.events({
              */
             let tOpeningBalance = [];
             let obEarningLines = templateObject.filterOpeningBalance(0);
-            if( obEarningLines ){
+            if( obEarningLines.length > 0 ){
                 for (const item of obEarningLines) {
                     if( item.fields.Active == true ){
                         let AType = $(`#obEarningRate${item.fields.ID}`).val();
@@ -8563,7 +8627,7 @@ Template.employeescard.events({
              * Fetch deduction Opening fields data
              */
             let obDeductionLines = templateObject.filterOpeningBalance(1);
-            if( obDeductionLines ){
+            if( obDeductionLines.length > 0 ){
                 for (const item of obDeductionLines) {
                     if( item.fields.Active == true ){
                         let AType = $(`#obDeductionLine${item.fields.ID}`).val();
@@ -8586,7 +8650,7 @@ Template.employeescard.events({
              * Fetch superannuation Opening fields data
              */
              let obSAnnuationLines = templateObject.filterOpeningBalance(2);
-             if( obSAnnuationLines ){
+             if( obSAnnuationLines.length > 0 ){
                  for (const item of obSAnnuationLines) {
                      if( item.fields.Active == true ){
                          let AType = $(`#obSuperannuationFund${item.fields.ID}`).val();
@@ -8609,7 +8673,7 @@ Template.employeescard.events({
              * Fetch Reinmbursment Opening fields data
              */
              let obReImbursmentLines = templateObject.filterOpeningBalance(3);
-             if( obReImbursmentLines ){
+             if( obReImbursmentLines.length > 0 ){
                  for (const item of obReImbursmentLines) {
                      if( item.fields.Active == true ){
                          let AType = $(`#obReimbursementFund${item.fields.ID}`).val();
@@ -8630,39 +8694,48 @@ Template.employeescard.events({
             }
 
             // Making bulk saving object
-            let openingBalanceObj = {
-                type: "TOpeningBalances",
-                objects:tOpeningBalance
-            };
+            if( tOpeningBalance.length > 0 ){
+                let openingBalanceObj = {
+                    type: "TOpeningBalances",
+                    objects: tOpeningBalance
+                };
 
-            const employeePayrolApis = new EmployeePayrollApi();
+                const employeePayrolApis = new EmployeePayrollApi();
 
-            apiEndpoint = employeePayrolApis.collection.findByName(
-                employeePayrolApis.collectionNames.TOpeningBalances
-            );
+                apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TOpeningBalances
+                );
 
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(openingBalanceObj),
-            });
-            if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                $('#obEarningsRate').val('');
-                await templateObject.saveOpeningBalanceLocalDB();
-                await templateObject.getOpeningBalances();
-                $('#addEarningsLineModal2').modal('hide');
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: "Success",
-                    text: "Opening balances has been saved",
-                    type: 'success',
-                })
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(openingBalanceObj),
+                });
+                if (ApiResponse.ok == true) {
+                    const jsonResponse = await ApiResponse.json();
+                    $('#obEarningsRate').val('');
+                    await templateObject.saveOpeningBalanceLocalDB();
+                    await templateObject.getOpeningBalances();
+                    $('#addEarningsLineModal2').modal('hide');
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Success",
+                        text: "Opening balances has been saved",
+                        type: 'success',
+                    })
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: "Error",
+                        text: "Failed to save opening balances",
+                        type: 'error',
+                    })
+                }
             }else{
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: "Error",
-                    text: "Failed to save opening balances",
+                    text: "Please add opening balance",
                     type: 'error',
                 })
             }
