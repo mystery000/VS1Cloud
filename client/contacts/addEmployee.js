@@ -7896,7 +7896,16 @@ Template.employeescard.events({
         await addVS1Data('TOpeningBalances', JSON.stringify(updatedOpeningBalances));
         $('.fullScreenSpin').css('display', 'none');
     },
-
+    // hide save button
+    'click .nav-link': function(e){
+        console.log('clicked');
+        if($(e.target).hasClass('hideSaveButton')) {
+            $('#btnSaveEmployeePayroll').hide(); 
+        }  else {
+            $('#btnSaveEmployeePayroll').show();
+        }
+        console.log('else');
+    },
     // Save active tab data
     'click #btnSaveEmployeePayroll': async (event) => {
         let activeTab = "";
