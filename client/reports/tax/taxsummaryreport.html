@@ -51,12 +51,14 @@
                                                 <div class="modal-header">
                                                     <h4>Deparment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                 <div class="modal-body">
+                                                    {{#if deptrecords}}
                                                     {{#each item in deptrecords}}
                                                     <div class="custom-control custom-switch" style="margin: 8px;">
                                                         <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
                                                         <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
                                                     </div>
                                                     {{/each}}
+                                                    {{/if}}
                                                 </div>
                                                 <div class="modal-footer"><button class="btn btn-primary" type="button" data-dismiss="modal"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button><button class="btn btn-light" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
                                             </div>
@@ -120,7 +122,23 @@
                         </div>
                         <div class="printReport">
                             <div class="row">
-                                <div class="col">
+                                <div class="col-12 col-md-4">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio"
+                                            name="taxCodeCategory" id="mainTaxCode" checked>
+                                        <label class="form-check-label" for="mainTaxCode">
+                                            Main Taxcode
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio"
+                                            name="taxCodeCategory" id="subTaxCode">
+                                        <label class="form-check-label" for="subTaxCode">
+                                            Sub Taxcode
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
                                     <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Tax Summary</p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
                                     <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
@@ -145,6 +163,9 @@
                                         <thead>
                                             <tr class="table-active">
                                                 <th>Tax Code</th>
+                                                {{#if isSub}}
+                                                <th>Sub Tax Code</th>
+                                                {{/if}}
                                                 <th class="text-right">Inputs Ex (Purchases)</th>
                                                 <!-- <th>INPUTS Inc (Purchases)</th> -->
                                                 <th class="text-right">Outputs Ex (Sales)</th>
@@ -158,8 +179,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{#if reportrecords}}
-                                            {{#each items in reportrecords}}
+                                            {{#if reportRecords}}
+                                            {{#each items in reportRecords}}
                                             <tr class="totalhr">
                                                 <td colspan="10" style="font-weight: 800;">
 
@@ -167,6 +188,9 @@
                                             </tr>
                                             <tr>
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="/supplierscard?id={{items.clientid}}" style="text-decoration:none!important;">{{items.taxcode}}</a></strong></span></td>
+                                                {{#if isSub}}
+                                                <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="/supplierscard?id={{items.clientid}}" style="text-decoration:none!important;">{{items.subtaxcode}}</a></strong></span></td>
+                                                {{/if}}
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="#" style="text-decoration:none!important;">{{items.inputsexpurchases}}</a></strong></span></td>
                                                 <!-- <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="#" style="text-decoration:none!important;">{{items.inputsincpurchases}}</a></strong></span></td> -->
                                                 <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong><a href="#" style="text-decoration:none!important;">{{items.outputexsales}}</a></strong></span></td>
@@ -180,9 +204,9 @@
                                             </tr>
                                             {{/each}}
 
-                                            {{#if grandrecords}}
+                                            {{#if grandRecords}}
                                             <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-                                                {{#each item in grandrecords}}
+                                                {{#each item in grandRecords}}
                                                 <td>{{item}}</td>
                                                 {{/each}}
 
@@ -191,7 +215,6 @@
                                             {{else}}
                                             <tr class="odd" style="text-align: center;"><td valign="top" colspan="10" class="dataTables_empty">No data available in table</td></tr>
                                             {{/if}}
-
                                         </tbody>
                                     </table>
                                 </div>

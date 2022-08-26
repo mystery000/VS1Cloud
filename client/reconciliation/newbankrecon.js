@@ -839,8 +839,6 @@ Template.newbankrecon.onRendered(function() {
             } else {
                 templateObject.defaultCustomerTerms.set('test');
             }
-        // }).catch(function(err) {
-        //     console.log(err);
         });
     };
     templateObject.getDefaultSupplierTerms = function() {

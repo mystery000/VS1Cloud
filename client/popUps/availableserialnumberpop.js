@@ -23,7 +23,6 @@ Template.availableserialnumberpop.onRendered(async () => {
     $(document).on('click', '.serial-no-row', function() {
         const activeNumber = $('.serial-no-row.active').length;
         const productItems = localStorage.getItem('productItem');
-        console.log(activeNumber, productItems, activeNumber < productItems);
         if (parseInt(activeNumber) < parseInt(productItems)) {
             $(this).toggleClass('active');
         } else {
@@ -58,7 +57,7 @@ Template.availableserialnumberpop.events({
             }
             $('#tblSeriallist').html(shtml);
         }
-        
+
         $('#availableSerialNumberModal').modal('hide');
     }
 });

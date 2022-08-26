@@ -4625,6 +4625,7 @@ Template.new_invoice.onRendered(() => {
        function showInvoice1(template_title,number) {
             var array_data = [];
             let lineItems = [];
+            let taxItems = {};
             object_invoce = [];
             let item_invoices = '';
             let invoice_data = templateObject.invoicerecord.get();
@@ -4669,6 +4670,32 @@ Template.new_invoice.onRendered(() => {
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
                 let taxamount = $('#' + lineID + " .colTaxAmount").text();
                 let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+
+                let targetRow = $('#' + lineID);
+                let targetTaxCode = targetRow.find('.lineTaxCode').val();
+                let qty = targetRow.find(".lineQty").val() || 0
+                let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+                const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+                if (taxDetail) {
+                    let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+                    let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+                    if (taxDetail.Lines) {
+                        taxDetail.Lines.map((line) => {
+                            let taxCode = line.SubTaxCode;
+                            let amount = priceTotal * line.Percentage / 100;
+                            if (taxItems[taxCode]) {
+                                taxItems[taxCode] += amount;
+                            }
+                            else {
+                                taxItems[taxCode] = amount;
+                            }
+                        });
+                    }
+                    else {
+                        taxItems[targetTaxCode] = taxTotal;
+                    }
+                }
 
                 array_data.push([
                     tdproduct,
@@ -4839,8 +4866,7 @@ Template.new_invoice.onRendered(() => {
 
             }
 
-
-
+            item_invoices.taxItems = taxItems;
 
             object_invoce.push(item_invoices);
 
@@ -8455,6 +8481,53 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 $("#html-Invoice-pdfwrapper .print-header").text('Invoice '+invoice_data_info.id);
             }
             document.getElementById('html-Invoice-pdfwrapper').style.display="block";
+
+            let taxItems = {};
+            $('#tblInvoiceLine > tbody > tr').each(function () {
+                var lineID = this.id;
+                let targetRow = $('#' + lineID);
+                let targetTaxCode = targetRow.find('.lineTaxCode').val();
+                let qty = targetRow.find(".lineQty").val() || 0
+                let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+                const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+                if (taxDetail) {
+                    let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+                    let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+                    if (taxDetail.Lines) {
+                        taxDetail.Lines.map((line) => {
+                            let taxCode = line.SubTaxCode;
+                            let amount = priceTotal * line.Percentage / 100;
+                            if (taxItems[taxCode]) {
+                                taxItems[taxCode] += amount;
+                            }
+                            else {
+                                taxItems[taxCode] = amount;
+                            }
+                        });
+                    }
+                    else {
+                        taxItems[targetTaxCode] = taxTotal;
+                    }
+                }
+            });
+            $("#html-Invoice-pdfwrapper #tax_list_print").html("");
+            Object.keys(taxItems).map((code) => {
+                let html = `
+                    <div style="width: 100%; display: flex;">
+                        <div style="padding-right: 16px; width: 50%;">
+                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                ${code}</p>
+                        </div>
+                        <div style="padding-left: 16px; width: 50%;">
+                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                $${taxItems[code].toFixed(2)}</p>
+                        </div>
+                    </div>
+                `;
+                $("#html-Invoice-pdfwrapper #tax_list_print").append(html);
+            });
+
             var source = document.getElementById('html-Invoice-pdfwrapper');
             let file = '';
             if(localStorage.getItem('invoice_type') == 'bo')
@@ -8720,6 +8793,28 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 tbl_header.append("<th style='background:white;width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
           }
         }
+
+        if (object_invoce[0]["taxItems"]) {
+                
+            let taxItems = object_invoce[0]["taxItems"];
+            $("#htemplatePreviewModal #tax_list_print").html("");
+            Object.keys(taxItems).map((code) => {
+                let html = `
+                    <div style="width: 100%; display: flex;">
+                        <div style="padding-right: 16px; width: 50%;">
+                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                ${code}</p>
+                        </div>
+                        <div style="padding-left: 16px; width: 50%;">
+                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                $${taxItems[code].toFixed(2)}</p>
+                        </div>
+                    </div>
+                `;
+                $("#templatePreviewModal #tax_list_print").append(html);
+            });
+        }
+        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
 
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content")
@@ -9029,12 +9124,12 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 let html = `
                     <div style="width: 100%; display: flex;">
                         <div style="padding-right: 16px; width: 50%;">
-                            <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
                                 ${code}</p>
                         </div>
                         <div style="padding-left: 16px; width: 50%;">
-                            <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
-                                $ ${taxItems[code]}</p>
+                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                $${taxItems[code].toFixed(2)}</p>
                         </div>
                     </div>
                 `;

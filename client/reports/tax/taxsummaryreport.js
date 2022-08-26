@@ -7,8 +7,13 @@ let utilityService = new UtilityService();
 Template.taxsummaryreport.onCreated(()=>{
 const templateObject = Template.instance();
 templateObject.records = new ReactiveVar([]);
-templateObject.reportrecords = new ReactiveVar([]);
-templateObject.grandrecords = new ReactiveVar();
+templateObject.reportRecords = new ReactiveVar([]);
+templateObject.mainReportRecords = new ReactiveVar([]);
+templateObject.subReportRecords = new ReactiveVar([]);
+templateObject.isSub = new ReactiveVar([]);
+templateObject.grandRecords = new ReactiveVar();
+templateObject.mainGrandRecords = new ReactiveVar();
+templateObject.subGrandRecords = new ReactiveVar();
 templateObject.dateAsAt = new ReactiveVar();
 templateObject.deptrecords = new ReactiveVar();
 });
@@ -75,9 +80,15 @@ Template.taxsummaryreport.onRendered(()=>{
           let grandtotalRecord = [];
 
         if(data.ttaxsummaryreport.length){
-          localStorage.setItem('VS1TaxSummary_Report', JSON.stringify(data)||'');
+          const taxSummaryReport = data.ttaxsummaryreport;
+
+          reportService.getTaxCodesDetailVS1().then(function(data) {
+          const taxCodesDetail = data.ttaxcodevs1;
+
+          // localStorage.setItem('VS1TaxSummary_Report', JSON.stringify(data)||'');
           let records = [];
-          let reportrecords =[];
+          let mainReportRecords =[];
+          let subReportRecords =[];
           let allRecords = [];
           let current = [];
 
@@ -87,22 +98,23 @@ Template.taxsummaryreport.onRendered(()=>{
           let incArr = [];
           let cogsArr = [];
           let expArr = [];
-          let accountData = data.ttaxsummaryreport;
+          let accountData = taxSummaryReport;
           let accountType = '';
+          let subTaxSummaryData = [];
 
-          for (let i = 0; i < accountData.length; i++) {
+          for (let i = 0; i < taxSummaryReport.length; i++) {
 
-            let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(data.ttaxsummaryreport[i].INPUT_AmountEx) || 0;
-            let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(data.ttaxsummaryreport[i].INPUT_AmountInc) || 0;
-            let outputexsales = utilityService.modifynegativeCurrencyFormat(data.ttaxsummaryreport[i].OUTPUT_AmountEx) || 0;
-            let outputincsales = utilityService.modifynegativeCurrencyFormat(data.ttaxsummaryreport[i].OUTPUT_AmountInc) || 0;
-            let totalnet = utilityService.modifynegativeCurrencyFormat(data.ttaxsummaryreport[i].TotalNet) || 0;
-            let totaltax = utilityService.modifynegativeCurrencyFormat(data.ttaxsummaryreport[i].TotalTax) || 0;
-            let totaltax1 = utilityService.modifynegativeCurrencyFormat(data.ttaxsummaryreport[i].TotalTax1) || 0;
-            var dataList = {
-              id: data.ttaxsummaryreport[i].ID || '',
-              taxcode:data.ttaxsummaryreport[i].TaxCode || '',
-              clientid:data.ttaxsummaryreport[i].ClientID || '',
+            let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountEx) || 0;
+            let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountInc) || 0;
+            let outputexsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountEx) || 0;
+            let outputincsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountInc) || 0;
+            let totalnet = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalNet) || 0;
+            let totaltax = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax) || 0;
+            let totaltax1 = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax1) || 0;
+            const mainReportData = {
+              id: taxSummaryReport[i].ID || '',
+              taxcode:taxSummaryReport[i].TaxCode || '',
+              clientid:taxSummaryReport[i].ClientID || '',
               inputsexpurchases: inputsexpurchases,
               inputsincpurchases: inputsincpurchases,
               outputexsales: outputexsales,
@@ -110,33 +122,59 @@ Template.taxsummaryreport.onRendered(()=>{
               totalnet: totalnet || 0.00,
               totaltax: totaltax || 0.00,
               totaltax1: totaltax1 || 0.00,
-              taxrate: (data.ttaxsummaryreport[i].TaxRate * 100).toFixed(2) + '%' || 0,
-              taxrate2: (data.ttaxsummaryreport[i].TaxRate * 100).toFixed(2) || 0
+              taxrate: (taxSummaryReport[i].TaxRate * 100).toFixed(2) + '%' || 0,
+              taxrate2: (taxSummaryReport[i].TaxRate * 100).toFixed(2) || 0
 
-          };
+            };
 
-          reportrecords.push(dataList);
+            mainReportRecords.push(mainReportData);
+
+            const taxDetail = taxCodesDetail.find((v) => v.CodeName === taxSummaryReport[i].TaxCode);
+            if(taxDetail && taxDetail.Lines) {
+              for (let j = 0; j < taxDetail.Lines.length; j++) {
+                const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
+                const subReportData = {
+                  id: taxSummaryReport[i].ID || '',
+                  taxcode:taxSummaryReport[i].TaxCode || '',
+                  subtaxcode:taxDetail.Lines[j].SubTaxCode || '',
+                  clientid:'',
+                  inputsexpurchases: inputsexpurchases,
+                  inputsincpurchases: inputsincpurchases,
+                  outputexsales: outputexsales,
+                  outputincsales: outputincsales,
+                  totalnet: totalnet || 0.00,
+                  totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
+                  totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
+                  taxrate: (taxDetail.Lines[j].Percentage ).toFixed(2) + '%' || 0,
+                  taxrate2: (taxDetail.Lines[j].Percentage ).toFixed(2) || 0    
+                };
+                subReportRecords.push(subReportData);
+              }
+            }
 
 
 
-        //   if((data.ttaxsummaryreport[i].AmountDue != 0) || (data.ttaxsummaryreport[i].Current != 0)
-        //   || (data.ttaxsummaryreport[i]["30Days"] != 0) || (data.ttaxsummaryreport[i]["60Days"] != 0)
-        // || (data.ttaxsummaryreport[i]["90Days"] != 0) || (data.ttaxsummaryreport[i]["120Days"] != 0)){
-      //  records.push(recordObj);
+          //   if((taxSummaryReport[i].AmountDue != 0) || (taxSummaryReport[i].Current != 0)
+          //   || (taxSummaryReport[i]["30Days"] != 0) || (taxSummaryReport[i]["60Days"] != 0)
+          // || (taxSummaryReport[i]["90Days"] != 0) || (taxSummaryReport[i]["120Days"] != 0)){
+          //  records.push(recordObj);
           //}
 
 
 
-        }
+            }
 
-        reportrecords = _.sortBy(reportrecords, 'taxcode');
-        templateObject.reportrecords.set(reportrecords);
-        //   records = _.sortBy(records, 'SupplierName');
-        // records = _.groupBy(records, 'SupplierName');
-        for (let key in records) {
-            let obj = [{key: key}, {data: records[key]}];
-            allRecords.push(obj);
-        }
+            mainReportRecords = _.sortBy(mainReportRecords, 'taxcode');
+            subReportRecords = _.sortBy(subReportRecords, 'subtaxcode');
+            
+            templateObject.mainReportRecords.set(mainReportRecords);
+            templateObject.reportRecords.set(mainReportRecords);
+            //   records = _.sortBy(records, 'SupplierName');
+            // records = _.groupBy(records, 'SupplierName');
+            for (let key in records) {
+              let obj = [{key: key}, {data: records[key]}];
+              allRecords.push(obj);
+            }
 
         let iterator = 0;
         let inputsexpurchasestotal = 0;
@@ -147,19 +185,19 @@ Template.taxsummaryreport.onRendered(()=>{
         let taxtotal = 0;
         let taxratetotal = 0;
         let taxtotal1 = 0;
-      for (let i = 0; i < reportrecords.length; i++) {
+      for (let i = 0; i < mainReportRecords.length; i++) {
 
 
 
           const currencyLength = Currency.length;
-          inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(reportrecords[i].inputsexpurchases);
-          inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(reportrecords[i].inputsincpurchases);
-          outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(reportrecords[i].outputexsales);
-          outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(reportrecords[i].outputincsales);
-          nettotal = nettotal + utilityService.convertSubstringParseFloat(reportrecords[i].totalnet);
-          taxtotal = taxtotal + utilityService.convertSubstringParseFloat(reportrecords[i].totaltax);
-          taxratetotal = taxratetotal + Number(reportrecords[i].taxrate2.replace(/[^0-9.-]+/g,"")) || 0;
-          taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(reportrecords[i].totaltax1);
+          inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsexpurchases);
+          inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsincpurchases);
+          outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputexsales);
+          outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputincsales);
+          nettotal = nettotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totalnet);
+          taxtotal = taxtotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax);
+          taxratetotal = taxratetotal + Number(mainReportRecords[i].taxrate2.replace(/[^0-9.-]+/g,"")) || 0;
+          taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax1);
 
           let val = ['', utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal), utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
               utilityService.modifynegativeCurrencyFormat(outputexsalestotal), utilityService.modifynegativeCurrencyFormat(outputincsalestotal), utilityService.modifynegativeCurrencyFormat(nettotal), utilityService.modifynegativeCurrencyFormat(taxtotal),'', utilityService.modifynegativeCurrencyFormat(taxtotal1)];
@@ -167,9 +205,8 @@ Template.taxsummaryreport.onRendered(()=>{
 
       }
 
-
-    let grandval = ['Grand Total ' +  '',
-    // '','',
+    let mainGrandval = ['Grand Total ' +  '',
+      // '','',
       '',
       '',
       // '',
@@ -180,40 +217,84 @@ Template.taxsummaryreport.onRendered(()=>{
       '',
       utilityService.modifynegativeCurrencyFormat(taxtotal)];
       // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
+    
+    let subGrandval = ['Grand Total ' +  '',
+      '',
+      '',
+      '',
+      utilityService.modifynegativeCurrencyFormat(nettotal),
+      '',
+      utilityService.modifynegativeCurrencyFormat(taxtotal)];
 
-        //templateObject.records.set(totalRecord);
-        templateObject.grandrecords.set(grandval);
+    //templateObject.records.set(totalRecord);
+    templateObject.mainGrandRecords.set(mainGrandval);
+    templateObject.subGrandRecords.set(subGrandval);
+    templateObject.grandRecords.set(mainGrandval);
 
 
-        if(templateObject.reportrecords.get()){
-          setTimeout(function () {
-            $('td a').each(function(){
-              if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-               });
-           $('td').each(function(){
-             if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-            });
+          let i = 0, posToAdd = -1, currentSubCode, subReportRecordsSize = subReportRecords.length;
+          
+          // i should be iterated being lower than subReportRecordsSize, but iterated once more to summing last group
+          while (i <= subReportRecordsSize) {
+            if(i===subReportRecordsSize || currentSubCode !== subReportRecords[i].subtaxcode) {
+              if(posToAdd>=0) {
+                const taxDetail = taxCodesDetail.find((v) => v.CodeName === subReportRecords[i-1].taxcode);
 
-            $('td').each(function(){
+                const subReportData = {
+                  id: taxDetail.ID,
+                  taxcode:'',
+                  subtaxcode: subReportRecords[i-1].subtaxcode || '',
+                  clientid:'',
+                  inputsexpurchases: utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal),
+                  inputsincpurchases: utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
+                  outputexsales: utilityService.modifynegativeCurrencyFormat(outputexsalestotal),
+                  outputincsales: utilityService.modifynegativeCurrencyFormat(outputincsalestotal),
+                  totalnet: utilityService.modifynegativeCurrencyFormat(nettotal) || 0.00,
+                  totaltax: utilityService.modifynegativeCurrencyFormat(taxtotal) || 0.00,
+                  totaltax1: utilityService.modifynegativeCurrencyFormat(taxtotal1) || 0.00,
+                  taxrate: (taxratetotal).toFixed(2) + '%' || 0,
+                  taxrate2: (taxratetotal ).toFixed(2) || 0    
+                };
+                subReportRecords.splice(posToAdd, 0, subReportData);
 
-              let lineValue = $(this).first().text()[0];
-              if(lineValue != undefined){
-                if(lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
+                // if this is last group summing, don't need to continue iterating
+                if(i===subReportRecordsSize) break;
+
+                i++;
+                subReportRecordsSize++;
               }
 
-             });
+                posToAdd = i; 
+                currentSubCode = subReportRecords[i].subtaxcode;
 
-             $('td').each(function(){
-               if($(this).first().text().indexOf('-'+Currency) >= 0) $(this).addClass('text-right')
-              });
+                inputsexpurchasestotal = 0;
+                inputsincpurchasestotal = 0;
+                outputexsalestotal = 0;
+                outputincsalestotal = 0;
+                nettotal = 0;
+                taxtotal = 0;
+                taxratetotal = 0;
+                taxtotal1 = 0;
+              }
 
-              $('td:nth-child(8)').each(function(){
-                $(this).addClass('text-right');
-              });
-              $('.fullScreenSpin').css('display','none');
-          }, 100);
-        }
+              inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].inputsexpurchases);
+              inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].inputsincpurchases);
+              outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].outputexsales);
+              outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].outputincsales);
+              nettotal = nettotal + utilityService.convertSubstringParseFloat(subReportRecords[i].totalnet);
+              taxtotal = taxtotal + utilityService.convertSubstringParseFloat(subReportRecords[i].totaltax);
+              taxratetotal = taxratetotal + Number(subReportRecords[i].taxrate2.replace(/[^0-9.-]+/g,"")) || 0;
+              taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(subReportRecords[i].totaltax1);
 
+              i++;
+            }
+          templateObject.subReportRecords.set(subReportRecords);
+
+          if(templateObject.mainReportRecords.get()){
+            templateObject.stylizeForm();
+          }
+          templateObject.isSub.set(false);
+        });
       }else{
         let records = [];
         let recordObj = {};
@@ -230,7 +311,7 @@ Template.taxsummaryreport.onRendered(()=>{
             '-',
             '-',
             '-',
-           '-'
+            '-'
         ];
 
         records.push(recordObj);
@@ -414,6 +495,35 @@ Template.taxsummaryreport.onRendered(()=>{
 
       }
     };
+
+    templateObject.stylizeForm = function() {
+      setTimeout(function () {
+        $('td a').each(function(){
+          if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+          });
+        $('td').each(function(){
+          if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+          });
+
+        $('td').each(function(){
+
+          let lineValue = $(this).first().text()[0];
+          if(lineValue != undefined){
+            if(lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
+          }
+
+        });
+
+        $('td').each(function(){
+          if($(this).first().text().indexOf('-'+Currency) >= 0) $(this).addClass('text-right')
+        });
+
+        $('td:nth-child(8)').each(function(){
+          $(this).addClass('text-right');
+        });
+        $('.fullScreenSpin').css('display','none');
+      }, 100);
+    }
 
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
@@ -749,6 +859,23 @@ Template.taxsummaryreport.onRendered(()=>{
       }else{
         $('.table tbody tr').show();
       }
+    },
+    'click #mainTaxCode':function(event){
+      const reportData = Template.instance().mainReportRecords.get();
+      Template.instance().reportRecords.set(reportData);
+      const grandData = Template.instance().mainGrandRecords.get();
+      Template.instance().grandRecords.set(grandData);
+      Template.instance().isSub.set(false);
+      Template.instance().stylizeForm();
+      
+    },
+    'click #subTaxCode':function(event){
+      const reportData = Template.instance().subReportRecords.get();
+      Template.instance().reportRecords.set(reportData);
+      const grandData = Template.instance().subGrandRecords.get();
+      Template.instance().grandRecords.set(grandData);
+      Template.instance().isSub.set(true);
+      Template.instance().stylizeForm();
     }
 
 
@@ -767,13 +894,31 @@ Template.taxsummaryreport.onRendered(()=>{
      // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
      // });
     },
-    reportrecords : () => {
-       return Template.instance().reportrecords.get();
+    reportRecords : () => {
+       return Template.instance().reportRecords.get();
     },
 
-    grandrecords: () => {
-       return Template.instance().grandrecords.get();
-   },
+    mainReportRecords : () => {
+      return Template.instance().mainReportRecords.get();
+    },
+
+    subReportRecords : () => {
+      return Template.instance().subReportRecords.get();
+    },
+
+    isSub : () => {
+      return Template.instance().isSub.get();
+    },
+
+    grandRecords: () => {
+       return Template.instance().grandRecords.get();
+    },
+    mainGrandRecords: () => {
+      return Template.instance().mainGrandRecords.get();
+    },
+    subGrandRecords: () => {
+      return Template.instance().subGrandRecords.get();
+    },
     dateAsAt: () =>{
         return Template.instance().dateAsAt.get() || '-';
     },
@@ -781,15 +926,21 @@ Template.taxsummaryreport.onRendered(()=>{
         return loggedCompany;
     },
     deptrecords: () => {
-        return Template.instance().deptrecords.get().sort(function(a, b){
+      const deptData = Template.instance().deptrecords.get();
+      if(deptData) {
+        return deptData.sort(function(a, b){
           if (a.department == 'NA') {
-        return 1;
-            }
-        else if (b.department == 'NA') {
-          return -1;
-        }
-      return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
-      });
+            return 1;
+          }
+          else if (b.department == 'NA') {
+            return -1;
+          }
+          return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
+          
+        });
+      } else {
+        return deptData;
+      }
     }
   });
   Template.registerHelper('equals', function (a, b) {

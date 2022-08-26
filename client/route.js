@@ -743,7 +743,7 @@ authenticatedRoutes.route('/allreports', {
     }
 });
 
-authenticatedRoutes.route('/accountant/company', {
+authenticatedRoutes.route('/accountant_company', {
     name: 'accountant_company',
     action() {
         BlazeLayout.render('layout', {
@@ -752,7 +752,7 @@ authenticatedRoutes.route('/accountant/company', {
     }
 });
 
-authenticatedRoutes.route('/accountant/companyastrustee', {
+authenticatedRoutes.route('/accountant_companyastrustee', {
     name: 'accountant_companyastrustee',
     action() {
         BlazeLayout.render('layout', {
@@ -761,7 +761,7 @@ authenticatedRoutes.route('/accountant/companyastrustee', {
     }
 });
 
-authenticatedRoutes.route('/accountant/financialstatement', {
+authenticatedRoutes.route('/accountant_financialstatement', {
     name: 'accountant_financialstatement',
     action() {
         BlazeLayout.render('layout', {
@@ -770,7 +770,7 @@ authenticatedRoutes.route('/accountant/financialstatement', {
     }
 });
 
-authenticatedRoutes.route('/accountant/individual', {
+authenticatedRoutes.route('/accountant_individual', {
     name: 'accountant_individual',
     action() {
         BlazeLayout.render('layout', {
@@ -779,7 +779,7 @@ authenticatedRoutes.route('/accountant/individual', {
     }
 });
 
-authenticatedRoutes.route('/accountant/partnershipnontrading', {
+authenticatedRoutes.route('/accountant_partnershipnontrading', {
     name: 'accountant_partnershipnontrading',
     action() {
         BlazeLayout.render('layout', {
@@ -788,7 +788,7 @@ authenticatedRoutes.route('/accountant/partnershipnontrading', {
     }
 });
 
-authenticatedRoutes.route('/accountant/trustnontrading', {
+authenticatedRoutes.route('/accountant_trustnontrading', {
     name: 'accountant_trustnontrading',
     action() {
         BlazeLayout.render('layout', {
@@ -797,7 +797,7 @@ authenticatedRoutes.route('/accountant/trustnontrading', {
     }
 });
 
-authenticatedRoutes.route('/accountant/selfmanagedsuperfund', {
+authenticatedRoutes.route('/accountant_selfmanagedsuperfund', {
     name: 'accountant_selfmanagedsuperfund',
     action() {
         BlazeLayout.render('layout', {
@@ -806,7 +806,7 @@ authenticatedRoutes.route('/accountant/selfmanagedsuperfund', {
     }
 });
 
-authenticatedRoutes.route('/accountant/singledirector', {
+authenticatedRoutes.route('/accountant_singledirector', {
     name: 'accountant_singledirector',
     action() {
         BlazeLayout.render('layout', {
@@ -815,7 +815,7 @@ authenticatedRoutes.route('/accountant/singledirector', {
     }
 });
 
-authenticatedRoutes.route('/accountant/soletradernontrading', {
+authenticatedRoutes.route('/accountant_soletradernontrading', {
     name: 'accountant_soletradernontrading',
     action() {
         BlazeLayout.render('layout', {
@@ -824,7 +824,7 @@ authenticatedRoutes.route('/accountant/soletradernontrading', {
     }
 });
 
-authenticatedRoutes.route('/accountant/trust', {
+authenticatedRoutes.route('/accountant_trust', {
     name: 'accountant_trust',
     action() {
         BlazeLayout.render('layout', {

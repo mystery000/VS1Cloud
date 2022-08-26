@@ -28,6 +28,8 @@ Template.timesheet.onCreated(function () {
 
     templateObject.allnoninvproducts = new ReactiveVar([]);
 
+    templateObject.selectedConvertTimesheet = new ReactiveVar([]);
+
 });
 
 Template.timesheet.onRendered(function () {
@@ -4641,6 +4643,155 @@ Template.timesheet.onRendered(function () {
                         // }
                     });
                     templateObject.selectedTimesheet.set(selectedTimesheetList);
+                    JsonIn = {
+                        Params: {
+                            TimesheetIDs: selectedTimesheetList
+                        }
+                    };
+                    templateObject.selectedConvertTimesheet.set(JsonIn);
+                },
+                'click #btnInvoice': function () {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    const templateObject = Template.instance();
+                    let selectClient = templateObject.selectedConvertTimesheet.get();
+                    let selectTimesheetID = templateObject.selectedTimesheetID.get();
+
+                    let selectTimeSheet = templateObject.selectedTimesheet.get();
+                    if (selectTimeSheet.length === 0) {
+                        swal('Please select Timesheet to generate Invoice for!', '', 'info');
+                        $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        let contactService = new ContactService();
+                        var erpGet = erpDb();
+                        var oPost = new XMLHttpRequest();
+                        oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_InvoiceTimesheet"', true);
+                        oPost.setRequestHeader("database", erpGet.ERPDatabase);
+                        oPost.setRequestHeader("username", erpGet.ERPUsername);
+                        oPost.setRequestHeader("password", erpGet.ERPPassword);
+                        oPost.setRequestHeader("Accept", "application/json");
+                        oPost.setRequestHeader("Accept", "application/html");
+                        oPost.setRequestHeader("Content-type", "application/json");
+                        // let objDataSave = '"JsonIn"' + ':' + JSON.stringify(selectClient);
+                        oPost.send(JSON.stringify(selectClient));
+
+                        oPost.onreadystatechange = function () {
+                            if (oPost.readyState == 4 && oPost.status == 200) {
+                                $('.fullScreenSpin').css('display', 'none');
+                                var myArrResponse = JSON.parse(oPost.responseText);
+                                if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
+                                    let objectDataConverted = {
+                                        type: "TTimeSheet",
+                                        fields: {
+                                            Id: parseInt(selectTimesheetID),
+                                            Status: "Converted"
+                                        }
+                                    };
+                                    contactService.saveTimeSheetUpdate(objectDataConverted).then(function (data) {
+                                        FlowRouter.go('/invoicelist?success=true');
+                                    }).catch(function (err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
+
+                                    //templateObject.getAllAppointmentDataOnConvert();
+
+
+
+                                } else {
+                                    swal({
+                                        title: 'Oooops...',
+                                        text: myArrResponse.ProcessLog.ResponseStatus,
+                                        type: 'warning',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Try Again'
+                                    }).then((result) => {
+                                        if (result.value) {
+
+                                        } else if (result.dismiss === 'cancel') {
+
+                                        }
+                                    });
+                                }
+
+                            } else if (oPost.readyState == 4 && oPost.status == 403) {
+                                $('.fullScreenSpin').css('display', 'none');
+                                swal({
+                                    title: 'Oooops...',
+                                    text: oPost.getResponseHeader('errormessage'),
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Try Again'
+                                }).then((result) => {
+                                    if (result.value) {
+                                    } else if (result.dismiss === 'cancel') {
+
+                                    }
+                                });
+                            } else if (oPost.readyState == 4 && oPost.status == 406) {
+                                $('.fullScreenSpin').css('display', 'none');
+                                var ErrorResponse = oPost.getResponseHeader('errormessage');
+                                var segError = ErrorResponse.split(':');
+
+                                if ((segError[1]) == ' "Unable to lock object') {
+
+                                    swal({
+                                        title: 'Oooops...',
+                                        text: oPost.getResponseHeader('errormessage'),
+                                        type: 'error',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Try Again'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                        } else if (result.dismiss === 'cancel') {
+
+                                        }
+                                    });
+                                } else {
+                                    swal({
+                                        title: 'Oooops...',
+                                        text: oPost.getResponseHeader('errormessage'),
+                                        type: 'error',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Try Again'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                        } else if (result.dismiss === 'cancel') {
+
+                                        }
+                                    });
+                                }
+
+                            } else if (oPost.readyState == '') {
+                                $('.fullScreenSpin').css('display', 'none');
+                                swal({
+                                    title: 'Oooops...',
+                                    text: oPost.getResponseHeader('errormessage'),
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Try Again'
+                                }).then((result) => {
+                                    if (result.value) {
+                                    } else if (result.dismiss === 'cancel') {
+
+                                    }
+                                });
+                            }
+
+                        }
+
+                    }
+
+                },
+                'click #btnInvoiceDisabled': function () {
+                  swal({
+                      title: 'Oops...',
+                      text: "You don't have access to create Invoice",
+                      type: 'error',
+                      showCancelButton: false,
+                      confirmButtonText: 'OK'
+                  }).then((result) => {
+                      if (result.value) {}
+                      else if (result.dismiss === 'cancel') {}
+                  });
                 },
                 'click .btnOpenSettings': function (event) {
                     let templateObject = Template.instance();
@@ -5754,10 +5905,6 @@ Template.timesheet.onRendered(function () {
                         $('.fullScreenSpin').css('display', 'none');
                     }
                 },
-                'click .btnInvoice': function () {
-                  swal('Coming Soon', '', 'info');
-                },
-
                 'click .processTimesheet': function () {
                     $('.fullScreenSpin').css('display', 'inline-block');
                     let templateObject = Template.instance();
