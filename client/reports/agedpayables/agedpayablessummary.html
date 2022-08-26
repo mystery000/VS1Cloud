@@ -295,44 +295,186 @@
                                   <a href="#" style="text-decoration:none!important;">{{items.duedate}}</a>
                                 </strong></span></td>
 
-                            <td class="Total1Indented MenuLeft TotalField">
-                              <span class="table-cells">
-                                <strong>
-                                  <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.amountdue}}</a>
-                                </strong></span></td>
-                            <td class="Total1Indented MenuLeft TotalField">
-                              <span class="table-cells">
-                                <strong>
-                                  <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.current}}</a>
-                                </strong></span></td>
-                            <td class="Total1Indented MenuLeft TotalField">
-                              <span class="table-cells">
-                                <strong>
-                                  <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day30}}</a>
-                                </strong></span></td>
-                            <td class="Total1Indented MenuLeft TotalField">
-                              <span class="table-cells">
-                                <strong>
-                                  <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day60}}</a>
-                                </strong></span></td>
-                            <td class="Total1Indented MenuLeft TotalField">
-                              <span class="table-cells">
-                                <strong>
-                                  <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day90}}</a>
-                                </strong></span></td>
-                            <td class="Total1Indented MenuLeft TotalField">
-                              <span class="table-cells">
-                                <strong>
-                                  <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.dayabove90}}</a>
-                                </strong></span></td>
+                                {{#if isOnlyDefaultActive }}
+
+                                  {{#if currencyList}}
+
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
+                                        
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.amountdue }} text-danger {{else}} text-success {{/if}}">
+                                                <span class="table-cells">
+                                                <strong>
+                                                    <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.amountdue c null}}</a>
+                                                </strong></span></td>
+                                        {{/if}}
+                                    {{/each}}
+
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
+                                        
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.current }} text-danger {{else}} text-success {{/if}}">
+                                                <span class="table-cells">
+                                                <strong>
+                                                    <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.current c null}}</a>
+                                                </strong></span></td>
+                                        {{/if}}
+                                    {{/each}}
+
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
+                                        
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.day30 }} text-danger {{else}} text-success {{/if}}">
+                                                <span class="table-cells">
+                                                <strong>
+                                                    <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.day30 c null}}</a>
+                                                </strong></span></td>
+                                        {{/if}}
+                                    {{/each}}
+
+
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
+                                        
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.day60 }} text-danger {{else}} text-success {{/if}}">
+                                                <span class="table-cells">
+                                                <strong>
+                                                    <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.day60 c null}}</a>
+                                                </strong></span></td>
+                                        {{/if}}
+                                    {{/each}}
+
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
+                                        
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.day90 }} text-danger {{else}} text-success {{/if}}">
+                                                <span class="table-cells">
+                                                <strong>
+                                                    <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.day90 c null}}</a>
+                                                </strong></span></td>
+                                        {{/if}}
+                                    {{/each}}
+
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
+                                        
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.dayabove90 }} text-danger {{else}} text-success {{/if}}">
+                                                <span class="table-cells">
+                                                <strong>
+                                                    <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.dayabove90 c null}}</a>
+                                                </strong></span></td>
+                                        {{/if}}
+                                    {{/each}}
+
+
+
+
+                                  {{/if}}
+
+                                {{else}}
+
+                                    <td class="Total1Indented MenuLeft TotalField">
+                                        <span class="table-cells">
+                                        <strong>
+                                            <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.amountdue}}</a>
+                                        </strong></span></td>
+
+                                    <td class="Total1Indented MenuLeft TotalField">
+                                        <span class="table-cells">
+                                        <strong>
+                                            <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.current}}</a>
+                                        </strong></span></td>
+
+                                    <td class="Total1Indented MenuLeft TotalField">
+                                        <span class="table-cells">
+                                        <strong>
+                                            <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day30}}</a>
+                                        </strong></span></td>
+
+
+                                    <td class="Total1Indented MenuLeft TotalField">
+                                        <span class="table-cells">
+                                        <strong>
+                                            <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day60}}</a>
+                                        </strong></span></td>
+                                    <td class="Total1Indented MenuLeft TotalField">
+                                        <span class="table-cells">
+                                        <strong>
+                                            <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day90}}</a>
+                                        </strong></span></td>
+                                    <td class="Total1Indented MenuLeft TotalField">
+                                        <span class="table-cells">
+                                        <strong>
+                                            <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.dayabove90}}</a>
+                                        </strong></span></td>
+
+                                {{/if}}
+
+                            
                           </tr>
                         {{/each}}
 
                         {{#if grandrecords}}
+                          <!-- {{#each item in grandrecords}} -->
                           <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-                            {{#each item in grandrecords}}
-                              <td>{{item}}</td>
-                            {{/each}}
+
+                            <td>{{grandrecords.Title}}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                            {{#if isOnlyDefaultActive }}
+                                    {{#if currencyList}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.TotalAmountDue c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.TotalCurrent c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.OneMonth c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.TwoMonth c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.ThreeMonth c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+                                      {{#each c in currencyList }}
+                                        {{#if c.active}}
+                                          <td>{{ convertAmount grandrecords.OlderMonth c null}}</td>
+                                        {{/if}}
+                                      {{/each}}
+
+
+
+                                    {{/if}}
+                            {{else}}
+
+                              <td>{{ formatPrice grandrecords.TotalAmountDue}}</td>
+                              <td>{{ formatPrice grandrecords.TotalCurrent}}</td>
+                              <td>{{ formatPrice grandrecords.OneMonth}}</td>
+                              <td>{{ formatPrice grandrecords.TwoMonth}}</td>
+                              <td>{{ formatPrice grandrecords.ThreeMonth}}</td>
+                              <td>{{ formatPrice grandrecords.OlderMonth}}</td>
+
+                            {{/if}}
 
                           </tr>
                         {{/if}}

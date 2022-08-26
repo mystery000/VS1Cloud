@@ -9,6 +9,8 @@ const reportService = new ReportService();
 const utilityService = new UtilityService();
 const taxRateService = new TaxRateService();
 
+let defaultCurrencyCode = CountryAbbr;
+
 Template.agedpayablessummary.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -202,15 +204,18 @@ Template.agedpayablessummary.onRendered(()=>{
       templateObject.reportrecords.set(reportrecords);
       records = _.sortBy(records, 'SupplierName');
       records = _.groupBy(records, 'SupplierName');
+      
       for (let key in records) {
         // let obj = [{key: key}, {data: records[key]}];
         let obj = {
           title: key, 
-          data: records[key],
+          entries: records[key],
           total: null
         };
         allRecords.push(obj);
       }
+
+      
 
       allRecords.forEach((record) => {
         let amountduetotal = 0;
@@ -246,6 +251,7 @@ Template.agedpayablessummary.onRendered(()=>{
 
 
       });
+
 
   //    let iterator = 0;
   //  for (let i = 0; i < allRecords.length; i++) {
@@ -286,7 +292,7 @@ Template.agedpayablessummary.onRendered(()=>{
       let grandthreeMonth = 0;
       let grandOlder = 0;
 
-      current.forEach((total) => {
+        current.forEach((total) => {
           grandamountduetotal = grandamountduetotal + parseFloat(total.TotalAmountDue);
           grandCurrenttotal = grandCurrenttotal + parseFloat(total.TotalCurrent);
           // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
@@ -294,7 +300,8 @@ Template.agedpayablessummary.onRendered(()=>{
           grandtwoMonth = grandtwoMonth + parseFloat(total.TwoMonth);
           grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
           grandOlder = grandOlder + parseFloat(total.OlderMonth);
-      });
+        });
+     
 
         // for (let n = 0; n < current.length; n++) {
 
@@ -334,6 +341,7 @@ Template.agedpayablessummary.onRendered(()=>{
             ThreeMonth: grandthreeMonth,
             OlderMonth: grandOlder
         };
+
 
   //  for (let key in records) {
   //      let dataArr = current[iterator]
@@ -864,6 +872,22 @@ Template.agedpayablessummary.helpers({
         }
       return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
       });
+    },
+
+    formatPrice(amount) {
+      let utilityService = new UtilityService();
+      if (isNaN(amount)) {
+        amount = amount === undefined || amount === null || amount.length === 0
+          ? 0
+          : amount;
+        amount = amount
+          ? Number(amount.replace(/[^0-9.-]+/g, ""))
+          : 0;
+      }
+      return utilityService.modifynegativeCurrencyFormat(amount) || 0.0;
+    },
+    formatDate: ( date ) => {
+      return ( date )? moment(date).format("DD/MM/YYYY") : '';
     },
 
 
