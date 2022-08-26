@@ -52,13 +52,13 @@ Template.new_process.onRendered(() => {
             name: processDetail.name?processDetail.name: '',
             dailyHours: processDetail.dailyHours?processDetail.dailyHours: '',
             description: processDetail.description?processDetail.description: '',
-            hourlyCost: processDetail.hourlyLabourCost?processDetail.hourlyLabourCost: 0,
+            hourlyCost: processDetail.hourlyLabourCost?processDetail.hourlyLabourCost: '',
             cogs: processDetail.cogs?processDetail.cogs:'',
             expenseAccount: processDetail.expenseAccount?processDetail.expenseAccount : '',
-            oHourlyCost: processDetail.oHourlyCost?processDetail.oHourlyCost: 0,
+            oHourlyCost: processDetail.oHourlyCost?processDetail.oHourlyCost: '',
             oCOGS: processDetail.oCogs?processDetail.oCogs: '',
             oExpenseAccount: processDetail.oExpense? processDetail.oExpense : '',
-            totalHCost: processDetail.totalHourlyCost?processDetail.totalHourlyCost: 0,
+            totalHCost: processDetail.totalHourlyCost?processDetail.totalHourlyCost: '',
             wastage: processDetail.wastage?processDetail.wastage: ''
         }
 
@@ -134,14 +134,30 @@ Template.new_process.onRendered(() => {
         $('#edtWastage').val(columnDataValue);
         $('#assetAccountListModal').modal('toggle');
     })
-    $(document).on('keyup', '.edtHourlyCost', function(e) {
+    $(document).on('blur', '.edtHourlyCost', function(e) {
         if($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() == '') {
             $('#edtTotalHourlyCosts').val($('#edtHourlyCost').val())
         } else if ($('#edtHourlyCost').val() == '' &&  $('#edtHourlyOverheadCost').val() != '') {
             $('#edtTotalHourlyCosts').val($('#edtHourlyOverheadCost').val())
         } else if ($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() != '') {
-            $('#edtTotalHourlyCosts').val((parseFloat($('#edtHourlyCost').val()) + parseFloat($('#edtHourlyOverheadCost').val())).toString())
+            $('#edtTotalHourlyCosts').val(Currency + (parseFloat($('#edtHourlyCost').val().replace('$', '')) + parseFloat($('#edtHourlyOverheadCost').val().replace('$', ''))).toFixed(2))
         }
+    })
+
+    $(document).on('blur', '#edtHourlyCost', function(e){
+        $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2)) 
+    })
+
+    $(document).on('focus', '#edtHourlyCost', function(e){
+        $('#edtHourlyCost').val($('#edtHourlyCost').val().replace('$', ''));
+    })
+
+    $(document).on('blur', '#edtHourlyOverheadCost', function(e){
+        $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2)) 
+    })
+
+    $(document).on('focus', '#edtHourlyOverheadCost', function(e){
+        $('#edtHourlyOverheadCost').val($('#edtHourlyOverheadCost').val().replace('$', ''));
     })
 });
 
