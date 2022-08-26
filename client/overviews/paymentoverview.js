@@ -1438,19 +1438,14 @@ Template.paymentoverview.events({
       let view_deleted = templateObject.view_deleted.get();
       await clearData('TPaymentList');
       if (view_deleted == "NO") {
-
         await templateObject.view_deleted.set("YES");
-        //await templateObject.getAllPaymentsData(true);
         $('.btnViewDeletedPayments').css('display','inline-block');
         $('.btnHideDeletedPayments').css('display','none');
-        //$('#tblPaymentOverview_filter input').val("").trigger('search');
       } else {
-
         await templateObject.view_deleted.set("NO");
-        //await templateObject.getAllPaymentsData('');
         $('.btnViewDeletedPayments').css('display','none');
         $('.btnHideDeletedPayments').css('display','inline-block');
-        //$('#tblPaymentOverview_filter input').val("Deleted").trigger('search');
+
       }
       await templateObject.getAllPaymentsData(true);
      },
@@ -1465,23 +1460,11 @@ Template.paymentoverview.events({
 
          $('.btnViewDeletedPayments').css('display','inline-block');
          $('.btnHideDeletedPayments').css('display','none');
-         //$('#tblPaymentOverview_filter input').val("").trigger('search');
        } else {
 
          await templateObject.view_deleted.set("NO");
-         //await templateObject.getAllPaymentsData('');
-         // sideBarService.getTPaymentList(fromDate, toDate, ignoreDate, initialReportLoad, 0,'').then(function(data) {
-         //     addVS1Data('TPaymentList', JSON.stringify(data)).then(function(datareturn) {
-         //         location.reload();
-         //     }).catch(function(err) {
-         //         location.reload();
-         //     });
-         // }).catch(function(err) {
-         //     $('.fullScreenSpin').css('display', 'none');
-         // });
          $('.btnViewDeletedPayments').css('display','none');
          $('.btnHideDeletedPayments').css('display','inline-block');
-         //$('#tblPaymentOverview_filter input').val("Deleted").trigger('search');
        }
 
        await templateObject.getAllPaymentsData('');

@@ -433,6 +433,7 @@ Template.receiptsoverview.onRendered(function() {
         }
     };
     function showEditTripGroupView(data) {
+      $('.fullScreenSpin').css('display', 'none');
         $("#add-tripgroup-title").text("Edit Trip-Group");
         $('#edtTripGroupID').val(data.Id);
         $('#edtTripGroupName').val(data.TripName);
