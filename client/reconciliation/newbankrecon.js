@@ -649,7 +649,6 @@ Template.newbankrecon.onRendered(function() {
     function setMatchTransactionData(matchData) {
         let thirdaryData = sortTransactionData(matchData, 'SortDate');
         VS1TransactionList = thirdaryData;
-        console.log(thirdaryData);
         matchTransactionList = thirdaryData;
         viewTransactionList = [];
         // templateObject.matchTransactionData.set(thirdaryData);
@@ -770,8 +769,6 @@ Template.newbankrecon.onRendered(function() {
             } else {
                 templateObject.defaultCustomerTerms.set('test');
             }
-        // }).catch(function(err) {
-        //     console.log(err);
         });
     };
     templateObject.getDefaultSupplierTerms = function() {
@@ -2987,11 +2984,6 @@ function setCalculated2() {
                 let fid = $(this).find('input[type="checkbox"]').attr("id");
                 if (fid != undefined) {
                     fid = fid.split("_").pop();
-                    // console.log(fid);
-                    // if (fid == 'd94') {
-                    //     $(this).addClass("matchedRow");
-                    //     $(this).find('input[type="checkbox"]').prop('checked', true);
-                    // }
                     if (jQuery.inArray(fid, viewIDs) != -1) {
                         $(this).addClass("matchedRow");
                         $(this).find('input[type="checkbox"]').prop('checked', true);

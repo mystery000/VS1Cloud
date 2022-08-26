@@ -819,7 +819,6 @@ Template.emailsettings.onRendered(function () {
             try {
                 let promise = settings.map(async (setting) => {
                     const formID = $(setting).attr('data-id');
-                    console.log("type of form id", typeof(formID))
                     const formName = $(setting).find('.sorting_1').text();
                     const frequencyEl = $(setting).find('#edtFrequency');
                     const sendEl = $(setting).find('#edtBasedOn');

@@ -143,10 +143,10 @@ Template.employeescard.onCreated(function () {
 });
 
 Template.employeescard.onRendered(function () {
- 
+
     var erpGet = erpDb();
     LoadingOverlay.show();
-    
+
 
     Session.setPersistent('cloudCurrentLogonName', '');
 
@@ -3573,7 +3573,7 @@ Template.employeescard.onRendered(function () {
                     $(`#ptReimbursementAmount${item.fields.ID}`).val( utilityService.modifynegativeCurrencyFormat(item.fields.Amount)|| 0.00 );
                 });
             }, 500);
-            
+
         }
 
     };
@@ -4583,7 +4583,7 @@ Template.employeescard.events({
     //                 value: 'Working Holiday Maker',
     //                 title: 'Working Holiday Maker'
     //             }
-    
+
     //         ]
     //     });
 
@@ -4627,11 +4627,11 @@ Template.employeescard.events({
     //                 value: 'S',
     //             },
 
-    
+
     //         ]
     //     });
 
-        
+
     //     setTimeout(() => {
     //         $('#AppTableModal').modal('toggle');
     //         $('#AppTableModal tbody tr').on('click', (event) => {
@@ -4763,7 +4763,7 @@ Template.employeescard.events({
     //             $('#AppTableModal tbody tr').off('click');
     //         });
     //     }, 300);
-    // }, 
+    // },
     // 'click #onTerminationUnusedBalance': (e, ui) => {
 
     //     ui.AppTableModalData.set({
@@ -4896,7 +4896,7 @@ Template.employeescard.events({
            $(".btnRefreshLeaveRequest").trigger("click");
         }
     },
-    'click .btnRefreshLeaveRequest':function(event){      
+    'click .btnRefreshLeaveRequest':function(event){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4908,7 +4908,7 @@ Template.employeescard.events({
 
             employeePayrollServices.getLeaveRequestByName(dataSearchName).then(function (data) {
                 $(".btnRefreshLeaveRequest").removeClass('btnSearchAlert');
-                let lineItems = []; 
+                let lineItems = [];
                 let splashArrayList = [];
                 let useData = LeaveRequest.fromList(
                     data.tleavrequest
@@ -4916,7 +4916,7 @@ Template.employeescard.events({
                     if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
                         return item;
                     }
-                });            
+                });
                 if (useData.length > 0) {
                     for (let i = 0; i < useData.length; i++) {
                         let dataListAllowance = [
@@ -4938,10 +4938,10 @@ Template.employeescard.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     swal({
                         title: 'Question',
                         text: "Leave Request does not exist, would you like to create it?",
@@ -4975,7 +4975,7 @@ Template.employeescard.events({
            $(".btnRefreshAssignLeave").trigger("click");
         }
     },
-    'click .btnRefreshAssignLeave':function(event){      
+    'click .btnRefreshAssignLeave':function(event){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4987,14 +4987,14 @@ Template.employeescard.events({
 
             employeePayrollServices.getAssignLeaveTypeByName(dataSearchName).then(function (data) {
                 $(".btnRefreshAssignLeave").removeClass('btnSearchAlert');
-                let lineItems = [];    
+                let lineItems = [];
                 let useData = AssignLeaveType.fromList(
                     data.tassignleavetype
                 ).filter((item) => {
                     if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Active == true ) {
                         return item;
                     }
-                });            
+                });
                 if (useData.length > 0) {
                     for (let i = 0; i < useData.length; i++) {
                         let dataListAllowance = [
@@ -5022,10 +5022,10 @@ Template.employeescard.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     swal({
                         title: 'Question',
                         text: "Assign Leave does not exist, would you like to create it?",
@@ -7898,13 +7898,12 @@ Template.employeescard.events({
     },
     // hide save button
     'click .nav-link': function(e){
-        console.log('clicked');
         if($(e.target).hasClass('hideSaveButton')) {
-            $('#btnSaveEmployeePayroll').hide(); 
+            $('#btnSaveEmployeePayroll').hide();
         }  else {
             $('#btnSaveEmployeePayroll').show();
         }
-        console.log('else');
+
     },
     // Save active tab data
     'click #btnSaveEmployeePayroll': async (event) => {
@@ -7993,7 +7992,7 @@ Template.employeescard.events({
                     body: JSON.stringify(employeePaySettings),
                 });
 
-                if (ApiResponse.ok == true) {                  
+                if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveEmployeePaySettingsLocalDB();
                     await templateObject.getEmployeePaySettings();
@@ -8741,7 +8740,7 @@ Template.employeescard.events({
                 })
             }
         }else if(activeTab == "notes") {
-            
+
         }else{
             return;
         }

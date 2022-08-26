@@ -184,7 +184,6 @@ Template.paymentoverview.onRendered(function() {
 
     templateObject.resetData = function(data) {
         location.reload();
-        console.log(data);
         /*
         const dataTableListDupp = [];
         var splashArrayPaymentOverviewListDupp = new Array();
