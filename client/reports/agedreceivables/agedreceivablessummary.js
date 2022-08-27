@@ -114,7 +114,7 @@ Template.agedreceivablessummary.onRendered(()=>{
 
             let amountdue = utilityService.modifynegativeCurrencyFormat(account.AmountDue) || 0;
             let current = utilityService.modifynegativeCurrencyFormat(account.Current) || 0;
-            let day30 = utilityService.modifynegativeCurrencyFormat(daccount["1-30Days"]) || 0;
+            let day30 = utilityService.modifynegativeCurrencyFormat(account["1-30Days"]) || 0;
             let day60 = utilityService.modifynegativeCurrencyFormat(account["30-60Days"]) || 0;
             let day90 = utilityService.modifynegativeCurrencyFormat(account["60-90Days"]) || 0;
             let dayabove90 = utilityService.modifynegativeCurrencyFormat(account[">90Days"]) || 0;
@@ -147,6 +147,7 @@ Template.agedreceivablessummary.onRendered(()=>{
             records.push(recordObj);
           
         });
+
 
         //   for (let i = 0; i < accountData.length; i++) {
         //     let amountdue = utilityService.modifynegativeCurrencyFormat(data.tarreport[i].AmountDue) || 0;
@@ -220,6 +221,7 @@ Template.agedreceivablessummary.onRendered(()=>{
           allRecords.push(obj);
         }
 
+
         allRecords.forEach((record) => {
           let amountduetotal = 0;
           let Currenttotal = 0;
@@ -232,10 +234,10 @@ Template.agedreceivablessummary.onRendered(()=>{
           record.entries.forEach((entry) => {
               amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
               Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
-              oneMonth = oneMonth + parseFloat(entry.entries["30Days"]);
-              twoMonth = twoMonth + parseFloat(entry.entries["60Days"]);
-              threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
-              Older = Older + parseFloat(entry.entries["120Days"]);
+              oneMonth = oneMonth + parseFloat(entry.entries["1-30Days"]);
+              twoMonth = twoMonth + parseFloat(entry.entries["30-60Days"]);
+              threeMonth = threeMonth + parseFloat(entry.entries["60-90Days"]);
+              Older = Older + parseFloat(entry.entries[">90Days"]);
   
           });
   

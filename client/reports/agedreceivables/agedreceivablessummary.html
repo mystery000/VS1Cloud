@@ -198,13 +198,70 @@
                         <th style="width: 130px;">Type</th>
                         <th class="text-right">Invoice No.</th>
                         <th>Due Date</th>
-                        <th class="text-right">Amount Due</th>
-                        <th class="text-right">Current</th>
-                        <th class="text-right">1 - 30 Days</th>
-                        <th class="text-right">30 - 60 Days</th>
-                        <th class="text-right">60 - 90 Days</th>
-                        <th class="text-right">&gt; 90 Days</th>
+
+                        <th class="text-center" colspan="{{countActive currencyList}}">Amount Due</th>
+                        <th class="text-center" colspan="{{countActive currencyList}}">Current</th>
+                        <th class="text-center" colspan="{{countActive currencyList}}">1 - 30 Days</th>
+                        <th class="text-center" colspan="{{countActive currencyList}}">30 - 60 Days</th>
+                        <th class="text-center" colspan="{{countActive currencyList}}">60 - 90 Days</th>
+                        <th class="text-center" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
                       </tr>
+                      {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid customDoubleTableHeading">
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+
+                          {{#if currencyList}}
+                            {{#each c in currencyList }}
+                              {{# if c.active}}
+                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                              {{/if}}
+                            {{/each}}
+                          {{/if}}
+
+                          {{#if currencyList}}
+                            {{#each c in currencyList }}
+                              {{# if c.active}}
+                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                              {{/if}}
+                            {{/each}}
+                          {{/if}}
+
+                          {{#if currencyList}}
+                            {{#each c in currencyList }}
+                              {{# if c.active}}
+                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                              {{/if}}
+                            {{/each}}
+                          {{/if}}
+
+                          {{#if currencyList}}
+                            {{#each c in currencyList }}
+                              {{# if c.active}}
+                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                              {{/if}}
+                            {{/each}}
+                          {{/if}}
+
+                          {{#if currencyList}}
+                            {{#each c in currencyList }}
+                              {{# if c.active}}
+                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                              {{/if}}
+                            {{/each}}
+                          {{/if}}
+                          {{#if currencyList}}
+                            {{#each c in currencyList }}
+                              {{# if c.active}}
+                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                              {{/if}}
+                            {{/each}}
+                          {{/if}}
+
+                        </tr>
+                      {{/if}}
                     </thead>
                     <tbody>
                       {{#if reportrecords}}
@@ -235,7 +292,7 @@
                             <td class="Total1Indented MenuLeft TotalField">
                               <span class="table-cells">
                                 <strong>
-                                  <a href="#" style="text-decoration:none!important;">{{items.duedate}}</a>
+                                  <a href="#" style="text-decoration:none!important;">{{ formatDate items.duedate}}</a>
                                 </strong>
                               </span>
                             </td>
