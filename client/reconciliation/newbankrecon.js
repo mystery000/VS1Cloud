@@ -19,6 +19,7 @@ let utilityService = new UtilityService();
 let yodleeService = new YodleeService();
 let reconService = new ReconService();
 let contactService = new ContactService();
+let accountService = new AccountService();
 
 let selectedLineID = null;
 let selectedYodleeID = null;
@@ -59,7 +60,6 @@ Template.newbankrecon.onCreated(function() {
 Template.newbankrecon.onRendered(function() {
     const templateObject = Template.instance();
     const productService = new ProductService();
-    const accountService = new AccountService();
     const supplierService = new PurchaseBoardService();
 
     let page_number = (FlowRouter.current().queryParams.page != undefined && parseInt(FlowRouter.current().queryParams.page) > 0)?FlowRouter.current().queryParams.page:1;
@@ -107,6 +107,76 @@ Template.newbankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         });
     };
+    
+    templateObject.getAllAccounts = function() {
+        getVS1Data('TAccountVS1').then(function(dataObject) {
+            if (dataObject.length === 0) {
+                sideBarService.getAccountListVS1().then(function(data) {
+                    setAccountListVS1(data);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                setAccountListVS1(data);
+            }
+        }).catch(function(err) {
+            sideBarService.getAccountListVS1().then(function(data) {
+                setAccountListVS1(data);
+            });
+        });
+    };
+    function setAccountListVS1(data) {
+        let splashArrayAccountList = [];
+        for (let i = 0; i < data.taccountvs1.length; i++) {            
+            let accBalance = 0;
+            if (!isNaN(data.taccountvs1[i].fields.Balance)) {
+                accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1[i].fields.Balance) || 0.00;
+            } else {
+                accBalance = Currency + "0.00";
+            }
+            const dataList = [
+                data.taccountvs1[i].fields.AccountName || '-',
+                data.taccountvs1[i].fields.Description || '',
+                data.taccountvs1[i].fields.AccountNumber || '',
+                data.taccountvs1[i].fields.AccountTypeName || '',
+                accBalance,
+                data.taccountvs1[i].fields.TaxCode || '',
+                data.taccountvs1[i].fields.ID || ''
+            ];
+            splashArrayAccountList.push(dataList);
+        }
+        if (splashArrayAccountList) {
+            $('#tblFullAccount').dataTable({
+                data: splashArrayAccountList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                paging: true,
+                "aaSorting": [],
+                "orderMulti": true,
+                columnDefs: [
+                    { className: "productName", "targets": [0] },
+                    { className: "productDesc", "targets": [1] },
+                    { className: "accountnumber", "targets": [2] },
+                    { className: "salePrice", "targets": [3] },
+                    { className: "prdqty text-right", "targets": [4] },
+                    { className: "taxrate", "targets": [5] },
+                    { className: "colAccountID hiddenColumn", "targets": [6] }
+                ],
+                colReorder: true,
+                "order": [
+                    [0, "asc"]
+                ],
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddNewAccount' data-dismiss='modal' data-toggle='modal' data-target='#addAccountModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblFullAccount_filter");
+                    $("<button class='btn btn-primary btnRefreshAccount' type='button' id='btnRefreshAccount' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblFullAccount_filter");
+                }
+
+            });
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        }
+    }
 
     templateObject.getAllTaxCodes = function () {
         getVS1Data("TTaxcodeVS1").then(function (dataObject) {
@@ -786,6 +856,7 @@ Template.newbankrecon.onRendered(function() {
     setTimeout(function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         templateObject.getAccountNames();
+        templateObject.getAllAccounts();
         templateObject.getAllTaxCodes();
         templateObject.getAllCustomers();
         templateObject.getAllSuppliers();
@@ -843,74 +914,6 @@ Template.newbankrecon.onRendered(function() {
             const datatable = $('#tblAccountlist').DataTable();
             datatable.draw();
             $('#tblAccountlist_filter .form-control-sm').trigger("input");
-        }, 500);
-    }
-    function setOneAccountByName(accountDataName) {
-        accountService.getOneAccountByName(accountDataName).then(function (data) {
-            setBankAccountData(data);
-        }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
-        });
-    }
-    function setBankAccountData(data, i = 0) {
-        let fullAccountTypeName = '';
-        $('#add-account-title').text('Edit Account Details');
-        $('#edtAccountName').attr('readonly', true);
-        $('#sltAccountType').attr('readonly', true);
-        $('#sltAccountType').attr('disabled', 'disabled');
-        const accountid = data.taccountvs1[i].fields.ID || '';
-        const accounttype = fullAccountTypeName || data.taccountvs1[i].fields.AccountTypeName;
-        const accountname = data.taccountvs1[i].fields.AccountName || '';
-        const accountno = data.taccountvs1[i].fields.AccountNumber || '';
-        const taxcode = data.taccountvs1[i].fields.TaxCode || '';
-        const accountdesc = data.taccountvs1[i].fields.Description || '';
-        const bankaccountname = data.taccountvs1[i].fields.BankAccountName || '';
-        const bankbsb = data.taccountvs1[i].fields.BSB || '';
-        const bankacountno = data.taccountvs1[i].fields.BankAccountNumber || '';
-        const swiftCode = data.taccountvs1[i].fields.Extra || '';
-        const routingNo = data.taccountvs1[i].fields.BankCode || '';
-        const showTrans = data.taccountvs1[i].fields.IsHeader || false;
-        const cardnumber = data.taccountvs1[i].fields.CarNumber || '';
-        const cardcvc = data.taccountvs1[i].fields.CVC || '';
-        const cardexpiry = data.taccountvs1[i].fields.ExpiryDate || '';
-
-        if ((accounttype == "BANK")) {
-            $('.isBankAccount').removeClass('isNotBankAccount');
-            $('.isCreditAccount').addClass('isNotCreditAccount');
-        }else if ((accounttype == "CCARD")) {
-            $('.isCreditAccount').removeClass('isNotCreditAccount');
-            $('.isBankAccount').addClass('isNotBankAccount');
-        } else {
-            $('.isBankAccount').addClass('isNotBankAccount');
-            $('.isCreditAccount').addClass('isNotCreditAccount');
-        }
-
-        $('#edtAccountID').val(accountid);
-        $('#sltAccountType').val(accounttype);
-        $('#sltAccountType').append('<option value="'+accounttype+'" selected="selected">'+accounttype+'</option>');
-        $('#edtAccountName').val(accountname);
-        $('#edtAccountNo').val(accountno);
-        $('#sltTaxCode').val(taxcode);
-        $('#txaAccountDescription').val(accountdesc);
-        $('#edtBankAccountName').val(bankaccountname);
-        $('#edtBSB').val(bankbsb);
-        $('#edtBankAccountNo').val(bankacountno);
-        $('#swiftCode').val(swiftCode);
-        $('#routingNo').val(routingNo);
-        $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
-
-        $('#edtCardNumber').val(cardnumber);
-        $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
-        $('#edtCvc').val(cardcvc);
-
-        if(showTrans == 'true'){
-            $('.showOnTransactions').prop('checked', true);
-        }else{
-            $('.showOnTransactions').prop('checked', false);
-        }
-
-        setTimeout(function () {
-            $('#addNewAccount').modal('show');
         }, 500);
     }
 
@@ -1378,15 +1381,26 @@ Template.newbankrecon.onRendered(function() {
                 $('#whatTaxCode_' + selectedYodleeID).val($(this).find(".taxrate").text());
             }
         } else {
-            if (selectedLineID) {
-                let lineAccountID = $(this).find(".colID").text();
-                let lineAccountName = $(this).find(".colCompany").text();
-                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountName").val(lineAccountName);
-                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountID").val(lineAccountID);
-                setCalculated();
-            }
+
         }
         $('#tblAccount_filter .form-control-sm').val('');
+    });
+    $(document).on("click", ".newbankrecon #tblFullAccount tbody tr", function(e) {
+        $(".colAccountName").removeClass('boldtablealertsborder');
+        $(".colAccount").removeClass('boldtablealertsborder');
+        $('#fullAccountListModal').modal('toggle');
+        if (selectedLineID) {
+            let lineAccountID = $(this).find(".colID").text();
+            let lineAccountName = $(this).find(".productName").text();
+            let lineProductDesc = $(this).find(".productDesc").text();
+            let lineTaxCode = $(this).find(".taxrate").text();
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountName").val(lineAccountName);
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountID").val(lineAccountID);
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineProductDesc").val(lineProductDesc);
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineTaxRate").val(lineTaxCode);
+        }
+        setCalculated();
+        $('#tblFullAccount_filter .form-control-sm').val('');
     });
     $(document).on("click", ".newbankrecon #tblCustomerlist tbody tr", function (e) {
         $('#customerListModal').modal('toggle');
@@ -1403,7 +1417,6 @@ Template.newbankrecon.onRendered(function() {
                 $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineCustomerID").val(lineCustomerID);
             }
         }
-        setCalculated();
     });
     $(document).on("click", ".newbankrecon #tblSupplierlist tbody tr", function (e) {
         $('#supplierListModal').modal('toggle');
@@ -1504,6 +1517,106 @@ Template.newbankrecon.events({
         }
         window.open('/newbankrecon?sort='+sort, '_self');
     },
+    'click .btnAddNewAccount': function(event) {
+        $('#add-account-title').text('Add New Account');
+        $('#edtAccountID').val('');
+        $('#sltAccountType').val('');
+        $('#sltAccountType').removeAttr('readonly', true);
+        $('#sltAccountType').removeAttr('disabled', 'disabled');
+        $('#edtAccountName').val('');
+        $('#edtAccountName').attr('readonly', false);
+        $('#edtAccountNo').val('');
+        $('#sltTaxCode').val('NT' || '');
+        $('#txaAccountDescription').val('');
+        $('#edtBankAccountName').val('');
+        $('#edtBSB').val('');
+        $('#edtBankAccountNo').val('');
+        $('#routingNo').val('');
+        $('#edtBankName').val('');
+        $('#swiftCode').val('');
+        $('.showOnTransactions').prop('checked', false);
+        $('.isBankAccount').addClass('isNotBankAccount');
+        $('.isCreditAccount').addClass('isNotCreditAccount');
+    },
+    'click .btnRefreshAccount': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        const splashArrayAccountList = [];
+        let utilityService = new UtilityService();
+        let sideBarService = new SideBarService();
+        let dataSearchName = $('#tblFullAccount_filter input').val();
+        if (dataSearchName.replace(/\s/g, '') !== '') {
+            sideBarService.getAllAccountDataVS1ByName(dataSearchName).then(function (data) {
+                let lineItems = [];
+                let lineItemObj = {};
+                if (data.taccountvs1.length > 0) {
+                    for (let i = 0; i < data.taccountvs1.length; i++) {
+                        const dataList = [
+                            data.taccountvs1[i].fields.AccountName || '-',
+                            data.taccountvs1[i].fields.Description || '',
+                            data.taccountvs1[i].fields.AccountNumber || '',
+                            data.taccountvs1[i].fields.AccountTypeName || '',
+                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].fields.Balance * 100) / 100) || 0,
+                            data.taccountvs1[i].fields.TaxCode || '',
+                            data.taccountvs1[i].fields.ID || ''
+                        ];
+                        splashArrayAccountList.push(dataList);
+                    }
+                    const datatable = $('#tblFullAccount').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(splashArrayAccountList);
+                    datatable.draw(false);
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    $('#accountListModal').modal('toggle');
+                    swal({
+                        title: 'Question',
+                        text: "Account does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#addAccountModal').modal('toggle');
+                            $('#edtAccountName').val(dataSearchName);
+                        } else if (result.dismiss === 'cancel') {
+                            $('#accountListModal').modal('toggle');
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+            sideBarService.getAccountListVS1().then(function(data) {
+                for (let i = 0; i < data.taccountvs1.length; i++) {
+                    const dataList = [
+                        data.taccountvs1[i].fields.AccountName || '-',
+                        data.taccountvs1[i].fields.Description || '',
+                        data.taccountvs1[i].fields.AccountNumber || '',
+                        data.taccountvs1[i].fields.AccountTypeName || '',
+                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.taccountvs1[i].fields.Balance * 100) / 100),
+                        data.taccountvs1[i].fields.TaxCode || '',
+                        data.taccountvs1[i].fields.ID || ''
+                    ];
+                    splashArrayAccountList.push(dataList);
+                }
+                const datatable = $('#tblFullAccount').DataTable();
+                datatable.clear();
+                datatable.rows.add(splashArrayAccountList);
+                datatable.draw(false);
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        }
+    },
+    'keyup #tblFullAccount_filter input': function (event) {
+        if (event.keyCode === 13) {
+            $(".btnRefreshAccount").trigger("click");
+        }
+    },
     'click .lineProductName, keydown .lineProductName': function (event) {
         selectedLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
@@ -1586,6 +1699,42 @@ Template.newbankrecon.events({
         }
     },
     'click .lineAccountName, keydown .lineAccountName': function (event) {
+        selectedCustomerFlag = "ForDetail";
+        selectedLineID = $(event.target).closest('tr').attr('id');
+        const $each = $(event.currentTarget);
+        const offset = $each.offset();
+        $('#edtAccountID').val('');
+        const accountName = event.target.value || '';
+        if (event.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+            openFullAccountModal();
+        } else {
+            if (accountName.replace(/\s/g, '') != '') {
+                $('#edtAccountID').val('');
+                getVS1Data('TAccountVS1').then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                        setOneAccountByName(accountName);
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.taccountvs1;
+                        let added = false;
+                        for (let i = 0; i < useData.length; i++) {
+                            if (useData[i].fields.AccountName == accountName) {
+                                setBankAccountData(useData[i]);
+                            }
+                        }
+                        if (!added) {
+                            setOneAccountByName(accountName);
+                        }
+                    }
+                }).catch(function (err) {
+                    setOneAccountByName(accountName);
+                });
+            } else {
+                openFullAccountModal();
+            }
+        }
+    },
+    'click .lineCustomerName, keydown .lineCustomerName': function (event) {
         selectedCustomerFlag = "ForDetail";
         selectedLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
@@ -1683,6 +1832,11 @@ Template.newbankrecon.events({
         setCurrencyFormatForInput(event.target);
         setCalculated();
     },
+    'change .lineAmountInput': function (event) {
+        selectedLineID = $(event.target).closest('tr').attr('id');
+        setCurrencyFormatForInput(event.target);
+        setCalculated();
+    },
     'change #taxOption': function (event) {
         setCalculated();
     },
@@ -1702,26 +1856,32 @@ Template.newbankrecon.events({
         if (selectedYodleeID) {
             const rowData = $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr:last").clone(true);
             let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
+            let PaymentType = $("#PaymentType_"+selectedYodleeID).val();
             let tokenid = Random.id();
+
+            $(".lineAccountName", rowData).val("");
+            $(".lineAccountID", rowData).val("");
             $(".lineProductName", rowData).val("");
             $(".lineProductDesc", rowData).val("");
             $(".lineQty", rowData).val("");
-            if (DepOrWith == "spent") {
-                $(".lineAccountName", rowData).val("");
-            }
             $(".lineUnitPrice", rowData).val("");
-            $(".lineAmount", rowData).text("");
             $(".lineSubTotal", rowData).text("");
+            $(".lineAmountInput", rowData).val("");
+            $(".lineCustomerName", rowData).val("");
+            $(".lineCustomerID", rowData).val("");
+            $(".lineDiscount", rowData).text("");
             $(".lineTaxRate", rowData).val("");
             $(".lineTaxAmount", rowData).text("");
-            if (DepOrWith == "received") {
-                $(".lineDiscount", rowData).text("");
-            }
+            $(".lineAmount", rowData).text("");
             $(".btnRemove", rowData).show();
             rowData.attr('id', tokenid);
             $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody").append(rowData);
             setTimeout(function () {
-                $("#divLineDetail_"+selectedYodleeID+" #" + tokenid + " .lineProductName").trigger('click');
+                if (PaymentType == "Invoice" || PaymentType == "Purchase Order") {
+                    $("#divLineDetail_"+selectedYodleeID+" #" + tokenid + " .lineProductName").trigger('click');
+                } else {
+                    $("#divLineDetail_"+selectedYodleeID+" #" + tokenid + " .lineAccountName").trigger('click');
+                }
             }, 200);
         }
     },
@@ -1740,6 +1900,7 @@ Template.newbankrecon.events({
             let employeeID = Session.get('mySessionEmployeeLoggedID');
             let employeename = Session.get('mySessionEmployee');
             let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
+            let PaymentType = $("#PaymentType_"+selectedYodleeID).val();
             let clientID = $("#whoID_"+selectedYodleeID).val();
             let clientName = $("#sender_"+selectedYodleeID).val();
             let reconNote = $('#YNote_'+selectedYodleeID).val();
@@ -2386,6 +2547,89 @@ function setProductNewModal(productInfo) {
     $('#edtbuyqty1cost').val(buyqty1cost);
 }
 
+function openFullAccountModal() {
+    $('#fullAccountListModal').modal();
+    setTimeout(function () {
+        $('#tblFullAccount_filter .form-control-sm').focus();
+        $('#tblFullAccount_filter .form-control-sm').val('');
+        $('#tblFullAccount_filter .form-control-sm').trigger("input");
+        const datatable = $('#tblFullAccount').DataTable();
+        //datatable.clear();
+        //datatable.rows.add(splashArrayCustomerList);
+        datatable.draw();
+        $('#tblFullAccount_filter .form-control-sm').trigger("input");
+        //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
+    }, 500);
+}
+function setOneAccountByName(accountDataName) {
+    accountService.getOneAccountByName(accountDataName).then(function (data) {
+        setBankAccountData(data);
+    }).catch(function (err) {
+        $('.fullScreenSpin').css('display','none');
+    });
+}
+function setBankAccountData(data, i = 0) {
+    let fullAccountTypeName = '';
+    $('#add-account-title').text('Edit Account Details');
+    $('#edtAccountName').attr('readonly', true);
+    $('#sltAccountType').attr('readonly', true);
+    $('#sltAccountType').attr('disabled', 'disabled');
+    const accountid = data.taccountvs1[i].fields.ID || '';
+    const accounttype = fullAccountTypeName || data.taccountvs1[i].fields.AccountTypeName;
+    const accountname = data.taccountvs1[i].fields.AccountName || '';
+    const accountno = data.taccountvs1[i].fields.AccountNumber || '';
+    const taxcode = data.taccountvs1[i].fields.TaxCode || '';
+    const accountdesc = data.taccountvs1[i].fields.Description || '';
+    const bankaccountname = data.taccountvs1[i].fields.BankAccountName || '';
+    const bankbsb = data.taccountvs1[i].fields.BSB || '';
+    const bankacountno = data.taccountvs1[i].fields.BankAccountNumber || '';
+    const swiftCode = data.taccountvs1[i].fields.Extra || '';
+    const routingNo = data.taccountvs1[i].fields.BankCode || '';
+    const showTrans = data.taccountvs1[i].fields.IsHeader || false;
+    const cardnumber = data.taccountvs1[i].fields.CarNumber || '';
+    const cardcvc = data.taccountvs1[i].fields.CVC || '';
+    const cardexpiry = data.taccountvs1[i].fields.ExpiryDate || '';
+
+    if ((accounttype == "BANK")) {
+        $('.isBankAccount').removeClass('isNotBankAccount');
+        $('.isCreditAccount').addClass('isNotCreditAccount');
+    }else if ((accounttype == "CCARD")) {
+        $('.isCreditAccount').removeClass('isNotCreditAccount');
+        $('.isBankAccount').addClass('isNotBankAccount');
+    } else {
+        $('.isBankAccount').addClass('isNotBankAccount');
+        $('.isCreditAccount').addClass('isNotCreditAccount');
+    }
+
+    $('#edtAccountID').val(accountid);
+    $('#sltAccountType').val(accounttype);
+    $('#sltAccountType').append('<option value="'+accounttype+'" selected="selected">'+accounttype+'</option>');
+    $('#edtAccountName').val(accountname);
+    $('#edtAccountNo').val(accountno);
+    $('#sltTaxCode').val(taxcode);
+    $('#txaAccountDescription').val(accountdesc);
+    $('#edtBankAccountName').val(bankaccountname);
+    $('#edtBSB').val(bankbsb);
+    $('#edtBankAccountNo').val(bankacountno);
+    $('#swiftCode').val(swiftCode);
+    $('#routingNo').val(routingNo);
+    $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
+
+    $('#edtCardNumber').val(cardnumber);
+    $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
+    $('#edtCvc').val(cardcvc);
+
+    if(showTrans == 'true'){
+        $('.showOnTransactions').prop('checked', true);
+    }else{
+        $('.showOnTransactions').prop('checked', false);
+    }
+
+    setTimeout(function () {
+        $('#addNewAccount').modal('show');
+    }, 500);
+}
+
 function openCustomerModal() {
     $('#customerListModal').modal();
     setTimeout(function () {
@@ -2660,9 +2904,9 @@ function setCalculated() {
         let taxTotal = 0;
         let grandTotal = 0;
         let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
-        let type = $("#sltSuppPaymentType_"+selectedYodleeID).val();
+        let paymentType = '';
         let discountRate = 0;
-        if (DepOrWith == "spent") {
+        if (DepOrWith == "received") {
             let customerName = $('#sender_' + selectedYodleeID).val();
             if (customerName != "") {
                 let customerDetail = customerList.filter(customer => {
@@ -2671,13 +2915,17 @@ function setCalculated() {
                 customerDetail = customerDetail[0];
                 discountRate = customerDetail.discount;
             }
+            paymentType = 'Invoice';
+        } else {
+            paymentType = $("#sltSuppPaymentType_"+selectedYodleeID).val();
         }
         let taxOption = $('#divLineDetail_' + selectedYodleeID + " #taxOption").val();
         if (selectedLineID) {
             let lineQty = parseInt($('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + ' .lineQty').val());
             let lineUnitPrice = $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + ' .lineUnitPrice').val();
             lineUnitPrice = Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0;
-            $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineSubTotal").text(utilityService.modifynegativeCurrencyFormat(lineQty * lineUnitPrice));
+            let lineAmountInput = $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + ' .lineAmountInput').val();
+            lineAmountInput = Number(lineAmountInput.replace(/[^0-9.-]+/g, "")) || 0;
             let lineTaxRate = $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineTaxRate").val();
             let lineTaxRateVal = 0;
             if (lineTaxRate != "") {
@@ -2687,21 +2935,26 @@ function setCalculated() {
                     }
                 }
             }
-            // let lineUnitPriceInc = lineUnitPrice + lineUnitPrice * lineTaxRateVal /100;
-            // $('#' + selectedLineID + " .lineUnitPriceInc").text(utilityService.modifynegativeCurrencyFormat(lineUnitPriceInc));
-            let lineTaxAmount = lineQty * lineUnitPrice * lineTaxRateVal / 100;
+            let subTotal = 0;
+            if (paymentType == "Invoice" || paymentType == "Purchase Order") {
+                subTotal = lineQty * lineUnitPrice;
+            } else {
+                subTotal = lineAmountInput;
+            }
+            let lineTaxAmount = subTotal * lineTaxRateVal / 100;
+            $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineSubTotal").text(utilityService.modifynegativeCurrencyFormat(subTotal));
             $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(lineTaxAmount));
 
-            let lineDiscount = (lineQty * lineUnitPrice + lineTaxAmount) * discountRate / 100;
+            let lineDiscount = (subTotal + lineTaxAmount) * discountRate / 100;
             if (DepOrWith == "received") {
                 $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
             }
             if (taxOption == 'tax_exclusive') {
-                lineAmount = lineQty * lineUnitPrice + lineTaxAmount - lineDiscount;
+                lineAmount = subTotal + lineTaxAmount - lineDiscount;
             } else if (taxOption == 'tax_inclusive') {
-                lineAmount = lineQty * lineUnitPrice - lineDiscount;
+                lineAmount = subTotal - lineDiscount;
             } else {
-                lineAmount = lineQty * lineUnitPrice - lineDiscount;
+                lineAmount = subTotal - lineDiscount;
             }
             $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineAmount").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
         }
@@ -2754,27 +3007,28 @@ function getClientDetail(clientName, clientType) {
     }
     return clientDetail;
 }
-function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
+function setTransactionDetail(Amount, DateIn, DepOrWith) {
     if (selectedYodleeID != null) {
         let clientDetail;
         let toCustomerName = '';
-        let suppPaymentType = '';
+        let paymentType = '';
         if (DepOrWith == "received") {
-            $(".suppPaymentType").hide();
-            $(".transactionTitle").text("New Invoice");
-            changeTblReconInvoice('Invoice');
+            $("#suppPaymentType_" + selectedYodleeID).hide();
+            $("#transactionTitle_" + selectedYodleeID).text("New Invoice");
+            paymentType = 'Invoice';
         } else {
             clientDetail = getClientDetail($('#sender_' + selectedYodleeID).val(), 'customer');
             toCustomerName = clientDetail? clientDetail.customername:'';
-            $(".suppPaymentType").show();
-            suppPaymentType = $('#sltSuppPaymentType_' + selectedYodleeID).val();
-            if (suppPaymentType == undefined) {
+            $("#suppPaymentType_" + selectedYodleeID).show();
+            paymentType = $('#sltSuppPaymentType_' + selectedYodleeID).val();
+            if (paymentType == undefined) {
                 $('#sltSuppPaymentType_' + selectedYodleeID).val("Purchase Order");
-                suppPaymentType = "Purchase Order";
+                paymentType = "Purchase Order";
             }
-            $(".transactionTitle").text("New "+suppPaymentType);
-            changeTblReconInvoice('suppPaymentType');
+            $("#transactionTitle_" + selectedYodleeID).text("New "+paymentType);
         }
+        $('#PaymentType_'+selectedYodleeID).val(paymentType);
+        changeTblReconInvoice(paymentType);
         let discountAmount = 0;
         if (DepOrWith == "received") {
             discountAmount = clientDetail? Amount * clientDetail.discount / 100 : 0;
@@ -2794,7 +3048,7 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         let dateIn_val = (DateIn !='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
         $('#DateIn_'+selectedYodleeID).val(dateIn_val);
 
-        $('#divLineDetail_'+selectedYodleeID+' #labelPaymentType').text(DepOrWith=='spent'?'Spent as':'Received as');
+        $('#labelPaymentMethod_'+selectedYodleeID).text(DepOrWith=='spent'?'Spent as':'Received as');
         $('#divLineDetail_'+selectedYodleeID+' #labelWho').text(DepOrWith=='spent'?'To':'From');
         // $('#divLineDetail_'+selectedYodleeID+' #FromWho').val(Who);
         $('#divLineDetail_'+selectedYodleeID+' #TotalAmount').val(utilityService.modifynegativeCurrencyFormat(Amount));
@@ -2809,6 +3063,7 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineQty').val(1);
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineUnitPrice').val(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineSubTotal').val(utilityService.modifynegativeCurrencyFormat(Amount));
+        $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAmountInput').val(utilityService.modifynegativeCurrencyFormat(Amount));
         if (DepOrWith == "spent") { // purchase order need customer field
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountID').val($('#whatID_'+selectedYodleeID).val());
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountName').val($('#what_'+selectedYodleeID).val());
@@ -2827,79 +3082,82 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
     }
 }
 function changeTblReconInvoice(type) {
-    // Never change field: Description,
-    if (type == "Invoice") {
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colItem").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colQty").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colUnitPrice").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colSubTotal").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAmountInput").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colCustomer").hide();
+    if (selectedYodleeID) {
+        $("#transactionTitle_" + selectedYodleeID).text("New " + type);
+        // Never change field: Description,
+        if (type == "Invoice") {
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colAccount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colItem").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colQty").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colUnitPrice").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colSubTotal").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colAmountInput").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colDiscount").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colCustomer").hide();
 
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAccount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colItem").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colQty").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colUnitPrice").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colSubTotal").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAmountInput").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colDiscount").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colCustomer").hide();
-    } else if (type == "Purchase Order") {
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colItem").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colQty").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colUnitPrice").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colSubTotal").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAmountInput").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colCustomer").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAccount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colItem").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colQty").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colUnitPrice").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colSubTotal").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAmountInput").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colDiscount").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colCustomer").hide();
+        } else if (type == "Purchase Order") {
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colAccount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colItem").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colQty").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colUnitPrice").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colSubTotal").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colAmountInput").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colDiscount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colCustomer").show();
 
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAccount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colItem").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colQty").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colUnitPrice").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colSubTotal").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAmountInput").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colDiscount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colCustomer").show();
-    } else if (type == "Bill") {
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colItem").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colQty").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colUnitPrice").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colSubTotal").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAmountInput").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colCustomer").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAccount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colItem").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colQty").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colUnitPrice").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colSubTotal").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAmountInput").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colDiscount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colCustomer").show();
+        } else if (type == "Bill") {
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colAccount").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colItem").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colQty").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colUnitPrice").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colSubTotal").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colAmountInput").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colDiscount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colCustomer").show();
 
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAccount").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colItem").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colQty").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colUnitPrice").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colSubTotal").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAmountInput").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colDiscount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colCustomer").show();
-    } else if (type == "Cheque") {
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAccount").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colItem").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colQty").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colUnitPrice").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colSubTotal").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colAmountInput").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colDiscount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice thead>tr th.colCustomer").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAccount").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colItem").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colQty").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colUnitPrice").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colSubTotal").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAmountInput").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colDiscount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colCustomer").show();
+        } else if (type == "Cheque") {
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colAccount").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colItem").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colQty").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colUnitPrice").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colSubTotal").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colAmountInput").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colDiscount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice thead>tr th.colCustomer").hide();
 
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAccount").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colItem").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colQty").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colUnitPrice").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colSubTotal").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colAmountInput").show();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colDiscount").hide();
-        $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr td.colCustomer").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAccount").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colItem").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colQty").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colUnitPrice").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colSubTotal").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAmountInput").show();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colDiscount").hide();
+            $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colCustomer").hide();
+        }
     }
 }
 
@@ -2933,7 +3191,7 @@ function openTransactionDetail(item){
 
     $('#divItemBox_'+selectedYodleeID).addClass('itemBox');
     $('#divLineDetail_'+selectedYodleeID).show();
-    setTransactionDetail(amount, dateIn, who, item.deporwith);
+    setTransactionDetail(amount, dateIn, item.deporwith);
 }
 function closeTransactionDetail() {
     if (selectedYodleeID) {
@@ -3109,7 +3367,9 @@ function openFindMatch(item){
     $('#divItemBox_'+selectedYodleeID).addClass('itemBox');
     $('#divLineFindMatch_'+selectedYodleeID).show();
     $('#divLineFindMatchTotal_'+selectedYodleeID).show();
-    setCalculated2();
+    setTimeout(function () {
+        setCalculated2();
+    }, 1000);
 }
 
 function handleSaveError(err) {

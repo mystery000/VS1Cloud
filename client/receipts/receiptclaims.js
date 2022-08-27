@@ -1012,7 +1012,7 @@ Template.receiptsoverview.onRendered(function() {
         }
     }
 
-    $("#date-input,#dateTo,#dateFrom,.dtReceiptDate").datepicker({
+    $("#date-input,#dateTo,#dateFrom,.dtReceiptDate, #dateFromMerge, #dateToMerge").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
         buttonImageOnly: true,
