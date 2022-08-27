@@ -86,8 +86,7 @@ Template.agedpayables.onRendered(() => {
     let contactName = FlowRouter.current().queryParams.contact ||'';
     let contactID = FlowRouter.current().queryParams.contactid ||'';
     templateObject.getAgedPayableReports = function (dateFrom, dateTo, ignoreDate) {
-        templateObject.records.set('');
-        templateObject.grandrecords.set('');
+       LoadingOverlay.show();
         sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(function (data) {
             let totalRecord = [];
             let grandtotalRecord = [];
@@ -370,34 +369,13 @@ Template.agedpayables.onRendered(() => {
                     }, 100);
                 }
 
-            } else {
-                let records = [];
-                let recordObj = {};
-                recordObj.Id = '';
-                recordObj.type = '';
-                recordObj.SupplierName = ' ';
-                recordObj.dataArr = [
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-'
-                ];
+            } 
+            LoadingOverlay.hide();
 
-                records.push(recordObj);
-                templateObject.records.set(records);
-                templateObject.grandrecords.set('');
-                $('.fullScreenSpin').css('display', 'none');
-            }
 
         }).catch(function (err) {
             //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $('.fullScreenSpin').css('display', 'none');
+            LoadingOverlay.hide();
         });
     };
 
