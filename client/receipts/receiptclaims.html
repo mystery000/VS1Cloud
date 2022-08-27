@@ -731,6 +731,16 @@
                                         <th class="th colReceiptAccount">Account</th>
                                         <th class="th colReceiptTripGroup">Trip-Group</th>
                                         <th class="th colReceiptDesc" style="width: 30%;">Description</th>
+                                        <th class="th colReimbursement hiddenColumn">Reimbursement</th>
+                                        <th class="th colSupplierID hiddenColumn"></th>
+                                        <th class="th colAccountID hiddenColumn"></th>
+                                        <th class="th colEmployeeID hiddenColumn"></th>
+                                        <th class="th colEmployeeName hiddenColumn"></th>
+                                        <th class="th colTaxCode hiddenColumn"></th>
+                                        <th class="th colTaxAmount hiddenColumn"></th>
+                                        <th class="th colAmountEx hiddenColumn"></th>
+                                        <th class="th colAmountInc hiddenColumn"></th>
+                                        <th class="th colLineID hiddenColumn"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -749,6 +759,16 @@
                                                 <td contenteditable="false" class="colReceiptAccount">{{item.AccountName}}</td>
                                                 <td contenteditable="false" class="colReceiptTripGroup">{{item.Comments}}</td>
                                                 <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colReimbursement" flag="{{item.Reimbursement}}">{{item.Reimbursement}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colSupplierID">{{item.SupplierID}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colAccountID">{{item.AccountId}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colEmployeeID">{{item.EmployeeID}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colEmployeeName">{{item.EmployeeName}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colTaxCode">{{item.TaxCode}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colTaxAmount">{{item.Tax}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colAmountEx">{{item.AmountEx}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colAmountInc">{{item.AmountInc}}</td>
+                                                <td contenteditable="false" class="hiddenColumn colLineID">{{item.LineID}}</td>
                                             </tr>
                                         {{/each}}
                                     {{/if}}
@@ -1300,7 +1320,6 @@
         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
             <div class="modal-content">
                 <div class="modal-header">
-
                     <h4 class="title-header">Banking Overview</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
@@ -1314,7 +1333,6 @@
             </div>
         </div>
     </div>
-
     <!-- End Help Video Modal -->
 
     <!-- Employee Select Standard Modals -->
@@ -1347,7 +1365,6 @@
                 <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
                     <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
                     {{> supplierlistpop}}
-
                 </div>
                 <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
                 </div>

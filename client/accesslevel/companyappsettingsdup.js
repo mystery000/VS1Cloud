@@ -299,12 +299,15 @@ Template.companyappsettingsdup.onRendered(function () {
                     // Hide Simple Start
                     $('#settingsCard1').addClass('fadeColorNew');
                     $('#settingsCard1 input').attr("disabled", true);
+                    $('#settingsCard1 input').prop("checked", true);
                 } else if (cloudPackage === "Essentials") {
                     // Hide Essentials
                     $('#settingsCard1').addClass('fadeColorNew');
                     $('#settingsCard2').addClass('fadeColorNew');
                     $('#settingsCard1 input').attr("disabled", true);
                     $('#settingsCard2 input').attr("disabled", true);
+                    $('#settingsCard1 input').prop("checked", true);
+                    $('#settingsCard2 input').prop("checked", true);
                 } else if (cloudPackage === "PLUS") {
                     // Hide PLUS
                     $('#settingsCard1').addClass('fadeColorNew');
@@ -313,6 +316,9 @@ Template.companyappsettingsdup.onRendered(function () {
                     $('#settingsCard1 input').attr("disabled", true);
                     $('#settingsCard2 input').attr("disabled", true);
                     $('#settingsCard3 input').attr("disabled", true);
+                    $('#settingsCard1 input').prop("checked", true);
+                    $('#settingsCard2 input').prop("checked", true);
+                    $('#settingsCard3 input').prop("checked", true);
                 }
                 // $('.fullScreenSpin').css('display','none');
             }, 500);
@@ -472,7 +478,7 @@ Template.companyappsettingsdup.events({
         // $('.fullScreenSpin').css('display', 'inline-block');
         const templateObject = Template.instance();
         let checkLinkTrueERP = false;
-        let cloudPackageCheck = localStorage.getItem('vs1cloudlicenselevel');  
+        let cloudPackageCheck = localStorage.getItem('vs1cloudlicenselevel');
         cloudPackageCheck = 'Simple Start';
         var checkEssentials = document.getElementById("formCheck-Essentials");
         var checkPlus = document.getElementById("formCheck-Plus");
@@ -487,14 +493,14 @@ Template.companyappsettingsdup.events({
         let userQuantity = 1;
         let sumPriceUser = 0;
         var splashLineArray = new Array();
-        let getCurrenUserPack = templateObject.recordpackType.get(); 
+        let getCurrenUserPack = templateObject.recordpackType.get();
         if( cloudPackageCheck != 'PLUS' ){
             if ((checkEssentials.checked == true) && (checkPlus.checked == false)) {
                 if (cloudPackageCheck == "Essentials") {
                     paymentAmount = 0;
                     accessLevelCheck = 2;
                 } else {
-                    let basePrice = 65;                
+                    let basePrice = 65;
                     if (getCurrenUserPack == "trialPack") {
                         paymentAmount = 30;
                     } else if (getCurrenUserPack == "subPack") {
@@ -534,7 +540,7 @@ Template.companyappsettingsdup.events({
                         paymentAmount = 60;
                     }
                 }
-                let basePrice = 95;  
+                let basePrice = 95;
                 lineItemObjForm = {
                     ModuleName: "PLUS" || '',
                     Price: paymentAmount.toFixed(2),
@@ -651,7 +657,7 @@ Template.companyappsettingsdup.events({
 
         for (let l = 0; l < lineItemsForm1.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItemsForm1[l].ModuleName + "&price" + l + "=" + Currency + lineItemsForm1[l].Price + "&qty" + l + "=" + lineItemsForm1[l].RenewDiscountDesc + "&";
-        }        
+        }
         stringQuery = stringQuery + "tax=0" + "&total=" + Currency + grandTotal + "&customer=" + Session.get('vs1companyName') + "&name=" + name + "&surname=" + surname + "&company=" + Session.get('vs1companyName') + "&customeremail=" + localStorage.getItem('mySession') + "&type=VS1 Modules Purchase&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
         newStripePrice = grandTotal.toFixed(2);
         // return false
