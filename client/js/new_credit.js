@@ -355,7 +355,7 @@ Template.creditcard.onRendered(() => {
 
         let targetRow = $('#' + lineID);
         let targetTaxCode = targetRow.find('.lineTaxCode').val();
-        let price = targetRow.find('.colAmount').val() || 0;
+        let price = targetRow.find('.colAmount').val() || '';
         const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
 
         if (taxDetail) {
@@ -604,7 +604,7 @@ Template.creditcard.onRendered(() => {
         let targetRow = $('#' + lineID);
         let targetTaxCode = targetRow.find('.lineTaxCode').val();
         let qty = targetRow.find(".lineQty").val() || 0
-        let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+        let price = targetRow.find('.colUnitPriceExChange').val() || '';
         const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
 
         if (taxDetail) {
@@ -2297,7 +2297,7 @@ Template.creditcard.onRendered(() => {
         if (object_invoce[0]["taxItems"]) {
                 
             let taxItems = object_invoce[0]["taxItems"];
-            $("#htemplatePreviewModal #tax_list_print").html("");
+            $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
                     <div style="width: 100%; display: flex;">
@@ -4278,7 +4278,7 @@ Template.creditcard.onRendered(() => {
             let targetRow = $('#' + lineID);
             let targetTaxCode = targetRow.find('.lineTaxCode').val();
             let qty = targetRow.find(".lineQty").val() || 0
-            let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+            let price = targetRow.find('.colUnitPriceExChange').val() || '';
             const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
     
             if (taxDetail) {
@@ -5755,7 +5755,7 @@ Template.creditcard.events({
         let targetRow = $(event.target).closest('tr');
         let targetID = targetRow.attr('id');
         let targetTaxCode = targetRow.find('.lineTaxCode').val();
-        let price = targetRow.find('.colAmountExChange').val() || 0;
+        let price = targetRow.find('.colAmountExChange').val() || '';
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
         const subTaxCodes = tmpObj.subtaxcodes.get();

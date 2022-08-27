@@ -1042,7 +1042,7 @@ templateObject.getLastPOData = async function() {
         if (object_invoce[0]["taxItems"]) {
                 
             let taxItems = object_invoce[0]["taxItems"];
-            $("#htemplatePreviewModal #tax_list_print").html("");
+            $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
                     <div style="width: 100%; display: flex;">
@@ -1416,12 +1416,12 @@ templateObject.getLastPOData = async function() {
                     let html = `
                         <div style="width: 100%; display: flex;">
                             <div style="padding-right: 16px; width: 50%;">
-                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
                                     ${code}</p>
                             </div>
                             <div style="padding-left: 16px; width: 50%;">
-                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
-                                    $ ${taxItems[code].toFixed(2)}</p>
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(2)}</p>
                             </div>
                         </div>
                     `;

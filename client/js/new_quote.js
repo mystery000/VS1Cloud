@@ -537,7 +537,7 @@ Template.new_quote.onRendered(() => {
 
         }
 
-        item_invoices.taxItems = taxItems;
+        item_quote.taxItems = taxItems;
 
         object_invoce.push(item_quote);
         $("#templatePreviewModal .field_payment").show();
@@ -1023,7 +1023,7 @@ Template.new_quote.onRendered(() => {
         if (object_invoce[0]["taxItems"]) {
                 
             let taxItems = object_invoce[0]["taxItems"];
-            $("#htemplatePreviewModal #tax_list_print").html("");
+            $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
                     <div style="width: 100%; display: flex;">

@@ -1604,7 +1604,8 @@ Template.new_salesorder.onRendered(() => {
         if (object_invoce[0]["taxItems"]) {
                 
             let taxItems = object_invoce[0]["taxItems"];
-            $("#htemplatePreviewModal #tax_list_print").html("");
+            console.log(taxItems);
+            $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
                     <div style="width: 100%; display: flex;">
@@ -1615,7 +1616,7 @@ Template.new_salesorder.onRendered(() => {
                         <div style="padding-left: 16px; width: 50%;">
                             <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
                                 $${taxItems[code].toFixed(2)}</p>
-                        </div>
+                        </div> 
                     </div>
                 `;
                 $("#templatePreviewModal #tax_list_print").append(html);
