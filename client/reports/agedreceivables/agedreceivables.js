@@ -3,6 +3,8 @@ import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
+import GlobalFunctions from "../../GlobalFunctions";
+
 
 
 
@@ -229,10 +231,10 @@ Template.agedreceivables.onRendered(() => {
                         record.entries.forEach((entry) => {
                             amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
                             Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
-                            oneMonth = oneMonth + parseFloat(entry.entries["30Days"]);
-                            twoMonth = twoMonth + parseFloat(entry.entries["60Days"]);
-                            threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
-                            Older = Older + parseFloat(entry.entries["120Days"]);
+                            oneMonth = oneMonth + parseFloat(entry.entries["1-30Days"]);
+                            twoMonth = twoMonth + parseFloat(entry.entries["30-60Days"]);
+                            threeMonth = threeMonth + parseFloat(entry.entries["60-90Days"]);
+                            Older = Older + parseFloat(entry.entries[">90Days"]);
     
                         });
     
@@ -1002,7 +1004,62 @@ Template.agedreceivables.events({
         } else {
             $('.table tbody tr').show();
         }
+    },
+
+
+    // CURRENCY MODULE
+  "click .fx-rate-btn": async e => {
+    await loadCurrency();
+    //loadCurrencyHistory();
+  },
+  "click .currency-modal-save": e => {
+    //$(e.currentTarget).parentsUntil(".modal").modal("hide");
+    LoadingOverlay.show();
+
+    let templateObject = Template.instance();
+
+    // Get all currency list
+    let _currencyList = templateObject.currencyList.get();
+
+    // Get all selected currencies
+    const currencySelected = $(".currency-selector-js:checked");
+    let _currencySelectedList = [];
+    if (currencySelected.length > 0) {
+      $.each(currencySelected, (index, e) => {
+        const sellRate = $(e).attr("sell-rate");
+        const buyRate = $(e).attr("buy-rate");
+        const currencyCode = $(e).attr("currency");
+        const currencyId = $(e).attr("currency-id");
+        let _currency = _currencyList.find(c => c.id == currencyId);
+        _currency.active = true;
+        _currencySelectedList.push(_currency);
+      });
+    } else {
+      let _currency = _currencyList.find(c => c.code == defaultCurrencyCode);
+      _currency.active = true;
+      _currencySelectedList.push(_currency);
     }
+
+    _currencyList.forEach((value, index) => {
+      if (_currencySelectedList.some(c => c.id == _currencyList[index].id)) {
+        _currencyList[index].active = _currencySelectedList.find(c => c.id == _currencyList[index].id).active;
+      } else {
+        _currencyList[index].active = false;
+      }
+    });
+
+    _currencyList = _currencyList.sort((a, b) => {
+      if (a.code == defaultCurrencyCode) {
+        return -1;
+      }
+      return 1;
+    });
+
+    // templateObject.activeCurrencyList.set(_activeCurrencyList);
+    templateObject.currencyList.set(_currencyList);
+
+    LoadingOverlay.hide();
+  }
 
 });
 
@@ -1031,7 +1088,10 @@ Template.agedreceivables.helpers({
         });
     },
 
-    formatPrice(amount) {
+    formatPrice: (amount, days = null) => {
+        if(days != null) {
+            amount = amount[days];
+        }
         let utilityService = new UtilityService();
         if (isNaN(amount)) {
           amount = amount === undefined || amount === null || amount.length === 0
@@ -1051,7 +1111,7 @@ Template.agedreceivables.helpers({
       // FX Module
     convertAmount: (amount = 0.00, currencyData, days = null) => {
       if(days != null) {
-          amount = amount[days + 'Days'];
+          amount = amount[days];
       }
       let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
   
@@ -1152,7 +1212,7 @@ Template.agedreceivables.helpers({
     },
     isNegativeAmount(amount, days = null) {
       if(days != null) {
-          amount = amount[days + 'Days'];
+          amount = amount[days];
       }
       if (Math.sign(amount) === -1) {
         return true;
