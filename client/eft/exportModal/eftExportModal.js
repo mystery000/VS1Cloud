@@ -1,14 +1,56 @@
 import { ReactiveVar } from "meteor/reactive-var";
+import { isNumber } from "underscore";
 
 
 Template.eftExportModal.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.eftOptionsList = new ReactiveVar([]);
   templateObject.accountTypes = new ReactiveVar([]);
+  templateObject.transactionDescriptions = new ReactiveVar([]);
+  templateObject.bankNames = new ReactiveVar([]);
 });
 
 Template.eftExportModal.onRendered(function () {
   let templateObject = Template.instance();
+
+  templateObject.transactionDescriptions.set([
+    {
+      value: 'payroll',
+      label: 'Payroll'
+    }, {
+      value: 'supplier',
+      label: 'Supplier'
+    }, {
+      value: 'insurance',
+      label: 'Insurance'
+    }
+  ]);
+
+  templateObject.bankNames.set([
+    {
+      value: 'None',
+      label: ''
+    }
+  ]);
+
+  setTimeout(() => {
+    $(".eftProcessingDate").datepicker({
+      showOn: "button",
+      buttonText: "Show Date",
+      buttonImageOnly: true,
+      buttonImage: "/img/imgCal2.png",
+      constrainInput: false,
+      dateFormat: "yy/mm/dd",
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-90:+10",
+      onSelect: function (dateText, inst) {
+        // $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
+      },
+    });
+  }, 100);
 
   templateObject.loadAccountTypes = () => {
     let accountTypeList = [];
@@ -72,6 +114,13 @@ Template.eftExportModal.events({
 
   "click .addNewRow": (e) => {
     e.preventDefault();
+    let transactionCodes = `
+      <select class="form-control pointer sltTranslactionCode">
+        <option value=""></option> 
+        <option value="">Debit Items</option> 
+        <option value="">Credit Items</option> 
+      </select>
+    `;
     $('#eftExportTableBody').append(`
       <tr>
         <td class="colIdx" style="width: 2%;">
@@ -80,28 +129,28 @@ Template.eftExportModal.events({
           <input type="checkbox" class="isApply" />
         </td>
         <td class="colAccountName">
-          <input type="text" class="form-control eftInput" />
+          <input type="text" class="form-control eftInput eftInputAccountName" />
         </td>
         <td class="colBsb">
-          <input type="text" class="form-control eftInput" value="-" />
+          <input type="text" class="form-control eftInput eftInputBsb" placeholder="___-___" />
         </td>
         <td class="colAccountNo">
-          <input type="text" class="form-control eftInput" />
+          <input type="text" class="form-control eftInput eftInputAccountNo" />
         </td>
         <td class="colTransactionCode">
-          <input type="text" class="form-control eftInput" />
+          ${transactionCodes}
         </td>
         <td class="colLodgement">
-          <input type="text" class="form-control eftInput" />
+          <input type="text" class="form-control eftInput eftInputTransactionCode" />
         </td>
         <td class="colAmount">
-          <input type="text" class="form-control eftInput text-right" />
+          <input type="text" class="form-control eftInput eftInputAmount text-right" />
         </td>
         <td class="colFromBsb">
-          <input type="text" class="form-control eftInput" value="-" />
+          <input type="text" class="form-control eftInput eftInputFromBsb" placeholder="___-___" />
         </td>
         <td class="colFromAccountNo">
-          <input type="text" class="form-control eftInput" />
+          <input type="text" class="form-control eftInput eftInputFromAccountNo" />
         </td>
       </tr> 
     `)
@@ -109,7 +158,13 @@ Template.eftExportModal.events({
 
   "click .btnRemoveAll": (e) => {
     e.preventDefault();
-
+    let transactionCodes = `
+      <select class="form-control pointer sltTranslactionCode">
+        <option value=""></option> 
+        <option value="">Debit Items</option> 
+        <option value="">Credit Items</option> 
+      </select>
+    `;
     $('#eftExportTableBody').empty();
 
     $('#eftExportTableBody').append(`
@@ -121,32 +176,76 @@ Template.eftExportModal.events({
           <input type="checkbox" class="isApply" />
         </td>
         <td class="colAccountName">
-          <input type="text" class="form-control eftInput" />
+          <input type="text" class="form-control eftInput eftInputAccountName" />
         </td>
         <td class="colBsb">
-          <input type="text" class="form-control eftInput" value="-" />
+          <input type="text" class="form-control eftInput eftInputBsb" placeholder="___-___" />
         </td>
         <td class="colAccountNo">
-          <input type="text" class="form-control eftInput" />
+          <input type="text" class="form-control eftInput eftInputAccountNo" />
         </td>
         <td class="colTransactionCode">
-          <input type="text" class="form-control eftInput" />
+          ${transactionCodes}
         </td>
         <td class="colLodgement">
-          <input type="text" class="form-control eftInput" />
+          <input type="text" class="form-control eftInput eftInputTransactionCode" />
         </td>
         <td class="colAmount">
-          <input type="text" class="form-control eftInput text-right" />
+          <input type="text" class="form-control eftInput eftInputAmount text-right" />
         </td>
         <td class="colFromBsb">
-          <input type="text" class="form-control eftInput" value="-" />
+          <input type="text" class="form-control eftInput eftInputFromBsb" placeholder="___-___" />
         </td>
         <td class="colFromAccountNo">
-          <input type="text" class="form-control eftInput" />
+          <input type="text" class="form-control eftInput eftInputFromAccountNo" />
         </td>
       </tr> 
     `)
   },
+
+  "keypress .eftInputAmount": (e) => {
+    if (e.which === 13) {
+      console.log('enter pressed', e.target.value)
+    }
+  },
+
+  "change .eftInputAmount": function (e) {
+    let sum = 0;
+    $('.eftInputAmount').each(function () {
+      let val = parseFloat($(this).val())
+      if (isNaN(val)) {
+        $(this).val('');
+        val = 0;
+      }
+      sum += val;
+    });
+    $('#totalAmount').html(sum.toFixed(2))
+  },
+
+  "click .btnDoEftExport": (e) => {
+    let sltAccountType = $('#sltAccountType').val();
+    let sltBankName = $('#sltBankName').val();
+    let eftProcessingDate = $('#eftProcessingDate').val();
+    let eftUserName = $('#eftUserName').val();
+    let eftNumberUser = $('#eftNumberUser').val();
+    let sltTransactionDescription = $('#sltTransactionDescription').val();
+    console.log(sltAccountType, sltBankName, eftProcessingDate, eftUserName, eftNumberUser, sltTransactionDescription)
+
+    if (!sltAccountType) {
+      swal("Please input Account Name", "", "error");
+      return false;
+    } else if (!sltBankName) {
+      swal("Please input Bank Name", "", "error");
+      return false;
+    } else if(!eftProcessingDate) {
+      swal("Please input Processing Date", "", "error");
+      return false;
+    }
+
+    return true;
+
+    return;
+  }
 });
 
 Template.eftExportModal.helpers({
@@ -164,4 +263,8 @@ Template.eftExportModal.helpers({
           : -1;
       });
   },
+
+  transactionDescriptions: () => {
+    return Template.instance().transactionDescriptions.get();
+  }
 });
