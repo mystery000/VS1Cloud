@@ -1069,7 +1069,7 @@ Template.refundcard.onRendered(() => {
             if (object_invoce[0]["taxItems"]) {
                 
                 let taxItems = object_invoce[0]["taxItems"];
-                $("#htemplatePreviewModal #tax_list_print").html("");
+                $("#templatePreviewModal #tax_list_print").html("");
                 Object.keys(taxItems).map((code) => {
                     let html = `
                         <div style="width: 100%; display: flex;">

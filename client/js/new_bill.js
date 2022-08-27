@@ -336,11 +336,11 @@ Template.billcard.onRendered(() => {
         let targetRow = $('#' + lineID);
         let targetTaxCode = targetRow.find('.lineTaxCode').val();
         let qty = targetRow.find(".lineQty").val() || 0
-        let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+        let price = targetRow.find('.colUnitPriceExChange').val() || '';
         const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
 
         if (taxDetail) {
-            let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+            let priceTotal = utilityService.convertSubstringParseFloat(colAmount);
             let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
             if (taxDetail.Lines) {
                 taxDetail.Lines.map((line) => {
@@ -584,11 +584,11 @@ Template.billcard.onRendered(() => {
 
             let targetRow = $('#' + lineID);
             let targetTaxCode = targetRow.find('.lineTaxCode').val();
-            let price = targetRow.find('.colAmount').val() || 0;
+            let price = targetRow.find('.colAmount').val() || '';
             const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
 
             if (taxDetail) {
-                let priceTotal = Number(price.replace(/[^0-9.-]+/g, ""));
+                let priceTotal = utilityService.convertSubstringParseFloat(colAmount);
                 let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
                 if (taxDetail.Lines) {
                     taxDetail.Lines.map((line) => {
@@ -2297,7 +2297,8 @@ Template.billcard.onRendered(() => {
         if (object_invoce[0]["taxItems"]) {
                 
             let taxItems = object_invoce[0]["taxItems"];
-            $("#htemplatePreviewModal #tax_list_print").html("");
+            console.log(taxItems);
+            $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
                     <div style="width: 100%; display: flex;">
@@ -4255,11 +4256,12 @@ Template.billcard.onRendered(() => {
             let targetRow = $('#' + lineID);
             let targetTaxCode = targetRow.find('.lineTaxCode').val();
             let qty = targetRow.find(".lineQty").val() || 0
-            let price = targetRow.find('.colUnitPriceExChange').val() || 0;
+            let price = targetRow.find('.colUnitPriceExChange').val() || '';
+            let colAmount = $('#' + lineID + " .colAmount").val();
             const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
     
             if (taxDetail) {
-                let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+                let priceTotal = utilityService.convertSubstringParseFloat(colAmount);
                 let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
                 if (taxDetail.Lines) {
                     taxDetail.Lines.map((line) => {
@@ -5853,7 +5855,7 @@ Template.billcard.events({
         let targetRow = $(event.target).closest('tr');
         let targetID = targetRow.attr('id');
         let targetTaxCode = targetRow.find('.lineTaxCode').val();
-        let price = targetRow.find('.colAmountExChange').val() || 0;
+        let price = targetRow.find('.colAmountExChange').val() || '';
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
         const subTaxCodes = tmpObj.subtaxcodes.get();
