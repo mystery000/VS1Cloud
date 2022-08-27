@@ -31,7 +31,7 @@ const templateObject = Template.instance();
 Template.report1099.onRendered(()=>{
 
   const templateObject = Template.instance();
-  let utilityService = new UtilityService();
+
   let salesOrderTable;
   var splashArray = new Array();
   var today = moment().format('DD/MM/YYYY');
@@ -84,8 +84,7 @@ Template.report1099.onRendered(()=>{
     $("#dateTo").val(begunDate);
     templateObject.ContractorPaymentSummaryReports = (dateFrom, dateTo, ignoreDate) => {
       LoadingOverlay.show();
-      templateObject.records.set("");
-      templateObject.grandrecords.set("");
+  
       reportService.getContractorPaymentSummaryData(dateFrom, dateTo, ignoreDate).then(function (data) {
         if (data.tcontractorpaymentsummary.length) {
           let records = [];
@@ -102,16 +101,12 @@ Template.report1099.onRendered(()=>{
           let accountType = "";
           let purchaseID = "";
 
-          console.log(accountData);
 
-          try {
-            accountData.forEach(account => {
-              records.push({Id: account.PaymentID, type: account.PaymentType, Company: account.SupplierPrintName, entries: account});
-            });
-            console.log(records);
-          } catch (e) {
-            console.log(e);
-          }
+          accountData.forEach(account => {
+            records.push({Id: account.PaymentID, type: account.PaymentType, Company: account.SupplierPrintName, entries: account});
+          });
+           
+         
 
           //   for (let i = 0; i < accountData.length; i++) {
 
@@ -321,9 +316,9 @@ Template.report1099.onRendered(()=>{
     templateObject.getDepartments();
 
       /**
-   * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
-   * So we have a showable list of currencies to toggle
-   */
+     * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
+     * So we have a showable list of currencies to toggle
+     */
 
        templateObject.loadCurrency = async () => {
         await loadCurrency();
