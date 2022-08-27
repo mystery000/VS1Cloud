@@ -205,9 +205,6 @@ Template.purchasesreport.onRendered(() => {
                 totalTax = totalTax + parseFloat(entry.entries["Total Tax"]);
                 amountInc = amountInc + parseFloat(entry.entries["Total Amount (Inc)"]);
                 balance = balance + parseFloat(entry.entries.Balance);
-
-
-                console.log(entry, totalAmountEx, totalTax, amountInc, balance);
             });
 
             record.total = {
@@ -262,10 +259,10 @@ Template.purchasesreport.onRendered(() => {
         let grandbalance = 0;
 
         current.forEach((total) => {
-            grandtotalAmountEx = grandtotalAmountEx + total.TotalAmountEx;
-            grandtotalTax = grandtotalTax + total.TotalTax;
-            grandamountInc = grandamountInc + total.AmountInc;
-            grandbalance = grandbalance + total.Balance;
+            grandtotalAmountEx = grandtotalAmountEx + parseFloat(total.TotalAmountEx);
+            grandtotalTax = grandtotalTax + parseFloat(total.TotalTax);
+            grandamountInc = grandamountInc + parseFloat(total.AmountInc);
+            grandbalance = grandbalance + parseFloat(total.Balance);
         });
 
         // for (let n = 0; n < current.length; n++) {
@@ -320,9 +317,7 @@ Template.purchasesreport.onRendered(() => {
         // templateObject.grandrecords.set(grandval);
 
 
-        console.log(allRecords);
-        console.log(grandValObj);
-
+        console.log(allRecords, grandValObj);
         templateObject.records.set(allRecords);
         templateObject.grandrecords.set(grandValObj);
 
