@@ -317,7 +317,6 @@ Template.purchasesreport.onRendered(() => {
         // templateObject.grandrecords.set(grandval);
 
 
-        console.log(allRecords, grandValObj);
         templateObject.records.set(allRecords);
         templateObject.grandrecords.set(grandValObj);
 
