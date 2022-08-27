@@ -15,6 +15,12 @@
       border: none;
     }
 
+    .eftExportTableContainer {
+      margin: 8px 8px 8px 16px;
+      min-height: 300px;
+      max-height: 360px;
+    }
+
     #eftExportTable {
       border: solid 1px #e3e3e3;
     }
@@ -25,7 +31,17 @@
 
     #eftExportTableBody .colIdx,
     #eftExportTableBody .colApply {
-      padding: 0.5rem;
+      /* padding: 0.5rem; */
+      vertical-align: middle;
+    }
+
+    .colAmount {
+      text-align: right;
+    }
+
+    .border-none {
+      border: none !important;
+      border-top: solid 1px #e3e3e3 !important;
     }
   </style>
   <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered generated-id" role="document">
@@ -38,8 +54,8 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-6 col-md-10">
-            <div class="row" style="margin-top: 56px;">
-              <div class="col-6 col-md-4">
+            <div class="row" style="margin-top: 16px;">
+              <div class="col-6 col-md-4" style="margin-top: 14px;">
                 <div class="form-group" style="margin: 4px;"><label>Account</label>
                   <select class="form-control pointer" id="sltAccountType" name="sltAccountType">
                     {{#each item in accountTypes}}
@@ -49,30 +65,47 @@
                   </select>
                 </div>
               </div>
-              <div class="col-6 col-md-4">
+              <div class="col-6 col-md-4" style="margin-top: 14px;">
                 <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
-                  <input type="text" class="form-control" id="edtAccountName" name="edtAccountName">
+                  <select class="form-control pointer" id="sltBankName" name="sltBankName">
+                    <option value=""></option>
+                    {{#each item in bankNames}}
+                    <option value="{{item.value}}">{{item.label}} </option>
+                    {{/each}}
+                  </select>
                 </div>
               </div>
-              <div class="col-6 col-md-4">
+              <div class="col-6 col-md-4" style="margin-top: 14px;">
                 <div class="form-group" style="margin: 4px;"><label>Processing Date</label>
-                  <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo">
+                  <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: YYYY-MM-DD">
+                    <div class="input-group date">
+                      <input type="text" class="form-control eftProcessingDate" id="eftProcessingDate" autocomplete="off" />
+                      <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th" style="cursor: pointer"></span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-6 col-md-4">
+              <div class="col-6 col-md-4" style="margin-top: 14px;">
                 <div class="form-group" style="margin: 4px;"><label>Name of User</label>
-                  <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo">
+                  <input type="text" class="form-control" id="eftUserName" name="eftUserName">
                 </div>
               </div>
-              <div class="col-6 col-md-4">
+              <div class="col-6 col-md-4" style="margin-top: 14px;">
                 <div class="form-group" style="margin: 4px;"><label>Number of User</label>
-                  <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo">
+                  <input type="text" class="form-control" id="eftNumberUser" name="eftNumberUser">
                 </div>
               </div>
-              <div class="col-6 col-md-4">
+              <div class="col-6 col-md-4" style="margin-top: 14px;">
                 <div class="form-group" style="margin: 4px;">
                   <label>Transaction Description</label>
-                  <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo">
+                  <select class="form-control pointer" id="sltTransactionDescription" name="sltTransactionDescription">
+                    <option value=""></option>
+                    {{#each item in transactionDescriptions}}
+                    <option value="{{item.value}}">{{item.label}}</option>
+                    {{/each}}
+                  </select>
                 </div>
               </div>
             </div>
@@ -98,7 +131,7 @@
         </div>
 
         <div class="row">
-          <div class="table-responsive" style="margin: 0 8px 8px 16px; min-height: 120px;">
+          <div class="table-responsive eftExportTableContainer">
             <table id="eftExportTable" name="eftExportTable"
               class="dataTable table table-hover table-striped table-bordered eftExportTable">
               <thead>
@@ -126,31 +159,58 @@
                     <input type="checkbox" class="isApply" />
                   </td>
                   <td class="colAccountName">
-                    <input type="text" class="form-control eftInput" />
+                    <input type="text" class="form-control eftInput eftInputAccountName" />
                   </td>
                   <td class="colBsb">
-                    <input type="text" class="form-control eftInput" value="-" />
+                    <input type="text" class="form-control eftInput eftInputBsb" placeholder="___-___" />
                   </td>
                   <td class="colAccountNo">
-                    <input type="text" class="form-control eftInput" />
+                    <input type="text" class="form-control eftInput eftInputAccountNo" />
                   </td>
                   <td class="colTransactionCode">
-                    <input type="text" class="form-control eftInput" />
+                    <select class="form-control pointer sltTranslactionCode">
+                      <option value=""></option>
+                      <option value="">Debit Items</option>
+                      <option value="">Credit Items</option>
+                    </select>
                   </td>
                   <td class="colLodgement">
-                    <input type="text" class="form-control eftInput" />
+                    <input type="text" class="form-control eftInput eftInputTransactionCode" />
                   </td>
                   <td class="colAmount">
-                    <input type="text" class="form-control eftInput text-right" />
+                    <input type="text" class="form-control eftInput eftInputAmount text-right" />
                   </td>
                   <td class="colFromBsb">
-                    <input type="text" class="form-control eftInput" value="-" />
+                    <input type="text" class="form-control eftInput eftInputFromBsb" placeholder="___-___" />
                   </td>
                   <td class="colFromAccountNo">
-                    <input type="text" class="form-control eftInput" />
+                    <input type="text" class="form-control eftInput eftInputFromAccountNo" />
                   </td>
-                </tr> 
+                </tr>
               </tbody>
+              <tr>
+                <td class="border-none" style="width: 2%;">
+                </td>
+                <td class="border-none">
+                </td>
+                <td class="border-none">
+                </td>
+                <td class="border-none">
+                </td>
+                <td class="border-none">
+                </td>
+                <td class="border-none">
+                </td>
+                <td class="border-none">
+                </td>
+                <td class="border-none text-right">
+                  <span id="totalAmount"></span>
+                </td>
+                <td class="border-none">
+                </td>
+                <td class="border-none">
+                </td>
+              </tr>
             </table>
           </div>
         </div>
