@@ -1041,7 +1041,7 @@ Template.emailsettings.onRendered(function () {
                                     EmployeeId: parseInt(recipientId),
                                     Every: 1,
                                     EndDate: "",
-                                    FormID: formID,
+                                    FormID: parseInt(formID),
                                     LastEmaileddate: "",
                                     MonthDays: 0,
                                     StartDate: sDate,
@@ -1068,10 +1068,10 @@ Template.emailsettings.onRendered(function () {
                                             Active: true,
                                             BeginFromOption: "",
                                             ContinueIndefinitely: true,
-                                            EmployeeId: parseInt(recipientId),
+                                            EmployeeId: recipientId + '_' + (attachIndex + 1),
                                             Every: 1,
                                             EndDate: "",
-                                            FormID: formID + '_' + (attachIndex+1).toString(),
+                                            FormID: parseInt(formID),
                                             LastEmaileddate: "",
                                             MonthDays: 0,
                                             StartDate: sDate,
@@ -1097,6 +1097,7 @@ Template.emailsettings.onRendered(function () {
                                             });
                                         });
                                         object.fields.NextDueDate = nextDueDate;
+                                        object.fields.EmployeeId = object.fields.EmployeeId + '_T'
                                         Meteor.call('addTask', object.fields);
                                     }
 
@@ -1112,6 +1113,7 @@ Template.emailsettings.onRendered(function () {
                                             });
                                         });
                                         object.fields.NextDueDate = nextDueDate;
+                                        object.fields.EmployeeId = object.fields.EmployeeId.replace('_T', '') + '_D'
                                         Meteor.call('addTask', object.fields);
                                     }
 
@@ -1302,7 +1304,7 @@ Template.emailsettings.onRendered(function () {
                             EmployeeId: parseInt(recipientId),
                             Every: 1,
                             EndDate: "",
-                            FormID: formID,
+                            FormID: parseInt(formID),
                             LastEmaileddate: "",
                             MonthDays: 0,
                             StartDate: sDate,
