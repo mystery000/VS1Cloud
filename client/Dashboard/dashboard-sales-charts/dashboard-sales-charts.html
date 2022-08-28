@@ -1,109 +1,48 @@
 <template name="dashboardSalesCharts">
-    <style>
-        .portlet-placeholder {
-            border: 1px dotted black;
-            margin: 0 1em 1em 0;
-            height: 50px;
-            width: 50px;
-        }
-        .ui-sortable .card.hovered {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
-            cursor: move;
-            transition-duration: 300ms;
+    <div class="sortable-chart-widget-js chart-visibility hideelement col-auto col-md-6" data-default-position="24" data-default-class="col-md-6" key="sd-comparison-chart" pref-id="0" chart-id="1001" chart chart-slug="sd-comparison-chart" chart-name="Comparison Chart" chart-active="true" chart-group="DSCharts">
+        <div class="">
+            <div class="card shadow mb-4 portlet">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="text-info font-weight-bold m-0">Discount Given By Employee</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+                        <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                        <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                            <a  class="dropdown-item" role="presentation" href="#">&nbsp;More Details</a>
+                            <div class="dropdown-divider"></div>
+                            <a id="" class="dropdown-item pointer editchartsbtn " role="presentation" data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
+                            <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="sd-comparison-chart" class="ds-highcharts"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        }
-        .ui-widget.ui-widget-content {
-            border: 1px solid #e3e6f0;
-        }
-        .responsive-chart {
-            position: relative;
-            height: 100%;
-            width: 100%;
-        }
-        .ui-resizable-handle {
-            opacity: 0;
-        }
-        .sortable-chart-widget-js {
-            margin-bottom: 30px !important;
-        }
-        .minHeight100 .card.mb-4 {
-            margin: 0px !important;
-        }
-        .resizeAfterChart .card {
-            max-width: 100%;
-        }
-        .on-editor-change-mode i {
-            pointer-events: none;
-        }
-        .btn-sm.dropdown-toggle.hideelement,
-        .btn-sm.dropdown-toggle.showelement {
-            background-color: #00a3d3!important;
-        }
-        
-        .dimmedChart .fa-eye {
-            color: #1cc88a;
-        }
-        .dimmedChart .fa-eye-slash {
-            color: #e74a3b;
-        }
-    </style>
-        <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" style="width:100%;" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
-            <div class="sortable-chart-widget-js chart-visibility hideelement col-auto col-md-6" data-default-position="0" data-default-class="col-md-6" key="sd-comparison-chart" pref-id="0" chart-id="1001" chart chart-slug="sd-comparison-chart" chart-name="Comparison Chart" chart-active="true" chart-group="DSCharts">
-                <div class="">
-                    <div class="card shadow mb-4 portlet">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="text-info font-weight-bold m-0">Discount Given By Employee</h6>
-                            <div class="dropdown no-arrow">
-                                <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                                <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                                <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                    <a  class="dropdown-item" role="presentation" href="#">&nbsp;More Details</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a id="" class="dropdown-item pointer editchartsbtn " role="presentation" data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                                    <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                                </div>
-                            </div>
+    <div class="sortable-chart-widget-js chart-visibility hideelement col-auto col-md-6" data-default-position="25" data-default-class="col-md-6" key="opens-oppertunities-chart" pref-id="0" chart-id="1002" chart-slug="opens-oppertunities-chart" chart-name="Open Oppertunities Chart" chart-active="true" chart-group="DSCharts">
+        <div class="">
+            <div class="card shadow mb-4 portlet">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="text-info font-weight-bold m-0">Open Oppertunities</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
+                        <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+                        <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
+                            <a  class="dropdown-item" role="presentation" href="#">&nbsp;More Details</a>
+                            <div class="dropdown-divider"></div>
+                            <a id="" class="dropdown-item pointer editchartsbtn " role="presentation" data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
+                            <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
                         </div>
-                        <div class="card-body">
-                            <div id="sd-comparison-chart"></div>
-                        </div>
+                        
                     </div>
                 </div>
-            </div>
-        
-            <div class="sortable-chart-widget-js chart-visibility hideelement col-auto col-md-6" data-default-position="1" data-default-class="col-md-6" key="opens-oppertunities-chart" pref-id="0" chart-id="1002" chart-slug="opens-oppertunities-chart" chart-name="Open Oppertunities Chart" chart-active="true" chart-group="DSCharts">
-                <div class="">
-                    <div class="card shadow mb-4 portlet">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="text-info font-weight-bold m-0">Open Oppertunities</h6>
-                            <div class="dropdown no-arrow">
-                                <a class="on-editor-change-mode btn btn-link hideelement" role="presentation" href="">Hide</a>
-                                <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                                <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
-                                    <a  class="dropdown-item" role="presentation" href="#">&nbsp;More Details</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a id="" class="dropdown-item pointer editchartsbtn " role="presentation" data-toggle="modal" data-target="#">&nbsp;Edit Chart</a>
-                                    <a id="" class="dropdown-item pointer resetchartbtn" role="presentation">&nbsp;Reset Chart</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                        <div class="card-body">                
-                            <div id="opens-oppertunities-chart"></div>
-                        </div>
-                    </div>
+                <div class="card-body">                
+                    <div id="opens-oppertunities-chart" class="ds-highcharts"></div>
                 </div>
             </div>
         </div>
-        <div class="row no-gutters justify-content-center" style="width: 100%;">
-            <button class="btn btn-success float-right hideelement" id="btnDone" type="button" style="margin:0 8px 16px;">
-                <i class="fa fa-save" style="margin-right: 5px;"></i>Save Changes
-            </button>
-            <button class="btn btn-warning float-right hideelement resetchartbtn" id="resetcharts" type="button" style="margin:0 8px 16px;">
-                <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Charts
-            </button>
-            <button class="btn btn-secondary float-right hideelement" id="btnCancel" type="button" style="margin:0 8px 16px;">
-                <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
-            </button>
-        </div>
+    </div>
 </template>

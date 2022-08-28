@@ -13,7 +13,7 @@
 </div>
 {{#if todayTasks}}
   {{#each item in todayTasks}}
-  <div class="row text-center no-gutters mb-1 align-items-center" style="border-bottom: 1px solid #80808042; font-size: 14px;">
+  <div class="row text-center no-gutters mb-1 align-items-center" style="border-bottom: 1px solid #80808042; font-size: 14px; cursor: pointer;"  onclick="window.location.href='/tasklist'">
     <div class="col-md-4 no-gutters">
         <p class="mb-0">{{item.fields.TaskName}}</p>
       </div>

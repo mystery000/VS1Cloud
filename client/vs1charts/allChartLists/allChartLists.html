@@ -116,7 +116,7 @@
             color: #e74a3b;
         } 
     </style>
-        <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
+        <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
             <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="0" data-default-class="col-md-8" id="monthylprofiteandlosscol" key="dashboard__monthyl_profit_and_loss">
                 {{> monthlyprofitandloss}}
             </div>
@@ -184,6 +184,10 @@
             <div class="sortable-chart-widget-js hideelement col-auto col-md-8" data-default-position="16" data-default-class="col-md-8" key="employees__absentee_rate_over_last_12_months">
                 {{> absenteeRate }}
             </div>
+            <!-- position 17 to 23 -->
+            {{> dashboardManagerCharts}}
+            <!-- position 24, 35 -->
+            {{> dashboardSalesCharts}}
         </div>
         <div class="row no-gutters justify-content-center">
             <button class="btn btn-success float-right hideelement" id="btnDone" type="button" style="margin:0 8px 16px;">
