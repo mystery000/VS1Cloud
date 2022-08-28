@@ -741,7 +741,7 @@ Template.productview.onRendered(function() {
                    if (taxcodeList) {
                        for (var i = 0; i < taxcodeList.length; i++) {
                            if (taxcodeList[i].codename == taxRate) {
-                               taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+                               taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100||0;
                            }
                        }
                    }
@@ -757,7 +757,11 @@ Template.productview.onRendered(function() {
                    }
 
                    var taxTotal = parseFloat(sellPrice) * parseFloat(taxrateamount);
+                   if(taxrateamount != 0){
                    sellPriceInc = parseFloat(sellPrice) + taxTotal;
+                   }else{
+                    sellPriceInc = parseFloat(sellPrice);
+                   }
                    if (!isNaN(sellPriceInc)) {
                        $('#edtsellqty1priceInc').val(utilityService.modifynegativeCurrencyFormat(sellPriceInc));
                    }
@@ -4646,7 +4650,7 @@ Template.productview.events({
                     $(colProcess).find('.edtProcessName').val(subStructure.process)
                     $(colNote).append("<input class='w-100' type='text' style='border: 2px solid black'/>");
                     $(colAttachment).append(" <button class='btnAddAttachment' style='border: 0; background-color: #00a3d3; padding-top: 2px; padding-bottom: 2px'><i class='fa fa-paperclip' style='padding-right: 5px; '></i>Add Attachments</button>")
-                   
+
                     for(let i = 0; i< subStructure.mats.length; i++) {
                         grandParent.append("<div class='d-flex productRow'>"+
                             "<div class= 'd-flex colProduct'>"+
@@ -4679,7 +4683,7 @@ Template.productview.events({
                     "<div class='colAttachment'></div>" +
                     "<div class='colDelete'></div>" +
                     "</div>")
-                
+
                 }
                 $(colProduct).prepend("<div style='width: 29%'></div>")
             }

@@ -433,6 +433,7 @@ Template.receiptsoverview.onRendered(function() {
         }
     };
     function showEditTripGroupView(data) {
+      $('.fullScreenSpin').css('display', 'none');
         $("#add-tripgroup-title").text("Edit Trip-Group");
         $('#edtTripGroupID').val(data.Id);
         $('#edtTripGroupName').val(data.TripName);
@@ -1011,7 +1012,7 @@ Template.receiptsoverview.onRendered(function() {
         }
     }
 
-    $("#date-input,#dateTo,#dateFrom,.dtReceiptDate").datepicker({
+    $("#date-input,#dateTo,#dateFrom,.dtReceiptDate, #dateFromMerge, #dateToMerge").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
         buttonImageOnly: true,

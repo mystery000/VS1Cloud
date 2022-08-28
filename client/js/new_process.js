@@ -28,12 +28,12 @@ Template.new_process.onCreated(() => {
 
 Template.new_process.onRendered(() => {
     const templateObject = Template.instance();
-    $('#edtCOGS').select();
-    $('#edtCOGS').editableSelect();
-    $('#edtExpenseAccount').editableSelect();
-    $('#edtOverheadCOGS').editableSelect();
-    $('#edtOverheadExpenseAccount').editableSelect();
-    $('#edtWastage').editableSelect();
+    // $('#edtCOGS').select();
+    // $('#edtCOGS').editableSelect();
+    // $('#edtExpenseAccount').editableSelect();
+    // $('#edtOverheadCOGS').editableSelect();
+    // $('#edtOverheadExpenseAccount').editableSelect();
+    // $('#edtWastage').editableSelect();
     var currentID = FlowRouter.current().queryParams.id;
     templateObject.getProcessDetail  = function() {
         let tempArray = localStorage.getItem('TProcesses');
@@ -65,21 +65,23 @@ Template.new_process.onRendered(() => {
         templateObject.processrecord.set(objDetail);        
     }
 
-   
+    templateObject.getProcessDetail();
 
-    $(document).ready(function() {
+   
+    setTimeout(()=>{
         $('#edtCOGS').editableSelect();
         $('#edtExpenseAccount').editableSelect();
         $('#edtOverheadCOGS').editableSelect();
         $('#edtOverheadExpenseAccount').editableSelect();
         $('#edtWastage').editableSelect();
-        // templateObject.selectedInventoryAssetAccount.set('Inventory Asset Wastage')
-        templateObject.getProcessDetail();
-    })
+    }, 500)
+            // templateObject.selectedInventoryAssetAccount.set('Inventory Asset Wastage')
+            
 
 
-    $(document).on('click', '#edtCOGS', function (e) {
-        $('#accountListModal').modal('toggle')
+
+   $(document).on('click', '#edtCOGS', function(e) {
+        $('#accountListModal').modal();
         templateObject.selectedAccount.set('cogs');
     })
     $(document).on('click', '#edtExpenseAccount', function (e) {
@@ -305,7 +307,16 @@ Template.new_process.events({
     'click #edtOverheadExpenseAccount': function (event) {
         $('#edtOverheadExpenseAccount').select();
         $('#edtOverheadExpenseAccount').editableSelect();
-    }
+    },
+
+    'click #edtWastage': function(event) {
+        $('#edtWastage').select();
+        $('#edtWastage').editableSelect();
+    },
+
+    // 'click #edtCOGS': function (e) {
+      
+    // }
 });
 
 

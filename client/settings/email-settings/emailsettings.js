@@ -696,7 +696,7 @@ Template.emailsettings.onRendered(function () {
     //     templateObject.correspondences.set(temp ? JSON.parse(temp) : [])
     // }
 
-    
+
     templateObject.getCorrespondence = () => {
         // let temp = localStorage.getItem('correspondence');
         getVS1Data('TCorrespondence').then(function (dataObject) {
@@ -727,7 +727,7 @@ Template.emailsettings.onRendered(function () {
                         let temp = dataObject.tcorrespondence.filter(item=>{
                             return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                         })
-        
+
                         for(let i = 0; i< temp.length; i++) {
                             for (let j = i+1; j< temp.length; j++ ) {
                                 if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -735,7 +735,7 @@ Template.emailsettings.onRendered(function () {
                                 }
                             }
                         }
-                        
+
                         temp.map(item=>{
                             if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                                 tempArray.push(item.fields)
@@ -752,7 +752,7 @@ Template.emailsettings.onRendered(function () {
                     let temp = dataObject.tcorrespondence.filter(item=>{
                         return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                     })
-    
+
                     for(let i = 0; i< temp.length; i++) {
                         for (let j = i+1; j< temp.length; j++ ) {
                             if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -760,7 +760,7 @@ Template.emailsettings.onRendered(function () {
                             }
                         }
                     }
-                    
+
                     temp.map(item=>{
                         if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                             tempArray.push(item.fields)
@@ -770,7 +770,7 @@ Template.emailsettings.onRendered(function () {
                 templateObject.correspondences.set(tempArray)
             })
         })
-    
+
     }
 
     templateObject.getCorrespondence();
@@ -972,7 +972,7 @@ Template.emailsettings.onRendered(function () {
                                             }
                                         };
                                         let source = targetElement[i];
-                                       
+
 
                                         await (async () => {
                                             return new Promise((resolve, reject) => {
@@ -1041,7 +1041,7 @@ Template.emailsettings.onRendered(function () {
                                     EmployeeId: parseInt(recipientId),
                                     Every: 1,
                                     EndDate: "",
-                                    FormID: formID,
+                                    FormID: parseInt(formID),
                                     LastEmaileddate: "",
                                     MonthDays: 0,
                                     StartDate: sDate,
@@ -1058,20 +1058,20 @@ Template.emailsettings.onRendered(function () {
                                     let currentTime = new Date()
                                     let transTime = new Date(attachment.tDate)
                                     let dueTime = new Date(attachment.dDate)
-    
+
                                     let attaches = [];
                                     attaches.push(attachment.pdfObject)
-                                    
+
                                     let object = {
                                         type: "TReportSchedules",
                                         fields: {
                                             Active: true,
                                             BeginFromOption: "",
                                             ContinueIndefinitely: true,
-                                            EmployeeId: parseInt(recipientId),
+                                            EmployeeId: recipientId + '_' + (attachIndex + 1),
                                             Every: 1,
                                             EndDate: "",
-                                            FormID: formID + '_' + (attachIndex+1).toString(),
+                                            FormID: parseInt(formID),
                                             LastEmaileddate: "",
                                             MonthDays: 0,
                                             StartDate: sDate,
@@ -1085,7 +1085,7 @@ Template.emailsettings.onRendered(function () {
                                             Offset: new Date().getTimezoneOffset()
                                         }
                                     }
-    
+
                                     if(basedOnType.includes('T') == true && attachment.tDate != '') {
                                         object.fields.StartDate = moment(transTime).format("YYYY-MM-DD HH:mm");
                                         object.fields.EndDate = moment(transTime).format("YYYY-MM-DD HH:mm");
@@ -1097,9 +1097,10 @@ Template.emailsettings.onRendered(function () {
                                             });
                                         });
                                         object.fields.NextDueDate = nextDueDate;
+                                        object.fields.EmployeeId = object.fields.EmployeeId + '_T'
                                         Meteor.call('addTask', object.fields);
                                     }
-    
+
                                     if(basedOnType.includes('D') == true && attachment.dDate != '') {
                                         object.fields.StartDate = moment(dueTime).format("YYYY-MM-DD HH:mm");
                                         object.fields.EndDate = moment(dueTime).format("YYYY-MM-DD HH:mm");
@@ -1112,9 +1113,10 @@ Template.emailsettings.onRendered(function () {
                                             });
                                         });
                                         object.fields.NextDueDate = nextDueDate;
+                                        object.fields.EmployeeId = object.fields.EmployeeId.replace('_T', '') + '_D'
                                         Meteor.call('addTask', object.fields);
                                     }
-    
+
                                     if(basedOnType.includes('O') && attachment.dDate != '' && currentTime.getTime() > dueTime.getTime()) {
                                         object.fields.StartDate = moment(transTime).format("YYYY-MM-DD HH:mm");
                                         Meteor.call('sendNormalEmail', object.fields);
@@ -1122,8 +1124,8 @@ Template.emailsettings.onRendered(function () {
                                     }
 
                                     checkBasedOnType();
-                                    
-                                   
+
+
                                 })
                             }
 
@@ -1225,7 +1227,7 @@ Template.emailsettings.onRendered(function () {
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
 
-                                
+
                                 // Add synced cron job here
                                 objDetail.fields.FormName = formName;
                                 objDetail.fields.EmployeeEmail = recipients[index];
@@ -1302,7 +1304,7 @@ Template.emailsettings.onRendered(function () {
                             EmployeeId: parseInt(recipientId),
                             Every: 1,
                             EndDate: "",
-                            FormID: formID,
+                            FormID: parseInt(formID),
                             LastEmaileddate: "",
                             MonthDays: 0,
                             StartDate: sDate,
@@ -1610,7 +1612,7 @@ Template.emailsettings.events({
             });
         }
 
-       
+
     },
     'click .chkBoxDays': function (event) {
         var checkboxes = document.querySelectorAll('.chkBoxDays');
@@ -1955,7 +1957,7 @@ Template.emailsettings.events({
                 });
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-               
+
                 sideBarService.getCorrespondences().then(dObject =>{
 
                     let temp = {
@@ -1974,10 +1976,10 @@ Template.emailsettings.events({
                         type: 'TCorrespondence',
                         fields: temp
                     }
-    
+
                     // let array = [];
                     // array.push(objDetails)
-                   
+
                     sideBarService.saveCorrespondence(objDetails).then(data=>{
                         sideBarService.getCorrespondences().then(function(dataUpdate){
                             addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
@@ -1992,7 +1994,7 @@ Template.emailsettings.events({
                                     if (result.value) {
                                         $('#addLetterTemplateModal').modal('toggle')
                                         templateObject.getCorrespondence();
-                                        
+
                                     } else if (result.dismiss === 'cancel') { }
                                 });
                             }).catch(function(err) {
@@ -2034,10 +2036,10 @@ Template.emailsettings.events({
                     type: 'TCorrespondence',
                     fields: temp
                 }
-    
+
                 let array = [];
                     array.push(objDetails)
-    
+
                 sideBarService.saveCorrespondence(objDetails).then(data=>{
                     sideBarService.getCorrespondences().then(function(dataUpdate){
                         addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
@@ -2052,7 +2054,7 @@ Template.emailsettings.events({
                                 if (result.value) {
                                     $('#addLetterTemplateModal').modal('toggle')
                                     templateObject.getCorrespondence();
-                                    
+
                                 } else if (result.dismiss === 'cancel') { }
                             });
                         }).catch(function(err) {

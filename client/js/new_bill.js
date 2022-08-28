@@ -288,6 +288,7 @@ Template.billcard.onRendered(() => {
 
         var array_data = [];
         let lineItems = [];
+        let taxItems = {};
         object_invoce = [];
         let item_invoices = '';
 
@@ -332,6 +333,31 @@ Template.billcard.onRendered(() => {
 
         let colAmount = $('#' + lineID + " .colAmount").val();
 
+        let targetRow = $('#' + lineID);
+        let targetTaxCode = targetRow.find('.lineTaxCode').val();
+        let qty = targetRow.find(".lineQty").val() || 0
+        let price = targetRow.find('.colUnitPriceExChange').val() || '';
+        const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+
+        if (taxDetail) {
+            let priceTotal = utilityService.convertSubstringParseFloat(colAmount);
+            let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+            if (taxDetail.Lines) {
+                taxDetail.Lines.map((line) => {
+                    let taxCode = line.SubTaxCode;
+                    let amount = priceTotal * line.Percentage / 100;
+                    if (taxItems[taxCode]) {
+                        taxItems[taxCode] += amount;
+                    }
+                    else {
+                        taxItems[taxCode] = amount;
+                    }
+                });
+            }
+            else {
+                taxItems[targetTaxCode] = taxTotal;
+            }
+        }
 
         array_data.push([
             accountName,
@@ -493,8 +519,7 @@ Template.billcard.onRendered(() => {
 
         }
 
-
-
+        item_invoices.taxItems = taxItems;
 
         object_invoce.push(item_invoices);
 
@@ -559,11 +584,11 @@ Template.billcard.onRendered(() => {
 
             let targetRow = $('#' + lineID);
             let targetTaxCode = targetRow.find('.lineTaxCode').val();
-            let price = targetRow.find('.colAmount').val() || 0;
+            let price = targetRow.find('.colAmount').val() || '';
             const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
 
             if (taxDetail) {
-                let priceTotal = Number(price.replace(/[^0-9.-]+/g, ""));
+                let priceTotal = utilityService.convertSubstringParseFloat(colAmount);
                 let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
                 if (taxDetail.Lines) {
                     taxDetail.Lines.map((line) => {
@@ -2269,6 +2294,29 @@ Template.billcard.onRendered(() => {
             }
         }
 
+        if (object_invoce[0]["taxItems"]) {
+                
+            let taxItems = object_invoce[0]["taxItems"];
+            console.log(taxItems);
+            $("#templatePreviewModal #tax_list_print").html("");
+            Object.keys(taxItems).map((code) => {
+                let html = `
+                    <div style="width: 100%; display: flex;">
+                        <div style="padding-right: 16px; width: 50%;">
+                            <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                                ${code}</p>
+                        </div>
+                        <div style="padding-left: 16px; width: 50%;">
+                            <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                $${taxItems[code].toFixed(2)}</p>
+                        </div>
+                    </div>
+                `;
+                $("#templatePreviewModal #tax_list_print").append(html);
+            });
+        }
+        $("#templatePreviewModal #total_tax_amount_print").text(object_invoce[0]["gst"]);
+
       // table content
        var tbl_content = $("#templatePreviewModal .tbl_content")
        tbl_content.empty()
@@ -2561,12 +2609,12 @@ Template.billcard.onRendered(() => {
                     let html = `
                         <div style="width: 100%; display: flex;">
                             <div style="padding-right: 16px; width: 50%;">
-                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
                                     ${code}</p>
                             </div>
                             <div style="padding-left: 16px; width: 50%;">
-                                <p style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
-                                    $ ${taxItems[code]}</p>
+                                <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                                    $${taxItems[code].toFixed(2)}</p>
                             </div>
                         </div>
                     `;
@@ -4201,6 +4249,54 @@ Template.billcard.onRendered(() => {
         };
         let id = $('.printID').attr("id");
         document.getElementById('html-2-pdfwrapper').style.display="block";
+
+        let taxItems = {};
+        $('#tblBillLine > tbody > tr').each(function () {
+            var lineID = this.id;    
+            let targetRow = $('#' + lineID);
+            let targetTaxCode = targetRow.find('.lineTaxCode').val();
+            let qty = targetRow.find(".lineQty").val() || 0
+            let price = targetRow.find('.colUnitPriceExChange').val() || '';
+            let colAmount = $('#' + lineID + " .colAmount").val();
+            const taxDetail = templateObject.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
+    
+            if (taxDetail) {
+                let priceTotal = utilityService.convertSubstringParseFloat(colAmount);
+                let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
+                if (taxDetail.Lines) {
+                    taxDetail.Lines.map((line) => {
+                        let taxCode = line.SubTaxCode;
+                        let amount = priceTotal * line.Percentage / 100;
+                        if (taxItems[taxCode]) {
+                            taxItems[taxCode] += amount;
+                        }
+                        else {
+                            taxItems[taxCode] = amount;
+                        }
+                    });
+                }
+                else {
+                    taxItems[targetTaxCode] = taxTotal;
+                }
+            }    
+        });
+        $("#html-2-pdfwrapper #tax_list_print").html("");
+        Object.keys(taxItems).map((code) => {
+            let html = `
+                <div style="width: 100%; display: flex;">
+                    <div style="padding-right: 16px; width: 50%;">
+                        <p style="font-weight: 600; text-align: left; margin-bottom: 8px; color: rgb(0 0 0);">
+                            ${code}</p>
+                    </div>
+                    <div style="padding-left: 16px; width: 50%;">
+                        <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
+                            $${taxItems[code].toFixed(2)}</p>
+                    </div>
+                </div>
+            `;
+            $("#html-2-pdfwrapper #tax_list_print").append(html);
+        });
+
         var source = document.getElementById('html-2-pdfwrapper');
         let file = "Bill.pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') == "") {
@@ -5759,7 +5855,7 @@ Template.billcard.events({
         let targetRow = $(event.target).closest('tr');
         let targetID = targetRow.attr('id');
         let targetTaxCode = targetRow.find('.lineTaxCode').val();
-        let price = targetRow.find('.colAmountExChange').val() || 0;
+        let price = targetRow.find('.colAmountExChange').val() || '';
         const tmpObj = Template.instance();
         const taxDetail = tmpObj.taxcodes.get().find((v) => v.CodeName === targetTaxCode);
         const subTaxCodes = tmpObj.subtaxcodes.get();
