@@ -203,13 +203,13 @@
                         <th>Contact</th>
                         <th style="width: 130px;">Type</th>
                         <th class="text-right">PO No.</th>
-                        <th>Due Date</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Amount Due</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Current</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">1 - 30 Days</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">30 - 60 Days</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">60 - 90 Days</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
+                        <th class="text-right">Due Date</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">Amount Due</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">Current</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">1 - 30 Days</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">30 - 60 Days</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">60 - 90 Days</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
                       </tr>
 
                       {{#if isOnlyDefaultActive equal "false" }}
@@ -222,7 +222,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -230,7 +230,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -238,7 +238,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -246,7 +246,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -254,14 +254,14 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -279,17 +279,17 @@
                                 <strong>
                                   <a href="/supplierscard?id={{items.clientid}}" style="text-decoration:none!important;">{{items.contact}}</a>
                                 </strong></span></td>
-                            <td class="Total1Indented MenuLeft TotalField">
+                            <td class="Total1Indented MenuLeft TotalField text-right">
                               <span class="table-cells">
                                 <strong>
                                   <a href="#" style="text-decoration:none!important;">{{items.type}}</a>
                                 </strong></span></td>
-                            <td class="Total1Indented MenuLeft TotalField">
+                            <td class="Total1Indented MenuLeft TotalField text-right">
                               <span class="table-cells">
                                 <strong>
                                   <a href="#" style="text-decoration:none!important;">{{items.invoiceno}}</a>
                                 </strong></span></td>
-                            <td class="Total1Indented MenuLeft TotalField">
+                            <td class="Total1Indented MenuLeft TotalField text-right">
                               <span class="table-cells">
                                 <strong>
                                   <a href="#" style="text-decoration:none!important;">{{items.duedate}}</a>
@@ -302,7 +302,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                         
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.amountdue }} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.amountdue }} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                 <strong>
                                                     <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.amountdue c null}}</a>
@@ -313,7 +313,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                         
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.current }} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.current }} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                 <strong>
                                                     <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.current c null}}</a>
@@ -324,7 +324,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                         
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.day30 }} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.day30 }} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                 <strong>
                                                     <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.day30 c null}}</a>
@@ -336,7 +336,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                         
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.day60 }} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.day60 }} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                 <strong>
                                                     <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.day60 c null}}</a>
@@ -347,7 +347,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                         
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.day90 }} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.day90 }} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                 <strong>
                                                     <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.day90 c null}}</a>
@@ -358,7 +358,7 @@
                                     {{#each c in currencyList }}
                                         {{# if c.active}}
                                         
-                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount items.dayabove90 }} text-danger {{else}} text-success {{/if}}">
+                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.dayabove90 }} text-danger {{else}} text-success {{/if}}">
                                                 <span class="table-cells">
                                                 <strong>
                                                     <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{convertAmount items.dayabove90 c null}}</a>
@@ -373,36 +373,36 @@
 
                                 {{else}}
 
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         <strong>
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.amountdue}}</a>
                                         </strong></span></td>
 
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         <strong>
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.current}}</a>
                                         </strong></span></td>
 
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         <strong>
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day30}}</a>
                                         </strong></span></td>
 
 
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         <strong>
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day60}}</a>
                                         </strong></span></td>
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         <strong>
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.day90}}</a>
                                         </strong></span></td>
-                                    <td class="Total1Indented MenuLeft TotalField">
+                                    <td class="Total1Indented MenuLeft TotalField text-right">
                                         <span class="table-cells">
                                         <strong>
                                             <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}" style="text-decoration:none!important;">{{items.dayabove90}}</a>
@@ -428,37 +428,37 @@
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.TotalAmountDue c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.TotalAmountDue c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.TotalCurrent c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.TotalCurrent c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.OneMonth c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.OneMonth c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.TwoMonth c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.TwoMonth c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.ThreeMonth c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.ThreeMonth c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
                                       {{#each c in currencyList }}
                                         {{#if c.active}}
-                                          <td>{{ convertAmount grandrecords.OlderMonth c null}}</td>
+                                          <td class="text-right">{{ convertAmount grandrecords.OlderMonth c null}}</td>
                                         {{/if}}
                                       {{/each}}
 
@@ -467,12 +467,12 @@
                                     {{/if}}
                             {{else}}
 
-                              <td>{{ formatPrice grandrecords.TotalAmountDue}}</td>
-                              <td>{{ formatPrice grandrecords.TotalCurrent}}</td>
-                              <td>{{ formatPrice grandrecords.OneMonth}}</td>
-                              <td>{{ formatPrice grandrecords.TwoMonth}}</td>
-                              <td>{{ formatPrice grandrecords.ThreeMonth}}</td>
-                              <td>{{ formatPrice grandrecords.OlderMonth}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.TotalAmountDue}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.TotalCurrent}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.OneMonth}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.TwoMonth}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.ThreeMonth}}</td>
+                              <td class="text-right">{{ formatPrice grandrecords.OlderMonth}}</td>
 
                             {{/if}}
 
