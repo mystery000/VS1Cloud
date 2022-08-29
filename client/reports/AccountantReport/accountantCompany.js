@@ -1,8 +1,10 @@
 import { ContactService } from "../../contacts/contact-service";
 import { ReportService } from "../report-service";
-import 'jQuery.print/jQuery.print.js';
-import { UtilityService } from "../../utility-service";
 
+import { UtilityService } from "../../utility-service";
+import 'jquery-ui-dist/external/jquery/jquery';
+import 'jquery-ui-dist/jquery-ui';
+import 'jQuery.print/jQuery.print.js';
 import { CountryService } from "../../js/country-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { AccountService } from "../../accounts/account-service";
@@ -10,6 +12,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import { OrganisationService } from '../../js/organisation-service';
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
+
 
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
@@ -49,6 +52,10 @@ Template.accountant_company.onRendered(() => {
     const dataTableList = [];
     let categories = [];
     let categoryAccountList = [];
+
+    tinymce.init({
+        selector: 'textarea#editor',
+    });
 
     templateObject.getReceiptCategoryList = function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
@@ -487,6 +494,8 @@ Template.accountant_company.onRendered(() => {
         var currentDate2 = new Date(new Date().getFullYear(), (parseInt(endMonth)), 0);
         templateObject.endDate.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+
+        console.log("getLoadDate", getLoadDate);
 
         getVS1Data('TSupplierVS1').then(function(dataObject) {
             if (dataObject.length === 0) {
@@ -1490,12 +1499,12 @@ Template.accountant_company.events({
                                         localStorage.setItem("vs1companyBankRoutingNo", routingNo);
                                         sideBarService.getAccountListVS1().then(function(dataReload) {
                                             addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             }).catch(function(err) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             });
                                         }).catch(function(err) {
-                                            window.open("/accountant_company", "_self");
+                                            window.open("/accountantcompany", "_self");
                                         });
                                     })
                                     .catch(function(err) {
@@ -1504,14 +1513,14 @@ Template.accountant_company.events({
                                             .then(function(dataReload) {
                                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                                     .then(function(datareturn) {
-                                                        window.open("/accountant_company", "_self");
+                                                        window.open("/accountantcompany", "_self");
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountant_company", "_self");
+                                                        window.open("/accountantcompany", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             });
                                     });
                             } else {
@@ -1520,14 +1529,14 @@ Template.accountant_company.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
+                                        window.open("/accountantcompany", "_self");
                                     });
                             }
                         })
@@ -1612,14 +1621,14 @@ Template.accountant_company.events({
                                             .then(function(dataReload) {
                                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                                     .then(function(datareturn) {
-                                                        window.open("/accountant_company", "_self");
+                                                        window.open("/accountantcompany", "_self");
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountant_company", "_self");
+                                                        window.open("//company", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             });
                                     })
                                     .catch(function(err) {
@@ -1628,14 +1637,14 @@ Template.accountant_company.events({
                                             .then(function(dataReload) {
                                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                                     .then(function(datareturn) {
-                                                        //window.open('/accountsoverview', '_self');
+                                                        //window.open('/accountantcompany', '_self');
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountant_company", "_self");
+                                                        window.open("/accountantcompany", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             });
                                     });
                             } else {
@@ -1644,14 +1653,14 @@ Template.accountant_company.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
+                                        window.open("/accountantcompany", "_self");
                                     });
                             }
                         })
@@ -1735,14 +1744,14 @@ Template.accountant_company.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
+                                        window.open("/accountantcompany", "_self");
                                     });
                             })
                             .catch(function(err) {
@@ -1751,14 +1760,14 @@ Template.accountant_company.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountant_company", "_self");
+                                                window.open("/accountantcompany", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
+                                        window.open("/accountantcompany", "_self");
                                     });
                             });
                     } else {
@@ -1767,14 +1776,14 @@ Template.accountant_company.events({
                             .then(function(dataReload) {
                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                     .then(function(datareturn) {
-                                        window.open("/accountant_company", "_self");
+                                        window.open("/accountantcompany", "_self");
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountant_company", "_self");
+                                        window.open("/accountantcompany", "_self");
                                     });
                             })
                             .catch(function(err) {
-                                window.open("/accountant_company", "_self");
+                                window.open("/accountantcompany", "_self");
                             });
                     }
                 })
@@ -1859,28 +1868,38 @@ Template.accountant_company.events({
             $(".printReport").hide();
         }, 100);
     },
+
     "click .btnExportReport": function() {
-        var specialElementHandlers = {
-            '#bypassme': function(element, renderer) {
-                return true;
+        $(".printReport").show();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        var opt = {
+            margin: 0.8,
+            filename: 'accountant-company.pdf',
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            },
+            pagebreak: {
+                after: [".pagebreak"]
             }
         };
+        var element = document.getElementById('printReport');
 
-        Blaze.saveAsPDF(Template.test, {
-            filename: "test.pdf", // optional, default is "document.pdf"
-            x: 0, // optional, left starting position on resulting PDF, default is 4 units
-            y: 0, // optional, top starting position on resulting PDF, default is 4 units
-            unit: "in", // optional, unit for coordinates, one of "pt", "mm" (default), "cm", or "in"
-            format: "letter", // optional, see Page Formats, default is "a4"
-            elementHandlers: specialElementHandlers
-        });
-        // $(".fullScreenSpin").css("display", "inline-block");
-        // // let utilityService = new UtilityService();
-
-        // const filename = loggedCompany + "-Company" + ".csv";
-        // var element = $('#printReport');
         // html2pdf(element);
-        // utilityService.exportToPdf("printReport", filename);
+
+        html2pdf().set(opt).from(element).save()
+            .then(dataObject => {
+                $(".printReport").hide();
+                $('.fullScreenSpin').css('display', 'none');
+            })
     },
 
     'click #tblCategory tbody tr': function(e) {
@@ -1894,6 +1913,84 @@ Template.accountant_company.events({
 
         $('#categoryListModal').modal('toggle');
     },
+
+    "click #editTitle": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-1-content").html());
+        $("#editorType").val("title");
+    },
+
+    "click #editOrder": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-2-content").html());
+        $("#editorType").val("order");
+    },
+
+    "click #editSummary": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-3-content").html());
+        $("#editorType").val("summary");
+    },
+
+    "click #editDeclaration": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-4-content").html());
+        $("#editorType").val("declaration");
+    },
+
+    "click #editDescription-1": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-9-content").html());
+        $("#editorType").val("description-1");
+    },
+
+    "click #editDescription-2": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-10-content").html());
+        $("#editorType").val("description-2");
+    },
+
+    "click #btnSaveEditor": function(event) {
+        // $('#editor').wysiwyg();
+        let iframe = document.getElementById("editor_ifr");
+        var elmnt = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
+
+        if ($("#editorType").val() == "title") {
+            $("#page-1-content").html(elmnt);
+            $("#page-1-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "order") {
+            $("#page-2-content").html(elmnt);
+            $("#page-2-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "summary") {
+            $("#page-3-content").html(elmnt);
+            $("#page-3-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "declaration") {
+            $("#page-4-content").html(elmnt);
+            $("#page-4-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "description-1") {
+            $("#page-9-content").html(elmnt);
+            $("#page-9-content-prt").html(elmnt + $("#page-10-content").html());
+        } else {
+            $("#page-10-content").html(elmnt);
+            $("#page-9-content-prt").html($("#page-9-content").html() + elmnt);
+        }
+        $('#editReportModal').modal('toggle');
+    },
+
+    // "change #sltYear": function(event) {
+    //     const templateObject = Template.instance();
+
+    //     $(".fullScreenSpin").css("display", "inline-block");
+    //     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    //     templateObject.currentYear.set($("#sltYear").val());
+    //     templateObject.currentMonth.set(new Date().getMonth());
+
+    //     var selDate = new Date($("#sltYear").val(), (parseInt(templateObject.endMonth.get())), 0);
+    //     templateObject.endDate.set(selDate.getDate() + " " + months[parseInt(templateObject.endMonth.get()) - 1] + " " + $("#sltYear").val());
+    //     var getLoadDate = moment(selDate).format("YYYY-MM-DD");
+    //     console.log("getLoadDate", getLoadDate);
+    //     templateObject.getBalanceSheetReports(getLoadDate);
+    // },
 });
 
 Template.accountant_company.helpers({
@@ -1955,6 +2052,15 @@ Template.accountant_company.helpers({
     },
     endDate: () => {
         return Template.instance().endDate.get();
+    },
+    yearsData: () => {
+        let yearsData = [];
+        let currentYear = Template.instance().currentYear.get();
+        for (var i = currentYear; i >= 2021; i--) {
+            yearsData.push(i);
+        }
+
+        return yearsData;
     },
     convertAmount: (amount, currencyData) => {
         let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory

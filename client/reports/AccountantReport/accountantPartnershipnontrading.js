@@ -1,12 +1,15 @@
 import { ContactService } from "../../contacts/contact-service";
 import { ReportService } from "../report-service";
-import 'jQuery.print/jQuery.print.js';
-import { UtilityService } from "../../utility-service";
 
+import { UtilityService } from "../../utility-service";
+import 'jquery-ui-dist/external/jquery/jquery';
+import 'jquery-ui-dist/jquery-ui';
+import 'jQuery.print/jQuery.print.js';
 import { CountryService } from "../../js/country-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { AccountService } from "../../accounts/account-service";
 import { SideBarService } from "../../js/sidebar-service";
+import { OrganisationService } from '../../js/organisation-service';
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
 
@@ -46,6 +49,10 @@ Template.accountant_partnershipnontrading.onRendered(() => {
     const dataTableList = [];
     let categories = [];
     let categoryAccountList = [];
+
+    tinymce.init({
+        selector: 'textarea#editor',
+    });
 
     templateObject.getReceiptCategoryList = function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
@@ -1483,12 +1490,12 @@ Template.accountant_partnershipnontrading.events({
                                         localStorage.setItem("vs1companyBankRoutingNo", routingNo);
                                         sideBarService.getAccountListVS1().then(function(dataReload) {
                                             addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             }).catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             });
                                         }).catch(function(err) {
-                                            window.open("/accountsoverview", "_self");
+                                            window.open("/accountantpartnershipnontrading", "_self");
                                         });
                                     })
                                     .catch(function(err) {
@@ -1497,14 +1504,14 @@ Template.accountant_partnershipnontrading.events({
                                             .then(function(dataReload) {
                                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                                     .then(function(datareturn) {
-                                                        window.open("/accountsoverview", "_self");
+                                                        window.open("/accountantpartnershipnontrading", "_self");
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountsoverview", "_self");
+                                                        window.open("/accountantpartnershipnontrading", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             });
                                     });
                             } else {
@@ -1513,14 +1520,14 @@ Template.accountant_partnershipnontrading.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountsoverview", "_self");
+                                        window.open("/accountantpartnershipnontrading", "_self");
                                     });
                             }
                         })
@@ -1605,14 +1612,14 @@ Template.accountant_partnershipnontrading.events({
                                             .then(function(dataReload) {
                                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                                     .then(function(datareturn) {
-                                                        window.open("/accountsoverview", "_self");
+                                                        window.open("/accountantpartnershipnontrading", "_self");
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountsoverview", "_self");
+                                                        window.open("/accountantpartnershipnontrading", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             });
                                     })
                                     .catch(function(err) {
@@ -1624,11 +1631,11 @@ Template.accountant_partnershipnontrading.events({
                                                         //window.open('/accountsoverview', '_self');
                                                     })
                                                     .catch(function(err) {
-                                                        window.open("/accountsoverview", "_self");
+                                                        window.open("/accountantpartnershipnontrading", "_self");
                                                     });
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             });
                                     });
                             } else {
@@ -1637,14 +1644,14 @@ Template.accountant_partnershipnontrading.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountsoverview", "_self");
+                                        window.open("/accountantpartnershipnontrading", "_self");
                                     });
                             }
                         })
@@ -1728,14 +1735,14 @@ Template.accountant_partnershipnontrading.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountsoverview", "_self");
+                                        window.open("/accountantpartnershipnontrading", "_self");
                                     });
                             })
                             .catch(function(err) {
@@ -1744,14 +1751,14 @@ Template.accountant_partnershipnontrading.events({
                                     .then(function(dataReload) {
                                         addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                             .then(function(datareturn) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             })
                                             .catch(function(err) {
-                                                window.open("/accountsoverview", "_self");
+                                                window.open("/accountantpartnershipnontrading", "_self");
                                             });
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountsoverview", "_self");
+                                        window.open("/accountantpartnershipnontrading", "_self");
                                     });
                             });
                     } else {
@@ -1760,14 +1767,14 @@ Template.accountant_partnershipnontrading.events({
                             .then(function(dataReload) {
                                 addVS1Data("TAccountVS1", JSON.stringify(dataReload))
                                     .then(function(datareturn) {
-                                        window.open("/accountsoverview", "_self");
+                                        window.open("/accountantpartnershipnontrading", "_self");
                                     })
                                     .catch(function(err) {
-                                        window.open("/accountsoverview", "_self");
+                                        window.open("/accountantpartnershipnontrading", "_self");
                                     });
                             })
                             .catch(function(err) {
-                                window.open("/accountsoverview", "_self");
+                                window.open("/accountantpartnershipnontrading", "_self");
                             });
                     }
                 })
@@ -1856,11 +1863,36 @@ Template.accountant_partnershipnontrading.events({
     },
 
     "click .btnExportReport": function() {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let utilityService = new UtilityService();
+        $(".printReport").show();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        var opt = {
+            margin: 0.8,
+            filename: 'accountant-partnershipnontrading.pdf',
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            },
+            pagebreak: {
+                after: [".pagebreak"]
+            }
+        };
+        var element = document.getElementById('printReport');
 
-        const filename = loggedCompany + "-Balance Sheet" + ".csv";
-        utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+        // html2pdf(element);
+
+        html2pdf().set(opt).from(element).save()
+            .then(dataObject => {
+                $(".printReport").hide();
+                $('.fullScreenSpin').css('display', 'none');
+            })
     },
 
     'click #tblCategory tbody tr': function(e) {
@@ -1873,6 +1905,69 @@ Template.accountant_partnershipnontrading.events({
         $('#categoryAccountName').val(accountName);
 
         $('#categoryListModal').modal('toggle');
+    },
+
+    "click #editTitle": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-1-content").html());
+        $("#editorType").val("title");
+    },
+
+    "click #editOrder": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-2-content").html());
+        $("#editorType").val("order");
+    },
+
+    "click #editSummary": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-3-content").html());
+        $("#editorType").val("summary");
+    },
+
+    "click #editDeclaration": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-4-content").html());
+        $("#editorType").val("declaration");
+    },
+
+    "click #editDescription-1": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-8-content").html());
+        $("#editorType").val("description-1");
+    },
+
+    "click #editDescription-2": function(event) {
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-9-content").html());
+        $("#editorType").val("description-2");
+    },
+
+    "click #btnSaveEditor": function(event) {
+        // $('#editor').wysiwyg();
+        let iframe = document.getElementById("editor_ifr");
+        var elmnt = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
+
+        if ($("#editorType").val() == "title") {
+            $("#page-1-content").html(elmnt);
+            $("#page-1-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "order") {
+            $("#page-2-content").html(elmnt);
+            $("#page-2-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "summary") {
+            $("#page-3-content").html(elmnt);
+            $("#page-3-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "declaration") {
+            $("#page-4-content").html(elmnt);
+            $("#page-4-content-prt").html(elmnt);
+        } else if ($("#editorType").val() == "description-1") {
+            $("#page-8-content").html(elmnt);
+            $("#page-8-content-prt").html(elmnt + $("#page-9-content").html());
+        } else {
+            $("#page-9-content").html(elmnt);
+            $("#page-8-content-prt").html($("#page-8-content").html() + elmnt);
+        }
+        $('#editReportModal').modal('toggle');
     },
 });
 
