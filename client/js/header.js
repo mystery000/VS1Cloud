@@ -2123,6 +2123,9 @@ Template.header.helpers({
         let checkCloudTrueERP = Session.get('CloudTrueERPModule') || false;
         return checkCloudTrueERP;
     },
+    isSetupWizardComplete: function() {
+        return localStorage.getItem("IS_SETUP_FINISHED") || false;
+    },
     searchdatatablerecords: () => {
         return Template.instance().searchdatatablerecords.get().sort(function(a, b) {
             if (a.transDate == 'NA') {

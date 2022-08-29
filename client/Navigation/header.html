@@ -213,15 +213,34 @@
                         </button>
                     </div>
                 </li>
-                {{#if isCloudTrueERP}}
-                {{#if isCloudAdminUser}}
+                <!-- {{#if isSetupWizardComplete }} -->
+                    {{#if isCloudTrueERP}}
+                        {{#if isCloudAdminUser}}
+                            <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
+                                <a class="nav-link" href="linktrueerp" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
+                                    <i class="fas fa-link" style="margin-right: 5px;"></i> TrueERP
+                                </a>
+                            </li>
+                        {{/if}}
+                    {{/if}}
+                <!-- {{else}}
                     <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
-                        <a class="nav-link" href="linktrueerp" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
-                            <i class="fas fa-link" style="margin-right: 5px;"></i> TrueERP
+                        <a class="nav-link" href="setup" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
+                            <i class="fas fa-link" style="margin-right: 5px;"></i> Setup Wizard
                         </a>
                     </li>
-                  {{/if}}
+                {{/if}} -->
+                
+                {{#if isSetupWizardComplete }}
+                
+                    {{else}}
+                    <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
+                        <a class="nav-link" href="setup" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
+                            <i class="fas fa-link" style="margin-right: 5px;"></i> Setup
+                        </a>
+                    </li>
                 {{/if}}
+                
                 {{#if isGreenTrack}}
                     <li class="nav-item no-arrow mx-1 upgradeToVS1" id="upgrade" role="presentation">
                         <a class="nav-link"
