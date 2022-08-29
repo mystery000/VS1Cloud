@@ -1,25 +1,25 @@
-import {ReportService} from "../report-service";
+import { ReportService } from "../report-service";
 import 'jQuery.print/jQuery.print.js';
-import {UtilityService} from "../../utility-service";
+import { UtilityService } from "../../utility-service";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
-Template.taxsummaryreport.onCreated(()=>{
-const templateObject = Template.instance();
-templateObject.records = new ReactiveVar([]);
-templateObject.reportRecords = new ReactiveVar([]);
-templateObject.mainReportRecords = new ReactiveVar([]);
-templateObject.subReportRecords = new ReactiveVar([]);
-templateObject.isSub = new ReactiveVar([]);
-templateObject.grandRecords = new ReactiveVar();
-templateObject.mainGrandRecords = new ReactiveVar();
-templateObject.subGrandRecords = new ReactiveVar();
-templateObject.dateAsAt = new ReactiveVar();
-templateObject.deptrecords = new ReactiveVar();
+Template.taxsummaryreport.onCreated(() => {
+  const templateObject = Template.instance();
+  templateObject.records = new ReactiveVar([]);
+  templateObject.reportRecords = new ReactiveVar([]);
+  templateObject.mainReportRecords = new ReactiveVar([]);
+  templateObject.subReportRecords = new ReactiveVar([]);
+  templateObject.isSub = new ReactiveVar([]);
+  templateObject.grandRecords = new ReactiveVar();
+  templateObject.mainGrandRecords = new ReactiveVar();
+  templateObject.subGrandRecords = new ReactiveVar();
+  templateObject.dateAsAt = new ReactiveVar();
+  templateObject.deptrecords = new ReactiveVar();
 });
 
-Template.taxsummaryreport.onRendered(()=>{
-  $('.fullScreenSpin').css('display','inline-block');
+Template.taxsummaryreport.onRendered(() => {
+  $('.fullScreenSpin').css('display', 'inline-block');
   const templateObject = Template.instance();
   let utilityService = new UtilityService();
   let salesOrderTable;
@@ -29,136 +29,136 @@ Template.taxsummaryreport.onRendered(()=>{
   var begunDate = moment(currentDate).format("DD/MM/YYYY");
   let fromDateMonth = (currentDate.getMonth() + 1);
   let fromDateDay = currentDate.getDate();
-  if((currentDate.getMonth()+1) < 10){
-    fromDateMonth = "0" + (currentDate.getMonth()+1);
+  if ((currentDate.getMonth() + 1) < 10) {
+    fromDateMonth = "0" + (currentDate.getMonth() + 1);
   }
 
-  let imageData= (localStorage.getItem("Image"));
-  if(imageData)
-  {
-      $('#uploadedImage').attr('src', imageData);
-      $('#uploadedImage').attr('width','50%');
+  let imageData = (localStorage.getItem("Image"));
+  if (imageData) {
+    $('#uploadedImage').attr('src', imageData);
+    $('#uploadedImage').attr('width', '50%');
   }
 
-  if(currentDate.getDate() < 10){
+  if (currentDate.getDate() < 10) {
     fromDateDay = "0" + currentDate.getDate();
   }
-  var fromDate =fromDateDay + "/" +(fromDateMonth) + "/" + currentDate.getFullYear();
+  var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
 
   templateObject.dateAsAt.set(begunDate);
- const dataTableList = [];
- const deptrecords = [];
+  const dataTableList = [];
+  const deptrecords = [];
   $("#date-input,#dateTo,#dateFrom").datepicker({
-      showOn: 'button',
-      buttonText: 'Show Date',
-      buttonImageOnly: true,
-      buttonImage: '/img/imgCal2.png',
-      dateFormat: 'dd/mm/yy',
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-      onChangeMonthYear: function(year, month, inst){
+    showOn: 'button',
+    buttonText: 'Show Date',
+    buttonImageOnly: true,
+    buttonImage: '/img/imgCal2.png',
+    dateFormat: 'dd/mm/yy',
+    showOtherMonths: true,
+    selectOtherMonths: true,
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "-90:+10",
+    onChangeMonthYear: function (year, month, inst) {
       // Set date to picker
       $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
       // Hide (close) the picker
       // $(this).datepicker('hide');
       // // Change ttrigger the on change function
       // $(this).trigger('change');
-     }
+    }
   });
 
-   $("#dateFrom").val(fromDate);
-   $("#dateTo").val(begunDate);
+  $("#dateFrom").val(fromDate);
+  $("#dateTo").val(begunDate);
 
-    templateObject.getTaxSummaryReports = function (dateFrom, dateTo, ignoreDate) {
-      if(!localStorage.getItem('VS1TaxSummary_Report')){
-        reportService.getTaxSummaryData(dateFrom, dateTo, ignoreDate).then(function (data) {
-          let totalRecord = [];
-          let grandtotalRecord = [];
+  templateObject.getTaxSummaryReports = function (dateFrom, dateTo, ignoreDate) {
+    if (!localStorage.getItem('VS1TaxSummary_Report')) {
+      reportService.getTaxSummaryData(dateFrom, dateTo, ignoreDate).then(function (data) {
+        let totalRecord = [];
+        let grandtotalRecord = [];
 
-        if(data.ttaxsummaryreport.length){
+        if (data.ttaxsummaryreport.length) {
           const taxSummaryReport = data.ttaxsummaryreport;
 
-          reportService.getTaxCodesDetailVS1().then(function(data) {
-          const taxCodesDetail = data.ttaxcodevs1;
+          reportService.getTaxCodesDetailVS1().then(function (data) {
+            const taxCodesDetail = data.ttaxcodevs1;
+            // localStorage.setItem('VS1TaxSummary_Report', JSON.stringify(data)||'');
+            let records = [];
+            let mainReportRecords = [];
+            let subReportRecords = [];
+            let allRecords = [];
+            let current = [];
 
-          // localStorage.setItem('VS1TaxSummary_Report', JSON.stringify(data)||'');
-          let records = [];
-          let mainReportRecords =[];
-          let subReportRecords =[];
-          let allRecords = [];
-          let current = [];
+            let totalNetAssets = 0;
+            let GrandTotalLiability = 0;
+            let GrandTotalAsset = 0;
+            let incArr = [];
+            let cogsArr = [];
+            let expArr = [];
+            let accountData = taxSummaryReport;
+            let accountType = '';
+            let subTaxSummaryData = [];
 
-          let totalNetAssets = 0;
-          let GrandTotalLiability = 0;
-          let GrandTotalAsset = 0;
-          let incArr = [];
-          let cogsArr = [];
-          let expArr = [];
-          let accountData = taxSummaryReport;
-          let accountType = '';
-          let subTaxSummaryData = [];
+            for (let i = 0; i < taxSummaryReport.length; i++) {
 
-          for (let i = 0; i < taxSummaryReport.length; i++) {
+              let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountEx) || 0;
+              let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountInc) || 0;
+              let outputexsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountEx) || 0;
+              let outputincsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountInc) || 0;
+              let totalnet = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalNet) || 0;
+              let totaltax = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax) || 0;
+              let totaltax1 = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax1) || 0;
+              const mainReportData = {
+                id: taxSummaryReport[i].ID || '',
+                taxcode: taxSummaryReport[i].TaxCode || '',
+                clientid: taxSummaryReport[i].ClientID || '',
+                inputsexpurchases: inputsexpurchases,
+                inputsincpurchases: inputsincpurchases,
+                outputexsales: outputexsales,
+                outputincsales: outputincsales,
+                totalnet: totalnet || 0.00,
+                totaltax: totaltax || 0.00,
+                totaltax1: totaltax1 || 0.00,
+                taxrate: (taxSummaryReport[i].TaxRate * 100).toFixed(2) + '%' || 0,
+                taxrate2: (taxSummaryReport[i].TaxRate * 100).toFixed(2) || 0
 
-            let inputsexpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountEx) || 0;
-            let inputsincpurchases = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].INPUT_AmountInc) || 0;
-            let outputexsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountEx) || 0;
-            let outputincsales = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].OUTPUT_AmountInc) || 0;
-            let totalnet = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalNet) || 0;
-            let totaltax = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax) || 0;
-            let totaltax1 = utilityService.modifynegativeCurrencyFormat(taxSummaryReport[i].TotalTax1) || 0;
-            const mainReportData = {
-              id: taxSummaryReport[i].ID || '',
-              taxcode:taxSummaryReport[i].TaxCode || '',
-              clientid:taxSummaryReport[i].ClientID || '',
-              inputsexpurchases: inputsexpurchases,
-              inputsincpurchases: inputsincpurchases,
-              outputexsales: outputexsales,
-              outputincsales: outputincsales,
-              totalnet: totalnet || 0.00,
-              totaltax: totaltax || 0.00,
-              totaltax1: totaltax1 || 0.00,
-              taxrate: (taxSummaryReport[i].TaxRate * 100).toFixed(2) + '%' || 0,
-              taxrate2: (taxSummaryReport[i].TaxRate * 100).toFixed(2) || 0
+              };
 
-            };
+              mainReportRecords.push(mainReportData);
 
-            mainReportRecords.push(mainReportData);
-
-            const taxDetail = taxCodesDetail.find((v) => v.CodeName === taxSummaryReport[i].TaxCode);
-            if(taxDetail && taxDetail.Lines) {
-              for (let j = 0; j < taxDetail.Lines.length; j++) {
-                const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
-                const subReportData = {
-                  id: taxSummaryReport[i].ID || '',
-                  taxcode:taxSummaryReport[i].TaxCode || '',
-                  subtaxcode:taxDetail.Lines[j].SubTaxCode || '',
-                  clientid:'',
-                  inputsexpurchases: inputsexpurchases,
-                  inputsincpurchases: inputsincpurchases,
-                  outputexsales: outputexsales,
-                  outputincsales: outputincsales,
-                  totalnet: totalnet || 0.00,
-                  totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
-                  totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
-                  taxrate: (taxDetail.Lines[j].Percentage ).toFixed(2) + '%' || 0,
-                  taxrate2: (taxDetail.Lines[j].Percentage ).toFixed(2) || 0    
-                };
-                subReportRecords.push(subReportData);
+              const taxDetail = taxCodesDetail.find((v) => v.CodeName === taxSummaryReport[i].TaxCode);
+              if (taxDetail && taxDetail.Lines) {
+                for (let j = 0; j < taxDetail.Lines.length; j++) {
+                  const tax = (utilityService.convertSubstringParseFloat(inputsexpurchases) - utilityService.convertSubstringParseFloat(outputexsales)) * taxDetail.Lines[j].Percentage / 100.0;
+                  const subReportData = {
+                    id: taxSummaryReport[i].ID || '',
+                    taxcode: taxSummaryReport[i].TaxCode || '',
+                    subtaxcode: taxDetail.Lines[j].SubTaxCode || '',
+                    clientid: '',
+                    inputsexpurchases: inputsexpurchases,
+                    inputsincpurchases: inputsincpurchases,
+                    outputexsales: outputexsales,
+                    outputincsales: outputincsales,
+                    totalnet: totalnet || 0.00,
+                    totaltax: utilityService.modifynegativeCurrencyFormat(Math.abs(tax)) || 0.00,
+                    totaltax1: utilityService.modifynegativeCurrencyFormat(tax) || 0.00,
+                    taxrate: (taxDetail.Lines[j].Percentage).toFixed(2) + '%' || 0,
+                    taxrate2: (taxDetail.Lines[j].Percentage).toFixed(2) || 0
+                  };
+                  subReportRecords.push(subReportData);
+                }
               }
-            }
 
 
 
-          //   if((taxSummaryReport[i].AmountDue != 0) || (taxSummaryReport[i].Current != 0)
-          //   || (taxSummaryReport[i]["30Days"] != 0) || (taxSummaryReport[i]["60Days"] != 0)
-          // || (taxSummaryReport[i]["90Days"] != 0) || (taxSummaryReport[i]["120Days"] != 0)){
-          //  records.push(recordObj);
-          //}
+
+
+              //   if((taxSummaryReport[i].AmountDue != 0) || (taxSummaryReport[i].Current != 0)
+              //   || (taxSummaryReport[i]["30Days"] != 0) || (taxSummaryReport[i]["60Days"] != 0)
+              // || (taxSummaryReport[i]["90Days"] != 0) || (taxSummaryReport[i]["120Days"] != 0)){
+              //  records.push(recordObj);
+              //}
 
 
 
@@ -166,106 +166,107 @@ Template.taxsummaryreport.onRendered(()=>{
 
             mainReportRecords = _.sortBy(mainReportRecords, 'taxcode');
             subReportRecords = _.sortBy(subReportRecords, 'subtaxcode');
-            
+
             templateObject.mainReportRecords.set(mainReportRecords);
             templateObject.reportRecords.set(mainReportRecords);
             //   records = _.sortBy(records, 'SupplierName');
             // records = _.groupBy(records, 'SupplierName');
             for (let key in records) {
-              let obj = [{key: key}, {data: records[key]}];
+              let obj = [{ key: key }, { data: records[key] }];
               allRecords.push(obj);
             }
 
-        let iterator = 0;
-        let inputsexpurchasestotal = 0;
-        let inputsincpurchasestotal = 0;
-        let outputexsalestotal = 0;
-        let outputincsalestotal = 0;
-        let nettotal = 0;
-        let taxtotal = 0;
-        let taxratetotal = 0;
-        let taxtotal1 = 0;
-      for (let i = 0; i < mainReportRecords.length; i++) {
+            let iterator = 0;
+            let inputsexpurchasestotal = 0;
+            let inputsincpurchasestotal = 0;
+            let outputexsalestotal = 0;
+            let outputincsalestotal = 0;
+            let nettotal = 0;
+            let taxtotal = 0;
+            let taxratetotal = 0;
+            let taxtotal1 = 0;
+            for (let i = 0; i < mainReportRecords.length; i++) {
 
 
 
-          const currencyLength = Currency.length;
-          inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsexpurchases);
-          inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsincpurchases);
-          outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputexsales);
-          outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputincsales);
-          nettotal = nettotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totalnet);
-          taxtotal = taxtotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax);
-          taxratetotal = taxratetotal + Number(mainReportRecords[i].taxrate2.replace(/[^0-9.-]+/g,"")) || 0;
-          taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax1);
+              const currencyLength = Currency.length;
+              inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsexpurchases);
+              inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].inputsincpurchases);
+              outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputexsales);
+              outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].outputincsales);
+              nettotal = nettotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totalnet);
+              taxtotal = taxtotal + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax);
+              taxratetotal = taxratetotal + Number(mainReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+              taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(mainReportRecords[i].totaltax1);
 
-          let val = ['', utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal), utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
-              utilityService.modifynegativeCurrencyFormat(outputexsalestotal), utilityService.modifynegativeCurrencyFormat(outputincsalestotal), utilityService.modifynegativeCurrencyFormat(nettotal), utilityService.modifynegativeCurrencyFormat(taxtotal),'', utilityService.modifynegativeCurrencyFormat(taxtotal1)];
-          current.push(val);
+              let val = ['', utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal), utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
+                utilityService.modifynegativeCurrencyFormat(outputexsalestotal), utilityService.modifynegativeCurrencyFormat(outputincsalestotal), utilityService.modifynegativeCurrencyFormat(nettotal), utilityService.modifynegativeCurrencyFormat(taxtotal), '', utilityService.modifynegativeCurrencyFormat(taxtotal1)];
+              current.push(val);
 
-      }
+            }
 
-    let mainGrandval = ['Grand Total ' +  '',
-      // '','',
-      '',
-      '',
-      // '',
-      // '',
-      utilityService.modifynegativeCurrencyFormat(nettotal),
+            let mainGrandval = ['Grand Total ' + '',
+              // '','',
+              '',
+              '',
+            // '',
+            // '',
+            utilityService.modifynegativeCurrencyFormat(nettotal),
 
-      // taxratetotal.toFixed(2) + '%' || 0,
-      '',
-      utilityService.modifynegativeCurrencyFormat(taxtotal)];
-      // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
-    
-    let subGrandval = ['Grand Total ' +  '',
-      '',
-      '',
-      '',
-      utilityService.modifynegativeCurrencyFormat(nettotal),
-      '',
-      utilityService.modifynegativeCurrencyFormat(taxtotal)];
+              // taxratetotal.toFixed(2) + '%' || 0,
+              '',
+            utilityService.modifynegativeCurrencyFormat(taxtotal)];
+            // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
 
-    //templateObject.records.set(totalRecord);
-    templateObject.mainGrandRecords.set(mainGrandval);
-    templateObject.subGrandRecords.set(subGrandval);
-    templateObject.grandRecords.set(mainGrandval);
+            let subGrandval = ['Grand Total ' + '',
+              '',
+              '',
+              '',
+            utilityService.modifynegativeCurrencyFormat(nettotal),
+              '',
+            utilityService.modifynegativeCurrencyFormat(taxtotal)];
 
+            //templateObject.records.set(totalRecord);
+            templateObject.mainGrandRecords.set(mainGrandval);
+            templateObject.subGrandRecords.set(subGrandval);
+            templateObject.grandRecords.set(mainGrandval);
 
-          let i = 0, posToAdd = -1, currentSubCode, subReportRecordsSize = subReportRecords.length;
-          
-          // i should be iterated being lower than subReportRecordsSize, but iterated once more to summing last group
-          while (i <= subReportRecordsSize) {
-            if(i===subReportRecordsSize || currentSubCode !== subReportRecords[i].subtaxcode) {
-              if(posToAdd>=0) {
-                const taxDetail = taxCodesDetail.find((v) => v.CodeName === subReportRecords[i-1].taxcode);
+            let i = 0, posToAdd = -1, currentSubCode, subReportRecordsSize = subReportRecords.length;
 
-                const subReportData = {
-                  id: taxDetail.ID,
-                  taxcode:'',
-                  subtaxcode: subReportRecords[i-1].subtaxcode || '',
-                  clientid:'',
-                  inputsexpurchases: utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal),
-                  inputsincpurchases: utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
-                  outputexsales: utilityService.modifynegativeCurrencyFormat(outputexsalestotal),
-                  outputincsales: utilityService.modifynegativeCurrencyFormat(outputincsalestotal),
-                  totalnet: utilityService.modifynegativeCurrencyFormat(nettotal) || 0.00,
-                  totaltax: utilityService.modifynegativeCurrencyFormat(taxtotal) || 0.00,
-                  totaltax1: utilityService.modifynegativeCurrencyFormat(taxtotal1) || 0.00,
-                  taxrate: (taxratetotal).toFixed(2) + '%' || 0,
-                  taxrate2: (taxratetotal ).toFixed(2) || 0    
-                };
-                subReportRecords.splice(posToAdd, 0, subReportData);
+            // i should be iterated being lower than subReportRecordsSize, but iterated once more to summing last group
+            while (i <= subReportRecordsSize) {
+              if (i === subReportRecordsSize || currentSubCode !== subReportRecords[i].subtaxcode) {
+                if (posToAdd >= 0) {
+                  const taxDetail = taxCodesDetail.find((v) => v.CodeName === subReportRecords[i - 1].taxcode);
 
-                // if this is last group summing, don't need to continue iterating
-                if(i===subReportRecordsSize) break;
+                  const subReportData = {
+                    id: taxDetail.ID,
+                    taxcode: '',
+                    subtaxcode: subReportRecords[i - 1].subtaxcode || '',
+                    clientid: '',
+                    inputsexpurchases: utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal),
+                    inputsincpurchases: utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
+                    outputexsales: utilityService.modifynegativeCurrencyFormat(outputexsalestotal),
+                    outputincsales: utilityService.modifynegativeCurrencyFormat(outputincsalestotal),
+                    totalnet: utilityService.modifynegativeCurrencyFormat(nettotal) || 0.00,
+                    totaltax: utilityService.modifynegativeCurrencyFormat(taxtotal) || 0.00,
+                    totaltax1: utilityService.modifynegativeCurrencyFormat(taxtotal1) || 0.00,
+                    taxrate: (taxratetotal).toFixed(2) + '%' || 0,
+                    taxrate2: (taxratetotal).toFixed(2) || 0
+                  };
+                  subReportRecords.splice(posToAdd, 0, subReportData);
 
-                i++;
-                subReportRecordsSize++;
-              }
+                  // if this is last group summing, don't need to continue iterating
+                  if (i === subReportRecordsSize) break;
 
-                posToAdd = i; 
-                currentSubCode = subReportRecords[i].subtaxcode;
+                  i++;
+                  subReportRecordsSize++;
+                }
+
+                posToAdd = i;
+                if (subReportRecords.length > 0) {
+                  currentSubCode = subReportRecords[i].subtaxcode;
+                }
 
                 inputsexpurchasestotal = 0;
                 inputsincpurchasestotal = 0;
@@ -276,32 +277,33 @@ Template.taxsummaryreport.onRendered(()=>{
                 taxratetotal = 0;
                 taxtotal1 = 0;
               }
-
-              inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].inputsexpurchases);
-              inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].inputsincpurchases);
-              outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].outputexsales);
-              outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].outputincsales);
-              nettotal = nettotal + utilityService.convertSubstringParseFloat(subReportRecords[i].totalnet);
-              taxtotal = taxtotal + utilityService.convertSubstringParseFloat(subReportRecords[i].totaltax);
-              taxratetotal = taxratetotal + Number(subReportRecords[i].taxrate2.replace(/[^0-9.-]+/g,"")) || 0;
-              taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(subReportRecords[i].totaltax1);
-
+              if (subReportRecords.length > 0) {
+                inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].inputsexpurchases);
+                inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].inputsincpurchases);
+                outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].outputexsales);
+                outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(subReportRecords[i].outputincsales);
+                nettotal = nettotal + utilityService.convertSubstringParseFloat(subReportRecords[i].totalnet);
+                taxtotal = taxtotal + utilityService.convertSubstringParseFloat(subReportRecords[i].totaltax);
+                taxratetotal = taxratetotal + Number(subReportRecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+                taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(subReportRecords[i].totaltax1);
+              }
               i++;
             }
-          templateObject.subReportRecords.set(subReportRecords);
+            templateObject.subReportRecords.set(subReportRecords);
 
-          if(templateObject.mainReportRecords.get()){
-            templateObject.stylizeForm();
-          }
-          templateObject.isSub.set(false);
-        });
-      }else{
-        let records = [];
-        let recordObj = {};
-        recordObj.Id = '';
-        recordObj.type = '';
-        recordObj.SupplierName = ' ';
-        recordObj.dataArr = [
+            if (templateObject.mainReportRecords.get()) {
+              templateObject.stylizeForm();
+            }
+            templateObject.isSub.set(false);
+          });
+          $('.fullScreenSpin').css('display', 'none');
+        } else {
+          let records = [];
+          let recordObj = {};
+          recordObj.Id = '';
+          recordObj.type = '';
+          recordObj.SupplierName = ' ';
+          recordObj.dataArr = [
             '-',
             '-',
             '-',
@@ -312,26 +314,26 @@ Template.taxsummaryreport.onRendered(()=>{
             '-',
             '-',
             '-'
-        ];
+          ];
 
-        records.push(recordObj);
-        templateObject.records.set(records);
-        templateObject.grandrecords.set('');
-          $('.fullScreenSpin').css('display','none');
-      }
+          records.push(recordObj);
+          templateObject.records.set(records);
+          templateObject.grandrecords.set('');
+          $('.fullScreenSpin').css('display', 'none');
+        }
 
-        }).catch(function (err) {
-          //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $('.fullScreenSpin').css('display','none');
-        });
-      }else{
-        let data = JSON.parse(localStorage.getItem('VS1TaxSummary_Report'));
-        let totalRecord = [];
-        let grandtotalRecord = [];
+      }).catch(function (err) {
+        //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+        $('.fullScreenSpin').css('display', 'none');
+      });
+    } else {
+      let data = JSON.parse(localStorage.getItem('VS1TaxSummary_Report'));
+      let totalRecord = [];
+      let grandtotalRecord = [];
 
-      if(data.ttaxsummaryreport.length){
+      if (data.ttaxsummaryreport.length) {
         let records = [];
-        let reportrecords =[];
+        let reportrecords = [];
         let allRecords = [];
         let current = [];
 
@@ -355,8 +357,8 @@ Template.taxsummaryreport.onRendered(()=>{
           let totaltax1 = utilityService.modifynegativeCurrencyFormat(data.ttaxsummaryreport[i].TotalTax1) || 0;
           var dataList = {
             id: data.ttaxsummaryreport[i].ID || '',
-            taxcode:data.ttaxsummaryreport[i].TaxCode || '',
-            clientid:data.ttaxsummaryreport[i].ClientID || '',
+            taxcode: data.ttaxsummaryreport[i].TaxCode || '',
+            clientid: data.ttaxsummaryreport[i].ClientID || '',
             inputsexpurchases: inputsexpurchases,
             inputsincpurchases: inputsincpurchases,
             outputexsales: outputexsales,
@@ -367,312 +369,340 @@ Template.taxsummaryreport.onRendered(()=>{
             taxrate: (data.ttaxsummaryreport[i].TaxRate * 100).toFixed(2) + '%' || 0,
             taxrate2: (data.ttaxsummaryreport[i].TaxRate * 100).toFixed(2) || 0
 
-        };
-
-        reportrecords.push(dataList);
-
-
-
-      //   if((data.ttaxsummaryreport[i].AmountDue != 0) || (data.ttaxsummaryreport[i].Current != 0)
-      //   || (data.ttaxsummaryreport[i]["30Days"] != 0) || (data.ttaxsummaryreport[i]["60Days"] != 0)
-      // || (data.ttaxsummaryreport[i]["90Days"] != 0) || (data.ttaxsummaryreport[i]["120Days"] != 0)){
-    //  records.push(recordObj);
-        //}
-
-
-
-      }
-
-      reportrecords = _.sortBy(reportrecords, 'taxcode');
-      templateObject.reportrecords.set(reportrecords);
-      //   records = _.sortBy(records, 'SupplierName');
-      // records = _.groupBy(records, 'SupplierName');
-      for (let key in records) {
-          let obj = [{key: key}, {data: records[key]}];
-          allRecords.push(obj);
-      }
-
-      let iterator = 0;
-      let inputsexpurchasestotal = 0;
-      let inputsincpurchasestotal = 0;
-      let outputexsalestotal = 0;
-      let outputincsalestotal = 0;
-      let nettotal = 0;
-      let taxtotal = 0;
-      let taxratetotal = 0;
-      let taxtotal1 = 0;
-    for (let i = 0; i < reportrecords.length; i++) {
-
-
-
-        const currencyLength = Currency.length;
-        inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(reportrecords[i].inputsexpurchases);
-        inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(reportrecords[i].inputsincpurchases);
-        outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(reportrecords[i].outputexsales);
-        outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(reportrecords[i].outputincsales);
-        nettotal = nettotal + utilityService.convertSubstringParseFloat(reportrecords[i].totalnet);
-        taxtotal = taxtotal + utilityService.convertSubstringParseFloat(reportrecords[i].totaltax);
-        taxratetotal = taxratetotal + Number(reportrecords[i].taxrate2.replace(/[^0-9.-]+/g,"")) || 0;
-        taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(reportrecords[i].totaltax1);
-
-        let val = ['', utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal), utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
-            utilityService.modifynegativeCurrencyFormat(outputexsalestotal), utilityService.modifynegativeCurrencyFormat(outputincsalestotal), utilityService.modifynegativeCurrencyFormat(nettotal), utilityService.modifynegativeCurrencyFormat(taxtotal),'', utilityService.modifynegativeCurrencyFormat(taxtotal1)];
-        current.push(val);
-
-    }
-
-
-  let grandval = ['Grand Total ' +  '',
-  // '','',
-    '',
-    '',
-    // '',
-    // '',
-    utilityService.modifynegativeCurrencyFormat(nettotal),
-
-    // taxratetotal.toFixed(2) + '%' || 0,
-    '',
-    utilityService.modifynegativeCurrencyFormat(taxtotal)];
-    // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
-
-      //templateObject.records.set(totalRecord);
-      templateObject.grandrecords.set(grandval);
-
-
-      if(templateObject.reportrecords.get()){
-        setTimeout(function () {
-          $('td a').each(function(){
-            if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-             });
-         $('td').each(function(){
-           if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-          });
-
-          $('td').each(function(){
-
-            let lineValue = $(this).first().text()[0];
-            if(lineValue != undefined){
-              if(lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
-            }
-
-           });
-
-           $('td').each(function(){
-             if($(this).first().text().indexOf('-'+Currency) >= 0) $(this).addClass('text-right')
-            });
-
-            $('td:nth-child(8)').each(function(){
-              $(this).addClass('text-right');
-            });
-            $('.fullScreenSpin').css('display','none');
-        }, 100);
-      }
-
-    }else{
-      let records = [];
-      let recordObj = {};
-      recordObj.Id = '';
-      recordObj.type = '';
-      recordObj.SupplierName = ' ';
-      recordObj.dataArr = [
-          '-',
-          '-',
-          '-',
-          '-',
-          '-',
-          '-',
-          '-',
-          '-',
-          '-',
-         '-'
-      ];
-
-      records.push(recordObj);
-      templateObject.records.set(records);
-      templateObject.grandrecords.set('');
-        $('.fullScreenSpin').css('display','none');
-    }
-
-      }
-    };
-
-    templateObject.stylizeForm = function() {
-      setTimeout(function () {
-        $('td a').each(function(){
-          if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-          });
-        $('td').each(function(){
-          if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-          });
-
-        $('td').each(function(){
-
-          let lineValue = $(this).first().text()[0];
-          if(lineValue != undefined){
-            if(lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
-          }
-
-        });
-
-        $('td').each(function(){
-          if($(this).first().text().indexOf('-'+Currency) >= 0) $(this).addClass('text-right')
-        });
-
-        $('td:nth-child(8)').each(function(){
-          $(this).addClass('text-right');
-        });
-        $('.fullScreenSpin').css('display','none');
-      }, 100);
-    }
-
-    var currentDate2 = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
-    templateObject.getTaxSummaryReports(getDateFrom,getLoadDate,false);
-
-    templateObject.getDepartments = function(){
-      reportService.getDepartment().then(function(data){
-        for(let i in data.tdeptclass){
-
-          let deptrecordObj = {
-            id: data.tdeptclass[i].Id || ' ',
-            department: data.tdeptclass[i].DeptClassName || ' ',
           };
 
-          deptrecords.push(deptrecordObj);
-          templateObject.deptrecords.set(deptrecords);
+          reportrecords.push(dataList);
+
+
+
+          //   if((data.ttaxsummaryreport[i].AmountDue != 0) || (data.ttaxsummaryreport[i].Current != 0)
+          //   || (data.ttaxsummaryreport[i]["30Days"] != 0) || (data.ttaxsummaryreport[i]["60Days"] != 0)
+          // || (data.ttaxsummaryreport[i]["90Days"] != 0) || (data.ttaxsummaryreport[i]["120Days"] != 0)){
+          //  records.push(recordObj);
+          //}
+
+
 
         }
-    });
+
+        reportrecords = _.sortBy(reportrecords, 'taxcode');
+        templateObject.reportrecords.set(reportrecords);
+        //   records = _.sortBy(records, 'SupplierName');
+        // records = _.groupBy(records, 'SupplierName');
+        for (let key in records) {
+          let obj = [{ key: key }, { data: records[key] }];
+          allRecords.push(obj);
+        }
+
+        let iterator = 0;
+        let inputsexpurchasestotal = 0;
+        let inputsincpurchasestotal = 0;
+        let outputexsalestotal = 0;
+        let outputincsalestotal = 0;
+        let nettotal = 0;
+        let taxtotal = 0;
+        let taxratetotal = 0;
+        let taxtotal1 = 0;
+        for (let i = 0; i < reportrecords.length; i++) {
+
+
+
+          const currencyLength = Currency.length;
+          inputsexpurchasestotal = inputsexpurchasestotal + utilityService.convertSubstringParseFloat(reportrecords[i].inputsexpurchases);
+          inputsincpurchasestotal = inputsincpurchasestotal + utilityService.convertSubstringParseFloat(reportrecords[i].inputsincpurchases);
+          outputexsalestotal = outputexsalestotal + utilityService.convertSubstringParseFloat(reportrecords[i].outputexsales);
+          outputincsalestotal = outputincsalestotal + utilityService.convertSubstringParseFloat(reportrecords[i].outputincsales);
+          nettotal = nettotal + utilityService.convertSubstringParseFloat(reportrecords[i].totalnet);
+          taxtotal = taxtotal + utilityService.convertSubstringParseFloat(reportrecords[i].totaltax);
+          taxratetotal = taxratetotal + Number(reportrecords[i].taxrate2.replace(/[^0-9.-]+/g, "")) || 0;
+          taxtotal1 = taxtotal1 + utilityService.convertSubstringParseFloat(reportrecords[i].totaltax1);
+
+          let val = ['', utilityService.modifynegativeCurrencyFormat(inputsexpurchasestotal), utilityService.modifynegativeCurrencyFormat(inputsincpurchasestotal),
+            utilityService.modifynegativeCurrencyFormat(outputexsalestotal), utilityService.modifynegativeCurrencyFormat(outputincsalestotal), utilityService.modifynegativeCurrencyFormat(nettotal), utilityService.modifynegativeCurrencyFormat(taxtotal), '', utilityService.modifynegativeCurrencyFormat(taxtotal1)];
+          current.push(val);
+
+        }
+
+
+        let grandval = ['Grand Total ' + '',
+          // '','',
+          '',
+          '',
+        // '',
+        // '',
+        utilityService.modifynegativeCurrencyFormat(nettotal),
+
+          // taxratetotal.toFixed(2) + '%' || 0,
+          '',
+        utilityService.modifynegativeCurrencyFormat(taxtotal)];
+        // utilityService.modifynegativeCurrencyFormat(taxtotal1)];
+
+        //templateObject.records.set(totalRecord);
+        templateObject.grandrecords.set(grandval);
+
+
+        if (templateObject.reportrecords.get()) {
+          setTimeout(function () {
+            $('td a').each(function () {
+              if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+            });
+            $('td').each(function () {
+              if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+            });
+
+            $('td').each(function () {
+
+              let lineValue = $(this).first().text()[0];
+              if (lineValue != undefined) {
+                if (lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
+              }
+
+            });
+
+            $('td').each(function () {
+              if ($(this).first().text().indexOf('-' + Currency) >= 0) $(this).addClass('text-right')
+            });
+
+            $('td:nth-child(8)').each(function () {
+              $(this).addClass('text-right');
+            });
+            $('.fullScreenSpin').css('display', 'none');
+          }, 100);
+        }
+
+      } else {
+        let records = [];
+        let recordObj = {};
+        recordObj.Id = '';
+        recordObj.type = '';
+        recordObj.SupplierName = ' ';
+        recordObj.dataArr = [
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
+          '-',
+          '-'
+        ];
+
+        records.push(recordObj);
+        templateObject.records.set(records);
+        templateObject.grandrecords.set('');
+        $('.fullScreenSpin').css('display', 'none');
+      }
 
     }
-    // templateObject.getAllProductData();
-    templateObject.getDepartments();
-  });
+  };
 
-  Template.taxsummaryreport.events({
-    'change #dateTo':function(){
-        let templateObject = Template.instance();
-          $('.fullScreenSpin').css('display','inline-block');
-          $('#dateFrom').attr('readonly', false);
-          $('#dateTo').attr('readonly', false);
-        templateObject.records.set('');
-        templateObject.grandrecords.set('');
-        setTimeout(function(){
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  templateObject.stylizeForm = function () {
+    setTimeout(function () {
+      $('td a').each(function () {
+        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+      });
+      $('td').each(function () {
+        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+      });
 
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth()+1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-" + dateTo.getDate();
+      $('td').each(function () {
+
+        let lineValue = $(this).first().text()[0];
+        if (lineValue != undefined) {
+          if (lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
+        }
+
+      });
+
+      $('td').each(function () {
+        if ($(this).first().text().indexOf('-' + Currency) >= 0) $(this).addClass('text-right')
+      });
+
+      $('td:nth-child(8)').each(function () {
+        $(this).addClass('text-right');
+      });
+      $('.fullScreenSpin').css('display', 'none');
+    }, 100);
+  }
+
+  var currentDate2 = new Date();
+  var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
+  templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
+
+  templateObject.getDepartments = function () {
+    reportService.getDepartment().then(function (data) {
+      for (let i in data.tdeptclass) {
+
+        let deptrecordObj = {
+          id: data.tdeptclass[i].Id || ' ',
+          department: data.tdeptclass[i].DeptClassName || ' ',
+        };
+
+        deptrecords.push(deptrecordObj);
+        templateObject.deptrecords.set(deptrecords);
+
+      }
+    });
+
+  }
+  // templateObject.getAllProductData();
+  templateObject.getDepartments();
+});
+
+Template.taxsummaryreport.events({
+  "click .chkAccBasis": function (event) {
+    $(".tglAccBasis").toggle();
+  },
+  "click .rbAccrual": function (event) {
+    $(".tglAccBasis").text("Accrual Basis");
+    if ($(".chkAccBasis").is(":checked")) {
+      // $('.chkAccBasis').trigger('click');
+      $(".tglAccBasis").text("Accrual Basis");
+    } else if ($(".chkAccBasis").is(":not(:checked)")) {
+      $(".tglAccBasis").text("Accrual Basis");
+      $(".chkAccBasis").trigger("click");
+      $(".chkAccBasis").prop("checked", true);
+
+      // $('.chkAccBasis').trigger('click');
+    }
+  },
+  "click .rbCash": function (event) {
+    $(".tglAccBasis").text("Cash Basis");
+    if ($(".chkAccBasis").is(":checked")) {
+      $(".tglAccBasis").text("Cash Basis");
+    } else if ($(".chkAccBasis").is(":not(:checked)")) {
+      $(".tglAccBasis").text("Cash Basis");
+      $(".chkAccBasis").trigger("click");
+      $(".chkAccBasis").prop("checked", true);
+
+      // $('.chkAccBasis').trigger('click');
+    }
+  },
+  'change #dateTo': function () {
+    let templateObject = Template.instance();
+    $('.fullScreenSpin').css('display', 'inline-block');
+    $('#dateFrom').attr('readonly', false);
+    $('#dateTo').attr('readonly', false);
+    templateObject.records.set('');
+    templateObject.grandrecords.set('');
+    setTimeout(function () {
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+      let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+      let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
       //  templateObject.getTaxSummaryReports(formatDateFrom,formatDateTo,false);
-        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth()+1) + "/" + dateTo.getFullYear();
-        //templateObject.dateAsAt.set(formatDate);
-        if(($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")){
-          templateObject.getTaxSummaryReports('','',true);
-          templateObject.dateAsAt.set('Current Date');
-        }else{
-          templateObject.getTaxSummaryReports(formatDateFrom,formatDateTo,false);
-          templateObject.dateAsAt.set(formatDate);
-        }
-        },500);
-    },
-    'change #dateFrom':function(){
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        templateObject.records.set('');
-        templateObject.grandrecords.set('');
-        setTimeout(function(){
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth()+1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-" + dateTo.getDate();
-
-        //templateObject.getTaxSummaryReports(formatDateFrom,formatDateTo,false);
-        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth()+1) + "/" + dateTo.getFullYear();
-        //templateObject.dateAsAt.set(formatDate);
-        if(($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")){
-          templateObject.getTaxSummaryReports('','',true);
-          templateObject.dateAsAt.set('Current Date');
-        }else{
-          templateObject.getTaxSummaryReports(formatDateFrom,formatDateTo,false);
-          templateObject.dateAsAt.set(formatDate);
-        }
-
-        },500);
-    },
-    'click .btnRefresh': function () {
-      $('.fullScreenSpin').css('display','inline-block');
-      localStorage.setItem('VS1TaxSummary_Report', '');
-      Meteor._reload.reload();
-    },
-    'click td a':function (event) {
-        let redirectid = $(event.target).closest('tr').attr('id');
-
-        let transactiontype = $(event.target).closest('tr').attr('class');;
-
-        if(redirectid && transactiontype){
-          if(transactiontype === 'Bill' ){
-            window.open('/billcard?id=' + redirectid,'_self');
-          }else if(transactiontype === 'PO'){
-            window.open('/purchaseordercard?id=' + redirectid,'_self');
-          }else if(transactiontype === 'Credit'){
-            window.open('/creditcard?id=' + redirectid,'_self');
-          }else if(transactiontype === 'Supplier Payment'){
-            window.open('/supplierpaymentcard?id=' + redirectid,'_self');
-          }
-        }
-        // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
-    },
-    'click .btnPrintReport':function (event) {
-
-      let values = [];
-      let basedOnTypeStorages = Object.keys(localStorage);
-      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-          let employeeId = storage.split('_')[2];
-          return storage.includes('BasedOnType_');
-          // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
-      });
-      let i = basedOnTypeStorages.length;
-      if (i > 0) {
-          while (i--) {
-              values.push(localStorage.getItem(basedOnTypeStorages[i]));
-          }
+      var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+      //templateObject.dateAsAt.set(formatDate);
+      if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+        templateObject.getTaxSummaryReports('', '', true);
+        templateObject.dateAsAt.set('Current Date');
+      } else {
+        templateObject.getTaxSummaryReports(formatDateFrom, formatDateTo, false);
+        templateObject.dateAsAt.set(formatDate);
       }
-      values.forEach(value => {
-          let reportData = JSON.parse(value);
-          reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-          if (reportData.BasedOnType.includes("P")) {
-              if (reportData.FormID == 1) {
-                  let formIds = reportData.FormIDs.split(',');
-                  if (formIds.includes("278")) {
-                      reportData.FormID = 278;
-                      Meteor.call('sendNormalEmail', reportData);
-                  }
-              } else {
-                  if (reportData.FormID == 278)
-                      Meteor.call('sendNormalEmail', reportData);
-              }
+    }, 500);
+  },
+  'change #dateFrom': function () {
+    let templateObject = Template.instance();
+    $('.fullScreenSpin').css('display', 'inline-block');
+    $('#dateFrom').attr('readonly', false);
+    $('#dateTo').attr('readonly', false);
+    templateObject.records.set('');
+    templateObject.grandrecords.set('');
+    setTimeout(function () {
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+      let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+      let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+      //templateObject.getTaxSummaryReports(formatDateFrom,formatDateTo,false);
+      var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+      //templateObject.dateAsAt.set(formatDate);
+      if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+        templateObject.getTaxSummaryReports('', '', true);
+        templateObject.dateAsAt.set('Current Date');
+      } else {
+        templateObject.getTaxSummaryReports(formatDateFrom, formatDateTo, false);
+        templateObject.dateAsAt.set(formatDate);
+      }
+
+    }, 500);
+  },
+  'click .btnRefresh': function () {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    localStorage.setItem('VS1TaxSummary_Report', '');
+    Meteor._reload.reload();
+  },
+  'click td a': function (event) {
+    let redirectid = $(event.target).closest('tr').attr('id');
+
+    let transactiontype = $(event.target).closest('tr').attr('class');;
+
+    if (redirectid && transactiontype) {
+      if (transactiontype === 'Bill') {
+        window.open('/billcard?id=' + redirectid, '_self');
+      } else if (transactiontype === 'PO') {
+        window.open('/purchaseordercard?id=' + redirectid, '_self');
+      } else if (transactiontype === 'Credit') {
+        window.open('/creditcard?id=' + redirectid, '_self');
+      } else if (transactiontype === 'Supplier Payment') {
+        window.open('/supplierpaymentcard?id=' + redirectid, '_self');
+      }
+    }
+    // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
+  },
+  'click .btnPrintReport': function (event) {
+
+    let values = [];
+    let basedOnTypeStorages = Object.keys(localStorage);
+    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+      let employeeId = storage.split('_')[2];
+      return storage.includes('BasedOnType_');
+      // return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+    });
+    let i = basedOnTypeStorages.length;
+    if (i > 0) {
+      while (i--) {
+        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+      }
+    }
+    values.forEach(value => {
+      let reportData = JSON.parse(value);
+      reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+      if (reportData.BasedOnType.includes("P")) {
+        if (reportData.FormID == 1) {
+          let formIds = reportData.FormIDs.split(',');
+          if (formIds.includes("278")) {
+            reportData.FormID = 278;
+            Meteor.call('sendNormalEmail', reportData);
           }
-      });
-      document.title = 'Tax Summary Report';
-      $(".printReport").print({
-          title   :  document.title +" | Tax Summary | "+loggedCompany,
-          noPrintSelector : ".addSummaryEditor",
-      })
-    },
-'click .btnExportReport':function() {
-  $('.fullScreenSpin').css('display','inline-block');
+        } else {
+          if (reportData.FormID == 278)
+            Meteor.call('sendNormalEmail', reportData);
+        }
+      }
+    });
+    document.title = 'Tax Summary Report';
+    $(".printReport").print({
+      title: document.title + " | Tax Summary | " + loggedCompany,
+      noPrintSelector: ".addSummaryEditor",
+    })
+  },
+  'click .btnExportReport': function () {
+    $('.fullScreenSpin').css('display', 'inline-block');
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth()+1) + "-" + dateFrom.getDate();
-    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-" + dateTo.getDate();
+    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
     const filename = loggedCompany + '-Tax Summary' + '.csv';
     utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
@@ -699,10 +729,10 @@ Template.taxsummaryreport.onRendered(()=>{
     //     }
     //
     // });
-},
-'click #lastMonth':function(){
+  },
+  'click #lastMonth': function () {
     let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display','inline-block');
+    $('.fullScreenSpin').css('display', 'inline-block');
     $('#dateFrom').attr('readonly', false);
     $('#dateTo').attr('readonly', false);
     var currentDate = new Date();
@@ -710,16 +740,16 @@ Template.taxsummaryreport.onRendered(()=>{
     var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
     var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
 
-    var formatDateComponent = function(dateComponent) {
+    var formatDateComponent = function (dateComponent) {
       return (dateComponent < 10 ? '0' : '') + dateComponent;
     };
 
-    var formatDate = function(date) {
-      return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+    var formatDate = function (date) {
+      return formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
     };
 
-    var formatDateERP = function(date) {
-      return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+    var formatDateERP = function (date) {
+      return date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
     };
 
 
@@ -731,12 +761,12 @@ Template.taxsummaryreport.onRendered(()=>{
 
     var getLoadDate = formatDateERP(prevMonthLastDate);
     let getDateFrom = formatDateERP(prevMonthFirstDate);
-    templateObject.getTaxSummaryReports(getDateFrom,getLoadDate,false);
+    templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
 
-},
-'click #lastQuarter':function(){
+  },
+  'click #lastQuarter': function () {
     let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display','inline-block');
+    $('.fullScreenSpin').css('display', 'inline-block');
     $('#dateFrom').attr('readonly', false);
     $('#dateTo').attr('readonly', false);
     var currentDate = new Date();
@@ -745,11 +775,11 @@ Template.taxsummaryreport.onRendered(()=>{
     var begunDate = moment(currentDate).format("DD/MM/YYYY");
     function getQuarter(d) {
       d = d || new Date();
-      var m = Math.floor(d.getMonth()/3) + 2;
-      return m > 4? m - 4 : m;
+      var m = Math.floor(d.getMonth() / 3) + 2;
+      return m > 4 ? m - 4 : m;
     }
 
-    var quarterAdjustment= (moment().month() % 3) + 1;
+    var quarterAdjustment = (moment().month() % 3) + 1;
     var lastQuarterEndDate = moment().subtract({ months: quarterAdjustment }).endOf('month');
     var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({ months: 2 }).startOf('month');
 
@@ -767,190 +797,184 @@ Template.taxsummaryreport.onRendered(()=>{
 
     var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
     let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    templateObject.getTaxSummaryReports(getDateFrom,getLoadDate,false);
+    templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
 
-},
-'click #last12Months':function(){
-  let templateObject = Template.instance();
-  $('.fullScreenSpin').css('display','inline-block');
-  $('#dateFrom').attr('readonly', false);
-  $('#dateTo').attr('readonly', false);
-  var currentDate = new Date();
-  var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  },
+  'click #last12Months': function () {
+    let templateObject = Template.instance();
+    $('.fullScreenSpin').css('display', 'inline-block');
+    $('#dateFrom').attr('readonly', false);
+    $('#dateTo').attr('readonly', false);
+    var currentDate = new Date();
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-  let fromDateMonth = Math.floor(currentDate.getMonth()+1);
-  let fromDateDay = currentDate.getDate();
-  if((currentDate.getMonth()+1) < 10){
-    fromDateMonth = "0" + (currentDate.getMonth()+1);
-  }
-  if(currentDate.getDate() < 10){
-  fromDateDay = "0" + currentDate.getDate();
-  }
-
-  var fromDate =fromDateDay + "/" +(fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() -1);
-  templateObject.dateAsAt.set(begunDate);
-  $("#dateFrom").val(fromDate);
-  $("#dateTo").val(begunDate);
-
-  var currentDate2 = new Date();
-  var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-  let getDateFrom = Math.floor(currentDate2.getFullYear()-1) + "-" + Math.floor(currentDate2.getMonth() +1) + "-" + currentDate2.getDate() ;
-  templateObject.getTaxSummaryReports(getDateFrom,getLoadDate,false);
-
-
-},
-'click #ignoreDate':function(){
-  let templateObject = Template.instance();
-  $('.fullScreenSpin').css('display','inline-block');
-  $('#dateFrom').attr('readonly', true);
-  $('#dateTo').attr('readonly', true);
-  templateObject.dateAsAt.set('Current Date');
-  templateObject.getTaxSummaryReports('','',true);
-
-},
-    'keyup #myInputSearch':function(event){
-      $('.table tbody tr').show();
-      let searchItem = $(event.target).val();
-      if(searchItem != ''){
-        var value = searchItem.toLowerCase();
-        $('.table tbody tr').each(function(){
-         var found = 'false';
-         $(this).each(function(){
-              if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
-              {
-                   found = 'true';
-              }
-         });
-         if(found == 'true')
-         {
-              $(this).show();
-         }
-         else
-         {
-              $(this).hide();
-         }
-    });
-      }else{
-        $('.table tbody tr').show();
-      }
-    },
-    'blur #myInputSearch':function(event){
-      $('.table tbody tr').show();
-      let searchItem = $(event.target).val();
-      if(searchItem != ''){
-        var value = searchItem.toLowerCase();
-        $('.table tbody tr').each(function(){
-         var found = 'false';
-         $(this).each(function(){
-              if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
-              {
-                   found = 'true';
-              }
-         });
-         if(found == 'true')
-         {
-              $(this).show();
-         }
-         else
-         {
-              $(this).hide();
-         }
-    });
-      }else{
-        $('.table tbody tr').show();
-      }
-    },
-    'click #mainTaxCode':function(event){
-      const reportData = Template.instance().mainReportRecords.get();
-      Template.instance().reportRecords.set(reportData);
-      const grandData = Template.instance().mainGrandRecords.get();
-      Template.instance().grandRecords.set(grandData);
-      Template.instance().isSub.set(false);
-      Template.instance().stylizeForm();
-      
-    },
-    'click #subTaxCode':function(event){
-      const reportData = Template.instance().subReportRecords.get();
-      Template.instance().reportRecords.set(reportData);
-      const grandData = Template.instance().subGrandRecords.get();
-      Template.instance().grandRecords.set(grandData);
-      Template.instance().isSub.set(true);
-      Template.instance().stylizeForm();
+    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+    let fromDateDay = currentDate.getDate();
+    if ((currentDate.getMonth() + 1) < 10) {
+      fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+    if (currentDate.getDate() < 10) {
+      fromDateDay = "0" + currentDate.getDate();
     }
 
+    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+    templateObject.dateAsAt.set(begunDate);
+    $("#dateFrom").val(fromDate);
+    $("#dateTo").val(begunDate);
 
-  });
-  Template.taxsummaryreport.helpers({
-    records : () => {
-       return Template.instance().records.get();
-     //   .sort(function(a, b){
-     //     if (a.accounttype == 'NA') {
-     //   return 1;
-     //       }
-     //   else if (b.accounttype == 'NA') {
-     //     return -1;
-     //   }
-     // return (a.accounttype.toUpperCase() > b.accounttype.toUpperCase()) ? 1 : -1;
-     // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-     // });
-    },
-    reportRecords : () => {
-       return Template.instance().reportRecords.get();
-    },
+    var currentDate2 = new Date();
+    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
+    templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
 
-    mainReportRecords : () => {
-      return Template.instance().mainReportRecords.get();
-    },
 
-    subReportRecords : () => {
-      return Template.instance().subReportRecords.get();
-    },
+  },
+  'click #ignoreDate': function () {
+    let templateObject = Template.instance();
+    $('.fullScreenSpin').css('display', 'inline-block');
+    $('#dateFrom').attr('readonly', true);
+    $('#dateTo').attr('readonly', true);
+    templateObject.dateAsAt.set('Current Date');
+    templateObject.getTaxSummaryReports('', '', true);
 
-    isSub : () => {
-      return Template.instance().isSub.get();
-    },
-
-    grandRecords: () => {
-       return Template.instance().grandRecords.get();
-    },
-    mainGrandRecords: () => {
-      return Template.instance().mainGrandRecords.get();
-    },
-    subGrandRecords: () => {
-      return Template.instance().subGrandRecords.get();
-    },
-    dateAsAt: () =>{
-        return Template.instance().dateAsAt.get() || '-';
-    },
-    companyname: () =>{
-        return loggedCompany;
-    },
-    deptrecords: () => {
-      const deptData = Template.instance().deptrecords.get();
-      if(deptData) {
-        return deptData.sort(function(a, b){
-          if (a.department == 'NA') {
-            return 1;
+  },
+  'keyup #myInputSearch': function (event) {
+    $('.table tbody tr').show();
+    let searchItem = $(event.target).val();
+    if (searchItem != '') {
+      var value = searchItem.toLowerCase();
+      $('.table tbody tr').each(function () {
+        var found = 'false';
+        $(this).each(function () {
+          if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            found = 'true';
           }
-          else if (b.department == 'NA') {
-            return -1;
-          }
-          return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
-          
         });
-      } else {
-        return deptData;
-      }
+        if (found == 'true') {
+          $(this).show();
+        }
+        else {
+          $(this).hide();
+        }
+      });
+    } else {
+      $('.table tbody tr').show();
     }
-  });
-  Template.registerHelper('equals', function (a, b) {
-      return a === b;
-  });
+  },
+  'blur #myInputSearch': function (event) {
+    $('.table tbody tr').show();
+    let searchItem = $(event.target).val();
+    if (searchItem != '') {
+      var value = searchItem.toLowerCase();
+      $('.table tbody tr').each(function () {
+        var found = 'false';
+        $(this).each(function () {
+          if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            found = 'true';
+          }
+        });
+        if (found == 'true') {
+          $(this).show();
+        }
+        else {
+          $(this).hide();
+        }
+      });
+    } else {
+      $('.table tbody tr').show();
+    }
+  },
+  'click #mainTaxCode': function (event) {
+    const reportData = Template.instance().mainReportRecords.get();
+    Template.instance().reportRecords.set(reportData);
+    const grandData = Template.instance().mainGrandRecords.get();
+    Template.instance().grandRecords.set(grandData);
+    Template.instance().isSub.set(false);
+    Template.instance().stylizeForm();
 
-  Template.registerHelper('notEquals', function (a, b) {
-      return a != b;
-  });
+  },
+  'click #subTaxCode': function (event) {
+    const reportData = Template.instance().subReportRecords.get();
+    Template.instance().reportRecords.set(reportData);
+    const grandData = Template.instance().subGrandRecords.get();
+    Template.instance().grandRecords.set(grandData);
+    Template.instance().isSub.set(true);
+    Template.instance().stylizeForm();
+  }
 
-  Template.registerHelper('containsequals', function (a, b) {
-      return (a.indexOf(b) >= 0 );
-  });
+
+});
+Template.taxsummaryreport.helpers({
+  records: () => {
+    return Template.instance().records.get();
+    //   .sort(function(a, b){
+    //     if (a.accounttype == 'NA') {
+    //   return 1;
+    //       }
+    //   else if (b.accounttype == 'NA') {
+    //     return -1;
+    //   }
+    // return (a.accounttype.toUpperCase() > b.accounttype.toUpperCase()) ? 1 : -1;
+    // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
+    // });
+  },
+  reportRecords: () => {
+    return Template.instance().reportRecords.get();
+  },
+
+  mainReportRecords: () => {
+    return Template.instance().mainReportRecords.get();
+  },
+
+  subReportRecords: () => {
+    return Template.instance().subReportRecords.get();
+  },
+
+  isSub: () => {
+    return Template.instance().isSub.get();
+  },
+
+  grandRecords: () => {
+    return Template.instance().grandRecords.get();
+  },
+  mainGrandRecords: () => {
+    return Template.instance().mainGrandRecords.get();
+  },
+  subGrandRecords: () => {
+    return Template.instance().subGrandRecords.get();
+  },
+  dateAsAt: () => {
+    return Template.instance().dateAsAt.get() || '-';
+  },
+  companyname: () => {
+    return loggedCompany;
+  },
+  deptrecords: () => {
+    const deptData = Template.instance().deptrecords.get();
+    if (deptData) {
+      return deptData.sort(function (a, b) {
+        if (a.department == 'NA') {
+          return 1;
+        }
+        else if (b.department == 'NA') {
+          return -1;
+        }
+        return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
+
+      });
+    } else {
+      return deptData;
+    }
+  }
+});
+Template.registerHelper('equals', function (a, b) {
+  return a === b;
+});
+
+Template.registerHelper('notEquals', function (a, b) {
+  return a != b;
+});
+
+Template.registerHelper('containsequals', function (a, b) {
+  return (a.indexOf(b) >= 0);
+});
