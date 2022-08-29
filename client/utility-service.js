@@ -1232,6 +1232,17 @@ export class UtilityService {
       }
 
     };
+
+  getStartDateWithSpecificFormat = function (date) {
+      const leaveDate = new Date(date);
+      const yyyy = leaveDate.getFullYear();
+      let mm = ("0" + (leaveDate.getMonth() + 1)).slice(-2);
+      let dd = leaveDate.getDate();
+
+      return dd + "/" + mm + "/" + yyyy;
+    };
+  
+
     negativeCurrencyRoundFormat = function (price) {
         if(price < 0) {
             let currency = price.toString().split('-')[1];
