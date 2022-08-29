@@ -1274,7 +1274,8 @@ export class UtilityService {
 
     convertSubstringParseFloat(value) {
         if((value).includes('-')) {
-            let price = value.substring(2).replace(",","");
+            // let price = value.substring(2).replace(",","");
+            let price = value.substring(2).replace(/\,/g,'');
             price = '-'+price;
             return (parseFloat(price));
 

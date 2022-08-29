@@ -44,7 +44,7 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>Search:</label>
                                         <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
-                                    </div>
+                                    </div>                                    
                                     <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
                                         <div class="modal-dialog modal-sm" role="document">
                                             <div class="modal-content">
@@ -67,6 +67,28 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    <div class="dropdown periodSelector scnd" style="margin: 8px;">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">More </button>
+                                        <div class="dropdown-menu accountingBasisDropdown" aria-labelledby="dropdownMenuButton" style="width: 250px;">
+                                            <span>Accounting basis</span>
+                                            <br />
+                                            <div class="form-check form-check-inline" style="margin-top: 8px;">
+                                                <input class="form-check-input rbAccrual" type="radio" name="radio" id="mddItem1" value="accrual">
+                                                <label class="form-check-label" for="mddItem1">Accrual</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="margin-top: 8px;">
+                                                <input class="form-check-input rbCash" type="radio" name="radio" id="mddItem2" value="cash">
+                                                <label class="form-check-label" for="mddItem2">Cash</label>
+                                            </div>
+                                            <hr class="periodSelectorLine" style="margin-top: 8px; margin-bottom: 8px;" />
+                                            <span>Show</span>
+                                            <span class="dropdown-item custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkAccBasis" id="mddItem3" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem3">Accounting basis</label>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-2">
@@ -142,6 +164,7 @@
                                     <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Tax Summary</p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
                                     <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
+                                    <p class="text-center tglAccBasis" style="margin-bottom: 8px; display:none;"></p>
                                 </div>
                             </div>
                             <div class="row no-gutters">
