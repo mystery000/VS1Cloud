@@ -295,13 +295,13 @@
 
                             <div class="card-body text-nowrap">
                                 <div>
-                                    <ul class="nav nav-tabs nav-fill">
+                                    <ul class="nav nav-tabs nav-fill" id="mainTabs">
 
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link employeeTab active" role="tab" data-toggle="tab" data-target="#tab-2">Employee Details</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link employeeTab active" data-tabname="employeetab" role="tab" data-toggle="tab" data-target="#tab-2">Employee Details</a></li>
                                         {{#if includePayroll}}
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link payrollTab" role="tab" data-toggle="tab" data-target="#tab-3">Payroll</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link payrollTab" data-tabname="payrolltab" role="tab" data-toggle="tab" data-target="#tab-3">Payroll</a></li>
                                         {{/if}}
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link transTab" role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link transTab" data-tabname="transtab" role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
                                         <!-- <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-3">Jobs / Projects</a></li> -->
                                     </ul>
                                     <div class="tab-content">
@@ -1954,7 +1954,7 @@
                                                                         <h4>Leave Requests</h4>
                                                                     </div>
                                                                     <div class="col-12 col-md-6">
-                                                                        <button type="button" class="btn btn-primary float-right" id="newLeaveRequestbtn" data-toggle="modal" data-target="#newLeaveRequestModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Leave
+                                                                        <button type="button" class="btn btn-primary float-right btnLeaveRequestBtn" id="newLeaveRequestbtn" data-toggle="modal" data-target="#newLeaveRequestModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Leave
                                                                             Request</button>
                                                                     </div>
                                                                 </div>
@@ -1962,7 +1962,7 @@
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
-                                                                                <h5 class="modal-title" id="newPayCalendarLabel">New Leave Request</h5>
+                                                                                <h5 class="modal-title" id="newLeaveRequestLabel">New Leave Request</h5>
                                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                     <span aria-hidden="true">&times;</span>
                                                                                 </button>
@@ -2037,7 +2037,7 @@
                                                                                         </div> -->
                                                                                     </div>
                                                                                 </div>
-                                                                                <button type="button" id="removeLeaveRequest" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
+                                                                                <button type="button" id="removeLeaveRequestBtn" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
                                                                                 <button type="button" id="btnSaveLeaveRequest" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                             </div>
@@ -2438,7 +2438,7 @@
                                                                         <h4>Payslip</h4>
                                                                     </div>
                                                                     <div class="col-12 col-md-6">
-                                                                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#paySlipModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Payslip </button>
+                                                                        <button type="button" class="btn btn-primary float-right addNewSlip" data-toggle="modal" data-target="#paySlipModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Payslip </button>
                                                                     </div>
                                                                 </div>
 
@@ -2446,20 +2446,21 @@
                                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
-                                                                                <h5 class="modal-title">New payslip</h5>
+                                                                                <h5 class="modal-title" id="newPaySlipLabel">New payslip</h5>
                                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                     <span aria-hidden="true">&times;</span>
                                                                                 </button>
                                                                             </div>
                                                                             <div class="modal-body">
-                                                                                <div class="row">
-                                                                                    <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
+                                                                                <form class="row" id="paySlipForm">
+                                                                                    <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Period</label>
+                                                                                            <input type="hidden" id="periodID" value="0">
                                                                                             <select type="search" class="form-control" id="period" name="period" style="cursor: pointer;"></select>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
+                                                                                    <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Payment Date</label>
                                                                                             <div class="input-group date" style="cursor: pointer;">
@@ -2470,17 +2471,18 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
+                                                                                    <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Total pay</label>
-                                                                                            <input type="number" class="form-control" id="totalPay" name="totalPay">
+                                                                                            <input type="text" class="form-control edtPriceFormatting" id="totalPay" name="totalPay">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="modal-footer">
+                                                                                        <button type="button" id="btnDeletePayslipBtn" data-id="0" style="display: none;" class="btn btn-danger btnDeletePayslip"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
                                                                                         <button type="button" id="btnPayslip" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                                     </div>
-                                                                                </div>
+                                                                                </form>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -3330,13 +3332,13 @@
                                                                         <h4>Notes</h4>
                                                                     </div>
                                                                     <div class="col-12 col-md-6">
-                                                                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newNoteModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New
+                                                                        <button type="button" class="btn btn-primary float-right btnAddNewNotes" data-toggle="modal" data-target="#newNoteModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New
                                                                             Note</button>
                                                                         <div class="modal fade" id="newNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                                                 <div class="modal-content">
                                                                                     <div class="modal-header">
-                                                                                        <h5 class="modal-title" id="newPayCalendarLabel">Add a New Note</h5>
+                                                                                        <h5 class="modal-title" id="newPayNotesLabel">Add New Note</h5>
                                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                             <span aria-hidden="true">&times;</span>
                                                                                         </button>
