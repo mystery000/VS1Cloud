@@ -1,5 +1,6 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { isNumber } from "underscore";
+// import { isNumber } from "underscore";
+import { Random } from "meteor/random";
 
 
 Template.eftExportModal.onCreated(function () {
@@ -8,10 +9,14 @@ Template.eftExportModal.onCreated(function () {
   templateObject.accountTypes = new ReactiveVar([]);
   templateObject.transactionDescriptions = new ReactiveVar([]);
   templateObject.bankNames = new ReactiveVar([]);
+  templateObject.eftRowId = new ReactiveVar(null);
 });
 
 Template.eftExportModal.onRendered(function () {
   let templateObject = Template.instance();
+
+  // tempcode
+  templateObject.eftRowId.set(Random.id());
 
   templateObject.transactionDescriptions.set([
     {
@@ -112,8 +117,10 @@ Template.eftExportModal.events({
     $('#eftExportModal').modal('hide');
   },
 
-  "click .addNewRow": (e) => {
+  "click .addNewEftRow": (e) => {
     e.preventDefault();
+    let tokenid = Random.id();
+
     let transactionCodes = `
       <select class="form-control pointer sltTranslactionCode">
         <option value=""></option> 
@@ -122,9 +129,7 @@ Template.eftExportModal.events({
       </select>
     `;
     $('#eftExportTableBody').append(`
-      <tr>
-        <td class="colIdx" style="width: 2%;">
-        </td>
+      <tr id="${tokenid}">
         <td class="colApply">
           <input type="checkbox" class="isApply" />
         </td>
@@ -152,60 +157,30 @@ Template.eftExportModal.events({
         <td class="colFromAccountNo">
           <input type="text" class="form-control eftInput eftInputFromAccountNo" />
         </td>
+        <td class="colIdx addNewRow" style="width: 25px">
+          <span class="table-remove btnEftRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
+        </td>
       </tr> 
-    `)
+    `);
   },
 
-  "click .btnRemoveAll": (e) => {
-    e.preventDefault();
-    let transactionCodes = `
-      <select class="form-control pointer sltTranslactionCode">
-        <option value=""></option> 
-        <option value="">Debit Items</option> 
-        <option value="">Credit Items</option> 
-      </select>
-    `;
-    $('#eftExportTableBody').empty();
 
-    $('#eftExportTableBody').append(`
-      <tr>
-        <td class="colIdx addNewRow" style="width: 2%;">
-          <i class="fa fa-plus" aria-hidden="true"></i>
-        </td>
-        <td class="colApply">
-          <input type="checkbox" class="isApply" />
-        </td>
-        <td class="colAccountName">
-          <input type="text" class="form-control eftInput eftInputAccountName" />
-        </td>
-        <td class="colBsb">
-          <input type="text" class="form-control eftInput eftInputBsb" placeholder="___-___" />
-        </td>
-        <td class="colAccountNo">
-          <input type="text" class="form-control eftInput eftInputAccountNo" />
-        </td>
-        <td class="colTransactionCode">
-          ${transactionCodes}
-        </td>
-        <td class="colLodgement">
-          <input type="text" class="form-control eftInput eftInputTransactionCode" />
-        </td>
-        <td class="colAmount">
-          <input type="text" class="form-control eftInput eftInputAmount text-right" />
-        </td>
-        <td class="colFromBsb">
-          <input type="text" class="form-control eftInput eftInputFromBsb" placeholder="___-___" />
-        </td>
-        <td class="colFromAccountNo">
-          <input type="text" class="form-control eftInput eftInputFromAccountNo" />
-        </td>
-      </tr> 
-    `)
+  "click .btnEftRemove": function (event) {
+
+    try {
+
+      var targetID = $(event.target).closest("tr").attr("id");
+      $(event.target).closest("tr").remove();
+      $("#eftExportTable #" + targetID).remove();
+    } catch (error) {
+
+    }
+
   },
 
   "keypress .eftInputAmount": (e) => {
     if (e.which === 13) {
-      console.log('enter pressed', e.target.value)
+      // console.log('enter pressed', e.target.value)
     }
   },
 
@@ -229,7 +204,7 @@ Template.eftExportModal.events({
     let eftUserName = $('#eftUserName').val();
     let eftNumberUser = $('#eftNumberUser').val();
     let sltTransactionDescription = $('#sltTransactionDescription').val();
-    console.log(sltAccountType, sltBankName, eftProcessingDate, eftUserName, eftNumberUser, sltTransactionDescription)
+    // console.log(sltAccountType, sltBankName, eftProcessingDate, eftUserName, eftNumberUser, sltTransactionDescription)
 
     if (!sltAccountType) {
       swal("Please input Account Name", "", "error");
@@ -237,14 +212,12 @@ Template.eftExportModal.events({
     } else if (!sltBankName) {
       swal("Please input Bank Name", "", "error");
       return false;
-    } else if(!eftProcessingDate) {
+    } else if (!eftProcessingDate) {
       swal("Please input Processing Date", "", "error");
       return false;
     }
 
     return true;
-
-    return;
   }
 });
 
@@ -266,5 +239,10 @@ Template.eftExportModal.helpers({
 
   transactionDescriptions: () => {
     return Template.instance().transactionDescriptions.get();
-  }
+  },
+
+  eftRowId: () => {
+    return Template.instance().eftRowId.get();
+  },
+
 });

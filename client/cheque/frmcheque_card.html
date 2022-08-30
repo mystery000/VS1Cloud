@@ -12,8 +12,7 @@
             <input type="hidden" id="h1" name="id">
             <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">{{chequerecord.lid}}
 
-              <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i
-                  class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+              {{> helpbutton}}
               <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
               {{#if equals chequerecord.isReconciled true}}
               <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
@@ -951,7 +950,7 @@
             </div>
           </div>
           <div class="row justify-content-center desktopButtons">
-              
+
             <div class="col-12 col-md-2">
               <div class="row justify-content-start desktopButtons" style="margin: 8px;">
                   <div class="custom-control custom-switch">
@@ -959,8 +958,8 @@
                       <label class="custom-control-label" style="width:100px;cursor: pointer;" for="chkEFT">Add to EFT</label>
                   </div>
               </div>
-            </div> 
-            
+            </div>
+
             <button class="btn btn-success btnSave btnFooter" type="button"
               style="margin: 16px;margin-top: 0px;width: 100px;">
               <i class="fa fa-save" style="padding-right: 8px;"></i>Save
@@ -1526,7 +1525,9 @@
   </div>
 
   <div class="modal fade" role="dialog" tabindex="-1" id="eftExportModal">
-    {{> eftExportModal}}
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered generated-id" role="document" style="max-width: 90vw;">
+      {{> eftExportModal}}
+    </div>
   </div>
 
   <!-- End Help Video Modal -->

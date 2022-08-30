@@ -44,6 +44,9 @@ Template.serialnumberpop.events({
         if ($('.tblRefundLine').length) serialNumberCreationType = 0;
         const productName = localStorage.getItem('selectedProductName');
         if (newNumberList.length) {
+            $('.btnSNSave').prop('disabled', true);
+            $('.btnSNSave .fa-save').addClass('d-none');
+            $('.btnSNSave .spinner-border').removeClass('d-none');
             const serialList = await sideBarService.getAllSerialNumber();
             const availableList = serialList.tserialnumberlistcurrentreport.filter(serial => serial.ProductName === productName && serial.AllocType === 'In-Stock');
             const serialNumberList = availableList.map(serial => serial.SerialNumber);
@@ -85,6 +88,9 @@ Template.serialnumberpop.events({
                     $('#serialNumberModal').modal('hide');
                 }
             }
+            $('.btnSNSave').prop('disabled', false);
+            $('.btnSNSave .fa-save').removeClass('d-none');
+            $('.btnSNSave .spinner-border').addClass('d-none');
         } else {
             swal('', 'You should input more than one serial numbers.', 'info');
         }
@@ -149,6 +155,8 @@ Template.serialnumberpop.events({
                 event.preventDefault();
                 return false;
             } else {
+                $('.btnAutoFill').prop('disabled', true);
+                $('.btnAutoFill .spinner-border').removeClass('d-none');
                 const serialList = await sideBarService.getAllSerialNumber();
                 const serialNumberList = serialList.tserialnumberlistcurrentreport.map(serial => serial.SerialNumber);
                 let existSameNumber = false;
@@ -178,6 +186,8 @@ Template.serialnumberpop.events({
                     }
                     $('#tblSeriallist').html(shtml);
                 }
+                $('.btnAutoFill').prop('disabled', false);
+                $('.btnAutoFill .spinner-border').addClass('d-none');
             }
         }
     }

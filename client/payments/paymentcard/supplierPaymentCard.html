@@ -29,7 +29,7 @@
                     <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">
                         Supplier Payment {{record.lid}}
 
-                        <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                        {{> helpbutton}}
                         <!-- Start Help View Modal -->
                         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                             <div class="modal-dialog modal-sm" role="document">
@@ -568,7 +568,7 @@
                         </div>
                     </div>
                     <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
-                     
+
                          <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Supplier Payment</h4>
 
                         <div style="display: flex; width: 100%;">
@@ -629,7 +629,7 @@
                     </div>
                 </div>
                 <hr>
-               
+
 
                 <div style="font-size: 10px; margin-right: 8px; float: right;">
                     <p class="applied" style="font-size: 14px;font-weight: 800; margin-bottom: 8px; color: rgb(0 0 0);">Applied $50.00</p>
@@ -1375,7 +1375,7 @@
 
                     </div>
 
-                    <div class="col-12 col-md-2"> 
+                    <div class="col-12 col-md-2">
                       <div class="row justify-content-center desktopButtons" style="margin: 8px;">
                           <div class="custom-control custom-switch">
                               <input class="custom-control-input chkEFT" id="chkEFT" type="checkbox" style="cursor: pointer;">
@@ -1682,7 +1682,9 @@
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="eftExportModal">
-      {{> eftExportModal}}
+      <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered generated-id" role="document" style="max-width: 90vw;">
+        {{> eftExportModal}}
+      </div>
     </div>
 
     <!-- End Help Video Modal -->

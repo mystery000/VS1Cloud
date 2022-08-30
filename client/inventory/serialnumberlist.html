@@ -55,7 +55,7 @@
                         </thead>
                         <tbody>
                             {{#each item in datatablerecords}}
-                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                            <tr class="dnd-moved" data-serialnumber="{{item.serialnumber}}" style="cursor: pointer;">
                                 <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
                                 <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
                                 <td contenteditable="false" class="colDepartment text-start">{{item.salsedes}}</td>

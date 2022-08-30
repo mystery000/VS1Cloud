@@ -223,6 +223,7 @@ openDb = function (dbName) {
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
 
+      db.createObjectStore('TSerialNumberListCurrentReport', { keyPath: "EmployeeEmail" });
 
       db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });

@@ -1,14 +1,14 @@
 <template name="eft_export">
-  <div class="container-fluid">
+  <div class="container-fluid" style="padding-left: 0; padding-right: 0;">
     <div class="fullScreenSpin" style="display:none;">
       <div class="spinner"></div>
     </div>
     <header class="pt-2 pb-2 d-flex align-items-center"
       style="padding-top: 0px !important; padding-bottom: 0px !important;">
-      <h2 class="mr-1">Electronic Funds Transfer</h2>
+      <!-- <h2 class="mr-1">Electronic Funds Transfer</h2>
       <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
         <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
-      </a>
+      </a> -->
 
       <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
         <div class="modal-dialog modal-sm" role="document">
@@ -36,13 +36,12 @@
 
     </header>
 
-    <div class="row">
-      <div class="card-body p-3 rounded" style="padding-top: 0px !important;">
+    <div class="card-body p-0 rounded">
 
-        {{>eftExportModal}}
+      {{>eftExportModal}}
 
-      </div>
     </div>
+
   </div>
 
   <script>

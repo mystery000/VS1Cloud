@@ -1861,18 +1861,18 @@ export class SideBarService extends BaseService {
     if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
       options = {
-        OrderBy: "TransactionDate desc",
+        //OrderBy: "TransactionDate desc",
         IgnoreDates: true,
-        Search: "Deleted != true",
+        //Search: "Deleted != true",
         IsDetailReport: true,
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
     } else {
       options = {
-        OrderBy: "TransactionDate desc",
+        //OrderBy: "TransactionDate desc",
         IgnoreDates: false,
-        Search: "Deleted != true",
+        //Search: "Deleted != true",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
         LimitCount: '"' + limitcount + '"',
@@ -1882,7 +1882,7 @@ export class SideBarService extends BaseService {
     }else{
       if (ignoreDate == true) {
         options = {
-          OrderBy: "TransactionDate desc",
+          //OrderBy: "TransactionDate desc",
           IgnoreDates: true,
           IsDetailReport: true,
           LimitCount: '"' + limitcount + '"',
@@ -1890,7 +1890,7 @@ export class SideBarService extends BaseService {
         };
       } else {
         options = {
-          OrderBy: "TransactionDate desc",
+          //OrderBy: "TransactionDate desc",
           IgnoreDates: false,
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',

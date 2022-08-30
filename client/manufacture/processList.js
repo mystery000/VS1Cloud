@@ -72,7 +72,7 @@ Template.processList.onRendered (function() {
             // setTimeout(function () {
             //     MakeNegative();
             // }, 100);
-            
+
         }
 
         $('.fullScreenSpin').css('display', 'none');
@@ -297,35 +297,32 @@ Template.processList.onRendered (function() {
     }
     templateObject.getProcessRecords();
 
-    $(document).on('click', '.btnRefresh', function(e) {
+    $(document).on('click', '.processList .btnRefresh', function(e) {
         $('.fullScreenSpin').css('display', 'inline-block');
         templateObject.getProcessRecords();
         setTimeout(function () {
             window.open('/processlist', '_self');
           }, 2000);
-    })
-    
-    $(document).on('click', '#exportbtn', function() {
+    });
+
+    $(document).on('click', '.processList #exportbtn', function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblProcessList_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display', 'none');
-    })
+    });
 
-    $(document).on('click', '.printConfirm', function() {
+    $(document).on('click', '.processList .printConfirm', function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblProcessList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
-    })
+    });
 
-    
 
-        
-
-    $(document).on("click", "#btnNewProcess", function (e) {
+    $(document).on("click", ".processList #btnNewProcess", function (e) {
         FlowRouter.go('/processcard');
     });
 
-   
+
 });
 
 Template.processList.helpers ({
@@ -335,6 +332,5 @@ Template.processList.helpers ({
     selectedInventoryAssetAccount: () => {
         return Template.instance().selectedInventoryAssetAccount.get();
     }
-    
-})
 
+})

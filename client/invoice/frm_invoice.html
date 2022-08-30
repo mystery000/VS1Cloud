@@ -81,7 +81,7 @@
                 <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
                     <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
                         {{invoicerecord.lid}}
-                        <a class="btnSettings" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                        {{> helpbutton}}
                         <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
                     </h2>
                 </header>
@@ -2350,11 +2350,14 @@
         <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
             {{> serialnumberpop}}
         </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
+            {{> lotnumberpop}}
+        </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="availableSerialNumberModal">
          {{> availableserialnumberpop}}
         </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
-            {{> lotnumberpop}}
+        <div class="modal fade" role="dialog" tabindex="-1" id="availableLotNumberModal">
+            {{> availablelotnumberpop}}
         </div>
 
         <!-- <div class="modal fade" role="dialog" tabindex="-1" id="customFieldList">

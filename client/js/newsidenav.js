@@ -129,6 +129,9 @@ Template.newsidenav.onCreated(function() {
     templateObject.isAppointmentSMS = new ReactiveVar();
     templateObject.isAppointmentSMS.set(false);
 
+    templateObject.isSerialNumberList = new ReactiveVar();
+    templateObject.isSerialNumberList.set(false);
+
     $(document).ready(function() {
         var erpGet = erpDb();
         var LoggedDB = erpGet.ERPDatabase;
@@ -194,6 +197,8 @@ Template.newsidenav.onRendered(function() {
     let isImportProduct = Session.get('CloudImportProd');
     let isStockonHandDemandChart = Session.get('CloudStockOnHand');
     let isAppointmentSMS = Session.get('CloudApptSMS');
+
+    let isSerialNumberList = Session.get('CloudShowSerial') || false;
 
     var erpGet = erpDb();
     var LoggedDB = erpGet.ERPDatabase;
@@ -840,6 +845,9 @@ Template.newsidenav.onRendered(function() {
         }
         if (isAppointmentSMS) {
             templateObject.isAppointmentSMS.set(true);
+        }
+        if (isSerialNumberList) {
+            templateObject.isSerialNumberList.set(true);
         }
     }
 

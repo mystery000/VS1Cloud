@@ -3061,7 +3061,7 @@ Template.receiptsoverview.events({
         let splitDataTable = $('#tblSplitExpense').DataTable();
         const lineItems = splitDataTable.rows().data();
         let totalAmount = 0;
-        for (i = 0; i < lineItems.length; i++) {
+        for (let i = 0; i < lineItems.length; i++) {
             let amount = lineItems[i].AmountInc;
             totalAmount += amount;
         }
@@ -3074,6 +3074,7 @@ Template.receiptsoverview.events({
         for (let i = 0; i < lineItems.length; i++) {
             let lineItem = lineItems[i];
             lineItem.DateTime = moment(lineItem.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD');
+            let expenseClaim;
             if (i > 0) {
                 let expenseClaimLine = {
                     type: "TExpenseClaimLineEx",
@@ -3096,7 +3097,7 @@ Template.receiptsoverview.events({
                         // CurrencyName: currencyName,
                     }
                 };
-                let expenseClaim = {
+                expenseClaim = {
                     type: "TExpenseClaimEx",
                     fields: {
                         EmployeeID: receipt.EmployeeID,
@@ -3106,6 +3107,7 @@ Template.receiptsoverview.events({
                         Lines: [expenseClaimLine],
                         RequestToEmployeeID: receipt.EmployeeID,
                         RequestToEmployeeName: receipt.EmployeeName,
+                        TripGroup: receipt.TripGroup
                     }
                 }
             } else {
@@ -3132,12 +3134,13 @@ Template.receiptsoverview.events({
                         // CurrencyName: currencyName,
                     }
                 };
-                let expenseClaim = {
+                expenseClaim = {
                     type: "TExpenseClaimEx",
                     fields: {
                         ID: receipt.ExpenseClaimID,
                         DateTime: lineItem.DateTime,
                         Lines: [expenseClaimLine],
+                        TripGroup: receipt.TripGroup
                     }
                 }
             }
@@ -3170,6 +3173,7 @@ Template.receiptsoverview.events({
         let splitDataTable = $('#tblSplitExpense').DataTable();
         let rowData = splitDataTable.row(index).data();
         rowData.AmountInc = newValue ? parseFloat(newValue) : 0;
+        setCurrencyFormatForInput(e.target);
     },
     'click input[id^="splitAccount-"]': function(e) {
         $('#employeeListModal').attr('data-from', e.target.id);
@@ -3382,6 +3386,10 @@ Template.receiptsoverview.events({
                 mergedExpense.Paymethod = selectedPaymethod;
                 let selectedReiumbursable = $('#swtMergedReiumbursable').prop('checked');
                 mergedExpense.Reimbursement = selectedReiumbursable;
+                let tripGroup = mergedExpense.TripGroup;
+                delete mergedExpense.MetaID;
+                delete mergedExpense.LineID;
+                delete mergedExpense.TripGroup;
                 let expenseClaimLine = {
                     type: "TExpenseClaimLineEx",
                     fields: mergedExpense
@@ -3395,6 +3403,7 @@ Template.receiptsoverview.events({
                         DateTime: mergedExpense.DateTime,
                         Description: mergedExpense.Description,
                         Lines: [expenseClaimLine],
+                        TripGroup: tripGroup,
                         RequestToEmployeeID: mergedExpense.EmployeeID,
                         RequestToEmployeeName: mergedExpense.EmployeeName,
                     }
@@ -3457,7 +3466,8 @@ Template.receiptsoverview.events({
                         Lines: [expenseClaimLine],
                         RequestToEmployeeID: receipt.EmployeeID,
                         RequestToEmployeeName: receipt.EmployeeName,
-                        Active: false
+                        Active: false,
+                        TripGroup: receipt.TripGroup
                     }
                 };
 
@@ -3742,3 +3752,14 @@ Template.receiptsoverview.helpers({
         return Session.get('CloudUseForeignLicence');
     }
 });
+
+function setCurrencyFormatForInput(target) {
+    let input = 0;
+    if (!isNaN($(target).val())) {
+        input = parseFloat($(target).val()) || 0;
+        $(target).val(utilityService.modifynegativeCurrencyFormat(input));
+    } else {
+        input = Number($(target).val().replace(/[^0-9.-]+/g, "")) || 0;
+        $(target).val(utilityService.modifynegativeCurrencyFormat(input));
+    }
+}
