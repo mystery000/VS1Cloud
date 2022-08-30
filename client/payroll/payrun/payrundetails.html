@@ -6,7 +6,7 @@
         <header style="padding: 16px; background-color: #ededed;">
             <h2 style="margin: 16px; margin-bottom: 0px;" class="timesheetHeader">Pay Run Details
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                {{> helpbutton}}
 
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -357,7 +357,7 @@
         </style>
 
         <div class="row" style="margin: 0px 4px;">
-            <div class="col-2"> 
+            <div class="col-2">
               <div class="row justify-content-center desktopButtons" style="margin-top: 22px;">
                   <div class="custom-control custom-switch">
                       <input class="custom-control-input chkEFT" id="chkEFT" type="checkbox" style="cursor: pointer;">
@@ -365,7 +365,7 @@
                   </div>
               </div>
             </div>
-            
+
             <div class="col-4">
                 <button type="button" class="btn btn-danger btnFooter" style="margin: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete Pay Run</button>
                 <button type="button" class="btn btn-warning btnFooter" style="margin: 16px;"><i class="fas fa-undo" style="margin-right: 5px;"></i> Reset Pay Run</button>

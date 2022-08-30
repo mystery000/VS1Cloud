@@ -1,5 +1,5 @@
 <template name="processList">
-    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+    <div class="container-fluid processList" style="padding-left: 0px; padding-right: 0px;">
         <div class="fullScreenSpin" style="display: none;">
             <div class="spinner"></div>
         </div>
@@ -43,7 +43,7 @@
                     <button class="btn btn-primary export float-right" type="button" style="margin: 16px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
                 </div>
             </div>
-            
+
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0px 16px">
                     <div class="table-responsive">
@@ -108,7 +108,7 @@
                                 <tr class="dnd-moved" id="{{item.fields.id}}" style="cursor:pointer">
                                     <td contenteditable="false" class="colName">{{item.fields.name}}</td>
                                     <td contenteditable="false" class="colDescription">{{item.fields.description}}</td>
-                                    <td contenteditable="false" class="colDailyHours">{{item.fields.dailyHours}}</td>                         
+                                    <td contenteditable="false" class="colDailyHours">{{item.fields.dailyHours}}</td>
                                     <td contenteditable="false" class="colHourlyLabourCost">{{item.fields.hourlyLabourCost}}</td>
                                     <td contenteditable="false" class="colCOGS">{{item.fields.cogs}}</td>
                                     <td contenteditable="false" class="colExpense">{{item.fields.expenseAccount}}</td>
