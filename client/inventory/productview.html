@@ -98,7 +98,7 @@
         </style>
         {{#if productrecord}}
         <header style="padding: 16px;padding-bottom: 0px;">
-            <h1 style="margin: 16px;" id="productcardbodyname">{{productrecord.lib}}
+            <h1 style="margin: 16px;" id="productcardbodyname">{{productrecord.lib}} {{#if notEquals productrecord.id ''}} {{productrecord.id}}{{/if}}
                 <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
 
                 <!-- Start Help View Modal -->
@@ -126,7 +126,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="text-primary m-0 font-weight-bold" id="productcardbodycode">{{productrecord.lib}}</p>
+                                <p class="text-primary m-0 font-weight-bold" id="productcardbodycode">{{#if notEquals productrecord.id ''}}PRO-{{productrecord.id}} - {{/if}}{{productrecord.lib}}</p>
                             </div>
                             <div class="float-right"></div><div>
                             <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="icon ion-android-more-horizontal"></i></a>
@@ -933,7 +933,7 @@
                         }
 
                         .productRow input, .productRow select {
-                            padding-top: 2px; 
+                            padding-top: 2px;
                             padding-bottom: 2px;
                             font-size: 13px;
                         }
@@ -957,7 +957,7 @@
                             flex: 14%;
                             text-align: left;
                         }
-                        
+
 
                         .edtProductName, .edtQuantity, .edtProcess, .edtProcessNote {
                             border: 2px solid black;

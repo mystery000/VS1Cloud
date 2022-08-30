@@ -199,7 +199,7 @@ Template.customerscard.onRendered(function () {
                         let temp = dataObject.tcorrespondence.filter(item=>{
                             return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                         })
-        
+
                         for(let i = 0; i< temp.length; i++) {
                             for (let j = i+1; j< temp.length; j++ ) {
                                 if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -207,7 +207,7 @@ Template.customerscard.onRendered(function () {
                                 }
                             }
                         }
-        
+
                         temp.map(item=>{
                             if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
                                 tempArray.push(item.fields)
@@ -223,7 +223,7 @@ Template.customerscard.onRendered(function () {
                     let temp = dataObj.tcorrespondence.filter(item=>{
                         return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                     })
-    
+
                     for(let i = 0; i< temp.length; i++) {
                         for (let j = i+1; j< temp.length; j++ ) {
                             if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -247,7 +247,7 @@ Template.customerscard.onRendered(function () {
                     let temp = dataObject.tcorrespondence.filter(item=>{
                         return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                     })
-    
+
                     for(let i = 0; i< temp.length; i++) {
                         for (let j = i+1; j< temp.length; j++ ) {
                             if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
@@ -263,7 +263,7 @@ Template.customerscard.onRendered(function () {
                 }
                 templateObject.correspondences.set(tempArray)
             })
-        }) 
+        })
     }
 
 
@@ -742,7 +742,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getAllCrm = function (customerName) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = Session.get("mySessionEmployeeLoggedID"); 
+        let employeeID = Session.get("mySessionEmployeeLoggedID");
         var url = FlowRouter.current().path;
         if (url.includes("/employeescard")) {
             url = new URL(window.location.href);
@@ -802,9 +802,9 @@ Template.customerscard.onRendered(function () {
                             description: '',
                             labels: '',
                             category: 'appointment'
-        
+
                         }
-    
+
                         dataTableList.push(obj);
                     })
                 }
@@ -846,7 +846,7 @@ Template.customerscard.onRendered(function () {
                 }catch (error) {
                 }
                 setCrmProjectTasks()
-                
+
             })
             .catch((err)=>{
                 templateObject.crmRecords.set(dataTableList);
@@ -854,7 +854,7 @@ Template.customerscard.onRendered(function () {
                 $('.fullScreenSpin').css('display', 'none');
             })
         }
-  
+
         // await getTask();
         // await getAppointments();
         // await getEmails();
@@ -1929,7 +1929,7 @@ Template.customerscard.onRendered(function () {
             }).then((result) => {
                 if (result.value) {
                     $('#referenceLetterModal').modal('toggle');
-                } 
+                }
             });
         } else {
             let email = $('#edtCustomerEmail').val();
@@ -1972,7 +1972,7 @@ Template.customerscard.onRendered(function () {
                 }).then((result) => {
                     if (result.value) {
                         $('#referenceLetterModal').modal('toggle');
-                    } 
+                    }
                 });
             }
         }
@@ -2006,7 +2006,7 @@ Template.customerscard.onRendered(function () {
                 });
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-               
+
                 sideBarService.getCorrespondences().then(dObject =>{
 
                     let temp = {
@@ -2025,10 +2025,10 @@ Template.customerscard.onRendered(function () {
                         type: 'TCorrespondence',
                         fields: temp
                     }
-    
+
                     // let array = [];
                     // array.push(objDetails)
-                    
+
                     sideBarService.saveCorrespondence(objDetails).then(data=>{
                         sideBarService.getCorrespondences().then(dataUpdate => {
                             addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function(){
@@ -2074,7 +2074,7 @@ Template.customerscard.onRendered(function () {
                             } else if (result.dismiss === 'cancel') { }
                         });
                     })
-                    
+
                 })
             }
         } else {
@@ -2095,10 +2095,10 @@ Template.customerscard.onRendered(function () {
                     type: 'TCorrespondence',
                     fields: temp
                 }
-    
+
                 let array = [];
                     array.push(objDetails)
-    
+
                 sideBarService.saveCorrespondence(objDetails).then(data=>{
                     sideBarService.getCorrespondences().then(function(dataUpdate){
                         addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
@@ -2113,7 +2113,7 @@ Template.customerscard.onRendered(function () {
                                 if (result.value) {
                                     $('#addLetterTemplateModal').modal('toggle')
                                     templateObject.getReferenceLetters();
-        
+
                                 } else if (result.dismiss === 'cancel') { }
                             });
                         }).catch(function(err) {
@@ -2129,7 +2129,7 @@ Template.customerscard.onRendered(function () {
                                     $('#addLetterTemplateModal').modal('toggle')
                                 } else if (result.dismiss === 'cancel') { }
                             });
-                        })  
+                        })
                     })
                 }).catch(function () {
                     swal({
@@ -2145,7 +2145,7 @@ Template.customerscard.onRendered(function () {
                     });
                 })
             })
-            
+
         }
         // localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
         // templateObject.correspondences.set(correspondenceTemp);
@@ -3985,6 +3985,13 @@ Template.customerscard.helpers({
 
         return isMobile;
     }
+});
+
+Template.registerHelper('equals', function (a, b) {
+    return a === b;
+});
+Template.registerHelper('notEquals', function (a, b) {
+    return a != b;
 });
 
 function getPreviewFile(uploadedFiles, attachmentID) {

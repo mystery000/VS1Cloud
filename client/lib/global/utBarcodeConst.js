@@ -34,6 +34,7 @@
   Barcode_Prefix_Shipping = 'SH';
   Barcode_Prefix_Serial     = 'SER';
   Barcode_Prefix_LOT     = 'LOT';
+  Barcode_Prefix_Lead = 'LED';
 
  licenceIPAddress = "vs1connection.vs1cloud.com"; //165.228.147.127
   //Global Declaration
