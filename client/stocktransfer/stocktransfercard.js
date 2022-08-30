@@ -594,7 +594,6 @@ Template.stocktransfercard.onRendered(function() {
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         let useData = data.tstocktransferentry;
-                        console.log(useData);
                         var added = false;
                         for (let d = 0; d < useData.length; d++) {
                             if (parseInt(useData[d].fields.ID) === currentStockTransfer) {
@@ -1029,7 +1028,6 @@ Template.stocktransfercard.onRendered(function() {
                         //here
                     }
                 }).catch(function(err) {
-                    console.log(err);
 
                     stockTransferService.getOneStockTransferData(currentStockTransfer).then(function(data) {
                         $('.fullScreenSpin').css('display', 'none');

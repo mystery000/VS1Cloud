@@ -63,12 +63,10 @@ Template.eftOptionsModal.onRendered(function () {
         active: false
       }
     ];
-    console.log('eftOptions...', eftOptions)
 
     templateObject.eftOptionsList.set(eftOptions)
     addVS1Data('TEftOptions', JSON.stringify(eftOptions)).then(function (datareturn) {
     }).catch(function (err) {
-      console.log(err)
     });
   }
 

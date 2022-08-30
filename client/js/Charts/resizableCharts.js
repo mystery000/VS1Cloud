@@ -50,7 +50,6 @@ export default class resizableCharts {
             // resize all highcharts
             try {
               const allHighCharts = $('.ds-highcharts');
-              console.log('allHighCharts', allHighCharts.length);
               _.each(allHighCharts, chartElement => {
                 const index = $(chartElement).data('highcharts-chart');
                 let highChart = highCharts.charts[index];

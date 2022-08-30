@@ -1602,9 +1602,8 @@ Template.new_salesorder.onRendered(() => {
         }
 
         if (object_invoce[0]["taxItems"]) {
-                
+
             let taxItems = object_invoce[0]["taxItems"];
-            console.log(taxItems);
             $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
@@ -1616,7 +1615,7 @@ Template.new_salesorder.onRendered(() => {
                         <div style="padding-left: 16px; width: 50%;">
                             <p style="font-weight: 600; text-align: right; margin-bottom: 8px; color: rgb(0 0 0);">
                                 $${taxItems[code].toFixed(2)}</p>
-                        </div> 
+                        </div>
                     </div>
                 `;
                 $("#templatePreviewModal #tax_list_print").append(html);
@@ -6450,7 +6449,7 @@ Template.new_salesorder.onRendered(() => {
             // pdf.setFontSize(18);
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
             $('#html-2-pdfwrapper').css('display', 'block');
-            
+
             $("#html-2-pdfwrapper #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `
@@ -6467,7 +6466,7 @@ Template.new_salesorder.onRendered(() => {
                 `;
                 $("#html-2-pdfwrapper #tax_list_print").append(html);
             });
-            
+
             var source = document.getElementById('html-2-pdfwrapper');
             let file = "Sales Order.pdf";
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -9492,7 +9491,7 @@ Template.new_salesorder.events({
                             const tpqaObject = {
                                 type: "PQABatch",
                                 fields: {
-                                    Active: true,   
+                                    Active: true,
                                     BatchExpiryDate: new Date(parseInt(dates[2]), parseInt(dates[1]) - 1, parseInt(dates[0])).toISOString(),
                                     Qty: 1,
                                     BatchNo: lotNumbers[i],

@@ -833,7 +833,9 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       //ListType: "Detail",
-      select: '[name] = "' + dataSearchName + '"',
+      Company:dataSearchName,
+      Employeename:dataSearchName,
+      // select: '[name] = "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TERPCombinedContactsVS1, options);
   }

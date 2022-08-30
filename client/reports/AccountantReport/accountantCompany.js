@@ -495,8 +495,6 @@ Template.accountant_company.onRendered(() => {
         templateObject.endDate.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
-        console.log("getLoadDate", getLoadDate);
-
         getVS1Data('TSupplierVS1').then(function(dataObject) {
             if (dataObject.length === 0) {
                 contactService.getOneSupplierDataEx(supplierID).then(function(data) {
@@ -1975,22 +1973,7 @@ Template.accountant_company.events({
             $("#page-9-content-prt").html($("#page-9-content").html() + elmnt);
         }
         $('#editReportModal').modal('toggle');
-    },
-
-    // "change #sltYear": function(event) {
-    //     const templateObject = Template.instance();
-
-    //     $(".fullScreenSpin").css("display", "inline-block");
-    //     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    //     templateObject.currentYear.set($("#sltYear").val());
-    //     templateObject.currentMonth.set(new Date().getMonth());
-
-    //     var selDate = new Date($("#sltYear").val(), (parseInt(templateObject.endMonth.get())), 0);
-    //     templateObject.endDate.set(selDate.getDate() + " " + months[parseInt(templateObject.endMonth.get()) - 1] + " " + $("#sltYear").val());
-    //     var getLoadDate = moment(selDate).format("YYYY-MM-DD");
-    //     console.log("getLoadDate", getLoadDate);
-    //     templateObject.getBalanceSheetReports(getLoadDate);
-    // },
+    }
 });
 
 Template.accountant_company.helpers({

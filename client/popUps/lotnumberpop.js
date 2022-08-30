@@ -117,12 +117,10 @@ Template.lotnumberpop.events({
     },
     'click .btnSelect': async function() {
         const lotList = await sideBarService.getAllSerialNumber();
-        console.log(lotList);
         const productName = localStorage.getItem('selectedProductName');
         const filteredList = lotList.tserialnumberlistcurrentreport.filter(serial => serial.ProductName === productName && serial.AllocType === 'In-Stock');
         const lotNumberList = filteredList.map(lot => lot.BatchNumber);
         const lotExpiryDateList = filteredList.map(lot => log.BatchExpiryDate);
-        console.log(lotNumberList, lotExpiryDateList);
         let htmlList = `<tr>
             <td rowspan="2"></td>
             <td colspan="3" class="text-center">Available Lot Numbers</td>
@@ -259,7 +257,7 @@ Template.lotnumberpop.events({
                     }
                     $('#tblLotlist').html(shtml);
                 }
-                
+
                 $(".lotExpiryDate input").datepicker({
                     showOn: 'focus',
                     buttonImageOnly: false,
