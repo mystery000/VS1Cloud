@@ -1972,6 +1972,7 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Type of Request</label>
+                                                                                            <input type="hidden" id="edtLeaveRequestID" value="0">
                                                                                             <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
                                                                                             <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
                                                                                             </select>
@@ -2036,6 +2037,7 @@
                                                                                         </div> -->
                                                                                     </div>
                                                                                 </div>
+                                                                                <button type="button" id="removeLeaveRequest" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
                                                                                 <button type="button" id="btnSaveLeaveRequest" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                             </div>
@@ -2064,6 +2066,7 @@
                                                                                         <th class="th colLRLeavePeriod">Leave Period</th>
                                                                                         <th class="th colLRLeaveType">Leave Type</th>
                                                                                         <th class="th colLRStatus">Status</th>
+                                                                                        <th class="th colLRAction">Action</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>

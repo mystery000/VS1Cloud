@@ -1664,6 +1664,20 @@ Template.newproductpop.events({
     var getprod_id = $("#selectProductID").val();
     var currentID = getprod_id;
 
+    var txapurchasedescription = $("#txapurchasedescription").val();
+    var txasalesdescription = $("#txasalesdescription").val();
+    var sltinventoryacount = $("#sltinventoryacount").val();
+    var sltcogsaccount = $("#sltcogsaccount").val();
+    var sltsalesacount = $("#sltsalesacount").val();
+    var edtbuyqty1cost = $("#edtbuyqty1cost").val();
+    var edtsellqty1price = $("#edtsellqty1price").val();
+    var slttaxcodepurchase = $("#slttaxcodepurchase").val();
+    var slttaxcodesales = $("#slttaxcodesales").val();
+    var edtbarcode = $("#edtbarcode").val();
+    var edtCustomerUseType = $("#edtCustomerUseType").val();
+    var edtCustomerUseDiscount = $("#edtCustomerUseDiscount").val();
+    var edttotalqtyinstock1 = $('#edttotalqtyinstock1').val();
+
     if ($("#chkSellPrice").is(":checked")) {
       $(".itemExtraSellRow").each(function () {
         var lineID = this.id;
@@ -1685,7 +1699,7 @@ Template.newproductpop.events({
     }
 
     if (getprod_id != "") {
-      if (itrackThisItem == true && $("#sltinventoryacount").val() != "") {
+      if (itrackThisItem == true && sltinventoryacount != "") {
         objDetails = {
           type: "TProductVS1",
           fields: {
@@ -1697,28 +1711,18 @@ Template.newproductpop.events({
             CUSTFLD2: customField2,
             ProductPrintName: productName,
             ProductName: productName,
-            PurchaseDescription: $("#txapurchasedescription").val(),
-            SalesDescription: $("#txasalesdescription").val(),
-            AssetAccount: $("#sltinventoryacount").val(),
-            CogsAccount: $("#sltcogsaccount").val(),
-            IncomeAccount: $("#sltsalesacount").val(),
-            BuyQty1Cost:
-              parseFloat(
-                $("#edtbuyqty1cost")
-                  .val()
-                  .replace(/[^0-9.-]+/g, "")
-              ) || 0,
-            SellQty1Price:
-              parseFloat(
-                $("#edtsellqty1price")
-                  .val()
-                  .replace(/[^0-9.-]+/g, "")
-              ) || 0,
-            TaxCodePurchase: $("#slttaxcodepurchase").val(),
-            TaxCodeSales: $("#slttaxcodesales").val(),
+            PurchaseDescription: txapurchasedescription,
+            SalesDescription: txasalesdescription,
+            AssetAccount: sltinventoryacount,
+            CogsAccount: sltcogsaccount,
+            IncomeAccount: sltsalesacount,
+            BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
+            SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
+            TaxCodePurchase: slttaxcodepurchase,
+            TaxCodeSales: slttaxcodesales,
             UOMPurchases: defaultUOM,
             UOMSales: defaultUOM,
-            Barcode: $("#edtbarcode").val(),
+            Barcode: edtbarcode,
             LockExtraSell: itrackThisItem,
             ExtraSellPrice: lineExtaSellItems || null,
             PublishOnVS1: true,
@@ -1736,27 +1740,17 @@ Template.newproductpop.events({
             CUSTFLD2: customField2,
             ProductPrintName: productName,
             ProductName: productName,
-            PurchaseDescription: $("#txapurchasedescription").val(),
-            SalesDescription: $("#txasalesdescription").val(),
-            CogsAccount: $("#sltcogsaccount").val(),
-            IncomeAccount: $("#sltsalesacount").val(),
-            BuyQty1Cost:
-              parseFloat(
-                $("#edtbuyqty1cost")
-                  .val()
-                  .replace(/[^0-9.-]+/g, "")
-              ) || 0,
-            SellQty1Price:
-              parseFloat(
-                $("#edtsellqty1price")
-                  .val()
-                  .replace(/[^0-9.-]+/g, "")
-              ) || 0,
-            TaxCodePurchase: $("#slttaxcodepurchase").val(),
-            TaxCodeSales: $("#slttaxcodesales").val(),
+            PurchaseDescription: txapurchasedescription,
+            SalesDescription: txasalesdescription,
+            CogsAccount: sltcogsaccount,
+            IncomeAccount: sltsalesacount,
+            BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
+            SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
+            TaxCodePurchase: slttaxcodepurchase,
+            TaxCodeSales: slttaxcodesales,
             UOMPurchases: defaultUOM,
             UOMSales: defaultUOM,
-            Barcode: $("#edtbarcode").val(),
+            Barcode: edtbarcode,
             LockExtraSell: itrackThisItem,
             ExtraSellPrice: lineExtaSellItems || null,
             PublishOnVS1: true,
@@ -1775,12 +1769,7 @@ Template.newproductpop.events({
               fields: {
                 ProductId: parseInt(linesave),
                 ServiceDesc: productName,
-                StandardRate:
-                  parseFloat(
-                    $("#edtbuyqty1cost")
-                      .val()
-                      .replace(/[^0-9.-]+/g, "")
-                  ) || 0,
+                StandardRate: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
               },
             };
             productService
@@ -1810,13 +1799,8 @@ Template.newproductpop.events({
 
             if (selectLineID) {
               var lineProductName = productName;
-              var lineProductDesc = $("#txasalesdescription").val();
-              var lineUnitPrice =
-                parseFloat(
-                  $("#edtsellqty1price")
-                    .val()
-                    .replace(/[^0-9.-]+/g, "")
-                ) || 0;
+              var lineProductDesc = txasalesdescription;
+              var lineUnitPrice = parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0;
               // var $tblrows = $("#tblInvoiceLine tbody tr");
               var lineTaxCode = 0;
               var lineAmount = 0;
@@ -1824,14 +1808,12 @@ Template.newproductpop.events({
               var subGrandTotal = 0;
               var taxGrandTotal = 0;
               var taxGrandTotalPrint = 0;
-              var lineTaxRate = $("#slttaxcodesales").val() || "";
+              var lineTaxRate = slttaxcodesales || "";
               var taxRate = "";
 
               let lineExtraSellPrice = lineExtaSellItems || null;
-              let getCustomerClientTypeName =
-                $("#edtCustomerUseType").val() || "Default";
-              let getCustomerDiscount =
-                parseFloat($("#edtCustomerUseDiscount").val()) || 0;
+              let getCustomerClientTypeName = edtCustomerUseType || "Default";
+              let getCustomerDiscount = parseFloat(edtCustomerUseDiscount) || 0;
               let getCustomerProductDiscount = 0;
               let discountAmount = getCustomerDiscount;
               if (lineExtraSellPrice != null) {
@@ -1916,10 +1898,8 @@ Template.newproductpop.events({
               var lineTaxRate = $("#slttaxcodepurchase").val() || "";
               var taxRate = "";
               let lineExtraSellPrice = lineExtaSellItems || null;
-              let getCustomerClientTypeName =
-                $("#edtCustomerUseType").val() || "Default";
-              let getCustomerDiscount =
-                parseFloat($("#edtCustomerUseDiscount").val()) || 0;
+              let getCustomerClientTypeName = edtCustomerUseType || "Default";
+              let getCustomerDiscount = parseFloat(edtCustomerUseDiscount) || 0;
               let getCustomerProductDiscount = 0;
               let discountAmount = getCustomerDiscount;
               if (lineExtraSellPrice != null) {
@@ -2027,10 +2007,7 @@ Template.newproductpop.events({
           if (data.tproduct[0].Id != "") {
             let productID = data.tproduct[0].Id;
             currentID = parseInt(productID);
-            if (
-              itrackThisItem == true &&
-              $("#sltinventoryacount").val() != ""
-            ) {
+            if ( itrackThisItem == true && sltinventoryacount != "" ) {
               objDetails = {
                 type: "TProductVS1",
                 fields: {
@@ -2042,28 +2019,18 @@ Template.newproductpop.events({
                   CUSTFLD2: customField2,
                   ProductPrintName: productName,
                   ProductName: productName,
-                  PurchaseDescription: $("#txapurchasedescription").val(),
-                  SalesDescription: $("#txasalesdescription").val(),
-                  AssetAccount: $("#sltinventoryacount").val(),
-                  CogsAccount: $("#sltcogsaccount").val(),
-                  IncomeAccount: $("#sltsalesacount").val(),
-                  BuyQty1Cost:
-                    parseFloat(
-                      $("#edtbuyqty1cost")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0,
-                  SellQty1Price:
-                    parseFloat(
-                      $("#edtsellqty1price")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0,
-                  TaxCodePurchase: $("#slttaxcodepurchase").val(),
-                  TaxCodeSales: $("#slttaxcodesales").val(),
+                  PurchaseDescription: txapurchasedescription,
+                  SalesDescription: txasalesdescription,
+                  AssetAccount: sltinventoryacount,
+                  CogsAccount: sltcogsaccount,
+                  IncomeAccount: sltsalesacount,
+                  BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
+                  SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
+                  TaxCodePurchase: slttaxcodepurchase,
+                  TaxCodeSales: slttaxcodesales,
                   UOMPurchases: defaultUOM,
                   UOMSales: defaultUOM,
-                  Barcode: $("#edtbarcode").val(),
+                  Barcode: edtbarcode,
                   LockExtraSell: itrackThisItem,
                   ExtraSellPrice: lineExtaSellItems || null,
                   PublishOnVS1: true,
@@ -2081,27 +2048,17 @@ Template.newproductpop.events({
                   CUSTFLD2: customField2,
                   ProductPrintName: productName,
                   ProductName: productName,
-                  PurchaseDescription: $("#txapurchasedescription").val(),
-                  SalesDescription: $("#txasalesdescription").val(),
-                  CogsAccount: $("#sltcogsaccount").val(),
-                  IncomeAccount: $("#sltsalesacount").val(),
-                  BuyQty1Cost:
-                    parseFloat(
-                      $("#edtbuyqty1cost")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0,
-                  SellQty1Price:
-                    parseFloat(
-                      $("#edtsellqty1price")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0,
-                  TaxCodePurchase: $("#slttaxcodepurchase").val(),
-                  TaxCodeSales: $("#slttaxcodesales").val(),
+                  PurchaseDescription: txapurchasedescription,
+                  SalesDescription: txasalesdescription,
+                  CogsAccount: sltcogsaccount,
+                  IncomeAccount: sltsalesacount,
+                  BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
+                  SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
+                  TaxCodePurchase: slttaxcodepurchase,
+                  TaxCodeSales: slttaxcodesales,
                   UOMPurchases: defaultUOM,
                   UOMSales: defaultUOM,
-                  Barcode: $("#edtbarcode").val(),
+                  Barcode: edtbarcode,
                   LockExtraSell: itrackThisItem,
                   ExtraSellPrice: lineExtaSellItems || null,
                   PublishOnVS1: true,
@@ -2120,12 +2077,7 @@ Template.newproductpop.events({
                     fields: {
                       ProductId: parseInt(linesave),
                       ServiceDesc: productName,
-                      StandardRate:
-                        parseFloat(
-                          $("#edtbuyqty1cost")
-                            .val()
-                            .replace(/[^0-9.-]+/g, "")
-                        ) || 0,
+                      StandardRate: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
                     },
                   };
                   productService
@@ -2134,23 +2086,13 @@ Template.newproductpop.events({
                 }
                 var currentLoc = FlowRouter.current().route.path;
 
-                if (
-                  currentLoc == "/invoicecard" ||
-                  currentLoc == "/quotecard" ||
-                  currentLoc == "/salesordercard" ||
-                  currentLoc == "/refundcard"
-                ) {
+                if ( currentLoc == "/invoicecard" || currentLoc == "/quotecard" ||  currentLoc == "/salesordercard" || currentLoc == "/refundcard" ) {
                   var selectLineID = $("#selectLineID").val();
 
                   if (selectLineID) {
                     var lineProductName = productName;
-                    var lineProductDesc = $("#txasalesdescription").val();
-                    var lineUnitPrice =
-                      parseFloat(
-                        $("#edtsellqty1price")
-                          .val()
-                          .replace(/[^0-9.-]+/g, "")
-                      ) || 0;
+                    var lineProductDesc = txasalesdescription;
+                    var lineUnitPrice = parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0;
                     // var $tblrows = $("#tblInvoiceLine tbody tr");
                     var lineTaxCode = 0;
                     var lineAmount = 0;
@@ -2158,11 +2100,9 @@ Template.newproductpop.events({
                     var subGrandTotal = 0;
                     var taxGrandTotal = 0;
                     var taxGrandTotalPrint = 0;
-                    var lineTaxRate = $("#slttaxcodesales").val() || "";
+                    var lineTaxRate = slttaxcodesales || "";
                     var taxRate = "";
-                    $("#" + selectLineID + " .lineTaxCode").text(
-                      $("#slttaxcodesales").val()
-                    );
+                    $("#" + selectLineID + " .lineTaxCode").text(slttaxcodesales);
                     $("#" + selectLineID + " .lineProductName").val(
                       lineProductName
                     );
@@ -2216,7 +2156,7 @@ Template.newproductpop.events({
 
                   if (selectLineID) {
                     var lineProductName = productName;
-                    var lineProductDesc = $("#txasalesdescription").val();
+                    var lineProductDesc = txasalesdescription;
                     var lineUnitPrice =
                       parseFloat(
                         $("#edtsellqty1price")
@@ -2230,11 +2170,9 @@ Template.newproductpop.events({
                     var subGrandTotal = 0;
                     var taxGrandTotal = 0;
                     var taxGrandTotalPrint = 0;
-                    var lineTaxRate = $("#slttaxcodepurchase").val() || "";
+                    var lineTaxRate = slttaxcodepurchase || "";
                     var taxRate = "";
-                    $("#" + selectLineID + " .lineTaxCode").text(
-                      $("#slttaxcodepurchase").val()
-                    );
+                    $("#" + selectLineID + " .lineTaxCode").text(slttaxcodepurchase);
                     $("#" + selectLineID + " .lineProductName").val(
                       lineProductName
                     );
@@ -2314,10 +2252,7 @@ Template.newproductpop.events({
                 //$('.loginSpinner').css('display','none');
               });
           } else {
-            if (
-              itrackThisItem == true &&
-              $("#sltinventoryacount").val() != ""
-            ) {
+            if ( itrackThisItem == true && sltinventoryacount != "" ) {
               objDetails = {
                 type: "TProductVS1",
                 fields: {
@@ -2328,30 +2263,20 @@ Template.newproductpop.events({
                   CUSTFLD2: customField2,
                   ProductPrintName: productName,
                   ProductName: productName,
-                  PurchaseDescription: $("#txapurchasedescription").val(),
-                  SalesDescription: $("#txasalesdescription").val(),
-                  AssetAccount: $("#sltinventoryacount").val(),
-                  CogsAccount: $("#sltcogsaccount").val(),
-                  IncomeAccount: $("#sltsalesacount").val(),
-                  BuyQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
-                  BuyQty1Cost:
-                    parseFloat(
-                      $("#edtbuyqty1cost")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0,
-                  SellQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
-                  SellQty1Price:
-                    parseFloat(
-                      $("#edtsellqty1price")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0,
-                  TaxCodePurchase: $("#slttaxcodepurchase").val(),
-                  TaxCodeSales: $("#slttaxcodesales").val(),
+                  PurchaseDescription: txapurchasedescription,
+                  SalesDescription: txasalesdescription,
+                  AssetAccount: sltinventoryacount,
+                  CogsAccount: sltcogsaccount,
+                  IncomeAccount: sltsalesacount,
+                  BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
+                  SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
+                  BuyQty1: parseFloat(edttotalqtyinstock1) || 1,                 
+                  SellQty1: parseFloat(edttotalqtyinstock1) || 1,
+                  TaxCodePurchase: slttaxcodepurchase,
+                  TaxCodeSales: slttaxcodesales,
                   UOMPurchases: defaultUOM,
                   UOMSales: defaultUOM,
-                  Barcode: $("#edtbarcode").val(),
+                  Barcode: edtbarcode,
                   LockExtraSell: itrackThisItem,
                   ExtraSellPrice: lineExtaSellItems || null,
                   PublishOnVS1: true,
@@ -2368,30 +2293,20 @@ Template.newproductpop.events({
                   CUSTFLD2: customField2,
                   ProductPrintName: productName,
                   ProductName: productName,
-                  PurchaseDescription: $("#txapurchasedescription").val(),
-                  SalesDescription: $("#txasalesdescription").val(),
+                  PurchaseDescription: txapurchasedescription,
+                  SalesDescription: txasalesdescription,
                   // AssetAccount:$("#sltinventoryacount").val(),
-                  CogsAccount: $("#sltcogsaccount").val(),
-                  IncomeAccount: $("#sltsalesacount").val(),
-                  BuyQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
-                  BuyQty1Cost:
-                    parseFloat(
-                      $("#edtbuyqty1cost")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0,
-                  SellQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
-                  SellQty1Price:
-                    parseFloat(
-                      $("#edtsellqty1price")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0,
-                  TaxCodePurchase: $("#slttaxcodepurchase").val(),
-                  TaxCodeSales: $("#slttaxcodesales").val(),
+                  CogsAccount: sltcogsaccount,
+                  IncomeAccount: sltsalesacount,
+                  BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
+                  SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
+                  BuyQty1: parseFloat(edttotalqtyinstock1) || 1,                 
+                  SellQty1: parseFloat(edttotalqtyinstock1) || 1,
+                  TaxCodePurchase: slttaxcodepurchase,
+                  TaxCodeSales: slttaxcodesales,
                   UOMPurchases: defaultUOM,
                   UOMSales: defaultUOM,
-                  Barcode: $("#edtbarcode").val(),
+                  Barcode: edtbarcode,
                   LockExtraSell: itrackThisItem,
                   ExtraSellPrice: lineExtaSellItems || null,
                   PublishOnVS1: true,
@@ -2409,12 +2324,7 @@ Template.newproductpop.events({
                     fields: {
                       ProductId: parseInt(linesave),
                       ServiceDesc: productName,
-                      StandardRate:
-                        parseFloat(
-                          $("#edtbuyqty1cost")
-                            .val()
-                            .replace(/[^0-9.-]+/g, "")
-                        ) || 0,
+                      StandardRate:parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0
                     },
                   };
                   productService
@@ -2433,13 +2343,8 @@ Template.newproductpop.events({
 
                   if (selectLineID) {
                     var lineProductName = productName;
-                    var lineProductDesc = $("#txasalesdescription").val();
-                    var lineUnitPrice =
-                      parseFloat(
-                        $("#edtsellqty1price")
-                          .val()
-                          .replace(/[^0-9.-]+/g, "")
-                      ) || 0;
+                    var lineProductDesc = txasalesdescription;
+                    var lineUnitPrice = parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0
                     // var $tblrows = $("#tblInvoiceLine tbody tr");
                     var lineTaxCode = 0;
                     var lineAmount = 0;
@@ -2447,10 +2352,10 @@ Template.newproductpop.events({
                     var subGrandTotal = 0;
                     var taxGrandTotal = 0;
                     var taxGrandTotalPrint = 0;
-                    var lineTaxRate = $("#slttaxcodesales").val() || "";
+                    var lineTaxRate = slttaxcodesales || "";
                     var taxRate = "";
                     $("#" + selectLineID + " .lineTaxCode").text(
-                      $("#slttaxcodesales").val()
+                      slttaxcodesales
                     );
                     $("#" + selectLineID + " .lineProductName").val(
                       lineProductName
@@ -2505,13 +2410,8 @@ Template.newproductpop.events({
 
                   if (selectLineID) {
                     var lineProductName = productName;
-                    var lineProductDesc = $("#txasalesdescription").val();
-                    var lineUnitPrice =
-                      parseFloat(
-                        $("#edtsellqty1price")
-                          .val()
-                          .replace(/[^0-9.-]+/g, "")
-                      ) || 0;
+                    var lineProductDesc = txasalesdescription;
+                    var lineUnitPrice = parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0;
                     // var $tblrows = $("#tblInvoiceLine tbody tr");
                     var lineTaxCode = 0;
                     var lineAmount = 0;
@@ -2519,10 +2419,10 @@ Template.newproductpop.events({
                     var subGrandTotal = 0;
                     var taxGrandTotal = 0;
                     var taxGrandTotalPrint = 0;
-                    var lineTaxRate = $("#slttaxcodepurchase").val() || "";
+                    var lineTaxRate = slttaxcodepurchase || "";
                     var taxRate = "";
                     $("#" + selectLineID + " .lineTaxCode").text(
-                      $("#slttaxcodepurchase").val()
+                      slttaxcodepurchase
                     );
                     $("#" + selectLineID + " .lineProductName").val(
                       lineProductName
@@ -2618,7 +2518,7 @@ Template.newproductpop.events({
           // clearProduct();
         })
         .catch(function (err) {
-          if (itrackThisItem == true && $("#sltinventoryacount").val() != "") {
+          if (itrackThisItem == true && sltinventoryacount != "") {
             objDetails = {
               type: "TProductVS1",
               fields: {
@@ -2629,30 +2529,20 @@ Template.newproductpop.events({
                 CUSTFLD2: customField2,
                 ProductPrintName: productName,
                 ProductName: productName,
-                PurchaseDescription: $("#txapurchasedescription").val(),
-                SalesDescription: $("#txasalesdescription").val(),
-                AssetAccount: $("#sltinventoryacount").val(),
-                CogsAccount: $("#sltcogsaccount").val(),
-                IncomeAccount: $("#sltsalesacount").val(),
-                BuyQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
-                BuyQty1Cost:
-                  parseFloat(
-                    $("#edtbuyqty1cost")
-                      .val()
-                      .replace(/[^0-9.-]+/g, "")
-                  ) || 0,
-                SellQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
-                SellQty1Price:
-                  parseFloat(
-                    $("#edtsellqty1price")
-                      .val()
-                      .replace(/[^0-9.-]+/g, "")
-                  ) || 0,
-                TaxCodePurchase: $("#slttaxcodepurchase").val(),
-                TaxCodeSales: $("#slttaxcodesales").val(),
+                PurchaseDescription: txapurchasedescription,
+                SalesDescription: txasalesdescription,
+                AssetAccount: sltinventoryacount,
+                CogsAccount: sltcogsaccount,
+                IncomeAccount: sltsalesacount,
+                BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
+                SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
+                BuyQty1: parseFloat(edttotalqtyinstock1) || 1,                 
+                SellQty1: parseFloat(edttotalqtyinstock1) || 1,
+                TaxCodePurchase: slttaxcodepurchase,
+                TaxCodeSales: slttaxcodesales,
                 UOMPurchases: defaultUOM,
                 UOMSales: defaultUOM,
-                Barcode: $("#edtbarcode").val(),
+                Barcode: edtbarcode,
                 LockExtraSell: itrackThisItem,
                 ExtraSellPrice: lineExtaSellItems || null,
                 PublishOnVS1: true,
@@ -2669,37 +2559,26 @@ Template.newproductpop.events({
                 CUSTFLD2: customField2,
                 ProductPrintName: productName,
                 ProductName: productName,
-                PurchaseDescription: $("#txapurchasedescription").val(),
-                SalesDescription: $("#txasalesdescription").val(),
+                PurchaseDescription: txapurchasedescription,
+                SalesDescription: txasalesdescription,
                 // AssetAccount:$("#sltinventoryacount").val(),
-                CogsAccount: $("#sltcogsaccount").val(),
-                IncomeAccount: $("#sltsalesacount").val(),
-                BuyQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
-                BuyQty1Cost:
-                  parseFloat(
-                    $("#edtbuyqty1cost")
-                      .val()
-                      .replace(/[^0-9.-]+/g, "")
-                  ) || 0,
-                SellQty1: parseFloat($("#edttotalqtyinstock1").val()) || 1,
-                SellQty1Price:
-                  parseFloat(
-                    $("#edtsellqty1price")
-                      .val()
-                      .replace(/[^0-9.-]+/g, "")
-                  ) || 0,
-                TaxCodePurchase: $("#slttaxcodepurchase").val(),
-                TaxCodeSales: $("#slttaxcodesales").val(),
+                CogsAccount: sltcogsaccount,
+                IncomeAccount: sltsalesacount,
+                BuyQty1Cost: parseFloat(edtbuyqty1cost.replace(/[^0-9.-]+/g, "")) || 0,
+                SellQty1Price: parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "")) || 0,
+                BuyQty1: parseFloat(edttotalqtyinstock1) || 1,                 
+                SellQty1: parseFloat(edttotalqtyinstock1) || 1,
+                TaxCodePurchase: slttaxcodepurchase,
+                TaxCodeSales: slttaxcodesales,
                 UOMPurchases: defaultUOM,
                 UOMSales: defaultUOM,
-                Barcode: $("#edtbarcode").val(),
+                Barcode: edtbarcode,
                 LockExtraSell: itrackThisItem,
                 ExtraSellPrice: lineExtaSellItems || null,
                 PublishOnVS1: true,
               },
             };
           }
-
           productService
             .saveProductVS1(objDetails)
             .then(function (objDetails) {
@@ -2726,23 +2605,13 @@ Template.newproductpop.events({
               }
               var currentLoc = FlowRouter.current().route.path;
 
-              if (
-                currentLoc == "/invoicecard" ||
-                currentLoc == "/quotecard" ||
-                currentLoc == "/salesordercard" ||
-                currentLoc == "/refundcard"
-              ) {
+              if (  currentLoc == "/invoicecard" || currentLoc == "/quotecard" || currentLoc == "/salesordercard" || currentLoc == "/refundcard" ) {
                 var selectLineID = $("#selectLineID").val();
 
                 if (selectLineID) {
                   var lineProductName = productName;
-                  var lineProductDesc = $("#txasalesdescription").val();
-                  var lineUnitPrice =
-                    parseFloat(
-                      $("#edtsellqty1price")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0;
+                  var lineProductDesc = txasalesdescription;
+                  var lineUnitPrice = parseFloat(edtsellqty1price.replace(/[^0-9.-]+/g, "") ) || 0;
                   // var $tblrows = $("#tblInvoiceLine tbody tr");
                   var lineTaxCode = 0;
                   var lineAmount = 0;
@@ -2750,10 +2619,10 @@ Template.newproductpop.events({
                   var subGrandTotal = 0;
                   var taxGrandTotal = 0;
                   var taxGrandTotalPrint = 0;
-                  var lineTaxRate = $("#slttaxcodesales").val() || "";
+                  var lineTaxRate = slttaxcodesales || "";
                   var taxRate = "";
                   $("#" + selectLineID + " .lineTaxCode").text(
-                    $("#slttaxcodesales").val()
+                    slttaxcodesales
                   );
                   $("#" + selectLineID + " .lineProductName").val(
                     lineProductName
@@ -2802,13 +2671,8 @@ Template.newproductpop.events({
 
                 if (selectLineID) {
                   var lineProductName = productName;
-                  var lineProductDesc = $("#txasalesdescription").val();
-                  var lineUnitPrice =
-                    parseFloat(
-                      $("#edtsellqty1price")
-                        .val()
-                        .replace(/[^0-9.-]+/g, "")
-                    ) || 0;
+                  var lineProductDesc = txasalesdescription;
+                  var lineUnitPrice = parseFloat( edtsellqty1price.replace(/[^0-9.-]+/g, "") ) || 0;
                   // var $tblrows = $("#tblInvoiceLine tbody tr");
                   var lineTaxCode = 0;
                   var lineAmount = 0;
@@ -2816,10 +2680,10 @@ Template.newproductpop.events({
                   var subGrandTotal = 0;
                   var taxGrandTotal = 0;
                   var taxGrandTotalPrint = 0;
-                  var lineTaxRate = $("#slttaxcodepurchase").val() || "";
+                  var lineTaxRate = slttaxcodepurchase || "";
                   var taxRate = "";
                   $("#" + selectLineID + " .lineTaxCode").text(
-                    $("#slttaxcodepurchase").val()
+                    slttaxcodepurchase
                   );
                   $("#" + selectLineID + " .lineProductName").val(
                     lineProductName

@@ -1281,7 +1281,7 @@ export class UtilityService {
 
         }
         else {
-            value = value.substring(1).replace(",", "");
+            value = value.substring(2).replace(/\,/g,'');
             return (parseFloat(value));
 
         }
