@@ -3190,6 +3190,12 @@ function openTransactionDetail(item){
 
     $('#divItemBox_'+selectedYodleeID).addClass('itemBox');
     $('#divLineDetail_'+selectedYodleeID).show();
+    let $tblrows = $('#divLineDetail_' + selectedYodleeID + ' #tblReconInvoice tbody tr');
+    $tblrows.each(function (index) {
+        if (this.id != "firstLine") {
+            $(this).remove();
+        }
+    });
     setTransactionDetail(amount, dateIn, item.deporwith);
 }
 function closeTransactionDetail() {

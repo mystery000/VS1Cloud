@@ -144,7 +144,7 @@ Template.addemployeepop.onRendered(function () {
 
     templateObject.getAllProductData = function () {
         let productService = new ProductService();
-        productList = [];
+        let productList = [];
         getVS1Data('TProductVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
                 productService.getNewProductListVS1().then(function (data) {
@@ -762,7 +762,7 @@ Template.addemployeepop.onRendered(function () {
                 }
             }
         });
-    }
+    };
     if (currentId.id == "undefined") {
         var currentDate = new Date();
         LoadingOverlay.hide();
@@ -795,8 +795,10 @@ Template.addemployeepop.onRendered(function () {
             country: LoggedCountry || '',
             custFld1: '',
             custFld2: '',
+            dashboardOptions: '',
+            salesQuota: '',
             website: ''
-        }
+        };
 
         templateObject.records.set(lineItemObj);
         setTimeout(function () {
@@ -930,6 +932,8 @@ Template.addemployeepop.onRendered(function () {
                                 custfield14: data.fields.CustFld14 || '',
                                 website: '',
                                 notes: data.fields.Notes || '',
+                                dashboardOptions: data.fields.CustFld11 || '',
+                                salesQuota: data.fields.CustFld12 || ''
 
                             };
                             templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
@@ -1294,6 +1298,8 @@ Template.addemployeepop.onRendered(function () {
                                     custfield14: data.fields.CustFld14 || '',
                                     website: '',
                                     notes: data.fields.Notes || '',
+                                    dashboardOptions: data.fields.CustFld11 || '',
+                                    salesQuota: data.fields.CustFld12 || ''
 
                                 };
                                 templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
@@ -1467,6 +1473,8 @@ Template.addemployeepop.onRendered(function () {
                             custfield4: data.fields.CustFld4 || '',
                             website: '',
                             notes: data.fields.Notes || '',
+                            dashboardOptions: data.fields.CustFld11 || '',
+                            salesQuota: data.fields.CustFld12 || ''
 
                         };
                         templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
@@ -1583,6 +1591,8 @@ Template.addemployeepop.onRendered(function () {
                 country: LoggedCountry || '',
                 custFld1: '',
                 custFld2: '',
+                dashboardOptions: '',
+                salesQuota: '',
                 website: ''
             }
 
@@ -2049,6 +2059,8 @@ Template.addemployeepop.events({
         if (templateObject.imageFileData.get()) {
             imageData = templateObject.imageFileData.get().split(',')[1] || '';
         }
+        let edtDashboardOptions = $('#edtDashboardOptions').val()||'';
+        let edtSalesQuota = $('#edtSalesQuota').val()||'';
 
         currentEmployee = currentId.id ? currentId.id : $('.addemployeepop #edtEmployeeId').val();
 
@@ -2085,7 +2097,9 @@ Template.addemployeepop.events({
                     CustFld4: custField4,
                     CustFld5: $('.addemployeepop #edtPriority').val(),
                     CustFld6: $('.addemployeepop #favcolor').val(),
-                    CustFld14: overrideGlobalCalendarSet
+                    CustFld14: overrideGlobalCalendarSet,
+                    CustFld11: edtDashboardOptions, // tempcode until the fields are added in backend
+                    CustFld12: edtSalesQuota // tempcode
                 }
             };
         } else {
@@ -2119,7 +2133,9 @@ Template.addemployeepop.events({
                     CustFld4: custField4,
                     CustFld5: $('.addemployeepop #edtPriority').val(),
                     CustFld6: $('.addemployeepop #favcolor').val(),
-                    CustFld14: overrideGlobalCalendarSet
+                    CustFld14: overrideGlobalCalendarSet,
+                    CustFld11: edtDashboardOptions, // tempcode until the fields are added in backend
+                    CustFld12: edtSalesQuota // tempcode
 
                 }
             };
@@ -3846,5 +3862,8 @@ Template.addemployeepop.helpers({
         }
 
         return isMobile;
+    },
+    dashboardOptionsList: () => {
+        return ['All', 'Accounts', 'Executive', 'Marketing', 'Sales', 'Sales Manager'];
     }
 });

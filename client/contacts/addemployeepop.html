@@ -1,6 +1,6 @@
 <template name="addemployeepop">
     <div class="modal-dialog modal-xl modal-dialog-scrollable addemployeepop" role="document" style="min-width: 75vw;">
-        <div class="modal-content">
+        <div class="modal-content" style="background-color: #ededed;">
             <div class="modal-header">
                 <h4>
                     <div id="add-customer-title" name="add-customer-title" style="float: left;">{{#if editableEmployee}} {{editableEmployee.lid}} {{else}} Add New Employee {{/if}}</div>
@@ -93,6 +93,22 @@
                                     value="{{# if editableEmployee}} {{editableEmployee.company}} {{ else }} {{record.company}} {{/if}}" readonly></div>
                             <div class="form-group flex-grow-1" style="margin: 4px;"><label>Employee Email</label><input type="email" class="form-control" id="edtEmailAddress" name="edtEmailAddress"
                                     value="{{# if editableEmployee}} {{editableEmployee.email}} {{ else }} {{record.email}} {{/if}}"></div>
+                            <div class="form-group flex-grow-1" style="margin: 4px;">
+                                <label>Dashboard Options</label>
+                                <select class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" style="cursor: pointer;">
+                                    {{#each item in dashboardOptionsList}}
+                                        {{#if equals item record.dashboardOptions }}
+                                            <option value="{{record.dashboardOptions}}" selected="">{{record.dashboardOptions}}</option>
+                                        {{else}}
+                                            <option value="{{item}}">{{item}}</option>
+                                        {{/if}}
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="form-group flex-grow-1" style="margin: 4px;">
+                                <label>Sales Quota</label>
+                                <input type="number" class="form-control" id="edtSalesQuota" name="edtSalesQuota" value="{{record.salesQuota}}">
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col d-xl-flex align-items-xl-start" style="padding: 0px;">
@@ -133,7 +149,7 @@
                                 <div class="form-group flex-grow-1" style="margin: 4px;">
                                     <label>Date of Birth</label>
                                     <div class="input-group date">
-                                        <input type="text" class="form-control highlightInput" id="dtDOB" name="dtDOB" value="{{# if editableEmployee}} {{editableEmployee.dob}} {{ else }}{{record.dob}} {{/if}}">
+                                        <input type="text" class="form-control" id="dtDOB" name="dtDOB" value="{{# if editableEmployee}} {{editableEmployee.dob}} {{ else }}{{record.dob}} {{/if}}">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -148,6 +164,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group flex-grow-1" style="margin: 4px;">
+                                    <label class="text-nowrap">Employee ID</label>
+                                    <input type="text" class="form-control" id="edtEmployeeID" name="edtEmployeeID" value="emp_{{# if editableEmployee}} {{editableEmployee.id}} {{ else }} {{record.id}} {{/if}}" readonly>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,7 +181,8 @@
                                                 id="attachment-count">{{attachmentCount}}</span>{{/if}} Attachments</a></li>
                                 <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-9">Custom Fields</a></li>
                                 <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-EmpLogo">Employee Photo</a></li>
-                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-appointment">Appointment Settings</a></li>
+                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-appointment" style="width: 200px;">Appointment Settings</a></li>
+                                <li class="nav-item" style="cursor: pointer;"><a class="nav-link tabproductsservices" role="tab" data-toggle="tab" data-target="#tab-productsservices">Products</a></li>
                                 <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link tabproductsservices" role="tab" data-toggle="tab" data-target="#tab-productsservices">Product / Service</a></li> -->
                                 {{#if isCloudUserPass}}
                                     <li class="nav-item" style="cursor: pointer;"><a class="nav-link addvs1usertab" role="tab" data-toggle="tab" data-target="#tab-11">VS1 User Login</a></li>
@@ -210,18 +231,19 @@
                                         </div>
                                         <style>
                                             .billingaddress {
+                                                width: 100%;
                                                 display: none;
                                             }
-                                            .billingaddress.show {
+                                            .billingaddress .show {
                                                 display: flex;
                                             }
                                         </style>
                                        
                                         <div class="col">
-                                            <div class="row no-gutters" style="margin-top: 12spx;">
+                                            <div class="row no-gutters" style="margin-top: 12px;">
                                                 <div class="col d-xl-flex align-items-start" style="padding: 0px;">
                                                     <h4 class="flex-grow" style="margin: 4px;">Billing Address</h4>
-                                                    <div class="custom-control custom-switch chkaddress" style="margin: 8px;"><input class="custom-control-input" type="checkbox" id="chkSameAsShipping"
+                                                    <div class="custom-control custom-switch chkaddress" style="margin: 8px; margin-left: 40px;"><input class="custom-control-input" type="checkbox" id="chkSameAsShipping"
                                                              style=" cursor: pointer;" checked><label class="custom-control-label" for="chkSameAsShipping" style=" cursor: pointer;">Same as
                                                             Shipping</label></div>
                                                 </div>
@@ -764,7 +786,7 @@
 
 
                                 </div>
-                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-productsservices" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                <div class="tab-pane border rounded-0" role="tabpanel" id="tab-productsservices" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important; overflow: auto; ">
                                     <div class="row" style="padding: 24px;">
                                         <div class="col-12 col-md-6">
                                             <div class="custom-control custom-switch" style="margin: 8px;">
@@ -772,50 +794,135 @@
                                                 <label class="custom-control-label" for="productCostPayRate" style=" cursor: pointer;">Use Product Cost as Pay Rate for Employee</label>
                                             </div>
                                             <div class="custom-control custom-switch" style="margin: 8px;">
-                                                <input class="custom-control-input" type="checkbox" id="addAllProducts" style=" cursor: pointer;">
-                                                <label class="custom-control-label" for="addAllProducts" style=" cursor: pointer;">Include All Products / Services</label>
+                                                <input class="custom-control-input" type="checkbox" id="addAllProducts" name="addAllProducts" style=" cursor: pointer;">
+                                                <label class="custom-control-label" for="addAllProducts" style=" cursor: pointer;">Include All Products</label>
+                                            </div>
+                                            <div class="custom-control custom-switch" style="margin: 8px;">
+                                                <input class="custom-control-input" type="checkbox" id="useOvertimeRates" name="useOvertimeRates" style=" cursor: pointer;">
+                                                <label class="custom-control-label" for="useOvertimeRates" style=" cursor: pointer;">Use Overtime Rates</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6" style="display: none;">
+                                            <div class="form-group" style="margin: 4px;">
+                                                <label>Copy Products From</label>
+                                                <div class="input-group">
+                                                    <div class="input-group">
+                                                        <select class="custom-select" id="sltCopyFromEmployee">
+                                                            {{#if employeerecords}}
+                                                                {{#each item in employeerecords}}
+                                                                    <option value="{{item.company}}" class="{{item.classname}}" title="{{item.company}}" id="{{item.id}}">{{item.company}}</option>
+                                                                    <a class="dropdown-item {{item.classname}}" title="{{item.company}}" id="{{item.id}}">{{item.company}}</a>
+                                                                {{/each}}
+                                                            {{/if}}>
+                                                        </select>
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-primary" type="button">Copy From</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <hr style="margin-top: 14px;">
                                         </div>
                                     </div>
-                                    <div class="row" style="padding: 0px 24px 24px 24px;">
+                                    <div class="row activeProductEmployee" style="padding: 0px 24px 24px 24px;">
                                         <div class="col-12 col-md-6">
-                                            <h4 style="margin-bottom: 8px;">Active Products / Services for {{record.company}}</h4>
+                                            <h4 style="margin-bottom: 8px;">Active Products for {{record.company}}</h4>
                                         </div>
-                                        <div class="col-12 col-md-6" style="margin-bottom: 16px;">
-                                            <button class="btn btn-primary btnProductServicesModal" type="button" data-toggle="modal" data-target="#productListModal"><i class="fas fa-plus" style="margin: 4px;"></i>Add New Product / Service</button>
-                                        </div>
-                                        {{#if productsdatatable}}
-                                            {{#each item in productsdatatable}}
-                                                <div class="col-6">
-                                                    <div class="row align-items-end">
-                                                        <div class="col-10 ">
-                                                            <div class="form-grou" style="margin: 4px;">
-                                                                <label class="text-nowrap">Product / Service Name</label>
-                                                                <input type="text" class="form-control" id="prdouctServiceName" name="prdouctServiceName" value="{{item.productname}}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off" style="margin-bottom: 8px; margin-left: -16px;" value="{{item.id}}">
-                                                                <i class="fa fa-remove" style="padding: 8px 4px;"></i></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {{/each}}
-                                        {{/if}}
+                                        <!-- <div class="col-12 col-md-6" style="margin-bottom: 16px;">
+                                            <button class="btn btn-primary btnProductServicesModal" type="button" data-toggle="modal" data-target="#productListModal"><i class="fas fa-plus" style="margin: 4px;"></i>Add New
+                                                Products</button>
+                                        </div> -->
+                                        <div class="col-12" style="margin-bottom: 16px;">
+                                            <style>
+                                                .colServiceName {
+                                                    width: 30% !important;
+                                                }
 
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
-                                            {{> productlistpop}}
+                                                .colServiceCostPrice,
+                                                .colServiceSalesPrice {
+                                                    width: 8% !important;
+                                                }
+
+                                                .colServiceDelete {
+                                                    width: 2% !important;
+                                                }
+
+                                                .highlightInput {
+                                                    border: 0px solid transparent !important;
+                                                    background-color: rgba(0, 0, 0, 0) !important;
+                                                    padding: 0px !important;
+                                                    width: 100% !important;
+                                                    text-align: right !important;
+                                                    color: #858796 !important;
+                                                }
+
+                                                .highlightInput::-webkit-outer-spin-button,
+                                                .highlightInput::-webkit-inner-spin-button {
+                                                    -webkit-appearance: none !important;
+                                                    margin: 0 !important;
+                                                }
+
+                                                /* Firefox */
+                                                .highlightInput[type=number] {
+                                                    -moz-appearance: textfield !important;
+                                                }
+                                            </style>
+                                            <table id="tblEmpServiceList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblEmpServiceList">
+                                                <thead>
+                                                <tr class="dnd-moved">
+                                                    <th class="th colServiceName" style="width: 30% !important;">Name</th>
+                                                    <th class="th colServiceDescription">Description</th>
+                                                    <!-- <th class="th colServiceRate" style="width: 8%!important;">Rate</th> -->
+                                                    <th class="th colServiceCostPrice" style="width: 8% !important;text-align: left!important;">Cost Price</th>
+                                                    <th class="th colServiceSalesPrice" style="width: 8% !important;text-align: left!important;">Sale Price</th>
+                                                    <!-- <th class="th colPurcDef" style="width:20px">Purchase Default</th>-->
+                                                    <th class="th colID hiddenColumn" style="width:20px">ID</th>
+                                                    <th class="th colServiceDelete" style="width: 2% !important;"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <!-- {{#if selectedproducts}}
+                                                    {{#each item in selectedproducts}}
+                                                                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                                                                            <td contenteditable="false" class="colServiceName">{{item.productname}}</td>
+                                                                                            <td contenteditable="false" class="colServiceDescription">{{item.productdesc}}</td>
+                                                                                            <td contenteditable="true" class=" text-right"><input class="colServiceCostPrice highlightInput" type="text" value="{{item.rate}}"></td>
+                                                                                            <td contenteditable="true" class=" text-right"><input class="colServiceSalesPrice  highlightInput" type="text" value="{{item.payrate}}"></td>
+                                                                                            <td contenteditable="false" class="colServiceDelete"><span class="table-remove colServiceDelete"><button type="button"
+                                                                                                        class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
+                                                                                        </tr>
+                                                                                    {{/each}}
+                                                {{/if}} -->
+
+                                                </tbody>
+
+                                            </table>
                                         </div>
-                                        {{#if isSetup}}
-                                        {{else}}
-                                            <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-                                                {{> newproductpop}}
-                                            </div>
-                                        {{/if}}
+
+                                        <!-- {{#if selectedproducts}}
+                                            {{#each item in selectedproducts}}
+                                                                            <div class="col-6">
+                                                                                <div class="row align-items-end">
+                                                                                    <div class="col-10 ">
+                                                                                        <div class="form-grou" style="margin: 4px;">
+                                                                                            <label class="text-nowrap">Product / Service Name</label>
+                                                                                            <input type="text" class="form-control productServiceName" id="{{item.id}}" name="productServiceName" value="{{item.productname}}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-2">
+                                                                                        <button type="button" class="btn btn-danger btn-rounded btn-sm btnRemoveProduct" autocomplete="off" style="margin-bottom: 8px; margin-left: -16px;" id="{{item.id}}">
+                                                                                            <i class="fa fa-remove" style="padding: 8px 4px;"></i></button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        {{/each}}
+                                        {{/if}} -->
+
+
                                     </div>
+
                                 </div>
                             </div>
                         </div>
