@@ -4,7 +4,7 @@
       <div class="spinner"></div>
     </div>
     <header style="padding: 16px;">
-      <h2 style="margin: 16px;">Aged Payables Report
+      <h2 style="margin: 16px;">Aged Payables
         <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
           <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
         </a>
@@ -65,7 +65,7 @@
         <div class="card shadow mb-3">
           <div class="card-header py-3" style="background-color: rgb(248,249,252);">
             <div class="row no-gutters justify-content-between">
-              <p class="text-primary m-0 font-weight-bold">Aged Payables Report</p>
+              <p class="text-primary m-0 font-weight-bold">Aged Payables</p>
               <button type="button" class="btn btn-primary" id="btnSummary">
                 <i class="fas fa-repeat" style="margin-right: 5px;"></i>
                 Summary</button>
@@ -185,6 +185,15 @@
                   .grandtotal {
                     border-top: 2px #858999 solid;
                     border-bottom: 2px #858999 solid;
+                  }
+                  .table th,
+                  .table td {
+                    text-align: right;
+                    min-width: 100px;
+                  }
+                  .table th:first-child,
+                  .table td:first-child {
+                      text-align: left;
                   }
                 </style>
                 <div class="table-responsive">
@@ -552,7 +561,7 @@
     <div class="modal-dialog" role="document" style="max-width: 670px!important;">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="title-header">Aged Payables Report</h4>
+          <h4 class="title-header">Aged Payables</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span></button>
         </div>

@@ -4,7 +4,7 @@
       <div class="spinner"></div>
     </div>
     <header style="padding: 16px;">
-      <h2 style="margin: 16px;">Aged Receivables Report
+      <h2 style="margin: 16px;">Aged Receivables
         <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
           <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
         </a>
@@ -178,6 +178,15 @@
                     border-top: 2px #858999 solid;
                     border-bottom: 2px #858999 solid;
                   }
+                  .table th,
+                  .table td {
+                    text-align: right;
+                    min-width: 100px;
+                  }
+                  .table th:first-child,
+                  .table td:first-child {
+                    text-align: left;
+                  }
                 </style>
                 <div class="table-responsive">
                   <table class="table table-sm" id="tableExport" name="tableExport">
@@ -188,12 +197,12 @@
                         <th class="text-right">Invoice No.</th>
                         <th>Due Date</th>
 
-                        <th class="text-center" colspan="{{countActive currencyList}}">Amount Due</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">Current</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">1 - 30 Days</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">30 - 60 Days</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">60 - 90 Days</th>
-                        <th class="text-center" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">Amount Due</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">Current</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">1 - 30 Days</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">30 - 60 Days</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">60 - 90 Days</th>
+                        <th class="text-right" colspan="{{countActive currencyList}}">&gt; 90 Days</th>
                       </tr>
 
                       {{#if isOnlyDefaultActive equal "false" }}
@@ -206,7 +215,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -214,7 +223,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -222,7 +231,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -230,7 +239,7 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -238,14 +247,14 @@
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
                           {{#if currencyList}}
                             {{#each c in currencyList }}
                               {{# if c.active}}
-                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                               {{/if}}
                             {{/each}}
                           {{/if}}
@@ -545,7 +554,7 @@
     <div class="modal-dialog" role="document" style="max-width: 670px!important;">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="title-header">Aged Receivables Report</h4>
+          <h4 class="title-header">Aged Receivables</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span></button>
         </div>

@@ -112,7 +112,6 @@ Template.stockmovementreport.onRendered(() => {
     let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
     let ignoreDate = options.ignoreDate || false;
     let data = await reportService.getStockMovementReport( dateFrom, dateTo, ignoreDate);
-
     let movementReport = [];
     if( data.t_vs1_report_productmovement.length > 0 ){
         let reportGroups = [];
@@ -146,6 +145,9 @@ Template.stockmovementreport.onRendered(() => {
               TotalRunningQty += subitem.fields.Qty;
               TotalCurrentQty += subitem.fields.Qty;
               TotalUnitCost += subitem.fields.Cost;
+            });
+            item.SubAccounts.sort(function(a,b){
+              return new Date(b.fields.TransactionDate) - new Date(a.fields.TransactionDate);
             });
             item.TotalRunningQty = TotalRunningQty;
             item.TotalCurrentQty = TotalCurrentQty;
@@ -445,7 +447,7 @@ Template.stockmovementreport.helpers({
      return ( value == 0 )? '': value;
   },
   formatDate: ( date ) => {
-      return ( date )? moment(date).format("DD/MM/YYYY") : '';
+    return ( date )? moment(date).format("YYYY/MM/DD") : '';
   },
 
   // FX Module //

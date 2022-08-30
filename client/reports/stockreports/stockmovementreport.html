@@ -4,7 +4,7 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Stock Movement Report <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
+            <h2 style="margin: 16px;">Stock Movement <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
         </header>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -28,7 +28,7 @@
             <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="title-header">Stock Movement Report</h4>
+                        <h4 class="title-header">Stock Movement</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
@@ -56,7 +56,7 @@
             <div class="col-12 col-md-8">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <p class="text-primary m-0 font-weight-bold">Stock Movement Report</p>
+                        <p class="text-primary m-0 font-weight-bold">Stock Movement</p>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -147,7 +147,7 @@
                         <div class="printReport">
                             <div class="row">
                                 <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Stock Movement Report</p>
+                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Stock Movement</p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
                                     <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
                                 </div>
@@ -173,20 +173,49 @@
                                     .table-active th {
                                         white-space: nowrap;
                                     }
+                                    .textCntr0 {
+                                        text-align: right !important;
+                                    }
+                                    .table .fgrtotal {
+                                        color: #858796 !important;
+                                        font-weight: 800;
+                                    } 
+                                    .table td {
+                                        color: #00a3d3;
+                                    }
+                                    .table th,
+                                    .table td {
+                                        text-align: right;
+                                        min-width: 150px;
+                                    }
+                                    .table th:first-child,
+                                    .table td:first-child {
+                                        text-align: left;
+                                    }
+                                    table tr .text-danger,
+                                    table tr .text-danger a {
+                                        color: #e74a3b !important;
+                                    }
+                                    .customDoubleTableHeading + tr th {
+                                        border-right: 1px solid #cbcbcb !important;
+                                    }
+                                    .customDoubleTableHeading + tr th:last-child {
+                                        border-right: none !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
-                                            <tr class="table-active">
+                                            <tr class="table-active customDoubleTableHeading">
                                                 <th>Product</th>
                                                 <th>Trans Date</th>
                                                 <th>Trans Type</th>
                                                 <th>Trans No</th>
-                                                <th class="text-right">Opening Qty</th>
-                                                <th class="text-right">Trans Qty</th>
-                                                <th class="text-right">Running Qty</th>
-                                                <th class="text-center" colspan="{{countActive currencyList}}">Unit Cost</th>
-                                                <th class="text-center" colspan="{{countActive currencyList}}">Total Cost</th>
+                                                <th>Opening Qty</th>
+                                                <th>Trans Qty</th>
+                                                <th>Running Qty</th>
+                                                <th class="textCntr{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Unit Cost</th>
+                                                <th class="textCntr{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Cost</th>
                                                 <!-- <th class="text-center" colspan="{{countActive currencyList}}">Unit Cost (Ex)</th> -->
                                                 <!-- <th class="text-center" colspan="{{countActive currencyList}}">Total Cost (Ex)</th> -->
                                             </tr>
@@ -205,7 +234,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -213,7 +242,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -226,18 +255,18 @@
                                             {{#if records}}
                                                 {{#each arrayify records}}
                                                     <tr>
-                                                       <td style="font-weight: 800;">{{ value.ProductName }}</td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <!-- <td class="text-right" style="font-weight: 800;">{{ value.TotalRunningQty }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ value.TotalCurrentQty }}</td>
-                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalUnitCost }}</td> -->
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
-                                                        <td style="font-weight: 800;"></td>
+                                                       <td  class="fgrtotal">{{ value.ProductName }}</td>
+                                                        <td  class="fgrtotal"></td>
+                                                        <td  class="fgrtotal"></td>
+                                                        <td  class="fgrtotal"></td>
+                                                        <!-- <td class="text-right"  class="fgrtotal">{{ value.TotalRunningQty }}</td>
+                                                        <td class="text-right"  class="fgrtotal">{{ value.TotalCurrentQty }}</td>
+                                                        <td class="text-right"  class="fgrtotal">{{ formatPrice value.TotalUnitCost }}</td> -->
+                                                        <td  class="fgrtotal"></td>
+                                                        <td  class="fgrtotal"></td>
+                                                        <td  class="fgrtotal"></td>
+                                                        <td  class="fgrtotal"></td>
+                                                        <td  class="fgrtotal"></td>
                                                         
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
@@ -246,10 +275,10 @@
                                                             <td></td>
                                                             <td>{{ formatDate item.fields.TransactionDate }}</td>
                                                             <td>{{ item.fields.TranstypeDesc }}</td>
-                                                            <td class="text-right">{{ checkZero item.fields.TransactionNo }}</td>
-                                                            <td class="text-right">{{ checkZero item.fields.Qty }}</td>
-                                                            <td class="text-right">{{ checkZero item.fields.Qty }}</td>
-                                                            <td class="text-right">{{ checkZero item.fields.Qty }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.TransactionNo }} text-danger {{/if}}">{{ checkZero item.fields.TransactionNo }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{/if}}">{{ checkZero item.fields.Qty }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{/if}}">{{ checkZero item.fields.Qty }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{/if}}">{{ checkZero item.fields.Qty }}</td>
                                                             <!-- <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
                                                             <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td> -->
 
