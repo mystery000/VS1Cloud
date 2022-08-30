@@ -652,11 +652,29 @@ authenticatedRoutes.route('/serialnumberlist', {
     }
 });
 
+authenticatedRoutes.route('/serialnumberview', {
+    name: 'serialnumberview',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serialnumberview'
+        });
+    }
+});
+
 authenticatedRoutes.route('/lotnumberlist', {
     name: 'lotnumberlist',
     action() {
         BlazeLayout.render('layout', {
             yield: 'lotnumberlist'
+        });
+    }
+});
+
+authenticatedRoutes.route('/lotnumberview', {
+    name: 'lotnumberview',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'lotnumberview'
         });
     }
 });

@@ -115,6 +115,8 @@ Template.sidenav.onCreated(function() {
     templateObject.isPurchaseSummaryReport.set(false);
     templateObject.isPrintStatement = new ReactiveVar();
     templateObject.isPrintStatement.set(false);
+    templateObject.isSerialNumberList = new ReactiveVar();
+    templateObject.isSerialNumberList.set(false);
 
     $(document).ready(function() {
         var erpGet = erpDb();
@@ -158,6 +160,8 @@ Template.sidenav.onRendered(function() {
 
     let isSidePanel = Session.get('CloudSidePanelMenu');
     let isTopPanel = Session.get('CloudTopPanelMenu');
+
+    let isSerialNumberList = Session.get('CloudShowSerial') || false;
 
     let isAppointmentScheduling = Session.get('CloudAppointmentSchedulingModule');
     let isCurrencyEnable = Session.get('CloudUseForeignLicence');
@@ -581,6 +585,9 @@ Template.sidenav.onRendered(function() {
         }
         if (isTopPanel) {
             templateObject.isCloudTopPanelMenu.set(true);
+        }
+        if (isSerialNumberList) {
+            templateObject.isSerialNumberList.set(true);
         }
     }
 
@@ -1241,6 +1248,12 @@ Template.sidenav.onRendered(function() {
 
   }
 
+    templateObject.getTSerialNumberListCurrentReport = function() {
+        sideBarService.getTSerialNumberListCurrentReport().then(function(data) {
+            console.log(data);
+        })
+    }
+
     var job = new CronJob('00 00 00 * * *', function() {
 
     });
@@ -1252,6 +1265,14 @@ Template.sidenav.onRendered(function() {
 /* Start Here */
 templateObject.getFollowedAllObjectPull = function () {
 setTimeout(function() {
+    if (isSerialNumberList) {
+        getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                templateObject.getTSerialNumberListCurrentReport();
+            } else {
+            }
+        })
+    }
   if(isPayments) {
   getVS1Data('TStatementList').then(function (dataObject) {
         if(dataObject.length == 0){
