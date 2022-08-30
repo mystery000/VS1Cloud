@@ -7,7 +7,7 @@
         <h3 class="text-dark mb-0 appointmentHeader" style="width: 100%; margin-right: 1em;">
             Appointment Overview
 
-            <a role="button" data-toggle="modal" href="#helpViewModal" class=""><label class="lblplay">Help</label><i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+            {{> helpbutton}}
             {{#if equals accessStartStopOnly true}}
             {{else}}
             <a style="margin-right: 8px;" class="btn float-right btnoptionsmodal" role="button" href="#settingsModal"><i class="icon ion-android-more-horizontal"></i></a>
@@ -23,8 +23,8 @@
                     <div class="modal-body">
                         <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                         <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=56" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                        <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                        {{> helpadvisor}}
+                        {{> helpgotoforum}}
                     </div>
                     <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                 </div>
