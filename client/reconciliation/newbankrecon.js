@@ -2876,7 +2876,6 @@ function setTaxRateData(data, taxRateDataName) {
     }
 }
 
-
 function sortTransactionData(array, key, desc=true) {
     return array.sort(function(a, b) {
         let x = a[key];
