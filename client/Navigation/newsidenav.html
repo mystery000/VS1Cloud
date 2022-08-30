@@ -212,7 +212,18 @@
                             </a>
                         </li> -->
                         <li>
-                            <a id="sidenavjournalentry" name="sidenavjournalentry"><i class="fas fa-book"></i> Journal Entries</a>
+                            <a id="sidenavjournalentry" name="sidenavjournalentry">
+                            <div class="row">
+                                <div class="col">
+                                    <i class="fas fa-book"></i> Journal Entries
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <i class="fas fa-book" style="visibility: hidden;"></i> List
+                                </div>
+                            </div>
+                            </a>
                         </li>
                         <li>
                             <a id="sidenavnewaccounts" name="sidenavnewaccounts"><i class="fas fa-plus"></i> New Account</a>
@@ -381,16 +392,16 @@
                             </a>
                         </li> -->
                         <li>
-                            <a id="sidenavcustomers" name="sidenavcustomers"><i class="fas fa-user-friends"></i> Customers</a>
+                            <a id="sidenavcustomers" name="sidenavcustomers"><i class="fas fa-user-friends"></i> Customer List</a>
                         </li>
                         <li>
-                            <a id="sidenavemployees" name="sidenavemployees"><i class="fas fa-user-tie"></i> Employees</a>
+                            <a id="sidenavemployees" name="sidenavemployees"><i class="fas fa-user-tie"></i> Employee List</a>
                         </li>
                         <li>
-                            <a id="sidenavjobs" name="sidenavjobs"><i class="fas fa-briefcase"></i> Jobs</a>
+                            <a id="sidenavjobs" name="sidenavjobs"><i class="fas fa-briefcase"></i> Job List</a>
                         </li>
                         <li>
-                            <a id="sidenavcontactleads" name="sidenavcontactleads"><i class="fas fa-briefcase"></i> Leads</a>
+                            <a id="sidenavcontactleads" name="sidenavcontactleads"><i class="fas fa-briefcase"></i> Lead List</a>
                         </li>
                         <li>
                             <a id="sidenavsuppliers" name="sidenavsuppliers"><i class="fas fa-user"></i> Suppliers</a>
@@ -459,10 +470,10 @@
                 <a href="#crmSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader crmLiHeader"><i class="fas fa-tasks faHeader"></i> CRM</a>
                 <ul class="collapse list-unstyled" id="crmSubmenu">
                     <li>
-                        <a class="sidenavleads" id="sidenavleads" name="sidenavleads"><i class="fas fa-user-friends"></i> Leads</a>
+                        <a class="sidenavleads" id="sidenavleads" name="sidenavleads"><i class="fas fa-user-friends"></i> Lead List</a>
                     </li>
                     <li>
-                        <a id="sidenavtasks" name="sidenavtasks"><i class="fas fa-user-tie"></i> Tasks</a>
+                        <a id="sidenavtasks" name="sidenavtasks"><i class="fas fa-user-tie"></i> Task List</a>
                     </li>
                 </ul>
             </li>
@@ -559,7 +570,7 @@
 
             {{#if isGreenTrack}}
                 <li class="gsemployeesLi" id="sidenavemployeesGreenTrack">
-                    <a class="liHeader sidenavemployeesGreenTrack"><i class="fa fa-user faHeader"></i><span> Employees</span></a>
+                    <a class="liHeader sidenavemployeesGreenTrack"><i class="fa fa-user faHeader"></i><span> Employee List</span></a>
                 </li>
             {{/if}}
 
@@ -815,7 +826,7 @@
                         {{#if includeTimesheetEntry}}
                             {{#if equals showTimesheet true}}
                             <li>
-                                <a id="sidenavtimesheet" name="sidenavtimesheet"><i class="fas fa-user-clock"></i> Timesheets</a>
+                                <a id="sidenavtimesheet" name="sidenavtimesheet"><i class="fas fa-user-clock"></i> Timesheet List</a>
                             </li>
                             {{/if}}
                         {{/if}}
