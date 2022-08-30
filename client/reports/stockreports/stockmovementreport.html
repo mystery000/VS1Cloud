@@ -4,7 +4,7 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Stock Movement <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
+            <h2 style="margin: 16px;">Stock Movement {{> helpbutton}}</h2>
         </header>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -16,8 +16,8 @@
                     <div class="modal-body">
                         <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                         <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=39" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                        <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                        {{> helpadvisor}}
+                        {{> helpgotoforum}}
                     </div>
                     <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                 </div>
@@ -202,6 +202,13 @@
                                     .customDoubleTableHeading + tr th:last-child {
                                         border-right: none !important;
                                     }
+                                    tr[data-tr="TMergedSalesLines"] {
+                                        display: none !important;
+                                    }
+                                    .table tr[data-tr="Opening Balance"] td {
+                                        font-weight: 800;
+                                        color: #858796 !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
@@ -209,7 +216,7 @@
                                             <tr class="table-active customDoubleTableHeading">
                                                 <th>Product</th>
                                                 <th>Trans Date</th>
-                                                <th>Trans Type</th>
+                                                <th class="fgrtotal text-left">Trans Type</th>
                                                 <th>Trans No</th>
                                                 <th>Opening Qty</th>
                                                 <th>Trans Qty</th>
@@ -257,7 +264,7 @@
                                                     <tr>
                                                        <td  class="fgrtotal">{{ value.ProductName }}</td>
                                                         <td  class="fgrtotal"></td>
-                                                        <td  class="fgrtotal"></td>
+                                                        <td  class="fgrtotal text-left"></td>
                                                         <td  class="fgrtotal"></td>
                                                         <!-- <td class="text-right"  class="fgrtotal">{{ value.TotalRunningQty }}</td>
                                                         <td class="text-right"  class="fgrtotal">{{ value.TotalCurrentQty }}</td>
@@ -270,15 +277,15 @@
                                                         
                                                     </tr>
                                                     {{#each item in value.SubAccounts}}
-
-                                                        <tr>
-                                                            <td></td>
+                                                        <tr data-tr="{{ item.fields.TranstypeDesc }}">
+                                                            <td></td>                                                            
                                                             <td>{{ formatDate item.fields.TransactionDate }}</td>
-                                                            <td>{{ item.fields.TranstypeDesc }}</td>
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.TransactionNo }} text-danger {{/if}}">{{ checkZero item.fields.TransactionNo }}</td>
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{/if}}">{{ checkZero item.fields.Qty }}</td>
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{/if}}">{{ checkZero item.fields.Qty }}</td>
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{/if}}">{{ checkZero item.fields.Qty }}</td>
+                                                            
+                                                            <td class="text-left">{{ item.fields.TranstypeDesc }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.TransactionNo }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.TransactionNo }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
+                                                            <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
                                                             <!-- <td class="text-right text-success">{{ formatPrice item.fields.Cost }}</td>
                                                             <td class="text-right text-success">{{ formatPrice item.fields.TotalCost }}</td> -->
 
