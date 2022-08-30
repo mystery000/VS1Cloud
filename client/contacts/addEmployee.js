@@ -2951,6 +2951,7 @@ Template.employeescard.onRendered(function () {
                     useData[i].fields.PayPeriod || '',
                     useData[i].fields.LeaveMethod || '',
                     useData[i].fields.Status || '',
+                    `<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
                 ];
                 splashArrayList.push(dataListAllowance);
             }
@@ -2963,24 +2964,28 @@ Template.employeescard.onRendered(function () {
                 columnDefs: [
 
                     {
-                        className: "colLRID hiddenColumn",
+                        className: "colLRID colLeaveRequest hiddenColumn",
                         "targets": [0]
                     },
                     {
-                        className: "colLRDescription",
+                        className: "colLeaveRequest colLRDescription",
                         "targets": [1]
                     },
                     {
-                        className: "colLRLeavePeriod",
+                        className: "colLeaveRequest colLRLeavePeriod",
                         "targets": [2]
                     },
                     {
-                        className: "colLRLeaveType",
+                        className: "colLeaveRequest colLRLeaveType",
                         "targets": [3]
                     },
                     {
-                        className: "colLRStatus",
+                        className: "colLeaveRequest colLRStatus",
                         "targets": [4]
+                    },
+                    {
+                        className: "colLRAction",
+                        "targets": [5]
                     }
                 ],
                 select: true,
@@ -3024,6 +3029,7 @@ Template.employeescard.onRendered(function () {
                                         useData[i].fields.PayPeriod || '',
                                         useData[i].fields.LeaveMethod || '',
                                         useData[i].fields.Status || '',
+                                        `<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
                                     ];
                                     splashArrayList.push(dataListAllowance);
                                 }
@@ -6439,6 +6445,7 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let ID = $('#edtLeaveRequestID').val();
         let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
         let Leave = $('#edtLeaveTypeofRequest').val();
         let Description = $('#edtLeaveDescription').val();
@@ -6505,6 +6512,7 @@ Template.employeescard.events({
                 let leaveRequestSettings =  new LeaveRequest({
                     type: "TLeavRequest",
                     fields: new LeaveRequestFields({
+                        ID: parseInt(ID),
                         EmployeeID: parseInt( employeeID ),
                         TypeofRequest: parseInt(TypeofRequest),
                         LeaveMethod: Leave,
@@ -6792,6 +6800,8 @@ Template.employeescard.events({
         today = dd+'/'+mm+'/'+ yyyy;
         $('#edtLeaveStartDate').val(today);
         $('#edtLeaveEndDate').val(today)
+        $('#edtLeaveRequestID').val(0);
+        $('#edtLeaveTypeofRequestID').val(0);
     },
 
     'change #taxes :input, #taxes :select': async function(){
@@ -10328,6 +10338,94 @@ Template.employeescard.events({
         }
     });
   },
+  "click .removeLeaveRequest": function(e){
+    let templateObject = Template.instance();
+    var deleteID = $(e.target).data('id') || '';
+    swal({
+        title: 'Delete Leave Request',
+        text: "Are you sure you want to Delete this Leave Request?",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes'
+    }).then( async (result) => {
+        if (result.value) {
+            $('.fullScreenSpin').css('display', 'block');
+            const employeePayrolApis = new EmployeePayrollApi();
+            const apiEndpoint = employeePayrolApis.collection.findByName(
+                employeePayrolApis.collectionNames.TLeavRequest
+            );
+            
+            try {
+                let leaveSetting =  new LeaveRequest({
+                    type: "TLeavRequest",
+                    fields: new LeaveRequestFields({
+                        ID: parseInt( deleteID ),
+                        Active: false
+                    }),
+                })
+    
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(leaveSetting),
+                });
+                if (ApiResponse.ok == true) {
+                    let dataObject = await getVS1Data('TLeavRequest');
+                    if ( dataObject.length > 0) {
+                        data = JSON.parse(dataObject[0].data);
+                        if( data.tleavrequest.length > 0 ){
+                            let updatedLeaveRequest = data.tleavrequest.map( (item) => {
+                                if( deleteID == item.fields.ID ){
+                                    item.fields.Active = false;
+                                }
+                                return item;
+                            });
+                            let leaveRequestObj = {
+                                tleavrequest: updatedLeaveRequest
+                            }
+                            await addVS1Data('TLeavRequest', JSON.stringify(leaveRequestObj))
+                        }
+                    }
+
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Leave request deleted successfully',
+                        text: '',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if (result.value) { window.location.reload(); }
+                        } 
+                    });
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: error,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });  
+                }
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });                
+            }
+        }
+    });
+  },
   "click #btnDeletePayNote": function (e){
     let templateObject = Template.instance();
     let deleteID = $(e.target).data('id') || '';
@@ -10400,6 +10498,34 @@ Template.employeescard.events({
         $("#edtLeaveTypeofRequest").trigger("click.editable-select");
     }, 200);
   },
+  "dblclick .colLeaveRequest": async function(e){
+    let ID = $(e.target).parent().find('.colLRID').text();
+    let dataObject = await getVS1Data('TLeavRequest');
+    if ( dataObject.length > 0) {
+        data = JSON.parse(dataObject[0].data);
+        if( data.tleavrequest.length > 0 ){
+            let useData = data.tleavrequest.filter( (item) => {
+                if( ID == item.fields.ID ){
+                    return item;
+                }
+            });
+            if( useData.length > 0 ){
+                $('#removeLeaveRequest').show();
+                $('#edtLeaveRequestID').val(useData[0].fields.ID);
+                $('#removeLeaveRequest').data('id', useData[0].fields.ID);
+                $('#edtLeaveTypeofRequestID').val(useData[0].fields.TypeofRequest);
+                $('#edtLeaveTypeofRequest').val(useData[0].fields.LeaveMethod);
+                $('#edtLeaveDescription').val(useData[0].fields.Description);
+                $('#edtLeaveStartDate').val(moment(useData[0].fields.StartDate).format('DD/MM/YYYY'));
+                $('#edtLeaveEndDate').val(moment(useData[0].fields.EndDate).format('DD/MM/YYYY'));
+                $('#edtLeavePayPeriod').val(useData[0].fields.PayPeriod);
+                $('#edtLeaveHours').val(useData[0].fields.Hours);
+                $('#edtLeavePayStatus').val(useData[0].fields.Status);
+            }
+        }
+    }
+    $('#newLeaveRequestModal').modal('show');
+  }
 //   'click #edtLeaveTypeofRequest': (e, ui) => {
 //     ui.getAssignLeaveTypes();
 //   }
