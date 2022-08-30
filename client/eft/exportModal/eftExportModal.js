@@ -123,9 +123,9 @@ Template.eftExportModal.events({
 
     let transactionCodes = `
       <select class="form-control pointer sltTranslactionCode">
-        <option value=""></option> 
-        <option value="">Debit Items</option> 
-        <option value="">Credit Items</option> 
+        <option value=""></option>
+        <option value="">Debit Items</option>
+        <option value="">Credit Items</option>
       </select>
     `;
     $('#eftExportTableBody').append(`
@@ -160,7 +160,7 @@ Template.eftExportModal.events({
         <td class="colIdx addNewRow" style="width: 25px">
           <span class="table-remove btnEftRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
         </td>
-      </tr> 
+      </tr>
     `);
   },
 
@@ -180,7 +180,6 @@ Template.eftExportModal.events({
 
   "keypress .eftInputAmount": (e) => {
     if (e.which === 13) {
-      // console.log('enter pressed', e.target.value)
     }
   },
 
@@ -204,7 +203,6 @@ Template.eftExportModal.events({
     let eftUserName = $('#eftUserName').val();
     let eftNumberUser = $('#eftNumberUser').val();
     let sltTransactionDescription = $('#sltTransactionDescription').val();
-    // console.log(sltAccountType, sltBankName, eftProcessingDate, eftUserName, eftNumberUser, sltTransactionDescription)
 
     if (!sltAccountType) {
       swal("Please input Account Name", "", "error");

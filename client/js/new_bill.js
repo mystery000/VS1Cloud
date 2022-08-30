@@ -2297,7 +2297,6 @@ Template.billcard.onRendered(() => {
         if (object_invoce[0]["taxItems"]) {
 
             let taxItems = object_invoce[0]["taxItems"];
-            console.log(taxItems);
             $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
                 let html = `

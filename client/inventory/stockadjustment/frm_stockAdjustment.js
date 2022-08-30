@@ -394,7 +394,6 @@ Template.stockadjustmentcard.onRendered(() => {
                     });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
-                    console.log(data);
                     let useData = data.tstockadjustentry;
                     var added = false;
                     for (let d = 0; d < useData.length; d++) {

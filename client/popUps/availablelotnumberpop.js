@@ -23,7 +23,6 @@ Template.availablelotnumberpop.onRendered(async () => {
     $(document).on('click', '.lot-no-row', function() {
         const activeNumber = $('.lot-no-row.active').length;
         const productItems = localStorage.getItem('productItem');
-        console.log(activeNumber, productItems, activeNumber < productItems);
         if (parseInt(activeNumber) < parseInt(productItems)) {
             $(this).toggleClass('active');
         } else {
@@ -57,7 +56,7 @@ Template.availablelotnumberpop.events({
             }
             $('#tblLotlist').html(shtml);
         }
-        
+
         $('#availableLotNumberModal').modal('hide');
     }
 });

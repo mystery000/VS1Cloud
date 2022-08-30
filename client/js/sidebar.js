@@ -1250,7 +1250,6 @@ Template.sidenav.onRendered(function() {
 
     templateObject.getTSerialNumberListCurrentReport = function() {
         sideBarService.getTSerialNumberListCurrentReport().then(function(data) {
-            console.log(data);
         })
     }
 

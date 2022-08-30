@@ -52,19 +52,16 @@ Template.serialnumberlist.onRendered(function() {
     }
     templateObject.getAllSerialNumberData = function() {
         getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
-            console.log(dataObject);
             if (dataObject.length !== 0) {
                 sideBarService.getAllSerialNumber().then(function(data) {
-                    console.log(data);
                     sideBarService.getAllStockAdjustEntry("All").then(function(data) {
-                        console.log(data);
                     });
                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
                     for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
                         let tclass = '';
                         let datet=new Date(data.tserialnumberlistcurrentreport[i].TransDate);
                         let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
-                        
+
                         if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
                             tclass="text-sold";
                         }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
@@ -82,17 +79,17 @@ Template.serialnumberlist.onRendered(function() {
                             serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                             status: data.tserialnumberlistcurrentreport[i].AllocType,
                             date: sdatet,
-                            cssclass:tclass 
+                            cssclass:tclass
                         };
                         dataTableList.push(dataList);
                     }
-        
+
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
-        
+
                         Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
                             if (error) {
-        
+
                             } else {
                                 if (result) {
                                     for (let i = 0; i < result.customFields.length; i++) {
@@ -103,34 +100,34 @@ Template.serialnumberlist.onRendered(function() {
                                         let columnClass = columHeaderUpdate.split('.')[1];
                                         let columnWidth = customcolumn[i].width;
                                         let columnindex = customcolumn[i].index + 1;
-        
+
                                         if (hiddenColumn == true) {
-        
+
                                             $("." + columnClass + "").addClass('hiddenColumn');
                                             $("." + columnClass + "").removeClass('showColumn');
                                         } else if (hiddenColumn == false) {
                                             $("." + columnClass + "").removeClass('hiddenColumn');
                                             $("." + columnClass + "").addClass('showColumn');
                                         }
-        
+
                                     }
                                 }
-        
+
                             }
                         });
-        
-        
+
+
                         setTimeout(function() {
                             MakeNegative();
                         }, 100);
                     }
-        
+
                     $('.fullScreenSpin').css('display', 'none');
                     setTimeout(function() {
                         $('#tblSerialNumberList').DataTable({
                             columnDefs: [
                                 { type: 'date', targets: 0 }
-        
+
                             ],
                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             buttons: [{
@@ -148,9 +145,9 @@ Template.serialnumberlist.onRendered(function() {
                                                 var res = data.split("</span>");
                                                 data = res[1];
                                             }
-        
+
                                             return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-        
+
                                         }
                                     }
                                 }
@@ -189,55 +186,53 @@ Template.serialnumberlist.onRendered(function() {
                             "fnDrawCallback": function(oSettings) {
                                 $('.paginate_button.page-item').removeClass('disabled');
                                 $('#tblSerialNumberList_ellipsis').addClass('disabled');
-        
+
                                 if (oSettings._iDisplayLength == -1) {
                                     if (oSettings.fnRecordsDisplay() > 150) {
                                         $('.paginate_button.page-item.previous').addClass('disabled');
                                         $('.paginate_button.page-item.next').addClass('disabled');
                                     }
                                 } else {
-        
+
                                 }
                                 if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                                     $('.paginate_button.page-item.next').addClass('disabled');
                                 }
-        
+
                                 $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                     .on('click', function() {
                                         $('.fullScreenSpin').css('display', 'inline-block');
                                         let dataLenght = oSettings._iDisplayLength;
-        
+
                                         sideBarService.getAllSerialNumber(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                            console.log(dataObjectnew);
                                             getVS1Data('TSerialNumberListCurrentReport').then(function(dataObjectold) {
-                                                console.log(dataObjectold);
                                                 if (dataObjectold.length == 0) {
-        
+
                                                 } else {
                                                     let dataOld = JSON.parse(dataObjectold[0].data);
-        
+
                                                     var thirdaryData = $.merge($.merge([], dataObjectnew.tserialnumberlistcurrentreport), dataOld.tserialnumberlistcurrentreport);
                                                     let objCombineData = {
                                                         tserialnumberlistcurrentreport: thirdaryData
                                                     }
-        
-        
+
+
                                                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(objCombineData)).then(function(datareturn) {
                                                         templateObject.resetData(objCombineData);
                                                         $('.fullScreenSpin').css('display', 'none');
                                                     }).catch(function(err) {
                                                         $('.fullScreenSpin').css('display', 'none');
                                                     });
-        
+
                                                 }
                                             }).catch(function(err) {
-        
+
                                             });
-        
+
                                         }).catch(function(err) {
                                             $('.fullScreenSpin').css('display', 'none');
                                         });
-        
+
                                     });
                                 setTimeout(function() {
                                     MakeNegative();
@@ -250,7 +245,7 @@ Template.serialnumberlist.onRendered(function() {
                                 }
                                 $("<button class='btn btn-primary btnRefreshStockAdjustment' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSerialNumberList_filter");
                             }
-        
+
                         }).on('page', function() {
                             setTimeout(function() {
                                 MakeNegative();
@@ -258,7 +253,7 @@ Template.serialnumberlist.onRendered(function() {
                             let draftRecord = templateObject.datatablerecords.get();
                             templateObject.datatablerecords.set(draftRecord);
                         }).on('column-reorder', function() {
-        
+
                         }).on('length.dt', function(e, settings, len) {
                             $('.fullScreenSpin').css('display', 'inline-block');
                             let dataLenght = settings._iDisplayLength;
@@ -267,7 +262,7 @@ Template.serialnumberlist.onRendered(function() {
                                     $('.fullScreenSpin').css('display', 'none');
                                 } else {
                                     sideBarService.getAllSerialNumber().then(function(dataNonBo) {
-        
+
                                         addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(dataNonBo)).then(function(datareturn) {
                                             templateObject.resetData(dataNonBo);
                                             $('.fullScreenSpin').css('display', 'none');
@@ -283,7 +278,7 @@ Template.serialnumberlist.onRendered(function() {
                                     $('.fullScreenSpin').css('display', 'none');
                                 } else {
                                     sideBarService.getAllSerialNumber(dataLenght, 0).then(function(dataNonBo) {
-        
+
                                         addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(dataNonBo)).then(function(datareturn) {
                                             templateObject.resetData(dataNonBo);
                                             $('.fullScreenSpin').css('display', 'none');
@@ -301,7 +296,7 @@ Template.serialnumberlist.onRendered(function() {
                         });
                         $('.fullScreenSpin').css('display', 'none');
                     }, 0);
-        
+
                     var columns = $('#tblSerialNumberList th');
                     let sTible = "";
                     let sWidth = "";
@@ -317,7 +312,7 @@ Template.serialnumberlist.onRendered(function() {
                             columVisible = false;
                         }
                         sWidth = v.style.width.replace('px', "");
-        
+
                         let datatablerecordObj = {
                             sTitle: v.innerText || '',
                             sWidth: sWidth || '',
@@ -335,9 +330,9 @@ Template.serialnumberlist.onRendered(function() {
                             FlowRouter.go('/serialnumberview?serialnumber=' + listData);
                         }
                     });
-        
+
                 }).catch(function(err) {
-        
+
                     sideBarService.getAllSerialNumber().then(function(data) {
                         let lineItems = [];
                         let lineItemObj = {};
@@ -346,7 +341,7 @@ Template.serialnumberlist.onRendered(function() {
                         for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
                             let datet=new Date(data.tserialnumberlistcurrentreport[i].TransDate);
                             let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
-                            
+
                             if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
                                 tclass="text-sold";
                             }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
@@ -364,19 +359,19 @@ Template.serialnumberlist.onRendered(function() {
                                 serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                                 status: data.tserialnumberlistcurrentreport[i].AllocType,
                                 date: sdatet,
-                                cssclass:tclass 
+                                cssclass:tclass
                             };
-            
+
                             dataTableList.push(dataList);
-            
+
                         }
-        
+
                         templateObject.datatablerecords.set(dataTableList);
                         if (templateObject.datatablerecords.get()) {
-        
+
                             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSerialNumberList', function(error, result) {
                                 if (error) {
-        
+
                                 } else {
                                     if (result) {
                                         for (let i = 0; i < result.customFields.length; i++) {
@@ -387,28 +382,28 @@ Template.serialnumberlist.onRendered(function() {
                                             let columnClass = columHeaderUpdate.split('.')[1];
                                             let columnWidth = customcolumn[i].width;
                                             let columnindex = customcolumn[i].index + 1;
-        
+
                                             if (hiddenColumn == true) {
-        
+
                                                 $("." + columnClass + "").addClass('hiddenColumn');
                                                 $("." + columnClass + "").removeClass('showColumn');
                                             } else if (hiddenColumn == false) {
                                                 $("." + columnClass + "").removeClass('hiddenColumn');
                                                 $("." + columnClass + "").addClass('showColumn');
                                             }
-        
+
                                         }
                                     }
-        
+
                                 }
                             });
-        
-        
+
+
                             setTimeout(function() {
                                 MakeNegative();
                             }, 100);
                         }
-        
+
                         $('.fullScreenSpin').css('display', 'none');
                         setTimeout(function() {
                             //$.fn.dataTable.moment('DD/MM/YY');
@@ -418,7 +413,7 @@ Template.serialnumberlist.onRendered(function() {
                                     { type: 'date', targets: 0 }
                                     // ,
                                     // { targets: 0, className: "text-center" }
-        
+
                                 ],
                                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                                 buttons: [{
@@ -436,9 +431,9 @@ Template.serialnumberlist.onRendered(function() {
                                                     var res = data.split("</span>");
                                                     data = res[1];
                                                 }
-        
+
                                                 return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-        
+
                                             }
                                         }
                                     }
@@ -477,7 +472,7 @@ Template.serialnumberlist.onRendered(function() {
                                         MakeNegative();
                                     }, 100);
                                 },
-        
+
                             }).on('page', function() {
                                 setTimeout(function() {
                                     MakeNegative();
@@ -485,11 +480,11 @@ Template.serialnumberlist.onRendered(function() {
                                 let draftRecord = templateObject.datatablerecords.get();
                                 templateObject.datatablerecords.set(draftRecord);
                             }).on('column-reorder', function() {
-        
+
                             });
                             $('.fullScreenSpin').css('display', 'none');
                         }, 0);
-        
+
                         var columns = $('#tblSerialNumberList th');
                         let sTible = "";
                         let sWidth = "";
@@ -505,7 +500,7 @@ Template.serialnumberlist.onRendered(function() {
                                 columVisible = false;
                             }
                             sWidth = v.style.width.replace('px', "");
-        
+
                             let datatablerecordObj = {
                                 sTitle: v.innerText || '',
                                 sWidth: sWidth || '',
@@ -523,14 +518,13 @@ Template.serialnumberlist.onRendered(function() {
                                 window.open('/stocktransfercard?id=' + listData, '_self');
                             }
                         });
-        
+
                     }).catch(function(err) {
                         $('.fullScreenSpin').css('display', 'none');
                     });
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data);
             }
         })
 
