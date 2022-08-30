@@ -1,12 +1,12 @@
 import { ReactiveVar } from "meteor/reactive-var";
 
 
-Template.eftOptionsModal.onCreated(function () {
+Template.addNewEftModal.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.eftOptionsList = new ReactiveVar([]);
 });
 
-Template.eftOptionsModal.onRendered(function () {
+Template.addNewEftModal.onRendered(function () {
   let templateObject = Template.instance();
 
   templateObject.setInitEftOptions = () => {
@@ -88,7 +88,7 @@ Template.eftOptionsModal.onRendered(function () {
   templateObject.loadEftOptions();
 });
 
-Template.eftOptionsModal.events({
+Template.addNewEftModal.events({
 
   "click .btnSaveEftOptions": (e) => {
     const templateObject = Template.instance();
@@ -114,20 +114,20 @@ Template.eftOptionsModal.events({
     });
 
     addVS1Data('TEftOptions', JSON.stringify(eftOptions)).then(function (datareturn) {
-      $('#eftOptionsModal').modal('hide');
+      $('#addNewEftModal').modal('hide');
     }).catch(function (err) {
-      $('#eftOptionsModal').modal('hide');
+      $('#addNewEftModal').modal('hide');
     });
 
   },
 
   "click .btnCancelEftOptions": (e) => {
-    $('#eftOptionsModal').modal('hide');
+    $('#addNewEftModal').modal('hide');
   },
 
 });
 
-Template.eftOptionsModal.helpers({
+Template.addNewEftModal.helpers({
   eftOptionsList: () => {
     return Template.instance().eftOptionsList.get();
   },
