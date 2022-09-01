@@ -32,6 +32,8 @@ Template.emailsettings.onCreated(function () {
     templateObject.essentialReportSchedules = new ReactiveVar([]);
     templateObject.invoicerecords = new ReactiveVar([]);
     templateObject.correspondences = new ReactiveVar([]);
+    templateObject.isAdd = new ReactiveVar(true);
+    templateObject.selectedRowID = new ReactiveVar();
     templateObject.formsData.set(
         [
             {
@@ -706,15 +708,15 @@ Template.emailsettings.onRendered(function () {
                     return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                 })
                 let tempArray = [];
-                for(let i = 0; i< temp.length; i++) {
-                    for (let j = i+1; j< temp.length; j++ ) {
-                        if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-                            temp[j].fields.dup = true
-                        }
-                    }
-                }
+                // for(let i = 0; i< temp.length; i++) {
+                //     for (let j = i+1; j< temp.length; j++ ) {
+                //         if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                //             temp[j].fields.dup = true
+                //         }
+                //     }
+                // }
                 temp.map(item=>{
-                    if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                    if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.MessageTo == '') {
                         tempArray.push(item.fields)
                     }
                 })
@@ -727,17 +729,17 @@ Template.emailsettings.onRendered(function () {
                         let temp = dataObject.tcorrespondence.filter(item=>{
                             return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                         })
-
-                        for(let i = 0; i< temp.length; i++) {
-                            for (let j = i+1; j< temp.length; j++ ) {
-                                if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-                                    temp[j].fields.dup = true
-                                }
-                            }
-                        }
-
+        
+                        // for(let i = 0; i< temp.length; i++) {
+                        //     for (let j = i+1; j< temp.length; j++ ) {
+                        //         if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                        //             temp[j].fields.dup = true
+                        //         }
+                        //     }
+                        // }
+                        
                         temp.map(item=>{
-                            if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                            if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.MessageTo == '') {
                                 tempArray.push(item.fields)
                             }
                         })
@@ -752,17 +754,17 @@ Template.emailsettings.onRendered(function () {
                     let temp = dataObject.tcorrespondence.filter(item=>{
                         return item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID')
                     })
-
-                    for(let i = 0; i< temp.length; i++) {
-                        for (let j = i+1; j< temp.length; j++ ) {
-                            if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-                                temp[j].fields.dup = true
-                            }
-                        }
-                    }
-
+    
+                    // for(let i = 0; i< temp.length; i++) {
+                    //     for (let j = i+1; j< temp.length; j++ ) {
+                    //         if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
+                    //             temp[j].fields.dup = true
+                    //         }
+                    //     }
+                    // }
+                    
                     temp.map(item=>{
-                        if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.dup != true) {
+                        if(item.fields.EmployeeId == Session.get('mySessionEmployeeLoggedID') && item.fields.MessageTo == '') {
                             tempArray.push(item.fields)
                         }
                     })
@@ -1399,6 +1401,73 @@ Template.emailsettings.onRendered(function () {
             return { success: false, message: 'Something went wrong. Please try again later.' };
         }
     }
+
+
+    $(document).on('click', '#tblCorrespondence tr', function(e) {
+        let tempLabel = $(e.target).closest('tr').find('.colLabel').text();
+        let tempSubject  = $(e.target).closest('tr').find('.colSubject').text();
+        let tempMemo  = $(e.target).closest('tr').find('.colTemplateContent').text();
+        let tempId = $(e.target).closest('tr').find('.colID').text();
+        templateObject.isAdd.set(false);
+        templateObject.selectedRowID.set(tempId);
+        $('#addLetterTemplateModal').modal();
+        $('#edtTemplateLbl').val(tempLabel);
+        $('#edtTemplateSubject').val(tempSubject);
+        $('#edtTemplateContent').val(tempMemo);
+    })
+
+    $(document).on('click', '#tblCorrespondence tr .btn-remove-raw', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let tempId = $(e.target).closest('tr').find('.colID').text();
+        let correspondenceTemp = templateObject.correspondences.get();
+        let index = correspondenceTemp.findIndex(item => {
+            return item.MessageId == tempId;
+        })
+        if(index > -1) {
+            let objDetail = correspondenceTemp[index];
+            objDetail.Active = false;
+            let objectData = {
+                type: "TCorrespondence",
+                fields: objDetail
+            }
+            sideBarService.saveCorrespondence(objectData).then(function() {
+                sideBarService.getCorrespondences().then(function(dataUpdate){
+                    addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Success',
+                            text: 'Template has been removed successfully ',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Continue'
+                        }).then((result) => {
+                            if (result.value) {
+                                templateObject.getCorrespondence();
+                            } else if (result.dismiss === 'cancel') { }
+                        });
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    })
+                })
+            }).catch(function(error) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Ooops',
+                    text: 'Template has not been removed',
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Continue'
+                }).then((result) => {
+                    if (result.value) {
+                        templateObject.getCorrespondence();
+                    } else if (result.dismiss === 'cancel') { }
+                });
+            })
+        }
+
+    })
 });
 
 Template.emailsettings.events({
@@ -1929,6 +1998,8 @@ Template.emailsettings.events({
 
 
     'click .btnAddLetter': function (event) {
+        let templateObject = Template.instance();
+        templateObject.isAdd.set(true);
         $('#addLetterTemplateModal').modal('toggle');
     },
 
@@ -1940,26 +2011,87 @@ Template.emailsettings.events({
         let tempLabel = $("#edtTemplateLbl").val();
         let tempSubject = $('#edtTemplateSubject').val();
         let tempContent = $("#edtTemplateContent").val();
-        if(correspondenceTemp.length > 0 ) {
-            let index = correspondenceTemp.findIndex(item=>{
-                return item.Ref_Type == tempLabel
-            })
-            if(index > 0) {
-                swal({
-                    title: 'Oooops...',
-                    text: 'There is already a template labeled ' + tempLabel,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') { }
-                });
-                $('.fullScreenSpin').css('display', 'none');
+        if(templateObject.isAdd.get() == true) {
+            if(correspondenceTemp.length > 0 ) {
+                let index = correspondenceTemp.findIndex(item=>{
+                    return item.Ref_Type == tempLabel
+                })
+                if(index > 0) {
+                    swal({
+                        title: 'Oooops...',
+                        text: 'There is already a template labeled ' + tempLabel,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                        } else if (result.dismiss === 'cancel') { }
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                   
+                    sideBarService.getCorrespondences().then(dObject =>{
+    
+                        let temp = {
+                            Active: true,
+                            EmployeeId: Session.get('mySessionEmployeeLoggedID'),
+                            Ref_Type: tempLabel,
+                            MessageAsString: tempContent,
+                            MessageFrom: "",
+                            MessageId : dObject.tcorrespondence.length.toString(),
+                            MessageTo : "",
+                            ReferenceTxt: tempSubject,
+                            Ref_Date: moment().format('YYYY-MM-DD'),
+                            Status: ""
+                        }
+                        let objDetails = {
+                            type: 'TCorrespondence',
+                            fields: temp
+                        }
+        
+                        // let array = [];
+                        // array.push(objDetails)
+                       
+                        sideBarService.saveCorrespondence(objDetails).then(data=>{
+                            sideBarService.getCorrespondences().then(function(dataUpdate){
+                                addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                    swal({
+                                        title: 'Success',
+                                        text: 'Template has been saved successfully ',
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Continue'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            $('#addLetterTemplateModal').modal('toggle')
+                                            templateObject.getCorrespondence();
+                                            
+                                        } else if (result.dismiss === 'cancel') { }
+                                    });
+                                }).catch(function(err) {
+                                })
+                            }).catch(function(err) {
+                            })
+                        }).catch(function () {
+                            swal({
+                                title: 'Oooops...',
+                                text: 'Something went wrong',
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                            }).then((result) => {
+                                if (result.value) {
+                                    $('#addLetterTemplateModal').modal('toggle')
+                                    $('.fullScreenSpin').css('display', 'none');
+                                } else if (result.dismiss === 'cancel') { }
+                            });
+                        })
+                    })
+                }
             } else {
-
+    
                 sideBarService.getCorrespondences().then(dObject =>{
-
                     let temp = {
                         Active: true,
                         EmployeeId: Session.get('mySessionEmployeeLoggedID'),
@@ -1976,10 +2108,10 @@ Template.emailsettings.events({
                         type: 'TCorrespondence',
                         fields: temp
                     }
-
-                    // let array = [];
-                    // array.push(objDetails)
-
+        
+                    let array = [];
+                        array.push(objDetails)
+        
                     sideBarService.saveCorrespondence(objDetails).then(data=>{
                         sideBarService.getCorrespondences().then(function(dataUpdate){
                             addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
@@ -1994,7 +2126,7 @@ Template.emailsettings.events({
                                     if (result.value) {
                                         $('#addLetterTemplateModal').modal('toggle')
                                         templateObject.getCorrespondence();
-
+                                        
                                     } else if (result.dismiss === 'cancel') { }
                                 });
                             }).catch(function(err) {
@@ -2018,68 +2150,56 @@ Template.emailsettings.events({
                 })
             }
         } else {
-
-            sideBarService.getCorrespondences().then(dObject =>{
-                let temp = {
-                    Active: true,
-                    EmployeeId: Session.get('mySessionEmployeeLoggedID'),
-                    Ref_Type: tempLabel,
-                    MessageAsString: tempContent,
-                    MessageFrom: "",
-                    MessageId : dObject.tcorrespondence.length.toString(),
-                    MessageTo : "",
-                    ReferenceTxt: tempSubject,
-                    Ref_Date: moment().format('YYYY-MM-DD'),
-                    Status: ""
-                }
-                let objDetails = {
-                    type: 'TCorrespondence',
-                    fields: temp
-                }
-
-                let array = [];
-                    array.push(objDetails)
-
-                sideBarService.saveCorrespondence(objDetails).then(data=>{
-                    sideBarService.getCorrespondences().then(function(dataUpdate){
-                        addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
-                            $('.fullScreenSpin').css('display', 'none');
-                            swal({
-                                title: 'Success',
-                                text: 'Template has been saved successfully ',
-                                type: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Continue'
-                            }).then((result) => {
-                                if (result.value) {
-                                    $('#addLetterTemplateModal').modal('toggle')
-                                    templateObject.getCorrespondence();
-
-                                } else if (result.dismiss === 'cancel') { }
-                            });
-                        }).catch(function(err) {
-                        })
-                    }).catch(function(err) {
-                    })
-                }).catch(function () {
-                    swal({
-                        title: 'Oooops...',
-                        text: 'Something went wrong',
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {
-                            $('#addLetterTemplateModal').modal('toggle')
-                            $('.fullScreenSpin').css('display', 'none');
-                        } else if (result.dismiss === 'cancel') { }
-                    });
+            if(correspondenceTemp.length > 0 ) {
+                let index = correspondenceTemp.findIndex(item=>{
+                    return item.MessageId == templateObject.selectedRowID.get()
                 })
-            })
+                if(index > -1) {
+                    let objDetail = correspondenceTemp[index];
+                    objDetail.Ref_Type = tempLabel;
+                    objDetail.ReferenceTxt = tempSubject;
+                    objDetail.MessageAsString = tempContent;
+                    let objectData = {
+                        type: "TCorrespondence",
+                        fields: objDetail
+                    }
+                    sideBarService.saveCorrespondence(objectData).then(function() {
+                        sideBarService.getCorrespondences().then(function(dataUpdate){
+                            addVS1Data('TCorrespondence', JSON.stringify(dataUpdate)).then(function() {
+                                $('.fullScreenSpin').css('display', 'none');
+                                swal({
+                                    title: 'Success',
+                                    text: 'Template has been updated successfully ',
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Continue'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        templateObject.getCorrespondence();
+                                        $('#addLetterTemplateModal').modal('toggle')
+                                    } else if (result.dismiss === 'cancel') { }
+                                });
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            })
+                        })
+                    }).catch(function(error) {
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Ooops',
+                            text: 'Template has not been updated',
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Continue'
+                        }).then((result) => {
+                            if (result.value) {
+                                templateObject.getCorrespondence();
+                            } else if (result.dismiss === 'cancel') { }
+                        });
+                    })
+                }
+            } 
         }
-        // localStorage.setItem('correspondence', JSON.stringify(correspondenceTemp));
-        // templateObject.correspondences.set(correspondenceTemp);
-        // $('#addLetterTemplateModal').modal('toggle');
     },
 
 
@@ -2169,5 +2289,9 @@ Template.emailsettings.helpers({
 
         return countryRegValue;
     },
+
+    isAdd:()=>{
+        return Template.instance().isAdd.get();
+    }
 
 });

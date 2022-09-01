@@ -1510,7 +1510,7 @@
                                                 width: 30% !important;
                                             }
 
-                                            .colMemo {
+                                            .colTemplateContent {
                                                 width: 50% !important
                                             }
                                         </style>
@@ -1518,16 +1518,20 @@
                                             <thead>
                                                 <tr>
                                                     <th class="th colLabel">Reference Letter Label</th>
-                                                    <th class="tb colSubject">Subject</th>
-                                                    <th class="tb colMemo">Memo</th>
+                                                    <th class="th colSubject">Subject</th>
+                                                    <th class="th colTemplateContent">Memo</th>
+                                                    <th class="th colID hiddenColumn">ID</th>
+                                                    <th class="th colDelete"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {{#each correspondence in correspondences}}
                                                     <tr>
-                                                        <td>{{correspondence.Ref_Type}}</td>
-                                                        <td>{{correspondence.ReferenceTxt}}</td>
-                                                        <td>{{correspondence.MessageAsString}}</td>
+                                                        <td class="colLabel">{{correspondence.Ref_Type}}</td>
+                                                        <td class="colSubject">{{correspondence.ReferenceTxt}}</td>
+                                                        <td class="colTemplateContent">{{correspondence.MessageAsString}}</td>
+                                                        <td class="colID hiddenColumn">{{correspondence.MessageId}}</td>
+                                                        <td class="colDelete d-flex align-items-center justify-content-center"><i class='fas fa-window-close btn-remove-raw' style='color: red; font-size: 16px; cursor: pointer'></i></td>
                                                     </tr>
                                                 {{/each}}
                                             </tbody>
@@ -1538,7 +1542,7 @@
                                         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="addLetterTemplateLabel">Create a Letter Template</h5>
+                                                    <h5 class="modal-title" id="addLetterTemplateLabel">{{#if equals isAdd true}}Create a template{{else}}Edit a template{{/if}}</h5>
                                                 </div>
                                                 <div class="modal-body p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
                                                     <input type="text" class="p-2" style="width: 100%; border-radius: 5px; border: 1px solid #d1d3ed" id="edtTemplateLbl" placeholder="Reference Letter Label"/>

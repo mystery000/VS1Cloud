@@ -560,6 +560,19 @@ export class UtilityService {
         $(".attchment-tooltip").show();
     };
 
+    customShowUploadedAttachment = function(myFiles, modalId) {
+        let empName = localStorage.getItem('mySession');
+        let elementToAdd = '';
+        for(let i=0;i<myFiles.length;i++){
+            let myFile = myFiles[i].fields;
+           let elementForItem = '<div class="uploaded-element attachment-name-'+i+'"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.AttachmentName + '</span>'
+               +'<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times remove-attachment-'+i+'"></i></div> </div>';
+            elementToAdd =  elementToAdd + elementForItem;
+        }
+        $('#'+modalId+' .file-display').html(elementToAdd);
+        $(".attchment-tooltip").show();
+    }
+
     showUploadedAttachmentTabs = function(myFiles){
         let empName = localStorage.getItem('mySession');
         let elementToAdd = '';
@@ -597,6 +610,57 @@ export class UtilityService {
         }
         $('#file-displayJobNoPOP').html(elementToAdd);
         $(".attchment-tooltipJobNoPOP").show();
+    };
+
+    customAttachmentUpload = async function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment, modalId){
+        let empName = localStorage.getItem('mySession');
+        let totalAttachments = uploadedFilesArray.length;
+        for(let i=0; i<myFiles.length; i++){
+            let myFile = myFiles[i];
+            let myFileType = myFile.type;
+ 
+            const loadAttachment = () => {
+                 return new Promise((resolve) => {
+                     //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
+                     //second parameter must be a BlogPropertyBag object containing MIME property
+                     let myBlob = new Blob([myFile], {type: myFileType});
+                     let myReader = new FileReader();
+                     myReader.readAsDataURL(myBlob);
+                     //handler executed once reading(blob content referenced to a variable) from blob is finished.
+                     myReader.addEventListener("loadend", function (e) {
+                         let base64data = myReader.result.split(',')[1];
+                         let uploadObject = {
+                             type: "TAttachment",
+                             fields: {
+                                 Attachment:  base64data,
+                                 AttachmentName: myFile.name,
+                                 Description: myFile.type
+                             }
+                         };
+                         uploadedFilesArray.push(uploadObject);
+                         if(!saveToTAttachment){
+                             let elementForItem = '<div class="uploaded-element attachment-name-'+totalAttachments+'"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.name + '</span>'
+                                 +'<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times remove-attachment-'+ totalAttachments +'"></i></div> </div>';
+                             if(!$('.uploaded-element').length){
+                                 $("#"+modalId + ' .file-display').html(elementForItem);
+                             } else {
+                                 $("#"+modalId + ' .file-display').append(elementForItem);
+                             }
+                             $('#new-attachment2-tooltip').show();
+                         }
+                         totalAttachments++;
+                         resolve()
+                     });
+                 })
+             }
+ 
+             await loadAttachment()
+        }
+        let dataObj = {
+            totalAttachments: totalAttachments,
+            uploadedFilesArray: uploadedFilesArray
+        };
+        return dataObj;
     };
 
    attachmentUpload = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment){
