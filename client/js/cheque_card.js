@@ -104,7 +104,7 @@ Template.chequecard.onRendered(() => {
           lastBankAccount = lastCheque.GLAccountName;
         } else {
         }
-        // $(".heading").html("New " +chequeSpelling +" #" +newChequeID +'<a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 8px;"></i></a>  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+        // $(".heading").html("New " +chequeSpelling +" #" +newChequeID +<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
         setTimeout(function () {
           $("#sltBankAccountName").val(lastBankAccount);
           $("#ponumber").val(newChequeID);

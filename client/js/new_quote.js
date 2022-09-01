@@ -130,17 +130,17 @@ Template.new_quote.onRendered(() => {
                   addVS1Data('TTemplateSettings', JSON.stringify(data));
 
                   for (let i = 0; i < data.ttemplatesettings.length; i++) {
-                   
+
                     if(data.ttemplatesettings[i].fields.SettingName == 'Quotes')
                     {
                            if(data.ttemplatesettings[i].fields.Template == 1)
-                           {       
+                           {
                                    $('input[name="Quotes_1"]').val(data.ttemplatesettings[i].fields.Description);
                                    if(data.ttemplatesettings[i].fields.Active == true)
                                    {
                                      $('#Quotes_1').attr('checked','checked');
                                    }
-                                 
+
                            }
                            if(data.ttemplatesettings[i].fields.Template == 2)
                            {
@@ -280,7 +280,7 @@ Template.new_quote.onRendered(() => {
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
-                // $(".heading").html("New Quote " +newQuoteId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a> <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+                // $(".heading").html("New Quote " +newQuoteId +'<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                 };
             }, 50);
         }).catch(function(err) {
@@ -1021,7 +1021,7 @@ Template.new_quote.onRendered(() => {
         }
 
         if (object_invoce[0]["taxItems"]) {
-                
+
             let taxItems = object_invoce[0]["taxItems"];
             $("#templatePreviewModal #tax_list_print").html("");
             Object.keys(taxItems).map((code) => {
@@ -1048,7 +1048,7 @@ Template.new_quote.onRendered(() => {
          const data = object_invoce[0]["data"]
 
          for(item of data){
-            
+
             var html = '';
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
@@ -1057,7 +1057,7 @@ Template.new_quote.onRendered(() => {
 
             html +="</tr>";
             tbl_content.append(html);
-           
+
          }
 
 
@@ -1303,7 +1303,7 @@ Template.new_quote.onRendered(() => {
          }
 
         //   table header
-        
+
             var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
             tbl_header.empty()
             var count = 0;
@@ -1318,7 +1318,7 @@ Template.new_quote.onRendered(() => {
                     }
                     else if(count == 2)
                     {
-                        
+
                         tbl_header.append("<th style='text-align: right; width: 50px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                     }
                     else if(count == 3)
@@ -1326,14 +1326,14 @@ Template.new_quote.onRendered(() => {
                         tbl_header.append("<th style='text-align: right; width: 90px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                     }
                     else if(count == 4)
-                    {                       
+                    {
                         tbl_header.append("<th style='text-align: right; width: 77px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                     }
                     else
-                    {                       
+                    {
                         tbl_header.append("<th style='text-align: right; width: 100px; background:white;color:rgb(0,0,0);width:" + value + "%';>" + key + "</th>")
                     }
-                    
+
                     count++;
             }
 
@@ -1355,9 +1355,9 @@ Template.new_quote.onRendered(() => {
                 $("#html-2-pdfwrapper_new #tax_list_print").append(html);
             });
         }
-        
+
         $("#html-2-pdfwrapper_new #total_tax_amount_print").text(object_invoce[0]["gst"]);
-        
+
         }
 
         // table content
@@ -1366,17 +1366,17 @@ Template.new_quote.onRendered(() => {
         const data = object_invoce[0]["data"]
 
         for(item of data){
-            
+
              var html = '';
              var count = 0;
              html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
              for(item_temp of item){
                 if(count > 1)
                 {
-                  
+
                         html = html + "<td style='text-align: right;'>" + item_temp + "</td>";
-                    
-                   
+
+
                 }
                 else
                 {
@@ -1387,7 +1387,7 @@ Template.new_quote.onRendered(() => {
 
             html +="</tr>";
             tbl_content.append(html);
-           
+
          }
 
 
@@ -5467,31 +5467,31 @@ Template.new_quote.onRendered(() => {
                 if(template_title == 'Quotes')
                 {
                     await showQuotes(template_title,number);
-        
+
                 }
-        
-        
+
+
                 let margins = {
                     top: 0,
                     bottom: 0,
                     left: 0,
                     width: 100
                 };
-        
+
                 let quoteData = templateObject.quoterecord.get();
                 document.getElementById('html-2-pdfwrapper_new').style.display="block";
                 var source = document.getElementById('html-2-pdfwrapper_new');
-        
+
                 let file = "Quotes.pdf";
                 if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                     if(template_title == 'Quotes')
                     {
                         file = 'Quote-' + quoteData.id + '.pdf';
                     }
-        
-        
+
+
                 }
-        
+
                 var opt = {
                     margin: 0,
                     filename: file,
@@ -5508,9 +5508,9 @@ Template.new_quote.onRendered(() => {
                         orientation: 'portrait'
                     }
                 };
-        
-        
-        
+
+
+
                 html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
                     let attachment = [];
                     let base64data = data.split(',')[1];
@@ -5538,7 +5538,7 @@ Template.new_quote.onRendered(() => {
                     values.forEach(value => {
                         let reportData = JSON.parse(value);
                         let temp = {... reportData};
-        
+
                         temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                         reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                         temp.attachments = attachment;
@@ -5556,7 +5556,7 @@ Template.new_quote.onRendered(() => {
                         }
                     });
                     }
-                   
+
                     html2pdf().set(opt).from(source).save().then(function (dataObject) {
                         if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                             //$(".btnSave").trigger("click");
@@ -5569,18 +5569,18 @@ Template.new_quote.onRendered(() => {
                         }
                     });
                 })
-        
+
                 return true;
 
         }
-      
+
 
 
 
     }
 
     exportSalesToPdf1= function () {
-      
+
         let margins = {
             top: 0,
             bottom: 0,
@@ -5705,7 +5705,7 @@ Template.new_quote.onRendered(() => {
             `;
             $("#html-2-pdfwrapper #tax_list_print").append(html);
         });
-        
+
         var source = document.getElementById('html-2-pdfwrapper');
         html2pdf().set(opt).from(source).save().then(function (dataObject) {
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
@@ -6300,7 +6300,7 @@ Template.new_quote.onRendered(function() {
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
-  
+
         getVS1Data("TSubTaxVS1")
           .then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -6312,10 +6312,10 @@ Template.new_quote.onRendered(function() {
                     description: data.tsubtaxcode[i].Description || "-",
                     category: data.tsubtaxcode[i].Category || "-",
                   };
-  
+
                   subTaxTableList.push(dataList);
                 }
-  
+
                 tempObj.subtaxcodes.set(subTaxTableList);
               });
             } else {
@@ -6328,10 +6328,10 @@ Template.new_quote.onRendered(function() {
                   description: useData[i].Description || "-",
                   category: useData[i].Category || "-",
                 };
-  
+
                 subTaxTableList.push(dataList);
               }
-  
+
               tempObj.subtaxcodes.set(subTaxTableList);
             }
           })
@@ -6344,10 +6344,10 @@ Template.new_quote.onRendered(function() {
                   description: data.tsubtaxcode[i].Description || "-",
                   category: data.tsubtaxcode[i].Category || "-",
                 };
-  
+
                 subTaxTableList.push(dataList);
               }
-  
+
               tempObj.subtaxcodes.set(subTaxTableList);
             });
           });
@@ -7735,180 +7735,180 @@ Template.new_quote.events({
 
          sideBarService.getTemplateNameandEmployeId("Quotes",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 GlobalRef:"Quotes",
                                 Description:$('input[name="Quotes_1"]').val(),
                                 Template:"1",
                                 Active:quotes == 1 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));   
-                      
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                });
-        
+
             }).catch(function (err) {
-        
-             
-          
+
+
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 Description:$('input[name="Quotes_1"]').val(),
                                 Template:"1",
                                 Active:quotes == 1 ? true:false,
-                            }            
+                            }
                     }
-                
+
                       sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                         sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                          addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                          
+                          addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                         });
-                     
-                
+
+
                       }).catch(function (err) {
-                
-                      
-                  
-                      });  
-    
+
+
+
+                      });
+
           });
-    
-    
+
+
           sideBarService.getTemplateNameandEmployeId("Quotes",emid,2).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 GlobalRef:"Quotes",
                                 Description:$('input[name="Quotes_2"]').val(),
                                 Template:"2",
                                 Active:quotes == 2 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                     
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-              
-        
+
+
             }).catch(function (err) {
-        
-             
-          
+
+
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                   EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                   SettingName:"Quotes",
                                   Description:$('input[name="Quotes_2"]').val(),
                                   Template:"2",
                                   Active:quotes == 2 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data));    
-                              
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                        
-                
+
+
                     }).catch(function (err) {
-                
-                        
-                  
-                    });  
-    
+
+
+
+                    });
+
           });
-    
-    
+
+
           sideBarService.getTemplateNameandEmployeId("Quotes",emid,3).then(function (data) {
             templateid = data.ttemplatesettings;
-            var id = templateid[0].fields.ID;    
+            var id = templateid[0].fields.ID;
             objDetails =  {
             type:"TTemplateSettings",
-            fields:{        
-                                ID:parseInt(id),                      
+            fields:{
+                                ID:parseInt(id),
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 GlobalRef:"Quotes",
                                 Description:$('input[name="Quotes_3"]').val(),
                                 Template:"3",
                                 Active:quotes == 3 ? true:false,
-                    }            
+                    }
             }
-        
+
             sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-        
+
               sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TTemplateSettings', JSON.stringify(data));  
-                  
+                addVS1Data('TTemplateSettings', JSON.stringify(data));
+
               });
-              
-        
+
+
             }).catch(function (err) {
-        
-              
-          
+
+
+
             });
-        
+
           }).catch(function (err) {
-                    
+
                     objDetails =  {
                     type:"TTemplateSettings",
-                    fields:{                                                                  
+                    fields:{
                                 EmployeeID:Session.get('mySessionEmployeeLoggedID'),
                                 SettingName:"Quotes",
                                 Description:$('input[name="Quotes_3"]').val(),
                                 Template:"3",
                                 Active:quotes == 3 ? true:false,
-                            }            
+                            }
                     }
-                
+
                     sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-                
+
                       sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-                        addVS1Data('TTemplateSettings', JSON.stringify(data)); 
-                              
+                        addVS1Data('TTemplateSettings', JSON.stringify(data));
+
                       });
-                        
-                
+
+
                     }).catch(function (err) {
-                
-                        
-                  
-                    });  
-    
+
+
+
+                    });
+
           });
 
 
@@ -9113,7 +9113,7 @@ Template.new_quote.events({
                                         Meteor.call('sendNormalEmail', reportData);
                                 }
                             }
-                        });  
+                        });
                       if(FlowRouter.current().queryParams.trans){
                         FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
                       }else{

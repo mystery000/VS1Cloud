@@ -236,7 +236,7 @@
                     {{else}} -->
                     <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
                         <a class="nav-link" href="setup" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
-                            <i class="fas fa-link" style="margin-right: 5px;"></i> Setup
+                            <i class="fas fa-link" style="margin-right: 5px;"></i> Setup Wizard
                         </a>
                     </li>
                 <!-- {{/if}} -->
@@ -260,9 +260,9 @@
                         <a class="nav-link pointer" data-toggle="modal" data-target="#supportModal" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">Get <img class="img-support" src="images/phone-support.png" style="width: 25px!important;padding: 2px;"> Support</a>
                     </li>
 
-                    <div class="modal fade" role="dialog" tabindex="-1" id="supportModal">
+                    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="supportModal"> -->
                         {{> supportmodalpop}}
-                    </div>
+                    <!-- </div> -->
                 {{/if}}
 
                 <div class="d-none d-sm-block topbar-divider"></div>
@@ -824,5 +824,7 @@
         </div>
     </div>
 
-
+    <script>
+        modalDraggable();
+    </script>
 </template>

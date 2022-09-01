@@ -57,7 +57,6 @@ Meteor.methods({
         attachments: details.attachments
       });
     } catch(e) {
-      console.log(e);
         if (e) {
             throw new Meteor.Error("error", e.response);
         }

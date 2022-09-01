@@ -967,7 +967,7 @@ Template.paymentcard.onRendered(() => {
                   tbl_header.append("<th style='background:white;width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
             }
           }
-  
+
           // table content
            var tbl_content = $("#templatePreviewModal .tbl_content")
            tbl_content.empty()
@@ -975,7 +975,7 @@ Template.paymentcard.onRendered(() => {
            var length = data.length;
            var i = 0;
            for(item of data){
-                
+
             var html = '';
             if(i == length-1)
             {
@@ -985,7 +985,7 @@ Template.paymentcard.onRendered(() => {
             {
                 html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             }
-           
+
             var count = 0;
             for(item_temp of item){
 
@@ -996,14 +996,14 @@ Template.paymentcard.onRendered(() => {
                {
                    html = html + "<td>" + item_temp + "</td>";
                }
-              
+
 
                count++;
             }
            html +="</tr>";
            tbl_content.append(html);
            i++;
-          
+
         }
 
             // total amount
@@ -1255,7 +1255,7 @@ Template.paymentcard.onRendered(() => {
                 tbl_header.empty()
                 var count = 0;
                 for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
-                    
+
                         if(count > 2)
                         {
                             tbl_header.append("<th class='text-nowrap text-right' style='text-algin:right;background:white;color:rgb(0,0,0);width:" + value + "%'; >" + key + "</th>")
@@ -1265,10 +1265,10 @@ Template.paymentcard.onRendered(() => {
                             tbl_header.append("<th  class='text-nowrap' style='background:white;color:rgb(0,0,0);width:" + value + "%'; >" + key + "</th>")
                         }
                         count++;
-                    
+
                 }
               }
-    
+
             // table content
            var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
            tbl_content.empty()
@@ -1276,7 +1276,7 @@ Template.paymentcard.onRendered(() => {
            var length = data.length;
            var i = 0;
            for(item of data){
-                
+
             var html = '';
             if(i == length-1)
             {
@@ -1286,10 +1286,10 @@ Template.paymentcard.onRendered(() => {
             {
                 html += "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>";
             }
-           
+
             var count = 0;
             for(item_temp of item){
-              
+
                if(count < 3){
                    if(count == 1)
                    {
@@ -1300,20 +1300,20 @@ Template.paymentcard.onRendered(() => {
                         html = html + "<td class='text-nowrap' >" + item_temp + "</td>";
 
                    }
-                  
+
                }
                else
                {
                    html = html + "<td class='text-right text-nowrap' >" + item_temp + "</td>";
                }
-              
+
 
                count++;
             }
            html +="</tr>";
            tbl_content.append(html);
            i++;
-          
+
         }
 
             // total amount
@@ -1380,7 +1380,7 @@ Template.paymentcard.onRendered(() => {
                 if (FlowRouter.current().queryParams.id) {
 
                 }else{
-                $(".heading").html("New Customer Payment " +''+'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
+                $(".heading").html("New Customer Payment " +''+'<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
                 };
             }, 50);
         }).catch(function(err) {
@@ -4660,30 +4660,30 @@ Template.paymentcard.onRendered(() => {
             if(template_title == 'Customer Payments')
             {
                   await showCustomerPayment(template_title,number);
-    
+
             }
-    
+
             let margins = {
                 top: 0,
                 bottom: 0,
                 left: 0,
                 width: 100
             };
-    
+
             let invoice_data_info = templateObject.record.get()
             document.getElementById('html-2-pdfwrapper_new').style.display="block";
             var source = document.getElementById('html-2-pdfwrapper_new');
-    
+
             let file = "Customer_Payments.pdf";
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 if(template_title == 'Customer Payments')
                 {
                     file = 'Customer Payments-' + invoice_data_info.lid + '.pdf';
                 }
-    
-    
+
+
             }
-    
+
             var opt = {
                 margin: 0,
                 filename: file,
@@ -4700,15 +4700,15 @@ Template.paymentcard.onRendered(() => {
                     orientation: 'portrait'
                 }
             };
-    
-    
+
+
             html2pdf().set(opt).from(source).toPdf().output('datauristring').then(data => {
-    
+
                 let attachment = [];
-    
+
                 let paymentId = FlowRouter.current().queryParams.id? FlowRouter.current().queryParams.id : '';
                 let pdfObject = "";
-    
+
                 let base64data = data.split(',')[1];
                 pdfObject = {
                     filename: 'Customer Payment-' + paymentId + '.pdf',
@@ -4716,7 +4716,7 @@ Template.paymentcard.onRendered(() => {
                     encoding: 'base64'
                 };
                 attachment.push(pdfObject);
-    
+
                 let values = [];
                 let basedOnTypeStorages = Object.keys(localStorage);
                 basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -4730,11 +4730,11 @@ Template.paymentcard.onRendered(() => {
                         values.push(localStorage.getItem(basedOnTypeStorages[j]));
                     }
                 }
-    
+
                 values.forEach(value => {
                     let reportData = JSON.parse(value);
                     let temp = {... reportData};
-    
+
                     temp.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                     temp.attachments = attachment;
@@ -4751,7 +4751,7 @@ Template.paymentcard.onRendered(() => {
                         }
                     }
                 });
-    
+
                 html2pdf().set(opt).from(source).save().then(function (dataObject) {
                     if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
                         //$(".btnSave").trigger("click");
@@ -4763,11 +4763,11 @@ Template.paymentcard.onRendered(() => {
                         $('.fullScreenSpin').css('display', 'none');
                     }
                 });
-    
-    
+
+
                 return true;
             })
-           
+
 
         }
 

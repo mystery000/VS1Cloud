@@ -12,6 +12,11 @@ $(document).ready(function(){
     $(this).select();
   });
 
+  $(document).on('click', '.close', function () {
+    var vid = document.getElementById("myVideo");
+    vid.pause();
+  });
+
   // $(document).on('click', '.highlightSelect', function () {
   //   $(this).select();
   // });
