@@ -151,7 +151,77 @@
                     <img class="imageUpload img-fluid mb-3 mt-4" id="uploadedImage" src="assets/img/VS1.png">
                 </div>
                 <div class="col-12 col-md-5">
-                    <div class="row no-gutters justify-content-end" style="position:absolute; bottom:0; right:0">
+                    <div class="row no-gutters justify-content-end">
+                        <div class="form-group" style="margin: 8px;">
+                            <label>From</label>
+                            <div class="input-group date" style="width: 145px;">
+                                <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom" value="{{ formatDate reportOptions.fromDate }}">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin: 8px;">
+                            <label>To</label>
+                            <div class="input-group date" style="width: 145px;">
+                                <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo" value="{{ formatDate reportOptions.toDate }}">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <style>
+                            .selectedDateRangeBtnMod {
+                                border-top-left-radius: 0px !important;
+                                border-bottom-left-radius: 0px !important;
+                            }
+                        </style>
+                        
+                    </div>
+                    <div class="row no-gutters justify-content-end" style="">
+                        <div class="form-group" style="margin: 8px; display: inline-flex;">
+                            <input type="text" class="form-control" id="selectedDateRange" aria-describedby="basic-addon2" style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;" readonly>
+                            <div class="input-group-append">
+                                <button style="z-index: 1;" type=" button" class="btn btn-link dropdown-toggle" id="btnSltDateRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-calendar-alt"></i></button>
+                                <style>
+                                    .dropdown-toggle::after {
+                                        display: none;
+                                    }
+                                </style>
+                                <div class="dropdown-menu" id="dropdownDateRang" style="width: 350px;">
+                                    <a class="dropdown-item mnuDateRng" href="#" id="thisMonth">This month
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrMonth"></div>
+                                    </a>
+                                    <a class="dropdown-item mnuDateRng" href="#" id="thisQuarter">This quarter
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrQuarter">
+                                        </div>
+                                    </a>
+                                    <a class="dropdown-item mnuDateRng" href="#" id="thisFinYear">This financial year
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrFiscYear"></div>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item mnuDateRng" href="#" id="lastMonth">Last month
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispPrevMonth"></div>
+                                    </a>
+                                    <a class="dropdown-item mnuDateRng" href="#" id="lastQuarter">Last quarter
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispLastQuarter"></div>
+                                    </a>
+                                    <a class="dropdown-item mnuDateRng" href="#" id="lastFinYear">Last financial year
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispPrevFiscYear"></div>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item mnuDateRng" href="#" id="monthToDate">Month to date
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="monthStartDisp"></div>
+                                    </a>
+                                    <a class="dropdown-item mnuDateRng" href="#" id="quarterToDate">Quarter to date
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="quarterToDateDisp"></div>
+                                    </a>
+                                    <a class="dropdown-item mnuDateRng" href="#" id="finYearToDate">Year to date
+                                        <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrFiscYearToDate"></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
                         <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                     </div>
@@ -162,7 +232,7 @@
                     <div class="col">
                         <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Reports Accountant Sheet</p>
                         <p class="text-center" style="margin-bottom: 0px;">{{companyname}}</p>
-                        <p class="text-center dateAdOf" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
+                        <p class="text-center dateAdOf" style="margin-bottom: 8px;">{{fiscalYearEnding}}</p>
                     </div>
                 </div>
                 <nav aria-label="Page navigation example">
@@ -244,13 +314,13 @@
                                     <div class="col">
                                         <h3><b>Compilation Report</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>For the year ended {{endDate}}</b></h6>
+                                        <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col" id="page-3-content">
                                         <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
-                                        <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{endDate}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1. </span>
+                                        <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1. </span>
                                         <span style="float:left; padding-bottom:10px"><b>The Responsibility of the Partners</b></span>
                                         <span style="float:left; padding-bottom:12px">The partners of {{companyname}} are solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
                                         <span style="float:left; padding-bottom:10px"><b>Our Responsibility</b></span>
@@ -266,7 +336,7 @@
                                         <span style="float:left; padding-bottom:8px">Ashley Summerville, CPA</span>
                                         <span style="float:left; padding-bottom:8px"><b>OnPoint Advisory</b></span>
                                         <span style="float:left; padding-bottom:20px">PO Box 5190<br/>Q SUPER CENTRE QLD 4218</span>
-                                        <span style="float:left;">Dated: 31 August 2021</span>
+                                        <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
                                     </div>
                                 </div>
                                 <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
@@ -290,14 +360,14 @@
                                     <div class="col">
                                         <h3><b>Partner Declaration</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>For the year ended {{endDate}}</b></h6>
+                                        <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col" id="page-4-content">
                                         <span style="float:left; padding-bottom:12px">The partners declare that the partnership is not a reporting entity and that these special purpose financial statements should be prepared in accordance with the accounting policies outlined in Note 1 to the financial statements.</span>
                                         <span style="float:left; padding-bottom:12px">The director of the company declares that:</span>
-                                        <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes, present fairly the company’s financial position as at {{endDate}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 to the financial statements; and</span>
+                                        <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes, present fairly the company’s financial position as at {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 to the financial statements; and</span>
                                         <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the partners’ opinion there are reasonable grounds to believe that the partnership will be able to pay its debts as and when they become due and payable.</span>
                                         <div style="float:left; margin-top:40px;">
                                             <span style="float:left; padding-bottom:10px">Partner: </span>
@@ -309,7 +379,7 @@
                                             <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
                                         </div>
                                         <span style="float:left; padding-left:65px; padding-bottom:30px; width:100%">Partner 2</span>
-                                        <span style="float:left;">Dated: {{currentDate}}</span>
+                                        <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
                                     </div>
                                 </div>
                                 <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
@@ -328,7 +398,7 @@
                                     <div class="col">
                                         <h3><b>Income Statement</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>For the year ended {{endDate}}</b></h6>
+                                        <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -337,7 +407,7 @@
                                             <div style='width: 100%; padding:0'>
                                                 <div style='width:calc(100% - 200px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
                                                 <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
-                                                <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>Total</b></div>
                                             </div>
                                         </div>
                                         <div style="margin-top:10px; float:left; width:100%">
@@ -392,7 +462,7 @@
                                     <div class="col">
                                         <h3><b>Balance Sheet - Summarised</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>As at {{endDate}}</b></h6>
+                                        <h6><b>As at {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -401,7 +471,7 @@
                                             <div style='width: 100%; padding:0'>
                                                 <div style='width:calc(100% - 200px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
                                                 <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
-                                                <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
+                                                <div style='float:left; padding-top:4px; width:100px'><b>Total</b></div>
                                             </div>
                                         </div>
                                         <div style="margin-top:10px; float:left; width:100%">
@@ -468,7 +538,7 @@
                                     <div class="col">
                                         <h3><b>Partner Accounts</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>For the year ended {{endDate}}</b></h6>
+                                        <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -599,7 +669,7 @@
                                     <div class="col">
                                         <h3><b>Notes to the Financial Statements</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>For the year ended {{endDate}}</b></h6>
+                                        <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -608,7 +678,7 @@
                                         <span style="float:left; padding-bottom:8px">The partnership has prepared the financial statements on the basis that it is a non-reporting entity because there are no users dependent on general purpose financial statements. These financial statements are therefore special purpose financial statements that have been prepared in order to meet the needs of the partners and their bank.</span>
                                         <span style="float:left; padding-bottom:8px">The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the partners have determined are appropriate to meet both their and their banks needs. Such accounting policies are consistent with the previous period unless stated otherwise.</span>
                                         <span style="float:left; padding-bottom:8px">The financial statements have been prepared on an accruals basis and are based on historical costs unless stated otherwise in the notes</span>
-                                        <span style="float:left; padding-bottom:12px">The financial statements were authorised for issue on {{currentDate}} by the partners.</span>
+                                        <span style="float:left; padding-bottom:12px">The financial statements were authorised for issue on {{fiscalYearEnding}} by the partners.</span>
                                         <span style="float:left; padding-bottom:8px; clear:both"><b>Income Tax</b></span>
                                         <span style="float:left; padding-bottom:12px">The partnership is not directly subject to income tax as its taxable income is recognised in the income tax returns of the
                                             individual partners. Therefore, no provision for income taxes has been made in these financial statements.</span>
@@ -670,9 +740,9 @@
                                     <div class="col" style="margin-bottom:20px" id="page-9-content">
                                         <span style="float:left; padding-bottom:8px"><b>Trade and Other Payables</b></span>
                                         <span style="float:left; padding-bottom:12px; letter-spacing: -0.2px;">Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at 
-                                            {{endDate}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
+                                            {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Employee Benefits</b></span>
-                                        <span style="float:left; padding-bottom:12px">Provision is made for the liability for employee entitlements arising from services rendered by employees to {{endDate}}.
+                                        <span style="float:left; padding-bottom:12px">Provision is made for the liability for employee entitlements arising from services rendered by employees to {{fiscalYearEnding}}.
                                             Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.</span>
                                         <span style="float:left; padding-bottom:8px"><b>Provisions</b></span>
                                         <span style="float:left; padding-bottom:12px">Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
@@ -847,7 +917,7 @@
                                     <div class="col">
                                         <h3><b>Depreciation Schedule</b></h3>
                                         <h6><b>{{companyname}}</b></h6>
-                                        <h6><b>For the year ended {{endDate}}</b></h6>
+                                        <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -1002,13 +1072,13 @@
                         <div class="col">
                             <h3><b>Compilation Report</b></h3>
                             <h6><b>{{companyname}}</b></h6>
-                            <h6><b>For the year ended {{endDate}}</b></h6>
+                            <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col" id="page-3-content-prt">
                             <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
-                            <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{endDate}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1. </span>
+                            <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1. </span>
                             <span style="float:left; padding-bottom:10px"><b>The Responsibility of the Partners</b></span>
                             <span style="float:left; padding-bottom:12px">The partners of {{companyname}} are solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
                             <span style="float:left; padding-bottom:10px"><b>Our Responsibility</b></span>
@@ -1024,7 +1094,7 @@
                             <span style="float:left; padding-bottom:8px">Ashley Summerville, CPA</span>
                             <span style="float:left; padding-bottom:8px"><b>OnPoint Advisory</b></span>
                             <span style="float:left; padding-bottom:20px">PO Box 5190<br/>Q SUPER CENTRE QLD 4218</span>
-                            <span style="float:left;">Dated: 31 August 2021</span>
+                            <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
                         </div>
                     </div>                    
                 </div>
@@ -1033,14 +1103,14 @@
                         <div class="col">
                             <h3><b>Partner Declaration</b></h3>
                             <h6><b>{{companyname}}</b></h6>
-                            <h6><b>For the year ended {{endDate}}</b></h6>
+                            <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col" id="page-4-content-prt">
                             <span style="float:left; padding-bottom:12px">The partners declare that the partnership is not a reporting entity and that these special purpose financial statements should be prepared in accordance with the accounting policies outlined in Note 1 to the financial statements.</span>
                             <span style="float:left; padding-bottom:12px">The director of the company declares that:</span>
-                            <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes, present fairly the company’s financial position as at {{endDate}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 to the financial statements; and</span>
+                            <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes, present fairly the company’s financial position as at {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 to the financial statements; and</span>
                             <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the partners’ opinion there are reasonable grounds to believe that the partnership will be able to pay its debts as and when they become due and payable.</span>
                             <div style="float:left; margin-top:40px;">
                                 <span style="float:left; padding-bottom:10px">Partner: </span>
@@ -1052,7 +1122,7 @@
                                 <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
                             </div>
                             <span style="float:left; padding-left:65px; padding-bottom:30px; width:100%">Partner 2</span>
-                            <span style="float:left;">Dated: {{currentDate}}</span>
+                            <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
                         </div>
                     </div>
                 </div>
@@ -1061,7 +1131,7 @@
                         <div class="col">
                             <h3><b>Income Statement</b></h3>
                             <h6><b>{{companyname}}</b></h6>
-                            <h6><b>For the year ended {{endDate}}</b></h6>
+                            <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                         </div>
                     </div>
                     <div class="row">
@@ -1070,7 +1140,7 @@
                                 <div style='width: 100%; padding:0'>
                                     <div style='width:calc(100% - 200px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
                                     <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
-                                    <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>Total</b></div>
                                 </div>
                             </div>
                             <div style="margin-top:10px; float:left; width:100%">
@@ -1112,7 +1182,7 @@
                         <div class="col">
                             <h3><b>Balance Sheet - Summarised</b></h3>
                             <h6><b>{{companyname}}</b></h6>
-                            <h6><b>As at {{endDate}}</b></h6>
+                            <h6><b>As at {{fiscalYearEnding}}</b></h6>
                         </div>
                     </div>
                     <div class="row">
@@ -1121,7 +1191,7 @@
                                 <div style='width: 100%; padding:0'>
                                     <div style='width:calc(100% - 200px); float:left; padding-top:4px; padding-right:30px; text-align:right'></div>
                                     <div style='float:left; padding-top:4px; width:100px'><b>NOTES</b></div>
-                                    <div style='float:left; padding-top:4px; width:100px'><b>{{currentYear}}</b></div>
+                                    <div style='float:left; padding-top:4px; width:100px'><b>Total</b></div>
                                 </div>
                             </div>
                             <div style="margin-top:10px; float:left; width:100%">
@@ -1175,7 +1245,7 @@
                         <div class="col">
                             <h3><b>Partner Accounts</b></h3>
                             <h6><b>{{companyname}}</b></h6>
-                            <h6><b>For the year ended {{endDate}}</b></h6>
+                            <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                         </div>
                     </div>
                     <div class="row">
@@ -1204,7 +1274,7 @@
                         <div class="col">
                             <h3><b>Notes to the Financial Statements</b></h3>
                             <h6><b>{{companyname}}</b></h6>
-                            <h6><b>For the year ended {{endDate}}</b></h6>
+                            <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                         </div>
                     </div>
                     <div class="row">
@@ -1213,7 +1283,7 @@
                             <span style="float:left; padding-bottom:8px">The partnership has prepared the financial statements on the basis that it is a non-reporting entity because there are no users dependent on general purpose financial statements. These financial statements are therefore special purpose financial statements that have been prepared in order to meet the needs of the partners and their bank.</span>
                             <span style="float:left; padding-bottom:8px">The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the partners have determined are appropriate to meet both their and their banks needs. Such accounting policies are consistent with the previous period unless stated otherwise.</span>
                             <span style="float:left; padding-bottom:8px">The financial statements have been prepared on an accruals basis and are based on historical costs unless stated otherwise in the notes</span>
-                            <span style="float:left; padding-bottom:12px">The financial statements were authorised for issue on {{currentDate}} by the partners.</span>
+                            <span style="float:left; padding-bottom:12px">The financial statements were authorised for issue on {{fiscalYearEnding}} by the partners.</span>
                             <span style="float:left; padding-bottom:8px; clear:both"><b>Income Tax</b></span>
                             <span style="float:left; padding-bottom:12px">The partnership is not directly subject to income tax as its taxable income is recognised in the income tax returns of the
                                 individual partners. Therefore, no provision for income taxes has been made in these financial statements.</span>
@@ -1246,9 +1316,9 @@
                                 through an equity reserve.</span>
                             <span style="float:left; padding-bottom:8px"><b>Trade and Other Payables</b></span>
                             <span style="float:left; padding-bottom:12px; letter-spacing: -0.2px;">Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at 
-                                {{endDate}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
+                                {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
                             <span style="float:left; padding-bottom:8px"><b>Employee Benefits</b></span>
-                            <span style="float:left; padding-bottom:12px">Provision is made for the liability for employee entitlements arising from services rendered by employees to {{endDate}}.
+                            <span style="float:left; padding-bottom:12px">Provision is made for the liability for employee entitlements arising from services rendered by employees to {{fiscalYearEnding}}.
                                 Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.</span>
                             <span style="float:left; padding-bottom:8px"><b>Provisions</b></span>
                             <span style="float:left; padding-bottom:12px">Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
@@ -1315,7 +1385,7 @@
                         <div class="col">
                             <h3><b>Depreciation Schedule</b></h3>
                             <h6><b>{{companyname}}</b></h6>
-                            <h6><b>For the year ended {{endDate}}</b></h6>
+                            <h6><b>For the year ended {{fiscalYearEnding}}</b></h6>
                         </div>
                     </div>
                     <div class="row">
