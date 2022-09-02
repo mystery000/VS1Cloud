@@ -57,11 +57,9 @@ Template.accountant_financialstatement.onRendered(() => {
     let categories = [];
     let categoryAccountList = [];
 
-    setTimeout(function() {
-        tinymce.init({
-            selector: 'textarea#editor',
-        });
-    }, 500);
+    tinymce.init({
+        selector: 'textarea#editor',
+    });
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: "button",

@@ -51,11 +51,9 @@ Template.accountant_company.onCreated(() => {
 
 Template.accountant_company.onRendered(() => {
 
-    setTimeout(function() {
-        tinymce.init({
-            selector: 'textarea#editor',
-        });
-    }, 500);
+    tinymce.init({
+        selector: 'textarea#editor',
+    });
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: "button",
@@ -193,10 +191,6 @@ Template.accountant_company.onRendered(() => {
     const dataTableList = [];
     let categories = [];
     let categoryAccountList = [];
-
-    // tinymce.init({
-    //     selector: 'textarea#editor',
-    // });
 
     templateObject.getReceiptCategoryList = function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
@@ -1488,11 +1482,6 @@ Template.accountant_company.onRendered(() => {
     getLoadDate = getLoadDate[2] + "-" + getLoadDate[1] + "-" + getLoadDate[0];
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);
     templateObject.getBalanceSheetReports(getLoadDate);
-});
-
-Template.accountant_company.onDestroyed(() => {
-    tinymce.EditorManager.execCommand('mceRemoveControl', true, 'editor');
-    tinymce.EditorManager.execCommand('mceAddControl', true, 'editor');
 });
 
 Template.accountant_company.events({
