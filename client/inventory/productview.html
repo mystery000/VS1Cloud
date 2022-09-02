@@ -1028,15 +1028,10 @@
                     <style>
                         .productRow {
                             margin-bottom: 0.5rem;
-                            gap: 1%;
-                            font-size: 13px;
+                            gap: 0.5%;
                         }
 
-                        .productRow input, .productRow select {
-                            /* padding-top: 2px; 
-                            padding-bottom: 2px; */
-                            font-size: 13px;
-                        }
+                     
 
                         .productRow .colProduct{
                             width: 40%;
@@ -1048,7 +1043,11 @@
                             width: 19%;
                             text-align: left;
                         }
-                        .productRow .colQty, .productRow .colDelete {
+                        .productRow .colQty {
+                            width: 4.5%;
+                            text-align: left;
+                        }
+                         .productRow .colDelete {
                             width: 4%;
                             text-align: left;
                         }
@@ -1059,7 +1058,7 @@
                         }
 
                         .productRow .colAttachment {
-                            flex: 15%;
+                            flex: 18%;
                             text-align: left;
                         }
 
@@ -1067,14 +1066,7 @@
                             margin-bottom: 0;
                         }
 
-                        .form-group .btn {
-                            font-size: 13px;
-                        }
-                        
-
-                        /* .edtProductName, .edtQuantity, .edtProcess, .edtProcessNote {
-                            border: 2px solid black;
-                        } */
+                     
 
                     </style>
                     <div class="d-flex productRow">
@@ -1101,10 +1093,9 @@
                             </div>
                             <div class="colAttachment">
                                
-                                <a class="btn btn-primary btnAddAttachment" role="button" style="font-size: 13px" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
+                                <a class="btn btn-primary btnAddAttachment" role="button"  data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
                                     {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments</a>
                                 <div class="attachedFiles d-none"></div>
-                                <!-- <button class="btn btnAddAttachment btn-primary" style="font-size: 13px"><i class="fa fa-paperclip" style="padding-right: 5px;"></i>Add Attachments</button> -->
                             </div>
                             <div class="colDelete"></div>
                         </div>
