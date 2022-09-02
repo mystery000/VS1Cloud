@@ -2413,7 +2413,6 @@ Template.accountant_company.events({
     //     var selDate = new Date($("#sltYear").val(), (parseInt(templateObject.endMonth.get())), 0);
     //     templateObject.endDate.set(selDate.getDate() + " " + months[parseInt(templateObject.endMonth.get()) - 1] + " " + $("#sltYear").val());
     //     var getLoadDate = moment(selDate).format("YYYY-MM-DD");
-    //     console.log("getLoadDate", getLoadDate);
     //     templateObject.getBalanceSheetReports(getLoadDate);
     // },
 });
