@@ -1623,6 +1623,24 @@ authenticatedRoutes.route('/newbankrecon', {
     }
 });
 
+authenticatedRoutes.route('/newbankrule', {
+    name: 'newbankrule',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'newbankrule'
+        });
+    }
+});
+
+authenticatedRoutes.route('/bankrulelist', {
+    name: 'bankrulelist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'bankrulelist'
+        });
+    }
+});
+
 authenticatedRoutes.route('/depositcard', {
     name: 'depositcard',
     action() {

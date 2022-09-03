@@ -2902,6 +2902,14 @@ export class SideBarService extends BaseService {
     };
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }
+  getAllBankRuleList() {
+    let options = {
+      IgnoreDates: true,
+      OrderBy: "ID desc",
+      Search: "Active != false",
+    };
+    return this.getList(this.ERPObjects.TBankRuleList, options);
+  }
 
   getProductStocknSaleReportData(dateFrom, dateTo) {
     let options = {
