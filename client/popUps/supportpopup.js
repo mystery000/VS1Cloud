@@ -345,3 +345,14 @@ Template.supportmodalpop.events({
 });
 
 Template.supportmodalpop.helpers({});
+
+Template.supportmodalpop.events({
+    // 'click .btnViewHelpVideo': async function (event) {
+    //     $('#supportModal').modal('toggle');
+    //     $('.modal-backdrop').css('display', 'none');
+    //     // setTimeout(function() {
+    //     //
+    //     // }, 1000);
+    // }
+
+});

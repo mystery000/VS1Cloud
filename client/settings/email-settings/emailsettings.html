@@ -1,8 +1,14 @@
 <template name="emailsettings">
-    <div class="container-fluid">
+    <div class="container-fluid email-settings">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
+
+        <style>
+            .email-settings .table th, .email-settings .table td {
+                text-align: left;
+            }
+        </style>
         <h3 class="text-dark mb-4">Email Settings
             <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
             <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i
@@ -122,6 +128,10 @@
                                                 th.colHistory {
                                                     width: 15% !important;
                                                 }
+
+                                                /* .print-wrapper .table tr th, .print-wrapper .table tr td {
+                                                    min-width: 0px;
+                                                }  */
             
                                                 @media screen and (min-width: 1600px) {
                                                     .emailsetting-card-wrapper {
@@ -334,6 +344,10 @@
                                                 #tblAutomatedEmails th.colHistory {
                                                     width: 15% !important;
                                                 }
+                                                
+                                                /* .print-wrapper .table tr th, .print-wrapper .table tr td {
+                                                    min-width: 0px;
+                                                }  */
                                             </style>
                                             <table id="tblAutomatedEmails" style="width:100%"
                                                 class="dataTable table table-hover table-striped table-bordered tblPayRollRulesList">

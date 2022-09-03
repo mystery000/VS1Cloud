@@ -632,7 +632,7 @@ export class SideBarService extends BaseService {
           IgnoreDates: true,
           IsDetailReport: true,
           OrderBy: "PaymentDate desc",
-          Search: "Deleted != true",
+          // Search: "Deleted != true",
           LimitCount: '"' + limitcount + '"',
           LimitFrom: '"' + limitfrom + '"',
         };
