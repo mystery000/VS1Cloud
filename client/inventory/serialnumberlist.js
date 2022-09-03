@@ -61,7 +61,6 @@ Template.serialnumberlist.onRendered(function() {
     }
     templateObject.getAllSerialNumberData = function() {
         getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
-            console.log(dataObject);
             if (dataObject.length === 0) {
                 sideBarService.getAllSerialNumber().then(function(data) {
                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));

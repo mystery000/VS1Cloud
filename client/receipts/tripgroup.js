@@ -14,8 +14,6 @@ Template.tripgroup.onRendered(function() {
     let templateObject = Template.instance();
     let receiptService = new ReceiptService();
     const tripGroupList = [];
-    const dataTableList = [];
-    const tableHeaderList = [];
 
     Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tripGroupList', function(error, result){
         if(error){
@@ -35,12 +33,6 @@ Template.tripgroup.onRendered(function() {
             }
         }
     });
-
-    function MakeNegative() {
-        $('td').each(function(){
-            if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-        });
-    }
 
     templateObject.getTripGroupList = function(){
         getVS1Data('TTripGroup').then(function (dataObject) {
@@ -91,19 +83,18 @@ Template.tripgroup.onRendered(function() {
     });
 
     $('#tripGroupList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
-        let listData = $(this).closest('tr').attr('id');
-        if(listData){
+        let ID = $(this).closest('tr').attr('id');
+        if (ID) {
             $('#add-tripgroup-title').text('Edit Trip-Group');
-            if (listData !== '') {
-                listData = Number(listData);
-                const tripGroupID = listData || '';
+            if (ID !== '') {
+                ID = Number(ID);
+                const tripGroupID = ID || '';
                 const tripGroupName = $(event.target).closest("tr").find(".colName").text() || '';
                 const tripGroupDesc = $(event.target).closest("tr").find(".colDescription").text() || '';
                 $('#edtTripGroupID').val(tripGroupID);
                 $('#edtTripGroupName').val(tripGroupName);
                 $('#edtTripGroupDesc').val(tripGroupDesc);
-                $(this).closest('tr').attr('data-target', '#myModal');
-                $(this).closest('tr').attr('data-toggle', 'modal');
+                $('#tripGroupModal').modal('toggle');
             }
         }
     });

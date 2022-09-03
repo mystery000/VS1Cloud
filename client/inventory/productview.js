@@ -4733,9 +4733,8 @@ Template.productview.events({
                     $(colProcess).find('.edtProcessName').val(subStructure.process)
                     $(colNote).append("<input class='w-100 form-control edtProcessNote' disabled type='text'/>");
                     let pName = $(edtRaw).val()
-                    $(colAttachment).append("<a class='btn btn-primary btnAddAttachment' role='button' style='font-size: 13px' data-toggle='modal' href='#myModalAttachment-"+pName.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'>"+
+                    $(colAttachment).append("<a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+pName.replace(/[|&;$%@"<>()+," "]/g, '')+"' id='btn_Attachment' name='btn_Attachment'>"+
                     "<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div>")
-                    // $(colAttachment).append(" <button class='btn btn-primary btnAddAttachment' style='font-size: 13px'><i class='fa fa-paperclip' style='padding-right: 5px; '></i>Add Attachments</button>")
 
                     for (let i = 0; i < subStructure.mats.length; i++) {
                         parent.append("<div class='d-flex productRow'>" +
@@ -4756,7 +4755,7 @@ Template.productview.events({
                     }
                     grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
                         "<div class='colProduct d-flex form-group'>" +
-                        "<button class='btn btn-primary btnAddProduct' style='width: 29%; font-size: 13px'>Product+</button>" +
+                        "<button class='btn btn-primary btnAddProduct' style='width: 29%;'>Product+</button>" +
                         "<input class='edtProductName form-control edtRaw' id='edtRaw' type='search'  style='width: 30%'/>" +
                         "</div>" +
                         "<div class='colQty form-group'>" +

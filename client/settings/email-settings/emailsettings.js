@@ -954,6 +954,14 @@ Template.emailsettings.onRendered(function () {
                                             targetElement[i].style.fontSize = "13.33px";
                                             targetElement[i].style.color = "#000000";
                                             targetElement[i].style.overflowX = "visible";
+                                            let targetTds = $(targetElement[i]).find('.table-responsive .table td');
+                                            let targetThs = $(targetElement[i]).find('.table-responsive .table th');
+                                            for (let i = 0; i< targetTds.length; i++) {
+                                                $(targetTds[i]).css('min-width', '0px')
+                                            }
+                                            for (let j = 0; j< targetThs.length; j++) {
+                                                $(targetThs[j]).css('min-width', '0px')
+                                            }
                                         } else {
                                         }
 

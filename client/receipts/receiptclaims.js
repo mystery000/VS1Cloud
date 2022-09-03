@@ -433,11 +433,11 @@ Template.receiptsoverview.onRendered(function() {
         }
     };
     function showEditTripGroupView(data) {
-      $('.fullScreenSpin').css('display', 'none');
+        $('.fullScreenSpin').css('display', 'none');
         $("#add-tripgroup-title").text("Edit Trip-Group");
-        $('#edtTripGroupID').val(data.Id);
-        $('#edtTripGroupName').val(data.TripName);
-        $('#edtTripGroupDesc').val(data.Description);
+        $('#edtTripGroupID').val(data.fields.Id);
+        $('#edtTripGroupName').val(data.fields.TripName);
+        $('#edtTripGroupDesc').val(data.fields.Description);
         setTimeout(function() {
             $('#addTripGroupModal').modal('show');
         }, 200);

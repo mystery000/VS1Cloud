@@ -43,6 +43,8 @@ Template.accountsoverview.onRendered(function() {
             if (dataObject.length == 0) {
                 sideBarService.getReceiptCategory().then(function(data) {
                     setReceiptCategory(data);
+                }).catch(function(err) {
+                  templateObject.getAccountLists();
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -51,11 +53,14 @@ Template.accountsoverview.onRendered(function() {
         }).catch(function(err) {
             sideBarService.getReceiptCategory().then(function(data) {
                 setReceiptCategory(data);
+            }).catch(function(err) {
+              templateObject.getAccountLists();
             });
         });
     };
 
     function setReceiptCategory(data) {
+        addVS1Data('TReceiptCategory', JSON.stringify(data));
         for (let i in data.treceiptcategory) {
             if (data.treceiptcategory.hasOwnProperty(i)) {
                 if (data.treceiptcategory[i].CategoryName != "") {
@@ -97,28 +102,6 @@ Template.accountsoverview.onRendered(function() {
         yearRange: "-90:+10",
     });
 
-    Meteor.call(
-        "readPrefMethod",
-        Session.get("mycloudLogonID"),
-        "tblAccountOverview",
-        function(error, result) {
-            if (error) {} else {
-                if (result) {
-                    for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.split(".")[1];
-                        let columnWidth = customcolumn[i].width;
-                        // let columnindex = customcolumn[i].index + 1;
-                        $("th." + columnClass + "").html(columData);
-                        $("th." + columnClass + "").css("width", "" + columnWidth + "px");
-                    }
-                }
-            }
-        }
-    );
 
     templateObject.getAllTaxCodes = function() {
         getVS1Data("TTaxcodeVS1").then(function(dataObject) {
@@ -610,7 +593,7 @@ Template.accountsoverview.onRendered(function() {
     };
 
     function setAccountListVS1(data, isField = false) {
-        //addVS1Data('TAccountVS1', JSON.stringify(data));
+        addVS1Data('TAccountVS1', JSON.stringify(data));
         let lineItems = [];
         let lineItemObj = {};
         let fullAccountTypeName = "";

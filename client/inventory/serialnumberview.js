@@ -42,10 +42,8 @@ Template.serialnumberview.onRendered(function() {
             if (dataObject.length === 0) {
                 const serialnumbers = await sideBarService.getAllSerialNumber();
                 addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
-                console.log(serialnumbers);
             } else {
                 const data = JSON.parse(dataObject[0].data);
-                console.log(data);
             }
         });
     }
@@ -53,14 +51,11 @@ Template.serialnumberview.onRendered(function() {
 
     templateObject.getAllPurchaseOrderData = function() {
         getVS1Data('TPurchaseOrderEx').then(function(dataObject) {
-            console.log(dataObject);
             if (dataObject.length === 0) {
                 purchaseService.getAllPurchaseOrderList().then(function(data) {
-                    console.log(data);
                 });
             } else {
                 const data = JSON.parse(dataObject[0].data);
-                console.log(data);
 
             }
         });
@@ -69,31 +64,25 @@ Template.serialnumberview.onRendered(function() {
 
     templateObject.getAllSalesOrderData = function() {
         getVS1Data('TSalesOrderEx').then(function(dataObject) {
-            console.log(dataObject);
             if (dataObject.length === 0) {
                 salesService.getAllSalesOrderList().then(function(data) {
-                    console.log(data);
                 });
             } else {
                 const data = JSON.parse(dataObject[0].data);
-                console.log(data);
             }
         });
     }
     templateObject.getAllSalesOrderData();
 
-    
+
     templateObject.getAllStockAdjustmentData = function() {
         getVS1Data('TStockAdjustmentEX').then(function(dataObject) {
-            console.log(dataObject);
             if (dataObject.length === 0) {
                 stockTransferService.getAllStockAdjustmentData(currentPurchaseOrder).then(function(data) {
-                    console.log(data);
                 });
             } else {
                 const data = JSON.parse(dataObject.data);
-                console.log(data);
-                
+
             }
         });
     }

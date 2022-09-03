@@ -259,7 +259,9 @@ const erpObject = {
     TTemplateSettings:"TTemplateSettings",
     TReportsAccountantsCategory:"TReportsAccountantsCategory",
     TCorrespondence:"TCorrespondence",
-    TReceiptCategory:"TReceiptCategory"
+    TReceiptCategory:"TReceiptCategory",
+    TBankRule: "TBankRule",
+    TBankRuleList: "TBankRuleList",
 
 };
 
