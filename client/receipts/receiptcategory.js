@@ -14,8 +14,6 @@ Template.receiptcategory.onRendered(function() {
     let templateObject = Template.instance();
     let receiptService = new ReceiptService();
     const receiptCategoryList = [];
-    const dataTableList = [];
-    const tableHeaderList = [];
 
     Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'receiptCategoryList', function(error, result){
         if(error){
@@ -35,12 +33,6 @@ Template.receiptcategory.onRendered(function() {
             }
         }
     });
-
-    function MakeNegative() {
-        $('td').each(function(){
-            if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-        });
-    }
 
     templateObject.getReceiptCategoryList = function(){
         getVS1Data('TReceiptCategory').then(function (dataObject) {
@@ -74,7 +66,7 @@ Template.receiptcategory.onRendered(function() {
     }
     templateObject.getReceiptCategoryList();
 
-    $(document).on('click', '.table-remove', function() {
+    $(document).on('click', '.table-remove', function(event) {
         event.stopPropagation();
         event.stopPropagation();
         const targetID = $(event.target).closest('tr').attr('id'); // table row ID
@@ -91,19 +83,18 @@ Template.receiptcategory.onRendered(function() {
     });
 
     $('#receiptCategoryList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
-        let listData = $(this).closest('tr').attr('id');
-        if(listData){
+        let ID = $(this).closest('tr').attr('id');
+        if (ID) {
             $('#add-receiptcategory-title').text('Edit Receipt Category');
-            if (listData !== '') {
-                listData = Number(listData);
-                const receiptCategoryID = listData || '';
+            if (ID !== '') {
+                ID = Number(ID);
+                const receiptCategoryID = ID || '';
                 const receiptCategoryName = $(event.target).closest("tr").find(".colName").text() || '';
                 const receiptCategoryDesc = $(event.target).closest("tr").find(".colDescription").text() || '';
                 $('#edtReceiptCategoryID').val(receiptCategoryID);
                 $('#edtReceiptCategoryName').val(receiptCategoryName);
                 $('#edtReceiptCategoryDesc').val(receiptCategoryDesc);
-                $(this).closest('tr').attr('data-target', '#myModal');
-                $(this).closest('tr').attr('data-toggle', 'modal');
+                $('#receiptCategoryModal').modal('toggle');
             }
         }
     });

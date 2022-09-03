@@ -82,20 +82,19 @@ Template.tripgroup.onRendered(function() {
         // }
     });
 
-    $('.tripgroupcard #tripGroupList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
-        let listData = $(this).closest('tr').attr('id');
-        if(listData){
+    $('#tripGroupList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
+        let ID = $(this).closest('tr').attr('id');
+        if (ID) {
             $('#add-tripgroup-title').text('Edit Trip-Group');
-            if (listData !== '') {
-                listData = Number(listData);
-                const tripGroupID = listData || '';
+            if (ID !== '') {
+                ID = Number(ID);
+                const tripGroupID = ID || '';
                 const tripGroupName = $(event.target).closest("tr").find(".colName").text() || '';
                 const tripGroupDesc = $(event.target).closest("tr").find(".colDescription").text() || '';
                 $('#edtTripGroupID').val(tripGroupID);
                 $('#edtTripGroupName').val(tripGroupName);
                 $('#edtTripGroupDesc').val(tripGroupDesc);
-                $(this).closest('tr').attr('data-target', '#tripGroupModal');
-                $(this).closest('tr').attr('data-toggle', 'modal');
+                $('#tripGroupModal').modal('toggle');
             }
         }
     });
