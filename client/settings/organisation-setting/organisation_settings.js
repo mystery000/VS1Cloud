@@ -75,7 +75,7 @@ Template.organisationsettings.onRendered(function() {
                         for (let i = 0; i < data.tcountries.length; i++) {
                             countries.push(data.tcountries[i].Country);
                         }
-                        countries = _.sortBy(countries);
+                        countries.sort((a, b) => a.localeCompare(b));
                         templateObject.countryData.set(countries);
                     });
                 } else {
@@ -84,7 +84,7 @@ Template.organisationsettings.onRendered(function() {
                     for (let i = 0; i < useData.length; i++) {
                         countries.push(useData[i].Country);
                     }
-                    countries = _.sortBy(countries);
+                    countries.sort((a, b) => a.localeCompare(b));
                     templateObject.countryData.set(countries);
                 }
             })
@@ -93,7 +93,7 @@ Template.organisationsettings.onRendered(function() {
                     for (let i = 0; i < data.tcountries.length; i++) {
                         countries.push(data.tcountries[i].Country);
                     }
-                    countries = _.sortBy(countries);
+                    countries.sort((a, b) => a.localeCompare(b));
                     templateObject.countryData.set(countries);
                 });
             });
@@ -105,7 +105,7 @@ Template.organisationsettings.onRendered(function() {
             for (let i = 0; i < data.tcomplogo.length; i++) {
                 //countries.push(data.tcomplogo[i].Country)
             }
-            countries = _.sortBy(countries);
+            countries.sort((a, b) => a.localeCompare(b));
             templateObject.countryData.set(countries);
         });
     };

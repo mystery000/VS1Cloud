@@ -249,7 +249,7 @@ Template.supplierscard.onRendered(function () {
         for (let i = 0; i < data.tcountries.length; i++) {
             countries.push(data.tcountries[i].Country)
         }
-        countries = _.sortBy(countries);
+        countries.sort((a, b) => a.localeCompare(b));
         templateObject.countryData.set(countries);
     }
     templateObject.getCountryData();
