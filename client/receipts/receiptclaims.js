@@ -100,6 +100,7 @@ Template.receiptsoverview.onRendered(function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getReceiptCategory().then(function(data) {
+                    addVS1Data('TReceiptCategory', JSON.stringify(data));
                     setReceiptCategory(data);
                 });
             } else {
@@ -108,6 +109,7 @@ Template.receiptsoverview.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getReceiptCategory().then(function(data) {
+                addVS1Data('TReceiptCategory', JSON.stringify(data));
                 setReceiptCategory(data);
             });
         });
@@ -314,6 +316,7 @@ Template.receiptsoverview.onRendered(function() {
         getVS1Data('TTripGroup').then(function(dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getTripGroup().then(function(data) {
+                    addVS1Data('TTripGroup', JSON.stringify(data));
                     setTripGroup(data);
                 });
             } else {
@@ -322,6 +325,7 @@ Template.receiptsoverview.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getTripGroup().then(function(data) {
+                addVS1Data('TTripGroup', JSON.stringify(data));
                 setTripGroup(data);
             });
         });
@@ -466,9 +470,7 @@ Template.receiptsoverview.onRendered(function() {
         } else {
             if (employeeName.replace(/\s/g, '') != '') { // edit employee
                 let editId = $('#viewReceiptModal .employees').attr('data-id');
-
                 getVS1Data('TEmployee').then(function(dataObject) {
-
                     if (dataObject.length == 0) {
                         sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(data) {
                             addVS1Data('TEmployee', JSON.stringify(data));
@@ -717,6 +719,7 @@ Template.receiptsoverview.onRendered(function() {
                     if (dataObject.length == 0) {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getCurrencies().then(function(data) {
+                            addVS1Data('TCurrency', JSON.stringify(data));
                             for (let i in data.tcurrency) {
                                 if (data.tcurrency.hasOwnProperty(i)) {
                                     if (data.tcurrency[i].fields.Code === currencyDataName) {
@@ -746,6 +749,7 @@ Template.receiptsoverview.onRendered(function() {
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'inline-block');
                     sideBarService.getCurrencies().then(function(data) {
+                        addVS1Data('TCurrency', JSON.stringify(data));
                         for (let i in data.tcurrency) {
                             if (data.tcurrency.hasOwnProperty(i)) {
                                 if (data.tcurrency[i].fields.Code === currencyDataName) {
@@ -766,7 +770,7 @@ Template.receiptsoverview.onRendered(function() {
                     $('#tblCurrencyPopList_filter .form-control-sm').focus();
                     $('#tblCurrencyPopList_filter .form-control-sm').val('');
                     $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblCurrencyPopList').DataTable();
+                    const datatable = $('#tblCurrencyPopList').DataTable();
                     datatable.draw();
                     $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
                 }, 500);
@@ -1610,16 +1614,24 @@ Template.receiptsoverview.onRendered(function() {
                                 }
                             };
                             contactService.saveSupplier(objDetails).then(function (supplier) {
-                                $('.fullScreenSpin').css('display','none');
-                                //  Meteor._reload.reload();
-                                $(parentElement + ' .merchants').val(supplier_name);
-                                $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
-                                const suppliers = templateObject.suppliers.get();
-                                suppliers.push({
-                                    supplierid: supplier.fields.ID,
-                                    suppliername: supplier_name,
-                                });
-                                templateObject.suppliers.set(suppliers);
+                                let supplierSaveID = supplier.fields.ID;
+                                if(supplierSaveID){
+                                    sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad,0).then(function(dataReload) {
+                                        addVS1Data('TSupplierVS1',JSON.stringify(dataReload));
+                                        $('.fullScreenSpin').css('display','none');
+                                        //  Meteor._reload.reload();
+                                        $(parentElement + ' .merchants').val(supplier_name);
+                                        $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
+                                        const suppliers = templateObject.suppliers.get();
+                                        suppliers.push({
+                                            supplierid: supplier.fields.ID,
+                                            suppliername: supplier_name,
+                                        });
+                                        templateObject.suppliers.set(suppliers);
+                                    }).catch(function(err) {
+                                        $('.fullScreenSpin').css('display','none');
+                                    });
+                                }
                             }).catch(function (err) {
                                 swal({
                                     title: 'Oooops...',
