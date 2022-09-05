@@ -2089,3 +2089,12 @@ authenticatedRoutes.route('/eft', {
       })
   }
 })
+
+authenticatedRoutes.route('/workordercard', {
+    name: 'new_workorder',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'new_workorder'
+        })
+    }
+})

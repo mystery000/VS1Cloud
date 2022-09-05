@@ -1,6 +1,5 @@
 import { ReactiveVar } from "meteor/reactive-var";
 
-
 Template.addNewEftModal.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.eftOptionsList = new ReactiveVar([]);

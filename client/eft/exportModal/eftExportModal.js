@@ -1,6 +1,7 @@
 import { ReactiveVar } from "meteor/reactive-var";
 // import { isNumber } from "underscore";
 import { Random } from "meteor/random";
+import {AccountService} from "../../accounts/account-service";
 
 
 Template.eftExportModal.onCreated(function () {
@@ -14,6 +15,7 @@ Template.eftExportModal.onCreated(function () {
 
 Template.eftExportModal.onRendered(function () {
   let templateObject = Template.instance();
+  let accountService = new AccountService();
 
   // tempcode
   templateObject.eftRowId.set(Random.id());
