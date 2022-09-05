@@ -154,9 +154,12 @@
                                   <input type="text" class="form-control" id="apcaNo" name="apcaNo">
                               </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-8" style="display: flex; justify-content: end;">
                                 <div class="form-group" style="margin: 4px;">
-                                  <a id="openEftOptionsModal" class="btn btn-secondary" data-toggle="modal" href="#eftOptionsModal" type="button" style="margin-top: 32px;">EFT Options</a>
+                                  <a id="openEftBankCodesModal" class="btn btn-primary" data-toggle="modal" href="#eftBankCodesModal" type="button" style="margin-top: 32px;">Bank Codes</a>
+                                </div> 
+                                <div class="form-group" style="margin: 4px; margin-left: 1.5rem;">
+                                  <a id="openEftOptionsModal" class="btn btn-primary" data-toggle="modal" href="#eftOptionsModal" type="button" style="margin-top: 32px;">EFT Options</a>
                                 </div>
                             </div>  
 
@@ -293,4 +296,5 @@
     </div>
 
     {{> eftOptionsModal}}
+    {{> eftBankCodesModal}}
 </template>

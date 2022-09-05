@@ -13,55 +13,25 @@ Template.eftOptionsModal.onRendered(function () {
     // tempcode
     let eftOptions = [
       {
-        id: 'cba',
-        label: 'CBA (Commonwealth Bank)',
+        id: 'balance',
+        label: 'Include Balance Record',
         active: false
       },
       {
-        id: 'nab',
-        label: 'NAB (National Australian Bank)',
+        id: 'net',
+        label: 'Include Net Total',
         active: false
       },
       {
-        id: 'wbc',
-        label: 'WBC (Westpac Bank)',
+        id: 'credit',
+        label: 'Include Credit Total',
         active: false
       },
       {
-        id: 'mqg',
-        label: 'MQG (Macquarie Bank)',
+        id: 'debit',
+        label: 'Include Debit Total',
         active: false
       },
-      {
-        id: 'anz',
-        label: 'ANZ (Australia and New Zealand Banking Group)',
-        active: false
-      },
-      {
-        id: 'ben',
-        label: 'BEN (Bendigo Bank)',
-        active: false
-      },
-      {
-        id: 'boq',
-        label: 'BOQ (Bank of Queensland)',
-        active: false
-      },
-      {
-        id: 'vuk',
-        label: 'VUK (Virgin Money)',
-        active: false
-      },
-      {
-        id: 'bfl',
-        label: 'BFL (BSP Financial Group)',
-        active: false
-      },
-      {
-        id: 'jdo',
-        label: 'JDO (Judo Bank)',
-        active: false
-      }
     ];
 
     templateObject.eftOptionsList.set(eftOptions)
