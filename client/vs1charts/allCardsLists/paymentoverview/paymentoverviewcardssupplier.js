@@ -77,8 +77,7 @@ Template.paymentoverviewcardssupplier.onRendered(function() {
 
     let OVERDUE_PAYABLES_AMOUNT = localStorage.getItem('VS1OverDuePayablesAmt_dash') || 0;
     let OVERDUE_PAYABLES_QUANTITY = localStorage.getItem('VS1OverDuePayablesQty_dash') || 0;
-
-    // if ((!localStorage.getItem('VS1OutstandingPayablesQty_dash')) && (!localStorage.getItem('VS1OutstandingPayablesAmt_dash'))) {
+    if ((!localStorage.getItem('VS1OutstandingPayablesQty_dash')) && (!localStorage.getItem('VS1OutstandingPayablesAmt_dash'))) {
 
     getVS1Data('TAPReport').then(function(dataObject) {
         if (dataObject.length == 0) {
@@ -213,12 +212,12 @@ Template.paymentoverviewcardssupplier.onRendered(function() {
         });
     });
 
-//   }else{
-//     $('.SuppOutstandingQTY').text(OUTSTANDING_PAYABLES_QUANTITY);
-//     $('.suppOverdueQTY').text(OVERDUE_PAYABLES_QUANTITY);
-//     $('.SuppOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(OUTSTANDING_PAYABLES_AMOUNT));
-//     $('.suppOverdueAmount').text(utilityService.modifynegativeCurrencyFormat(OVERDUE_PAYABLES_AMOUNT));
-//   }
+  }else{
+    $('.SuppOutstandingQTY').text(OUTSTANDING_PAYABLES_QUANTITY);
+    $('.suppOverdueQTY').text(OVERDUE_PAYABLES_QUANTITY);
+    $('.SuppOutstandingAmt').text(utilityService.modifynegativeCurrencyFormat(OUTSTANDING_PAYABLES_AMOUNT));
+    $('.suppOverdueAmount').text(utilityService.modifynegativeCurrencyFormat(OVERDUE_PAYABLES_AMOUNT));
+  }
 
 });
 
