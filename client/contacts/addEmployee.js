@@ -3878,10 +3878,40 @@ Template.employeescard.onRendered(function () {
                 return item;
             }
         });
-        templateObject.openingBalanceInfo.set(openingBalances);
+        await templateObject.openingBalanceInfo.set(openingBalances);
+        templateObject.setOpeningBalance();       
     };
 
     templateObject.getOpeningBalances();
+
+    templateObject.setOpeningBalance = async () => {
+        setTimeout(function () {
+            let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+            for (const item of checkOpeningBalances ) {
+                if( item.fields.Active == true ){
+                    let amount = utilityService.modifynegativeCurrencyFormat( item.fields.Amount );                   
+                    switch (item.fields.Balance) {
+                        case 0:
+                            $(`#obEarningRate${ item.fields.ID }`).val(item.fields.AType);
+                            $(`#obEarningAmount${ item.fields.ID }`).val(amount);
+                        break;
+                        case 1:
+                            $(`#obDeductionLine${ item.fields.ID }`).val(item.fields.AType);
+                            $(`#obDeductionAmount${ item.fields.ID }`).val(amount);
+                        break;
+                        case 2:
+                            $(`#obSuperannuationFund${ item.fields.ID }`).val(item.fields.AType);
+                            $(`#obSuperannuationAmount${ item.fields.ID }`).val(amount);
+                        break;
+                        case 3:
+                            $(`#obReimbursementFund${ item.fields.ID }`).val(item.fields.AType);
+                            $(`#obReimbursementAmount${ item.fields.ID }`).val(amount);
+                        break;
+                    }
+                }
+            }
+        }, 2000);
+    }
 
     templateObject.saveEmployeePaySettingsLocalDB = async function(){
         const employeePayrolApis = new EmployeePayrollApi();
@@ -7004,7 +7034,7 @@ Template.employeescard.events({
                 CalculationType: CalculationType,
                 ExpenseAccount: ControlAccount,
                 Amount: 0,
-                Percentage: 0,
+                Percentage: '0',
                 Active: true
             })
         });
@@ -8366,7 +8396,7 @@ Template.employeescard.events({
             if( FirstPayDate == "" ){
                 swal({
                     title: 'Validation Error',
-                    text: 'Please select first pay date',
+                    text: 'Please select first pay date in taxes tab',
                     type: 'error',
                     showCancelButton: false,
                 });
@@ -8375,7 +8405,7 @@ Template.employeescard.events({
             if( EdtPayPeriod == "" ){
                 swal({
                     title: 'Validation Error',
-                    text: 'Please select pay period',
+                    text: 'Please select pay period in taxes tab',
                     type: 'error',
                     showCancelButton: false,
                 });
@@ -8757,7 +8787,7 @@ Template.employeescard.events({
                                 ID: item.fields.ID,
                                 DeductionType: DeductionType,
                                 Amount: parseFloat( amount ),
-                                Percent: percentVal,
+                                Percentage: String(percentVal),
                                 Active: true,
                             },
                         });
