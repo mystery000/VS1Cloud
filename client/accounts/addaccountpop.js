@@ -28,7 +28,7 @@ Template.addaccountpop.onRendered(function () {
     //     $(this).val(item.id);
     //     $(this).text(item.name);
     // });
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let accountService = new AccountService();
     let organisationService = new OrganisationService();
@@ -177,6 +177,8 @@ Template.addaccountpop.onRendered(function () {
             templateObject.accounttyperecords.set(accountTypeList);
 
         });
+        $(".fullScreenSpin").css("display", "none");
+
     });
 
     templateObject.getAllTaxCodes = function () {
