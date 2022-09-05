@@ -49,46 +49,41 @@
             .mb-6 {
                 margin-bottom: 3rem;
             }
-            .nav-tabs {
-                border-bottom: 0 solid #dddfeb;
+            .hiddenColumn{
+                display:none;
             }
-            .sortBtn {
-                cursor: pointer;
-            }
-            .sortBtn .fa-sort {
+            .highlightInput {
+                border: 0 solid transparent !important;
+                background-color: rgba(0, 0, 0, 0) !important;
+                padding: 0 !important;
+                width: 100% !important;
+                /*text-align: right !important;*/
                 color: #858796 !important;
             }
-            .manage-account {
-                width: 550px !important;
-                /*left: unset !important;*/
-                right: 0 !important;
+
+            .highlightInput::-webkit-outer-spin-button,
+            .highlightInput::-webkit-inner-spin-button {
+                -webkit-appearance: none !important;
+                margin: 0 !important;
+            }
+
+            /* Firefox */
+            .highlightInput[type=number] {
+                -moz-appearance: textfield !important;
             }
             .manage-account ul {
                 list-style: none;
                 padding: 0;
-            }
-            .textFindMatch {
-                min-height: 80px;
-                text-align: center;
-                background-color: #f2f3f4;
             }
             .textFindMatch p {
                 line-height: 80px;
                 margin: 0;
                 text-align: center;
             }
-            .noTransaction {
-                min-height: 150px;
-                text-align: center;
-                background-color: #f2f3f4;
-            }
             .noTransaction p {
                 line-height: 150px;
                 margin: 0;
                 text-align: center;
-            }
-            .btnFindMatch {
-                min-height: 110px;
             }
             .btnFindMatch button{
                 margin-top: 32px;
@@ -109,27 +104,9 @@
                 border-right: 1px solid #ccced2;
                 border-bottom: 1px solid #ccced2;
             }
-            .dropdown-toggle::after {
-                display: none;
-            }
-            .dataTables_scroll {
-                overflow:auto;
-            }
-            .dataTables_wrapper {
-                min-height: 400px !important;
-                /*height: 400px;*/
-            }
             .tab-pane {
                 border: 1px solid;
                 border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;
-            }
-            .itemBox {
-                /*border: 1px solid red;*/
-                box-shadow: inset 0 0 3px 3px rgba(0, 10, 30, 0.25);
-                margin-top: 10px;
-                margin-bottom: 10px;
-                padding-top: 20px;
-                padding-bottom: 20px;
             }
             .ruleType {
                 padding: 6px 16px 6px 6px;
@@ -165,7 +142,7 @@
                 </div>
             </div>
         </div>
-
+        <input type="hidden" id="selectedCard" value="spent">
         <div class="row justify-content-center mb-6" id="spentRuleCard">
             <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
                 <div class="card col-lg-6 col-md-12 col-sm-12 spentBankRuleCard" id="spentBankRuleCard">
@@ -204,7 +181,7 @@
                                         <table id="tblSpentCondition" style="width:100%;" class="table table-bordered tblSpentCondition">
                                             <thead>
                                             <tr class="dnd-moved">
-                                                <th class="th colSortDate hiddenColumn">id</th>
+                                                <th class="th colID hiddenColumn">id</th>
                                                 <th>Field</th>
                                                 <th>Condition</th>
                                                 <th>Value</th>
@@ -212,31 +189,54 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {{#if spentConditionData}}
-                                                {{#each item in spentConditionData}}
-                                                    <tr class="dnd-moved">
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.id}}</td>
-                                                        <td class="colField">{{item.field}}</td>
-                                                        <td class="colCondition">{{item.condition}}</td>
-                                                        <td class="colValue">{{item.value}}</td>
-                                                        <td class="text-center">
-                                                            <span class="table-remove btnRemove">
-                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </td>
+                                                {{#if spentConditionData}}
+                                                    {{#each item in spentConditionData}}
+                                                        <tr class="dnd-moved" id="sc_{{item.id}}">
+                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                            <td class="colField">
+                                                                <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
+                                                            </td>
+                                                            <td class="colCondition">
+                                                                <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
+                                                            </td>
+                                                            <td class="colValue">
+                                                                <input class="highlightInput lineValue" type="text" value="{{item.value}}">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="table-remove btnRemove">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                {{#unless spentConditionData}}
+                                                    <tr class="dnd-moved" id="noData">
+                                                        <td colspan="5">No conditions</td>
                                                     </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                            {{#unless spentConditionData}}
-                                                <tr class="dnd-moved">
-                                                    <td colspan="5">No conditions</td>
+                                                {{/unless}}
+                                                <tr class="dnd-moved" id="sampleData" style="display:none">
+                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
+                                                    <td class="colField">
+                                                        <input class="es-input highlightSelect lineField" type="search" value="">
+                                                    </td>
+                                                    <td class="colCondition">
+                                                        <input class="es-input highlightSelect lineCondition" type="search" value="">
+                                                    </td>
+                                                    <td class="colValue">
+                                                        <input class="highlightInput lineValue" type="text" value="">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="table-remove btnRemove">
+                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                        </span>
+                                                    </td>
                                                 </tr>
-                                            {{/unless}}
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="row">
-                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLine" >Add a new condition</button>
+                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLineCondition" >Add a new condition</button>
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +250,8 @@
                             <div class="col-12">
                                 <div class="form-group"  style="padding: 0 20px;">
                                     <label style="margin-right: 20px;">Customer: </label>
-                                    <select type="search" class="form-control" id="sltContact" value="" style="display:inline-block; width: 300px;"></select>
+                                    <input type="hidden" id="sltCustomerID" value="">
+                                    <select type="search" class="form-control" id="sltCustomer" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
                                 </div>
                             </div>
                         </div>
@@ -269,7 +270,7 @@
                                         <table id="tblSpentFixedItem" style="width:100%;" class="table table-bordered tblSpentFixedItem">
                                             <thead>
                                             <tr class="dnd-moved">
-                                                <th class="th colSortDate hiddenColumn">id</th>
+                                                <th class="th colID hiddenColumn">id</th>
                                                 <th>Description</th>
                                                 <th>Account</th>
                                                 <th>Tax Rate</th>
@@ -278,36 +279,64 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {{#if spentFixedItemData}}
-                                                {{#each item in spentFixedItemData}}
-                                                    <tr class="dnd-moved">
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.id}}</td>
-                                                        <td class="colDesc">{{item.description}}</td>
-                                                        <td class="colAccount">{{item.accountName}}</td>
-                                                        <td class="colTaxCode">{{item.taxCode}}</td>
-                                                        <td class="colAmount">{{item.amount}}</td>
-                                                        <td class="text-center">
-                                                            <span class="table-remove btnRemove">
-                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </td>
+                                                {{#if spentFixedItemData}}
+                                                    {{#each item in spentFixedItemData}}
+                                                        <tr class="dnd-moved" id="sf_{{item.id}}">
+                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                            <td class="colDesc">
+                                                                <input class="highlightInput lineDesc" type="text" value="{{item.description}}">
+                                                            </td>
+                                                            <td class="colAccount">
+                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
+                                                            </td>
+                                                            <td class="colTaxCode">
+                                                                <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
+                                                            </td>
+                                                            <td class="colAmount text-right">
+                                                                <input class="highlightInput lineAmount text-right" type="number" value="{{item.amount}}">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="table-remove btnRemove">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                {{#unless spentFixedItemData}}
+                                                    <tr class="dnd-moved" id="noData">
+                                                        <td colspan="6">No items</td>
                                                     </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                            {{#unless spentFixedItemData}}
-                                                <tr class="dnd-moved">
-                                                    <td colspan="6">No items</td>
+                                                {{/unless}}
+                                                <tr class="dnd-moved" id="sampleData" style="display:none">
+                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
+                                                    <td class="colDesc">
+                                                        <input class="highlightInput lineDesc" type="text" value="">
+                                                    </td>
+                                                    <td class="colAccount">
+                                                        <input class="es-input highlightSelect lineAccountName" type="search" value="">
+                                                    </td>
+                                                    <td class="colTaxCode">
+                                                        <input class="es-input highlightSelect lineTaxCode" type="search" value="">
+                                                    </td>
+                                                    <td class="colAmount text-right">
+                                                        <input class="highlightInput lineAmount text-right" type="number" value="">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="table-remove btnRemove">
+                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
+                                                        </span>
+                                                    </td>
                                                 </tr>
-                                            {{/unless}}
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
-                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLine" >Add a new line</button>
+                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLineFixed" >Add a new line</button>
                                         </div>
                                         <div class="col-6">
-                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="spentTotalAmount"> 0.00 $</span></p>
+                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="spentTotalAmount"></span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -319,7 +348,7 @@
                                         <table id="tblSpentPercentItem" style="width:100%;" class="table table-bordered tblSpentPercentItem">
                                             <thead>
                                             <tr class="dnd-moved">
-                                                <th class="th colSortDate hiddenColumn">id</th>
+                                                <th class="th colID hiddenColumn">id</th>
                                                 <th>Description</th>
                                                 <th>Account</th>
                                                 <th>Tax Rate</th>
@@ -328,36 +357,64 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {{#if spentPercentItemData}}
-                                                {{#each item in spentPercentItemData}}
-                                                    <tr class="dnd-moved">
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.id}}</td>
-                                                        <td class="colDesc">{{item.description}}</td>
-                                                        <td class="colAccount">{{item.accountName}}</td>
-                                                        <td class="colTaxCode">{{item.taxCode}}</td>
-                                                        <td class="colPercent">{{item.percent}}</td>
-                                                        <td class="text-center">
-                                                            <span class="table-remove btnRemove">
-                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </td>
+                                                {{#if spentPercentItemData}}
+                                                    {{#each item in spentPercentItemData}}
+                                                        <tr class="dnd-moved" id="sp_{{item.id}}">
+                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                            <td class="colDesc">
+                                                                <input class="highlightInput lineDesc" type="text" value="{{item.description}}">
+                                                            </td>
+                                                            <td class="colAccount">
+                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
+                                                            </td>
+                                                            <td class="colTaxCode">
+                                                                <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
+                                                            </td>
+                                                            <td class="colPercent text-right">
+                                                                <input class="highlightInput linePercent text-right" type="number" value="{{item.percent}}">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="table-remove btnRemove">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                {{#unless spentPercentItemData}}
+                                                    <tr class="dnd-moved" id="noData">
+                                                        <td colspan="6">No items</td>
                                                     </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                            {{#unless spentPercentItemData}}
-                                                <tr class="dnd-moved">
-                                                    <td colspan="6">No items</td>
+                                                {{/unless}}
+                                                <tr class="dnd-moved" id="sampleData" style="display:none">
+                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
+                                                    <td class="colDesc">
+                                                        <input class="highlightInput lineDesc" type="text" value="">
+                                                    </td>
+                                                    <td class="colAccount">
+                                                        <input class="es-input highlightSelect lineAccountName" type="search" value="">
+                                                    </td>
+                                                    <td class="colTaxCode">
+                                                        <input class="es-input highlightSelect lineTaxCode" type="search" value="">
+                                                    </td>
+                                                    <td class="colPercent text-right">
+                                                        <input class="highlightInput linePercent text-right" type="number" value="">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="table-remove btnRemove">
+                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                        </span>
+                                                    </td>
                                                 </tr>
-                                            {{/unless}}
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
-                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLine" >Add a new line</button>
+                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLinePercent" >Add a new line</button>
                                         </div>
                                         <div class="col-6">
-                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="spentTotalPercent"> 100%</span></p>
+                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="spentTotalPercent"></span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -372,13 +429,13 @@
                             <div class="col-6 col-md-6" style="padding: 0 20px;">
                                 <div class="form-group mb-0">
                                     <label>Rule Name</label>
-                                    <input type="text" class="form-control" id="spentRuleName">
+                                    <input type="text" class="form-control" id="spentRuleName" value="">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6">
                                 <div class="form-group mb-0">
                                     <label>Comment</label>
-                                    <input type="text" class="form-control" id="spentRuleComment">
+                                    <input type="text" class="form-control" id="spentRuleComment" value="">
                                 </div>
                             </div>
                         </div>
@@ -424,7 +481,7 @@
                                         <table id="tblReceivedCondition" style="width:100%;" class="table table-bordered tblReceivedCondition">
                                             <thead>
                                             <tr class="dnd-moved">
-                                                <th class="th colSortDate hiddenColumn">id</th>
+                                                <th class="th colID hiddenColumn">id</th>
                                                 <th>Field</th>
                                                 <th>Condition</th>
                                                 <th>Value</th>
@@ -432,31 +489,54 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {{#if receivedConditionData}}
-                                                {{#each item in receivedConditionData}}
-                                                    <tr class="dnd-moved">
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.id}}</td>
-                                                        <td class="colField">{{item.field}}</td>
-                                                        <td class="colCondition">{{item.condition}}</td>
-                                                        <td class="colValue">{{item.value}}</td>
-                                                        <td class="text-center">
-                                                            <span class="table-remove btnRemove">
-                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </td>
+                                                {{#if receivedConditionData}}
+                                                    {{#each item in receivedConditionData}}
+                                                        <tr class="dnd-moved" id="rc_{{item.id}}">
+                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                            <td class="colField">
+                                                                <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
+                                                            </td>
+                                                            <td class="colCondition">
+                                                                <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
+                                                            </td>
+                                                            <td class="colValue">
+                                                                <input class="highlightInput lineValue" type="search" value="{{item.value}}">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="table-remove btnRemove">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                {{#unless receivedConditionData}}
+                                                    <tr class="dnd-moved" id="noData">
+                                                        <td colspan="5">No conditions</td>
                                                     </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                            {{#unless receivedConditionData}}
-                                                <tr class="dnd-moved">
-                                                    <td colspan="5">No conditions</td>
+                                                {{/unless}}
+                                                <tr class="dnd-moved" id="sampleData" style="display:none">
+                                                    <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                    <td class="colField">
+                                                        <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
+                                                    </td>
+                                                    <td class="colCondition">
+                                                        <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
+                                                    </td>
+                                                    <td class="colValue">
+                                                        <input class="highlightInput lineValue" type="text" value="{{item.value}}">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="table-remove btnRemove">
+                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                        </span>
+                                                    </td>
                                                 </tr>
-                                            {{/unless}}
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="row">
-                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLine" >Add a new condition</button>
+                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLineCondition" >Add a new condition</button>
                                     </div>
                                 </div>
                             </div>
@@ -470,7 +550,8 @@
                             <div class="col-12">
                                 <div class="form-group"  style="padding: 0 20px;">
                                     <label style="margin-right: 20px;">Supplier: </label>
-                                    <select type="search" class="form-control" id="sltSupplier" value="" style="display:inline-block; width: 300px;"></select>
+                                    <input type="hidden" id="sltSupplierID" value="">
+                                    <select type="search" class="form-control" id="sltSupplier" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
                                 </div>
                             </div>
                         </div>
@@ -489,7 +570,7 @@
                                         <table id="tblReceivedFixedItem" style="width:100%;" class="table table-bordered tblReceivedFixedItem">
                                             <thead>
                                             <tr class="dnd-moved">
-                                                <th class="th colSortDate hiddenColumn">id</th>
+                                                <th class="th colID hiddenColumn">id</th>
                                                 <th>Description</th>
                                                 <th>Account</th>
                                                 <th>Tax Rate</th>
@@ -498,36 +579,64 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {{#if receivedFixedItemData}}
-                                                {{#each item in receivedFixedItemData}}
-                                                    <tr class="dnd-moved">
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.id}}</td>
-                                                        <td class="colDesc">{{item.description}}</td>
-                                                        <td class="colAccount">{{item.accountName}}</td>
-                                                        <td class="colTaxCode">{{item.taxCode}}</td>
-                                                        <td class="colAmount">{{item.amount}}</td>
-                                                        <td class="text-center">
-                                                            <span class="table-remove btnRemove">
-                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </td>
+                                                {{#if receivedFixedItemData}}
+                                                    {{#each item in receivedFixedItemData}}
+                                                        <tr class="dnd-moved" id="rf_{{item.id}}">
+                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                            <td class="colDesc">
+                                                                <input class="highlightInput lineDesc" type="search" value="{{item.description}}">
+                                                            </td>
+                                                            <td class="colAccount">
+                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
+                                                            </td>
+                                                            <td class="colTaxCode">
+                                                                <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
+                                                            </td>
+                                                            <td class="colAmount text-right">
+                                                                <input class="highlightInput lineAmount text-right" type="search" value="{{item.amount}}">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="table-remove btnRemove">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                {{#unless receivedFixedItemData}}
+                                                    <tr class="dnd-moved" id="noData">
+                                                        <td colspan="6">No items</td>
                                                     </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                            {{#unless receivedFixedItemData}}
-                                                <tr class="dnd-moved">
-                                                    <td colspan="6">No items</td>
+                                                {{/unless}}
+                                                <tr class="dnd-moved" id="sampleData" style="display:none">
+                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
+                                                    <td class="colDesc">
+                                                        <input class="highlightInput lineDesc" type="text" value="">
+                                                    </td>
+                                                    <td class="colAccount">
+                                                        <input class="es-input highlightSelect lineAccountName" type="search" value="">
+                                                    </td>
+                                                    <td class="colTaxCode">
+                                                        <input class="es-input highlightSelect lineTaxCode" type="search" value="">
+                                                    </td>
+                                                    <td class="colAmount text-right">
+                                                        <input class="highlightInput lineAmount text-right" type="number" value="">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="table-remove btnRemove">
+                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
+                                                        </span>
+                                                    </td>
                                                 </tr>
-                                            {{/unless}}
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
-                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLine" >Add a new line</button>
+                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLineFixed" >Add a new line</button>
                                         </div>
                                         <div class="col-6">
-                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="receivedTotalAmount"> 0.00 $</span></p>
+                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="receivedTotalAmount"></span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -539,7 +648,7 @@
                                         <table id="tblReceivedPercentItem" style="width:100%;" class="table table-bordered tblReceivedPercentItem">
                                             <thead>
                                             <tr class="dnd-moved">
-                                                <th class="th colSortDate hiddenColumn">id</th>
+                                                <th class="th colID hiddenColumn">id</th>
                                                 <th>Description</th>
                                                 <th>Account</th>
                                                 <th>Tax Rate</th>
@@ -548,36 +657,64 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {{#if receivedPercentItemData}}
-                                                {{#each item in receivedPercentItemData}}
-                                                    <tr class="dnd-moved">
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.id}}</td>
-                                                        <td class="colDesc">{{item.description}}</td>
-                                                        <td class="colAccount">{{item.accountName}}</td>
-                                                        <td class="colTaxCode">{{item.taxCode}}</td>
-                                                        <td class="colPercent">{{item.percent}}</td>
-                                                        <td class="text-center">
-                                                            <span class="table-remove btnRemove">
-                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </td>
+                                                {{#if receivedPercentItemData}}
+                                                    {{#each item in receivedPercentItemData}}
+                                                        <tr class="dnd-moved" id="rp_{{item.id}}">
+                                                            <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                            <td class="colDesc">
+                                                                <input class="highlightInput lineDesc" type="text" value="{{item.description}}">
+                                                            </td>
+                                                            <td class="colAccount">
+                                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountName}}">
+                                                            </td>
+                                                            <td class="colTaxCode">
+                                                                <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
+                                                            </td>
+                                                            <td class="colPercent text-right">
+                                                                <input class="highlightInput linePercent text-right" type="number" value="{{item.percent}}">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="table-remove btnRemove">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                {{#unless receivedPercentItemData}}
+                                                    <tr class="dnd-moved" id="noData">
+                                                        <td colspan="6">No items</td>
                                                     </tr>
-                                                {{/each}}
-                                            {{/if}}
-                                            {{#unless receivedPercentItemData}}
-                                                <tr class="dnd-moved">
-                                                    <td colspan="6">No items</td>
+                                                {{/unless}}
+                                                <tr class="dnd-moved" id="sampleData" style="display:none">
+                                                    <td contenteditable="false" class="colID hiddenColumn"></td>
+                                                    <td class="colDesc">
+                                                        <input class="highlightInput lineDesc" type="text" value="">
+                                                    </td>
+                                                    <td class="colAccount">
+                                                        <input class="es-input highlightSelect lineAccountName" type="search" value="">
+                                                    </td>
+                                                    <td class="colTaxCode">
+                                                        <input class="es-input highlightSelect lineTaxCode" type="search" value="">
+                                                    </td>
+                                                    <td class="linePercent">
+                                                        <input class="highlightInput linePercent text-right" type="number" value="">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="table-remove btnRemove">
+                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
+                                                        </span>
+                                                    </td>
                                                 </tr>
-                                            {{/unless}}
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
-                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLine" >Add a new line</button>
+                                            <button class="btn btn-primary" style="margin-left: 35px;" id="addLinePercent" >Add a new line</button>
                                         </div>
                                         <div class="col-6">
-                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="receivedTotalPercent"> 100%</span></p>
+                                            <p class="float-right" style="margin-right: 30px;">Total: <span id="receivedTotalPercent"></span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -592,13 +729,13 @@
                             <div class="col-6 col-md-6" style="padding: 0 20px;">
                                 <div class="form-group mb-0">
                                     <label>Rule Name</label>
-                                    <input type="text" class="form-control" id="receivedRuleName">
+                                    <input type="text" class="form-control" id="receivedRuleName" value="">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6">
                                 <div class="form-group mb-0">
                                     <label>Comment</label>
-                                    <input type="text" class="form-control" id="receivedRuleComment">
+                                    <input type="text" class="form-control" id="receivedRuleComment" value="">
                                 </div>
                             </div>
                         </div>
@@ -644,7 +781,7 @@
                                         <table id="tblTransferCondition" style="width:100%;" class="table table-bordered tblTransferCondition">
                                             <thead>
                                             <tr class="dnd-moved">
-                                                <th class="th colSortDate hiddenColumn">id</th>
+                                                <th class="th colID hiddenColumn">id</th>
                                                 <th>Field</th>
                                                 <th>Condition</th>
                                                 <th>Value</th>
@@ -654,11 +791,17 @@
                                             <tbody>
                                             {{#if transferConditionData}}
                                                 {{#each item in transferConditionData}}
-                                                    <tr class="dnd-moved">
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.id}}</td>
-                                                        <td class="colField">{{item.field}}</td>
-                                                        <td class="colCondition">{{item.condition}}</td>
-                                                        <td class="colValue">{{item.value}}</td>
+                                                    <tr class="dnd-moved" id="tc_{{item.id}}">
+                                                        <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                        <td class="colField">
+                                                            <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
+                                                        </td>
+                                                        <td class="colCondition">
+                                                            <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
+                                                        </td>
+                                                        <td class="colValue">
+                                                            <input class="highlightInput lineValue" type="text" value="{{item.value}}">
+                                                        </td>
                                                         <td class="text-center">
                                                             <span class="table-remove btnRemove">
                                                                 <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
@@ -668,15 +811,32 @@
                                                 {{/each}}
                                             {{/if}}
                                             {{#unless transferConditionData}}
-                                                <tr class="dnd-moved">
+                                                <tr class="dnd-moved" id="noData">
                                                     <td colspan="5">No conditions</td>
                                                 </tr>
                                             {{/unless}}
+                                            <tr class="dnd-moved" id="sampleData" style="display:none">
+                                                <td contenteditable="false" class="colID hiddenColumn">{{item.id}}</td>
+                                                <td class="colField">
+                                                    <input class="es-input highlightSelect lineField" type="search" value="{{item.field}}">
+                                                </td>
+                                                <td class="colCondition">
+                                                    <input class="es-input highlightSelect lineCondition" type="search" value="{{item.condition}}">
+                                                </td>
+                                                <td class="colValue">
+                                                    <input class="highlightInput lineValue" type="search" value="{{item.value}}">
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="table-remove btnRemove">
+                                                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button>
+                                                    </span>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="row">
-                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLine" >Add a new condition</button>
+                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLineCondition" >Add a new condition</button>
                                     </div>
                                 </div>
                             </div>
@@ -693,7 +853,8 @@
                                 </div>
                                 <div class="form-group"  style="padding: 0 20px;">
                                     <label style="margin-right: 20px;">Bank Account: </label>
-                                    <select type="search" class="form-control" id="sltBankAccount" value="" style="display:inline-block; width: 300px;"></select>
+                                    <input type="hidden" id="sltBankAccountID" value="">
+                                    <select type="search" class="form-control" id="sltBankAccount" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
                                 </div>
                             </div>
                         </div>
@@ -706,13 +867,13 @@
                             <div class="col-6 col-md-6" style="padding: 0 20px;">
                                 <div class="form-group mb-0">
                                     <label>Rule Name</label>
-                                    <input type="text" class="form-control" id="transferRuleName">
+                                    <input type="text" class="form-control" id="transferRuleName" value="">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6">
                                 <div class="form-group mb-0">
                                     <label>Comment</label>
-                                    <input type="text" class="form-control" id="transferRuleComment">
+                                    <input type="text" class="form-control" id="transferRuleComment" value="">
                                 </div>
                             </div>
                         </div>
@@ -737,117 +898,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="newBankRuleModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="">Bank Rules</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12 mb-4">
-                            <button type="button" class="btn btn-primary" style="margin-right: 8px;"><i class="fas fa-plus" style="margin-right: 5px;"></i> Create Rule</button>
-                            <button type="button" class="btn btn-primary" style="margin-left: 8px;"><i class="fas fa-check" style="margin-right: 5px;"></i> Reconcile</button>
-                        </div>
-                        <div class="col-12">
-                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-spendmoneyrules" role="tab" aria-controls="pills-home" aria-selected="true">Spend Money Rules</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-receivemoneyrules" role="tab" aria-controls="pills-profile" aria-selected="false">Receive Money Rules</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-transferrules" role="tab" aria-controls="pills-contact" aria-selected="false">Transfer Rules</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="pills-bankrules">
-                                <div class="tab-pane fade show active" id="pills-spendmoneyrules" role="tabpanel" aria-labelledby="">...</div>
-                                <div class="tab-pane fade" id="pills-receivemoneyrules" role="tabpanel" aria-labelledby="">...</div>
-                                <div class="tab-pane fade" id="pills-transferrules" role="tabpanel" aria-labelledby="">...</div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success" type="button" style="margin: 0 16px;">
-                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                    </button>
-                    <button class="btn btn-secondary" type="button" style="margin: 0 16px;">
-                        <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="moreDetailModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="width: 640px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="">Statement Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row moreDetailBox">
-                        <div class="col-12">
-                            <div class="row moreDetailLine">
-                                <div class="col-md-6 moreDetailLabel">Transaction Date</div>
-                                <div class="col-md-6 moreDetailValue" id="mdTransactionDate"></div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row moreDetailLine">
-                                <div class="col-md-6 moreDetailLabel">Category</div>
-                                <div class="col-md-6 moreDetailValue" id="mdCategory"></div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row moreDetailLine">
-                                <div class="col-md-6 moreDetailLabel">Category Type</div>
-                                <div class="col-md-6 moreDetailValue" id="mdCategoryType"></div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row moreDetailLine">
-                                <div class="col-md-6 moreDetailLabel">Description</div>
-                                <div class="col-md-6 moreDetailValue" id="mdDescription"></div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row moreDetailLine">
-                                <div class="col-md-6 moreDetailLabel">Transaction Amount</div>
-                                <div class="col-md-6 moreDetailValue" id="mdTransactionAmount"></div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row moreDetailLine">
-                                <div class="col-md-6 moreDetailLabel">Transaction Type</div>
-                                <div class="col-md-6 moreDetailValue" id="mdTransactionType"></div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row moreDetailLine">
-                                <div class="col-md-6 moreDetailLabel">Cheque No.</div>
-                                <div class="col-md-6 moreDetailValue" id="mdChequeNo"></div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row moreDetailLine">
-                                <div class="col-md-6 moreDetailLabel">Type</div>
-                                <div class="col-md-6 moreDetailValue" id="mdType"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="taxRateListModal">
         {{> taxratelistpop}}
     </div>
@@ -889,15 +939,15 @@
                             </style>
                             <table id="tblFullAccount" style="width:100%" class="table table-striped table-bordered tblFullAccount">
                                 <thead>
-                                <tr class="dnd-moved">
-                                    <th class="thAccountName">Account Name</th>
-                                    <th class="thDescription">Description</th>
-                                    <th class="thAccountNo">Account No</th>
-                                    <th class="thType">Type</th>
-                                    <th class="thBalance" style="text-align: left!important;">Balance</th>
-                                    <th class="thTaxRate" style="text-align: left!important;">Tax Rate</th>
-                                    <th class="thAccountID hiddenColumn">Account ID</th>
-                                </tr>
+                                    <tr class="dnd-moved">
+                                        <th class="thAccountName">Account Name</th>
+                                        <th class="thDescription">Description</th>
+                                        <th class="thAccountNo">Account No</th>
+                                        <th class="thType">Type</th>
+                                        <th class="thBalance" style="text-align: left!important;">Balance</th>
+                                        <th class="thTaxRate" style="text-align: left!important;">Tax Rate</th>
+                                        <th class="thAccountID hiddenColumn">Account ID</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
 
@@ -910,6 +960,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
         {{> addaccountpop}}
     </div>
@@ -955,6 +1006,64 @@
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
         {{> addsupplierpop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="fieldModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 40vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Field List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <table id="tblFields" style="width:100%" class="table table-striped table-bordered tblFields">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="thFieldName">Field Name</th>
+                                        <th class="thDescription">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="conditionModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 40vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Condition List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <table id="tblConditions" style="width:100%" class="table table-striped table-bordered tblConditions">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="thConditionName">Condition Name</th>
+                                        <th class="thDescription">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
     </div>
     <script>
         modalDraggable();

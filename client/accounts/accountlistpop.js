@@ -108,7 +108,7 @@ Template.accountlistpop.onRendered(function() {
                         ){
                       	splashArrayAccountList.push(dataList);
                         }
-                      }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon"){
+                      }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon" || currentLoc === "/newbankrule"){
                         if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
                           splashArrayAccountList.push(dataList);
                         }
@@ -194,7 +194,7 @@ Template.accountlistpop.onRendered(function() {
                       ){
                         splashArrayAccountList.push(dataList);
                       }
-                    }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon"){
+                    }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon" || currentLoc === "/newbankrule"){
                       if((useData[i].fields.AccountTypeName === "BANK")||(useData[i].fields.AccountTypeName === "CCARD")){
                       splashArrayAccountList.push(dataList);
                       }
@@ -280,7 +280,7 @@ Template.accountlistpop.onRendered(function() {
                     ){
                     splashArrayAccountList.push(dataList);
                     }
-                  }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon"){
+                  }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon" || currentLoc === "/newbankrule"){
                     if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
                     splashArrayAccountList.push(dataList);
                     }
@@ -498,7 +498,7 @@ Template.accountlistpop.events({
                       ){
                     	splashArrayAccountList.push(dataList);
                       }
-                    }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon"){
+                    }else if (currentLoc === "/bankrecon" || currentLoc === "/newbankrecon" || currentLoc === "/newbankrule"){
                       if((data.taccountvs1[i].fields.AccountTypeName === "BANK")||(data.taccountvs1[i].fields.AccountTypeName === "CCARD")){
                       splashArrayAccountList.push(dataList);
                       }

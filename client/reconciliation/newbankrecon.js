@@ -3048,41 +3048,41 @@ function setOneSupplierDataExByName(supplierDataName) {
 function setSupplierModal(data) {
     $('.fullScreenSpin').css('display', 'none');
     $('#add-supplier-title').text('Edit Supplier');
-    let popSupplierID = data.tsupplier[0].fields.ID || '';
-    let popSupplierName = data.tsupplier[0].fields.ClientName || '';
-    let popSupplierEmail = data.tsupplier[0].fields.Email || '';
-    let popSupplierTitle = data.tsupplier[0].fields.Title || '';
-    let popSupplierFirstName = data.tsupplier[0].fields.FirstName || '';
-    let popSupplierMiddleName = data.tsupplier[0].fields.CUSTFLD10 || '';
-    let popSupplierLastName = data.tsupplier[0].fields.LastName || '';
+    let popSupplierID = data.fields.ID || '';
+    let popSupplierName = data.fields.ClientName || '';
+    let popSupplierEmail = data.fields.Email || '';
+    let popSupplierTitle = data.fields.Title || '';
+    let popSupplierFirstName = data.fields.FirstName || '';
+    let popSupplierMiddleName = data.fields.CUSTFLD10 || '';
+    let popSupplierLastName = data.fields.LastName || '';
     let popSuppliertfn = '' || '';
-    let popSupplierPhone = data.tsupplier[0].fields.Phone || '';
-    let popSupplierMobile = data.tsupplier[0].fields.Mobile || '';
-    let popSupplierFaxnumber = data.tsupplier[0].fields.Faxnumber || '';
-    let popSupplierSkypeName = data.tsupplier[0].fields.SkypeName || '';
-    let popSupplierURL = data.tsupplier[0].fields.URL || '';
-    let popSupplierStreet = data.tsupplier[0].fields.Street || '';
-    let popSupplierStreet2 = data.tsupplier[0].fields.Street2 || '';
-    let popSupplierState = data.tsupplier[0].fields.State || '';
-    let popSupplierPostcode = data.tsupplier[0].fields.Postcode || '';
-    let popSupplierCountry = data.tsupplier[0].fields.Country || LoggedCountry;
-    let popSupplierbillingaddress = data.tsupplier[0].fields.BillStreet || '';
-    let popSupplierbcity = data.tsupplier[0].fields.BillStreet2 || '';
-    let popSupplierbstate = data.tsupplier[0].fields.BillState || '';
-    let popSupplierbpostalcode = data.tsupplier[0].fields.BillPostcode || '';
-    let popSupplierbcountry = data.tsupplier[0].fields.Billcountry || LoggedCountry;
-    let popSuppliercustfield1 = data.tsupplier[0].fields.CUSTFLD1 || '';
-    let popSuppliercustfield2 = data.tsupplier[0].fields.CUSTFLD2 || '';
-    let popSuppliercustfield3 = data.tsupplier[0].fields.CUSTFLD3 || '';
-    let popSuppliercustfield4 = data.tsupplier[0].fields.CUSTFLD4 || '';
-    let popSuppliernotes = data.tsupplier[0].fields.Notes || '';
-    let popSupplierpreferedpayment = data.tsupplier[0].fields.PaymentMethodName || '';
-    let popSupplierterms = data.tsupplier[0].fields.TermsName || '';
-    let popSupplierdeliverymethod = data.tsupplier[0].fields.ShippingMethodName || '';
-    let popSupplieraccountnumber = data.tsupplier[0].fields.ClientNo || '';
-    let popSupplierisContractor = data.tsupplier[0].fields.Contractor || false;
-    let popSupplierissupplier = data.tsupplier[0].fields.IsSupplier || false;
-    let popSupplieriscustomer = data.tsupplier[0].fields.IsCustomer || false;
+    let popSupplierPhone = data.fields.Phone || '';
+    let popSupplierMobile = data.fields.Mobile || '';
+    let popSupplierFaxnumber = data.fields.Faxnumber || '';
+    let popSupplierSkypeName = data.fields.SkypeName || '';
+    let popSupplierURL = data.fields.URL || '';
+    let popSupplierStreet = data.fields.Street || '';
+    let popSupplierStreet2 = data.fields.Street2 || '';
+    let popSupplierState = data.fields.State || '';
+    let popSupplierPostcode = data.fields.Postcode || '';
+    let popSupplierCountry = data.fields.Country || LoggedCountry;
+    let popSupplierbillingaddress = data.fields.BillStreet || '';
+    let popSupplierbcity = data.fields.BillStreet2 || '';
+    let popSupplierbstate = data.fields.BillState || '';
+    let popSupplierbpostalcode = data.fields.BillPostcode || '';
+    let popSupplierbcountry = data.fields.Billcountry || LoggedCountry;
+    let popSuppliercustfield1 = data.fields.CUSTFLD1 || '';
+    let popSuppliercustfield2 = data.fields.CUSTFLD2 || '';
+    let popSuppliercustfield3 = data.fields.CUSTFLD3 || '';
+    let popSuppliercustfield4 = data.fields.CUSTFLD4 || '';
+    let popSuppliernotes = data.fields.Notes || '';
+    let popSupplierpreferedpayment = data.fields.PaymentMethodName || '';
+    let popSupplierterms = data.fields.TermsName || '';
+    let popSupplierdeliverymethod = data.fields.ShippingMethodName || '';
+    let popSupplieraccountnumber = data.fields.ClientNo || '';
+    let popSupplierisContractor = data.fields.Contractor || false;
+    let popSupplierissupplier = data.fields.IsSupplier || false;
+    let popSupplieriscustomer = data.fields.IsCustomer || false;
 
     $('#edtSupplierCompany').val(popSupplierName);
     $('#edtSupplierPOPID').val(popSupplierID);
@@ -3110,13 +3110,13 @@ function setSupplierModal(data) {
     $('#edtCustomeField3').val(popSuppliercustfield3);
     $('#edtCustomeField4').val(popSuppliercustfield4);
 
-    if ((data.tsupplier[0].fields.Street == data.tsupplier[0].fields.BillStreet) && (data.tsupplier[0].fields.Street2 == data.tsupplier[0].fields.BillStreet2) &&
-        (data.tsupplier[0].fields.State == data.tsupplier[0].fields.BillState) && (data.tsupplier[0].fields.Postcode == data.tsupplier[0].fields.Postcode) &&
-        (data.tsupplier[0].fields.Country == data.tsupplier[0].fields.Billcountry)) {
+    if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2) &&
+        (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.Postcode) &&
+        (data.fields.Country == data.fields.Billcountry)) {
         //templateObject.isSameAddress.set(true);
         $('#chkSameAsShipping').attr("checked", "checked");
     }
-    if (data.tsupplier[0].fields.Contractor == true) {
+    if (data.fields.Contractor == true) {
         // $('#isformcontractor')
         $('#isformcontractor').attr("checked", "checked");
     } else {
