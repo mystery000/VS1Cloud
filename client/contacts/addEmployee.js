@@ -167,6 +167,8 @@ Template.employeescard.onRendered(function () {
     let employeePriority = [];
     let currentId = FlowRouter.current().queryParams;
     let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+    const activeParentTab = ( (currentId.activeparenttab) )? currentId.activeparenttab : 'employeeTab';
+    const activeChildTab = ( (currentId.activechildtab) )? currentId.activechildtab : 'contact-tab';
 
     const dataTableList = [];
     const tableHeaderList = [];
@@ -460,7 +462,13 @@ Template.employeescard.onRendered(function () {
         }, 1000);
     }
     }, 500);
-
+    
+    // setTimeout(function () {
+    //     if( activeParentTab != ""){
+    //         $('#mainTabs ul li a').removeClass('active');
+    //         $(`.${activeParentTab}`).trigger('click');
+    //     }
+    // }, 1000);   
 
 
     templateObject.getAllSelectedProducts = function (employeeName) {
@@ -1256,7 +1264,7 @@ Template.employeescard.onRendered(function () {
                   for (let i = 0; i < data.tcountries.length; i++) {
                       countries.push(data.tcountries[i].Country)
                   }
-                  countries = _.sortBy(countries);
+                  countries.sort((a, b) => a.localeCompare(b));
                   templateObject.countryData.set(countries);
               });
           } else {
@@ -1265,7 +1273,7 @@ Template.employeescard.onRendered(function () {
               for (let i = 0; i < useData.length; i++) {
                   countries.push(useData[i].Country)
               }
-              countries = _.sortBy(countries);
+              countries.sort((a, b) => a.localeCompare(b));
               templateObject.countryData.set(countries);
 
           }
@@ -1274,7 +1282,7 @@ Template.employeescard.onRendered(function () {
               for (let i = 0; i < data.tcountries.length; i++) {
                   countries.push(data.tcountries[i].Country)
               }
-              countries = _.sortBy(countries);
+              countries.sort((a, b) => a.localeCompare(b));
               templateObject.countryData.set(countries);
           });
       });
@@ -3147,8 +3155,7 @@ Template.employeescard.onRendered(function () {
                 (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
                 useData[i].fields.UserName || '',
                 useData[i].fields.Notes || '',
-                `<button type="button" class="btn btn-success btnEditPayNote" id="btnEditPayNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-edit"></i></button>
-                <button type="button" class="btn btn-danger btnDeletePayNote" id="btnDeletePayNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                `<button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayNote" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
             ];
             splashArrayPayNotesList.push(dataListAllowance);
         }
@@ -3159,19 +3166,19 @@ Template.employeescard.onRendered(function () {
                 columnDefs: [
 
                     {
-                        className: "colEmpPayrollNotesID hiddenColumn",
+                        className: "colEmpPayrollNotes colEmpPayrollNotesID hiddenColumn",
                         "targets": [0]
                     },
                     {
-                        className: "colEmpPayrollNotesDate",
+                        className: "colEmpPayrollNotes colEmpPayrollNotesDate",
                         "targets": [1]
                     },
                     {
-                        className: "colEmpPayrollNotesUser",
+                        className: "colEmpPayrollNotes colEmpPayrollNotesUser",
                         "targets": [2]
                     },
                     {
-                        className: "colEmpPayrollNotesDesc",
+                        className: "colEmpPayrollNotes colEmpPayrollNotesDesc",
                         "targets": [3]
                     },
                     {
@@ -3220,8 +3227,7 @@ Template.employeescard.onRendered(function () {
                                         (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
                                         useData[i].fields.UserName || '',
                                         useData[i].fields.Notes || '',
-                                        `<button type="button" class="btn btn-success btnEditPayslip"><i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-danger btnDeletePayNote" id="btnDeletePayNote" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                                        `<button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayNote" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
                                     ];
                                     splashArrayPayNotesList.push(dataListAllowance);
                                 }
@@ -3248,7 +3254,7 @@ Template.employeescard.onRendered(function () {
                     }, 100);
                 },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddordinaryTimePayNotes' data-dismiss='modal' data-toggle='modal' data-target='#newNoteModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpPayrollNotes_filter");
+                    $("<button class='btn btn-primary btnAddNewNotes' data-dismiss='modal' data-toggle='modal' data-target='#newNoteModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmpPayrollNotes_filter");
                     $("<button class='btn btn-primary btnRefreshPayNotes' type='button' id='btnRefreshPayNotes' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmpPayrollNotes_filter");
                 }
 
@@ -3667,8 +3673,7 @@ Template.employeescard.onRendered(function () {
                     useData[i].fields.HoursLeave || '',
                     useData[i].fields.OpeningBalance || '',
                     ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
-                    `<button type="button" class="btn btn-success btnEditAssignLeaveType" id="btnEditAssignLeaveType"><i class="fas fa-edit"></i></button>
-                    <button type="button" class="btn btn-danger btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                    `<button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fa fa-remove"></i></button>`
                 ];
                 splashArrayAssignLeaveList.push(dataListAllowance);
             }
@@ -3680,39 +3685,39 @@ Template.employeescard.onRendered(function () {
                 columnDefs: [
 
                     {
-                        className: "colALTypeID hiddenColumn",
+                        className: "colALType colALTypeID hiddenColumn",
                         "targets": [0]
                     },
                     {
-                        className: "colALTypeLeave",
+                        className: "colALType colALTypeLeave",
                         "targets": [1]
                     },
                     {
-                        className: "colALTypeLeaveCalMethod",
+                        className: "colALType colALTypeLeaveCalMethod",
                         "targets": [2]
                     },
                     {
-                        className: "colALTypeHoursAccruedAnnually",
+                        className: "colALType colALTypeHoursAccruedAnnually",
                         "targets": [3]
                     },
                     {
-                        className: "colALTypeHoursAccruedAnnuallyFullTimeEmp",
+                        className: "colALType colALTypeHoursAccruedAnnuallyFullTimeEmp",
                         "targets": [4]
                     },
                     {
-                        className: "colALTypeHoursFullTimeEmpFortnightlyPay",
+                        className: "colALType colALTypeHoursFullTimeEmpFortnightlyPay",
                         "targets": [5]
                     },
                     {
-                        className: "colALTypeHours",
+                        className: "colALType colALTypeHours",
                         "targets": [6]
                     },
                     {
-                        className: "colALTypeOpeningBalance",
+                        className: "colALType colALTypeOpeningBalance",
                         "targets": [7]
                     },
                     {
-                        className: "colALTypeTerminationBalance",
+                        className: "colALType colALTypeTerminationBalance",
                         "targets": [8]
                     }
                     ,
@@ -3767,8 +3772,7 @@ Template.employeescard.onRendered(function () {
                                         useData[i].fields.HoursLeave || '',
                                         useData[i].fields.OpeningBalance || '',
                                         ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
-                                        `<button type="button" class="btn btn-success btnEditAssignLeaveType" id="btnEditAssignLeaveType"><i class="fas fa-edit"></i></button>
-                                        <button type="button" class="btn btn-danger btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                                        `<button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fa fa-remove"></i></button>`
                                     ];
                                     splashArrayAssignLeaveList.push(dataListAllowance);
                                 }
@@ -3795,7 +3799,7 @@ Template.employeescard.onRendered(function () {
                     }, 100);
                 },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddAssignLeave' data-dismiss='modal' data-toggle='modal' data-target='#assignLeaveTypeModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAssignLeaveTypes_filter");
+                    $("<button class='btn btn-primary btnAssignLeaveType' data-dismiss='modal' data-toggle='modal' data-target='#assignLeaveTypeModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAssignLeaveTypes_filter");
                     $("<button class='btn btn-primary btnRefreshAssignLeave' type='button' id='btnRefreshAssignLeave' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAssignLeaveTypes_filter");
                 }
 
@@ -4111,9 +4115,8 @@ Template.employeescard.onRendered(function () {
                     useData[i].fields.Period || '',
                     (useData[i].fields.PaymentDate == 0) ? '' : moment(useData[i].fields.PaymentDate).format("DD/MM/YYYY") || '',
                     utilityService.modifynegativeCurrencyFormat( useData[i].fields.TotalPay ) || '',
-                    `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                    <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>
-                    `,
+                    `<button type="button" style="margin-bottom: 24px;" class="btn btn-success btn-rounded btn-sm btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayslip" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`,
                 ];
                 splashArrayPaySlipList.push(dataListAllowance);
             }
@@ -4126,19 +4129,19 @@ Template.employeescard.onRendered(function () {
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     columnDefs: [
                         {
-                            className: "colPayslipID hiddenColumn",
+                            className: "colPaySlip colPayslipID hiddenColumn",
                             "targets": [0]
                         },
                         {
-                            className: "colPayslipPeriod",
+                            className: "colPaySlip colPayslipPeriod",
                             "targets": [1]
                         },
                         {
-                            className: "colPayslipPaymentDate",
+                            className: "colPaySlip colPayslipPaymentDate",
                             "targets": [2]
                         },
                         {
-                            className: "colPayslipTotalPay",
+                            className: "colPaySlip colPayslipTotalPay",
                             "targets": [3]
                         },
                         {
@@ -4187,9 +4190,8 @@ Template.employeescard.onRendered(function () {
                                             useData[i].fields.Period || '',
                                             (useData[i].fields.PaymentDate == 0) ? '' : moment(useData[i].fields.PaymentDate).format("DD/MM/YYYY") || '',
                                             utilityService.modifynegativeCurrencyFormat( useData[i].fields.TotalPay ) || '',
-                                            `<button type="button" class="btn btn-success btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                                            <button type="button" class="btn btn-danger btnDeletePayslip" id="btnDeletePayslip" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>
-                                            `,
+                                            `<button type="button" class="btn btn-success btnDownloadPayslip" style="margin-bottom: 24px;"><i class="fas fa-file-download"></i></button>
+                                            <button type="button" class="btn btn-danger btn-rounded btn-sm btn-rounded btn-sm btnDeletePayslip" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`,
                                         ];
                                         splashArrayPaySlipList.push(dataListAllowance);
                                     }
@@ -4216,7 +4218,7 @@ Template.employeescard.onRendered(function () {
                         }, 100);
                     },
                     "fnInitComplete": function () {
-                        $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
+                        $("<button class='btn btn-primary addNewSlip' data-dismiss='modal' data-toggle='modal' data-target='#paySlipModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayslipHistory_filter");
                         $("<button class='btn btn-primary btnRefreshPaySlip' type='button' id='btnRefreshPaySlip' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayslipHistory_filter");
                     }
 
@@ -4256,7 +4258,7 @@ Template.employeescard.onRendered(function () {
                         MakeNegative();
                     }, 100);
                 });
-            }, 0);
+            }, 1000);
 
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -4981,6 +4983,7 @@ Template.employeescard.events({
            $(".btnRefreshAssignLeave").trigger("click");
         }
     },
+    
     'click .btnRefreshAssignLeave':function(event){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -5013,8 +5016,7 @@ Template.employeescard.events({
                             useData[i].fields.HoursLeave || '',
                             useData[i].fields.OpeningBalance || '',
                             ( ( useData[i].fields.OnTerminationUnusedBalance )? 'Paid Out': 'Not Paid Out' ),
-                            `<button type="button" class="btn btn-success btnEditAssignLeaveType" id="btnEditAssignLeaveType"><i class="fas fa-edit"></i></button>
-                            <button type="button" class="btn btn-danger btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
+                            `<button type="button" class="btn btn-danger btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
                         ];
                         splashArrayAssignLeaveList.push(dataListAllowance);
                     }
@@ -5999,15 +6001,9 @@ Template.employeescard.events({
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let period = $('#period').val();
+        let ID = $('#periodID').val();        
         let paymentDate = $('#paymentDate').val();
         let totalPay = $('#totalPay').val();
-
-
-        const employeePayrolApis = new EmployeePayrollApi();
-        // now we have to make the post request to save the data in database
-        const apiEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TPaySlips
-        );
 
         if(period == ''){
             swal({
@@ -6015,74 +6011,90 @@ Template.employeescard.events({
                 text: "Please enter period",
                 type: 'warning',
             })
-        }else if(paymentDate == ''){
+            return false
+        }
+        if(paymentDate == ''){
             swal({
                 title: "Warning",
                 text: "Please enter total pay",
                 type: 'warning',
             })
-        }else if(totalPay == ''){
+            return false
+        }
+        if(totalPay == ''){
             swal({
                 title: "Warning",
                 text: "Please enter total pay",
                 type: 'warning',
             })
-        } else if(isNaN(totalPay)){
-            swal({
-                title: "Warning",
-                text: "Please enter a number as total pay",
-                type: 'warning',
-            })
-        } else{
-            $('.fullScreenSpin').css('display', 'block');
+            return false
+        } 
 
-            // leaveRequests.push(
-                let paySlipSettings =  new PaySlips({
-                    type: "TPaySlips",
-                    fields: new PaySlipsFields({
-                        EmployeeID: parseInt( employeeID ),
-                        Period: period,
-                        PaymentDate: moment(paymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
-                        TotalPay: parseInt( totalPay ),
-                        Active: true
-                    }),
-                })
-            // );
+        // Making a post request to save payslips
+        $('.fullScreenSpin').css('display', 'block');
+        const employeePayrolApis = new EmployeePayrollApi();
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPaySlips
+        );
+        totalPay = Number(totalPay.replace(/[^0-9.-]+/g,""));
+        let paySlipSettings =  new PaySlips({
+            type: "TPaySlips",
+            fields: new PaySlipsFields({
+                ID: parseInt(ID),
+                EmployeeID: parseInt( employeeID ),
+                Period: period,
+                PaymentDate: moment(paymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
+                TotalPay: parseInt( totalPay ),
+                Active: true
+            }),
+        });
 
+        try {
             const ApiResponse = await apiEndpoint.fetch(null, {
                 method: "POST",
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(paySlipSettings),
             });
-            try {
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    await templateObject.savePaySlipLocalDB();
-                    await templateObject.getPaySlips();
-                    $('#paySlipModal').modal('hide');
-                    $('#Period, #paymentDate, #totalPay').val('');
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Success",
-                        text: "Pay slip added",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add pay slip",
-                        type: 'error',
-                    })
-                }
-            } catch (error) {
+            if (ApiResponse.ok == true) {
+                await templateObject.savePaySlipLocalDB();
+                await templateObject.getPaySlips();
+                $('#paySlipModal').modal('hide');
+                $('#period, #paymentDate, #totalPay').val('');
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: "Error",
-                    text: "Failed to add pay slip",
+                    title: ( parseInt(ID) != 0 )? 'Pay slip updated successfully': 'Pay slip added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
                     type: 'error',
-                })
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
         }
     },
 
@@ -6107,69 +6119,65 @@ Template.employeescard.events({
         const apiEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TOpeningBalances
         );
-        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        // if( Array.isArray( checkOpeningBalances ) ){
-        //     openingBalances = checkOpeningBalances
-        // }
-
-        // openingBalances.push(
-            let openingSettings = new OpeningBalance({
-                type: "TOpeningBalances",
-                fields: new OpeningBalanceFields({
-                    EmployeeID: employeeID,
-                    AType: EarningsRate,
-                    Amount: 0,
-                    Balance: 0,
-                    Active: true
-                }),
-            })
-        // );
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(openingSettings),
-        });
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            $('#obEarningsRate').val('');
-            await templateObject.saveOpeningBalanceLocalDB();
-            await templateObject.getOpeningBalances();
-            $('#addEarningsLineModal2').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Earning rate has been added",
-                type: 'success',
-            })
-        }else{
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Error",
-                text: "Failed to add earning rate",
-                type: 'error',
-            })
-        }
-
-        return false
-
-        templateObject.openingBalanceInfo.set(openingBalances);
-        $('#obEarningsRate').val('');
-        $('#addEarningsLineModal2').modal('hide');
-        await templateObject.setEarningLineDropDown();
-        // Set Dropdown fields manually
-        openingBalanceFilter = openingBalances.filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
-                return item;
+        let openingSettings = new OpeningBalance({
+            type: "TOpeningBalances",
+            fields: new OpeningBalanceFields({
+                EmployeeID: employeeID,
+                AType: EarningsRate,
+                Amount: 0,
+                Balance: 0,
+                Active: true
+            }),
+        })
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(openingSettings),
+            });
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#obEarningsRate').val('');
+                await templateObject.saveOpeningBalanceLocalDB();
+                await templateObject.getOpeningBalances();
+                $('#addEarningsLineModal2').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Earning added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
-        });
-
-        if( openingBalanceFilter.length ){
-            setTimeout(function () {
-                let index = openingBalanceFilter.length - 1;
-                $('#obEarningRate' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 500);
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
         }
-        $('.fullScreenSpin').css('display', 'none');
+        
     },
 
     'click #saveObDeductionType': async function(event) {
@@ -6192,70 +6200,65 @@ Template.employeescard.events({
         const apiEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TOpeningBalances
         );
-        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        // if( Array.isArray( checkOpeningBalances ) ){
-        //     openingBalances = checkOpeningBalances
-        // }
+        let openingSettings = new OpeningBalance({
+            type: "TOpeningBalances",
+            fields: new OpeningBalanceFields({
+                EmployeeID: employeeID,
+                AType: DeductionType,
+                Amount: 0,
+                Balance: 1,
+                Active: true
+            }),
+        })
 
-        // openingBalances.push(
-            let openingSettings = new OpeningBalance({
-                type: "TOpeningBalances",
-                fields: new OpeningBalanceFields({
-                    EmployeeID: employeeID,
-                    AType: DeductionType,
-                    Amount: 0,
-                    Balance: 1,
-                    Active: true
-                }),
-            })
-        // );
-
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(openingSettings),
-        });
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            $('#obDeductionType').val('');
-            await templateObject.saveOpeningBalanceLocalDB();
-            await templateObject.getOpeningBalances();
-            $('#addDeductionLineModal2').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Deduction type has been added",
-                type: 'success',
-            })
-        }else{
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Error",
-                text: "Failed to add deduction type",
-                type: 'error',
-            })
-        }
-
-        return false;
-
-        templateObject.openingBalanceInfo.set(openingBalances);
-        $('#obDeductionType').val('');
-        $('#addDeductionLineModal2').modal('hide');
-        await templateObject.setDeductionLineDropDown();
-        // Set Dropdown fields manually
-        openingBalanceFilter = openingBalances.filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'DeductionLine' ) {
-                return item;
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(openingSettings),
+            });
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#obDeductionType').val('');
+                await templateObject.saveOpeningBalanceLocalDB();
+                await templateObject.getOpeningBalances();
+                $('#addDeductionLineModal2').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Deduction added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
-        });
-
-        if( openingBalanceFilter.length ){
-            setTimeout(function () {
-                let index = openingBalanceFilter.length - 1;
-                $('#obDeductionLine' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 500);
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
         }
-        $('.fullScreenSpin').css('display', 'none');
     },
 
     'click #saveObSuperannuationType': async function(event) {
@@ -6279,81 +6282,82 @@ Template.employeescard.events({
         const apiEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TOpeningBalances
         );
-        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        // if( Array.isArray( checkOpeningBalances ) ){
-        //     openingBalances = checkOpeningBalances
-        // }
-
-        // openingBalances.push(
-            let openingSettings = new OpeningBalance({
-                type: "TOpeningBalances",
-                fields: new OpeningBalanceFields({
-                    EmployeeID: employeeID,
-                    AType: SuperannuationFund,
-                    Amount: 0,
-                    ContributionType: ContributionType,
-                    Balance: 2,
-                    Active: true
-                }),
-            })
-        // );
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(openingSettings),
+        let openingSettings = new OpeningBalance({
+            type: "TOpeningBalances",
+            fields: new OpeningBalanceFields({
+                EmployeeID: employeeID,
+                AType: SuperannuationFund,
+                Amount: 0,
+                ContributionType: ContributionType,
+                Balance: 2,
+                Active: true
+            }),
         });
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            $('#obSuperannuationFund').val('');
-            $('#obContributionType').val('');
-            await templateObject.saveOpeningBalanceLocalDB();
-            await templateObject.getOpeningBalances();
-            $('#addSuperannuationLineModal2').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Superannuation has been added",
-                type: 'success',
-            })
-        }else{
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Error",
-                text: "Failed to add Superannuation line",
-                type: 'error',
-            })
-        }
 
-        return false;
-
-        templateObject.openingBalanceInfo.set(openingBalances);
-        $('#obSuperannuationFund').val('');
-        $('#obContributionType').val('');
-        $('#addSuperannuationLineModal2').modal('hide');
-        await templateObject.setSuperannuationDropDown();
-        // Set Dropdown fields manually
-        openingBalanceFilter = openingBalances.filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'SuperannuationLine' ) {
-                return item;
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(openingSettings),
+            });
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#obSuperannuationFund').val('');
+                $('#obContributionType').val('');
+                await templateObject.saveOpeningBalanceLocalDB();
+                await templateObject.getOpeningBalances();
+                $('#addSuperannuationLineModal2').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Superannuation added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
-        });
-
-        if( openingBalanceFilter.length ){
-            setTimeout(function () {
-                let index = openingBalanceFilter.length - 1;
-                $('#obSuperannuationFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 500);
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
         }
-        $('.fullScreenSpin').css('display', 'none');
     },
 
-    'click .btnEditPayNote': async function( event ){
-        event.target.data
-        let ID = $(event.target).data('id');
-        let NotesDesc = $(event.target).closest('tr').find('.colEmpPayrollNotesDesc').text();
+    'click .colEmpPayrollNotes': function( event ){
+        $('#newPayNotesLabel').text('Edit Note');
+        let ID = $(event.target).parent().find('.colEmpPayrollNotesID').text();
+        let NotesDesc = $(event.target).parent().find('.colEmpPayrollNotesDesc').text();
         $('#payRollNoteID').val(ID);
         $('#payRollNotes').val(NotesDesc);
         $('#newNoteModal').modal('show');
+    },
+
+    'click .btnAddNewNotes': function(){
+        $('#newPayNotesLabel').text('Add New Note');
+        $('#payRollNoteID').val(0);
+        $('#payRollNotes').val("");
     },
 
     'click #saveobReimbursement': async function(event) {
@@ -6376,68 +6380,65 @@ Template.employeescard.events({
         const apiEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TOpeningBalances
         );
-        // let checkOpeningBalances = templateObject.openingBalanceInfo.get();
-        // if( Array.isArray( checkOpeningBalances ) ){
-        //     openingBalances = checkOpeningBalances
-        // }
-
-        // openingBalances.push(
-            let openingSettings = new OpeningBalance({
-                type: "TOpeningBalances",
-                fields: new OpeningBalanceFields({
-                    EmployeeID: employeeID,
-                    AType: Reimbursement,
-                    Amount: 0,
-                    Balance: 3,
-                    Active: true
-                }),
-            })
-        // );
-        const ApiResponse = await apiEndpoint.fetch(null, {
-            method: "POST",
-            headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(openingSettings),
+        let openingSettings = new OpeningBalance({
+            type: "TOpeningBalances",
+            fields: new OpeningBalanceFields({
+                EmployeeID: employeeID,
+                AType: Reimbursement,
+                Amount: 0,
+                Balance: 3,
+                Active: true
+            }),
         });
-        if (ApiResponse.ok == true) {
-            const jsonResponse = await ApiResponse.json();
-            $('#obReimbursementType').val('');
-            await templateObject.saveOpeningBalanceLocalDB();
-            await templateObject.getOpeningBalances();
-            $('#addReimbursementLineModal2').modal('hide');
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Success",
-                text: "Reimbursement type has been added",
-                type: 'success',
-            })
-        }else{
-            $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: "Error",
-                text: "Failed to add Reimbursement type",
-                type: 'error',
-            })
-        }
 
-        return false;
-        templateObject.openingBalanceInfo.set(openingBalances);
-        $('#obReimbursementType').val('');
-        $('#addReimbursementLineModal2').modal('hide');
-        await templateObject.setReiumbursementDropDown();
-        // Set Dropdown fields manually
-        openingBalanceFilter = openingBalances.filter((item) => {
-            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'ReimbursementLine' ) {
-                return item;
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(openingSettings),
+            });
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                $('#obReimbursementType').val('');
+                await templateObject.saveOpeningBalanceLocalDB();
+                await templateObject.getOpeningBalances();
+                $('#addReimbursementLineModal2').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Reimbursement added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
-        });
-
-        if( openingBalanceFilter.length ){
-            setTimeout(function () {
-                let index = openingBalanceFilter.length - 1;
-                $('#obReimbursementFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 500);
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
         }
-        $('.fullScreenSpin').css('display', 'none');
     },
 
     // Save LeaveRequest Popup
@@ -6541,28 +6542,39 @@ Template.employeescard.events({
                     $('#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus').val('');
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Leave request added",
+                        title: 'Leave request added successfully',
+                        text: '',
                         type: 'success',
-
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if (result.value) { }
+                        } 
+                    });
                 }else{
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Error",
-                        text: "Failed to add leave request",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });  
                 }
             } catch (error) {
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: "Error",
-                    text: "Failed to add leave request",
+                    title: 'Oooops...',
+                    text: error,
                     type: 'error',
-
-                })
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });
             }
         }
     },
@@ -6688,35 +6700,45 @@ Template.employeescard.events({
             });
 
             if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                // $('#deductionRateForm')[0].reset();
                 await templateObject.saveAssignLeaveLocalDB();
                 await templateObject.getAssignLeaveTypes();
                 $('#assignLeaveTypeModal').modal('hide');
+                $('#assignLeaveTypeForm')[0].reset();
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: "Success",
-                    text: "Leave type has been assigned",
+                    title: 'Assign leave type added successfully',
+                    text: '',
                     type: 'success',
-
-                })
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: "Error",
-                    text: "Failed to assigned leave type",
+                    title: 'Oooops...',
+                    text: error,
                     type: 'error',
-
-                })
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: "Error",
-                text: "Failed to assigned leave type",
+                title: 'Oooops...',
+                text: error,
                 type: 'error',
-
-            })
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
         }
     },
 
@@ -6739,69 +6761,83 @@ Template.employeescard.events({
                 text: "Please enter a note",
                 type: 'warning',
             })
-        } else {
-            $('.fullScreenSpin').css('display', 'block');
-            let noteSetting = new PayNotes({
-                type: "TPayNotes",
-                fields: new PayNotesFields({
-                    ID: parseInt(ID),
-                    EmployeeID: parseInt(employeeID),
-                    Notes: Notes,
-                    CreatedAt: moment(),
-                    UserID: Session.get("mySessionEmployeeLoggedID"),
-                    UserName: Session.get('mySessionEmployee') || '',
-                    Active: true
-                }),
-            })
-            try {
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(noteSetting),
-                });
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    await templateObject.saveNotesLocalDB();
-                    await templateObject.getPayNotesTypes();
-                    $('#payRollNotes').val('');
-                    $('#payRollNoteID').val(0)
-                    $('#newNoteModal').modal('hide');
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Success",
-                        text: "Note has been added",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add note",
-                        type: 'warning',
-                    })
-                }
-            } catch (error) {
+            return false;
+        } 
+        $('.fullScreenSpin').css('display', 'block');
+        let noteSetting = new PayNotes({
+            type: "TPayNotes",
+            fields: new PayNotesFields({
+                ID: parseInt(ID),
+                EmployeeID: parseInt(employeeID),
+                Notes: Notes,
+                CreatedAt: moment(),
+                UserID: Session.get("mySessionEmployeeLoggedID"),
+                UserName: Session.get('mySessionEmployee') || '',
+                Active: true
+            }),
+        })
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(noteSetting),
+            });
+            if (ApiResponse.ok == true) {
+                await templateObject.saveNotesLocalDB();
+                await templateObject.getPayNotesTypes();
+                $('#payRollNotes').val('');
+                $('#payRollNoteID').val(0)
+                $('#newNoteModal').modal('hide');
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
-                    title: "Error",
-                    text: "Note could not be added",
+                    title: ( parseInt(ID) == 0 )? 'Note added successfully' : 'Note updated successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) { }
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
                     type: 'error',
-                })
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });
         }
     },
 
     // NEXT TASK HERE
-    'click #newLeaveRequestbtn':function(){
+    'click .btnLeaveRequestBtn':function(){
+        $('#newLeaveRequestLabel').text('New Leave Request');
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
         today = dd+'/'+mm+'/'+ yyyy;
+        $('#leaveRequestForm')[0].reset();
         $('#edtLeaveStartDate').val(today);
-        $('#edtLeaveEndDate').val(today)
-        $('#edtLeaveRequestID').val(0);
-        $('#edtLeaveTypeofRequestID').val(0);
+        $('#edtLeaveStartDate').val(today);
+        $('#removeLeaveRequestBtn').hide();       
     },
 
     'change #taxes :input, #taxes :select': async function(){
@@ -6810,162 +6846,223 @@ Template.employeescard.events({
     },
 
     // Pay Template Tab
-    'click #addEarningsLine': function(){
+    'click #addEarningsLine': async function(){
         let templateObject = Template.instance();
-        swal({
-            title: "Confirm",
-            text: "New Earnings line will be saved",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save'
-        })
-        .then(async (result)=>{
-            if(result){
-                $('.fullScreenSpin').css('display', 'block');
-                let currentId = FlowRouter.current().queryParams;
-                let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
 
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateEarningLine
-                );
+        let EarningRate = $('#earningRateSelect').val();
+        let CalculationType = $('input[name=calculationType]:checked').val();
+        let ExpenseAccount = $('#expenseAccount').val();
+        
+        if( EarningRate == ""){
+            swal({
+                title: "Error",
+                text: "Please select earning rate",
+                type: 'warning',
+            });
+            return false
+        }
 
-                let EarningRate = $('#earningRateSelect').val();
-                let CalculationType = $('input[name=calculationType]:checked').val();
-                let ExpenseAccount = $('#expenseAccount').val();
+        if( CalculationType == ""){
+            swal({
+                title: "Error",
+                text: "Please select calculation type",
+                type: 'warning',
+            });
+            return false
+        }
 
-                let payEarningLines = new PayTemplateEarningLine({
-                        type: 'TPayTemplateEarningLine',
-                        fields: new PayTemplateEarningLineFields({
-                            ID: 0,
-                            EmployeeID: employeeID,
-                            EarningRate: EarningRate,
-                            CalculationType: CalculationType,
-                            ExpenseAccount: ExpenseAccount,
-                            Amount: 0,
-                            Active: true
-                        })
-                    });
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(payEarningLines),
-                    });
+        if( ExpenseAccount == ""){
+            swal({
+                title: "Error",
+                text: "Please enter expense account",
+                type: 'warning',
+            });
+            return false
+        }
 
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        // Load all the earnings Line from Database
-                        await templateObject.saveEarningLocalDB();
-                        await templateObject.getPayEarningLines();
-                        $('input[name=calculationType]:checked').attr('checked', false);
-                        $('#expenseAccount').val('');
-                        $('#addEarningsLineModal').modal('hide');
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Success",
-                            text: "Earning line has been added",
-                            type: 'success',
-                        })
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Error",
-                            text: "Failed to add earning line",
-                            type: 'error',
-                        })
-                    }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add earning line",
-                        type: 'error',
-                    })
-                }
-            }
-        })
-    },
+        $('.fullScreenSpin').css('display', 'block');
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateEarningLine
+        );
 
-    'click #addDeductionLine': function(){
-        let templateObject = Template.instance();
-        swal({
-            title: "Confirm",
-            text: "New Deduction line will be saved",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save'
-        })
-        .then(async (result)=>{
-            if(result){
-                $('.fullScreenSpin').css('display', 'block');
-                let currentId = FlowRouter.current().queryParams;
-                let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-                let DeductionType = $('#deductionTypeSelect').val();
-                let CalculationType = $('input[name=calculationTypeDeduction]:checked').val();
-                let ControlAccount = $('#controlAccountDeduction').val();
+        let payEarningLines = new PayTemplateEarningLine({
+                type: 'TPayTemplateEarningLine',
+                fields: new PayTemplateEarningLineFields({
+                    ID: 0,
+                    EmployeeID: employeeID,
+                    EarningRate: EarningRate,
+                    CalculationType: CalculationType,
+                    ExpenseAccount: ExpenseAccount,
+                    Amount: 0,
+                    Active: true
+                })
+            });
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payEarningLines),
+            });
 
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateDeductionLine
-                );
-                let payDeductionLines = new PayTemplateDeductionLine({
-                    type: 'TPayTemplateDeductionLine',
-                    fields: new PayTemplateDeductionLineFields({
-                        EmployeeID: parseInt(employeeID),
-                        DeductionType: DeductionType,
-                        CalculationType: CalculationType,
-                        ExpenseAccount: ControlAccount,
-                        Amount: 0,
-                        // Percentage: 0,
-                        Active: true
-                    })
+            if (ApiResponse.ok == true) {
+                // Load all the earnings Line from Database
+                await templateObject.saveEarningLocalDB();
+                await templateObject.getPayEarningLines();
+                $('input[name=calculationType]:checked').attr('checked', false);
+                $('#expenseAccount').val('');
+                $('#earningRateSelect').val('');                
+                $('#addEarningsLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Earning line added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) {}
+                    } 
                 });
-
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(payDeductionLines),
-                    });
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        // Load all the earnings Line from Database
-                        await templateObject.saveDeductionLocalDB();
-                        await templateObject.getPayDeducitonLines();
-                        $('#deductionTypeSelect').val('');
-                        $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
-                        $('#controlAccountDeduction').val('');
-                        $('#addDeductionLineModal').modal('hide');
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Success",
-                            text: "Deduction line has been added",
-                            type: 'success',
-                        })
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Error",
-                            text: "Failed to add deduction line",
-                            type: 'error',
-                        })
-                    }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add deduction line",
-                        type: 'error',
-                    })
-                }
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
-        })
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });                
+        }
+
     },
 
-    'click #addSuperannuationLine': function(){
+    'click #addDeductionLine': async function(){
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let DeductionType = $('#deductionTypeSelect').val();
+        let CalculationType = $('input[name=calculationTypeDeduction]:checked').val();
+        let ControlAccount = $('#controlAccountDeduction').val();
+
+        if( DeductionType == "" ){
+            swal({
+                title: "Error",
+                text: "Please select deduction type",
+                type: 'warning',
+            });
+            return false
+        }
+
+        if( CalculationType == "" ){
+            swal({
+                title: "Error",
+                text: "Please select calculation type",
+                type: 'warning',
+            });
+            return false
+        }
+
+        if( ControlAccount == "" ){
+            swal({
+                title: "Error",
+                text: "Please select control account",
+                type: 'warning',
+            });
+            return false
+        }
+        
+        $('.fullScreenSpin').css('display', 'block');
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateDeductionLine
+        );
+        let payDeductionLines = new PayTemplateDeductionLine({
+            type: 'TPayTemplateDeductionLine',
+            fields: new PayTemplateDeductionLineFields({
+                EmployeeID: parseInt(employeeID),
+                DeductionType: DeductionType,
+                CalculationType: CalculationType,
+                ExpenseAccount: ControlAccount,
+                Amount: 0,
+                Percentage: 0,
+                Active: true
+            })
+        });
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payDeductionLines),
+            });
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                // Load all the earnings Line from Database
+                await templateObject.saveDeductionLocalDB();
+                await templateObject.getPayDeducitonLines();
+                $('#deductionTypeSelect').val('');
+                $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
+                $('#controlAccountDeduction').val('');
+                $('#addDeductionLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Deduction line added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) {}
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
+            }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });                
+        }
+    },
+
+    'click #addSuperannuationLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -6984,200 +7081,226 @@ Template.employeescard.events({
                 text: "Please select superannuation fund",
                 type: 'error',
             })
-        } else if(ContributionType == ''){
+            return false
+        } 
+        if(ContributionType == ''){
             swal({
                 title: "Error",
                 text: "Please select contribution type",
                 type: 'error',
             })
-        }else if(CalculationType == ''){
+            return false
+        }
+        if(CalculationType == ''){
             swal({
                 title: "Error",
                 text: "Please enter calculation type",
                 type: 'error',
             })
-        } else if(isNaN(CalculationType)){
-            swal({
-                title: "Error",
-                text: "Calculation type must be a number",
-                type: 'error',
-            })
-        } else if(MinimumMonthlyEarnings == ''){
+            return false
+        }
+        if(MinimumMonthlyEarnings == ''){
             swal({
                 title: "Error",
                 text: "Please enter Minimum monthly earnings",
                 type: 'error',
-            })
-        } else if(isNaN(MinimumMonthlyEarnings)){
-            swal({
-                title: "Error",
-                text: "Minimum monthly earnings must be a number",
-                type: 'error',
-            })
+            });
+            return false;
         }
-        else{
+        $('.fullScreenSpin').css('display', 'block');
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
+        );
+
+        let paySuperannuationLines = new PayTemplateSuperannuationLine({
+            type: 'TPayTemplateSuperannuationLine',
+            fields: new PayTemplateSuperannuationLineFields({
+                ID: 0,
+                EmployeeID: employeeID,
+                Fund: Fund,
+                ContributionType: ContributionType,
+                ReducesSGC: ReducesSGC,
+                CalculationType: parseInt(CalculationType),
+                MinimumMonthlyEarnings: parseInt(MinimumMonthlyEarnings),
+                ExpenseAccount: ExpenseAccount,
+                LiabilityAccount: LiabilityAccount,
+                PaymentFrequency: PaymentFrequency,
+                PeriodPaymentDate: moment(PeriodPaymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
+                PeriodPaymentDate: 0,
+                Percentage: 0,
+                Amount: 0,
+                Active: true
+            })
+        });
+
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(paySuperannuationLines),
+            });
+
+            if (ApiResponse.ok == true) {
+                const jsonResponse = await ApiResponse.json();
+                // Load all the earnings Line from Database
+                await templateObject.saveSuperannuationLocalDB();
+                await templateObject.getPaySuperannuationLines();
+                $('#superannuationFund').val('');
+                $('#superannuationTypeSelect').val('');
+                $('#reducesSGC').attr('checked', false);
+                $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
+                $('#minimumMonthlyEarnings').val('');
+                $('#expenseSuperannuationAccount').val('');
+                $('#liabilityAccount').val('');
+                $('#paymentFrequency').val('Monthly');
+                $('#edtPeriodPaymentDate').val('');
+                $('#addSuperannuationLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Superannuation line added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) {}
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
+            }
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: "Confirm",
-                text: "New Superannuation line will be saved",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, save'
-            })
-            .then(async (result)=>{
-                if(result){
-                    $('.fullScreenSpin').css('display', 'block');
-                    const employeePayrolApis = new EmployeePayrollApi();
-                    // now we have to make the post request to save the data in database
-                    const apiEndpoint = employeePayrolApis.collection.findByName(
-                        employeePayrolApis.collectionNames.TPayTemplateSuperannuationLine
-                    );
-
-                    let paySuperannuationLines = new PayTemplateSuperannuationLine({
-                        type: 'TPayTemplateSuperannuationLine',
-                        fields: new PayTemplateSuperannuationLineFields({
-                            ID: 0,
-                            EmployeeID: employeeID,
-                            Fund: Fund,
-                            ContributionType: ContributionType,
-                            ReducesSGC: ReducesSGC,
-                            CalculationType: parseInt(CalculationType),
-                            MinimumMonthlyEarnings: parseInt(MinimumMonthlyEarnings),
-                            ExpenseAccount: ExpenseAccount,
-                            LiabilityAccount: LiabilityAccount,
-                            PaymentFrequency: PaymentFrequency,
-                            PeriodPaymentDate: moment(PeriodPaymentDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss'),
-                            PeriodPaymentDate: 0,
-                            Percentage: 0,
-                            Amount: 0,
-                            Active: true
-                        })
-                    });
-
-                    try {
-                        const ApiResponse = await apiEndpoint.fetch(null, {
-                            method: "POST",
-                            headers: ApiService.getPostHeaders(),
-                            body: JSON.stringify(paySuperannuationLines),
-                        });
-
-                        if (ApiResponse.ok == true) {
-                            const jsonResponse = await ApiResponse.json();
-                            // Load all the earnings Line from Database
-                            await templateObject.saveSuperannuationLocalDB();
-                            await templateObject.getPaySuperannuationLines();
-                            $('#superannuationFund').val('');
-                            $('#superannuationTypeSelect').val('');
-                            $('#reducesSGC').attr('checked', false);
-                            $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
-                            $('#minimumMonthlyEarnings').val('');
-                            $('#expenseSuperannuationAccount').val('');
-                            $('#liabilityAccount').val('');
-                            $('#paymentFrequency').val('Monthly');
-                            $('#edtPeriodPaymentDate').val('');
-                            $('#addSuperannuationLineModal').modal('hide');
-                            $('.fullScreenSpin').css('display', 'none');
-                            swal({
-                                title: "Success",
-                                text: "Superannuation line has been added",
-                                type: 'success',
-                            })
-                        }else{
-                            $('.fullScreenSpin').css('display', 'none');
-                            swal({
-                                title: "Error",
-                                text: "Failed to add superannuation line",
-                                type: 'error',
-                            })
-                        }
-                    } catch (error) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Error",
-                            text: "Failed to add superannuation line",
-                            type: 'error',
-                        })
-                    }
-                }
-            })
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });                
         }
     },
 
-    'click #addReiumbursementLine': function(){
-        const templateObject = Template.instance();
+    'click #addReiumbursementLine': async function(){
+        const templateObject = Template.instance();        
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let ReiumbursementType = $('#reimbursementTypeSelect').val();
+        let Description = $('#reiumbursementDescription').val();
+        let ControlExpenseAccount = $('#controlExpenseAccount').val();
 
-        swal({
-            title: "Confirm",
-            text: "New Reimbursement line will be saved",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, save'
+        if(ReiumbursementType == ''){
+            swal({
+                title: "Error",
+                text: "Please select Reiumbursement Type",
+                type: 'error',
+            });
+            return false;
+        }
+
+        if(Description == ''){
+            swal({
+                title: "Error",
+                text: "Please enter Description",
+                type: 'error',
+            });
+            return false;
+        }
+
+        if(ControlExpenseAccount == ''){
+            swal({
+                title: "Error",
+                text: "Please enter Control Expense Account",
+                type: 'error',
+            });
+            return false;
+        }
+
+        $('.fullScreenSpin').css('display', 'block');
+
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
+        );
+        let payReiumbursementLines = new PayTemplateReiumbursementLine({
+            type: 'TPayTemplateReiumbursementLine',
+            fields: new PayTemplateReiumbursementLineFields({
+                ID: 0,
+                EmployeeID: employeeID,
+                ReiumbursementType: ReiumbursementType,
+                Description: Description,
+                ExpenseAccount: ControlExpenseAccount,
+                Amount: 0,
+                Active: true
+            })
         })
-        .then(async (result)=>{
-            if(result){
-                $('.fullScreenSpin').css('display', 'block');
-                let currentId = FlowRouter.current().queryParams;
-                let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-                let ReiumbursementType = $('#reimbursementTypeSelect').val();
-                let Description = $('#reiumbursementDescription').val();
-                let ControlExpenseAccount = $('#controlExpenseAccount').val();
 
-                const employeePayrolApis = new EmployeePayrollApi();
-                // now we have to make the post request to save the data in database
-                const apiEndpoint = employeePayrolApis.collection.findByName(
-                    employeePayrolApis.collectionNames.TPayTemplateReiumbursementLine
-                );
-                let payReiumbursementLines = new PayTemplateReiumbursementLine({
-                    type: 'TPayTemplateReiumbursementLine',
-                    fields: new PayTemplateReiumbursementLineFields({
-                        ID: 0,
-                        EmployeeID: employeeID,
-                        ReiumbursementType: ReiumbursementType,
-                        Description: Description,
-                        ExpenseAccount: ControlExpenseAccount,
-                        Amount: 0,
-                        Active: true
-                    })
-                })
+        try {
+            const ApiResponse = await apiEndpoint.fetch(null, {
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(payReiumbursementLines),
+            });
 
-                try {
-                    const ApiResponse = await apiEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(payReiumbursementLines),
-                    });
-
-                    if (ApiResponse.ok == true) {
-                        // Load all the earnings Line from Database
-                        await templateObject.saveReiumbursementDB();
-                        await templateObject.getPayReiumbursementLines();
-                        $('#reimbursementTypeSelect').val('');
-                        $('#reiumbursementDescription').val('');
-                        $('#controlExpenseAccount').val('');
-                        $('#addReimbursementLineModal').modal('hide');
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Success",
-                            text: "Reiumbursement line has been added",
-                            type: 'success',
-                        })
-                    }else{
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: "Error",
-                            text: "Failed to add Reiumbursement line",
-                            type: 'error',
-                        })
-                    }
-                } catch (error) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to add Reimbursement line",
-                        type: 'error',
-                    })
-                }
+            if (ApiResponse.ok == true) {
+                // Load all the earnings Line from Database
+                await templateObject.saveReiumbursementDB();
+                await templateObject.getPayReiumbursementLines();
+                $('#reimbursementTypeSelect').val('');
+                $('#reiumbursementDescription').val('');
+                $('#controlExpenseAccount').val('');
+                $('#addReimbursementLineModal').modal('hide');
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Reiumbursement line added successfully',
+                    text: '',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {
+                        if (result.value) {}
+                    } 
+                });
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });  
             }
-        })
+        } catch (error) {
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Oooops...',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {}
+            });                
+        }
     },
 
     'change #superannuationTypeSelect': function(){
@@ -7224,24 +7347,15 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         swal({
-            title: 'Confirm.',
-            text: 'You are about to delete this earning line. Proceed?',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonText: 'Yes. proceed'
-        }).then(async (result) => {
-            if (result) {
+            title: 'Delete Deduction Line',
+            text: "Are you sure you want to Delete this earning line?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
                 $('.fullScreenSpin').css('display', 'block');
-                // $(e.target).parents('.earningLinesContainer').remove();
-                let payLines = templateObject.payTemplateEarningLineInfo.get();
-                let updatedLines = PayTemplateEarningLine.fromList(
-                    payLines
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
-                        item.fields.Active = false;
-                    }
-                    return item;
-                });
+                // $(e.target).parents('.earningLinesContainer').remove();               
 
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
@@ -7257,35 +7371,68 @@ Template.employeescard.events({
                     }),
                 })
 
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(earningSettings),
-                });
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(earningSettings),
+                    });
 
-                let earningObj = {
-                    tpaytemplateearningline: updatedLines
-                }
-
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // Save into indexDB
-                    await addVS1Data('TPayTemplateEarningLine', JSON.stringify(earningObj))
-                    // Bind with html content
-                    await templateObject.payTemplateEarningLineInfo.set(updatedLines);
+                    if (ApiResponse.ok == true) {
+                        // Save into indexDB
+                        let dataObject = await getVS1Data('TPayTemplateEarningLine');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.tpaytemplateearningline.length > 0 ){
+                                let useData = data.tpaytemplateearningline.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let updatedObj = {
+                                    tpaytemplateearningline: useData
+                                }
+                                await addVS1Data('TPayTemplateEarningLine', JSON.stringify(updatedObj))
+                                // Bind with html content
+                                await templateObject.payTemplateEarningLineInfo.set(useData);
+                            }
+                        }                        
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Earning Line deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });  
+                    }
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Earning Line Removed successfully",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to remove",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });                
                 }
             }
         });
@@ -7295,25 +7442,14 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         swal({
-            title: 'Confirm.',
-            text: 'You are about to delete this deduction line. Proceed?',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonText: 'Yes. proceed'
-        }).then(async (result) => {
-            if (result) {
+            title: 'Delete Deduction Line',
+            text: "Are you sure you want to Delete this Deduction Line?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
                 $('.fullScreenSpin').css('display', 'block');
-                let payLines = templateObject.payTemplateDeductionLineInfo.get();
-                let updatedLines = PayTemplateDeductionLine.fromList(
-                    payLines
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
-                        item.fields.Active = false;
-                    }
-
-                    return item;
-                });
-
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -7328,63 +7464,87 @@ Template.employeescard.events({
                     }),
                 })
 
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(deductionSettings),
-                });
-
-
-                let deductionObj = {
-                    tpaytemplatedeductionline: updatedLines
-                }
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // Save into indexDB
-                    await addVS1Data('TPayTemplateDeductionLine', JSON.stringify(deductionObj));
-
-                    // Bind with html content
-                    await templateObject.payTemplateDeductionLineInfo.set(updatedLines);
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(deductionSettings),
+                    });
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TPayTemplateDeductionLine');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.tpaytemplatedeductionline.length > 0 ){
+                                let useData = data.tpaytemplatedeductionline.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let updatedObj = {
+                                    tpaytemplatedeductionline: useData
+                                }
+                                await addVS1Data('TPayTemplateDeductionLine', JSON.stringify(updatedObj))
+                                await templateObject.payTemplateDeductionLineInfo.set(useData);
+                            }
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Deduction Line deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });  
+                    }
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Deduction Line Removed successfully",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to remove",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });                
                 }
             }
         });
+    },
+
+    'click .btnAssignLeaveType': function(){
+        $('#assignteavetypeID').val(0);
+        $('#assignLeaveTypeForm')[0].reset();
     },
 
     'click .removePayTempSuperannuation': async function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         swal({
-            title: 'Confirm.',
-            text: 'You are about to delete this superannuation line. Proceed?',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonText: 'Yes. proceed'
-        }).then(async (result) => {
-            if (result) {
+            title: 'Delete Superannuation Line',
+            text: "Are you sure you want to Delete this Superannuation Line?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
                 $('.fullScreenSpin').css('display', 'block');
-                let payLines = templateObject.payTemplateSuperannuationLineInfo.get();
-                let updatedLines = PayTemplateSuperannuationLine.fromList(
-                    payLines
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
-                        item.fields.Active = false;
-                    }
-                    return item;
-                });
-
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -7399,35 +7559,65 @@ Template.employeescard.events({
                     }),
                 })
 
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(superannuationSettings),
-                });
-
-                let superannuationObj = {
-                    tPaytemplatesuperannuationline: updatedLines
-                }
-
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // Save into indexDB
-                    await addVS1Data('TPayTemplateSuperannuationLine', JSON.stringify(superannuationObj))
-                    // Bind with html content
-                    await templateObject.payTemplateSuperannuationLineInfo.set(updatedLines);
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(superannuationSettings),
+                    });
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TPayTemplateSuperannuationLine');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.tpaytemplatesuperannuationline.length > 0 ){
+                                let useData = data.tpaytemplatesuperannuationline.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let updatedObj = {
+                                    tpaytemplatesuperannuationline: useData
+                                }
+                                await addVS1Data('TPayTemplateSuperannuationLine', JSON.stringify(updatedObj))
+                                await templateObject.payTemplateSuperannuationLineInfo.set(useData);
+                            }
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Superannuation Line deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });  
+                    }
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Superannuation Line Removed successfully",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to remove",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });                
                 }
             }
         });
@@ -7437,24 +7627,14 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         swal({
-            title: 'Confirm.',
-            text: 'You are about to delete this superannuation line. Proceed?',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonText: 'Yes. proceed'
-        }).then(async (result) => {
-            if (result) {
+            title: 'Delete Superannuation Line',
+            text: "Are you sure you want to Delete this Superannuation Line?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
                 $('.fullScreenSpin').css('display', 'block');
-                let payLines = templateObject.payTemplateReiumbursementLineInfo.get();
-                let updatedLines = PayTemplateReiumbursementLine.fromList(
-                    payLines
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID ) ) {
-                        item.fields.Active = false;
-                    }
-                    return item;
-                });
-
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -7467,37 +7647,67 @@ Template.employeescard.events({
                         ID: deleteID,
                         Active: false,
                     }),
-                })
-
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(reiumbursementSettings),
                 });
 
-                let reiumbursementObj = {
-                    tpaytemplatereiumbursementline: updatedLines
-                }
-
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // Save into indexDB
-                    await addVS1Data('TPayTemplateReiumbursementLine', JSON.stringify(reiumbursementObj))
-                    // Bind with html content
-                    await templateObject.payTemplateReiumbursementLineInfo.set(updatedLines);
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(reiumbursementSettings),
+                    });    
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TPayTemplateReiumbursementLine');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.tpaytemplatereiumbursementline.length > 0 ){
+                                let useData = data.tpaytemplatereiumbursementline.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let updatedObj = {
+                                    tpaytemplatereiumbursementline: useData
+                                }
+                                await addVS1Data('TPayTemplateReiumbursementLine', JSON.stringify(updatedObj))
+                                await templateObject.payTemplateReiumbursementLineInfo.set(useData);
+                            }
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Reiumbursement Line deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });  
+                    }
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Reiumbursement Line Removed successfully",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to remove",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });                
                 }
             }
         });
@@ -7505,29 +7715,16 @@ Template.employeescard.events({
 
     'click .removeObEarning': async function(e){
         let templateObject = Template.instance();
-        // let currentId = FlowRouter.current().queryParams;
-        // let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let deleteID = $(e.target).data('id');
         swal({
-            title: 'Confirm.',
-            text: 'You are about to delete this earning line. Proceed?',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonText: 'Yes. proceed'
-        }).then(async (result) => {
-            if (result) {
-                $('.fullScreenSpin').css('display', 'block');
-                let deleteID = $(e.target).data('id');
-                let payLines = templateObject.openingBalanceInfo.get();
-                let updatedLines = OpeningBalance.fromList(
-                    payLines
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                        item.fields.Active = false;
-                    }
-                    return item;
-                });
-
-
+            title: 'Delete Earning',
+            text: "Are you sure you want to Delete this Earning?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'block');                
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -7538,41 +7735,69 @@ Template.employeescard.events({
                     type: "TOpeningBalances",
                     fields: new OpeningBalanceFields({
                         ID: deleteID,
-                        Active: false,
-                        Balance: 0
+                        Active: false
                     }),
                 })
 
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(reiumbursementSettings),
-                });
-
-                let openineBalanceObj = {
-                    topeningbalances: updatedLines
-                }
-
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // Save into indexDB
-                    await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
-                    // Bind with html content
-                    await templateObject.openingBalanceInfo.set(updatedLines);
-                    await templateObject.getOpeningBalances();
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(reiumbursementSettings),
+                    });
+                    
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TOpeningBalances');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.topeningbalances.length > 0 ){
+                                let useData = data.topeningbalances.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let updatedObj = {
+                                    topeningbalances: useData
+                                }
+                                await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj))
+                            }
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Earning deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });  
+                    }
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Earning Line Removed successfully",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to remove",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });                
                 }
             }
         })
@@ -7584,24 +7809,14 @@ Template.employeescard.events({
         // let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let deleteID = $(e.target).data('id');
         swal({
-            title: 'Confirm.',
-            text: 'You are about to delete this deduction line. Proceed?',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonText: 'Yes. proceed'
-        }).then(async (result) => {
-            if (result) {
+            title: 'Delete Deduction',
+            text: "Are you sure you want to Delete this Deduction?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
                 $('.fullScreenSpin').css('display', 'block');
-                let payLines = templateObject.openingBalanceInfo.get();
-                let updatedLines = OpeningBalance.fromList(
-                    payLines
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                        item.fields.Active = false;
-                    }
-                    return item;
-                });
-
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -7612,42 +7827,71 @@ Template.employeescard.events({
                     type: "TOpeningBalances",
                     fields: new OpeningBalanceFields({
                         ID: deleteID,
-                        Active: false,
-                        Balance: 1
+                        Active: false
                     }),
                 })
 
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(reiumbursementSettings),
-                });
-
-                let openineBalanceObj = {
-                    topeningbalances: updatedLines
-                }
-
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // Save into indexDB
-                    await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
-                    // Bind with html content
-                    await templateObject.openingBalanceInfo.set(updatedLines);
-                    await templateObject.getOpeningBalances();
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(reiumbursementSettings),
+                    });
+                    
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TOpeningBalances');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.topeningbalances.length > 0 ){
+                                let useData = data.topeningbalances.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let updatedObj = {
+                                    topeningbalances: useData
+                                }
+                                await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj))
+                            }
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Deduction deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });  
+                    }
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Deduction Line Removed successfully",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to remove",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });                
                 }
+                
             }
         });
     },
@@ -7657,24 +7901,14 @@ Template.employeescard.events({
 
         let deleteID = $(e.target).data('id');
         swal({
-            title: 'Confirm.',
-            text: 'You are about to delete this superannuation line. Proceed?',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonText: 'Yes. proceed'
-        }).then(async (result) => {
-            if (result) {
+            title: 'Delete Superannuation',
+            text: "Are you sure you want to Delete this Superannuation?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
+            if (result.value) {
                 $('.fullScreenSpin').css('display', 'block');
-                let payLines = templateObject.openingBalanceInfo.get();
-                let updatedLines = OpeningBalance.fromList(
-                    payLines
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                        item.fields.Active = false;
-                    }
-                    return item;
-                });
-
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -7685,41 +7919,69 @@ Template.employeescard.events({
                     type: "TOpeningBalances",
                     fields: new OpeningBalanceFields({
                         ID: deleteID,
-                        Active: false,
-                        Balance: 2
+                        Active: false
                     }),
                 })
 
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(reiumbursementSettings),
-                });
-
-                let openineBalanceObj = {
-                    topeningbalances: updatedLines
-                }
-
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // Save into indexDB
-                    await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
-                    // Bind with html content
-                    await templateObject.openingBalanceInfo.set(updatedLines);
-                    await templateObject.getOpeningBalances();
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(reiumbursementSettings),
+                    });
+                    
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TOpeningBalances');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.topeningbalances.length > 0 ){
+                                let useData = data.topeningbalances.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let updatedObj = {
+                                    topeningbalances: useData
+                                }
+                                await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj))
+                            }
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Superannuation deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });  
+                    }
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Superannuation Line Removed successfully",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to remove",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });                
                 }
             }
         });
@@ -7730,70 +7992,88 @@ Template.employeescard.events({
 
         let deleteID = $(e.target).data('id');
         swal({
-            title: 'Confirm.',
-            text: 'You are about to delete this reimbursement line. Proceed?',
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonText: 'Yes. proceed'
-        }).then(async (result) => {
+            title: 'Delete Reimbursement',
+            text: "Are you sure you want to Delete this Reimbursement?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then( async (result) => {
             if (result) {
                 $('.fullScreenSpin').css('display', 'block');
-                let payLines = templateObject.openingBalanceInfo.get();
-                let updatedLines = OpeningBalance.fromList(
-                    payLines
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                        item.fields.Active = false;
-                    }
-                    return item;
-                });
-
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TOpeningBalances
                 );
-
+                
                 let reiumbursementSettings =  new OpeningBalance({
                     type: "TOpeningBalances",
                     fields: new OpeningBalanceFields({
                         ID: deleteID,
-                        Active: false,
-                        Balance: 3
+                        Active: false
                     }),
                 })
 
-                const ApiResponse = await apiEndpoint.fetch(null, {
-                    method: "POST",
-                    headers: ApiService.getPostHeaders(),
-                    body: JSON.stringify(reiumbursementSettings),
-                });
-
-                let openineBalanceObj = {
-                    topeningbalances: updatedLines
-                }
-
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
-                    // Save into indexDB
-                    await addVS1Data('TOpeningBalances', JSON.stringify(openineBalanceObj))
-                    // Bind with html content
-                    await templateObject.openingBalanceInfo.set(updatedLines);
-                    await templateObject.getOpeningBalances();
+                try {
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(reiumbursementSettings),
+                    });
+                    
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TOpeningBalances');
+                        if ( dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if( data.topeningbalances.length > 0 ){
+                                let useData = data.topeningbalances.map( (item) => {
+                                    if( deleteID == item.fields.ID ){
+                                        item.fields.Active = false;
+                                    }
+                                    return item;
+                                });
+                                let updatedObj = {
+                                    topeningbalances: useData
+                                }
+                                await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj))
+                            }
+                        }
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Reimbursement deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        });
+                    }else{
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });  
+                    }
+                } catch (error) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
-                        title: "Success",
-                        text: "Reimbursement Line Removed successfully",
-                        type: 'success',
-                    })
-                }else{
-                    $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: "Error",
-                        text: "Failed to remove",
+                        title: 'Oooops...',
+                        text: error,
                         type: 'error',
-                    })
-                }
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });                
+                }                
             }
         })
     },
@@ -8063,8 +8343,7 @@ Template.employeescard.events({
             });
         }else if(activeTab == "leave") {
 
-        }else if(activeTab == "bankaccounts") {
-            LoadingOverlay.show();
+        }else if(activeTab == "bankaccounts") {          
 
             let currentId = FlowRouter.current().queryParams;
             let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -8084,48 +8363,7 @@ Template.employeescard.events({
             let bankAccountNo = $("#bankAccountNo").val();
             let EdtPayPeriod = $("#edtPayPeriod").val();
             let FirstPayDate = $("#edtFirstPayDate").val();
-            if( bankAccountStatement == "" ){
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter account statement',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
-            }
-            if( bankAccountName == "" ){
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter account name',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
-            }
-            if( bankAccountNo == "" ){
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter account number',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
-            }
-            if( bankAccountBSB == "" ){
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Validation Error',
-                    text: 'Please enter account BSB',
-                    type: 'error',
-                    showCancelButton: false,
-                });
-                return false
-            }
             if( FirstPayDate == "" ){
-                $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Validation Error',
                     text: 'Please select first pay date',
@@ -8135,7 +8373,6 @@ Template.employeescard.events({
                 return false
             }
             if( EdtPayPeriod == "" ){
-                $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Validation Error',
                     text: 'Please select pay period',
@@ -8144,6 +8381,43 @@ Template.employeescard.events({
                 });
                 return false
             }
+            if( bankAccountStatement == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter statement text',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+            if( bankAccountName == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter account name',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+            if( bankAccountNo == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter account number',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+            if( bankAccountBSB == "" ){
+                swal({
+                    title: 'Validation Error',
+                    text: 'Please enter account BSB',
+                    type: 'error',
+                    showCancelButton: false,
+                });
+                return false
+            }
+            $('.fullScreenSpin').css('display', 'block');            
 
             let employeePaySettings = templateObject.employeePaySettings.get();
 
@@ -8600,6 +8874,8 @@ Template.employeescard.events({
                     text: "Pay template has been saved",
                     type: 'success',
                 })
+            }else{
+                $('.fullScreenSpin').css('display', 'none');
             }
 
         }else if(activeTab == "openingbalances") {
@@ -8754,9 +9030,6 @@ Template.employeescard.events({
         }else{
             return;
         }
-    },
-    'click #addPaySlip': async function(event) {
-
     },
     'change .colServiceCostPrice': function (event) {
 
@@ -10204,19 +10477,18 @@ Template.employeescard.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
-  "click #btnDeletePayslip": function (e){
+  "click .btnDeletePayslip": function (e){
     let templateObject = Template.instance();
     let deleteID = $(e.target).data('id') || '';
     swal({
-        title: 'Confirm.',
-        text: 'You are about to delete this payslip. Proceed?',
-        type: 'info',
+        title: 'Delete Pay Slip',
+        text: "Are you sure you want to Delete this pay slip?",
+        type: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Yes. proceed'
+        confirmButtonText: 'Yes'
     }).then(async (result) => {
         if (result.value) {
             $('.fullScreenSpin').css('display', 'block');
-
             const employeePayrolApis = new EmployeePayrollApi();
             // now we have to make the post request to save the data in database
             const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -10231,55 +10503,75 @@ Template.employeescard.events({
                 }),
             })
 
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(paySlipSettings),
-            });
-
-            let dataObject = await getVS1Data('TPaySlips')
-
-            if ( dataObject.length > 0) {
-                data = JSON.parse(dataObject[0].data);
-                let updatedLines = PaySlips.fromList(
-                    data.tpayslips
-                ).filter(async (item) => {
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                        item.fields.Active = false;
-                    }
-                    return item;
+            try{
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(paySlipSettings),
                 });
-                let paySlipObj = {
-                    tpayslips: updatedLines
-                }
-                try {
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        await addVS1Data('TPaySlips', JSON.stringify(paySlipObj))
-                        await templateObject.getPaySlips();
-                        // await templateObject.paySlipInfos.set(updatedLines);
-
+                if (ApiResponse.ok == true) {
+                    let dataObject = await getVS1Data('TPaySlips');
+                    if ( dataObject.length > 0) {
+                        data = JSON.parse(dataObject[0].data);
+                        let updatedLines = data.tpayslips.map( (item) => {
+                            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                                item.fields.Active = false;
+                            }
+                            return item;
+                        });
+                        let paySlipObj = {
+                            tpayslips: updatedLines
+                        }
+                        await addVS1Data('TPaySlips', JSON.stringify(paySlipObj));
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Pay Slip deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.value) {
+                                if (result.value) { window.location.reload(); }
+                            } 
+                        }); 
                     }
-                    $('.fullScreenSpin').hide();
-
+                }else{            
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: error,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });  
                 }
-                catch(e){
-                    $('.fullScreenSpin').hide();
-
-                }
-            }
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });                
+            }            
         }
     });
   },
-  "click #btnDeleteAssignLeaveType": function (e){
+  "click .btnDeleteAssignLeaveType": function (e){
     let templateObject = Template.instance();
     let deleteID = $(e.target).data('id') || '';
     swal({
-        title: 'Confirm.',
-        text: 'You are about to delete this assign leave type. Proceed?',
-        type: 'info',
+        title: 'Delete Assign Leave Type',
+        text: "Are you sure you want to Delete this assign leave type?",
+        type: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Yes. proceed'
+        confirmButtonText: 'Yes'
     }).then(async (result) => {
         if (result.value) {
             $('.fullScreenSpin').css('display', 'block');
@@ -10298,43 +10590,66 @@ Template.employeescard.events({
                 }),
             })
 
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(assignLeaveSettings),
-            });
-
-            let dataObject = await getVS1Data('TAssignLeaveType')
-
-            if ( dataObject.length > 0) {
-                data = JSON.parse(dataObject[0].data);
-                let updatedLines = AssignLeaveType.fromList(
-                    data.tassignleavetype
-                ).filter(async (item) => {
-
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                        item.fields.Active = false;
-                    }
-                    return item;
+            try {
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(assignLeaveSettings),
                 });
-                let leaveTypeObj = {
-                    tassignleavetype: updatedLines
-                }
-                try {
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
+    
+                let dataObject = await getVS1Data('TAssignLeaveType')
+    
+                if ( dataObject.length > 0) {
+                    data = JSON.parse(dataObject[0].data);
+                    if( data.tassignleavetype.length > 0 ){
+                        let updatedLines = data.tassignleavetype.map((item) => {
+                            if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
+                                item.fields.Active = false;
+                            }
+                            return item;
+                        });
+                        let leaveTypeObj = {
+                            tassignleavetype: updatedLines
+                        }
                         await addVS1Data('TAssignLeaveType', JSON.stringify(leaveTypeObj))
-                        await templateObject.getAssignLeaveTypes();
-
+                        await templateObject.getAssignLeaveTypes();   
                     }
-                    $('.fullScreenSpin').hide();
-
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Assign Leave deleted successfully',
+                        text: '',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if (result.value) { window.location.reload(); }
+                        } 
+                    }); 
+                }else{            
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: error,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });  
                 }
-                catch(e){
-                    $('.fullScreenSpin').hide();
-
-                }
-            }
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });                
+            }            
         }
     });
   },
@@ -10426,19 +10741,18 @@ Template.employeescard.events({
         }
     });
   },
-  "click #btnDeletePayNote": function (e){
+  "click .btnDeletePayNote": function (e){
     let templateObject = Template.instance();
     let deleteID = $(e.target).data('id') || '';
     swal({
-        title: 'Confirm.',
-        text: 'You are about to delete this note. Proceed?',
-        type: 'info',
+        title: 'Delete Note',
+        text: "Are you sure you want to delete this note?",
+        type: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Yes. proceed'
-    }).then(async (result) => {
+        confirmButtonText: 'Yes'
+    }).then( async (result) => {
         if (result.value) {
             $('.fullScreenSpin').css('display', 'block');
-
             const employeePayrolApis = new EmployeePayrollApi();
             // now we have to make the post request to save the data in database
             const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -10453,42 +10767,64 @@ Template.employeescard.events({
                 }),
             })
 
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(noteSettings),
-            });
-
-            let dataObject = await getVS1Data('TPayNotes')
-
-            if ( dataObject.length > 0) {
-                data = JSON.parse(dataObject[0].data);
-            let updatedLines = PayNotes.fromList(
-                data.tpaynotes
-                ).filter(async (item) => {
-
-                    if ( parseInt( item.fields.ID ) == parseInt( deleteID )) {
-                        item.fields.Active = false;
-                    }
-                    return item;
+            try {
+                const ApiResponse = await apiEndpoint.fetch(null, {
+                    method: "POST",
+                    headers: ApiService.getPostHeaders(),
+                    body: JSON.stringify(noteSettings),
                 });
-                let payNoteObj = {
-                    tpaynotes: updatedLines
-                }
-                try {
-                    if (ApiResponse.ok == true) {
-                        const jsonResponse = await ApiResponse.json();
-                        await addVS1Data('TPayNotes', JSON.stringify(payNoteObj))
-                        await templateObject.getPayNotesTypes();
-
+                if (ApiResponse.ok == true) {
+                    let dataObject = await getVS1Data('TPayNotes');
+                    if ( dataObject.length > 0) {
+                        data = JSON.parse(dataObject[0].data);
+                        if( data.tpaynotes.length > 0 ){
+                            let updatedNotes = data.tpaynotes.map( (item) => {
+                                if( deleteID == item.fields.ID ){
+                                    item.fields.Active = false;
+                                }
+                                return item;
+                            });
+                            let notesObj = {
+                                tpaynotes: updatedNotes
+                            }
+                            await addVS1Data('TPayNotes', JSON.stringify(notesObj))
+                        }
                     }
-                    $('.fullScreenSpin').hide();
-
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Note deleted successfully',
+                        text: '',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if (result.value) { window.location.reload(); }
+                        } 
+                    });
+                }else{
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: error,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });  
                 }
-                catch(e){
-                    $('.fullScreenSpin').hide();
-
-                }
+            } catch (error) {
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Oooops...',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {}
+                });                
             }
         }
     });
@@ -10498,8 +10834,10 @@ Template.employeescard.events({
         $("#edtLeaveTypeofRequest").trigger("click.editable-select");
     }, 200);
   },
-  "dblclick .colLeaveRequest": async function(e){
+  "click .colLeaveRequest": async function(e){
+    $('.fullScreenSpin').css('display', 'block');
     let ID = $(e.target).parent().find('.colLRID').text();
+    $('#newLeaveRequestLabel').text('Edit Leave Request');
     let dataObject = await getVS1Data('TLeavRequest');
     if ( dataObject.length > 0) {
         data = JSON.parse(dataObject[0].data);
@@ -10510,9 +10848,9 @@ Template.employeescard.events({
                 }
             });
             if( useData.length > 0 ){
-                $('#removeLeaveRequest').show();
+                $('#removeLeaveRequestBtn').show();
                 $('#edtLeaveRequestID').val(useData[0].fields.ID);
-                $('#removeLeaveRequest').data('id', useData[0].fields.ID);
+                $('#removeLeaveRequestBtn').data('id', useData[0].fields.ID);
                 $('#edtLeaveTypeofRequestID').val(useData[0].fields.TypeofRequest);
                 $('#edtLeaveTypeofRequest').val(useData[0].fields.LeaveMethod);
                 $('#edtLeaveDescription').val(useData[0].fields.Description);
@@ -10525,6 +10863,46 @@ Template.employeescard.events({
         }
     }
     $('#newLeaveRequestModal').modal('show');
+    $('.fullScreenSpin').css('display', 'none');
+  },
+  "click .addNewSlip": function(){
+    $('#btnDeletePayslipBtn').hide();
+    $('#newPaySlipLabel').text('New payslip');
+    $('#paySlipForm')[0].reset();
+    $('#periodID').val(0);
+    $('#paymentDate').val(moment().format('DD/MM/YYYY'));
+  },
+  "click .colPaySlip": async function(e){
+    $('.fullScreenSpin').css('display', 'block');
+    let ID = $(e.target).parent().find('.colPayslipID').text();
+    $('#newPaySlipLabel').text('Edit Pay Slip');
+    let dataObject = await getVS1Data('TPaySlips');
+    if ( dataObject.length > 0) {
+        data = JSON.parse(dataObject[0].data);
+        if( data.tpayslips.length > 0 ){
+            let useData = data.tpayslips.filter( (item) => {
+                if( ID == item.fields.ID ){
+                    return item;
+                }
+            });
+            if( useData.length > 0 ){
+                $('#periodID').val(useData[0].fields.ID);
+                $('#period').val(useData[0].fields.Period);
+                $('#paymentDate').val(moment(useData[0].fields.PaymentDate).format('DD/MM/YYYY'));
+                let payPrice = useData[0].fields.TotalPay
+                if (!isNaN(payPrice)){
+                    $('#totalPay').val(utilityService.modifynegativeCurrencyFormat(payPrice));
+                }else{
+                    payPrice = Number(payPrice.replace(/[^0-9.-]+/g,""));
+                    $('#totalPay').val(utilityService.modifynegativeCurrencyFormat(payPrice));
+                }
+                $('#btnDeletePayslipBtn').show();
+                $('#btnDeletePayslipBtn').data('id', useData[0].fields.ID);
+            }
+        }
+    }
+    $('#paySlipModal').modal('show');
+    $('.fullScreenSpin').css('display', 'none');
   }
 //   'click #edtLeaveTypeofRequest': (e, ui) => {
 //     ui.getAssignLeaveTypes();

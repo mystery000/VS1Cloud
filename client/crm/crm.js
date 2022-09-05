@@ -82,11 +82,12 @@ Template.crmoverview.onRendered(function () {
     });
   }
   function getLeadData(leadID) {
-    getVS1Data("TProspectVS1").then(function (dataObject) {
+    getVS1Data("TProspectEx").then(function (dataObject) {
       if (dataObject.length === 0) {
         contactService.getOneLeadDataEx(leadID).then(function (data) {
           setCustomerByID(data);
         });
+
       } else {
         let data = JSON.parse(dataObject[0].data);
         let useData = data.tprospectvs1;
