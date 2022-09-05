@@ -1275,15 +1275,14 @@ export class UtilityService {
     convertSubstringParseFloat(value) {
         if((value).includes('-')) {
             // let price = value.substring(2).replace(",","");
-            let price = value.substring(2).replace(/\,/g,'');
+            let price = value.replace(/[^0-9\.]/g, '');
             price = '-'+price;
             return (parseFloat(price));
 
         }
         else {
-            value = value.substring(2).replace(/\,/g,'');
+            value = value.replace(/[^0-9\.]/g, '');
             return (parseFloat(value));
-
         }
     }
 
