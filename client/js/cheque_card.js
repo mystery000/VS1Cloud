@@ -403,15 +403,9 @@ Template.chequecard.onRendered(() => {
                     if (data.fields.Lines) {
                       if (data.fields.Lines.length) {
 
-                        $("#edtSaleCustField1").val(
-                          data.fields.Lines[0].fields.CustomField1
-                        );
-                        $("#edtSaleCustField2").val(
-                          data.fields.Lines[0].fields.CustomField2
-                        );
-                        $("#edtSaleCustField3").val(
-                          data.fields.Lines[0].fields.CustomField3
-                        );
+                        $("#edtSaleCustField1").val(data.fields.Lines[0].fields.CustomField1);
+                        $("#edtSaleCustField2").val(data.fields.Lines[0].fields.CustomField2);
+                        $("#edtSaleCustField3").val(data.fields.Lines[0].fields.CustomField3);
 
                         for (let i = 0; i < data.fields.Lines.length; i++) {
                           let AmountGbp = utilityService
@@ -490,15 +484,9 @@ Template.chequecard.onRendered(() => {
                         }
                       } else {
 
-                        $("#edtSaleCustField1").val(
-                          data.fields.Lines.fields.CustomField1
-                        );
-                        $("#edtSaleCustField2").val(
-                          data.fields.Lines.fields.CustomField2
-                        );
-                        $("#edtSaleCustField3").val(
-                          data.fields.Lines.fields.CustomField3
-                        );
+                        $("#edtSaleCustField1").val(data.fields.Lines.fields.CustomField1);
+                        $("#edtSaleCustField2").val(data.fields.Lines.fields.CustomField2);
+                        $("#edtSaleCustField3").val(data.fields.Lines.fields.CustomField3);
 
                         let AmountGbp =
                           data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
@@ -776,15 +764,9 @@ Template.chequecard.onRendered(() => {
                   if (useData[d].fields.Lines) {
                     if (useData[d].fields.Lines.length) {
 
-                      $("#edtSaleCustField1").val(
-                        useData[d].fields.Lines[0].fields.CustomField1
-                      );
-                      $("#edtSaleCustField2").val(
-                        useData[d].fields.Lines[0].fields.CustomField2
-                      );
-                      $("#edtSaleCustField3").val(
-                        useData[d].fields.Lines[0].fields.CustomField3
-                      );
+                      $("#edtSaleCustField1").val(useData[d].fields.Lines[0].fields.CustomField1);
+                      $("#edtSaleCustField2").val(useData[d].fields.Lines[0].fields.CustomField2);
+                      $("#edtSaleCustField3").val(useData[d].fields.Lines[0].fields.CustomField3);
 
                       for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                         let AmountGbp = utilityService
