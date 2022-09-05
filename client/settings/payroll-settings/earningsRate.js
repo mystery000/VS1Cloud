@@ -14,6 +14,7 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let productService = new ProductService();
 const taxCodesList = [];
+const splashArrayTaxRateList = [];
 let employeePayrollService = new EmployeePayrollService();
 
 Template.earningRateSettings.onCreated(function() {
@@ -25,6 +26,7 @@ Template.earningRateSettings.onCreated(function() {
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
   templateObject.currentDrpDownID = new ReactiveVar();
+  templateObject.taxraterecords = new ReactiveVar([]);
   // templateObject.Accounts = new ReactiveVar([]);
 });
 
@@ -485,6 +487,8 @@ setTimeout(function() {
         var taxSelected = "sales";
         var offset = $earch.offset();
         var taxRateDataName = e.target.value || '';
+        let dropDownID = $earch.attr('id')
+        templateObject.currentDrpDownID.set(dropDownID);
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $('#taxRateListModal').modal('toggle');
         } else {
@@ -767,6 +771,14 @@ setTimeout(function() {
         let drpDownValue = table.find(".thDescription").text()||'';
         $('#' + drpDownID).val(drpDownValue);
         $('#rateTypeListModel').modal('toggle');
+    });
+
+    $(document).on("click", "#tblTaxRate tbody tr", function (e) {
+        var table = $(this);
+        // let drpDownID = templateObject.currentDrpDownID.get();
+        let drpDownValue = table.find(".taxName").text()||'';
+        $('.taxCodedrpDown').val(drpDownValue);
+        $('#taxRateListModal').modal('toggle');
     });
 
     $(document).on("click", "#tblAccount tbody tr", function (e) {
