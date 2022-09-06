@@ -16,7 +16,8 @@ export default class CronSetting {
     days = [],
     months = [],
     dayNumberOfMonth = 1,
-    cronJob = () => {}
+    cronJob = () => {},
+    parsed
   }) {
     this.type = type;
     this.active = active;
@@ -31,6 +32,10 @@ export default class CronSetting {
 
     this.months = months;
     this.dayNumberOfMonth = this.dayNumberOfMonth;
+
+
+    // this is going to be used only if we use the regular perser
+    this.parsed = parsed;
   }
 
   buildParsedText() {
@@ -63,6 +68,10 @@ export default class CronSetting {
         //   date.toDateString().split(" ")[1] +
         //   " in " +
         //   date.toDateString().split(" ")[3];
+
+
+        // this.parsed = later.parse.recur().every(this.dayNumberOfMonth).dayOfMonth()
+        // .on((hours < 10? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes);
 
       }
     } else if (this.type == "Weekly") {
@@ -103,7 +112,9 @@ export default class CronSetting {
 
           text += " every " + lastDay;
 
-          text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
+          text += " starting on the " + this.convertDayNumberToString(date.getDate()) 
+                    + " day in " + date.toDateString().split(" ")[1] 
+                    + " in " + date.toDateString().split(" ")[3];
         } else {
           //this.days.pop();  remove the last day
           //text += " on " + this.days.join(",") + " and " + lastDay;
@@ -143,7 +154,9 @@ export default class CronSetting {
 
         text += " every day";
 
-        text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
+        text += " starting on the " + this.convertDayNumberToString(date.getDate()) 
+                  + " day in " + date.toDateString().split(" ")[1] 
+                  + " in " + date.toDateString().split(" ")[3];
       } else {
         // TODO: We must shedule throught database, we cannot schedule by using the parser
 
@@ -155,13 +168,36 @@ export default class CronSetting {
           ? "0"
           : "") + minutes;
 
-        text += " every " + this.every + " day";
+          // text += " every 5 mins";
+           text += " every " + this.secondsToMinutes(this.daysToSeconds(this.every)) + " minutes";
+          //  text += ` every ${this.every} day`;
+
+        if(this.daysToSeconds(this.every) < 86400)  {
+          text += ` every day`;
+        } else if(this.daysToSeconds(this.every) < 86400 * 7) {
+          text += ` every 1 week`;
+        } else if(this.daysToSeconds(this.every) < 86400 * 30) {
+          text += ` every 1 month`;
+        } else if(this.daysToSeconds(this.every) < 86400 * 30 * 12) {
+          text += ` every 1 year`;
+        }
+
+         
+
 
         // we cant schedule this in the future.
         // we must avoid or add a schedule
-        // text += " starting on the " + this.convertDayNumberToString(date.getDate()) + " day in " + date.toDateString().split(" ")[1] + " in " + date.toDateString().split(" ")[3];
-        this.isFuture = true; // we cant schedule using the parser, so we shedule it by hand
+        text += " starting on the " + this.convertDayNumberToString(date.getDate()) 
+          + " day in " + date.toDateString().split(" ")[1] 
+          + " in " + date.toDateString().split(" ")[3];
+        // this.isFuture = true; // we cant schedule using the parser, so we shedule it by hand
 
+
+        // this.parsed = later.parse.recur()
+        //   .every(this.daysToSeconds(this.every)).seconds() // converting days into seconds, in order to shedule far in future 
+        //   .on((hours < 10? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes)
+        //   .startingOn(10);
+        
       }
 
       // text += " also at " + (
@@ -204,6 +240,8 @@ export default class CronSetting {
     }
 
     this.toParse = text;
+
+    console.log(this.toParse);
   }
 
   /**
@@ -295,5 +333,30 @@ export default class CronSetting {
     let dayName = date.toLocaleDateString(undefined, { weekday: 'long' }); // monday
 
     return dayName;
+  }
+
+  /**
+   *  This will convert days into seconds
+   * @param {Number} days 
+   * @returns 
+   */
+  daysToSeconds(days = 1) {
+    const hours = 24;
+    const minutes = 60;
+    const seconds = 60;
+
+    const calc = days * (hours * minutes * seconds );
+    return calc;
+  }
+
+  /**
+   * This will convert seconds to minutes
+   * @param {Number} time 
+   * @returns 
+   */
+  secondsToMinutes(time = 0) {
+    var minutes = Math.floor(time / 60);
+
+    return minutes;
   }
 }
