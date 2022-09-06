@@ -4391,7 +4391,6 @@ Template.setup.events({
     if ($(event.target).is(":checked")) {
       templateObj.iscompanyemail.set(true);
     } else {
-      //alert("not checked");
       templateObj.iscompanyemail.set(false);
     }
   },
