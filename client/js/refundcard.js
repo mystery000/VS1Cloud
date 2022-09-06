@@ -5554,56 +5554,10 @@ Template.refundcard.onRendered(function() {
     };
 
     tempObj.getSubTaxCodes();
-
-    // custom field displaysettings
-    // tempObj.getAllCustomFieldDisplaySettings = function () {
-    //   let custFields = [];
-    //   let customData = {};
-    //   let customFieldCount = 10;
-    //   let ListType = 'ltSaleslines';  // tempcode until InvoiceLines is added on backend
-
-    //   sideBarService.getAllCustomFieldsWithQuery(ListType).then(function (data) {
-    //       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-    //         if (data.tcustomfieldlist[x].fields.ListType == ListType) {
-    //           customData = {
-    //             active: data.tcustomfieldlist[x].fields.Active || false,
-    //             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-    //             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-    //             datatype: data.tcustomfieldlist[x].fields.DataType || "",
-    //             isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-    //             iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-    //             dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-    //           };
-    //           custFields.push(customData);
-    //         }
-    //       }
-
-    //       if (custFields.length < customFieldCount) {
-    //         let remainder = customFieldCount - custFields.length;
-    //         let getRemCustomFields = parseInt(custFields.length);
-    //         // count = count + remainder;
-    //         for (let r = 0; r < remainder; r++) {
-    //           getRemCustomFields++;
-    //           customData = {
-    //             active: false,
-    //             id: "",
-    //             custfieldlabel: "",
-    //             datatype: "",
-    //             isempty: true,
-    //             iscombo: false,
-    //           };
-    //           // count++;
-    //           custFields.push(customData);
-    //         }
-    //       }
-    //       tempObj.displayfields.set(custFields);
-
-    //     })
-    // }
+ 
     function initCustomFieldDisplaySettings(data, listType) {
       let custFields = [];
-      let customData = {};
-      let customFieldCount = 14;
+      let customData = {}; 
 
       let reset_data = [
         { label: 'Product Name', class: 'colProductName', active: true },
@@ -5621,6 +5575,7 @@ Template.refundcard.onRendered(function() {
         { label: 'Disc %', class: 'colDiscount', active: true },
         { label: 'Serial/Lot No', class: 'colSerialNo', active: true },
       ];
+      let customFieldCount = reset_data.length; 
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
