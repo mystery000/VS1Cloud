@@ -2959,7 +2959,7 @@ Template.employeescard.onRendered(function () {
                     useData[i].fields.PayPeriod || '',
                     useData[i].fields.LeaveMethod || '',
                     useData[i].fields.Status || '',
-                    `<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
+                    `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${useData[i].fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
                 ];
                 splashArrayList.push(dataListAllowance);
             }
@@ -3102,9 +3102,9 @@ Template.employeescard.onRendered(function () {
                 }
                 setTimeout(function () {
                     MakeNegative();
-                }, 100);
+                }, 1000);
             });
-        }, 100);
+        }, 1000);
     };
     templateObject.getLeaveRequests();
 
@@ -3155,7 +3155,7 @@ Template.employeescard.onRendered(function () {
                 (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
                 useData[i].fields.UserName || '',
                 useData[i].fields.Notes || '',
-                `<button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayNote" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
+                `<button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayNote" data-id="${useData[i].fields.ID}" style="margin: 0;" autocomplete="off"><i class="fa fa-remove"></i></button>`
             ];
             splashArrayPayNotesList.push(dataListAllowance);
         }
@@ -3227,7 +3227,7 @@ Template.employeescard.onRendered(function () {
                                         (useData[i].fields.CreatedAt == 0) ? '' : moment(useData[i].fields.CreatedAt).format("DD/MM/YYYY") || '',
                                         useData[i].fields.UserName || '',
                                         useData[i].fields.Notes || '',
-                                        `<button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayNote" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
+                                        `<button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayNote" data-id="${useData[i].fields.ID}" style="margin: 0;" autocomplete="off"><i class="fa fa-remove"></i></button>`
                                     ];
                                     splashArrayPayNotesList.push(dataListAllowance);
                                 }
@@ -3290,11 +3290,8 @@ Template.employeescard.onRendered(function () {
                         });
                     }
                 }
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
             });
-        }, 0);
+        }, 1000);
     };
     templateObject.getPayNotesTypes();
 
@@ -4098,6 +4095,20 @@ Template.employeescard.onRendered(function () {
     }
     templateObject.getTBankAccounts();
 
+    templateObject.updateOBTotal = async function(Amount, ID){
+        let data = templateObject.openingBalanceInfo.get();
+        let formattedAmount = utilityService.convertSubstringParseFloat(Amount);
+        if( data ){
+            let useData = data.map( (item) => {
+                if( ID == item.fields.ID ){
+                    item.fields.Amount = formattedAmount;
+                }
+                return item;
+            });
+            templateObject.openingBalanceInfo.set(useData);
+        }
+    }
+
     // Pay Slip table
     templateObject.getPaySlips = async function(){
         try {
@@ -4145,8 +4156,8 @@ Template.employeescard.onRendered(function () {
                     useData[i].fields.Period || '',
                     (useData[i].fields.PaymentDate == 0) ? '' : moment(useData[i].fields.PaymentDate).format("DD/MM/YYYY") || '',
                     utilityService.modifynegativeCurrencyFormat( useData[i].fields.TotalPay ) || '',
-                    `<button type="button" style="margin-bottom: 24px;" class="btn btn-success btn-rounded btn-sm btnDownloadPayslip"><i class="fas fa-file-download"></i></button>
-                    <button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayslip" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`,
+                    `<button type="button"" class="btn btn-success btn-rounded btn-sm btnDownloadPayslip smallFontSizeBtn"><i class="fas fa-file-download"></i></button>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm btnDeletePayslip" data-id="${useData[i].fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`,
                 ];
                 splashArrayPaySlipList.push(dataListAllowance);
             }
@@ -4369,6 +4380,7 @@ Template.employeescard.onRendered(function () {
                                 return item;
                             }
                         });
+                        $('#headerEarningLabel').text('Edit Earning');
                         $('#earningRateForm')[0].reset();
                         $('#addEarningsLineModal').modal('hide');
                         if( tEarnings.length > 0 ){
@@ -4408,15 +4420,15 @@ Template.employeescard.onRendered(function () {
                             $('#deductionSettingsModal').modal('show');
                             return false
                         }
-                        let data = {};
                         let dataObject = await getVS1Data('TDeduction');
                         if ( dataObject.length > 0) {
-                            data = JSON.parse(dataObject[0].data);
+                            let data = JSON.parse(dataObject[0].data);
                             let tDeduction = data.tdeduction.filter((item) => {
                                 if( item.fields.Description == searchName ){
                                     return item;
                                 }
                             });
+                            $('#headerDeductionLabel').text('Edit Deduction');
                             $('#deductionRateForm')[0].reset();
                             $('#deductionSettingsModal').modal('hide');
                             if( tDeduction.length > 0 ){
@@ -4432,10 +4444,11 @@ Template.employeescard.onRendered(function () {
                                     }
                                 }
                                 $('#edtDeductionID').val(tDeduction[0].fields.ID)
-                                $('#edtDeductionName').val(tDeduction[0].fields.Description)
                                 $('#edtDeductionType').val(deductionType)
                                 $('#edtDeductionAccount').val(tDeduction[0].fields.Accountname)
+                                $('#edtDeductionAmount').val(tDeduction[0].fields.Amount)
                                 $('#edtDeductionAccountID').val(tDeduction[0].fields.Accountid)
+                                $('#edtDeductionDesctiption').val(tDeduction[0].fields.Description)
                                 $('#formCheck-ReducesPAYGDeduction').prop('checked', tDeduction[0].fields.Payrolltaxexempt || false)
                                 $('#formCheck-ReducesSuperannuationDeduction').prop('checked', tDeduction[0].fields.Superinc || false)
                                 $('#formCheck-ExcludedDeduction').prop('checked', tDeduction[0].fields.Workcoverexempt || false)
@@ -4468,14 +4481,19 @@ Template.employeescard.onRendered(function () {
                         }
                         let dataObject = await getVS1Data('TSuperannuation');
                         if ( dataObject.length > 0) {
+                            let data = JSON.parse(dataObject[0].data);
                             let tSuperannuation = data.tsuperannuation.filter((item) => {
-                                if( item.fields.Description == searchName ){
+                                if( item.fields.Superfund == searchName ){
                                     return item;
                                 }
                             });
 
+                            $('#superannuationRateForm')[0].reset();
+                            $('#newSuperannuationFundLabel').text('Edit Superannuation Fund')
+                            $('#superannuationSettingsModal').modal('hide');
+
                             if( tSuperannuation.length > 0 ){
-                                if( tsuperannuation[0].fields.Supertypeid == 'Self-Managed Superannuation Fund')
+                                if( tSuperannuation[0].fields.Supertypeid == 'Self-Managed Superannuation Fund')
                                 {
                                     $('#acountabmandelectronic').css('display','block');
                                     $('#accountbsb').css('display','block');
@@ -4487,7 +4505,7 @@ Template.employeescard.onRendered(function () {
                                 }
 
                                 $('#newSuperannuationFundId').val(tSuperannuation[0].fields.ID);
-                                $('#edtFundType').val(tSuperannuation[0].fields.area);
+                                $('#edtFundType').val(tSuperannuation[0].fields.Supertypeid);
                                 $('#edtFundName').val(tSuperannuation[0].fields.Superfund);
                                 $('#edtelectronicsalias').val(tSuperannuation[0].fields.ElectronicsServiceAddressAlias);
                                 $('#edtEmployerNumber').val(tSuperannuation[0].fields.Employeeid);
@@ -4525,10 +4543,14 @@ Template.employeescard.onRendered(function () {
                         if ( dataObject.length > 0) {
                             data = JSON.parse(dataObject[0].data);
                             let tReimbursement = data.treimbursement.filter((item) => {
-                                if( item.fields.Description == searchName ){
+                                if( item.fields.ReimbursementName == searchName ){
                                     return item;
                                 }
                             });
+
+                            $('#reimbursementRateForm')[0].reset();
+                            $('#newReimbursementLabel').text('Edit Reiumbursement');
+                            $('#reimbursementSettingsModal').modal('hide');
 
                             if( tReimbursement.length > 0 ){
                                 $('#res_id').val(tReimbursement[0].fields.ID) || 0 ;
@@ -7793,6 +7815,7 @@ Template.employeescard.events({
                                 await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj))
                             }
                         }
+                        await templateObject.getOpeningBalances();
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Earning deleted successfully',
@@ -7802,7 +7825,7 @@ Template.employeescard.events({
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                if (result.value) { window.location.reload(); }
+                                if (result.value) {}
                             } 
                         });
                     }else{
@@ -7885,6 +7908,7 @@ Template.employeescard.events({
                                 await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj))
                             }
                         }
+                        await templateObject.getOpeningBalances();
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Deduction deleted successfully',
@@ -7894,7 +7918,7 @@ Template.employeescard.events({
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                if (result.value) { window.location.reload(); }
+                                if (result.value) {}
                             } 
                         });
                     }else{
@@ -7977,6 +8001,7 @@ Template.employeescard.events({
                                 await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj))
                             }
                         }
+                        await templateObject.getOpeningBalances();
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Superannuation deleted successfully',
@@ -7986,7 +8011,7 @@ Template.employeescard.events({
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                if (result.value) { window.location.reload(); }
+                                if (result.value) {}
                             } 
                         });
                     }else{
@@ -8019,7 +8044,8 @@ Template.employeescard.events({
 
     'click .removeObReimbursement': async function(e){
         let templateObject = Template.instance();
-
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let deleteID = $(e.target).data('id');
         swal({
             title: 'Delete Reimbursement',
@@ -8065,9 +8091,10 @@ Template.employeescard.events({
                                 let updatedObj = {
                                     topeningbalances: useData
                                 }
-                                await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj))
+                                await addVS1Data('TOpeningBalances', JSON.stringify(updatedObj));
                             }
-                        }
+                        }                        
+                        await templateObject.getOpeningBalances();
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
                             title: 'Reimbursement deleted successfully',
@@ -8077,7 +8104,7 @@ Template.employeescard.events({
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                if (result.value) { window.location.reload(); }
+                                if (result.value) {}
                             } 
                         });
                     }else{
@@ -8108,20 +8135,12 @@ Template.employeescard.events({
         })
     },
 
-    'change .obCalculateEarningTotalAmount': function(e){
-        handleTotalAmount( 'obCalculateEarningTotalAmount', 'obEarningTotalAmount' )
-    },
-
-    'change .obCalculateDeductionTotalAmount': function(e){
-        handleTotalAmount( 'obCalculateDeductionTotalAmount', 'obDeductionTotalAmount' )
-    },
-
-    'change .obCalculateSuperannuationTotalAmount': function(e){
-        handleTotalAmount( 'obCalculateSuperannuationTotalAmount', 'obSuperannuationTotalAmount' )
-    },
-
-    'change .obCalculateReimbursementTotalAmount': function(e){
-        handleTotalAmount( 'obCalculateReimbursementTotalAmount', 'obReimbursementTotalAmount' )
+    'change .obCalculateTotalAmount': function(e){
+        let templateObject = Template.instance();
+        // handleTotalAmount( 'obCalculateEarningTotalAmount', 'obEarningTotalAmount' )
+        let Amount = $(e.target).val();
+        let ID = $(e.target).data('id');
+        templateObject.updateOBTotal(Amount, ID);
     },
 
     'click #saveOpeningBalance': async function(e){
@@ -10552,20 +10571,21 @@ Template.employeescard.events({
                         let paySlipObj = {
                             tpayslips: updatedLines
                         }
-                        await addVS1Data('TPaySlips', JSON.stringify(paySlipObj));
-                        $('.fullScreenSpin').css('display', 'none');
-                        swal({
-                            title: 'Pay Slip deleted successfully',
-                            text: '',
-                            type: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.value) {
-                                if (result.value) { window.location.reload(); }
-                            } 
-                        }); 
+                        await addVS1Data('TPaySlips', JSON.stringify(paySlipObj));                        
                     }
+                    templateObject.getPaySlips();
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Pay Slip deleted successfully',
+                        text: '',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if (result.value) { window.location.reload(); }
+                        } 
+                    }); 
                 }else{            
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -10731,7 +10751,7 @@ Template.employeescard.events({
                             await addVS1Data('TLeavRequest', JSON.stringify(leaveRequestObj))
                         }
                     }
-
+                    await templateObject.getLeaveRequests();
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Leave request deleted successfully',
@@ -10739,10 +10759,6 @@ Template.employeescard.events({
                         type: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.value) {
-                            if (result.value) { window.location.reload(); }
-                        } 
                     });
                 }else{
                     $('.fullScreenSpin').css('display', 'none');
@@ -10820,6 +10836,7 @@ Template.employeescard.events({
                             await addVS1Data('TPayNotes', JSON.stringify(notesObj))
                         }
                     }
+                    await templateObject.getPayNotesTypes();
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
                         title: 'Note deleted successfully',
@@ -10829,7 +10846,7 @@ Template.employeescard.events({
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.value) {
-                            if (result.value) { window.location.reload(); }
+                            if (result.value) { }
                         } 
                     });
                 }else{
@@ -11024,15 +11041,11 @@ Template.employeescard.helpers({
         const templateObject = Template.instance();
         return templateObject.filterOpeningBalance(3);
     },
-    calculateOpeningBalanceTotal( amountField ){
+    calculateOpeningBalanceTotal( items ){
         let totalAmount = 0;
-        let amount = 0;
-        $('.' + amountField).each(function(){
-            amount = $(this).val();
-            amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
-            amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-            totalAmount += parseFloat( amount );
-        });
+        for (const item of items) {
+            totalAmount += item.fields.Amount
+        }
         let utilityService = new UtilityService();
         return utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
     },
