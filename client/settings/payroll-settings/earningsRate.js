@@ -679,7 +679,9 @@ setTimeout(function() {
                     $('.isBankAccount').addClass('isNotBankAccount');
                     $('.isCreditAccount').addClass('isNotCreditAccount');
                 }
-
+                $('#sltAccountType').attr('disabled', true);
+                $('#edtAccountName').attr('disabled', true);
+                $('#add-account-title').text('Edit Account');
                 $('#edtAccountID').val(accountid);
                 $('#sltAccountType').val(accounttype);
                 $('#sltAccountType').append('<option value="'+accounttype+'" selected="selected">'+accounttype+'</option>');
@@ -703,9 +705,8 @@ setTimeout(function() {
                 }else{
                     $('.showOnTransactions').prop('checked', false);
                 }
-
-                $('#addAccountModal').modal('show');  
             }      
+            $('#addAccountModal').modal('show');  
         }
     });
     // Standard drop down
@@ -737,6 +738,7 @@ setTimeout(function() {
                         return item;
                     }
                 });
+                $('#headerEarningLabel').text('Edit Earning');
                 $('#earningRateForm')[0].reset();
                 $('#addEarningsLineModal').modal('hide');                
                 if( tEarnings.length > 0 ){
@@ -808,7 +810,13 @@ Template.earningRateSettings.events({
            $(".btnRefreshEarnings").trigger("click");
         }
     },
+    'click .btnAddNewAccount':function(){
+        $('#add-account-title').text('Add New Account');
+        $('#sltAccountType').prop('disabled', true);
+        $('#edtAccountName').prop('disabled', true);
+    },
     'click .btnAddordinaryTimeEarnings':function(event){
+        $('#headerEarningLabel').text('Add New Earning');
         $('#earningRateForm')[0].reset();
         $('#addEarningsLineModal').modal('hide');
     },
