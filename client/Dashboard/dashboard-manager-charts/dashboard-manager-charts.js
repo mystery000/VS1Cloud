@@ -161,8 +161,10 @@ Template.dashboardManagerCharts.onRendered(function () {
             let employees = [];
             temployee.forEach(employee => {
                 employees.push(employee.fields);
-                employeeNames.push(employee.fields.EmployeeName);
-                employeeSalesQuota.push(isNaN(parseInt(employee.fields.CustFld12)) ? 0 : parseInt(employee.fields.CustFld12));
+                if(!(isNaN(parseInt(employee.fields.CustFld12)) || parseInt(employee.fields.CustFld12) == 0)) {
+                    employeeNames.push(employee.fields.EmployeeName);
+                    employeeSalesQuota.push(parseInt(employee.fields.CustFld12));
+                }
             });
             templateObject.employees.set(employees);
         }

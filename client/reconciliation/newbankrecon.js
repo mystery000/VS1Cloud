@@ -873,7 +873,6 @@ Template.newbankrecon.onRendered(function() {
         const offset = $each.offset();
         const accountDataName = e.target.value || '';
         selectedAccountFlag = 'ForBank';
-
         if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
             openBankAccountListModal();
         } else {
@@ -903,19 +902,6 @@ Template.newbankrecon.onRendered(function() {
             }
         }
     });
-
-    function openBankAccountListModal(){
-        $('#selectLineID').val('');
-        $('#bankAccountListModal').modal();
-        setTimeout(function () {
-            $('#tblAccount_filter .form-control-sm').focus();
-            $('#tblAccount_filter .form-control-sm').val('');
-            $('#tblAccount_filter .form-control-sm').trigger("input");
-            const datatable = $('#tblAccountlist').DataTable();
-            datatable.draw();
-            $('#tblAccountlist_filter .form-control-sm').trigger("input");
-        }, 500);
-    }
 
     function defineTabpanelEvent() {
         templateObject.bankTransactionData.get().forEach(function(item, index) {
@@ -2126,161 +2112,445 @@ Template.newbankrecon.events({
                 // spent: bill->supplier payment->Reconciliation withdrawal
                 // spent: cheque->Reconciliation withdrawal
                 let isEmptyAccount = false;
-                $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice > tbody > tr").each(function () {
+                $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice > tbody > tr").each(function () {
                     let lineID = this.id;
-                    let lineProductName = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineProductName").val();
-                    let lineProductDesc = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineProductDesc").val();
-                    let lineQty = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineQty").val();
-                    let lineUnitPrice = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineUnitPrice").val();
-                    let lineAccountName = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAccountName").val();
-                    let lineAccountID = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAccountID").val();
-                    let lineTaxRate = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineTaxRate").val();
-                    let lineAmount = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAmount").text();
+                    let lineProductName = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineProductName").val();
+                    let lineProductDesc = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineProductDesc").val();
+                    let lineQty = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineQty").val();
+                    let lineUnitPrice = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineUnitPrice").val();
+                    let lineAccountName = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineAccountName").val();
+                    let lineAccountID = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineAccountID").val();
+                    let lineCustomerName = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineCustomerName").val();
+                    let lineTaxRate = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineTaxRate").val();
+                    let lineAmount = $("#divLineDetail_" + selectedYodleeID + " #" + lineID + " .lineAmount").text();
                     lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
-                    if (lineAccountName == '') {
-                        swal('Account must be valid.', '', 'error');
-                        $('.fullScreenSpin').css('display', 'none');
-                        isEmptyAccount = true;
-                        return false;
+                    if (PaymentType == 'Purchase Order') {
+                        if (lineProductName == '') {
+                            swal('Item must be valid.', '', 'error');
+                            $('.fullScreenSpin').css('display', 'none');
+                            isEmptyAccount = true;
+                            return false;
+                        } else {
+                            lineItemsObj = {
+                                type: "TPurchaseOrderLine",
+                                fields: {
+                                    ProductName: lineProductName || '',
+                                    ProductDescription: lineProductDesc || '',
+                                    UOMQtySold: parseFloat(lineQty) || 0,
+                                    UOMQtyShipped: parseFloat(lineQty) || 0,
+                                    LineCost: Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0,
+                                    CustomerJob: lineCustomerName || '',
+                                    LineTaxCode: lineTaxRate || '',
+                                    LineClassName: defaultDept
+                                }
+                            };
+                            lineItems.push(lineItemsObj);
+                        }
                     } else {
-                        lineItemsObj = {
-                            type: "TPurchaseOrderLine",
-                            fields: {
-                                ProductName: lineProductName || '',
-                                ProductDescription: lineProductDesc || '',
-                                UOMQtySold: parseFloat(lineQty) || 0,
-                                UOMQtyShipped: parseFloat(lineQty) || 0,
-                                LineCost: Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0,
-                                CustomerJob: lineAccountName || '',
-                                LineTaxCode: lineTaxRate || '',
-                                LineClassName: defaultDept
+                        if (lineAccountName == '') {
+                            swal('Account must be valid.', '', 'error');
+                            $('.fullScreenSpin').css('display', 'none');
+                            isEmptyAccount = true;
+                            return false;
+                        } else {
+                            if (PaymentType == 'Bill') {
+                                lineItemsObj = {
+                                    type: "TBillLine",
+                                    fields: {
+                                        AccountName: lineAccountName || '',
+                                        ProductDescription: lineProductDesc || '',
+                                        CustomerJob: lineCustomerName || '',
+                                        LineCost: Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0,
+                                        LineTaxCode: lineTaxRate || '',
+                                        LineClassName: defaultDept
+                                    }
+                                };
+                                lineItems.push(lineItemsObj);
                             }
-                        };
-                        lineItems.push(lineItemsObj);
+                            if (PaymentType == 'Cheque') {
+                                lineItemsObj = {
+                                    type: "TChequeLine",
+                                    fields: {
+                                        AccountName: lineAccountName || '',
+                                        ProductDescription: lineProductDesc || '',
+                                        LineCost: Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0,
+                                        CustomerJob: lineCustomerName || '',
+                                        LineTaxCode: lineTaxRate || ''
+                                    }
+                                };
+                                lineItems.push(lineItemsObj);
+                            }
+                        }
                     }
+
                 });
                 if (lineItems.length == 0 || isEmptyAccount) {
                     $('.fullScreenSpin').css('display', 'none');
                     return false;
                 }
-                let objPODetails = {
-                    type: "TPurchaseOrderEx",
-                    fields: {
-                        SupplierName: clientName,
-                        ForeignExchangeCode: CountryAbbr,
-                        // SupplierInvoiceNumber: refText || '',
-                        Lines: lineItems,
-                        OrderTo: clientBillingAddress,
-                        OrderDate: invoiceDate,
-                        SupplierInvoiceDate: invoiceDate,
-                        SaleLineRef: refText || '',
-                        TermsName: clientTermsName || '',
-                        Shipping: defaultDept,
-                        ShipTo: clientShippingAddress,
-                        Comments: comment || '',
-                        OrderStatus: ''
-                    }
-                };
-                purchaseService.savePurchaseOrderEx(objPODetails).then(function(resultPO) {
-                    if (resultPO.fields.ID) {
-                        let paymentData = [];
-                        const lineID = resultPO.fields.ID;
-                        let Line = {
-                            type: 'TGuiSuppPaymentLines',
-                            fields: {
-                                TransType: "Purchase Order",
-                                TransID: parseInt(lineID) || 0,
-                                Paid: true,
-                                Payment: grand_total
-                            }
-                        };
-                        paymentData.push(Line);
-                        let objPaymentDetails = {
-                            type: "TSuppPayments",
-                            fields: {
-                                ID: paymentID,
-                                Deleted: false,
-                                ClientPrintName: clientName,
-                                CompanyName: clientName,
-                                DeptClassName: defaultDept,
-                                EmployeeID: parseInt(employeeID) || 0,
-                                EmployeeName: employeename || '',
-                                GUILines: paymentData,
-                                Notes: comment || '',
-                                Payment: true,
-                                PaymentDate: invoiceDate,
-                                PayMethodName: "Cheque",
-                                ReferenceNo: refText || '',
-                                AccountID: bankaccountid || 0,
-                                AccountName: bankAccountName || '',
-                            }
-                        };
-                        paymentService.saveSuppDepositData(objPaymentDetails).then(function(resultPayment) {
-                            if (resultPayment.fields.ID) {
-                                let lineReconObj = {
-                                    type: "TReconciliationWithdrawalLines",
-                                    fields: {
-                                        AccountID: bankaccountid || 0,
-                                        AccountName: bankAccountName || '',
-                                        Amount: grand_total,
-                                        BankStatementLineID: selectedYodleeID,
-                                        ClientID: clientID,
-                                        ClientName: clientName,
-                                        DepositDate: invoiceDate,
-                                        Deposited: true,
-                                        Notes: reconNote || '',
-                                        PaymentID: resultPayment.fields.ID,
-                                        Payee: '',
-                                        Reconciled: false,
-                                        Reference: refText || ''
-                                    }
-                                };
-                                let reconData = [];
-                                reconData.push(lineReconObj);
-                                let objReconDetails = {
-                                    type: "TReconciliation",
-                                    fields: {
-                                        ID: reconcileID,
-                                        AccountID: bankaccountid || 0,
-                                        AccountName: bankAccountName || '',
-                                        // CloseBalance: closebalance,
-                                        Deleted: false,
-                                        DepositLines: null,
-                                        DeptName: defaultDept,
-                                        EmployeeID: parseInt(employeeID) || 0,
-                                        EmployeeName: employeename || '',
-                                        Finished: true,
-                                        Notes: discussNote || '',
-                                        OnHold: false,
-                                        // OpenBalance: openbalance,
-                                        ReconciliationDate: invoiceDate,
-                                        StatementNo: selectedYodleeID.toString() || '0',
-                                        WithdrawalLines: reconData || ''
-                                    }
-                                };
-                                reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
-                                    if (resultRecon.fields.ID) {
-                                        openFindMatchAfterSave(resultRecon.fields.ID);
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    } else {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    }
-                                }).catch(function (err) {
-                                    handleSaveError(err);
-                                });
-                            } else {
+                if (PaymentType == 'Purchase Order') {
+                    let objPODetails = {
+                        type: "TPurchaseOrderEx",
+                        fields: {
+                            SupplierName: clientName,
+                            ForeignExchangeCode: CountryAbbr,
+                            // SupplierInvoiceNumber: refText || '',
+                            Lines: lineItems,
+                            OrderTo: clientBillingAddress,
+                            OrderDate: invoiceDate,
+                            SupplierInvoiceDate: invoiceDate,
+                            SaleLineRef: refText || '',
+                            TermsName: clientTermsName || '',
+                            Shipping: defaultDept,
+                            ShipTo: clientShippingAddress,
+                            Comments: comment || '',
+                            OrderStatus: ''
+                        }
+                    };
+                    purchaseService.savePurchaseOrderEx(objPODetails).then(function (resultPO) {
+                        if (resultPO.fields.ID) {
+                            let paymentData = [];
+                            const lineID = resultPO.fields.ID;
+                            let Line = {
+                                type: 'TGuiSuppPaymentLines',
+                                fields: {
+                                    TransType: "Purchase Order",
+                                    TransID: parseInt(lineID) || 0,
+                                    Paid: true,
+                                    Payment: grand_total
+                                }
+                            };
+                            paymentData.push(Line);
+                            let objPaymentDetails = {
+                                type: "TSuppPayments",
+                                fields: {
+                                    ID: paymentID,
+                                    Deleted: false,
+                                    ClientPrintName: clientName,
+                                    CompanyName: clientName,
+                                    DeptClassName: defaultDept,
+                                    EmployeeID: parseInt(employeeID) || 0,
+                                    EmployeeName: employeename || '',
+                                    GUILines: paymentData,
+                                    Notes: comment || '',
+                                    Payment: true,
+                                    PaymentDate: invoiceDate,
+                                    // PayMethodName: "Cheque", // why cheque?
+                                    PayMethodName: "Purchase Order",
+                                    ReferenceNo: refText || '',
+                                    AccountID: bankaccountid || 0,
+                                    AccountName: bankAccountName || '',
+                                }
+                            };
+                            paymentService.saveSuppDepositData(objPaymentDetails).then(function (resultPayment) {
+                                if (resultPayment.fields.ID) {
+                                    let lineReconObj = {
+                                        type: "TReconciliationWithdrawalLines",
+                                        fields: {
+                                            AccountID: bankaccountid || 0,
+                                            AccountName: bankAccountName || '',
+                                            Amount: grand_total,
+                                            BankStatementLineID: selectedYodleeID,
+                                            ClientID: clientID,
+                                            ClientName: clientName,
+                                            DepositDate: invoiceDate,
+                                            Deposited: true,
+                                            Notes: reconNote || '',
+                                            PaymentID: resultPayment.fields.ID,
+                                            Payee: '',
+                                            Reconciled: false,
+                                            Reference: refText || ''
+                                        }
+                                    };
+                                    let reconData = [];
+                                    reconData.push(lineReconObj);
+                                    let objReconDetails = {
+                                        type: "TReconciliation",
+                                        fields: {
+                                            ID: reconcileID,
+                                            AccountID: bankaccountid || 0,
+                                            AccountName: bankAccountName || '',
+                                            // CloseBalance: closebalance,
+                                            Deleted: false,
+                                            DepositLines: null,
+                                            DeptName: defaultDept,
+                                            EmployeeID: parseInt(employeeID) || 0,
+                                            EmployeeName: employeename || '',
+                                            Finished: true,
+                                            Notes: discussNote || '',
+                                            OnHold: false,
+                                            // OpenBalance: openbalance,
+                                            ReconciliationDate: invoiceDate,
+                                            StatementNo: selectedYodleeID.toString() || '0',
+                                            WithdrawalLines: reconData || ''
+                                        }
+                                    };
+                                    reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
+                                        if (resultRecon.fields.ID) {
+                                            openFindMatchAfterSave(resultRecon.fields.ID);
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        } else {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        }
+                                    }).catch(function (err) {
+                                        handleSaveError(err);
+                                    });
+                                } else {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }
                                 $('.fullScreenSpin').css('display', 'none');
-                            }
+                            }).catch(function (err) {
+                                handleSaveError(err);
+                            });
+                        } else {
                             $('.fullScreenSpin').css('display', 'none');
-                        }).catch(function(err) {
-                            handleSaveError(err);
-                        });
-                    } else {
-                        $('.fullScreenSpin').css('display', 'none');
-                    }
-                }).catch(function(err) {
-                    handleSaveError(err);
-                });
+                        }
+                    }).catch(function (err) {
+                        handleSaveError(err);
+                    });
+                } else if (PaymentType == "Bill") {
+                    let objDetails = {
+                        type: "TBillEx",
+                        fields: {
+                            SupplierName: clientName,
+                            ForeignExchangeCode: CountryAbbr,
+                            Lines: lineItems,
+                            OrderTo: clientBillingAddress,
+                            OrderDate: invoiceDate,
+                            Deleted: false,
+                            // SupplierInvoiceNumber: refText || '',
+                            ConNote: refText || '',
+                            TermsName: clientTermsName || '',
+                            Shipping: defaultDept,
+                            ShipTo: clientShippingAddress,
+                            Comments: comment || '',
+                            // SalesComments: pickingInfrmation,
+                            OrderStatus: '',
+                            BillTotal: grand_total
+                        }
+                    };
+                    purchaseService.saveBillEx(objDetails).then(function(resultBill) {
+                        if (resultBill.fields.ID) {
+                            let paymentData = [];
+                            const lineID = resultBill.fields.ID;
+                            let Line = {
+                                type: 'TGuiSuppPaymentLines',
+                                fields: {
+                                    TransType: "Bill",
+                                    TransID: parseInt(lineID) || 0,
+                                    Paid: true,
+                                    Payment: grand_total
+                                }
+                            };
+                            paymentData.push(Line);
+                            let objPaymentDetails = {
+                                type: "TSuppPayments",
+                                fields: {
+                                    ID: paymentID,
+                                    Deleted: false,
+                                    ClientPrintName: clientName,
+                                    CompanyName: clientName,
+                                    DeptClassName: defaultDept,
+                                    EmployeeID: parseInt(employeeID) || 0,
+                                    EmployeeName: employeename || '',
+                                    GUILines: paymentData,
+                                    Notes: comment || '',
+                                    Payment: true,
+                                    PaymentDate: invoiceDate,
+                                    PayMethodName: "Bill",
+                                    ReferenceNo: refText || '',
+                                    AccountID: bankaccountid || 0,
+                                    AccountName: bankAccountName || '',
+                                }
+                            };
+                            paymentService.saveSuppDepositData(objPaymentDetails).then(function (resultPayment) {
+                                if (resultPayment.fields.ID) {
+                                    let lineReconObj = {
+                                        type: "TReconciliationWithdrawalLines",
+                                        fields: {
+                                            AccountID: bankaccountid || 0,
+                                            AccountName: bankAccountName || '',
+                                            Amount: grand_total,
+                                            BankStatementLineID: selectedYodleeID,
+                                            ClientID: clientID,
+                                            ClientName: clientName,
+                                            DepositDate: invoiceDate,
+                                            Deposited: true,
+                                            Notes: reconNote || '',
+                                            PaymentID: resultPayment.fields.ID,
+                                            Payee: '',
+                                            Reconciled: false,
+                                            Reference: refText || ''
+                                        }
+                                    };
+                                    let reconData = [];
+                                    reconData.push(lineReconObj);
+                                    let objReconDetails = {
+                                        type: "TReconciliation",
+                                        fields: {
+                                            ID: reconcileID,
+                                            AccountID: bankaccountid || 0,
+                                            AccountName: bankAccountName || '',
+                                            // CloseBalance: closebalance,
+                                            Deleted: false,
+                                            DepositLines: null,
+                                            DeptName: defaultDept,
+                                            EmployeeID: parseInt(employeeID) || 0,
+                                            EmployeeName: employeename || '',
+                                            Finished: true,
+                                            Notes: discussNote || '',
+                                            OnHold: false,
+                                            // OpenBalance: openbalance,
+                                            ReconciliationDate: invoiceDate,
+                                            StatementNo: selectedYodleeID.toString() || '0',
+                                            WithdrawalLines: reconData || ''
+                                        }
+                                    };
+                                    reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
+                                        if (resultRecon.fields.ID) {
+                                            openFindMatchAfterSave(resultRecon.fields.ID);
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        } else {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        }
+                                    }).catch(function (err) {
+                                        handleSaveError(err);
+                                    });
+                                } else {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }
+                                $('.fullScreenSpin').css('display', 'none');
+                            }).catch(function (err) {
+                                handleSaveError(err);
+                            });
+                        } else {
+                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    }).catch(function (err) {
+                        handleSaveError(err);
+                    });
+                } else {
+                    let objDetails = {
+                        type: "TChequeEx",
+                        fields: {
+                            SupplierName: clientName,
+                            ForeignExchangeCode: CountryAbbr,
+                            Lines: lineItems,
+                            OrderTo: clientBillingAddress,
+                            GLAccountName: bankAccountName,
+                            OrderDate: invoiceDate,
+                            // SupplierInvoiceNumber: refText || '',
+                            ConNote: refText || '',
+                            Shipping: defaultDept,
+                            ShipTo: clientShippingAddress,
+                            Comments: comment || '',
+                            RefNo: refText || '',
+                            // SalesComments: pickingInfrmation,
+                            OrderStatus: '',
+                            Chequetotal: grand_total,
+                        },
+                    };
+                    purchaseService.saveChequeEx(objDetails).then(function(resultCheque) {
+                        if (resultCheque.fields.ID) {
+                            let paymentData = [];
+                            const lineID = resultCheque.fields.ID;
+                            let Line = {
+                                type: 'TGuiSuppPaymentLines',
+                                fields: {
+                                    TransType: "Cheque",
+                                    TransID: parseInt(lineID) || 0,
+                                    Paid: true,
+                                    Payment: grand_total
+                                }
+                            };
+                            paymentData.push(Line);
+                            let objPaymentDetails = {
+                                type: "TSuppPayments",
+                                fields: {
+                                    ID: paymentID,
+                                    Deleted: false,
+                                    ClientPrintName: clientName,
+                                    CompanyName: clientName,
+                                    DeptClassName: defaultDept,
+                                    EmployeeID: parseInt(employeeID) || 0,
+                                    EmployeeName: employeename || '',
+                                    GUILines: paymentData,
+                                    Notes: comment || '',
+                                    Payment: true,
+                                    PaymentDate: invoiceDate,
+                                    PayMethodName: "Cheque",
+                                    ReferenceNo: refText || '',
+                                    AccountID: bankaccountid || 0,
+                                    AccountName: bankAccountName || '',
+                                }
+                            };
+                            paymentService.saveSuppDepositData(objPaymentDetails).then(function (resultPayment) {
+                                if (resultPayment.fields.ID) {
+                                    let lineReconObj = {
+                                        type: "TReconciliationWithdrawalLines",
+                                        fields: {
+                                            AccountID: bankaccountid || 0,
+                                            AccountName: bankAccountName || '',
+                                            Amount: grand_total,
+                                            BankStatementLineID: selectedYodleeID,
+                                            ClientID: clientID,
+                                            ClientName: clientName,
+                                            DepositDate: invoiceDate,
+                                            Deposited: true,
+                                            Notes: reconNote || '',
+                                            PaymentID: resultPayment.fields.ID,
+                                            Payee: '',
+                                            Reconciled: false,
+                                            Reference: refText || ''
+                                        }
+                                    };
+                                    let reconData = [];
+                                    reconData.push(lineReconObj);
+                                    let objReconDetails = {
+                                        type: "TReconciliation",
+                                        fields: {
+                                            ID: reconcileID,
+                                            AccountID: bankaccountid || 0,
+                                            AccountName: bankAccountName || '',
+                                            // CloseBalance: closebalance,
+                                            Deleted: false,
+                                            DepositLines: null,
+                                            DeptName: defaultDept,
+                                            EmployeeID: parseInt(employeeID) || 0,
+                                            EmployeeName: employeename || '',
+                                            Finished: true,
+                                            Notes: discussNote || '',
+                                            OnHold: false,
+                                            // OpenBalance: openbalance,
+                                            ReconciliationDate: invoiceDate,
+                                            StatementNo: selectedYodleeID.toString() || '0',
+                                            WithdrawalLines: reconData || ''
+                                        }
+                                    };
+                                    reconService.saveReconciliation(objReconDetails).then(function (resultRecon) {
+                                        if (resultRecon.fields.ID) {
+                                            openFindMatchAfterSave(resultRecon.fields.ID);
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        } else {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        }
+                                    }).catch(function (err) {
+                                        handleSaveError(err);
+                                    });
+                                } else {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }
+                                $('.fullScreenSpin').css('display', 'none');
+                            }).catch(function (err) {
+                                handleSaveError(err);
+                            });
+                        } else {
+                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    }).catch(function (err) {
+                        handleSaveError(err);
+                    });
+                }
             }
         }
     },
@@ -2413,7 +2683,7 @@ Template.newbankrecon.events({
             $("#transactionDataBox").removeClass('compactView');
         }
     },
-    'click .selectSuppPaymentType': function(event) {
+    'change .selectSuppPaymentType': function(event) {
         let type = $(event.target).val() || '';
         changeTblReconInvoice(type);
     },
@@ -2547,6 +2817,18 @@ function setProductNewModal(productInfo) {
     $('#edtbuyqty1cost').val(buyqty1cost);
 }
 
+function openBankAccountListModal(){
+    $('#selectLineID').val('');
+    $('#bankAccountListModal').modal();
+    setTimeout(function () {
+        $('#tblAccount_filter .form-control-sm').focus();
+        $('#tblAccount_filter .form-control-sm').val('');
+        $('#tblAccount_filter .form-control-sm').trigger("input");
+        const datatable = $('#tblAccountlist').DataTable();
+        datatable.draw();
+        $('#tblAccountlist_filter .form-control-sm').trigger("input");
+    }, 500);
+}
 function openFullAccountModal() {
     $('#fullAccountListModal').modal();
     setTimeout(function () {
@@ -2766,41 +3048,41 @@ function setOneSupplierDataExByName(supplierDataName) {
 function setSupplierModal(data) {
     $('.fullScreenSpin').css('display', 'none');
     $('#add-supplier-title').text('Edit Supplier');
-    let popSupplierID = data.tsupplier[0].fields.ID || '';
-    let popSupplierName = data.tsupplier[0].fields.ClientName || '';
-    let popSupplierEmail = data.tsupplier[0].fields.Email || '';
-    let popSupplierTitle = data.tsupplier[0].fields.Title || '';
-    let popSupplierFirstName = data.tsupplier[0].fields.FirstName || '';
-    let popSupplierMiddleName = data.tsupplier[0].fields.CUSTFLD10 || '';
-    let popSupplierLastName = data.tsupplier[0].fields.LastName || '';
+    let popSupplierID = data.fields.ID || '';
+    let popSupplierName = data.fields.ClientName || '';
+    let popSupplierEmail = data.fields.Email || '';
+    let popSupplierTitle = data.fields.Title || '';
+    let popSupplierFirstName = data.fields.FirstName || '';
+    let popSupplierMiddleName = data.fields.CUSTFLD10 || '';
+    let popSupplierLastName = data.fields.LastName || '';
     let popSuppliertfn = '' || '';
-    let popSupplierPhone = data.tsupplier[0].fields.Phone || '';
-    let popSupplierMobile = data.tsupplier[0].fields.Mobile || '';
-    let popSupplierFaxnumber = data.tsupplier[0].fields.Faxnumber || '';
-    let popSupplierSkypeName = data.tsupplier[0].fields.SkypeName || '';
-    let popSupplierURL = data.tsupplier[0].fields.URL || '';
-    let popSupplierStreet = data.tsupplier[0].fields.Street || '';
-    let popSupplierStreet2 = data.tsupplier[0].fields.Street2 || '';
-    let popSupplierState = data.tsupplier[0].fields.State || '';
-    let popSupplierPostcode = data.tsupplier[0].fields.Postcode || '';
-    let popSupplierCountry = data.tsupplier[0].fields.Country || LoggedCountry;
-    let popSupplierbillingaddress = data.tsupplier[0].fields.BillStreet || '';
-    let popSupplierbcity = data.tsupplier[0].fields.BillStreet2 || '';
-    let popSupplierbstate = data.tsupplier[0].fields.BillState || '';
-    let popSupplierbpostalcode = data.tsupplier[0].fields.BillPostcode || '';
-    let popSupplierbcountry = data.tsupplier[0].fields.Billcountry || LoggedCountry;
-    let popSuppliercustfield1 = data.tsupplier[0].fields.CUSTFLD1 || '';
-    let popSuppliercustfield2 = data.tsupplier[0].fields.CUSTFLD2 || '';
-    let popSuppliercustfield3 = data.tsupplier[0].fields.CUSTFLD3 || '';
-    let popSuppliercustfield4 = data.tsupplier[0].fields.CUSTFLD4 || '';
-    let popSuppliernotes = data.tsupplier[0].fields.Notes || '';
-    let popSupplierpreferedpayment = data.tsupplier[0].fields.PaymentMethodName || '';
-    let popSupplierterms = data.tsupplier[0].fields.TermsName || '';
-    let popSupplierdeliverymethod = data.tsupplier[0].fields.ShippingMethodName || '';
-    let popSupplieraccountnumber = data.tsupplier[0].fields.ClientNo || '';
-    let popSupplierisContractor = data.tsupplier[0].fields.Contractor || false;
-    let popSupplierissupplier = data.tsupplier[0].fields.IsSupplier || false;
-    let popSupplieriscustomer = data.tsupplier[0].fields.IsCustomer || false;
+    let popSupplierPhone = data.fields.Phone || '';
+    let popSupplierMobile = data.fields.Mobile || '';
+    let popSupplierFaxnumber = data.fields.Faxnumber || '';
+    let popSupplierSkypeName = data.fields.SkypeName || '';
+    let popSupplierURL = data.fields.URL || '';
+    let popSupplierStreet = data.fields.Street || '';
+    let popSupplierStreet2 = data.fields.Street2 || '';
+    let popSupplierState = data.fields.State || '';
+    let popSupplierPostcode = data.fields.Postcode || '';
+    let popSupplierCountry = data.fields.Country || LoggedCountry;
+    let popSupplierbillingaddress = data.fields.BillStreet || '';
+    let popSupplierbcity = data.fields.BillStreet2 || '';
+    let popSupplierbstate = data.fields.BillState || '';
+    let popSupplierbpostalcode = data.fields.BillPostcode || '';
+    let popSupplierbcountry = data.fields.Billcountry || LoggedCountry;
+    let popSuppliercustfield1 = data.fields.CUSTFLD1 || '';
+    let popSuppliercustfield2 = data.fields.CUSTFLD2 || '';
+    let popSuppliercustfield3 = data.fields.CUSTFLD3 || '';
+    let popSuppliercustfield4 = data.fields.CUSTFLD4 || '';
+    let popSuppliernotes = data.fields.Notes || '';
+    let popSupplierpreferedpayment = data.fields.PaymentMethodName || '';
+    let popSupplierterms = data.fields.TermsName || '';
+    let popSupplierdeliverymethod = data.fields.ShippingMethodName || '';
+    let popSupplieraccountnumber = data.fields.ClientNo || '';
+    let popSupplierisContractor = data.fields.Contractor || false;
+    let popSupplierissupplier = data.fields.IsSupplier || false;
+    let popSupplieriscustomer = data.fields.IsCustomer || false;
 
     $('#edtSupplierCompany').val(popSupplierName);
     $('#edtSupplierPOPID').val(popSupplierID);
@@ -2828,13 +3110,13 @@ function setSupplierModal(data) {
     $('#edtCustomeField3').val(popSuppliercustfield3);
     $('#edtCustomeField4').val(popSuppliercustfield4);
 
-    if ((data.tsupplier[0].fields.Street == data.tsupplier[0].fields.BillStreet) && (data.tsupplier[0].fields.Street2 == data.tsupplier[0].fields.BillStreet2) &&
-        (data.tsupplier[0].fields.State == data.tsupplier[0].fields.BillState) && (data.tsupplier[0].fields.Postcode == data.tsupplier[0].fields.Postcode) &&
-        (data.tsupplier[0].fields.Country == data.tsupplier[0].fields.Billcountry)) {
+    if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2) &&
+        (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.Postcode) &&
+        (data.fields.Country == data.fields.Billcountry)) {
         //templateObject.isSameAddress.set(true);
         $('#chkSameAsShipping').attr("checked", "checked");
     }
-    if (data.tsupplier[0].fields.Contractor == true) {
+    if (data.fields.Contractor == true) {
         // $('#isformcontractor')
         $('#isformcontractor').attr("checked", "checked");
     } else {
@@ -2917,6 +3199,9 @@ function setCalculated() {
             paymentType = 'Invoice';
         } else {
             paymentType = $("#sltSuppPaymentType_"+selectedYodleeID).val();
+            if (paymentType == undefined) {
+                paymentType = "Purchase Order";
+            }
         }
         let taxOption = $('#divLineDetail_' + selectedYodleeID + " #taxOption").val();
         if (selectedLineID) {
@@ -3156,6 +3441,14 @@ function changeTblReconInvoice(type) {
             $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colAmountInput").show();
             $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colDiscount").hide();
             $("#divLineDetail_" + selectedYodleeID + " #tblReconInvoice tbody>tr td.colCustomer").hide();
+        }
+        if (type != "Invoice") {
+            let $tblrows = $('#divLineDetail_' + selectedYodleeID + ' #tblReconInvoice tbody tr');
+            $tblrows.each(function (index) {
+                if (this.id != "firstLine") {
+                    $(this).remove();
+                }
+            });
         }
     }
 }

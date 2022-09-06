@@ -166,6 +166,173 @@ Template.supportmodalpop.onRendered(function() {
 
         }
         setInterval(updateTime, 1000);
+
+  var url = FlowRouter.current().path;
+  if (url.includes("/accountsoverview")) {
+    $('.btnDownloadHelpFile').attr("href","https://vs1forum.com/viewtopic.php?f=6&t=30");
+  }else if(url.includes("/journalentrylist")) {
+    $('.btnDownloadHelpFile').attr("href","https://vs1forum.com/");
+  }else if(url.includes("/journalentrycard")) {
+    $('.btnDownloadHelpFile').attr("href","https://vs1forum.com/");
+  }else if(url.includes("/appointments")) {
+    $('.btnDownloadHelpFile').attr("href","https://vs1forum.com/viewtopic.php?f=6&t=56");
+  }else if(url.includes("/appointmentlist")) {
+    $('.btnDownloadHelpFile').attr("href","https://vs1forum.com/");
+  }else if(url.includes("/appointmenttimelist")) {
+    $('.btnDownloadHelpFile').attr("href","https://vs1forum.com/");
+  }else if(url.includes("/bankingoverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/depositlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=76");
+  }else if(url.includes("/depositcard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/chequelist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=36");
+  }else if(url.includes("/chequecard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/reconciliationlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/bankrecon")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/eft")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/newbankrecon")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/eft")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/contactoverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=35");
+  }else if(url.includes("/customerlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/customerscard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=59");
+  }else if(url.includes("/employeelist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20");
+  }else if(url.includes("/employeescard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=38");
+  }else if(url.includes("/leadlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20");
+  }else if(url.includes("/leadscard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=59");
+  }else if(url.includes("/supplierlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/supplierscard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=53");
+  }else if(url.includes("/joblist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/crmoverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/dashboard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/dashboardexe")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/dashboardsalesmanager")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/dashboardsales")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/processlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/processlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/processcard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/inventorylist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/productview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/productlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/stockadjustmentoverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/stockadjustmentcard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/stocktransferlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/stocktransfercard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/lotnumberlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/serialnumberlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/paymentoverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6/");
+  }else if(url.includes("/customerpayment")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/customerpayment")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/paymentcard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/supplierpaymentcard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/customerawaitingpayments")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=77");
+  }else if(url.includes("/supplierawaitingpurchaseorder")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=78");
+  }else if(url.includes("/supplierpayment")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/statementlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=45");
+  }else if(url.includes("/payrolloverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20");
+  }else if(url.includes("/timesheet")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/timesheettimelog")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/singletouch")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/payrun")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/payrundetails")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/receiptsoverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/receiptcategory")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/tripgroup")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/purchasesoverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }else if(url.includes("/purchaseorderlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=48");
+  }else if(url.includes("/purchaseordercard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=48");
+  }else if(url.includes("/billlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/billcard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/creditlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/creditcard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/salesoverview")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=54");
+  }else if(url.includes("/quoteslist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else if(url.includes("/quotecard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=63");
+  }else if(url.includes("/salesorderslist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=55");
+  }else if(url.includes("/salesordercard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=65");
+  }else if(url.includes("/salesordercard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=65");
+  }else if(url.includes("/invoicelist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=40");
+  }else if(url.includes("/invoicecard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=60");
+  }else if(url.includes("/invoicelistBO")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=60");
+  }else if(url.includes("/refundlist")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=40");
+  }else if(url.includes("/refundcard")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=64");
+  }else if(url.includes("/organisationsettings")) {
+    //$('.btnDownloadHelpFile').attr("https://vs1forum.com/viewtopic.php?f=6&t=64");
+  }else if(url.includes("/companyappsettings")) {
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/");
+  }else{
+    $('.btnDownloadHelpFile').attr("https://vs1forum.com/viewforum.php?f=6");
+  }
 });
 
 
@@ -178,3 +345,14 @@ Template.supportmodalpop.events({
 });
 
 Template.supportmodalpop.helpers({});
+
+Template.supportmodalpop.events({
+    // 'click .btnViewHelpVideo': async function (event) {
+    //     $('#supportModal').modal('toggle');
+    //     $('.modal-backdrop').css('display', 'none');
+    //     // setTimeout(function() {
+    //     //
+    //     // }, 1000);
+    // }
+
+});

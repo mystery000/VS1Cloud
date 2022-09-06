@@ -58,11 +58,14 @@
           <div class="row">
             <div class="col-6 col-md-4">
               <div class="form-group" style="margin: 4px;"><label>Account</label>
-                <select class="form-control pointer" id="sltAccountType" name="sltAccountType">
+                <!-- <select class="form-control pointer" id="sltAccountType" name="sltAccountType">
                   {{#each item in accountTypes}}
                   <option value="{{item.accounttypename}}">{{item.description}}
                   </option>
                   {{/each}}
+                </select> -->
+                <select type="search" class="form-control" id="sltBankAccountName" name="sltBankAccountName"
+                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
                 </select>
               </div>
             </div>
@@ -227,6 +230,15 @@
     </div>
   </div>
 
+  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    {{> accountlistpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+    {{> addaccountpop}}
+  </div>
+
   {{> eftOptionsModal}}
+  {{> eftBankCodesModal}}
   {{> addNewEftModal}}
 </template>

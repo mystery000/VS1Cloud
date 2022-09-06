@@ -107,21 +107,11 @@ Template.purchaseorderlist.onRendered(function () {
     }
     var toDate =
       currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-    let prevMonth11Date = moment()
-      .subtract(reportsloadMonths, "months")
-      .format("YYYY-MM-DD");
+    let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
 
     getVS1Data("TPurchaseOrderList").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService
-            .getAllTPurchaseOrderListData(
-              prevMonth11Date,
-              toDate,
-              true,
-              initialReportLoad,
-              0
-            )
-            .then(function (data) {
+          sideBarService.getAllTPurchaseOrderListData(prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
               addVS1Data("TPurchaseOrderList", JSON.stringify(data));
@@ -132,16 +122,8 @@ Template.purchaseorderlist.onRendered(function () {
               } else {
                 $("#dateFrom").attr("readonly", false);
                 $("#dateTo").attr("readonly", false);
-                $("#dateFrom").val(
-                  data.Params.DateFrom != ""
-                    ? moment(data.Params.DateFrom).format("DD/MM/YYYY")
-                    : data.Params.DateFrom
-                );
-                $("#dateTo").val(
-                  data.Params.DateTo != ""
-                    ? moment(data.Params.DateTo).format("DD/MM/YYYY")
-                    : data.Params.DateTo
-                );
+                $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
               }
               for (let i = 0; i < data.tpurchaseorderlist.length; i++) {
                 let totalAmountEx =
@@ -205,39 +187,6 @@ Template.purchaseorderlist.onRendered(function () {
               templateObject.datatablerecords.set(dataTableList);
 
               if (templateObject.datatablerecords.get()) {
-                Meteor.call(
-                  "readPrefMethod",
-                  Session.get("mycloudLogonID"),
-                  "tblpurchaseorderlist",
-                  function (error, result) {
-                    if (error) {
-                    } else {
-                      if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                          let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
-                          let columHeaderUpdate = customcolumn[
-                            i
-                          ].thclass.replace(/ /g, ".");
-                          let hiddenColumn = customcolumn[i].hidden;
-                          let columnClass = columHeaderUpdate.split(".")[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
-
-                          if (hiddenColumn == true) {
-                            $("." + columnClass + "").addClass("hiddenColumn");
-                            $("." + columnClass + "").removeClass("showColumn");
-                          } else if (hiddenColumn == false) {
-                            $("." + columnClass + "").removeClass(
-                              "hiddenColumn"
-                            );
-                            $("." + columnClass + "").addClass("showColumn");
-                          }
-                        }
-                      }
-                    }
-                  }
-                );
 
                 setTimeout(function () {
                   MakeNegative();
@@ -658,39 +607,6 @@ Template.purchaseorderlist.onRendered(function () {
           templateObject.datatablerecords.set(dataTableList);
 
           if (templateObject.datatablerecords.get()) {
-            Meteor.call(
-              "readPrefMethod",
-              Session.get("mycloudLogonID"),
-              "tblpurchaseorderlist",
-              function (error, result) {
-                if (error) {
-                } else {
-                  if (result) {
-                    for (let i = 0; i < result.customFields.length; i++) {
-                      let customcolumn = result.customFields;
-                      let columData = customcolumn[i].label;
-                      let columHeaderUpdate = customcolumn[i].thclass.replace(
-                        / /g,
-                        "."
-                      );
-                      let hiddenColumn = customcolumn[i].hidden;
-                      let columnClass = columHeaderUpdate.split(".")[1];
-                      let columnWidth = customcolumn[i].width;
-                      let columnindex = customcolumn[i].index + 1;
-
-                      if (hiddenColumn == true) {
-                        $("." + columnClass + "").addClass("hiddenColumn");
-                        $("." + columnClass + "").removeClass("showColumn");
-                      } else if (hiddenColumn == false) {
-                        $("." + columnClass + "").removeClass("hiddenColumn");
-                        $("." + columnClass + "").addClass("showColumn");
-                      }
-                    }
-                  }
-                }
-              }
-            );
-
             setTimeout(function () {
               MakeNegative();
             }, 100);
@@ -991,13 +907,7 @@ Template.purchaseorderlist.onRendered(function () {
         }
       }).catch(function (err) {
         sideBarService.getAllTPurchaseOrderListData(
-            prevMonth11Date,
-            toDate,
-            true,
-            initialReportLoad,
-            0
-          )
-          .then(function (data) {
+            prevMonth11Date,toDate,true,initialReportLoad,0).then(function (data) {
             let lineItems = [];
             let lineItemObj = {};
             addVS1Data("TPurchaseOrderList", JSON.stringify(data));
@@ -1080,39 +990,6 @@ Template.purchaseorderlist.onRendered(function () {
             templateObject.datatablerecords.set(dataTableList);
 
             if (templateObject.datatablerecords.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "tblpurchaseorderlist",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass.replace(
-                          / /g,
-                          "."
-                        );
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.split(".")[1];
-                        let columnWidth = customcolumn[i].width;
-                        let columnindex = customcolumn[i].index + 1;
-
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
-                    }
-                  }
-                }
-              );
-
               setTimeout(function () {
                 MakeNegative();
               }, 100);

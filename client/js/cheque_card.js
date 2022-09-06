@@ -104,7 +104,7 @@ Template.chequecard.onRendered(() => {
           lastBankAccount = lastCheque.GLAccountName;
         } else {
         }
-        // $(".heading").html("New " +chequeSpelling +" #" +newChequeID +'<a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 8px;"></i></a>  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>');
+        // $(".heading").html("New " +chequeSpelling +" #" +newChequeID +<a role="button" class="btn btn-success" data-toggle="modal" href="#supportModal" style="margin-left: 12px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
         setTimeout(function () {
           $("#sltBankAccountName").val(lastBankAccount);
           $("#ponumber").val(newChequeID);
@@ -403,15 +403,9 @@ Template.chequecard.onRendered(() => {
                     if (data.fields.Lines) {
                       if (data.fields.Lines.length) {
 
-                        $("#edtSaleCustField1").val(
-                          data.fields.Lines[0].fields.CustomField1
-                        );
-                        $("#edtSaleCustField2").val(
-                          data.fields.Lines[0].fields.CustomField2
-                        );
-                        $("#edtSaleCustField3").val(
-                          data.fields.Lines[0].fields.CustomField3
-                        );
+                        $("#edtSaleCustField1").val(data.fields.Lines[0].fields.CustomField1);
+                        $("#edtSaleCustField2").val(data.fields.Lines[0].fields.CustomField2);
+                        $("#edtSaleCustField3").val(data.fields.Lines[0].fields.CustomField3);
 
                         for (let i = 0; i < data.fields.Lines.length; i++) {
                           let AmountGbp = utilityService
@@ -490,15 +484,9 @@ Template.chequecard.onRendered(() => {
                         }
                       } else {
 
-                        $("#edtSaleCustField1").val(
-                          data.fields.Lines.fields.CustomField1
-                        );
-                        $("#edtSaleCustField2").val(
-                          data.fields.Lines.fields.CustomField2
-                        );
-                        $("#edtSaleCustField3").val(
-                          data.fields.Lines.fields.CustomField3
-                        );
+                        $("#edtSaleCustField1").val(data.fields.Lines.fields.CustomField1);
+                        $("#edtSaleCustField2").val(data.fields.Lines.fields.CustomField2);
+                        $("#edtSaleCustField3").val(data.fields.Lines.fields.CustomField3);
 
                         let AmountGbp =
                           data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
@@ -776,15 +764,9 @@ Template.chequecard.onRendered(() => {
                   if (useData[d].fields.Lines) {
                     if (useData[d].fields.Lines.length) {
 
-                      $("#edtSaleCustField1").val(
-                        useData[d].fields.Lines[0].fields.CustomField1
-                      );
-                      $("#edtSaleCustField2").val(
-                        useData[d].fields.Lines[0].fields.CustomField2
-                      );
-                      $("#edtSaleCustField3").val(
-                        useData[d].fields.Lines[0].fields.CustomField3
-                      );
+                      $("#edtSaleCustField1").val(useData[d].fields.Lines[0].fields.CustomField1);
+                      $("#edtSaleCustField2").val(useData[d].fields.Lines[0].fields.CustomField2);
+                      $("#edtSaleCustField3").val(useData[d].fields.Lines[0].fields.CustomField3);
 
                       for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                         let AmountGbp = utilityService

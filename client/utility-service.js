@@ -140,7 +140,7 @@ import { autoTable }from 'jspdf-autotable';
                 dataMe = toCsv(table);
 
                 if(defaults.consoleLog){
-                    
+
                 }
 
                 download(options.filename,dataMe);
@@ -560,6 +560,19 @@ export class UtilityService {
         $(".attchment-tooltip").show();
     };
 
+    customShowUploadedAttachment = function(myFiles, modalId) {
+        let empName = localStorage.getItem('mySession');
+        let elementToAdd = '';
+        for(let i=0;i<myFiles.length;i++){
+            let myFile = myFiles[i].fields;
+           let elementForItem = '<div class="uploaded-element attachment-name-'+i+'"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.AttachmentName + '</span>'
+               +'<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times remove-attachment-'+i+'"></i></div> </div>';
+            elementToAdd =  elementToAdd + elementForItem;
+        }
+        $('#'+modalId+' .file-display').html(elementToAdd);
+        $(".attchment-tooltip").show();
+    }
+
     showUploadedAttachmentTabs = function(myFiles){
         let empName = localStorage.getItem('mySession');
         let elementToAdd = '';
@@ -598,6 +611,55 @@ export class UtilityService {
         $('#file-displayJobNoPOP').html(elementToAdd);
         $(".attchment-tooltipJobNoPOP").show();
     };
+
+    customAttachmentUpload = async function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment, modalId){
+        let empName = localStorage.getItem('mySession');
+        let totalAttachments = uploadedFilesArray.length;
+        for(let i=0; i<myFiles.length; i++){
+            let myFile = myFiles[i];
+            let myFileType = myFile.type;
+            const loadAttachment = () => {
+                 return new Promise((resolve) => {
+                     //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
+                     //second parameter must be a BlogPropertyBag object containing MIME property
+                     let myBlob = new Blob([myFile], {type: myFileType});
+                     let myReader = new FileReader();
+                     myReader.readAsDataURL(myBlob);
+                     //handler executed once reading(blob content referenced to a variable) from blob is finished.
+                     myReader.addEventListener("loadend", function (e) {
+                         let base64data = myReader.result.split(',')[1];
+                         let uploadObject = {
+                             type: "TAttachment",
+                             fields: {
+                                 Attachment:  base64data,
+                                 AttachmentName: myFile.name,
+                                 Description: myFile.type
+                             }
+                         };
+                         uploadedFilesArray.push(uploadObject);
+                         if(!saveToTAttachment){
+                             let elementForItem = '<div class="uploaded-element attachment-name-'+totalAttachments+'"><div class="fileIocns"><i class="fa fa-file"></i></div> <div class="file-name"><span> '+ myFile.name + '</span>'
+                                 +'<span class="uploaded-on">File upload by ' + empName + ' </span></div><div class="caret-down-icon remove-attachment"><i class="fa fa-times remove-attachment-'+ totalAttachments +'"></i></div> </div>';
+                             if(!$('.uploaded-element').length){
+                                 $("#"+modalId + ' .file-display').html(elementForItem);
+                             } else {
+                                 $("#"+modalId + ' .file-display').append(elementForItem);
+                             }
+                             $('#new-attachment2-tooltip').show();
+                         }
+                         totalAttachments++;
+                         resolve()
+                     });
+                 })
+             }
+        }
+        let dataObj = {
+            totalAttachments: totalAttachments,
+            uploadedFilesArray: uploadedFilesArray
+        };
+        return dataObj;
+    };
+
 
    attachmentUpload = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment){
        let empName = localStorage.getItem('mySession');
@@ -1233,15 +1295,13 @@ export class UtilityService {
 
     };
 
-  getStartDateWithSpecificFormat = function (date) {
+    getStartDateWithSpecificFormat = function (date) {
       const leaveDate = new Date(date);
       const yyyy = leaveDate.getFullYear();
       let mm = ("0" + (leaveDate.getMonth() + 1)).slice(-2);
       let dd = leaveDate.getDate();
-
       return dd + "/" + mm + "/" + yyyy;
     };
-  
 
     negativeCurrencyRoundFormat = function (price) {
         if(price < 0) {
@@ -1274,14 +1334,13 @@ export class UtilityService {
 
     convertSubstringParseFloat(value) {
         if((value).includes('-')) {
-            // let price = value.substring(2).replace(",","");
-            let price = value.substring(2).replace(/\,/g,'');
+            let price = value.substring(2).replace(",","");
             price = '-'+price;
             return (parseFloat(price));
 
         }
         else {
-            value = value.substring(2).replace(/\,/g,'');
+            value = value.substring(1).replace(",", "");
             return (parseFloat(value));
 
         }
@@ -1289,8 +1348,8 @@ export class UtilityService {
 
     /**
      * This function will convert a string to a float number
-     * 
-     * @param {string} stringNumber 
+     *
+     * @param {string} stringNumber
      * @param {string | false} _currency
      * @returns {float}
      */
@@ -1316,9 +1375,9 @@ export class UtilityService {
 
     /**
      * This function will get the currency
-     * 
-     * @param {*} stringNumber 
-     * @returns 
+     *
+     * @param {*} stringNumber
+     * @returns
      */
     extractCurrency(stringNumber = "$15.5") {
         if(!isNaN(stringNumber)) {
@@ -1331,8 +1390,8 @@ export class UtilityService {
 
 
     /**
-     * 
-     * @param {string|number} number 
+     *
+     * @param {string|number} number
      * @returns {boolean}
      */
     isNegative(number = "1235") {

@@ -14,7 +14,7 @@ Template.assignLeaveTypePop.onRendered(function () {
 Template.assignLeaveTypePop.onCreated(function () {
     const templateObject = Template.instance();
     setTimeout(function () {
-        $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf,#edtLeaveStartDate,#edtLeaveEndDate,#edtPeriodPaymentDate").datepicker({
+        $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf,#edtLeaveStartDate,#edtLeaveEndDate,#edtPeriodPaymentDate,#paymentDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
             buttonImageOnly: true,
@@ -35,6 +35,13 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#edtLeavePayStatus').editableSelect('add','Awaiting');
         $('#edtLeavePayStatus').editableSelect('add','Approved');
         $('#edtLeavePayStatus').editableSelect('add','Denied');
+
+        $('#period').editableSelect('add','Weekly');
+        $('#period').editableSelect('add','Fortnightly');
+        $('#period').editableSelect('add','Twice Monthly');
+        $('#period').editableSelect('add','Four Weekly');
+        $('#period').editableSelect('add','Monthly');
+        $('#period').editableSelect('add','Quarterly');
         
         // $('.customEditableSelect').editableSelect('add', function(item){
         //     $(this).val(item.id);
@@ -139,11 +146,11 @@ Template.assignLeaveTypePop.onCreated(function () {
             });
     }, 1000);
 
-    $(document).on("click", "#tblAssignLeaveTypes tbody tr", function (e) {
+    $(document).on("click", "#tblAssignLeaveTypes tbody tr .colALType", function (e) {
         var table = $(this);
-        let name = table.find(".colALTypeLeave").text()||'';
-        let ID = table.find(".colALTypeID").text()||'';
-        let Hours = table.find(".colALTypeOpeningBalance").text()||'';
+        let name = table.parent().find(".colALTypeLeave").text()||'';
+        let ID = table.parent().find(".colALTypeID").text()||'';
+        let Hours = table.parent().find(".colALTypeOpeningBalance").text()||'';
         let searchFilterID = templateObject.currentDrpDownID.get()
         $('#' + searchFilterID).val(name);
         $('#' + searchFilterID + 'ID').val(ID);

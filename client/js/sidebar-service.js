@@ -632,7 +632,7 @@ export class SideBarService extends BaseService {
           IgnoreDates: true,
           IsDetailReport: true,
           OrderBy: "PaymentDate desc",
-          Search: "Deleted != true",
+          // Search: "Deleted != true",
           LimitCount: '"' + limitcount + '"',
           LimitFrom: '"' + limitfrom + '"',
         };
@@ -2902,6 +2902,14 @@ export class SideBarService extends BaseService {
     };
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }
+  getAllBankRuleList() {
+    let options = {
+      IgnoreDates: true,
+      OrderBy: "ID desc",
+      Search: "Active != false",
+    };
+    return this.getList(this.ERPObjects.TBankRuleList, options);
+  }
 
   getProductStocknSaleReportData(dateFrom, dateTo) {
     let options = {
@@ -3382,6 +3390,13 @@ export class SideBarService extends BaseService {
      select: "[Active]=true"
    };
   return this.getList(this.ERPObjects.TCorrespondence, options);
+  }
+
+  getScheduleSettings() {
+      let options = {
+          ListType: "Detail",
+      };
+      return this.getList(this.ERPObjects.TReportSchedules,options);
   }
 
   saveCorrespondence(data)

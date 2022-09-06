@@ -75,7 +75,7 @@ Template.organisationsettings.onRendered(function() {
                         for (let i = 0; i < data.tcountries.length; i++) {
                             countries.push(data.tcountries[i].Country);
                         }
-                        countries = _.sortBy(countries);
+                        countries.sort((a, b) => a.localeCompare(b));
                         templateObject.countryData.set(countries);
                     });
                 } else {
@@ -84,7 +84,7 @@ Template.organisationsettings.onRendered(function() {
                     for (let i = 0; i < useData.length; i++) {
                         countries.push(useData[i].Country);
                     }
-                    countries = _.sortBy(countries);
+                    countries.sort((a, b) => a.localeCompare(b));
                     templateObject.countryData.set(countries);
                 }
             })
@@ -93,7 +93,7 @@ Template.organisationsettings.onRendered(function() {
                     for (let i = 0; i < data.tcountries.length; i++) {
                         countries.push(data.tcountries[i].Country);
                     }
-                    countries = _.sortBy(countries);
+                    countries.sort((a, b) => a.localeCompare(b));
                     templateObject.countryData.set(countries);
                 });
             });
@@ -105,7 +105,7 @@ Template.organisationsettings.onRendered(function() {
             for (let i = 0; i < data.tcomplogo.length; i++) {
                 //countries.push(data.tcomplogo[i].Country)
             }
-            countries = _.sortBy(countries);
+            countries.sort((a, b) => a.localeCompare(b));
             templateObject.countryData.set(countries);
         });
     };
@@ -124,7 +124,7 @@ Template.organisationsettings.onRendered(function() {
                         let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.SupplierCreditLimit) || 0.00;
                         let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1[i].fields.Balance) || 0.00;
                         var dataList = {
-                            id: data.tsuppliervs1[i].fields.ID || '',
+                            id: data.tsuppliervs1[i].fields.ID + 1 || '',
                             company: data.tsuppliervs1[i].fields.ClientName || '',
                             contactname: data.tsuppliervs1[i].fields.ContactName || '',
                             phone: data.tsuppliervs1[i].fields.Phone || '',
@@ -156,6 +156,30 @@ Template.organisationsettings.onRendered(function() {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tsuppliervs1;
 
+                // //////////////////////////////////
+                // var dataListinit = {
+                //     id: '',
+                //     company: '',
+                //     contactname: '',
+                //     phone: '',
+                //     arbalance: 0.00,
+                //     creditbalance: 0.00,
+                //     balance: 0.00,
+                //     creditlimit: 0.00,
+                //     salesorderbalance: 0.00,
+                //     email: '',
+                //     accountno: '',
+                //     clientno: '',
+                //     jobtitle: '',
+                //     notes: '',
+                //     suburb: '',
+                //     country: ''
+                // };
+                // suppliers.push(dataListinit);
+
+                // //////////////////////////////////
+
+
                 for (let i = 0; i < useData.length; i++) {
                     let arBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.APBalance) || 0.00;
                     let creditBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.ExcessAmount) || 0.00;
@@ -163,7 +187,7 @@ Template.organisationsettings.onRendered(function() {
                     let creditLimit = utilityService.modifynegativeCurrencyFormat(useData[i].fields.SupplierCreditLimit) || 0.00;
                     let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.00;
                     var dataList = {
-                        id: useData[i].fields.ID || '',
+                        id: useData[i].fields.ID + 1 || '',
                         company: useData[i].fields.ClientName || '',
                         contactname: useData[i].fields.ContactName || '',
                         phone: useData[i].fields.Phone || '',
@@ -651,6 +675,8 @@ Template.organisationsettings.events({
             .then(function(data) {
                 // Bert.alert('<strong>'+ 'Organisation details successfully updated!'+'</strong>!', 'success');
                 // swal('Organisation details successfully updated!', '', 'success');
+
+                localStorage.setItem("tradingName", tradingName);
                 if (isDefaultEmail) {
                     localStorage.setItem("VS1OrgEmail", emailAddress);
                 } else {

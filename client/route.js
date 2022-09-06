@@ -1623,6 +1623,24 @@ authenticatedRoutes.route('/newbankrecon', {
     }
 });
 
+authenticatedRoutes.route('/newbankrule', {
+    name: 'newbankrule',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'newbankrule'
+        });
+    }
+});
+
+authenticatedRoutes.route('/bankrulelist', {
+    name: 'bankrulelist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'bankrulelist'
+        });
+    }
+});
+
 authenticatedRoutes.route('/depositcard', {
     name: 'depositcard',
     action() {
@@ -2070,4 +2088,13 @@ authenticatedRoutes.route('/eft', {
           yield: 'eft_export'
       })
   }
+})
+
+authenticatedRoutes.route('/workordercard', {
+    name: 'new_workorder',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'new_workorder'
+        })
+    }
 })

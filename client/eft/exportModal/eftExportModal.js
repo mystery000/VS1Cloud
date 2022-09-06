@@ -1,6 +1,7 @@
 import { ReactiveVar } from "meteor/reactive-var";
 // import { isNumber } from "underscore";
 import { Random } from "meteor/random";
+import { AccountService } from "../../accounts/account-service";
 
 
 Template.eftExportModal.onCreated(function () {
@@ -14,6 +15,7 @@ Template.eftExportModal.onCreated(function () {
 
 Template.eftExportModal.onRendered(function () {
   let templateObject = Template.instance();
+  let accountService = new AccountService();
 
   // tempcode
   templateObject.eftRowId.set(Random.id());
@@ -100,6 +102,83 @@ Template.eftExportModal.onRendered(function () {
       });
   };
   templateObject.loadAccountTypes();
+
+  $("#sltBankAccountName").editableSelect();
+
+  $("#sltBankAccountName")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset();
+      let accountService = new AccountService();
+      const accountTypeList = [];
+      var accountDataName = e.target.value || "";
+
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#accountListModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+
+      } else {
+        if (accountDataName.replace(/\s/g, "") != "") {
+          getVS1Data("TAccountVS1")
+            .then(function (dataObject) {
+              if (dataObject.length == 0) {
+                accountService
+                  .getOneAccountByName(accountDataName)
+                  .then(function (data) {
+                    setTimeout(function () {
+                      $("#addNewAccount").modal("show");
+                    }, 500);
+                  })
+                  .catch(function (err) {
+                    $(".fullScreenSpin").css("display", "none");
+                  });
+              } else {
+                let data = JSON.parse(dataObject[0].data);
+                var added = false;
+                let fullAccountTypeName = "";
+
+                for (let a = 0; a < data.taccountvs1.length; a++) {
+                  if (
+                    data.taccountvs1[a].fields.AccountName === accountDataName
+                  ) {
+                    setTimeout(function () {
+                      $("#addNewAccount").modal("show");
+                    }, 500);
+                  }
+                }
+                if (!added) {
+                  accountService
+                    .getOneAccountByName(accountDataName)
+                    .then(function (data) {
+                      setTimeout(function () {
+                        $("#addNewAccount").modal("show");
+                      }, 500);
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                }
+              }
+            })
+            .catch(function (err) {
+              accountService
+                .getOneAccountByName(accountDataName)
+                .then(function (data) {
+                  setTimeout(function () {
+                    $("#addNewAccount").modal("show");
+                  }, 500);
+                })
+                .catch(function (err) {
+                  $(".fullScreenSpin").css("display", "none");
+                });
+            });
+          $("#addAccountModal").modal("toggle");
+        } else {
+          $("#accountListModal").modal();
+        }
+      }
+    });
 
 });
 
@@ -229,9 +308,7 @@ Template.eftExportModal.helpers({
         } else if (b.description === "NA") {
           return -1;
         }
-        return a.description.toUpperCase() > b.description.toUpperCase()
-          ? 1
-          : -1;
+        return a.description.toUpperCase() > b.description.toUpperCase() ? 1 : -1;
       });
   },
 

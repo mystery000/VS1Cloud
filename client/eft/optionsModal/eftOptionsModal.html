@@ -17,8 +17,8 @@
                           {{#each item in eftOptionsList}}
                           <div class="col-12 chkEftOptionsList" optionsid="{{item.id}}">
                             <div class="custom-control custom-switch" style="margin: 4px; margin-top: 20px;">
-                                <input type="checkbox" class="custom-control-input chkEftOption {{item.id}}" id="{{item.id}}" checked="{{item.active}}" />
-                                <label class="custom-control-label" for="{{item.id}}">{{item.label}}</label>
+                                <input type="checkbox" class="custom-control-input chkEftOption {{item.id}}" id="chkEftOption_{{item.id}}" checked="{{item.active}}" />
+                                <label class="custom-control-label" for="chkEftOption_{{item.id}}">{{item.label}}</label>
                             </div>
                           </div> 
                           {{/each}}
