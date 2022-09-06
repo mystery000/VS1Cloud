@@ -9807,7 +9807,7 @@ Template.new_invoice.onRendered(function () {
 
       let custFields = [];
       let customData = {};
-      let customFieldCount = 15;
+      // let customFieldCount = 15;
       let reset_data = [];
 
       if(Session.get('CloudSalesQtyOnly')) {
@@ -9829,7 +9829,7 @@ Template.new_invoice.onRendered(function () {
           { label: 'Units', class: 'colUOM', active: false }
         ];
       } else{
-        customFieldCount = 18;
+        // customFieldCount = 17;
         reset_data = [
           { label: 'Product Name', class: 'colProductName', active: true },
           { label: 'Description', class: 'colDescription', active: true },
@@ -9850,6 +9850,23 @@ Template.new_invoice.onRendered(function () {
           { label: 'Units', class: 'colUOM', active: false }
         ];
       }
+      let customFieldCount = reset_data.length;
+
+
+ 
+      // for (let r = 0; r < customFieldCount; r++) {
+      //   customData = {
+      //     active: reset_data[r].active,
+      //     id: "",
+      //     custfieldlabel: reset_data[r].label,
+      //     datatype: "",
+      //     isempty: true,
+      //     iscombo: false,
+      //   };
+      //   custFields.push(customData);
+      // } 
+
+      // tempObj.displayfields.set(custFields);
 
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
         if (data.tcustomfieldlist[x].fields.ListType == listType) {
