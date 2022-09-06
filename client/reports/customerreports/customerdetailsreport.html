@@ -4,7 +4,7 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Customer Details <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
+            <h2 style="margin: 16px;">Customer Details {{> helpbutton}}</h2>
         </header>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -16,8 +16,8 @@
                     <div class="modal-body">
                         <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                         <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=39" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                        <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                        {{> helpadvisor}}
+                        {{> helpgotoforum}}
                     </div>
                     <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                 </div>
@@ -107,7 +107,7 @@
                             </div>
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters justify-content-end">
-                                    <div class="dropdown" style="margin: 8px;">
+                                    <!-- <div class="dropdown" style="margin: 8px;">
                                         <style>
                                             .dropdown-toggle::after {
                                                 display: none;
@@ -121,8 +121,8 @@
                                             <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="javascript:void(0);">Last 12 Months</a>
                                             <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="javascript:void(0);">Ignore Date</a>
                                         </div>
-                                    </div>
-                                    <div class="form-group" style="margin: 8px;">
+                                    </div> -->
+                                    <!-- <div class="form-group" style="margin: 8px;">
                                         <label>From</label>
                                         <div class="input-group date" style="width: 160px;">
                                             <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom">
@@ -139,7 +139,7 @@
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row no-gutters justify-content-end">
                                     <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
@@ -173,18 +173,41 @@
                                     .text-right {
                                         text-align: right !important;
                                     }
+                                    .table th,
+                                    .table td {
+                                        text-align: right;
+                                        min-width: 150px;
+                                    }
+                                    .table th:first-child,
+                                    .table td:first-child {
+                                        text-align: left;
+                                    }
+                                    table tr .text-danger,
+                                    table tr .text-danger a {
+                                        color: #e74a3b !important;
+                                    }
+                                    .customDoubleTableHeading + tr th {
+                                        border-right: 1px solid #cbcbcb !important;
+                                    }
+                                    .customDoubleTableHeading + tr th:last-child {
+                                        border-right: none !important;
+                                    }
+                                    .text-center1,
+                                    .text-center0 {
+                                        text-align: right !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
-                                            <tr class="table-active">
+                                            <tr class="table-active customDoubleTableHeading">
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Type</th>
-                                                <th class="text-center" colspan="{{countActive currencyList}}">Total (Ex)</th>
-                                                <th class="text-center" colspan="{{countActive currencyList}}">Total (Inc)</th>
-                                                <th class="text-center" colspan="{{countActive currencyList}}">Gross Profit</th>
-                                                <th class="text-right">Margin</th>
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Ex)</th>
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total (Inc)</th>
+                                                <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Gross Profit</th>
+                                                <th class="text-right text-center{{countActive currencyList}}">Margin</th>
                                                 <th>Address</th>
                                                 <th>City</th>
                                                 <th>ZIP</th>
@@ -192,7 +215,7 @@
                                             </tr>
 
                                              {{#if isOnlyDefaultActive equal "false" }}
-                                                <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                <tr class="table-active tblAvoid">
                                                     <th></th>
                                                     <th></th>
                                                     <th></th>
@@ -201,7 +224,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -209,7 +232,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -217,7 +240,7 @@
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
+                                                                <th active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -342,6 +365,10 @@
                                                         </tr>
                                                     {{/if}}
                                                 {{/each}}
+                                            {{else}}
+                                                <tr class="odd" style="text-align: center;">
+                                                  <td valign="top" colspan="11" class="dataTables_empty text-left">No data available in table</td>
+                                                </tr>
                                             {{/if}}
                                         </tbody>
                                     </table>

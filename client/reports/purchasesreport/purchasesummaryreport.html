@@ -5,9 +5,7 @@
     </div>
     <header style="padding: 16px;">
       <h2 style="margin: 16px;">Purchase Summary
-        <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
-          <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
-        </a>
+        {{> helpbutton}}
       </h2>
     </header>
 
@@ -26,12 +24,8 @@
             <p class="text-center text-muted">
               <a href="https://vs1forum.com/viewtopic.php?f=6&t=75" target="_blank" class="btn btn-primary">Download Help File</a>
             </p>
-            <p class="text-center text-muted">
-              <button class="btn btn-primary" type="button">Employ Advisor</button>
-            </p>
-            <p class="text-center text-muted" style="margin: 0px;">
-              <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a>
-            </p>
+            {{> helpadvisor}}
+            {{> helpgotoforum}}
           </div>
           <div class="modal-footer" style="padding: 6px;">
             <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
@@ -188,30 +182,44 @@
                   .table th,
                   .table td {
                       text-align: right;
-                      min-width: 100px;
+                      min-width: 150px;
                   }
                   .table th:first-child,
                   .table td:first-child {
                       text-align: left;
                   }
+                  table tr .text-danger,
+                  table tr .text-danger a {
+                      color: #e74a3b !important;
+                  }
+                  .customDoubleTableHeading + tr th {
+                      border-right: 1px solid #cbcbcb !important;
+                  }
+                  .customDoubleTableHeading + tr th:last-child {
+                      border-right: none !important;
+                  }
+                  .text-center1,
+                  .text-center0 {
+                      text-align: right !important;
+                  }
                 </style>
                 <div class="table-responsive">
                   <table class="table table-sm tblPurchaseSummary" id="tableExport" name="tableExport">
                     <thead>
-                      <tr class="table-active">
+                      <tr class="table-active customDoubleTableHeading">
                         <th>Company</th>
                         <th style="width: 130px;">Type</th>
                         <th>Order No.</th>
                         <th>Order Date</th>
                         <th>Phone</th>
 
-                        <th  colspan="{{countActive currencyList}}">Total Amount (Ex)</th>
-                        <th  colspan="{{countActive currencyList}}">Total Tax</th>
-                        <th  colspan="{{countActive currencyList}}">Total Amount (Inc)</th>
-                        <th  colspan="{{countActive currencyList}}">Balance</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Amount (Ex)</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Tax</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Amount (Inc)</th>
+                        <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Balance</th>
                       </tr>
                       {{#if isOnlyDefaultActive equal "false" }}
-                        <tr class="table-active tblAvoid customDoubleTableHeading">
+                        <tr class="table-active tblAvoid">
                           <th></th>
                           <th></th>
                           <th></th>

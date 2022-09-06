@@ -180,9 +180,6 @@
                                         color: #858796 !important;
                                         font-weight: 800;
                                     } 
-                                    .table td {
-                                        color: #00a3d3;
-                                    }
                                     .table th,
                                     .table td {
                                         text-align: right;
@@ -201,6 +198,10 @@
                                     }
                                     .customDoubleTableHeading + tr th:last-child {
                                         border-right: none !important;
+                                    }
+                                    .text-center1,
+                                    .text-center0 {
+                                        text-align: right !important;
                                     }
                                     tr[data-tr="TMergedSalesLines"] {
                                         display: none !important;
@@ -221,8 +222,8 @@
                                                 <th>Opening Qty</th>
                                                 <th>Trans Qty</th>
                                                 <th>Running Qty</th>
-                                                <th class="textCntr{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Unit Cost</th>
-                                                <th class="textCntr{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Cost</th>
+                                                <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Unit Cost</th>
+                                                <th class="text-center{{countActive currencyList}} text-center" colspan="{{countActive currencyList}}">Total Cost</th>
                                                 <!-- <th class="text-center" colspan="{{countActive currencyList}}">Unit Cost (Ex)</th> -->
                                                 <!-- <th class="text-center" colspan="{{countActive currencyList}}">Total Cost (Ex)</th> -->
                                             </tr>
@@ -282,7 +283,7 @@
                                                             <td>{{ formatDate item.fields.TransactionDate }}</td>
                                                             
                                                             <td class="text-left">{{ item.fields.TranstypeDesc }}</td>
-                                                            <td class="text-right {{#if isNegativeAmount item.fields.TransactionNo }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.TransactionNo }}</td>
+                                                            <td class="text-right">{{ checkZero item.fields.TransactionNo }}</td>
                                                             <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
                                                             <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
                                                             <td class="text-right {{#if isNegativeAmount item.fields.Qty }} text-danger {{else}} text-success {{/if}}">{{ checkZero item.fields.Qty }}</td>
@@ -315,6 +316,10 @@
 
                                                     {{/each}}
                                                 {{/each}}
+                                            {{else}}
+                                                <tr class="odd" style="text-align: center;">
+                                                    <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
+                                                </tr>
                                             {{/if}}
                                         </tbody>
                                     </table>

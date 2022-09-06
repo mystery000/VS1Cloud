@@ -24,6 +24,7 @@ Template.agedpayablessummary.onCreated(() => {
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
+  templateObject.reportOptions = new ReactiveVar([]);
 });
 
 Template.agedpayablessummary.onRendered(()=>{
@@ -80,14 +81,41 @@ Template.agedpayablessummary.onRendered(()=>{
 
    $("#dateFrom").val(fromDate);
    $("#dateTo").val(begunDate);
+
+  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.ignoreDate = ignoreDate;
+    } else {
+      defaultOptions = {
+        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+        toDate: moment().format("YYYY-MM-DD"),
+        ignoreDate: true
+      };
+    }
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $('.edtReportDates').attr('disabled', false)
+    if( ignoreDate == true ){
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
+    }
+    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.getAgedPayableReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
+  };
+
+
    let contactID = FlowRouter.current().queryParams.contactid ||'';
    
     templateObject.getAgedPayableReports = function (dateFrom, dateTo, ignoreDate) {
       LoadingOverlay.show();
-
+      if (!localStorage.getItem('VS1AgedPayablesSummary_Report')) {
       reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID).then(function (data) {
         if (data.tapreport.length) {
-          // localStorage.setItem("VS1AgedPayablesSummary_Report", JSON.stringify(data) || "");
+          localStorage.setItem("VS1AgedPayablesSummary_Report", JSON.stringify(data) || "");
           let records = [];
           let reportrecords = [];
           let allRecords = [];
@@ -371,6 +399,290 @@ Template.agedpayablessummary.onRendered(()=>{
         //Bert.alert('<strong>' + err + '</strong>!', 'danger');
         LoadingOverlay.hide();
       });
+    } else {
+      let data = JSON.parse(localStorage.getItem('VS1AgedPayablesSummary_Report'));
+      if (data.tapreport.length) {
+        // localStorage.setItem("VS1AgedPayablesSummary_Report", JSON.stringify(data) || "");
+        let records = [];
+        let reportrecords = [];
+        let allRecords = [];
+        let current = [];
+
+        let totalNetAssets = 0;
+        let GrandTotalLiability = 0;
+        let GrandTotalAsset = 0;
+        let incArr = [];
+        let cogsArr = [];
+        let expArr = [];
+        let accountData = data.tapreport;
+        let accountType = "";
+
+        accountData.forEach(account => {
+          let amountdue = utilityService.modifynegativeCurrencyFormat(account.AmountDue) || 0;
+          let current = utilityService.modifynegativeCurrencyFormat(account.Current) || 0;
+          let day30 = utilityService.modifynegativeCurrencyFormat(account["30Days"]) || 0;
+          let day60 = utilityService.modifynegativeCurrencyFormat(account["60Days"]) || 0;
+          let day90 = utilityService.modifynegativeCurrencyFormat(account["90Days"]) || 0;
+          let dayabove90 = utilityService.modifynegativeCurrencyFormat(account["120Days"]) || 0;
+
+          let dataList = {
+            id: account.PurchaseOrderID || "",
+            contact: account.Name || "",
+            clientid: account.ClientID || "",
+            type: "",
+            invoiceno: "",
+            duedate: "",
+            amountdue: amountdue || 0.0,
+            current: current || 0.0,
+            day30: day30 || 0.0,
+            day60: day60 || 0.0,
+            day90: day90 || 0.0,
+            dayabove90: dayabove90 || 0.0
+          };
+
+          reportrecords.push(dataList);
+
+          let recordObj = {
+            Id: account.PurchaseOrderID,
+            Type: account.Type,
+            SupplierName: account.Name,
+            entries: account
+          };
+
+          records.push(recordObj);
+        });
+
+        // for (let i = 0; i < accountData.length; i++) {
+        //   let amountdue = utilityService.modifynegativeCurrencyFormat(data.tapreport[i].AmountDue) || 0;
+        //   let current = utilityService.modifynegativeCurrencyFormat(data.tapreport[i].Current) || 0;
+        //   let day30 = utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["30Days"]) || 0;
+        //   let day60 = utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["60Days"]) || 0;
+        //   let day90 = utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || 0;
+        //   let dayabove90 = utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || 0;
+        //   var dataList = {
+        //     id: data.tapreport[i].PurchaseOrderID || "",
+        //     contact: data.tapreport[i].Name || "",
+        //     clientid: data.tapreport[i].ClientID || "",
+        //     type: "",
+        //     invoiceno: "",
+        //     duedate: "",
+        //     amountdue: amountdue || 0.0,
+        //     current: current || 0.0,
+        //     day30: day30 || 0.0,
+        //     day60: day60 || 0.0,
+        //     day90: day90 || 0.0,
+        //     dayabove90: dayabove90 || 0.0
+        //   };
+
+        //   reportrecords.push(dataList);
+
+        //   let recordObj = {};
+        //   recordObj.Id = data.tapreport[i].PurchaseOrderID;
+        //   recordObj.type = data.tapreport[i].Type;
+        //   recordObj.SupplierName = data.tapreport[i].Name;
+        //   recordObj.dataArr = [
+        //     "", data.tapreport[i].Type,
+        //     data.tapreport[i].PurchaseOrderID,
+        //      moment(data.tapreport[i].InvoiceDate).format("DD MMM YYYY") || '-',
+        //     data.tapreport[i].DueDate != ""
+        //       ? moment(data.tapreport[i].DueDate).format("DD/MM/YYYY")
+        //       : data.tapreport[i].DueDate,
+        //      data.tapreport[i].InvoiceNumber || '-',
+        //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].AmountDue) || "-",
+        //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].Current) || "-",
+        //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["30Days"]) || "-",
+        //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["60Days"]) || "-",
+        //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || "-",
+        //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || "-"
+
+        //
+        //   ];
+
+        //      if((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
+        //      || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
+        //    || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)){
+        //   records.push(recordObj);
+        //   }
+        // }
+
+        reportrecords = _.sortBy(reportrecords, "contact");
+        templateObject.reportrecords.set(reportrecords);
+        records = _.sortBy(records, "SupplierName");
+        records = _.groupBy(records, "SupplierName");
+
+        for (let key in records) {
+          // let obj = [{key: key}, {data: records[key]}];
+          let obj = {
+            title: key,
+            entries: records[key],
+            total: null
+          };
+          allRecords.push(obj);
+        }
+
+        allRecords.forEach(record => {
+          let amountduetotal = 0;
+          let Currenttotal = 0;
+          let lessTnMonth = 0;
+          let oneMonth = 0;
+          let twoMonth = 0;
+          let threeMonth = 0;
+          let Older = 0;
+
+          record.entries.forEach(entry => {
+            amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
+            Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
+            oneMonth = oneMonth + parseFloat(entry.entries["30Days"]);
+            twoMonth = twoMonth + parseFloat(entry.entries["60Days"]);
+            threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
+            Older = Older + parseFloat(entry.entries["120Days"]);
+          });
+
+          record.total = {
+            // new
+            Title: "Total " + record.title,
+            TotalAmountDue: amountduetotal,
+            TotalCurrent: Currenttotal,
+            OneMonth: oneMonth,
+            TwoMonth: twoMonth,
+            ThreeMonth: threeMonth,
+            OlderMonth: Older
+          };
+
+          // Used for grand total later
+          current.push(record.total);
+        });
+
+        //    let iterator = 0;
+        //  for (let i = 0; i < allRecords.length; i++) {
+        //      let amountduetotal = 0;
+        //      let Currenttotal = 0;
+        //      let lessTnMonth = 0;
+        //      let oneMonth = 0;
+        //      let twoMonth = 0;
+        //      let threeMonth = 0;
+        //      let Older = 0;
+        //      const currencyLength = Currency.length;
+        //      for (let k = 0; k < allRecords[i][1].data.length; k++) {
+        //          amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
+        //          Currenttotal = Currenttotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+        //          oneMonth = oneMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+        //          twoMonth = twoMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
+        //          threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+        //          Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
+        //      }
+        //      let val = [allRecords[i][0].key+'', '', '', '',
+        //      utilityService.modifynegativeCurrencyFormat(amountduetotal),
+        //      utilityService.modifynegativeCurrencyFormat(Currenttotal),
+        //          utilityService.modifynegativeCurrencyFormat(oneMonth),
+        //      utilityService.modifynegativeCurrencyFormat(twoMonth),
+        //      utilityService.modifynegativeCurrencyFormat(threeMonth),
+        //      utilityService.modifynegativeCurrencyFormat(Older)];
+
+        //      current.push(val);
+
+        //  }
+
+        //grandtotalRecord
+        let grandamountduetotal = 0;
+        let grandCurrenttotal = 0;
+        let grandlessTnMonth = 0;
+        let grandoneMonth = 0;
+        let grandtwoMonth = 0;
+        let grandthreeMonth = 0;
+        let grandOlder = 0;
+
+        current.forEach(total => {
+          grandamountduetotal = grandamountduetotal + parseFloat(total.TotalAmountDue);
+          grandCurrenttotal = grandCurrenttotal + parseFloat(total.TotalCurrent);
+          // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
+          grandoneMonth = grandoneMonth + parseFloat(total.OneMonth);
+          grandtwoMonth = grandtwoMonth + parseFloat(total.TwoMonth);
+          grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
+          grandOlder = grandOlder + parseFloat(total.OlderMonth);
+        });
+
+        // for (let n = 0; n < current.length; n++) {
+
+        //     const grandcurrencyLength = Currency.length;
+
+        //     for (let m = 0; m < current[n].data.length; m++) {
+        //           grandamountduetotal = grandamountduetotal + utilityService.convertSubstringParseFloat(current[n][4]);
+        //           grandCurrenttotal = grandCurrenttotal + utilityService.convertSubstringParseFloat(current[n][5]);
+        //          grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
+        //           grandoneMonth = grandoneMonth + utilityService.convertSubstringParseFloat(current[n][6]);
+        //           grandtwoMonth = grandtwoMonth + utilityService.convertSubstringParseFloat(current[n][7]);
+        //           grandthreeMonth = grandthreeMonth + utilityService.convertSubstringParseFloat(current[n][8]);
+        //           grandOlder = grandOlder + utilityService.convertSubstringParseFloat(current[n][9]);
+        //     }
+        //      let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
+        //          utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
+        //      current.push(val);
+
+        // }
+
+        // let grandval = ['Grand Total ', '', '','',
+        // utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+        //  utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+        // utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
+        //     utilityService.modifynegativeCurrencyFormat(grandoneMonth),
+        //     utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
+        //     utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
+        //     utilityService.modifynegativeCurrencyFormat(grandOlder)];
+
+        let grandValObj = {
+          Title: "Grand Total ",
+          TotalAmountDue: grandamountduetotal,
+          TotalCurrent: grandCurrenttotal,
+          OneMonth: grandoneMonth,
+          TwoMonth: grandtwoMonth,
+          ThreeMonth: grandthreeMonth,
+          OlderMonth: grandOlder
+        };
+
+        //  for (let key in records) {
+        //      let dataArr = current[iterator]
+        //      let obj = [{key: key}, {data: records[key]},{total:[{dataArr:dataArr}]}];
+        //      totalRecord.push(obj);
+        //      iterator += 1;
+        //  }
+
+        templateObject.records.set(allRecords);
+        templateObject.grandrecords.set(grandValObj);
+
+        if (templateObject.records.get()) {
+          setTimeout(function () {
+            $("td a").each(function () {
+              if ($(this).text().indexOf("-" + Currency) >= 0) 
+                $(this).addClass("text-danger");
+              }
+            );
+            $("td").each(function () {
+              if ($(this).text().indexOf("-" + Currency) >= 0) 
+                $(this).addClass("text-danger");
+              }
+            );
+
+            $("td").each(function () {
+              let lineValue = $(this).first().text()[0];
+              if (lineValue != undefined) {
+                if (lineValue.indexOf(Currency) >= 0) 
+                  $(this).addClass("text-right");
+                }
+              });
+
+            $("td").each(function () {
+              if ($(this).first().text().indexOf("-" + Currency) >= 0) 
+                $(this).addClass("text-right");
+              }
+            );
+
+            $(".fullScreenSpin").css("display", "none");
+          }, 100);
+        }
+      }
+      LoadingOverlay.hide();
+    }
     };
 
     var currentDate2 = new Date();
@@ -578,88 +890,37 @@ Template.agedpayablessummary.events({
     //
     // });
   },
-  "click #lastMonth": function () {
-    let templateObject = Template.instance();
-    localStorage.setItem("VS1AgedPayablesSummary_Report", "");
+  "change .edtReportDates": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-
-    var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    var prevMonthFirstDate = new Date(currentDate.getFullYear() - (
-      currentDate.getMonth() > 0
-      ? 0
-      : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
-
-    var formatDateComponent = function (dateComponent) {
-      return (
-        dateComponent < 10
-        ? "0"
-        : "") + dateComponent;
-    };
-
-    var formatDate = function (date) {
-      return (formatDateComponent(date.getDate()) + "/" + formatDateComponent(date.getMonth() + 1) + "/" + date.getFullYear());
-    };
-
-    var formatDateERP = function (date) {
-      return (date.getFullYear() + "-" + formatDateComponent(date.getMonth() + 1) + "-" + formatDateComponent(date.getDate()));
-    };
-
-    var fromDate = formatDate(prevMonthFirstDate);
-    var toDate = formatDate(prevMonthLastDate);
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(toDate);
-
-    var getLoadDate = formatDateERP(prevMonthLastDate);
-    let getDateFrom = formatDateERP(prevMonthFirstDate);
-    templateObject.dateAsAt.set(fromDate);
-    templateObject.getAgedPayableReports(getDateFrom, getLoadDate, false);
+    localStorage.setItem('VS1AgedPayablesSummary_Report', '');
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    await templateObject.setReportOptions(false, dateFrom, dateTo);
+    
   },
-  "click #lastQuarter": function () {
-    let templateObject = Template.instance();
-    localStorage.setItem("VS1AgedPayablesSummary_Report", "");
+  "click #lastMonth": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    function getQuarter(d) {
-      d = d || new Date();
-      var m = Math.floor(d.getMonth() / 3) + 2;
-      return m > 4
-        ? m - 4
-        : m;
-    }
-
-    var quarterAdjustment = (moment().month() % 3) + 1;
-    var lastQuarterEndDate = moment().subtract({months: quarterAdjustment}).endOf("month");
-    var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({months: 2}).startOf("month");
-
-    var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
-    var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
-    templateObject.dateAsAt.set(lastQuarterStartDateFormat);
-    $("#dateFrom").val(lastQuarterStartDateFormat);
-    $("#dateTo").val(lastQuarterEndDateFormat);
-
-    let fromDateMonth = getQuarter(currentDate);
-    var quarterMonth = getQuarter(currentDate);
-    let fromDateDay = currentDate.getDate();
-
-    var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-    let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    templateObject.getAgedPayableReports(getDateFrom, getLoadDate, false);
+    localStorage.setItem('VS1AgedPayablesSummary_Report', '');
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+    await templateObject.setReportOptions(false, fromDate, endDate);
+    
   },
-  "click #last12Months": function () {
-    let templateObject = Template.instance();
-    localStorage.setItem("VS1AgedPayablesSummary_Report", "");
+  "click #lastQuarter": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1AgedPayablesSummary_Report', '');
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+    await templateObject.setReportOptions(false, fromDate, endDate);
+    
+  },
+  "click #last12Months": async function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    localStorage.setItem('VS1AgedPayablesSummary_Report', '');
+    let templateObject = Template.instance();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     var currentDate = new Date();
@@ -668,8 +929,7 @@ Template.agedpayablessummary.events({
     let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
     let fromDateDay = currentDate.getDate();
     if (currentDate.getMonth() + 1 < 10) {
-      fromDateMonth = "0" + (
-      currentDate.getMonth() + 1);
+      fromDateMonth = "0" + (currentDate.getMonth() + 1);
     }
     if (currentDate.getDate() < 10) {
       fromDateDay = "0" + currentDate.getDate();
@@ -683,16 +943,16 @@ Template.agedpayablessummary.events({
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-    templateObject.getAgedPayableReports(getDateFrom, getLoadDate, false);
+    await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
+    
   },
-  "click #ignoreDate": function () {
-    let templateObject = Template.instance();
-    localStorage.setItem("VS1AgedPayablesSummary_Report", "");
+  "click #ignoreDate": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", true);
-    $("#dateTo").attr("readonly", true);
+    localStorage.setItem('VS1AgedPayablesSummary_Report', '');
+    let templateObject = Template.instance();
     templateObject.dateAsAt.set("Current Date");
-    templateObject.getAgedPayableReports("", "", true);
+    await templateObject.setReportOptions(true);
+    
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();

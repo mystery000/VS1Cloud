@@ -134,6 +134,7 @@ Template.stockquantitybylocation.events({
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1StockQuantityByLocation_Report", "");
     Meteor._reload.reload();
+    $(".fullScreenSpin").css("display", "none");
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -159,6 +160,7 @@ Template.stockquantitybylocation.events({
       loggedCompany + "- Stock Quantity by Location Report" + ".csv";
     utilityService.exportReportToCsvTable("tableExport", filename, "csv");
     let rows = [];
+    $(".fullScreenSpin").css("display", "none");
   },
   "click .btnPrintReport": function (event) {
     let values = [];
@@ -297,6 +299,7 @@ Template.stockquantitybylocation.events({
     var getLoadDate = formatDateERP(prevMonthLastDate);
     let getDateFrom = formatDateERP(prevMonthFirstDate);
     templateObject.dateAsAt.set(fromDate);
+    $(".fullScreenSpin").css("display", "none");
 
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
   },
@@ -341,6 +344,7 @@ Template.stockquantitybylocation.events({
     var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
     let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    $(".fullScreenSpin").css("display", "none");
   },
   "click #last12Months": function () {
     let templateObject = Template.instance();
@@ -379,6 +383,7 @@ Template.stockquantitybylocation.events({
       "-" +
       currentDate2.getDate();
     // templateObject.getGeneralLedgerReports(getDateFrom, getLoadDate, false);
+    $(".fullScreenSpin").css("display", "none");
   },
   "click #ignoreDate": function () {
     let templateObject = Template.instance();
@@ -388,6 +393,7 @@ Template.stockquantitybylocation.events({
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
     // templateObject.getGeneralLedgerReports("", "", true);
+    $(".fullScreenSpin").css("display", "none");
   },
 
   // CURRENCY MODULE //
