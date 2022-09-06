@@ -1172,13 +1172,13 @@ Template.vs1login.onRendered(function () {
                 } else if (isAppointmentLaunch == true) {
                     window.open('/appointments', '_self');
                 } else {
-                    window.open('/dashboard', '_self');
-                    //handleSetupRedirection();
+                    //window.open('/dashboard', '_self');
+                    handleSetupRedirection();
                 }
             } else {
-                window.open('/dashboard', '_self');
+                //window.open('/dashboard', '_self');
 
-                //handleSetupRedirection();
+                handleSetupRedirection();
             }
 
         } else {

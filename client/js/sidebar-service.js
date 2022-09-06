@@ -3392,6 +3392,13 @@ export class SideBarService extends BaseService {
   return this.getList(this.ERPObjects.TCorrespondence, options);
   }
 
+  getScheduleSettings() {
+      let options = {
+          ListType: "Detail",
+      };
+      return this.getList(this.ERPObjects.TReportSchedules,options);
+  }
+
   saveCorrespondence(data)
   {
       return this.POST(this.ERPObjects.TCorrespondence,data);

@@ -140,7 +140,7 @@ import { autoTable }from 'jspdf-autotable';
                 dataMe = toCsv(table);
 
                 if(defaults.consoleLog){
-                    
+
                 }
 
                 download(options.filename,dataMe);
@@ -618,7 +618,6 @@ export class UtilityService {
         for(let i=0; i<myFiles.length; i++){
             let myFile = myFiles[i];
             let myFileType = myFile.type;
- 
             const loadAttachment = () => {
                  return new Promise((resolve) => {
                      //first arguement must be an regular array. The array can be of any javascript objects. Array can contain array to make it multi dimensional
@@ -653,8 +652,6 @@ export class UtilityService {
                      });
                  })
              }
- 
-             await loadAttachment()
         }
         let dataObj = {
             totalAttachments: totalAttachments,
@@ -662,6 +659,7 @@ export class UtilityService {
         };
         return dataObj;
     };
+
 
    attachmentUpload = function(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment){
        let empName = localStorage.getItem('mySession');
@@ -1297,15 +1295,13 @@ export class UtilityService {
 
     };
 
-  getStartDateWithSpecificFormat = function (date) {
+    getStartDateWithSpecificFormat = function (date) {
       const leaveDate = new Date(date);
       const yyyy = leaveDate.getFullYear();
       let mm = ("0" + (leaveDate.getMonth() + 1)).slice(-2);
       let dd = leaveDate.getDate();
-
       return dd + "/" + mm + "/" + yyyy;
     };
-  
 
     negativeCurrencyRoundFormat = function (price) {
         if(price < 0) {
@@ -1338,22 +1334,22 @@ export class UtilityService {
 
     convertSubstringParseFloat(value) {
         if((value).includes('-')) {
-            // let price = value.substring(2).replace(",","");
-            let price = value.replace(/[^0-9\.]/g, '');
+            let price = value.substring(2).replace(",","");
             price = '-'+price;
             return (parseFloat(price));
 
         }
         else {
-            value = value.replace(/[^0-9\.]/g, '');
+            value = value.substring(1).replace(",", "");
             return (parseFloat(value));
+
         }
     }
 
     /**
      * This function will convert a string to a float number
-     * 
-     * @param {string} stringNumber 
+     *
+     * @param {string} stringNumber
      * @param {string | false} _currency
      * @returns {float}
      */
@@ -1379,9 +1375,9 @@ export class UtilityService {
 
     /**
      * This function will get the currency
-     * 
-     * @param {*} stringNumber 
-     * @returns 
+     *
+     * @param {*} stringNumber
+     * @returns
      */
     extractCurrency(stringNumber = "$15.5") {
         if(!isNaN(stringNumber)) {
@@ -1394,8 +1390,8 @@ export class UtilityService {
 
 
     /**
-     * 
-     * @param {string|number} number 
+     *
+     * @param {string|number} number
      * @returns {boolean}
      */
     isNegative(number = "1235") {
