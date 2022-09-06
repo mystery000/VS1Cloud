@@ -4271,6 +4271,14 @@ Template.creditcard.onRendered(() => {
 
         let id = $('.printID').attr("id");
         document.getElementById('html-2-pdfwrapper').style.display="block";
+      
+        let subtotal = $('#subtotal_total').text();
+        let net = $('#subtotal_nett').text();
+        let subtotal_discount = $('#subtotal_discount').text();
+        let grandTotal = $('#grandTotal').text();
+        let totalPaidAmt = $('#totalPaidAmt').text();
+        let totalBalanceDue = $('#totalBalanceDue').text();
+        let total_new_tax = $('#subtotal_tax').text();
 
         let taxItems = {};
         $('#tblCreditLine > tbody > tr').each(function () {
@@ -4301,6 +4309,13 @@ Template.creditcard.onRendered(() => {
                 }
             }
         });
+
+        $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+        $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+        $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+        $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
+        $("#html-2-pdfwrapper #total_tax_new").html(total_new_tax);
+
         $("#html-2-pdfwrapper #tax_list_print").html("");
         Object.keys(taxItems).map((code) => {
             let html = `

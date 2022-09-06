@@ -4729,6 +4729,14 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         let invoice_data = templateObject.invoicerecord.get();
         document.getElementById('html-2-pdfwrapper').style.display = 'block';
 
+        let subtotal = $('#subtotal_total').text();
+        let net = $('#subtotal_nett').text();
+        let subtotal_discount = $('#subtotal_discount').text();
+        let grandTotal = $('#grandTotal').text();
+        let totalPaidAmt = $('#totalPaidAmt').text();
+        let totalBalanceDue = $('#totalBalanceDue').text();
+
+
         let taxItems = {};
         $('#tblInvoiceLine > tbody > tr').each(function () {
             var lineID = this.id;
@@ -4758,6 +4766,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                 }
             }
         });
+
         $("#html-2-pdfwrapper #tax_list_print").html("");
         Object.keys(taxItems).map((code) => {
             let html = `
@@ -4774,6 +4783,11 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             `;
             $("#html-2-pdfwrapper #tax_list_print").append(html);
         });
+
+        $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+        $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+        $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+        $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
 
         var source = document.getElementById('html-2-pdfwrapper');
         let id = invoice_data.id;
@@ -5703,6 +5717,10 @@ Template.refundcard.helpers({
         getTemplateNumber: function () {
             let template_numbers = ["1", "2", "3"];
             return template_numbers;
+        },
+
+        bsbRegionName: () => {
+            return bsbCodeName;
         },
 
 

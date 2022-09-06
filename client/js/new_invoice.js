@@ -8468,6 +8468,12 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                                 width: 100
                           };
 
+            let subtotal = $('#subtotal_total').text();
+            let net = $('#subtotal_nett').text();
+            let subtotal_discount = $('#subtotal_discount').text();
+            let grandTotal = $('#grandTotal').text();
+            let totalPaidAmt = $('#totalPaidAmt').text();
+            let totalBalanceDue = $('#totalBalanceDue').text();
 
 
 
@@ -8527,6 +8533,12 @@ $('#sltStatus').editableSelect().on('click.editable-select', function (e, li) {
                 `;
                 $("#html-Invoice-pdfwrapper #tax_list_print").append(html);
             });
+
+
+            $("#html-Invoice-pdfwrapper #subtotal_totalPrint").html(subtotal);
+            $("#html-Invoice-pdfwrapper #grandTotalPrint").html(grandTotal);
+            $("#html-Invoice-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+            $("#html-Invoice-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
 
             var source = document.getElementById('html-Invoice-pdfwrapper');
             let file = '';

@@ -6370,12 +6370,14 @@ Template.new_salesorder.onRendered(() => {
 
 
         exportSalesToPdf1 = function() {
+          
             let margins = {
                 top: 0,
                 bottom: 0,
                 left: 0,
                 width: 100
             };
+
             let invoiceData = templateObject.salesorderrecord.get();
             let stripe_id = templateObject.accountID.get() || '';
             let stripe_fee_method = templateObject.stripe_fee_method.get();
@@ -6388,6 +6390,14 @@ Template.new_salesorder.onRendered(() => {
             let surname = $('#lastname').val();
             let dept = $('#sltDept').val();
             var erpGet = erpDb();
+
+            let subtotal = $('#subtotal_total').text();
+            let net = $('#subtotal_nett').text();
+            let subtotal_discount = $('#subtotal_discount').text();
+            let grandTotal = $('#grandTotal').text();
+            let totalPaidAmt = $('#totalPaidAmt').text();
+            let totalBalanceDue = $('#totalBalanceDue').text();
+
             $('#tblSalesOrderLine > tbody > tr').each(function() {
                 var lineID = this.id;
                 let tdproduct = $('#' + lineID + " .lineProductName").val();
@@ -6434,6 +6444,13 @@ Template.new_salesorder.onRendered(() => {
 
                 lineItems.push(lineItemObj);
             });
+         
+            $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+            $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+            $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+            $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
+
+
             let company = Session.get('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
             let customerEmail = $('#edtCustomerEmail').val();
@@ -6468,6 +6485,7 @@ Template.new_salesorder.onRendered(() => {
             });
 
             var source = document.getElementById('html-2-pdfwrapper');
+         
             let file = "Sales Order.pdf";
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 file = 'Sales Order-' + id + '.pdf';
@@ -6490,13 +6508,16 @@ Template.new_salesorder.onRendered(() => {
                 }
             };
             html2pdf().set(opt).from(source).save().then(function(dataObject) {
+
                 if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                    $('#html-2-pdfwrapper').css('display', 'none');
                     $(".btnSave").trigger("click");
                 } else {
                     $('#html-2-pdfwrapper').css('display', 'none');
                     $('.fullScreenSpin').css('display', 'none');
                 }
             });
+         
             // pdf.addHTML(source, function () {
 
             //     pdf.setFontSize(10);
@@ -8613,9 +8634,7 @@ Template.new_salesorder.events({
           $('.fullScreenSpin').css('display', 'inline-block');
           var sales_orders = $('input[name="Sales Order"]:checked').val();
           let emid = Session.get('mySessionEmployeeLoggedID');
-
           var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
-
           sideBarService.getTemplateNameandEmployeId("Sales Orders",emid,1).then(function (data) {
             templateid = data.ttemplatesettings;
             var id = templateid[0].fields.ID;

@@ -5601,9 +5601,17 @@ Template.new_quote.onRendered(() => {
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
+
+        let subtotal = $('#subtotal_total').text();
+        let net = $('#subtotal_nett').text();
+        let subtotal_discount = $('#subtotal_discount').text();
+        let grandTotal = $('#grandTotal').text();
+        let totalPaidAmt = $('#totalPaidAmt').text();
+        let totalBalanceDue = $('#totalBalanceDue').text();
+
+
         $('#tblQuoteLine > tbody > tr').each(function () {
             var lineID = this.id;
-
 
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
@@ -5687,6 +5695,12 @@ Template.new_quote.onRendered(() => {
         // var pdf = new jsPDF('p', 'pt', 'a4');
 
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+
+        $("#html-2-pdfwrapper #subtotal_totalPrint").html(subtotal);
+        $("#html-2-pdfwrapper #grandTotalPrint").html(grandTotal);
+        $("#html-2-pdfwrapper #totalpaidamount").html(totalPaidAmt);
+        $("#html-2-pdfwrapper #totalBalanceDuePrint").html(totalBalanceDue);
+     
         // pdf.setFontSize(18);
 
         $("#html-2-pdfwrapper #tax_list_print").html("");
@@ -5709,6 +5723,7 @@ Template.new_quote.onRendered(() => {
         var source = document.getElementById('html-2-pdfwrapper');
         html2pdf().set(opt).from(source).save().then(function (dataObject) {
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                $('#html-2-pdfwrapper').css('display', 'none');
                 $(".btnSave").trigger("click");
             } else {
                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -6514,6 +6529,8 @@ Template.new_quote.helpers({
         let template_numbers = ["1", "2", "3"];
         return template_numbers;
    },
+
+   
 
     isBatchSerialNoTracking: () => {
         return Session.get('CloudShowSerial') || false;
