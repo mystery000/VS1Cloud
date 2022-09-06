@@ -1281,6 +1281,24 @@ authenticatedRoutes.route('/journalentrylist', {
         });
     }
 });
+
+authenticatedRoutes.route('/basreturn', {
+  name: 'basreturn',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'basreturn'
+      });
+  }
+});
+authenticatedRoutes.route('/basreturnlist', {
+  name: 'basreturnlist',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'basreturnlist'
+      });
+  }
+});
+
 authenticatedRoutes.route('/timesheet', {
     name: 'timesheet',
     action() {

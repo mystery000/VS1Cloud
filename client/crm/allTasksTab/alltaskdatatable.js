@@ -88,7 +88,6 @@ Template.alltaskdatatable.onRendered(function () {
       changeYear: true,
       yearRange: "-90:+10",
       onSelect: function (dateText, inst) {
-        // alert(dateText);
         let task_id = inst.id;
         templateObject.updateTaskSchedule(task_id, dateText);
       },
