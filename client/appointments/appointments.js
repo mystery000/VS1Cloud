@@ -13835,8 +13835,13 @@ Template.appointments.events({
           showCancelButton: true,
           confirmButtonText: "End Appointment",
           width: "700px",
-          input: 'text',
-          inputValue: "Associated Product / Service "+ selectedProduct +" and Notes "+ notes +"",
+          input: "text",
+          inputValue:
+            "Associated Product / Service " +
+            selectedProduct +
+            " and Notes " +
+            notes +
+            "",
         }).then(async (result) => {
           if (result.value) {
             let date1 = document.getElementById("dtSODate").value;
