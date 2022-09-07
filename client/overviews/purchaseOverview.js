@@ -1432,7 +1432,7 @@ Template.purchasesoverview.onRendered(function () {
         };
         custFields.push(customData);
       }
-      tempObj.displayfields.set(custFields);
+      templateObject.displayfields.set(custFields);
       return;
       // tempcode
 
