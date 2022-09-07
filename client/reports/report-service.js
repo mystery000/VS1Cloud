@@ -589,7 +589,7 @@ export class ReportService extends BaseService {
         DateTo: '"' + dateTo + '"',
       };
     }
-    return this.getList(this.ERPObjects.TProductStocknSalePeriodReport, options);
+    return this.getList(this.ERPObjects.TStockQuantityLocation, options);
   }
 
   getStockMovementReport(dateFrom, dateTo, ignoreDate = false) {

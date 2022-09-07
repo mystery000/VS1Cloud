@@ -18,7 +18,7 @@ Template.stockquantitybylocation.onCreated(() => {
   templateObject.currencyList = new ReactiveVar([]);
   templateObject.activeCurrencyList = new ReactiveVar([]);
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
-
+  templateObject.records = new ReactiveVar([]);
 });
 
 Template.stockquantitybylocation.onRendered(() => {
@@ -97,11 +97,69 @@ Template.stockquantitybylocation.onRendered(() => {
     await templateObject.getStockLocationReportData();
   };
   templateObject.getStockLocationReportData = async function () {
-    const options = await templateObject.reportOptions.get();
-    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let ignoreDate = options.ignoreDate || false;
-    let data = await reportService.getStockQuantityLocationReport( dateFrom, dateTo, false);
+    let data = [];
+    if (!localStorage.getItem('VS1StockQuantityLocation_Report')) {
+      const options = await templateObject.reportOptions.get();
+      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+      let ignoreDate = options.ignoreDate || false;
+      data = await reportService.getStockQuantityLocationReport( dateFrom, dateTo, ignoreDate);
+      if( data.tstockquantitylocation.length > 0 ){
+        localStorage.setItem('VS1StockQuantityLocation_Report', JSON.stringify(data)||'');
+      }
+    }else{
+      data = JSON.parse(localStorage.getItem('VS1StockQuantityLocation_Report'));
+    }
+    let reportData = [];
+    if( data.tstockquantitylocation.length > 0 ){
+      for (const item of data.tstockquantitylocation ) {   
+        let isExist = reportData.filter((subitem) => {
+          if( subitem.DepartmentID == item.DepartmentID ){
+              subitem.SubAccounts.push(item)
+              return subitem
+          }
+        });
+
+        if( isExist.length == 0 ){
+          reportData.push({
+              TotalCost: 0,
+              TotalValue: 0,
+              SubAccounts: [item],
+              ...item
+          });
+        }
+        $(".fullScreenSpin").css("display", "none");
+      }       
+    }
+    let useData = reportData.filter((item) => {
+      let TotalCost = 0;
+      let TotalValue = 0;
+      item.SubAccounts.map((subitem) => {
+        TotalCost += subitem.Cost;
+        TotalValue += subitem.Value;
+      });
+      item.TotalCost = TotalCost;
+      item.TotalValue = TotalValue;
+      return item;
+    });    
+    templateObject.records.set(useData);
+    if (templateObject.records.get()) {
+      setTimeout(function () {
+        $("td a").each(function () {
+          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $("td").each(function () {
+          if ($(this).text().indexOf("-" + Currency) >= 0) {
+            $(this).addClass("text-danger");
+            $(this).removeClass("fgrblue");
+          }
+        });
+        $(".fullScreenSpin").css("display", "none");
+      }, 1000);
+    }    
   }
 
   templateObject.setReportOptions();
@@ -457,7 +515,23 @@ Template.stockquantitybylocation.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
-
+  records: () => {
+    return Template.instance().records.get();
+  },
+  formatPrice( amount ){
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+      return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  checkZero( value ){
+    return ( value == 0 )? '': value;
+  },
+  formatDate: ( date ) => {
+    return ( date )? moment(date).format("YYYY/MM/DD") : '';
+  },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 

@@ -207,100 +207,39 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td colspan="10" style="font-weight: 800;">Burleigh</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>400 Tile Lightbeam</td>
-                                                <td></td>
-                                                <td>Units</td>
-                                                <td>Hardware</td>
-                                                <td>Doors</td>
-                                                <td>Kitchen</td>
-                                                <td class="text-right text-success">$ 50.00</td>
-                                                <td class="text-right text-success">$ 500.00</td>
-                                                <td class="text-right">10</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>ABC Parts</td>
-                                                <td></td>
-                                                <td>Units</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="text-right text-success">$ 40.00</td>
-                                                <td class="text-right text-success">$ 400.00</td>
-                                                <td class="text-right">36</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>K/B 10</td>
-                                                <td>Black Keyboard</td>
-                                                <td>Box</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="text-right text-success">$ 13.00</td>
-                                                <td class="text-right text-success">$ 2756.00</td>
-                                                <td class="text-right">0</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight: 800;">Burleigh Totals</td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td class="text-right" style="font-weight: 800;">$ 500.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 5000.00</td>
-                                                <td style="font-weight: 800;"></td>
-                                            </tr>
-                                            <tr class="departmentHeader">
-                                                <td colspan="10" style="font-weight: 800;">Default</td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td>K/B 10</td>
-                                                <td>Black Keyboard</td>
-                                                <td>Pallet</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="text-right text-success">$ 30.00</td>
-                                                <td class="text-right text-success">$ 300.00</td>
-                                                <td class="text-right">12</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight: 800;">Default Totals</td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td style="font-weight: 800;"></td>
-                                                <td class="text-right" style="font-weight: 800;">$ 50.00</td>
-                                                <td class="text-right" style="font-weight: 800;">$ 500.00</td>
-                                                <td style="font-weight: 800;"></td>
-                                            </tr>
-                                            <!-- {{#if records}}
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            {{else}}
-                                                <tr class="odd" style="text-align: center;">
-                                                    <td valign="top" colspan="12" class="dataTables_empty">No data available in table</td>
-                                                </tr>
-                                            {{/if}} -->
+                                            {{#if records}}
+                                                {{#each arrayify records}}
+                                                    <tr>
+                                                        <td colspan="10" style="font-weight: 800;">{{ value.Classname }}</td>
+                                                    </tr>
+                                                    {{#each item in value.SubAccounts}}
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ item.ProductName }}</td>
+                                                            <td>{{ item.PartsDescription }}</td>
+                                                            <td>{{ item.UOM }}</td>
+                                                            <td>{{ item.PartType }}</td>
+                                                            <td>{{ item.PartType }}</td>
+                                                            <td>{{ item.PartsDescription }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.Cost }}</td>
+                                                            <td class="text-right text-success">{{ formatPrice item.Value }}</td>
+                                                            <td class="text-right">{{ item.Qty }}</td>
+                                                        </tr>
+                                                    {{/each}}
+                                                    <tr>
+                                                        <td style="font-weight: 800;">{{ value.Classname }} Totals</td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td style="font-weight: 800;"></td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalCost }}</td>
+                                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalValue }}</td>
+                                                        <td style="font-weight: 800;"></td>
+                                                    </tr>
+                                                {{/each}}
+                                            {{/if}}
                                         </tbody>
                                     </table>
                                 </div>
