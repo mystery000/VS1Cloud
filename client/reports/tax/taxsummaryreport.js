@@ -85,9 +85,11 @@ Template.taxsummaryreport.onRendered(() => {
         ignoreDate: true
       };
     }
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $('.edtReportDates').attr('disabled', false)
     if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true)
+      $('.edtReportDates').attr('disabled', true);
+      templateObject.dateAsAt.set("Current Date");
     }
     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));

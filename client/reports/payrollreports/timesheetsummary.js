@@ -136,6 +136,7 @@ Template.timesheetsummary.onRendered(() => {
           });
         }
       });
+      
     }
     $(".fullScreenSpin").css("display", "none");
     templateObject.records.set(result);    
